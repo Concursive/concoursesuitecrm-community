@@ -42,7 +42,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="campaign-campaigns-groups-add"><a href="CampaignManagerGroup.do?command=Add">Add a Contact Group</a></dhv:permission>
+<dhv:permission name="campaign-campaigns-groups-add"><a href="CampaignManagerGroup.do?command=Add"><dhv:label name="communications.campaign.addContactGroup">Add a Contact Group</dhv:label></a></dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="CampaignGroupListInfo"/></center></dhv:include>

@@ -1,0 +1,53 @@
+/*
+ * This script is used by build.xml when installing a new database.
+ *
+ *@author     matt rajkowski
+ *@created    June 8, 2005
+ *@version    $Id$
+ */
+import java.sql.*;
+import java.io.File;
+import org.aspcfs.utils.DatabaseUtils;
+
+if (1==1) {
+  // Create a default user to relate new data to, bypass user class constraints
+  print("Inserting default user...");
+  int userId = DatabaseUtils.getNextSeq(db, "access_user_id_seq");
+  PreparedStatement pst = db.prepareStatement(
+    "INSERT INTO access (" + (userId>-1?"user_id,":"") + "username,password,role_id,contact_id,manager_id,enteredby,modifiedby) " +
+    "VALUES (" + (userId>-1?"?,":"") + "?,?,?,?,?,?,?)");
+  int i = 0;
+  if (userId>-1) {
+    pst.setInt(++i, userId);
+  }
+  pst.setString(++i, "dhvadmin");
+  pst.setString(++i, "---");
+  pst.setInt(++i, 1);
+  pst.setInt(++i, -1);
+  pst.setInt(++i, -1);
+  pst.setInt(++i, 0);
+  pst.setInt(++i, 0);
+  pst.execute();
+  pst.close();
+  userId = DatabaseUtils.getCurrVal(db, "access_user_id_seq", userId);
+}
+
+if (1==1) {
+  // Create a default organization
+  print("Inserting default organization...");
+  int orgId = DatabaseUtils.getNextSeq(db, "organization_org_id_seq");
+  PreparedStatement pst = db.prepareStatement(
+    "INSERT INTO organization (" + (orgId>-1?"org_id, ":"") + "name, modifiedby, enteredby, owner) VALUES " +
+    "(" + (orgId>-1?"?, ":"") + "?, ?, ?, ?)");
+  int i = 0;
+  if (orgId>-1) {
+    pst.setInt(++i, orgId);
+  }
+  pst.setString(++i, "My Company");
+  pst.setInt(++i, 0);
+  pst.setInt(++i, 0);
+  pst.setInt(++i, 0);
+  pst.execute();
+  pst.close();
+  orgId = DatabaseUtils.getCurrVal(db, "organization_org_id_seq", orgId);
+}

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -38,7 +38,7 @@
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
-    <tr>
+    <tr class="subtab">
       <td>
         <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId(); %>
         <zeroio:folderHierarchy module="Accounts" link="<%= documentLink %>" showLastLink="true"/> >
@@ -46,7 +46,7 @@
       </td>
     </tr>
   </table>
-  <dhv:formMessage />
+  <dhv:formMessage showSpace="false"/>
   <br />
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>

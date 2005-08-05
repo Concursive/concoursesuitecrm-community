@@ -1,19 +1,20 @@
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.controller.*;
-import com.darkhorseventures.database.*;
-import java.util.*;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    September 16, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class PagedListAlphabeticalLinksHandler extends TagSupport {
   private String name = "alphabeticalLinksProperties";
@@ -21,9 +22,9 @@ public class PagedListAlphabeticalLinksHandler extends TagSupport {
 
 
   /**
-   *  Sets the object attribute of the PagedListAlphabeticalLinksHandler object
+   * Sets the object attribute of the PagedListAlphabeticalLinksHandler object
    *
-   *@param  tmp  The new object value
+   * @param tmp The new object value
    */
   public void setObject(String tmp) {
     this.object = tmp;
@@ -31,9 +32,9 @@ public class PagedListAlphabeticalLinksHandler extends TagSupport {
 
 
   /**
-   *  Sets the name attribute of the PagedListAlphabeticalLinksHandler object
+   * Sets the name attribute of the PagedListAlphabeticalLinksHandler object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -41,9 +42,9 @@ public class PagedListAlphabeticalLinksHandler extends TagSupport {
 
 
   /**
-   *  Gets the name attribute of the PagedListAlphabeticalLinksHandler object
+   * Gets the name attribute of the PagedListAlphabeticalLinksHandler object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -51,9 +52,9 @@ public class PagedListAlphabeticalLinksHandler extends TagSupport {
 
 
   /**
-   *  Gets the object attribute of the PagedListAlphabeticalLinksHandler object
+   * Gets the object attribute of the PagedListAlphabeticalLinksHandler object
    *
-   *@return    The object value
+   * @return The object value
    */
   public String getObject() {
     return object;
@@ -61,24 +62,29 @@ public class PagedListAlphabeticalLinksHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public final int doStartTag() throws JspException {
     try {
-      PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(object);
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(
+          object);
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce == null) {
-        System.out.println("PagedListStatusHandler-> ConnectionElement is null");
+        System.out.println(
+            "PagedListStatusHandler-> ConnectionElement is null");
       }
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus == null) {
         System.out.println("PagedListStatusHandler-> SystemStatus is null");
       }
       if (systemStatus != null) {
-        pagedListInfo.setLettersArray(systemStatus.getLettersArray("language.alphabet"));
+        pagedListInfo.setLettersArray(
+            systemStatus.getLettersArray("language.alphabet"));
       }
 
       JspWriter out = this.pageContext.getOut();

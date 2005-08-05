@@ -15,27 +15,27 @@
  */
 package org.aspcfs.modules.pipeline.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import java.util.*;
-import java.text.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.pipeline.base.*;
-import org.aspcfs.modules.pipeline.beans.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.controller.*;
+import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Contains a list of opportunities, which are now a combination of
- *  OpportunityHeader and OpportunityComponent objects.
+ * Contains a list of opportunities, which are now a combination of
+ * OpportunityHeader and OpportunityComponent objects.
  *
- *@author     chris
- *@created    August 29, 2001
- *@version    $Id: OpportunityList.java,v 1.7 2001/10/03 21:26:46 mrajkowski Exp
- *      $
+ * @author chris
+ * @version $Id: OpportunityList.java,v 1.7 2001/10/03 21:26:46 mrajkowski Exp
+ *          $
+ * @created August 29, 2001
  */
 public class OpportunityList extends ArrayList {
 
@@ -68,24 +68,28 @@ public class OpportunityList extends ArrayList {
   private boolean excludeClosedComponents = false;
   private boolean buildComponentInfo = false;
   private int typeId = 0;
+  private java.sql.Timestamp trashedDate = null;
+  private boolean includeOnlyTrashed = false;
+  private boolean includeOnlyForGraph = false;
 
   protected HashMap errors = new HashMap();
   protected HashMap warnings = new HashMap();
 
 
   /**
-   *  Constructor for the ContactList object
+   * Constructor for the ContactList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public OpportunityList() { }
+  public OpportunityList() {
+  }
 
 
   /**
-   *  Sets the PagedListInfo attribute of the ContactList object
+   * Sets the PagedListInfo attribute of the ContactList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since       1.1
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -93,10 +97,10 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the OrgId attribute of the ContactList object
+   * Sets the OrgId attribute of the ContactList object
    *
-   *@param  tmp  The new OrgId value
-   *@since       1.1
+   * @param tmp The new OrgId value
+   * @since 1.1
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -104,9 +108,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the OpportunityList object
+   * Sets the orgId attribute of the OpportunityList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -114,9 +118,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the queryClosedOnly attribute of the OpportunityList object
+   * Sets the queryClosedOnly attribute of the OpportunityList object
    *
-   *@param  queryClosedOnly  The new queryClosedOnly value
+   * @param queryClosedOnly The new queryClosedOnly value
    */
   public void setQueryClosedOnly(boolean queryClosedOnly) {
     this.queryClosedOnly = queryClosedOnly;
@@ -124,9 +128,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the warnings attribute of the OpportunityList object
+   * Sets the warnings attribute of the OpportunityList object
    *
-   *@param  tmp  The new warnings value
+   * @param tmp The new warnings value
    */
   public void setWarnings(HashMap tmp) {
     this.warnings = tmp;
@@ -134,9 +138,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the warnings attribute of the OpportunityList object
+   * Gets the warnings attribute of the OpportunityList object
    *
-   *@return    The warnings value
+   * @return The warnings value
    */
   public HashMap getWarnings() {
     return warnings;
@@ -144,9 +148,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the typeId attribute of the OpportunityList object
+   * Gets the typeId attribute of the OpportunityList object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -154,9 +158,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the typeId attribute of the OpportunityList object
+   * Sets the typeId attribute of the OpportunityList object
    *
-   *@param  typeId  The new typeId value
+   * @param typeId The new typeId value
    */
   public void setTypeId(int typeId) {
     this.typeId = typeId;
@@ -164,20 +168,19 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the typeId attribute of the OpportunityList object
+   * Sets the typeId attribute of the OpportunityList object
    *
-   *@param  typeId  The new typeId value
+   * @param typeId The new typeId value
    */
   public void setTypeId(String typeId) {
     this.typeId = Integer.parseInt(typeId);
   }
 
 
-
   /**
-   *  Gets the stage attribute of the OpportunityList object
+   * Gets the stage attribute of the OpportunityList object
    *
-   *@return    The stage value
+   * @return The stage value
    */
   public int getStage() {
     return stage;
@@ -185,9 +188,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the stage attribute of the OpportunityList object
+   * Sets the stage attribute of the OpportunityList object
    *
-   *@param  stage  The new stage value
+   * @param stage The new stage value
    */
   public void setStage(int stage) {
     this.stage = stage;
@@ -195,9 +198,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the stage attribute of the OpportunityList object
+   * Sets the stage attribute of the OpportunityList object
    *
-   *@param  stage  The new stage value
+   * @param stage The new stage value
    */
   public void setStage(String stage) {
     this.stage = Integer.parseInt(stage);
@@ -205,10 +208,10 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the TypeId attribute of the ContactList object
+   * Sets the TypeId attribute of the ContactList object
    *
-   *@param  tmp  The new TypeId value
-   *@since       1.1
+   * @param tmp The new TypeId value
+   * @since 1.1
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -216,9 +219,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the contactId attribute of the OpportunityList object
+   * Sets the contactId attribute of the OpportunityList object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -226,9 +229,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the buildComponentInfo attribute of the OpportunityList object
+   * Gets the buildComponentInfo attribute of the OpportunityList object
    *
-   *@return    The buildComponentInfo value
+   * @return The buildComponentInfo value
    */
   public boolean getBuildComponentInfo() {
     return buildComponentInfo;
@@ -236,9 +239,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the buildComponentInfo attribute of the OpportunityList object
+   * Sets the buildComponentInfo attribute of the OpportunityList object
    *
-   *@param  buildComponentInfo  The new buildComponentInfo value
+   * @param buildComponentInfo The new buildComponentInfo value
    */
   public void setBuildComponentInfo(boolean buildComponentInfo) {
     this.buildComponentInfo = buildComponentInfo;
@@ -246,9 +249,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the Description attribute of the OpportunityList object
+   * Sets the Description attribute of the OpportunityList object
    *
-   *@param  description  The new Description value
+   * @param description The new Description value
    */
   public void setDescription(String description) {
     this.description = description;
@@ -256,9 +259,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the EnteredBy attribute of the OpportunityList object
+   * Sets the EnteredBy attribute of the OpportunityList object
    *
-   *@param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -266,9 +269,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the accountOwnerIdRange attribute of the OpportunityList object
+   * Sets the accountOwnerIdRange attribute of the OpportunityList object
    *
-   *@param  accountOwnerIdRange  The new accountOwnerIdRange value
+   * @param accountOwnerIdRange The new accountOwnerIdRange value
    */
   public void setAccountOwnerIdRange(String accountOwnerIdRange) {
     this.accountOwnerIdRange = accountOwnerIdRange;
@@ -276,9 +279,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the excludeClosedComponents attribute of the OpportunityList object
+   * Sets the excludeClosedComponents attribute of the OpportunityList object
    *
-   *@param  excludeClosedComponents  The new excludeClosedComponents value
+   * @param excludeClosedComponents The new excludeClosedComponents value
    */
   public void setExcludeClosedComponents(boolean excludeClosedComponents) {
     this.excludeClosedComponents = excludeClosedComponents;
@@ -286,9 +289,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the excludeClosedComponents attribute of the OpportunityList object
+   * Gets the excludeClosedComponents attribute of the OpportunityList object
    *
-   *@return    The excludeClosedComponents value
+   * @return The excludeClosedComponents value
    */
   public boolean getExcludeClosedComponents() {
     return excludeClosedComponents;
@@ -296,9 +299,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the includeEnabled attribute of the OpportunityList object
+   * Gets the includeEnabled attribute of the OpportunityList object
    *
-   *@return    The includeEnabled value
+   * @return The includeEnabled value
    */
   public int getIncludeEnabled() {
     return includeEnabled;
@@ -306,9 +309,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the includeEnabled attribute of the OpportunityList object
+   * Sets the includeEnabled attribute of the OpportunityList object
    *
-   *@param  includeEnabled  The new includeEnabled value
+   * @param includeEnabled The new includeEnabled value
    */
   public void setIncludeEnabled(int includeEnabled) {
     this.includeEnabled = includeEnabled;
@@ -316,9 +319,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the OwnerIdRange attribute of the OpportunityList object
+   * Sets the OwnerIdRange attribute of the OpportunityList object
    *
-   *@param  ownerIdRange  The new OwnerIdRange value
+   * @param ownerIdRange The new OwnerIdRange value
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -326,9 +329,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the OpportunityList object
+   * Sets the alertRangeStart attribute of the OpportunityList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Date tmp) {
     this.alertRangeStart = tmp;
@@ -336,9 +339,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the OpportunityList object
+   * Sets the alertRangeStart attribute of the OpportunityList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = java.sql.Date.valueOf(tmp);
@@ -346,9 +349,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the OpportunityList object
+   * Sets the alertRangeEnd attribute of the OpportunityList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Date tmp) {
     this.alertRangeEnd = tmp;
@@ -356,9 +359,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the OpportunityList object
+   * Sets the alertRangeEnd attribute of the OpportunityList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Date.valueOf(tmp);
@@ -366,9 +369,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeStart attribute of the OpportunityList object
+   * Gets the alertRangeStart attribute of the OpportunityList object
    *
-   *@return    The alertRangeStart value
+   * @return The alertRangeStart value
    */
   public java.sql.Date getAlertRangeStart() {
     return alertRangeStart;
@@ -376,9 +379,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeEnd attribute of the OpportunityList object
+   * Gets the alertRangeEnd attribute of the OpportunityList object
    *
-   *@return    The alertRangeEnd value
+   * @return The alertRangeEnd value
    */
   public java.sql.Date getAlertRangeEnd() {
     return alertRangeEnd;
@@ -386,9 +389,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the queryOpenOnly attribute of the OpportunityList object
+   * Gets the queryOpenOnly attribute of the OpportunityList object
    *
-   *@return    The queryOpenOnly value
+   * @return The queryOpenOnly value
    */
   public boolean getQueryOpenOnly() {
     return queryOpenOnly;
@@ -396,9 +399,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the queryOpenOnly attribute of the OpportunityList object
+   * Sets the queryOpenOnly attribute of the OpportunityList object
    *
-   *@param  queryOpenOnly  The new queryOpenOnly value
+   * @param queryOpenOnly The new queryOpenOnly value
    */
   public void setQueryOpenOnly(boolean queryOpenOnly) {
     this.queryOpenOnly = queryOpenOnly;
@@ -406,9 +409,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the HasAlertDate attribute of the OpportunityList object
+   * Sets the HasAlertDate attribute of the OpportunityList object
    *
-   *@param  tmp  The new HasAlertDate value
+   * @param tmp The new HasAlertDate value
    */
   public void setHasAlertDate(boolean tmp) {
     this.hasAlertDate = tmp;
@@ -416,9 +419,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the AlertDate attribute of the OpportunityList object
+   * Sets the AlertDate attribute of the OpportunityList object
    *
-   *@param  tmp  The new AlertDate value
+   * @param tmp The new AlertDate value
    */
   public void setAlertDate(java.sql.Date tmp) {
     this.alertDate = tmp;
@@ -426,9 +429,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the closeDateStart attribute of the OpportunityList object
+   * Gets the closeDateStart attribute of the OpportunityList object
    *
-   *@return    The closeDateStart value
+   * @return The closeDateStart value
    */
   public java.sql.Date getCloseDateStart() {
     return closeDateStart;
@@ -436,9 +439,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the closeDateEnd attribute of the OpportunityList object
+   * Gets the closeDateEnd attribute of the OpportunityList object
    *
-   *@return    The closeDateEnd value
+   * @return The closeDateEnd value
    */
   public java.sql.Date getCloseDateEnd() {
     return closeDateEnd;
@@ -446,9 +449,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the closeDateStart attribute of the OpportunityList object
+   * Sets the closeDateStart attribute of the OpportunityList object
    *
-   *@param  tmp  The new closeDateStart value
+   * @param tmp The new closeDateStart value
    */
   public void setCloseDateStart(java.sql.Date tmp) {
     this.closeDateStart = tmp;
@@ -456,9 +459,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the closeDateStart attribute of the OpportunityList object
+   * Sets the closeDateStart attribute of the OpportunityList object
    *
-   *@param  tmp  The new closeDateStart value
+   * @param tmp The new closeDateStart value
    */
   public void setCloseDateStart(String tmp) {
     try {
@@ -472,9 +475,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the closeDateEnd attribute of the OpportunityList object
+   * Sets the closeDateEnd attribute of the OpportunityList object
    *
-   *@param  tmp  The new closeDateEnd value
+   * @param tmp The new closeDateEnd value
    */
   public void setCloseDateEnd(java.sql.Date tmp) {
     this.closeDateEnd = tmp;
@@ -482,9 +485,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the closeDateEnd attribute of the OpportunityList object
+   * Sets the closeDateEnd attribute of the OpportunityList object
    *
-   *@param  tmp  The new closeDateEnd value
+   * @param tmp The new closeDateEnd value
    */
   public void setCloseDateEnd(String tmp) {
     try {
@@ -498,9 +501,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the OpportunityList object
+   * Sets the owner attribute of the OpportunityList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -508,9 +511,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Sets the Units attribute of the OpportunityList object
+   * Sets the Units attribute of the OpportunityList object
    *
-   *@param  units  The new Units value
+   * @param units The new Units value
    */
   public void setUnits(String units) {
     this.units = units;
@@ -518,9 +521,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the accountOwnerIdRange attribute of the OpportunityList object
+   * Gets the accountOwnerIdRange attribute of the OpportunityList object
    *
-   *@return    The accountOwnerIdRange value
+   * @return The accountOwnerIdRange value
    */
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
@@ -528,9 +531,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the OwnerIdRange attribute of the OpportunityList object
+   * Gets the OwnerIdRange attribute of the OpportunityList object
    *
-   *@return    The OwnerIdRange value
+   * @return The OwnerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -538,9 +541,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the ListSize attribute of the OpportunityList object
+   * Gets the ListSize attribute of the OpportunityList object
    *
-   *@return    The ListSize value
+   * @return The ListSize value
    */
   public int getListSize() {
     return this.size();
@@ -548,9 +551,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the Units attribute of the OpportunityList object
+   * Gets the Units attribute of the OpportunityList object
    *
-   *@return    The Units value
+   * @return The Units value
    */
   public String getUnits() {
     return units;
@@ -558,9 +561,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the EnteredBy attribute of the OpportunityList object
+   * Gets the EnteredBy attribute of the OpportunityList object
    *
-   *@return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -568,9 +571,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the HasAlertDate attribute of the OpportunityList object
+   * Gets the HasAlertDate attribute of the OpportunityList object
    *
-   *@return    The HasAlertDate value
+   * @return The HasAlertDate value
    */
   public boolean getHasAlertDate() {
     return hasAlertDate;
@@ -578,9 +581,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the Description attribute of the OpportunityList object
+   * Gets the Description attribute of the OpportunityList object
    *
-   *@return    The Description value
+   * @return The Description value
    */
   public String getDescription() {
     return description;
@@ -588,9 +591,99 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Gets the errors attribute of the OpportunityList object
+   * Sets the trashedDate attribute of the OpportunityList object
    *
-   *@return    The errors value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the OpportunityList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the OpportunityList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the OpportunityList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Sets the includeOnlyForGraph attribute of the OpportunityList object
+   *
+   * @param tmp The new includeOnlyForGraph value
+   */
+  public void setIncludeOnlyForGraph(boolean tmp) {
+    this.includeOnlyForGraph = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyForGraph attribute of the OpportunityList object
+   *
+   * @param tmp The new includeOnlyForGraph value
+   */
+  public void setIncludeOnlyForGraph(String tmp) {
+    this.includeOnlyForGraph = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the OpportunityList object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the includeOnlyTrashed attribute of the OpportunityList object
+   *
+   * @return The includeOnlyTrashed value
+   */
+  public boolean getIncludeOnlyTrashed() {
+    return includeOnlyTrashed;
+  }
+
+
+  /**
+   * Gets the includeOnlyForGraph attribute of the OpportunityList object
+   *
+   * @return The includeOnlyForGraph value
+   */
+  public boolean getIncludeOnlyForGraph() {
+    return includeOnlyForGraph;
+  }
+
+
+  /**
+   * Gets the errors attribute of the OpportunityList object
+   *
+   * @return The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -598,9 +691,9 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
@@ -608,14 +701,14 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Builds a list of contacts based on several parameters. The parameters are
-   *  set after this object is constructed, then the buildList method is called
-   *  to generate the list.
+   * Builds a list of contacts based on several parameters. The parameters are
+   * set after this object is constructed, then the buildList method is called
+   * to generate the list.
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public boolean buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -637,10 +730,11 @@ public class OpportunityList extends ArrayList {
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc on (x.opp_id = oc.opp_id) " +
         "WHERE x.opp_id > -1 ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -652,9 +746,10 @@ public class OpportunityList extends ArrayList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(x.description) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(x.description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -685,9 +780,10 @@ public class OpportunityList extends ArrayList {
         "x.enteredby AS header_enteredby, " +
         "x.modified AS header_modified, " +
         "x.modifiedby AS header_modifiedby, " +
+        "x.trashed_date AS header_trashed_date, " +
         "org.name AS acct_name, org.enabled AS accountenabled, " +
         "ct.namelast AS last_name, ct.namefirst AS first_name, " +
-        "ct.company AS ctcompany, " +
+        "ct.org_name AS ctcompany, " +
         "oc.*, y.description AS stagename " +
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id) " +
@@ -705,14 +801,7 @@ public class OpportunityList extends ArrayList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       OpportunityBean oppBean = new OpportunityBean();
       oppBean.setHeader(new OpportunityHeader(rs));
       oppBean.setComponent(new OpportunityComponent(rs));
@@ -736,10 +825,10 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
+   * Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
-   *@param  tmp  The feature to be added to the IgnoreTypeId attribute
-   *@since       1.2
+   * @param tmp The feature to be added to the IgnoreTypeId attribute
+   * @since 1.2
    */
   public void addIgnoreTypeId(String tmp) {
     ignoreTypeIdList.add(tmp);
@@ -747,10 +836,10 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
+   * Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
-   *@param  tmp  The feature to be added to the IgnoreTypeId attribute
-   *@since       1.2
+   * @param tmp The feature to be added to the IgnoreTypeId attribute
+   * @since 1.2
    */
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.add(String.valueOf(tmp));
@@ -758,12 +847,12 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -779,28 +868,31 @@ public class OpportunityList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db           Description of Parameter
+   * @param baseFilePath Description of the Parameter
+   * @param context      Description of the Parameter
+   * @throws SQLException Description of Exception
    */
-  public void delete(Connection db) throws SQLException {
+  public void delete(Connection db, ActionContext context, String baseFilePath) throws SQLException {
     Iterator opportunities = this.iterator();
     while (opportunities.hasNext()) {
       OpportunityBean oppBean = (OpportunityBean) opportunities.next();
-      oppBean.getHeader().delete(db);
+      oppBean.getHeader().delete(db, context, baseFilePath);
     }
   }
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.3
+   * @param sqlFilter Description of Parameter
+   * @param db        Description of the Parameter
+   * @since 1.3
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -830,9 +922,13 @@ public class OpportunityList extends ArrayList {
     }
     if (description != null) {
       if (description.indexOf("%") >= 0) {
-        sqlFilter.append("AND lower(x.description) like lower(?) ");
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(x.description) LIKE " + DatabaseUtils.toLowerCase(
+                db) + "(?) ");
       } else {
-        sqlFilter.append("AND lower(x.description) = lower(?) ");
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(x.description) = " + DatabaseUtils.toLowerCase(
+                db) + "(?) ");
       }
     }
     if (alertDate != null) {
@@ -857,7 +953,8 @@ public class OpportunityList extends ArrayList {
       sqlFilter.append("AND oc.owner in (" + this.ownerIdRange + ") ");
     }
     if (accountOwnerIdRange != null) {
-      sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
+      sqlFilter.append(
+          "AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
     if (units != null) {
       sqlFilter.append("AND oc.units = ? ");
@@ -869,29 +966,44 @@ public class OpportunityList extends ArrayList {
       sqlFilter.append("AND oc.stage = ? ");
     }
     if (queryOpenOnly) {
-      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.opp_id = x.opp_id AND oc.closed IS NULL) ");
+      sqlFilter.append(
+          "AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.opp_id = x.opp_id AND oc.closed IS NULL) ");
     }
     if (queryClosedOnly) {
-      sqlFilter.append("AND x.opp_id NOT IN (SELECT opp_id from opportunity_component oc where oc.opp_id = x.opp_id AND oc.closed IS NULL) ");
+      sqlFilter.append(
+          "AND x.opp_id NOT IN (SELECT opp_id from opportunity_component oc where oc.opp_id = x.opp_id AND oc.closed IS NULL) ");
     }
     if (typeId > 0) {
-      sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");
+      sqlFilter.append(
+          "AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");
     }
-
     if (excludeClosedComponents) {
       sqlFilter.append("AND oc.closed IS NULL ");
+    }
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND x.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND x.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND x.trashed_date IS NULL ");
+    }
+    if (includeOnlyForGraph) {
+      sqlFilter.append(
+          "AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimeStampInterval(
+              db, DatabaseUtils.MONTH, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
+                  db) + " ) ");
     }
   }
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description os.gerameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.3
+   * @param pst Description os.gerameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.3
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -915,19 +1027,23 @@ public class OpportunityList extends ArrayList {
       pst.setString(++i, description);
     }
     if (alertDate != null) {
-      pst.setDate(++i, alertDate);
+      DatabaseUtils.setTimestamp(pst, ++i, new Timestamp(alertDate.getTime()));
     }
     if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
+      DatabaseUtils.setTimestamp(
+          pst, ++i, new Timestamp(alertRangeStart.getTime()));
     }
     if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
+      DatabaseUtils.setTimestamp(
+          pst, ++i, new Timestamp(alertRangeEnd.getTime()));
     }
     if (closeDateStart != null) {
-      pst.setDate(++i, closeDateStart);
+      DatabaseUtils.setTimestamp(
+          pst, ++i, new Timestamp(closeDateStart.getTime()));
     }
     if (closeDateEnd != null) {
-      pst.setDate(++i, closeDateEnd);
+      DatabaseUtils.setTimestamp(
+          pst, ++i, new Timestamp(closeDateEnd.getTime()));
     }
     if (owner != -1) {
       pst.setInt(++i, owner);
@@ -946,18 +1062,25 @@ public class OpportunityList extends ArrayList {
     if (typeId > 0) {
       pst.setInt(++i, typeId);
     }
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@param  itemId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param moduleId Description of the Parameter
+   * @param itemId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
@@ -965,15 +1088,21 @@ public class OpportunityList extends ArrayList {
     sql.append(
         "SELECT COUNT(*) as itemcount " +
         "FROM opportunity_header o " +
-        "LEFT JOIN opportunity_component oc ON (o.opp_id = oc.opp_id) " +
         "WHERE o.opp_id > 0 ");
     if (moduleId == Constants.ACCOUNTS) {
-      sql.append("AND (o.acctlink = ? OR o.contactlink IN (SELECT contact_id FROM contact c WHERE c.org_id = ? )) ");
+      sql.append(
+          "AND (o.acctlink = ? OR o.contactlink IN (SELECT contact_id FROM contact c WHERE c.org_id = ? )) ");
+    }
+    if (moduleId == Constants.CONTACTS) {
+      sql.append("AND o.contactlink = ? ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (moduleId == Constants.ACCOUNTS) {
       pst.setInt(1, itemId);
       pst.setInt(2, itemId);
+    }
+    if (moduleId == Constants.CONTACTS) {
+      pst.setInt(1, itemId);
     }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -982,6 +1111,27 @@ public class OpportunityList extends ArrayList {
     rs.close();
     pst.close();
     return count;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @param context   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      OpportunityBean tmpOpportunityBean = (OpportunityBean) itr.next();
+      tmpOpportunityBean.getHeader().updateStatus(
+          db, context, toTrash, tmpUserId);
+    }
+    return true;
   }
 
 }

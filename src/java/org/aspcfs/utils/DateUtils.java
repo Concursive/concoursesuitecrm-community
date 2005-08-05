@@ -177,7 +177,9 @@ public class DateUtils {
       convertedDate = serverFormatter.format(
           new java.util.Date(localeFormatter.parse(date).getTime()));
     } catch (Exception e) {
-      System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
+      if (date != null && !"".equals(date)) {
+        System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
+      }
     }
     return convertedDate;
   }
@@ -203,7 +205,9 @@ public class DateUtils {
       localeFormatter.setLenient(false);
       return new Timestamp(localeFormatter.parse(date).getTime());
     } catch (Exception e) {
-      System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
+      if (date != null && !"".equals(date)) {
+        System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
+      }
     }
     return null;
   }
@@ -353,7 +357,7 @@ public class DateUtils {
    * @return The filename value
    */
   public static String getFilename(java.sql.Timestamp fileDate) {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
     return formatter.format(new java.util.Date());
   }
 
@@ -406,7 +410,8 @@ public class DateUtils {
   }
 
 
-  /** Accesses a valid user to return a date in the user's locale
+  /**
+   * Accesses a valid user to return a date in the user's locale
    *
    * @param context
    * @param date

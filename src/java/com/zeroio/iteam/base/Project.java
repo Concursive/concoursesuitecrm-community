@@ -17,6 +17,7 @@ package com.zeroio.iteam.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.utils.ProjectUtils;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.tasks.base.TaskCategoryList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
@@ -28,11 +29,11 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 
 /**
- *  Represents a Project in iTeam
+ * Represents a Project in iTeam
  *
- *@author     mrajkowski
- *@created    July 23, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 23, 2001
  */
 public class Project extends GenericBean {
 
@@ -93,6 +94,8 @@ public class Project extends GenericBean {
   private int lastNews = -1;
   private int currentNews = Constants.UNDEFINED;
 
+  private Timestamp trashedDate = null;
+
   // Portal capabilities
   private boolean portal = false;
   private String portalHeader = null;
@@ -105,7 +108,7 @@ public class Project extends GenericBean {
   private boolean allowGuests = false;
   private boolean updateAllowGuests = false;
   private boolean allowsUserObservers = false;
-  
+
   private boolean showCalendar = false;
   private boolean showNews = false;
   private boolean showDetails = false;
@@ -134,18 +137,17 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Constructor for the Project object
-   *
-   *@since
+   * Constructor for the Project object
    */
-  public Project() { }
+  public Project() {
+  }
 
 
   /**
-   *  Constructor for the Project object
+   * Constructor for the Project object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Project(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -153,13 +155,12 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Constructor for the Project object
+   * Constructor for the Project object
    *
-   *@param  db                Description of Parameter
-   *@param  thisId            Description of Parameter
-   *@param  userRange         Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db        Description of Parameter
+   * @param thisId    Description of Parameter
+   * @param userRange Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Project(Connection db, int thisId, String userRange) throws SQLException {
     this.userRange = userRange;
@@ -168,11 +169,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Constructor for the Project object
+   * Constructor for the Project object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Project(Connection db, int thisId) throws SQLException {
     queryRecord(db, thisId);
@@ -180,13 +181,16 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int thisId) throws SQLException {
+    if (thisId == -1) {
+      throw new SQLException("Invalid Project");
+    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
@@ -213,14 +217,17 @@ public class Project extends GenericBean {
     }
     rs.close();
     pst.close();
+
+    if (this.id == -1) {
+      throw new SQLException(Constants.NOT_FOUND_ERROR);
+    }
   }
 
 
   /**
-   *  Sets the Id attribute of the Project object
+   * Sets the Id attribute of the Project object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -228,9 +235,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Project object
+   * Sets the id attribute of the Project object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -238,10 +245,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the GroupId attribute of the Project object
+   * Sets the GroupId attribute of the Project object
    *
-   *@param  tmp  The new GroupId value
-   *@since
+   * @param tmp The new GroupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -249,9 +255,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the groupId attribute of the Project object
+   * Sets the groupId attribute of the Project object
    *
-   *@param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -259,10 +265,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentId attribute of the Project object
+   * Sets the DepartmentId attribute of the Project object
    *
-   *@param  tmp  The new DepartmentId value
-   *@since
+   * @param tmp The new DepartmentId value
    */
   public void setDepartmentId(int tmp) {
     this.departmentId = tmp;
@@ -270,9 +275,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the departmentId attribute of the Project object
+   * Sets the departmentId attribute of the Project object
    *
-   *@param  tmp  The new departmentId value
+   * @param tmp The new departmentId value
    */
   public void setDepartmentId(String tmp) {
     this.departmentId = Integer.parseInt(tmp);
@@ -280,9 +285,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Project object
+   * Sets the categoryId attribute of the Project object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     categoryId = tmp;
@@ -290,9 +295,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Project object
+   * Sets the categoryId attribute of the Project object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     categoryId = Integer.parseInt(tmp);
@@ -300,9 +305,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the Project object
+   * Sets the templateId attribute of the Project object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(int tmp) {
     this.templateId = tmp;
@@ -310,9 +315,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the Project object
+   * Sets the templateId attribute of the Project object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(String tmp) {
     this.templateId = Integer.parseInt(tmp);
@@ -320,10 +325,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the Title attribute of the Project object
+   * Sets the Title attribute of the Project object
    *
-   *@param  tmp  The new Title value
-   *@since
+   * @param tmp The new Title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -331,10 +335,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the ShortDescription attribute of the Project object
+   * Sets the ShortDescription attribute of the Project object
    *
-   *@param  tmp  The new ShortDescription value
-   *@since
+   * @param tmp The new ShortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -342,10 +345,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the RequestedBy attribute of the Project object
+   * Sets the RequestedBy attribute of the Project object
    *
-   *@param  tmp  The new RequestedBy value
-   *@since
+   * @param tmp The new RequestedBy value
    */
   public void setRequestedBy(String tmp) {
     this.requestedBy = tmp;
@@ -353,10 +355,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the RequestedByDept attribute of the Project object
+   * Sets the RequestedByDept attribute of the Project object
    *
-   *@param  tmp  The new RequestedByDept value
-   *@since
+   * @param tmp The new RequestedByDept value
    */
   public void setRequestedByDept(String tmp) {
     this.requestedByDept = tmp;
@@ -364,10 +365,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the RequestDate attribute of the Project object
+   * Sets the RequestDate attribute of the Project object
    *
-   *@param  tmp  The new RequestDate value
-   *@since
+   * @param tmp The new RequestDate value
    */
   public void setRequestDate(Timestamp tmp) {
     this.requestDate = tmp;
@@ -375,9 +375,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the requestDate attribute of the Project object
+   * Sets the requestDate attribute of the Project object
    *
-   *@param  tmp  The new requestDate value
+   * @param tmp The new requestDate value
    */
   public void setRequestDate(String tmp) {
     requestDate = DatabaseUtils.parseTimestamp(tmp);
@@ -385,10 +385,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the Approved attribute of the Project object
+   * Sets the Approved attribute of the Project object
    *
-   *@param  tmp  The new Approved value
-   *@since
+   * @param tmp The new Approved value
    */
   public void setApproved(boolean tmp) {
     this.approved = tmp;
@@ -396,9 +395,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the approved attribute of the Project object
+   * Sets the approved attribute of the Project object
    *
-   *@param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(String tmp) {
     approved = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -406,10 +405,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the ApprovalDate attribute of the Project object
+   * Sets the ApprovalDate attribute of the Project object
    *
-   *@param  tmp  The new ApprovalDate value
-   *@since
+   * @param tmp The new ApprovalDate value
    */
   public void setApprovalDate(java.sql.Timestamp tmp) {
     this.approvalDate = tmp;
@@ -417,9 +415,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the approvalDate attribute of the Project object
+   * Sets the approvalDate attribute of the Project object
    *
-   *@param  tmp  The new approvalDate value
+   * @param tmp The new approvalDate value
    */
   public void setApprovalDate(String tmp) {
     approvalDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -427,9 +425,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Project object
+   * Sets the closed attribute of the Project object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(boolean tmp) {
     this.closed = tmp;
@@ -437,9 +435,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Project object
+   * Sets the closed attribute of the Project object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     closed = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -447,9 +445,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the Project object
+   * Sets the closeDate attribute of the Project object
    *
-   *@param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(java.sql.Timestamp tmp) {
     this.closeDate = tmp;
@@ -457,9 +455,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the Project object
+   * Sets the closeDate attribute of the Project object
    *
-   *@param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(String tmp) {
     this.closeDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -467,9 +465,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the estimatedCloseDate attribute of the Project object
+   * Sets the estimatedCloseDate attribute of the Project object
    *
-   *@param  tmp  The new estimatedCloseDate value
+   * @param tmp The new estimatedCloseDate value
    */
   public void setEstimatedCloseDate(Timestamp tmp) {
     this.estimatedCloseDate = tmp;
@@ -477,9 +475,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the estimatedCloseDate attribute of the Project object
+   * Sets the estimatedCloseDate attribute of the Project object
    *
-   *@param  tmp  The new estimatedCloseDate value
+   * @param tmp The new estimatedCloseDate value
    */
   public void setEstimatedCloseDate(String tmp) {
     this.estimatedCloseDate = DatabaseUtils.parseTimestamp(tmp);
@@ -487,9 +485,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the budget attribute of the Project object
+   * Sets the budget attribute of the Project object
    *
-   *@param  tmp  The new budget value
+   * @param tmp The new budget value
    */
   public void setBudget(double tmp) {
     this.budget = tmp;
@@ -497,9 +495,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the budget attribute of the Project object
+   * Sets the budget attribute of the Project object
    *
-   *@param  tmp  The new budget value
+   * @param tmp The new budget value
    */
   public void setBudget(String tmp) {
     this.budget = Double.parseDouble(tmp);
@@ -507,9 +505,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the budgetCurrency attribute of the Project object
+   * Sets the budgetCurrency attribute of the Project object
    *
-   *@param  tmp  The new budgetCurrency value
+   * @param tmp The new budgetCurrency value
    */
   public void setBudgetCurrency(String tmp) {
     this.budgetCurrency = tmp;
@@ -517,9 +515,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Project object
+   * Sets the owner attribute of the Project object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -527,9 +525,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Project object
+   * Sets the owner attribute of the Project object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -537,9 +535,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Project object
+   * Sets the enteredBy attribute of the Project object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -547,9 +545,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Project object
+   * Sets the entered attribute of the Project object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -557,9 +555,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Project object
+   * Sets the entered attribute of the Project object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     entered = tmp;
@@ -567,9 +565,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Project object
+   * Sets the enteredBy attribute of the Project object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -577,9 +575,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Project object
+   * Sets the modified attribute of the Project object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -587,9 +585,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Project object
+   * Sets the modified attribute of the Project object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     modified = tmp;
@@ -597,9 +595,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Project object
+   * Sets the modifiedBy attribute of the Project object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -607,21 +605,19 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Project object
+   * Sets the modifiedBy attribute of the Project object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
-
   /**
-   *  Sets the Requirements attribute of the Project object
+   * Sets the Requirements attribute of the Project object
    *
-   *@param  tmp  The new Requirements value
-   *@since
+   * @param tmp The new Requirements value
    */
   public void setRequirements(RequirementList tmp) {
     this.requirements = tmp;
@@ -629,10 +625,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the Team attribute of the Project object
+   * Sets the Team attribute of the Project object
    *
-   *@param  tmp  The new Team value
-   *@since
+   * @param tmp The new Team value
    */
   public void setTeam(TeamMemberList tmp) {
     this.team = tmp;
@@ -640,9 +635,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the employeeTeam attribute of the Project object
+   * Sets the employeeTeam attribute of the Project object
    *
-   *@param  tmp  The new employeeTeam value
+   * @param tmp The new employeeTeam value
    */
   public void setEmployeeTeam(TeamMemberList tmp) {
     this.employeeTeam = tmp;
@@ -650,9 +645,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the accountContactTeam attribute of the Project object
+   * Sets the accountContactTeam attribute of the Project object
    *
-   *@param  tmp  The new accountContactTeam value
+   * @param tmp The new accountContactTeam value
    */
   public void setAccountContactTeam(TeamMemberList tmp) {
     this.accountContactTeam = tmp;
@@ -660,10 +655,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the Assignments attribute of the Project object
+   * Sets the Assignments attribute of the Project object
    *
-   *@param  tmp  The new Assignments value
-   *@since
+   * @param tmp The new Assignments value
    */
   public void setAssignments(AssignmentList tmp) {
     this.assignments = tmp;
@@ -671,10 +665,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the Issues attribute of the Project object
+   * Sets the Issues attribute of the Project object
    *
-   *@param  tmp  The new Issues value
-   *@since
+   * @param tmp The new Issues value
    */
   public void setIssues(IssueList tmp) {
     this.issues = tmp;
@@ -682,10 +675,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the Files attribute of the Project object
+   * Sets the Files attribute of the Project object
    *
-   *@param  tmp  The new Files value
-   *@since
+   * @param tmp The new Files value
    */
   public void setFiles(FileItemList tmp) {
     this.files = tmp;
@@ -693,9 +685,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the assignmentsForUser attribute of the Project object
+   * Sets the assignmentsForUser attribute of the Project object
    *
-   *@param  tmp  The new assignmentsForUser value
+   * @param tmp The new assignmentsForUser value
    */
   public void setAssignmentsForUser(int tmp) {
     this.assignmentsForUser = tmp;
@@ -703,9 +695,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the lastIssues attribute of the Project object
+   * Sets the lastIssues attribute of the Project object
    *
-   *@param  tmp  The new lastIssues value
+   * @param tmp The new lastIssues value
    */
   public void setLastIssues(int tmp) {
     this.lastIssues = tmp;
@@ -713,9 +705,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the lastNews attribute of the Project object
+   * Sets the lastNews attribute of the Project object
    *
-   *@param  tmp  The new lastNews value
+   * @param tmp The new lastNews value
    */
   public void setLastNews(int tmp) {
     this.lastNews = tmp;
@@ -723,9 +715,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the currentNews attribute of the Project object
+   * Sets the currentNews attribute of the Project object
    *
-   *@param  tmp  The new currentNews value
+   * @param tmp The new currentNews value
    */
   public void setCurrentNews(int tmp) {
     this.currentNews = tmp;
@@ -733,9 +725,43 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the withAssignmentDaysComplete attribute of the Project object
+   * Sets the trashedDate attribute of the Project object
    *
-   *@param  tmp  The new withAssignmentDaysComplete value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the Project object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the Project object
+   *
+   * @return The trashedDate value
+   */
+  public Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+  public boolean isTrashed() {
+    return (trashedDate != null);
+  }
+
+
+  /**
+   * Sets the withAssignmentDaysComplete attribute of the Project object
+   *
+   * @param tmp The new withAssignmentDaysComplete value
    */
   public void setWithAssignmentDaysComplete(int tmp) {
     this.withAssignmentDaysComplete = tmp;
@@ -743,9 +769,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the incompleteAssignmentsOnly attribute of the Project object
+   * Sets the incompleteAssignmentsOnly attribute of the Project object
    *
-   *@param  tmp  The new incompleteAssignmentsOnly value
+   * @param tmp The new incompleteAssignmentsOnly value
    */
   public void setIncompleteAssignmentsOnly(boolean tmp) {
     this.incompleteAssignmentsOnly = tmp;
@@ -753,9 +779,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the assignmentAlertRangeStart attribute of the Project object
+   * Sets the assignmentAlertRangeStart attribute of the Project object
    *
-   *@param  tmp  The new assignmentAlertRangeStart value
+   * @param tmp The new assignmentAlertRangeStart value
    */
   public void setAssignmentAlertRangeStart(java.sql.Timestamp tmp) {
     assignmentAlertRangeStart = tmp;
@@ -763,9 +789,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the assignmentAlertRangeEnd attribute of the Project object
+   * Sets the assignmentAlertRangeEnd attribute of the Project object
    *
-   *@param  tmp  The new assignmentAlertRangeEnd value
+   * @param tmp The new assignmentAlertRangeEnd value
    */
   public void setAssignmentAlertRangeEnd(java.sql.Timestamp tmp) {
     assignmentAlertRangeEnd = tmp;
@@ -773,9 +799,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the buildRequirementAssignments attribute of the Project object
+   * Sets the buildRequirementAssignments attribute of the Project object
    *
-   *@param  tmp  The new buildRequirementAssignments value
+   * @param tmp The new buildRequirementAssignments value
    */
   public void setBuildRequirementAssignments(boolean tmp) {
     this.buildRequirementAssignments = tmp;
@@ -783,9 +809,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portal attribute of the Project object
+   * Sets the portal attribute of the Project object
    *
-   *@param  tmp  The new portal value
+   * @param tmp The new portal value
    */
   public void setPortal(boolean tmp) {
     this.portal = tmp;
@@ -793,9 +819,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portal attribute of the Project object
+   * Sets the portal attribute of the Project object
    *
-   *@param  tmp  The new portal value
+   * @param tmp The new portal value
    */
   public void setPortal(String tmp) {
     this.portal = DatabaseUtils.parseBoolean(tmp);
@@ -803,9 +829,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portalHeader attribute of the Project object
+   * Gets the portalHeader attribute of the Project object
    *
-   *@return    The portalHeader value
+   * @return The portalHeader value
    */
   public String getPortalHeader() {
     return portalHeader;
@@ -813,9 +839,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalHeader attribute of the Project object
+   * Sets the portalHeader attribute of the Project object
    *
-   *@param  tmp  The new portalHeader value
+   * @param tmp The new portalHeader value
    */
   public void setPortalHeader(String tmp) {
     this.portalHeader = tmp;
@@ -823,9 +849,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portalFormat attribute of the Project object
+   * Gets the portalFormat attribute of the Project object
    *
-   *@return    The portalFormat value
+   * @return The portalFormat value
    */
   public String getPortalFormat() {
     return portalFormat;
@@ -833,9 +859,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalFormat attribute of the Project object
+   * Sets the portalFormat attribute of the Project object
    *
-   *@param  tmp  The new portalFormat value
+   * @param tmp The new portalFormat value
    */
   public void setPortalFormat(String tmp) {
     this.portalFormat = tmp;
@@ -843,9 +869,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portalKey attribute of the Project object
+   * Gets the portalKey attribute of the Project object
    *
-   *@return    The portalKey value
+   * @return The portalKey value
    */
   public String getPortalKey() {
     return portalKey;
@@ -853,9 +879,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalKey attribute of the Project object
+   * Sets the portalKey attribute of the Project object
    *
-   *@param  tmp  The new portalKey value
+   * @param tmp The new portalKey value
    */
   public void setPortalKey(String tmp) {
     this.portalKey = tmp;
@@ -863,9 +889,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portalBuildNewsBody attribute of the Project object
+   * Gets the portalBuildNewsBody attribute of the Project object
    *
-   *@return    The portalBuildNewsBody value
+   * @return The portalBuildNewsBody value
    */
   public boolean getPortalBuildNewsBody() {
     return portalBuildNewsBody;
@@ -873,9 +899,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalBuildNewsBody attribute of the Project object
+   * Sets the portalBuildNewsBody attribute of the Project object
    *
-   *@param  tmp  The new portalBuildNewsBody value
+   * @param tmp The new portalBuildNewsBody value
    */
   public void setPortalBuildNewsBody(boolean tmp) {
     this.portalBuildNewsBody = tmp;
@@ -883,9 +909,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalBuildNewsBody attribute of the Project object
+   * Sets the portalBuildNewsBody attribute of the Project object
    *
-   *@param  tmp  The new portalBuildNewsBody value
+   * @param tmp The new portalBuildNewsBody value
    */
   public void setPortalBuildNewsBody(String tmp) {
     this.portalBuildNewsBody = DatabaseUtils.parseBoolean(tmp);
@@ -893,9 +919,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portalNewsMenu attribute of the Project object
+   * Gets the portalNewsMenu attribute of the Project object
    *
-   *@return    The portalNewsMenu value
+   * @return The portalNewsMenu value
    */
   public boolean getPortalNewsMenu() {
     return portalNewsMenu;
@@ -903,9 +929,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalNewsMenu attribute of the Project object
+   * Sets the portalNewsMenu attribute of the Project object
    *
-   *@param  tmp  The new portalNewsMenu value
+   * @param tmp The new portalNewsMenu value
    */
   public void setPortalNewsMenu(boolean tmp) {
     this.portalNewsMenu = tmp;
@@ -913,9 +939,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalNewsMenu attribute of the Project object
+   * Sets the portalNewsMenu attribute of the Project object
    *
-   *@param  tmp  The new portalNewsMenu value
+   * @param tmp The new portalNewsMenu value
    */
   public void setPortalNewsMenu(String tmp) {
     this.portalNewsMenu = DatabaseUtils.parseBoolean(tmp);
@@ -923,9 +949,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portalPageType attribute of the Project object
+   * Gets the portalPageType attribute of the Project object
    *
-   *@return    The portalPageType value
+   * @return The portalPageType value
    */
   public int getPortalPageType() {
     return portalPageType;
@@ -933,9 +959,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalPageType attribute of the Project object
+   * Sets the portalPageType attribute of the Project object
    *
-   *@param  tmp  The new portalPageType value
+   * @param tmp The new portalPageType value
    */
   public void setPortalPageType(int tmp) {
     this.portalPageType = tmp;
@@ -943,9 +969,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the portalPageType attribute of the Project object
+   * Sets the portalPageType attribute of the Project object
    *
-   *@param  tmp  The new portalPageType value
+   * @param tmp The new portalPageType value
    */
   public void setPortalPageType(String tmp) {
     this.portalPageType = Integer.parseInt(tmp);
@@ -953,9 +979,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the allowGuests attribute of the Project object
+   * Sets the allowGuests attribute of the Project object
    *
-   *@param  tmp  The new allowGuests value
+   * @param tmp The new allowGuests value
    */
   public void setAllowGuests(boolean tmp) {
     this.allowGuests = tmp;
@@ -963,9 +989,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the allowGuests attribute of the Project object
+   * Sets the allowGuests attribute of the Project object
    *
-   *@param  tmp  The new allowGuests value
+   * @param tmp The new allowGuests value
    */
   public void setAllowGuests(String tmp) {
     this.allowGuests = DatabaseUtils.parseBoolean(tmp);
@@ -973,9 +999,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the updateAllowGuests attribute of the Project object
+   * Sets the updateAllowGuests attribute of the Project object
    *
-   *@param  tmp  The new updateAllowGuests value
+   * @param tmp The new updateAllowGuests value
    */
   public void setUpdateAllowGuests(boolean tmp) {
     this.updateAllowGuests = tmp;
@@ -983,9 +1009,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the allowsUserObservers attribute of the Project object
+   * Gets the allowsUserObservers attribute of the Project object
    *
-   *@return    The allowsUserObservers value
+   * @return The allowsUserObservers value
    */
   public boolean getAllowsUserObservers() {
     return allowsUserObservers;
@@ -993,9 +1019,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the allowsUserObservers attribute of the Project object
+   * Sets the allowsUserObservers attribute of the Project object
    *
-   *@param  tmp  The new allowsUserObservers value
+   * @param tmp The new allowsUserObservers value
    */
   public void setAllowsUserObservers(boolean tmp) {
     this.allowsUserObservers = tmp;
@@ -1003,9 +1029,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the allowsUserObservers attribute of the Project object
+   * Sets the allowsUserObservers attribute of the Project object
    *
-   *@param  tmp  The new allowsUserObservers value
+   * @param tmp The new allowsUserObservers value
    */
   public void setAllowsUserObservers(String tmp) {
     this.allowsUserObservers = DatabaseUtils.parseBoolean(tmp);
@@ -1013,9 +1039,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showCalendar attribute of the Project object
+   * Sets the showCalendar attribute of the Project object
    *
-   *@param  tmp  The new showCalendar value
+   * @param tmp The new showCalendar value
    */
   public void setShowCalendar(boolean tmp) {
     this.showCalendar = tmp;
@@ -1023,9 +1049,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showCalendar attribute of the Project object
+   * Sets the showCalendar attribute of the Project object
    *
-   *@param  tmp  The new showCalendar value
+   * @param tmp The new showCalendar value
    */
   public void setShowCalendar(String tmp) {
     this.showCalendar = DatabaseUtils.parseBoolean(tmp);
@@ -1033,9 +1059,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showNews attribute of the Project object
+   * Sets the showNews attribute of the Project object
    *
-   *@param  tmp  The new showNews value
+   * @param tmp The new showNews value
    */
   public void setShowNews(boolean tmp) {
     this.showNews = tmp;
@@ -1043,9 +1069,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showNews attribute of the Project object
+   * Sets the showNews attribute of the Project object
    *
-   *@param  tmp  The new showNews value
+   * @param tmp The new showNews value
    */
   public void setShowNews(String tmp) {
     this.showNews = DatabaseUtils.parseBoolean(tmp);
@@ -1053,9 +1079,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showDetails attribute of the Project object
+   * Sets the showDetails attribute of the Project object
    *
-   *@param  tmp  The new showDetails value
+   * @param tmp The new showDetails value
    */
   public void setShowDetails(boolean tmp) {
     this.showDetails = tmp;
@@ -1063,9 +1089,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showDetails attribute of the Project object
+   * Sets the showDetails attribute of the Project object
    *
-   *@param  tmp  The new showDetails value
+   * @param tmp The new showDetails value
    */
   public void setShowDetails(String tmp) {
     this.showDetails = DatabaseUtils.parseBoolean(tmp);
@@ -1073,9 +1099,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showTeam attribute of the Project object
+   * Sets the showTeam attribute of the Project object
    *
-   *@param  tmp  The new showTeam value
+   * @param tmp The new showTeam value
    */
   public void setShowTeam(boolean tmp) {
     this.showTeam = tmp;
@@ -1083,26 +1109,39 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showTeam attribute of the Project object
+   * Sets the showTeam attribute of the Project object
    *
-   *@param  tmp  The new showTeam value
+   * @param tmp The new showTeam value
    */
   public void setShowTeam(String tmp) {
     this.showTeam = DatabaseUtils.parseBoolean(tmp);
   }
 
+
+  /**
+   * Sets the showAccounts attribute of the Project object
+   *
+   * @param showAccounts The new showAccounts value
+   */
   public void setShowAccounts(boolean showAccounts) {
     this.showAccounts = showAccounts;
   }
 
+
+  /**
+   * Sets the showAccounts attribute of the Project object
+   *
+   * @param tmp The new showAccounts value
+   */
   public void setShowAccounts(String tmp) {
     this.showAccounts = DatabaseUtils.parseBoolean(tmp);
   }
 
+
   /**
-   *  Sets the showPlan attribute of the Project object
+   * Sets the showPlan attribute of the Project object
    *
-   *@param  tmp  The new showPlan value
+   * @param tmp The new showPlan value
    */
   public void setShowPlan(boolean tmp) {
     this.showPlan = tmp;
@@ -1110,9 +1149,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showPlan attribute of the Project object
+   * Sets the showPlan attribute of the Project object
    *
-   *@param  tmp  The new showPlan value
+   * @param tmp The new showPlan value
    */
   public void setShowPlan(String tmp) {
     this.showPlan = DatabaseUtils.parseBoolean(tmp);
@@ -1120,9 +1159,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showLists attribute of the Project object
+   * Sets the showLists attribute of the Project object
    *
-   *@param  tmp  The new showLists value
+   * @param tmp The new showLists value
    */
   public void setShowLists(boolean tmp) {
     this.showLists = tmp;
@@ -1130,9 +1169,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showLists attribute of the Project object
+   * Sets the showLists attribute of the Project object
    *
-   *@param  tmp  The new showLists value
+   * @param tmp The new showLists value
    */
   public void setShowLists(String tmp) {
     this.showLists = DatabaseUtils.parseBoolean(tmp);
@@ -1140,9 +1179,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showDiscussion attribute of the Project object
+   * Sets the showDiscussion attribute of the Project object
    *
-   *@param  tmp  The new showDiscussion value
+   * @param tmp The new showDiscussion value
    */
   public void setShowDiscussion(boolean tmp) {
     this.showDiscussion = tmp;
@@ -1150,9 +1189,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showDiscussion attribute of the Project object
+   * Sets the showDiscussion attribute of the Project object
    *
-   *@param  tmp  The new showDiscussion value
+   * @param tmp The new showDiscussion value
    */
   public void setShowDiscussion(String tmp) {
     this.showDiscussion = DatabaseUtils.parseBoolean(tmp);
@@ -1160,9 +1199,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showTickets attribute of the Project object
+   * Sets the showTickets attribute of the Project object
    *
-   *@param  tmp  The new showTickets value
+   * @param tmp The new showTickets value
    */
   public void setShowTickets(boolean tmp) {
     this.showTickets = tmp;
@@ -1170,9 +1209,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showTickets attribute of the Project object
+   * Sets the showTickets attribute of the Project object
    *
-   *@param  tmp  The new showTickets value
+   * @param tmp The new showTickets value
    */
   public void setShowTickets(String tmp) {
     this.showTickets = DatabaseUtils.parseBoolean(tmp);
@@ -1180,9 +1219,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showDocuments attribute of the Project object
+   * Sets the showDocuments attribute of the Project object
    *
-   *@param  tmp  The new showDocuments value
+   * @param tmp The new showDocuments value
    */
   public void setShowDocuments(boolean tmp) {
     this.showDocuments = tmp;
@@ -1190,9 +1229,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the showDocuments attribute of the Project object
+   * Sets the showDocuments attribute of the Project object
    *
-   *@param  tmp  The new showDocuments value
+   * @param tmp The new showDocuments value
    */
   public void setShowDocuments(String tmp) {
     this.showDocuments = DatabaseUtils.parseBoolean(tmp);
@@ -1200,9 +1239,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelCalendar attribute of the Project object
+   * Sets the labelCalendar attribute of the Project object
    *
-   *@param  tmp  The new labelCalendar value
+   * @param tmp The new labelCalendar value
    */
   public void setLabelCalendar(String tmp) {
     this.labelCalendar = tmp;
@@ -1210,9 +1249,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelNews attribute of the Project object
+   * Sets the labelNews attribute of the Project object
    *
-   *@param  tmp  The new labelNews value
+   * @param tmp The new labelNews value
    */
   public void setLabelNews(String tmp) {
     this.labelNews = tmp;
@@ -1220,9 +1259,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelDetails attribute of the Project object
+   * Sets the labelDetails attribute of the Project object
    *
-   *@param  tmp  The new labelDetails value
+   * @param tmp The new labelDetails value
    */
   public void setLabelDetails(String tmp) {
     this.labelDetails = tmp;
@@ -1230,24 +1269,29 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelTeam attribute of the Project object
+   * Sets the labelTeam attribute of the Project object
    *
-   *@param  tmp  The new labelTeam value
+   * @param tmp The new labelTeam value
    */
   public void setLabelTeam(String tmp) {
     this.labelTeam = tmp;
   }
 
 
+  /**
+   * Sets the labelAccounts attribute of the Project object
+   *
+   * @param tmp The new labelAccounts value
+   */
   public void setLabelAccounts(String tmp) {
     this.labelAccounts = tmp;
   }
 
 
   /**
-   *  Sets the labelPlan attribute of the Project object
+   * Sets the labelPlan attribute of the Project object
    *
-   *@param  tmp  The new labelPlan value
+   * @param tmp The new labelPlan value
    */
   public void setLabelPlan(String tmp) {
     this.labelPlan = tmp;
@@ -1255,9 +1299,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelLists attribute of the Project object
+   * Sets the labelLists attribute of the Project object
    *
-   *@param  tmp  The new labelLists value
+   * @param tmp The new labelLists value
    */
   public void setLabelLists(String tmp) {
     this.labelLists = tmp;
@@ -1265,9 +1309,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelDiscussion attribute of the Project object
+   * Sets the labelDiscussion attribute of the Project object
    *
-   *@param  tmp  The new labelDiscussion value
+   * @param tmp The new labelDiscussion value
    */
   public void setLabelDiscussion(String tmp) {
     this.labelDiscussion = tmp;
@@ -1275,9 +1319,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelTickets attribute of the Project object
+   * Sets the labelTickets attribute of the Project object
    *
-   *@param  tmp  The new labelTickets value
+   * @param tmp The new labelTickets value
    */
   public void setLabelTickets(String tmp) {
     this.labelTickets = tmp;
@@ -1285,9 +1329,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the labelDocuments attribute of the Project object
+   * Sets the labelDocuments attribute of the Project object
    *
-   *@param  tmp  The new labelDocuments value
+   * @param tmp The new labelDocuments value
    */
   public void setLabelDocuments(String tmp) {
     this.labelDocuments = tmp;
@@ -1295,9 +1339,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the requestDateTimeZone attribute of the Project object
+   * Sets the requestDateTimeZone attribute of the Project object
    *
-   *@param  tmp  The new requestDateTimeZone value
+   * @param tmp The new requestDateTimeZone value
    */
   public void setRequestDateTimeZone(String tmp) {
     this.requestDateTimeZone = tmp;
@@ -1305,9 +1349,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Sets the estimatedCloseDate attribute of the Project object
+   * Sets the estimatedCloseDate attribute of the Project object
    *
-   *@param  tmp  The new estimatedCloseDate value
+   * @param tmp The new estimatedCloseDate value
    */
   public void setEstimatedCloseDateTimeZone(String tmp) {
     this.estimatedCloseDateTimeZone = tmp;
@@ -1315,9 +1359,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the requestDateTimeZone attribute of the Project object
+   * Gets the requestDateTimeZone attribute of the Project object
    *
-   *@return    The requestDateTimeZone value
+   * @return The requestDateTimeZone value
    */
   public String getRequestDateTimeZone() {
     return requestDateTimeZone;
@@ -1325,9 +1369,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the estimatedCloseDate attribute of the Project object
+   * Gets the estimatedCloseDate attribute of the Project object
    *
-   *@return    The estimatedCloseDate value
+   * @return The estimatedCloseDate value
    */
   public String getEstimatedCloseDateTimeZone() {
     return estimatedCloseDateTimeZone;
@@ -1335,10 +1379,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Project object
+   * Gets the Id attribute of the Project object
    *
-   *@return    The Id value
-   *@since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -1346,10 +1389,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the GroupId attribute of the Project object
+   * Gets the GroupId attribute of the Project object
    *
-   *@return    The GroupId value
-   *@since
+   * @return The GroupId value
    */
   public int getGroupId() {
     return groupId;
@@ -1357,10 +1399,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the DepartmentId attribute of the Project object
+   * Gets the DepartmentId attribute of the Project object
    *
-   *@return    The DepartmentId value
-   *@since
+   * @return The DepartmentId value
    */
   public int getDepartmentId() {
     return departmentId;
@@ -1368,9 +1409,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the Project object
+   * Gets the categoryId attribute of the Project object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -1378,9 +1419,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the templateId attribute of the Project object
+   * Gets the templateId attribute of the Project object
    *
-   *@return    The templateId value
+   * @return The templateId value
    */
   public int getTemplateId() {
     return templateId;
@@ -1388,10 +1429,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Title attribute of the Project object
+   * Gets the Title attribute of the Project object
    *
-   *@return    The Title value
-   *@since
+   * @return The Title value
    */
   public String getTitle() {
     return title;
@@ -1399,10 +1439,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the ShortDescription attribute of the Project object
+   * Gets the ShortDescription attribute of the Project object
    *
-   *@return    The ShortDescription value
-   *@since
+   * @return The ShortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -1410,10 +1449,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the RequestedBy attribute of the Project object
+   * Gets the RequestedBy attribute of the Project object
    *
-   *@return    The RequestedBy value
-   *@since
+   * @return The RequestedBy value
    */
   public String getRequestedBy() {
     return requestedBy;
@@ -1421,10 +1459,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the RequestedByString attribute of the Project object
+   * Gets the RequestedByString attribute of the Project object
    *
-   *@return    The RequestedByString value
-   *@since
+   * @return The RequestedByString value
    */
   public String getRequestedByString() {
     if ((requestedBy == null) || (requestedBy.equals(""))) {
@@ -1436,10 +1473,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the RequestedByDept attribute of the Project object
+   * Gets the RequestedByDept attribute of the Project object
    *
-   *@return    The RequestedByDept value
-   *@since
+   * @return The RequestedByDept value
    */
   public String getRequestedByDept() {
     return requestedByDept;
@@ -1447,10 +1483,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the RequestedByDeptString attribute of the Project object
+   * Gets the RequestedByDeptString attribute of the Project object
    *
-   *@return    The RequestedByDeptString value
-   *@since
+   * @return The RequestedByDeptString value
    */
   public String getRequestedByDeptString() {
     if (requestedByDept == null || requestedByDept.equals("")) {
@@ -1462,10 +1497,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the RequestDate attribute of the Project object
+   * Gets the RequestDate attribute of the Project object
    *
-   *@return    The RequestDate value
-   *@since
+   * @return The RequestDate value
    */
   public Timestamp getRequestDate() {
     return requestDate;
@@ -1473,10 +1507,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the RequestDateString attribute of the Project object
+   * Gets the RequestDateString attribute of the Project object
    *
-   *@return    The RequestDateString value
-   *@since
+   * @return The RequestDateString value
    */
   public String getRequestDateString() {
     try {
@@ -1488,9 +1521,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the closeDateString attribute of the Project object
+   * Gets the closeDateString attribute of the Project object
    *
-   *@return    The closeDateString value
+   * @return The closeDateString value
    */
   public String getCloseDateString() {
     try {
@@ -1502,9 +1535,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the estimatedCloseDate attribute of the Project object
+   * Gets the estimatedCloseDate attribute of the Project object
    *
-   *@return    The estimatedCloseDate value
+   * @return The estimatedCloseDate value
    */
   public Timestamp getEstimatedCloseDate() {
     return estimatedCloseDate;
@@ -1512,9 +1545,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the budget attribute of the Project object
+   * Gets the budget attribute of the Project object
    *
-   *@return    The budget value
+   * @return The budget value
    */
   public double getBudget() {
     return budget;
@@ -1522,9 +1555,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the budgetCurrency attribute of the Project object
+   * Gets the budgetCurrency attribute of the Project object
    *
-   *@return    The budgetCurrency value
+   * @return The budgetCurrency value
    */
   public String getBudgetCurrency() {
     return budgetCurrency;
@@ -1532,10 +1565,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Approved attribute of the Project object
+   * Gets the Approved attribute of the Project object
    *
-   *@return    The Approved value
-   *@since
+   * @return The Approved value
    */
   public boolean getApproved() {
     return approved;
@@ -1543,10 +1575,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the ApprovedString attribute of the Project object
+   * Gets the ApprovedString attribute of the Project object
    *
-   *@return    The ApprovedString value
-   *@since
+   * @return The ApprovedString value
    */
   public String getApprovedString() {
     if (approvalDate == null) {
@@ -1558,10 +1589,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the ApprovalDate attribute of the Project object
+   * Gets the ApprovalDate attribute of the Project object
    *
-   *@return    The ApprovalDate value
-   *@since
+   * @return The ApprovalDate value
    */
   public java.sql.Timestamp getApprovalDate() {
     return approvalDate;
@@ -1569,9 +1599,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the Project object
+   * Gets the closed attribute of the Project object
    *
-   *@return    The closed value
+   * @return The closed value
    */
   public boolean getClosed() {
     return closed;
@@ -1579,10 +1609,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the CloseDate attribute of the Project object
+   * Gets the CloseDate attribute of the Project object
    *
-   *@return    The CloseDate value
-   *@since
+   * @return The CloseDate value
    */
   public java.sql.Timestamp getCloseDate() {
     return closeDate;
@@ -1590,9 +1619,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Project object
+   * Gets the entered attribute of the Project object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -1600,9 +1629,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the Project object
+   * Gets the owner attribute of the Project object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -1610,9 +1639,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Project object
+   * Gets the enteredBy attribute of the Project object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1620,9 +1649,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Project object
+   * Gets the modified attribute of the Project object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -1630,21 +1659,19 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Project object
+   * Gets the modifiedBy attribute of the Project object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
   }
 
 
-
   /**
-   *  Gets the Requirements attribute of the Project object
+   * Gets the Requirements attribute of the Project object
    *
-   *@return    The Requirements value
-   *@since
+   * @return The Requirements value
    */
   public RequirementList getRequirements() {
     return requirements;
@@ -1652,10 +1679,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Team attribute of the Project object
+   * Gets the Team attribute of the Project object
    *
-   *@return    The Team value
-   *@since
+   * @return The Team value
    */
   public TeamMemberList getTeam() {
     return team;
@@ -1663,9 +1689,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the employeeTeam attribute of the Project object
+   * Gets the employeeTeam attribute of the Project object
    *
-   *@return    The employeeTeam value
+   * @return The employeeTeam value
    */
   public TeamMemberList getEmployeeTeam() {
     return employeeTeam;
@@ -1673,9 +1699,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the accountContactTeam attribute of the Project object
+   * Gets the accountContactTeam attribute of the Project object
    *
-   *@return    The accountContactTeam value
+   * @return The accountContactTeam value
    */
   public TeamMemberList getAccountContactTeam() {
     return accountContactTeam;
@@ -1683,10 +1709,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Assignments attribute of the Project object
+   * Gets the Assignments attribute of the Project object
    *
-   *@return    The Assignments value
-   *@since
+   * @return The Assignments value
    */
   public AssignmentList getAssignments() {
     return assignments;
@@ -1694,10 +1719,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the AssignmentCount attribute of the Project object
+   * Gets the AssignmentCount attribute of the Project object
    *
-   *@return    The AssignmentCount value
-   *@since
+   * @return The AssignmentCount value
    */
   public int getAssignmentCount() {
     return assignments.size();
@@ -1705,10 +1729,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Issues attribute of the Project object
+   * Gets the Issues attribute of the Project object
    *
-   *@return    The Issues value
-   *@since
+   * @return The Issues value
    */
   public IssueList getIssues() {
     return issues;
@@ -1716,9 +1739,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the news attribute of the Project object
+   * Gets the news attribute of the Project object
    *
-   *@return    The news value
+   * @return The news value
    */
   public NewsArticleList getNews() {
     return news;
@@ -1726,9 +1749,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the issueCategories attribute of the Project object
+   * Gets the issueCategories attribute of the Project object
    *
-   *@return    The issueCategories value
+   * @return The issueCategories value
    */
   public IssueCategoryList getIssueCategories() {
     return issueCategories;
@@ -1736,10 +1759,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the IssueCount attribute of the Project object
+   * Gets the IssueCount attribute of the Project object
    *
-   *@return    The IssueCount value
-   *@since
+   * @return The IssueCount value
    */
   public int getIssueCount() {
     return issues.size();
@@ -1747,9 +1769,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the newsCount attribute of the Project object
+   * Gets the newsCount attribute of the Project object
    *
-   *@return    The newsCount value
+   * @return The newsCount value
    */
   public int getNewsCount() {
     return news.size();
@@ -1757,10 +1779,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the Files attribute of the Project object
+   * Gets the Files attribute of the Project object
    *
-   *@return    The Files value
-   *@since
+   * @return The Files value
    */
   public FileItemList getFiles() {
     return files;
@@ -1768,9 +1789,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the paddedId attribute of the Project object
+   * Gets the paddedId attribute of the Project object
    *
-   *@return    The paddedId value
+   * @return The paddedId value
    */
   public String getPaddedId() {
     String padded = (String.valueOf(id));
@@ -1782,9 +1803,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the portal attribute of the Project object
+   * Gets the portal attribute of the Project object
    *
-   *@return    The portal value
+   * @return The portal value
    */
   public boolean getPortal() {
     return portal;
@@ -1792,9 +1813,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the allowGuests attribute of the Project object
+   * Gets the allowGuests attribute of the Project object
    *
-   *@return    The allowGuests value
+   * @return The allowGuests value
    */
   public boolean getAllowGuests() {
     return allowGuests;
@@ -1802,9 +1823,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the updateAllowGuests attribute of the Project object
+   * Gets the updateAllowGuests attribute of the Project object
    *
-   *@return    The updateAllowGuests value
+   * @return The updateAllowGuests value
    */
   public boolean getUpdateAllowGuests() {
     return updateAllowGuests;
@@ -1812,9 +1833,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showCalendar attribute of the Project object
+   * Gets the showCalendar attribute of the Project object
    *
-   *@return    The showCalendar value
+   * @return The showCalendar value
    */
   public boolean getShowCalendar() {
     return showCalendar;
@@ -1822,9 +1843,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showNews attribute of the Project object
+   * Gets the showNews attribute of the Project object
    *
-   *@return    The showNews value
+   * @return The showNews value
    */
   public boolean getShowNews() {
     return showNews;
@@ -1832,9 +1853,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showDetails attribute of the Project object
+   * Gets the showDetails attribute of the Project object
    *
-   *@return    The showDetails value
+   * @return The showDetails value
    */
   public boolean getShowDetails() {
     return showDetails;
@@ -1842,22 +1863,29 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showTeam attribute of the Project object
+   * Gets the showTeam attribute of the Project object
    *
-   *@return    The showTeam value
+   * @return The showTeam value
    */
   public boolean getShowTeam() {
     return showTeam;
   }
 
+
+  /**
+   * Gets the showAccounts attribute of the Project object
+   *
+   * @return The showAccounts value
+   */
   public boolean getShowAccounts() {
     return showAccounts;
   }
 
+
   /**
-   *  Gets the showPlan attribute of the Project object
+   * Gets the showPlan attribute of the Project object
    *
-   *@return    The showPlan value
+   * @return The showPlan value
    */
   public boolean getShowPlan() {
     return showPlan;
@@ -1865,9 +1893,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showLists attribute of the Project object
+   * Gets the showLists attribute of the Project object
    *
-   *@return    The showLists value
+   * @return The showLists value
    */
   public boolean getShowLists() {
     return showLists;
@@ -1875,9 +1903,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showDiscussion attribute of the Project object
+   * Gets the showDiscussion attribute of the Project object
    *
-   *@return    The showDiscussion value
+   * @return The showDiscussion value
    */
   public boolean getShowDiscussion() {
     return showDiscussion;
@@ -1885,9 +1913,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showTickets attribute of the Project object
+   * Gets the showTickets attribute of the Project object
    *
-   *@return    The showTickets value
+   * @return The showTickets value
    */
   public boolean getShowTickets() {
     return showTickets;
@@ -1895,9 +1923,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the showDocuments attribute of the Project object
+   * Gets the showDocuments attribute of the Project object
    *
-   *@return    The showDocuments value
+   * @return The showDocuments value
    */
   public boolean getShowDocuments() {
     return showDocuments;
@@ -1905,9 +1933,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelNews attribute of the Project object
+   * Gets the labelNews attribute of the Project object
    *
-   *@return    The labelNews value
+   * @return The labelNews value
    */
   public String getLabelNews() {
     return labelNews;
@@ -1915,9 +1943,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelDetails attribute of the Project object
+   * Gets the labelDetails attribute of the Project object
    *
-   *@return    The labelDetails value
+   * @return The labelDetails value
    */
   public String getLabelDetails() {
     return labelDetails;
@@ -1925,22 +1953,29 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelTeam attribute of the Project object
+   * Gets the labelTeam attribute of the Project object
    *
-   *@return    The labelTeam value
+   * @return The labelTeam value
    */
   public String getLabelTeam() {
     return labelTeam;
   }
 
+
+  /**
+   * Gets the labelAccounts attribute of the Project object
+   *
+   * @return The labelAccounts value
+   */
   public String getLabelAccounts() {
     return labelAccounts;
   }
 
+
   /**
-   *  Gets the labelPlan attribute of the Project object
+   * Gets the labelPlan attribute of the Project object
    *
-   *@return    The labelPlan value
+   * @return The labelPlan value
    */
   public String getLabelPlan() {
     return labelPlan;
@@ -1948,9 +1983,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelLists attribute of the Project object
+   * Gets the labelLists attribute of the Project object
    *
-   *@return    The labelLists value
+   * @return The labelLists value
    */
   public String getLabelLists() {
     return labelLists;
@@ -1958,9 +1993,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelDiscussion attribute of the Project object
+   * Gets the labelDiscussion attribute of the Project object
    *
-   *@return    The labelDiscussion value
+   * @return The labelDiscussion value
    */
   public String getLabelDiscussion() {
     return labelDiscussion;
@@ -1968,9 +2003,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelTickets attribute of the Project object
+   * Gets the labelTickets attribute of the Project object
    *
-   *@return    The labelTickets value
+   * @return The labelTickets value
    */
   public String getLabelTickets() {
     return labelTickets;
@@ -1978,29 +2013,41 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the labelDocuments attribute of the Project object
+   * Gets the labelDocuments attribute of the Project object
    *
-   *@return    The labelDocuments value
+   * @return The labelDocuments value
    */
   public String getLabelDocuments() {
     return labelDocuments;
   }
 
+
+  /**
+   * Gets the hasAccess attribute of the Project object
+   *
+   * @return The hasAccess value
+   */
   public boolean getHasAccess() {
     return hasAccess;
   }
 
+
+  /**
+   * Sets the hasAccess attribute of the Project object
+   *
+   * @param hasAccess The new hasAccess value
+   */
   public void setHasAccess(boolean hasAccess) {
     this.hasAccess = hasAccess;
   }
 
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int buildAssignmentList(Connection db) throws SQLException {
     assignments.setProject(this);
@@ -2016,12 +2063,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int buildIssueList(Connection db) throws SQLException {
     return buildIssueList(db, -1);
@@ -2029,12 +2075,12 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  issueCategoryId        Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db              Description of Parameter
+   * @param issueCategoryId Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int buildIssueList(Connection db, int issueCategoryId) throws SQLException {
     //issues = new IssueList();
@@ -2048,11 +2094,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int buildNewsList(Connection db) throws SQLException {
     news.setProjectId(this.getId());
@@ -2064,11 +2110,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int buildIssueCategoryList(Connection db) throws SQLException {
     issueCategories.setProject(this);
@@ -2079,11 +2125,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int buildRequirementList(Connection db) throws SQLException {
     requirements.setProject(this);
@@ -2095,10 +2141,10 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildTeamMemberList(Connection db) throws SQLException {
     team.setProject(this);
@@ -2118,11 +2164,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int buildFileItemList(Connection db) throws SQLException {
     files.setLinkModuleId(Constants.PROJECTS_FILES);
@@ -2136,11 +2182,11 @@ public class Project extends GenericBean {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int buildPermissionList(Connection db) throws SQLException {
     permissions.setProjectId(this.getId());
@@ -2150,12 +2196,12 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     //TODO: Retrieve user information from the session to be used
@@ -2164,11 +2210,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     Exception errorMessage = null;
@@ -2178,28 +2224,37 @@ public class Project extends GenericBean {
         db.setAutoCommit(false);
       }
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "projects_project_id_seq");
       sql.append(
           "INSERT INTO projects " +
           "(group_id, department_id, category_id, owner, enteredBy, modifiedBy, template_id, ");
+      if (id > -1) {
+        sql.append("project_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone, " +
+      sql.append(
+          "title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone, " +
           "allow_guests, calendar_enabled, news_enabled, details_enabled, " +
           "team_enabled, accounts_enabled, plan_enabled, lists_enabled, discussion_enabled, " +
           "tickets_enabled, documents_enabled, " +
           "approvalDate, closeDate, est_closedate, est_closedate_timezone, budget, budget_currency) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?,");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+      sql.append(
+          "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -2210,6 +2265,9 @@ public class Project extends GenericBean {
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
       DatabaseUtils.setInt(pst, ++i, templateId);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2259,7 +2317,7 @@ public class Project extends GenericBean {
       pst.setString(++i, budgetCurrency);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "projects_project_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "projects_project_id_seq", id);
       //Insert the default permissions
       PermissionList.insertDefaultPermissions(db, id);
       TicketList.insertProjectTicketCount(db, id);
@@ -2333,12 +2391,75 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  basePath          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    int resultCount = 0;
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    int count = 0;
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      sql.append(
+          "UPDATE projects " +
+          "SET trashed_date = ? , " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "modifiedby = ? " +
+          "WHERE project_id = ? ");
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      if (toTrash) {
+        DatabaseUtils.setTimestamp(
+            pst, ++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+      }
+      DatabaseUtils.setInt(pst, ++i, tmpUserId);
+      pst.setInt(++i, this.id);
+      pst.executeUpdate();
+
+      TicketList ticketList = new TicketList();
+      ticketList.setProjectId(this.getId());
+      if (!toTrash) {
+        ticketList.setIncludeOnlyTrashed(true);
+      }
+      ticketList.buildList(db);
+      ticketList.updateStatus(db, toTrash, tmpUserId);
+
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db       Description of the Parameter
+   * @param basePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String basePath) throws SQLException {
     if (this.getId() == -1) {
@@ -2354,6 +2475,13 @@ public class Project extends GenericBean {
 
       TicketList tickets = new TicketList();
       tickets.setProjectId(id);
+      tickets.buildList(db);
+      tickets.delete(db, basePath);
+      tickets = null;
+
+      tickets = new TicketList();
+      tickets.setProjectId(id);
+      tickets.setIncludeOnlyTrashed(true);
       tickets.buildList(db);
       tickets.delete(db, basePath);
       tickets = null;
@@ -2375,7 +2503,7 @@ public class Project extends GenericBean {
       requirements = null;
 
       buildFileItemList(db);
-      files.delete(db, basePath);
+      files.delete(db, getFileLibraryPath(basePath, "projects"));
       files = null;
 
       FileFolderList folders = new FileFolderList();
@@ -2389,6 +2517,9 @@ public class Project extends GenericBean {
       NewsArticleCategoryList.delete(db, id);
       PermissionList.delete(db, id);
 
+      //Remove related accounts
+      ProjectUtils.removeAccountsFromProject(db, this.id);
+      
       //Delete the actual project
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM projects " +
@@ -2412,12 +2543,12 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     return update(db);
@@ -2425,11 +2556,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2510,11 +2641,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateFeatures(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2584,10 +2715,10 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("project_id");
@@ -2643,6 +2774,7 @@ public class Project extends GenericBean {
     labelCalendar = rs.getString("calendar_label");
     showAccounts = rs.getBoolean("accounts_enabled");
     labelAccounts = rs.getString("accounts_label");
+    trashedDate = rs.getTimestamp("trashed_date");
     //Set the related objects
     requirements.setProject(this);
     requirements.setProjectId(this.getId());
@@ -2661,10 +2793,10 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the accessUserLevel attribute of the Project object
+   * Gets the accessUserLevel attribute of the Project object
    *
-   *@param  permission  Description of the Parameter
-   *@return             The accessUserLevel value
+   * @param permission Description of the Parameter
+   * @return The accessUserLevel value
    */
   public int getAccessUserLevel(String permission) {
     return permissions.getAccessLevel(permission);
@@ -2672,10 +2804,10 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the label attribute of the Project object
+   * Gets the label attribute of the Project object
    *
-   *@param  name  Description of the Parameter
-   *@return       The label value
+   * @param name Description of the Parameter
+   * @return The label value
    */
   public String getLabel(String name) {
     String value = name;
@@ -2688,11 +2820,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void accept(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -2711,11 +2843,11 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void reject(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -2734,9 +2866,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  The following fields depend on a timezone preference
+   * The following fields depend on a timezone preference
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -2747,9 +2879,9 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the Project class
+   * Gets the numberParams attribute of the Project class
    *
-   *@return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();

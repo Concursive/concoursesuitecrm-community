@@ -17,19 +17,28 @@ package org.aspcfs.modules.admin.actions;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import org.aspcfs.apps.workFlowManager.BusinessProcessImporter;
+import org.aspcfs.apps.workFlowManager.BusinessProcessList;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.controller.objectHookManager.ObjectHookList;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.service.base.Record;
 import org.aspcfs.modules.service.base.RecordList;
 import org.aspcfs.modules.service.base.TransactionStatus;
 import org.aspcfs.modules.setup.beans.UpdateBean;
 import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.CountrySelect;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.StateSelect;
 import sun.misc.BASE64Encoder;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -57,6 +66,17 @@ public final class AdminConfig extends CFSModule {
       // get this company's name, always org_id 0
       Organization myCompany = new Organization(db, 0);
       context.getRequest().setAttribute("myCompany", myCompany);
+      // Get the number of events and the number of processes in the system
+      BusinessProcessList processList = new BusinessProcessList();
+      processList.setEnabled(Constants.TRUE);
+      processList.buildList(db);
+      ObjectHookList hookList = new ObjectHookList();
+      hookList.setEnabled(Constants.TRUE);
+      hookList.buildList(db);
+      context.getRequest().setAttribute(
+          "processes", "" + processList.values().size());
+      context.getRequest().setAttribute(
+          "hooks", "" + hookList.getSizeOfActions());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -150,6 +170,14 @@ public final class AdminConfig extends CFSModule {
         LookupList emailTypeList = systemStatus.getLookupList(
             db, "lookup_orgemail_types");
         context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+        
+        //Make the StateSelect and CountrySelect drop down menus available in the request. 
+        //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
+        StateSelect stateSelect = new StateSelect(systemStatus);
+        CountrySelect countrySelect = new CountrySelect(systemStatus);
+        context.getRequest().setAttribute("StateSelect", stateSelect);
+        context.getRequest().setAttribute("CountrySelect", countrySelect);
+        context.getRequest().setAttribute("systemStatus", systemStatus);
       } catch (Exception e) {
         context.getRequest().setAttribute("Error", e);
         return ("SystemError");
@@ -160,6 +188,9 @@ public final class AdminConfig extends CFSModule {
     }
     if ("MAILSERVER".equals(module)) {
       return "ModifyEmailOK";
+    }
+    if ("WORKFLOW".equals(module)) {
+      return "ModifyWorkflowOK";
     }
     if ("EMAILADDRESS".equals(module)) {
       return "ModifyEmailAddressOK";
@@ -190,6 +221,54 @@ public final class AdminConfig extends CFSModule {
     return "ModifyError";
   }
 
+  public synchronized String executeCommandImportWorkflow(ActionContext context) {
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    try {
+      HttpMultiPartParser multiPart = new HttpMultiPartParser();
+      HashMap parts = multiPart.parseData(context.getRequest(), null);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      String delete = null;
+      // Import the file
+      FileInfo fileInfo = (FileInfo) parts.get("file");
+      delete = (String) parts.get("delete");
+      if (fileInfo.getFileContents().length > 0) {
+        // Try to parse the XML
+        XMLUtils xml = new XMLUtils(new String(fileInfo.getFileContents()));
+        // TODO: In a transaction:
+        // - build all the objects from XML
+        // - delete existing workflow from database
+        // - insert new workflow in database
+        BusinessProcessImporter importer = new BusinessProcessImporter();
+        db = this.getConnection(context);
+        if (delete != null && "true".equals(delete)) {
+          importer.deleteProcesses(db);
+        } else {
+          importer.setProcesses(
+              systemStatus.getHookManager().getProcessList());
+          importer.setHooks(systemStatus.getHookManager().getHookList());
+          importer.buildEventList(db);
+        }
+        int sizeOfProcesses = importer.execute(db, xml.getDocumentElement());
+        if (sizeOfProcesses > 0) {
+          // TODO: tell the systemStatus to reload business process cached data
+          synchronized (systemStatus) {
+            //Reload the business processes from the database.
+            systemStatus.loadWorkflows(db);
+          }
+        }
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("actionError", e.getMessage());
+      e.printStackTrace(System.out);
+      return "ImportERROR";
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("UpdateOK");
+  }
 
   /**
    * Description of the Method

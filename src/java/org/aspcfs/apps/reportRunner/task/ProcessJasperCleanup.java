@@ -22,16 +22,16 @@ import org.aspcfs.utils.DateUtils;
 
 import java.sql.Connection;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
- *  Class to delete old reports from the database and any files associated
+ * Class to delete old reports from the database and any files associated
  *
- *@author     matt rajkowski
- *@created    November 11, 2003
- *@version    $Id: ProcessJasperCleanup.java,v 1.1 2003/11/12 14:40:10
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProcessJasperCleanup.java,v 1.1 2003/11/12 14:40:10
+ *          mrajkowski Exp $
+ * @created November 11, 2003
  */
 public class ProcessJasperCleanup {
 
@@ -39,12 +39,12 @@ public class ProcessJasperCleanup {
 
 
   /**
-   *@param  db             Description of the Parameter
-   *@param  thisSite       Description of the Parameter
-   *@param  config         Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param thisSite Description of the Parameter
+   * @param config   Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public ProcessJasperCleanup(Connection db, Site thisSite, HashMap config) throws Exception {
+  public ProcessJasperCleanup(Connection db, Site thisSite, Map config) throws Exception {
     //Only want reports older than 24 hours
     Calendar rangeEnd = Calendar.getInstance();
     rangeEnd.add(Calendar.DAY_OF_MONTH, -1);
@@ -58,7 +58,8 @@ public class ProcessJasperCleanup {
     Iterator list = queue.iterator();
     while (list.hasNext()) {
       ReportQueue thisQueue = (ReportQueue) list.next();
-      thisQueue.delete(db,
+      thisQueue.delete(
+          db,
           (String) config.get("FILELIBRARY") +
           thisSite.getDatabaseName() + fs +
           "reports-queue" + fs +

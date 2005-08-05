@@ -15,19 +15,23 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  This represents a List of Orders
+ * This represents a List of Orders
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created March 18, 2004
  */
 public class OrderList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -42,9 +46,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the typeExists attribute of the OrderList object
+   * Sets the typeExists attribute of the OrderList object
    *
-   * @param  tmp  The new typeExists value
+   * @param tmp The new typeExists value
    */
   public void setTypeExists(boolean tmp) {
     this.typeExists = tmp;
@@ -52,9 +56,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the typeExists attribute of the OrderList object
+   * Sets the typeExists attribute of the OrderList object
    *
-   * @param  tmp  The new typeExists value
+   * @param tmp The new typeExists value
    */
   public void setTypeExists(String tmp) {
     this.typeExists = DatabaseUtils.parseBoolean(tmp);
@@ -62,9 +66,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the typeExists attribute of the OrderList object
+   * Gets the typeExists attribute of the OrderList object
    *
-   * @return    The typeExists value
+   * @return The typeExists value
    */
   public boolean getTypeExists() {
     return typeExists;
@@ -72,9 +76,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the OrderList object
+   * Sets the categoryId attribute of the OrderList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -82,9 +86,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the OrderList object
+   * Sets the categoryId attribute of the OrderList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -92,9 +96,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the closedOnly attribute of the OrderList object
+   * Sets the closedOnly attribute of the OrderList object
    *
-   * @param  tmp  The new closedOnly value
+   * @param tmp The new closedOnly value
    */
   public void setClosedOnly(int tmp) {
     this.closedOnly = tmp;
@@ -102,9 +106,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the closedOnly attribute of the OrderList object
+   * Sets the closedOnly attribute of the OrderList object
    *
-   * @param  tmp  The new closedOnly value
+   * @param tmp The new closedOnly value
    */
   public void setClosedOnly(String tmp) {
     this.closedOnly = Integer.parseInt(tmp);
@@ -112,9 +116,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the closedOnly attribute of the OrderList object
+   * Gets the closedOnly attribute of the OrderList object
    *
-   * @return    The closedOnly value
+   * @return The closedOnly value
    */
   public int getClosedOnly() {
     return closedOnly;
@@ -122,9 +126,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the OrderList object
+   * Gets the categoryId attribute of the OrderList object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -132,9 +136,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the typeId attribute of the OrderList object
+   * Sets the typeId attribute of the OrderList object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -142,9 +146,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the typeId attribute of the OrderList object
+   * Sets the typeId attribute of the OrderList object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -152,9 +156,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the typeId attribute of the OrderList object
+   * Gets the typeId attribute of the OrderList object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -162,9 +166,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the OrderList object
+   * Sets the pagedListInfo attribute of the OrderList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -172,9 +176,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the OrderList object
+   * Sets the orgId attribute of the OrderList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -182,9 +186,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the OrderList object
+   * Sets the orgId attribute of the OrderList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -192,9 +196,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the sourceId attribute of the OrderList object
+   * Sets the sourceId attribute of the OrderList object
    *
-   *@param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(int tmp) {
     this.sourceId = tmp;
@@ -202,9 +206,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the sourceId attribute of the OrderList object
+   * Sets the sourceId attribute of the OrderList object
    *
-   *@param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(String tmp) {
     this.sourceId = Integer.parseInt(tmp);
@@ -212,9 +216,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderList object
+   * Sets the statusId attribute of the OrderList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -222,9 +226,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderList object
+   * Sets the statusId attribute of the OrderList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -232,9 +236,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the OrderList object
+   * Sets the buildResources attribute of the OrderList object
    *
-   *@param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -242,9 +246,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the OrderList object
+   * Sets the buildResources attribute of the OrderList object
    *
-   *@param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -252,9 +256,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the OrderList object
+   * Gets the pagedListInfo attribute of the OrderList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -262,9 +266,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the orgId attribute of the OrderList object
+   * Gets the orgId attribute of the OrderList object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -272,9 +276,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the sourceId attribute of the OrderList object
+   * Gets the sourceId attribute of the OrderList object
    *
-   *@return    The sourceId value
+   * @return The sourceId value
    */
   public int getSourceId() {
     return sourceId;
@@ -282,9 +286,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the statusId attribute of the OrderList object
+   * Gets the statusId attribute of the OrderList object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -292,9 +296,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Gets the buildResources attribute of the OrderList object
+   * Gets the buildResources attribute of the OrderList object
    *
-   *@return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -302,16 +306,17 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Constructor for the OrderList object
+   * Constructor for the OrderList object
    */
-  public OrderList() { }
+  public OrderList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -328,8 +333,7 @@ public class OrderList extends ArrayList {
         " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
         " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
         " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
-        " WHERE oe.order_id > -1 "
-        );
+        " WHERE oe.order_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -376,23 +380,16 @@ public class OrderList extends ArrayList {
         " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
         " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
         " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
-        " WHERE oe.order_id > -1 "
-        );
+        " WHERE oe.order_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Order thisOrder = new Order(rs);
       this.add(thisOrder);
     }
@@ -409,9 +406,9 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -430,9 +427,11 @@ public class OrderList extends ArrayList {
       sqlFilter.append("AND oe.order_type_id = ? ");
     }
     if (closedOnly == Constants.TRUE) {
-      sqlFilter.append(" AND loes.description IN ( 'Closed' , 'Complete', 'Cancelled', 'Rejected' ) ");
+      sqlFilter.append(
+          " AND loes.description IN ( 'Closed' , 'Complete', 'Cancelled', 'Rejected' ) ");
     } else if (closedOnly == Constants.FALSE) {
-      sqlFilter.append(" AND loes.description NOT IN ( 'Closed' , 'Complete', 'Cancelled', 'Rejected' ) ");
+      sqlFilter.append(
+          " AND loes.description NOT IN ( 'Closed' , 'Complete', 'Cancelled', 'Rejected' ) ");
     }
     if (categoryId > -1) {
       sqlFilter.append(
@@ -449,11 +448,11 @@ public class OrderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -33,12 +33,12 @@ import java.util.Iterator;
 import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    June 30, 2004
- *@version    $Id: TicketListScheduledActions.java,v 1.4 2004/08/31 12:48:26
- *      mrajkowski Exp $
+ * @author kbhoopal
+ * @version $Id: TicketListScheduledActions.java,v 1.4 2004/08/31 12:48:26
+ *          mrajkowski Exp $
+ * @created June 30, 2004
  */
 public class TicketListScheduledActions extends TicketList implements ScheduledActions {
 
@@ -48,15 +48,16 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Constructor for the TicketListScheduledActions object
+   * Constructor for the TicketListScheduledActions object
    */
-  public TicketListScheduledActions() { }
+  public TicketListScheduledActions() {
+  }
 
 
   /**
-   *  Sets the module attribute of the TicketListScheduledActions object
+   * Sets the module attribute of the TicketListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -64,9 +65,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Sets the context attribute of the TicketListScheduledActions object
+   * Sets the context attribute of the TicketListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -74,9 +75,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Gets the context attribute of the TicketListScheduledActions object
+   * Gets the context attribute of the TicketListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -84,9 +85,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Gets the module attribute of the TicketListScheduledActions object
+   * Gets the module attribute of the TicketListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -94,9 +95,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Sets the userId attribute of the TicketListScheduledActions object
+   * Sets the userId attribute of the TicketListScheduledActions object
    *
-   *@param  userId  The new userId value
+   * @param userId The new userId value
    */
   public void setUserId(int userId) {
     this.userId = userId;
@@ -104,9 +105,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Sets the userId attribute of the TicketListScheduledActions object
+   * Sets the userId attribute of the TicketListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -114,9 +115,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Gets the userId attribute of the TicketListScheduledActions object
+   * Gets the userId attribute of the TicketListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -124,16 +125,17 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TicketListScheduledActions-> Building Ticket alerts for user " + userId);
+        System.out.println(
+            "TicketListScheduledActions-> Building Ticket alerts for user " + userId);
       }
       //get User
       User thisUser = null;
@@ -149,7 +151,8 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 
       Timestamp todayTimestamp = new Timestamp(System.currentTimeMillis());
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, todayTimestamp);
+      String alertDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, todayTimestamp);
       // List 1//currently non-functional
       // NOTE: any filters set here must be unset in next list
       // this.setOrgId(thisUser.getContact().getOrgId());
@@ -178,8 +181,10 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       while (m.hasNext()) {
         Ticket thisTicket = (Ticket) m.next();
         thisTicket.buildContactInformation(db);
-        alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTicket.getEstimatedResolutionDate());
-        TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[12]);
+        alertDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, thisTicket.getEstimatedResolutionDate());
+        TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(
+            alertDate, CalendarEventList.EVENT_TYPES[12]);
         thisList.getOpenTickets().add(thisTicket);
       }
     } catch (SQLException e) {
@@ -189,28 +194,29 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
-   *  Build event categories and count of occurance of each category.
+   * Build event categories and count of occurance of each category.
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("TicketListScheduledActions --> Building Alert Counts ");
+      System.out.println(
+          "TicketListScheduledActions --> Building Alert Counts ");
     }
     // List 1//currently non-functional
-      //get User
-      User thisUser = null;
-      if (context != null) {
-        /*
-          This check is necessary since ICalendar.java for webcal feature builds
-          a list of Ticket events and does not have access to the ActionContext
-        */
-        thisUser = module.getUser(context, userId);
-      }
-      
-      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+    //get User
+    User thisUser = null;
+    if (context != null) {
+      /*
+        This check is necessary since ICalendar.java for webcal feature builds
+        a list of Ticket events and does not have access to the ActionContext
+      */
+      thisUser = module.getUser(context, userId);
+    }
+
+    TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 /*
     try {
       this.setOrgId(thisUser.getContact().getOrgId());
@@ -247,7 +253,8 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       Iterator i = dayEvents.keySet().iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[12], dayEvents.get(thisDay));
+        companyCalendar.addEventCount(
+            thisDay, CalendarEventList.EVENT_TYPES[12], dayEvents.get(thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Ticket Calendar Alert Counts 2");

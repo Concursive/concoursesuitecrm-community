@@ -15,30 +15,26 @@
  */
 package org.aspcfs.modules.healthcare.edit.base;
 
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.servlets.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
-import javax.servlet.http.*;
 
 /**
- *  Represents a billing transaction from EDIT terminals
+ * Represents a billing transaction from EDIT terminals
  *
- *@author     chris
- *@created    February 6, 2003
- *@version    $Id: TransactionRecord.java,v 1.3 2003/03/21 22:30:51 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: TransactionRecord.java,v 1.3 2003/03/21 22:30:51 mrajkowski
+ *          Exp $
+ * @created February 6, 2003
  */
 public class TransactionRecord extends GenericBean {
-
   protected int id = -1;
   protected String taxId = null;
   protected String licenseNumber = null;
@@ -57,17 +53,17 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Constructor for the TransactionRecord object
+   * Constructor for the TransactionRecord object
    */
-
-  public TransactionRecord() { }
+  public TransactionRecord() {
+  }
 
 
   /**
-   *  Constructor for the TransactionRecord object
+   * Constructor for the TransactionRecord object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public TransactionRecord(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -75,11 +71,11 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Constructor for the TransactionRecord object
+   * Constructor for the TransactionRecord object
    *
-   *@param  db                Description of Parameter
-   *@param  id                unique record ID
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @param id unique record ID
+   * @throws SQLException Description of Exception
    */
   public TransactionRecord(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -87,11 +83,11 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Constructor for the TransactionRecord object
+   * Constructor for the TransactionRecord object
    *
-   *@param  db                Description of Parameter
-   *@param  id                unique record ID
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @param id unique record ID
+   * @throws SQLException Description of Exception
    */
   public TransactionRecord(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -99,9 +95,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the transactionDate attribute of the TransactionRecord object
+   * Gets the transactionDate attribute of the TransactionRecord object
    *
-   *@return    The transactionDate value
+   * @return The transactionDate value
    */
   public String getTransactionDate() {
     return transactionDate;
@@ -109,9 +105,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the transactionDate attribute of the TransactionRecord object
+   * Sets the transactionDate attribute of the TransactionRecord object
    *
-   *@param  transactionDate  The new transactionDate value
+   * @param transactionDate The new transactionDate value
    */
   public void setTransactionDate(String transactionDate) {
     this.transactionDate = transactionDate;
@@ -121,9 +117,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the performedDate attribute of the TransactionRecord object
+   * Gets the performedDate attribute of the TransactionRecord object
    *
-   *@return    The performedDate value
+   * @return The performedDate value
    */
   public java.sql.Date getPerformedDate() {
     return performedDate;
@@ -131,9 +127,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the performedDate attribute of the TransactionRecord object
+   * Sets the performedDate attribute of the TransactionRecord object
    *
-   *@param  performedDate  The new performedDate value
+   * @param performedDate The new performedDate value
    */
   public void setPerformedDate(java.sql.Date performedDate) {
     this.performedDate = performedDate;
@@ -141,9 +137,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the performedDate attribute of the TransactionRecord object
+   * Sets the performedDate attribute of the TransactionRecord object
    *
-   *@param  tmp  The new performedDate value
+   * @param tmp The new performedDate value
    */
   public void setPerformedDate(String tmp) {
     this.performedDate = DateUtils.parseDateString(tmp, "yyyy-MM-dd");
@@ -151,9 +147,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the performedDateString attribute of the TransactionRecord object
+   * Gets the performedDateString attribute of the TransactionRecord object
    *
-   *@return    The performedDateString value
+   * @return The performedDateString value
    */
   public String getPerformedDateString() {
     String tmp = "";
@@ -166,9 +162,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the transactionTime attribute of the TransactionRecord object
+   * Gets the transactionTime attribute of the TransactionRecord object
    *
-   *@return    The transactionTime value
+   * @return The transactionTime value
    */
   public String getTransactionTime() {
     return transactionTime;
@@ -176,9 +172,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the transactionTime attribute of the TransactionRecord object
+   * Sets the transactionTime attribute of the TransactionRecord object
    *
-   *@param  transactionTime  The new transactionTime value
+   * @param transactionTime The new transactionTime value
    */
   public void setTransactionTime(String transactionTime) {
     this.transactionTime = transactionTime;
@@ -187,9 +183,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the TransactionRecord object
+   * Gets the id attribute of the TransactionRecord object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -197,9 +193,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TransactionRecord object
+   * Sets the id attribute of the TransactionRecord object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -207,9 +203,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TransactionRecord object
+   * Sets the id attribute of the TransactionRecord object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -217,9 +213,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the taxId attribute of the TransactionRecord object
+   * Sets the taxId attribute of the TransactionRecord object
    *
-   *@param  taxId  The new taxId value
+   * @param taxId The new taxId value
    */
   public void setTaxId(String taxId) {
     this.taxId = taxId;
@@ -227,9 +223,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the providerTaxId attribute of the TransactionRecord object
+   * Sets the providerTaxId attribute of the TransactionRecord object
    *
-   *@param  taxId  The new providerTaxId value
+   * @param taxId The new providerTaxId value
    */
   public void setProviderTaxID(String taxId) {
     this.setTaxId(taxId);
@@ -237,9 +233,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the taxId attribute of the TransactionRecord object
+   * Gets the taxId attribute of the TransactionRecord object
    *
-   *@return    The taxId value
+   * @return The taxId value
    */
   public String getTaxId() {
     return taxId;
@@ -247,9 +243,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the licenseNumber attribute of the TransactionRecord object
+   * Gets the licenseNumber attribute of the TransactionRecord object
    *
-   *@return    The licenseNumber value
+   * @return The licenseNumber value
    */
   public String getLicenseNumber() {
     return licenseNumber;
@@ -257,9 +253,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the licenseNumber attribute of the TransactionRecord object
+   * Sets the licenseNumber attribute of the TransactionRecord object
    *
-   *@param  licenseNumber  The new licenseNumber value
+   * @param licenseNumber The new licenseNumber value
    */
   public void setLicenseNumber(String licenseNumber) {
     this.licenseNumber = licenseNumber;
@@ -267,9 +263,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the npi attribute of the TransactionRecord object
+   * Gets the npi attribute of the TransactionRecord object
    *
-   *@return    The npi value
+   * @return The npi value
    */
   public String getNpi() {
     return npi;
@@ -277,9 +273,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the npi attribute of the TransactionRecord object
+   * Sets the npi attribute of the TransactionRecord object
    *
-   *@param  npi  The new npi value
+   * @param npi The new npi value
    */
   public void setNpi(String npi) {
     this.npi = npi;
@@ -287,9 +283,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the providerNPI attribute of the TransactionRecord object
+   * Sets the providerNPI attribute of the TransactionRecord object
    *
-   *@param  npi  The new providerNPI value
+   * @param npi The new providerNPI value
    */
   public void setProviderNPI(String npi) {
     this.setNpi(npi);
@@ -297,9 +293,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the providerId attribute of the TransactionRecord object
+   * Gets the providerId attribute of the TransactionRecord object
    *
-   *@return    The providerId value
+   * @return The providerId value
    */
   public String getProviderId() {
     return providerId;
@@ -307,9 +303,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the providerId attribute of the TransactionRecord object
+   * Sets the providerId attribute of the TransactionRecord object
    *
-   *@param  providerId  The new providerId value
+   * @param providerId The new providerId value
    */
   public void setProviderId(String providerId) {
     this.providerId = providerId;
@@ -317,9 +313,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the TransactionRecord object
+   * Gets the nameLast attribute of the TransactionRecord object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -327,9 +323,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the TransactionRecord object
+   * Sets the nameLast attribute of the TransactionRecord object
    *
-   *@param  nameLast  The new nameLast value
+   * @param nameLast The new nameLast value
    */
   public void setNameLast(String nameLast) {
     this.nameLast = nameLast;
@@ -337,9 +333,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the providerLastName attribute of the TransactionRecord object
+   * Sets the providerLastName attribute of the TransactionRecord object
    *
-   *@param  nameLast  The new providerLastName value
+   * @param nameLast The new providerLastName value
    */
   public void setProviderLastName(String nameLast) {
     this.setNameLast(nameLast);
@@ -347,9 +343,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the TransactionRecord object
+   * Gets the nameFirst attribute of the TransactionRecord object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -357,9 +353,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the TransactionRecord object
+   * Sets the nameFirst attribute of the TransactionRecord object
    *
-   *@param  nameFirst  The new nameFirst value
+   * @param nameFirst The new nameFirst value
    */
   public void setNameFirst(String nameFirst) {
     this.nameFirst = nameFirst;
@@ -367,9 +363,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the providerFirstName attribute of the TransactionRecord object
+   * Sets the providerFirstName attribute of the TransactionRecord object
    *
-   *@param  nameFirst  The new providerFirstName value
+   * @param nameFirst The new providerFirstName value
    */
   public void setProviderFirstName(String nameFirst) {
     this.setNameFirst(nameFirst);
@@ -377,9 +373,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the payerId attribute of the TransactionRecord object
+   * Gets the payerId attribute of the TransactionRecord object
    *
-   *@return    The payerId value
+   * @return The payerId value
    */
   public String getPayerId() {
     return payerId;
@@ -387,9 +383,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the payerId attribute of the TransactionRecord object
+   * Sets the payerId attribute of the TransactionRecord object
    *
-   *@param  payerId  The new payerId value
+   * @param payerId The new payerId value
    */
   public void setPayerId(String payerId) {
     this.payerId = payerId;
@@ -397,9 +393,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the TransactionRecord object
+   * Gets the type attribute of the TransactionRecord object
    *
-   *@return    The type value
+   * @return The type value
    */
   public String getType() {
     return type;
@@ -407,9 +403,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the TransactionRecord object
+   * Sets the type attribute of the TransactionRecord object
    *
-   *@param  type  The new type value
+   * @param type The new type value
    */
   public void setType(String type) {
     if (type != null) {
@@ -421,9 +417,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the transactionType attribute of the TransactionRecord object
+   * Sets the transactionType attribute of the TransactionRecord object
    *
-   *@param  type  The new transactionType value
+   * @param type The new transactionType value
    */
   public void setTransactionType(String type) {
     this.setType(type);
@@ -431,9 +427,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the transactionId attribute of the TransactionRecord object
+   * Gets the transactionId attribute of the TransactionRecord object
    *
-   *@return    The transactionId value
+   * @return The transactionId value
    */
   public String getTransactionId() {
     return transactionId;
@@ -441,9 +437,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the transactionId attribute of the TransactionRecord object
+   * Sets the transactionId attribute of the TransactionRecord object
    *
-   *@param  transactionId  The new transactionId value
+   * @param transactionId The new transactionId value
    */
   public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
@@ -451,9 +447,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the transactionID attribute of the TransactionRecord object
+   * Sets the transactionID attribute of the TransactionRecord object
    *
-   *@param  transactionId  The new transactionID value
+   * @param transactionId The new transactionID value
    */
   public void setTransactionID(String transactionId) {
     this.setTransactionId(transactionId);
@@ -461,9 +457,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the User object
+   * Sets the entered attribute of the User object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -471,9 +467,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the performed attribute of the TransactionRecord object
+   * Sets the performed attribute of the TransactionRecord object
    *
-   *@param  tmp  The new performed value
+   * @param tmp The new performed value
    */
   public void setPerformed(java.sql.Timestamp tmp) {
     this.performed = tmp;
@@ -481,9 +477,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the User object
+   * Sets the entered attribute of the User object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -491,17 +487,18 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Sets the performed attribute of the TransactionRecord object
+   * Sets the performed attribute of the TransactionRecord object
    *
-   *@param  tmp  The new performed value
+   * @param tmp The new performed value
    */
   public void setPerformed(String tmp) {
-    this.performed = DateUtils.parseTimestampString(tmp, "yyyy-MM-dd hh:mm:ss a");
+    this.performed = DateUtils.parseTimestampString(
+        tmp, "yyyy-MM-dd hh:mm:ss a");
   }
 
 
   /**
-   *  Sets the performed attribute of the TransactionRecord object
+   * Sets the performed attribute of the TransactionRecord object
    */
   private void processPerformed() {
     if (transactionDate != null && transactionTime != null) {
@@ -511,9 +508,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the User object
+   * Gets the entered attribute of the User object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -521,9 +518,9 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the performed attribute of the TransactionRecord object
+   * Gets the performed attribute of the TransactionRecord object
    *
-   *@return    The performed value
+   * @return The performed value
    */
   public java.sql.Timestamp getPerformed() {
     return performed;
@@ -531,14 +528,15 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the User object
+   * Gets the enteredString attribute of the User object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -546,14 +544,15 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Gets the performedString attribute of the TransactionRecord object
+   * Gets the performedString attribute of the TransactionRecord object
    *
-   *@return    The performedString value
+   * @return The performedString value
    */
   public String getPerformedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(performed);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          performed);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -561,13 +560,14 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Insert a transaction record into the database
+   * Insert a transaction record into the database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "billing_transaction_id_seq");
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO billing_transaction " +
@@ -579,6 +579,9 @@ public class TransactionRecord extends GenericBean {
     if (performed != null) {
       sql.append("performed, ");
     }
+    if (id > -1) {
+      sql.append("transaction_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -588,6 +591,9 @@ public class TransactionRecord extends GenericBean {
       sql.append("?, ");
     }
     if (performed != null) {
+      sql.append("?, ");
+    }
+    if (id > -1) {
       sql.append("?, ");
     }
     if (entered != null) {
@@ -610,25 +616,28 @@ public class TransactionRecord extends GenericBean {
     if (performed != null) {
       pst.setTimestamp(++i, performed);
     }
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
     pst.setString(++i, getTransactionId());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "billing_transaction_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "billing_transaction_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Check if the record to be inserted is valid, then insert, otherwise report
-   *  errors.
+   * Check if the record to be inserted is valid, then insert, otherwise report
+   * errors.
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     return this.insert(db);
@@ -636,11 +645,11 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Deletes the specified TransactionRecord
+   * Deletes the specified TransactionRecord
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
@@ -654,7 +663,8 @@ public class TransactionRecord extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
     if (resultCount == 0) {
-      errors.put("actionError", "Transaction Record (ID: " + getId() + ") could not be deleted.");
+      errors.put(
+          "actionError", "Transaction Record (ID: " + getId() + ") could not be deleted.");
       return false;
     } else {
       return true;
@@ -663,11 +673,11 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Query record information from the database
+   * Query record information from the database
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int id) throws SQLException {
     if (id < 0) {
@@ -677,7 +687,7 @@ public class TransactionRecord extends GenericBean {
     sql.append(
         "SELECT bt.* " +
         "FROM billing_transaction bt " +
-    //"LEFT JOIN lookup_transaction_types t ON (bt.type = t.code) " +
+        //"LEFT JOIN lookup_transaction_types t ON (bt.type = t.code) " +
         "WHERE bt.id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
@@ -695,11 +705,11 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
-   *  Populates the current TransactionRecord from a ResultSet
+   * Populates the current TransactionRecord from a ResultSet
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");

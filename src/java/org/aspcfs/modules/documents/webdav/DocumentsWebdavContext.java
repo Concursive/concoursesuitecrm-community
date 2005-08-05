@@ -23,37 +23,41 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 
+import javax.naming.NamingException;
+import java.io.FileNotFoundException;
 import java.sql.*;
 
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author
- *@created
- *@version    $Id$
+ * @author
+ * @version $Id: DocumentsWebdavContext.java,v 1.2.6.1 2005/05/10 18:01:53
+ *          ananth Exp $
+ * @created
  */
 public class DocumentsWebdavContext
-     extends BaseWebdavContext implements ModuleContext {
+    extends BaseWebdavContext implements ModuleContext {
 
   private final static String DOCUMENTS = "documents";
   private int linkModuleId = Constants.DOCUMENTS_DOCUMENTS;
   private int userId = -1;
-  private String contextName = null;
   private String fileLibraryPath = null;
   private String permission = "documents-view";
 
 
   /**
-   *  Constructor for the DocumentsWebdavContext object
+   * Constructor for the DocumentsWebdavContext object
    */
-  public DocumentsWebdavContext() { }
+  public DocumentsWebdavContext() {
+  }
 
 
   /**
-   *  Constructor for the DocumentsWebdavContext object
+   * Constructor for the DocumentsWebdavContext object
    *
-   *@param  name          Description of the Parameter
-   *@param  linkModuleId  Description of the Parameter
+   * @param name         Description of the Parameter
+   * @param linkModuleId Description of the Parameter
    */
   public DocumentsWebdavContext(String name, int linkModuleId) {
     this.contextName = name;
@@ -62,9 +66,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Sets the userId attribute of the DocumentsWebdavContext object
+   * Sets the userId attribute of the DocumentsWebdavContext object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -72,9 +76,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Sets the userId attribute of the DocumentsWebdavContext object
+   * Sets the userId attribute of the DocumentsWebdavContext object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -82,9 +86,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Gets the userId attribute of the DocumentsWebdavContext object
+   * Gets the userId attribute of the DocumentsWebdavContext object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -92,9 +96,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Sets the linkModuleId attribute of the DocumentsWebdavContext object
+   * Sets the linkModuleId attribute of the DocumentsWebdavContext object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -102,9 +106,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Sets the linkModuleId attribute of the DocumentsWebdavContext object
+   * Sets the linkModuleId attribute of the DocumentsWebdavContext object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -112,19 +116,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Sets the contextName attribute of the DocumentsWebdavContext object
+   * Sets the fileLibraryPath attribute of the DocumentsWebdavContext object
    *
-   *@param  tmp  The new contextName value
-   */
-  public void setContextName(String tmp) {
-    this.contextName = tmp;
-  }
-
-
-  /**
-   *  Sets the fileLibraryPath attribute of the DocumentsWebdavContext object
-   *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -132,9 +126,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Sets the permission attribute of the DocumentsWebdavContext object
+   * Sets the permission attribute of the DocumentsWebdavContext object
    *
-   *@param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -142,9 +136,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Gets the linkModuleId attribute of the DocumentsWebdavContext object
+   * Gets the linkModuleId attribute of the DocumentsWebdavContext object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -152,19 +146,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Gets the contextName attribute of the DocumentsWebdavContext object
+   * Gets the fileLibraryPath attribute of the DocumentsWebdavContext object
    *
-   *@return    The contextName value
-   */
-  public String getContextName() {
-    return contextName;
-  }
-
-
-  /**
-   *  Gets the fileLibraryPath attribute of the DocumentsWebdavContext object
-   *
-   *@return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -172,9 +156,9 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Gets the permission attribute of the DocumentsWebdavContext object
+   * Gets the permission attribute of the DocumentsWebdavContext object
    *
-   *@return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -182,13 +166,13 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisSystem        Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  fileLibraryPath   Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param thisSystem      Description of the Parameter
+   * @param db              Description of the Parameter
+   * @param userId          Description of the Parameter
+   * @param fileLibraryPath Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(SystemStatus thisSystem, Connection db, int userId, String fileLibraryPath) throws SQLException {
     this.fileLibraryPath = fileLibraryPath;
@@ -201,26 +185,27 @@ public class DocumentsWebdavContext
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void populateBindings(Connection db) throws SQLException {
     if (linkModuleId == -1) {
       throw new SQLException("Module ID not specified");
     }
-    
+
     User user = new User(db, userId);
     Contact contact = new Contact(db, user.getContactId());
-    
+
     PreparedStatement pst = db.prepareStatement(
-      "SELECT document_store_id, title, entered, modified " +
-      "FROM document_store " +
-      "WHERE document_store_id > -1 " +
-      "AND ((document_store_id in (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id = ? )) " + 
-      "OR (document_store_id in (SELECT DISTINCT document_store_id FROM document_store_role_member WHERE item_id = ? )) " + 
-      "OR (document_store_id in (SELECT DISTINCT document_store_id FROM document_store_department_member WHERE item_id = ? ))) ");
+        "SELECT document_store_id, title, entered, modified " +
+        "FROM document_store " +
+        "WHERE document_store_id > -1 " +
+        "AND ((document_store_id in (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id = ? )) " +
+        "OR (document_store_id in (SELECT DISTINCT document_store_id FROM document_store_role_member WHERE item_id = ? )) " +
+        "OR (document_store_id in (SELECT DISTINCT document_store_id FROM document_store_department_member WHERE item_id = ? ))) " +
+        "AND trashed_date IS NULL ");
     int i = 0;
     pst.setInt(++i, userId);
     pst.setInt(++i, user.getRoleId());
@@ -233,12 +218,32 @@ public class DocumentsWebdavContext
       item.setLinkItemId(rs.getInt("document_store_id"));
       item.setPath(fileLibraryPath + DOCUMENTS + fs);
       item.setUserId(userId);
-      item.setPermission("documentcenter-documents-view");
+      item.setPermission("documentcenter-documents");
       bindings.put(item.getContextName(), item);
       Timestamp entered = rs.getTimestamp("entered");
       Timestamp modified = rs.getTimestamp("modified");
-      buildProperties(item.getContextName(), entered, modified, new Integer(0));
+      buildProperties(
+          item.getContextName(), entered, modified, new Integer(0));
     }
   }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param folderName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   * @throws NamingException       Description of the Exception
+   */
+  public boolean createSubcontext(SystemStatus thisSystem, Connection db, String folderName) throws SQLException,
+      FileNotFoundException, NamingException {
+    //Not allowed
+    return false;
+  }
+
 }
 

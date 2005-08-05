@@ -15,17 +15,17 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- *  This Class formats the specified amount using the locale
+ * This Class formats the specified amount using the locale
  *
- *@author     matt rajkowski
- *@created    March 18, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created March 18, 2004
  */
 public class NumberHandler extends TagSupport {
 
@@ -35,9 +35,9 @@ public class NumberHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the CurrencyHandler object
+   * Sets the value attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(double tmp) {
     this.value = tmp;
@@ -45,9 +45,9 @@ public class NumberHandler extends TagSupport {
 
 
   /**
-   *  Sets the default attribute of the CurrencyHandler object
+   * Sets the default attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new default value
+   * @param tmp The new default value
    */
   public void setDefault(String tmp) {
     this.defaultValue = tmp;
@@ -55,9 +55,9 @@ public class NumberHandler extends TagSupport {
 
 
   /**
-   *  Sets the locale attribute of the CurrencyHandler object
+   * Sets the locale attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new locale value
+   * @param tmp The new locale value
    */
   public void setLocale(Locale tmp) {
     this.locale = tmp;
@@ -65,10 +65,10 @@ public class NumberHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -89,9 +89,9 @@ public class NumberHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

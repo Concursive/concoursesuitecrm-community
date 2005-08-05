@@ -18,21 +18,21 @@ package org.aspcfs.utils.web;
 import org.aspcfs.modules.base.Constants;
 
 /**
- *  Used when asking a user a yes/no question and the result can be unanswered
+ * Used when asking a user a yes/no question and the result can be unanswered
  *
- *@author     matt rajkowski (matt@zeroio.com)
- *@created    March 31, 2004
- *@version    $Id: HtmlSelectChoice.java,v 1.2 2004/07/21 19:00:44 mrajkowski
- *      Exp $
+ * @author matt rajkowski (matt@zeroio.com)
+ * @version $Id: HtmlSelectChoice.java,v 1.2 2004/07/21 19:00:44 mrajkowski
+ *          Exp $
+ * @created March 31, 2004
  */
 public class HtmlSelectChoice {
 
   /**
-   *  Gets the select attribute of the HtmlSelectChoice class
+   * Gets the select attribute of the HtmlSelectChoice class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, int defaultValue) {
     HtmlSelect select = new HtmlSelect();

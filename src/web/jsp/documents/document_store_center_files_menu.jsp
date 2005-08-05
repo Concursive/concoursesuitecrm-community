@@ -25,16 +25,38 @@
   var thisDisplay = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, folderId, fileId, displayId) {
+  function displayMenu(loc, id, folderId, fileId, displayId, trashed) {
     thisFolderId = folderId;
     thisFileId = fileId;
     thisDisplay = displayId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuFolder", "down", 0, 0, 170, getHeight("menuFolderTable"));
       new ypSlideOutMenu("menuFile", "down", 0, 0, 170, getHeight("menuFileTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuRenameFolder');
+      hideSpan('menuMoveFolder');
+      hideSpan('menuDeleteFolder');
+      hideSpan('menuDeleteFolderAndContents');
+      hideSpan('menuRenameFile');
+      hideSpan('menuAddFileVersion');
+      hideSpan('menuMoveFile');
+      hideSpan('menuDeleteFile');
+    } else {
+      showSpan('menuRenameFolder');
+      showSpan('menuMoveFolder');
+      showSpan('menuDeleteFolder');
+      showSpan('menuDeleteFolderAndContents');
+      showSpan('menuRenameFile');
+      showSpan('menuAddFileVersion');
+      showSpan('menuMoveFile');
+      showSpan('menuDeleteFile');
+    }
   }
   //Menu link functions
   function viewFolder() {
@@ -97,7 +119,7 @@
       </tr>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-documents-folders-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuRenameFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="editFolder()">
         <th>
           <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -108,7 +130,7 @@
       </tr>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-documents-folders-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuMoveFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveFolder()">
         <th>
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -119,7 +141,7 @@
       </tr>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-documents-folders-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDeleteFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFolder()">
         <th valign="top">
           <img src="images/icons/stock_left-with-subpoints-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -130,7 +152,7 @@
       </tr>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-documents-folders-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDeleteFolderAndContents" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFolderRecursive()">
         <th valign="top">
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -180,7 +202,7 @@
       </tr>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-documents-files-rename">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuRenameFile" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="renameFile()">
         <th>
           <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -191,7 +213,7 @@
       </tr>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-documents-files-upload">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuAddFileVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addVersion()">
         <th>
           <img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -202,7 +224,7 @@
       </tr>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-documents-files-rename">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuMoveFile" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveFile()">
         <th>
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -213,7 +235,7 @@
       </tr>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-documents-files-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDeleteFile" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFile()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>

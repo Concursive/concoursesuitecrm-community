@@ -34,12 +34,12 @@ import java.util.Hashtable;
 import java.util.TimeZone;
 
 /**
- *  Enhanced web app capabilities
+ * Enhanced web app capabilities
  *
- *@author     matt rajkowski
- *@created    March 14, 2004
- *@version    $Id: AutoPopulate.java,v 1.1.2.1 2004/07/15 19:32:46 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AutoPopulate.java,v 1.1.2.1 2004/07/15 19:32:46 mrajkowski
+ *          Exp $
+ * @created March 14, 2004
  */
 public class AutoPopulate {
 
@@ -53,10 +53,10 @@ public class AutoPopulate {
 
 
   /**
-   *  Constructor for the AutoPopulate object
+   * Constructor for the AutoPopulate object
    *
-   *@param  thisRequest  Description of the Parameter
-   *@param  bean         Description of the Parameter
+   * @param thisRequest Description of the Parameter
+   * @param bean        Description of the Parameter
    */
   public AutoPopulate(HttpServletRequest thisRequest, Object bean) {
     request = thisRequest;
@@ -74,7 +74,8 @@ public class AutoPopulate {
     if (timeParams != null) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("AutoPopulate-> Found timeParams");
-        System.out.println("AutoPopulate-> User has timezone: " + user.getTimeZone());
+        System.out.println(
+            "AutoPopulate-> User has timezone: " + user.getTimeZone());
       }
       cal = Calendar.getInstance();
     }
@@ -82,7 +83,8 @@ public class AutoPopulate {
     if (numberParams != null && user != null) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("AutoPopulate-> Found numberParams");
-        System.out.println("AutoPopulate-> User has locale: " + user.getLocale());
+        System.out.println(
+            "AutoPopulate-> User has locale: " + user.getLocale());
       }
       nf = NumberFormat.getInstance(user.getLocale());
     }
@@ -90,9 +92,9 @@ public class AutoPopulate {
 
 
   /**
-   *  Sets the name attribute of the AutoPopulate object
+   * Sets the name attribute of the AutoPopulate object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -100,13 +102,13 @@ public class AutoPopulate {
 
 
   /**
-   *  When objects are being auto-populated from an HTML request, additional
-   *  properties can be populated from multiple fields
+   * When objects are being auto-populated from an HTML request, additional
+   * properties can be populated from multiple fields
    *
-   *@param  param  Description of the Parameter
-   *@param  value  Description of the Parameter
-   *@param  bean   Description of the Parameter
-   *@return        Description of the Return Value
+   * @param param Description of the Parameter
+   * @param value Description of the Parameter
+   * @param bean  Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean populateObject(Object bean, String param, String value) {
     if (user == null) {
@@ -128,19 +130,23 @@ public class AutoPopulate {
         if (hourValue == null) {
           // Date fields: 1-1 mapping between HTML field and Java property
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("AutoPopulate-> timeParams trying to set: " + param);
+            System.out.println(
+                "AutoPopulate-> timeParams trying to set: " + param);
           }
-          Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(timeZone), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
+          Timestamp tmp = DateUtils.getUserToServerDateTime(
+              TimeZone.getTimeZone(timeZone), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
           if (tmp != null) {
             modified = ObjectUtils.setParam(bean, param, tmp);
           }
         } else {
           // Date & Time fields: 4-1 mapping between HTML fields and Java property
           try {
-            Timestamp timestamp = DatabaseUtils.parseDateToTimestamp(value, user.getLocale());
+            Timestamp timestamp = DatabaseUtils.parseDateToTimestamp(
+                value, user.getLocale());
             cal.setTimeInMillis(timestamp.getTime());
             int hour = Integer.parseInt(hourValue);
-            int minute = Integer.parseInt((String) request.getParameter(name + "Minute"));
+            int minute = Integer.parseInt(
+                (String) request.getParameter(name + "Minute"));
             String ampmString = (String) request.getParameter(name + "AMPM");
             if (ampmString != null) {
               int ampm = Integer.parseInt(ampmString);
@@ -158,15 +164,18 @@ public class AutoPopulate {
             cal.set(Calendar.MINUTE, minute);
             cal.setTimeZone(TimeZone.getTimeZone(timeZone));
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("AutoPopulate-> timeParams trying to set date/time: " + param);
+              System.out.println(
+                  "AutoPopulate-> timeParams trying to set date/time: " + param);
             }
-            modified = ObjectUtils.setParam(bean, param, new Timestamp(cal.getTimeInMillis()));
+            modified = ObjectUtils.setParam(
+                bean, param, new Timestamp(cal.getTimeInMillis()));
           } catch (Exception dateE) {
             //e.printStackTrace(System.out);
           }
         }
         if (!modified && value != null && !"".equals(value)) {
-          addError(bean, param, "object.validation.incorrectDateFormat", request);
+          addError(
+              bean, param, "object.validation.incorrectDateFormat", request);
         } else {
           return true;
         }
@@ -179,15 +188,18 @@ public class AutoPopulate {
         try {
           // Parse the value
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("AutoPopulate-> numberParams trying to set number: " + param);
+            System.out.println(
+                "AutoPopulate-> numberParams trying to set number: " + param);
           }
-          modified = ObjectUtils.setParam(bean, param, nf.parse(value).doubleValue());
+          modified = ObjectUtils.setParam(
+              bean, param, nf.parse(value).doubleValue());
           return true;
         } catch (Exception e) {
           //e.printStackTrace(System.out);
         }
         if (!modified && value != null && !"".equals(value)) {
-          addError(bean, param, "object.validation.incorrectNumberFormat", request);
+          addError(
+              bean, param, "object.validation.incorrectNumberFormat", request);
         } else {
           return true;
         }
@@ -198,19 +210,22 @@ public class AutoPopulate {
 
 
   /**
-   *  Adds a feature to the Error attribute of the AutoPopulate class
+   * Adds a feature to the Error attribute of the AutoPopulate class
    *
-   *@param  bean     The feature to be added to the Error attribute
-   *@param  param    The feature to be added to the Error attribute
-   *@param  message  The feature to be added to the Error attribute
-   *@param  request  The feature to be added to the Error attribute
+   * @param bean    The feature to be added to the Error attribute
+   * @param param   The feature to be added to the Error attribute
+   * @param message The feature to be added to the Error attribute
+   * @param request The feature to be added to the Error attribute
    */
   private static void addError(Object bean, String param, String message, HttpServletRequest request) {
     try {
-      ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) request.getSession().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute(
+          "ConnectionElement");
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) request.getSession().getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus != null) {
-        ((GenericBean) bean).getErrors().put(param + "Error", systemStatus.getLabel(message));
+        ((GenericBean) bean).getErrors().put(
+            param + "Error", systemStatus.getLabel(message));
       } else {
         ((GenericBean) bean).getErrors().put(param + "Error", message);
       }

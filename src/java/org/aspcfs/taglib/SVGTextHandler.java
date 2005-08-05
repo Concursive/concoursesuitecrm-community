@@ -15,23 +15,23 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.ArrayList;
-import java.io.*;
-import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.SVGUtils;
-import javax.servlet.*;
-import java.util.*;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.io.File;
+import java.util.HashMap;
 
 /**
- *  This tag will dynamically build a graphic based on the specified svg
- *  template. If the file already exists it will not generate a new one.
+ * This tag will dynamically build a graphic based on the specified svg
+ * template. If the file already exists it will not generate a new one.
  *
- *@author     ananth
- *@created    April 2, 2004
- *@version    $Id: SVGTextHandler.java,v 1.2 2004/05/04 15:46:14 mrajkowski Exp
- *      $
+ * @author ananth
+ * @version $Id: SVGTextHandler.java,v 1.2 2004/05/04 15:46:14 mrajkowski Exp
+ *          $
+ * @created April 2, 2004
  */
 public class SVGTextHandler extends TagSupport {
 
@@ -42,9 +42,9 @@ public class SVGTextHandler extends TagSupport {
 
 
   /**
-   *  Sets the template attribute of the SVGTextHandler object
+   * Sets the template attribute of the SVGTextHandler object
    *
-   *@param  tmp  The new template value
+   * @param tmp The new template value
    */
   public void setTemplate(String tmp) {
     this.template = tmp;
@@ -52,21 +52,20 @@ public class SVGTextHandler extends TagSupport {
 
 
   /**
-   *  Sets the text attribute of the SVGTextHandler object
+   * Sets the text attribute of the SVGTextHandler object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  str  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param str Description of the Parameter
+   * @return Description of the Return Value
    */
   private static String toSafeName(String str) {
     StringBuffer sb = new StringBuffer();
@@ -82,11 +81,11 @@ public class SVGTextHandler extends TagSupport {
 
 
   /**
-   *  Gets the version attribute of the SVGTextHandler object
+   * Gets the version attribute of the SVGTextHandler object
    *
-   *@param  context  Description of the Parameter
-   *@param  svgPath  Description of the Parameter
-   *@return          The version value
+   * @param context Description of the Parameter
+   * @param svgPath Description of the Parameter
+   * @return The version value
    */
   private String getVersion(ServletContext context, String svgPath) {
     HashMap svgMap = (HashMap) context.getAttribute("svgTextHandlerMap");
@@ -106,7 +105,8 @@ public class SVGTextHandler extends TagSupport {
         if (version == null) {
           try {
             String tmp = StringUtils.loadText(svgPath + template + ".version");
-            version = "_" + tmp.substring(0, tmp.indexOf(System.getProperty("line.separator")));
+            version = "_" + tmp.substring(
+                0, tmp.indexOf(System.getProperty("line.separator")));
           } catch (Exception e) {
             version = "";
           }
@@ -119,11 +119,11 @@ public class SVGTextHandler extends TagSupport {
 
 
   /**
-   *  Using the specified properties, an SVG is parsed and a bitmap image is
-   *  output for display in a web browser.
+   * Using the specified properties, an SVG is parsed and a bitmap image is
+   * output for display in a web browser.
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -131,13 +131,15 @@ public class SVGTextHandler extends TagSupport {
       String path = pageContext.getServletContext().getRealPath("/");
       String templateName = StringUtils.replace(template, " ", "_");
       String textName = toSafeName(text);
-      String version = getVersion(pageContext.getServletContext(), path + "WEB-INF" + fs + "svg" + fs);
+      String version = getVersion(
+          pageContext.getServletContext(), path + "WEB-INF" + fs + "svg" + fs);
       String imageFilename = templateName + "_" + textName + version + ".jpg";
       String templateFilename = template + ".svg";
       File imageFile = new File(path + "svg" + fs + imageFilename);
       if (!imageFile.exists()) {
         // Generate an SVG based on the supplied settings
-        File SVGFile = new File(path + "WEB-INF" + fs + "svg" + fs + templateFilename);
+        File SVGFile = new File(
+            path + "WEB-INF" + fs + "svg" + fs + templateFilename);
         if (SVGFile.exists()) {
           SVGUtils svg = new SVGUtils(SVGFile.toURL().toString());
           svg.setText(text);
@@ -148,7 +150,8 @@ public class SVGTextHandler extends TagSupport {
           svg.saveAsJPEG(imageFile);
         }
       }
-      this.pageContext.getOut().write("<img src=\"svg/" + imageFilename + "\" border=\"0\"/>");
+      this.pageContext.getOut().write(
+          "<img src=\"svg/" + imageFilename + "\" border=\"0\"/>");
     } catch (Exception e) {
       System.err.println("EXCEPTION: SVGTextHandler-> " + e.getMessage());
     }
@@ -157,9 +160,9 @@ public class SVGTextHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

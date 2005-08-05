@@ -15,25 +15,22 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
-import java.util.*;
-import java.text.*;
-import java.io.*;
-import java.lang.reflect.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItem;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.controller.ImportManager;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
 
 /**
- *  Represents a base Import
+ * Represents a base Import
  *
- *@author     Mathur
- *@created    March 30, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created March 30, 2004
  */
 public class Import extends GenericBean {
   //status
@@ -81,9 +78,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the systemStatus attribute of the Import object
+   * Sets the systemStatus attribute of the Import object
    *
-   *@param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -91,17 +88,28 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Constructor for the Import object
+   * Gets the systemStatus attribute of the Import object
+   *
+   * @return The systemStatus value
    */
-  public Import() { }
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
 
 
   /**
-   *  Constructor for the Import object
+   * Constructor for the Import object
+   */
+  public Import() {
+  }
+
+
+  /**
+   * Constructor for the Import object
    *
-   *@param  db                Description of the Parameter
-   *@param  importId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param importId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Import(Connection db, int importId) throws SQLException {
     if (importId == -1) {
@@ -135,10 +143,10 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Constructor for the Import object
+   * Constructor for the Import object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Import(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -146,9 +154,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Import object
+   * Sets the id attribute of the Import object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -156,9 +164,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Import object
+   * Sets the id attribute of the Import object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -166,9 +174,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Import object
+   * Sets the type attribute of the Import object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -176,9 +184,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Import object
+   * Sets the type attribute of the Import object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -186,9 +194,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the sourceType attribute of the Import object
+   * Sets the sourceType attribute of the Import object
    *
-   *@param  tmp  The new sourceType value
+   * @param tmp The new sourceType value
    */
   public void setSourceType(int tmp) {
     this.sourceType = tmp;
@@ -196,9 +204,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the sourceType attribute of the Import object
+   * Sets the sourceType attribute of the Import object
    *
-   *@param  tmp  The new sourceType value
+   * @param tmp The new sourceType value
    */
   public void setSourceType(String tmp) {
     this.sourceType = Integer.parseInt(tmp);
@@ -206,9 +214,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the totalImportedRecords attribute of the Import object
+   * Sets the totalImportedRecords attribute of the Import object
    *
-   *@param  tmp  The new totalImportedRecords value
+   * @param tmp The new totalImportedRecords value
    */
   public void setTotalImportedRecords(int tmp) {
     this.totalImportedRecords = tmp;
@@ -216,9 +224,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the totalImportedRecords attribute of the Import object
+   * Sets the totalImportedRecords attribute of the Import object
    *
-   *@param  tmp  The new totalImportedRecords value
+   * @param tmp The new totalImportedRecords value
    */
   public void setTotalImportedRecords(String tmp) {
     this.totalImportedRecords = Integer.parseInt(tmp);
@@ -226,9 +234,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the totalFailedRecords attribute of the Import object
+   * Sets the totalFailedRecords attribute of the Import object
    *
-   *@param  tmp  The new totalFailedRecords value
+   * @param tmp The new totalFailedRecords value
    */
   public void setTotalFailedRecords(int tmp) {
     this.totalFailedRecords = tmp;
@@ -236,9 +244,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the totalFailedRecords attribute of the Import object
+   * Sets the totalFailedRecords attribute of the Import object
    *
-   *@param  tmp  The new totalFailedRecords value
+   * @param tmp The new totalFailedRecords value
    */
   public void setTotalFailedRecords(String tmp) {
     this.totalFailedRecords = Integer.parseInt(tmp);
@@ -246,9 +254,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Import object
+   * Sets the statusId attribute of the Import object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -256,9 +264,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Import object
+   * Sets the statusId attribute of the Import object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -266,9 +274,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Import object
+   * Sets the enteredBy attribute of the Import object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -276,9 +284,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Import object
+   * Sets the enteredBy attribute of the Import object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -286,9 +294,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Import object
+   * Sets the modifiedBy attribute of the Import object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -296,9 +304,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Import object
+   * Sets the modifiedBy attribute of the Import object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -306,9 +314,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Import object
+   * Sets the name attribute of the Import object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -316,9 +324,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Import object
+   * Sets the description attribute of the Import object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -326,9 +334,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the source attribute of the Import object
+   * Sets the source attribute of the Import object
    *
-   *@param  tmp  The new source value
+   * @param tmp The new source value
    */
   public void setSource(String tmp) {
     this.source = tmp;
@@ -336,9 +344,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the recordDelimiter attribute of the Import object
+   * Sets the recordDelimiter attribute of the Import object
    *
-   *@param  tmp  The new recordDelimiter value
+   * @param tmp The new recordDelimiter value
    */
   public void setRecordDelimiter(String tmp) {
     this.recordDelimiter = tmp;
@@ -346,9 +354,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the columnDelimiter attribute of the Import object
+   * Sets the columnDelimiter attribute of the Import object
    *
-   *@param  tmp  The new columnDelimiter value
+   * @param tmp The new columnDelimiter value
    */
   public void setColumnDelimiter(String tmp) {
     this.columnDelimiter = tmp;
@@ -356,9 +364,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Import object
+   * Sets the entered attribute of the Import object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -366,9 +374,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Import object
+   * Sets the entered attribute of the Import object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -376,9 +384,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Import object
+   * Sets the modified attribute of the Import object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -386,9 +394,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Import object
+   * Sets the modified attribute of the Import object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -396,9 +404,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the fileType attribute of the Import object
+   * Sets the fileType attribute of the Import object
    *
-   *@param  tmp  The new fileType value
+   * @param tmp The new fileType value
    */
   public void setFileType(int tmp) {
     this.fileType = tmp;
@@ -406,9 +414,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the fileType attribute of the Import object
+   * Sets the fileType attribute of the Import object
    *
-   *@param  tmp  The new fileType value
+   * @param tmp The new fileType value
    */
   public void setFileType(String tmp) {
     this.fileType = Integer.parseInt(tmp);
@@ -416,9 +424,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the buildFileDetails attribute of the Import object
+   * Sets the buildFileDetails attribute of the Import object
    *
-   *@param  tmp  The new buildFileDetails value
+   * @param tmp The new buildFileDetails value
    */
   public void setBuildFileDetails(boolean tmp) {
     this.buildFileDetails = tmp;
@@ -426,9 +434,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the buildFileDetails attribute of the Import object
+   * Sets the buildFileDetails attribute of the Import object
    *
-   *@param  tmp  The new buildFileDetails value
+   * @param tmp The new buildFileDetails value
    */
   public void setBuildFileDetails(String tmp) {
     this.buildFileDetails = DatabaseUtils.parseBoolean(tmp);
@@ -436,9 +444,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Sets the file attribute of the Import object
+   * Sets the file attribute of the Import object
    *
-   *@param  tmp  The new file value
+   * @param tmp The new file value
    */
   public void setFile(FileItem tmp) {
     this.file = tmp;
@@ -446,9 +454,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the file attribute of the Import object
+   * Gets the file attribute of the Import object
    *
-   *@return    The file value
+   * @return The file value
    */
   public FileItem getFile() {
     return file;
@@ -456,9 +464,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the buildFileDetails attribute of the Import object
+   * Gets the buildFileDetails attribute of the Import object
    *
-   *@return    The buildFileDetails value
+   * @return The buildFileDetails value
    */
   public boolean getBuildFileDetails() {
     return buildFileDetails;
@@ -466,9 +474,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the fileType attribute of the Import object
+   * Gets the fileType attribute of the Import object
    *
-   *@return    The fileType value
+   * @return The fileType value
    */
   public int getFileType() {
     return fileType;
@@ -476,9 +484,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Import object
+   * Gets the id attribute of the Import object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -486,9 +494,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the Import object
+   * Gets the type attribute of the Import object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -496,9 +504,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the sourceType attribute of the Import object
+   * Gets the sourceType attribute of the Import object
    *
-   *@return    The sourceType value
+   * @return The sourceType value
    */
   public int getSourceType() {
     return sourceType;
@@ -506,9 +514,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the totalImportedRecords attribute of the Import object
+   * Gets the totalImportedRecords attribute of the Import object
    *
-   *@return    The totalImportedRecords value
+   * @return The totalImportedRecords value
    */
   public int getTotalImportedRecords() {
     return totalImportedRecords;
@@ -516,9 +524,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the totalFailedRecords attribute of the Import object
+   * Gets the totalFailedRecords attribute of the Import object
    *
-   *@return    The totalFailedRecords value
+   * @return The totalFailedRecords value
    */
   public int getTotalFailedRecords() {
     return totalFailedRecords;
@@ -526,9 +534,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Import object
+   * Gets the statusId attribute of the Import object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -536,33 +544,40 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the statusString attribute of the Import object
+   * Gets the statusString attribute of the Import object
    *
-   *@return    The statusString value
+   * @return The statusString value
    */
   public String getStatusString() {
     String tmp = null;
     switch (statusId) {
       case UNPROCESSED:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.pending") : "Import Pending");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.pending") : "Import Pending");
         break;
       case QUEUED:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.queued") : "Queued");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.queued") : "Queued");
         break;
       case RUNNING:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.running") : "Running");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.running") : "Running");
         break;
       case FAILED:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.failed") : "Failed");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.failed") : "Failed");
         break;
       case CANCELED:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.cancelled") : "Cancelled");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.cancelled") : "Cancelled");
         break;
       case PROCESSED_UNAPPROVED:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.pendingApproval") : "Pending Approval");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.pendingApproval") : "Pending Approval");
         break;
       case PROCESSED_APPROVED:
-        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.approved") : "Approved");
+        tmp = (systemStatus != null ? systemStatus.getLabel(
+            "contact.import.status.approved") : "Approved");
         break;
       default:
         break;
@@ -572,9 +587,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Import object
+   * Gets the enteredBy attribute of the Import object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -582,9 +597,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Import object
+   * Gets the modifiedBy attribute of the Import object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -592,9 +607,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the Import object
+   * Gets the name attribute of the Import object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -602,9 +617,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Import object
+   * Gets the description attribute of the Import object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -612,9 +627,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the source attribute of the Import object
+   * Gets the source attribute of the Import object
    *
-   *@return    The source value
+   * @return The source value
    */
   public String getSource() {
     return source;
@@ -622,7 +637,7 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void incrementTotalImportedRecords() {
     this.totalImportedRecords++;
@@ -630,7 +645,7 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void incrementTotalFailedRecords() {
     this.totalFailedRecords++;
@@ -638,9 +653,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the recordDelimiter attribute of the Import object
+   * Gets the recordDelimiter attribute of the Import object
    *
-   *@return    The recordDelimiter value
+   * @return The recordDelimiter value
    */
   public String getRecordDelimiter() {
     return recordDelimiter;
@@ -648,10 +663,10 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildFileDetails(Connection db) throws SQLException {
     file = new FileItem(db, id, type);
@@ -660,9 +675,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean canDelete() {
     if (statusId != RUNNING && statusId < PROCESSED_APPROVED) {
@@ -673,9 +688,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the running attribute of the Import object
+   * Gets the running attribute of the Import object
    *
-   *@return    The running value
+   * @return The running value
    */
   public boolean isRunning() {
     if (statusId == RUNNING) {
@@ -686,9 +701,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasBeenProcessed() {
     if (statusId == PROCESSED_APPROVED || statusId == PROCESSED_UNAPPROVED) {
@@ -699,9 +714,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean canProcess() {
     if (statusId == UNPROCESSED) {
@@ -712,9 +727,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean canApprove() {
     if (statusId == PROCESSED_UNAPPROVED) {
@@ -725,9 +740,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean canModify() {
     if (statusId == UNPROCESSED) {
@@ -738,9 +753,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the columnDelimiter attribute of the Import object
+   * Gets the columnDelimiter attribute of the Import object
    *
-   *@return    The columnDelimiter value
+   * @return The columnDelimiter value
    */
   public String getColumnDelimiter() {
     if (columnDelimiter == null) {
@@ -764,9 +779,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Import object
+   * Gets the entered attribute of the Import object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -774,9 +789,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Import object
+   * Gets the modified attribute of the Import object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -784,9 +799,9 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Updates records counts if this is a running import
+   * Updates records counts if this is a running import
    *
-   *@param  manager  Description of the Parameter
+   * @param manager Description of the Parameter
    */
   public void updateRecordCounts(ImportManager manager) {
     if (manager != null) {
@@ -806,12 +821,12 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Updates the status of the import
+   * Updates the status of the import
    *
-   *@param  db                Description of the Parameter
-   *@param  status            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param status Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateStatus(Connection db, int status) throws SQLException {
     int count = 0;
@@ -841,7 +856,8 @@ public class Import extends GenericBean {
         if (type == Constants.IMPORT_CONTACTS || type == Constants.IMPORT_ACCOUNT_CONTACTS || type == Constants.IMPORT_SALES) {
           Contact.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);
           if (type == Constants.IMPORT_ACCOUNT_CONTACTS) {
-            Organization.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);
+            Organization.updateImportStatus(
+                db, this.getId(), PROCESSED_APPROVED);
           }
         }
       }
@@ -860,11 +876,11 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Records the results on successful completion of import
+   * Records the results on successful completion of import
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int recordResults(Connection db) throws SQLException {
     int count = 0;
@@ -905,11 +921,11 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
@@ -919,11 +935,15 @@ public class Import extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
+      id = DatabaseUtils.getNextSeq(db, "import_import_id_seq");
       sql = "INSERT INTO import " +
-          "(type, name, description, file_type, source_type, record_delimiter, column_delimiter, status_id, enteredby, modifiedby) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+          "(" + (id > -1 ? "import_id, " : "") + "type, name, description, file_type, source_type, record_delimiter, column_delimiter, status_id, enteredby, modifiedby) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?,?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getType());
       pst.setString(++i, this.getName());
       pst.setString(++i, this.getDescription());
@@ -935,7 +955,7 @@ public class Import extends GenericBean {
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "import_import_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "import_import_id_seq", id);
       pst.close();
       if (commit) {
         db.commit();
@@ -955,10 +975,10 @@ public class Import extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //import table
@@ -980,3 +1000,4 @@ public class Import extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
   }
 }
+

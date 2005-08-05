@@ -15,15 +15,18 @@
  */
 package org.aspcfs.utils.web;
 
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.Template;
+
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     -
- *@created    January 13, 2003
- *@version    $Id: CustomFormGroup.java,v 1.2 2003/01/13 21:24:01 mrajkowski Exp
- *      $
+ * @author -
+ * @version $Id: CustomFormGroup.java,v 1.2 2003/01/13 21:24:01 mrajkowski Exp
+ *          $
+ * @created January 13, 2003
  */
 public class CustomFormGroup extends ArrayList {
 
@@ -31,15 +34,16 @@ public class CustomFormGroup extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomFormGroup object
+   * Constructor for the CustomFormGroup object
    */
-  public CustomFormGroup() { }
+  public CustomFormGroup() {
+  }
 
 
   /**
-   *  Sets the name attribute of the CustomFormGroup object
+   * Sets the name attribute of the CustomFormGroup object
    *
-   *@param  name  The new name value
+   * @param name The new name value
    */
   public void setName(String name) {
     this.name = name;
@@ -47,12 +51,26 @@ public class CustomFormGroup extends ArrayList {
 
 
   /**
-   *  Gets the name attribute of the CustomFormGroup object
+   * Gets the name attribute of the CustomFormGroup object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   */
+  public void parseTemplateText(SystemStatus thisSystem) {
+    if (name != null) {
+      Template template = new Template(name);
+      template.populateSystemVariables(thisSystem);
+      name = template.getParsedText();
+    }
   }
 }
 

@@ -18,24 +18,25 @@ package org.aspcfs.utils.formatter;
 import org.aspcfs.modules.base.EmailAddress;
 
 /**
- *  Takes an email address and formats the various fields to make the records
- *  consistent and presentable.
+ * Takes an email address and formats the various fields to make the records
+ * consistent and presentable.
  *
- *@author     matt rajkowski
- *@created    March 5, 2003
- *@version    $Id: EmailAddressFormatter.java,v 1.1.2.2 2003/03/06 17:52:06
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: EmailAddressFormatter.java,v 1.1.2.2 2003/03/06 17:52:06
+ *          mrajkowski Exp $
+ * @created March 5, 2003
  */
 public class EmailAddressFormatter {
 
   /**
-   *  Constructor for the EmailAddressFormatter object
+   * Constructor for the EmailAddressFormatter object
    */
-  public EmailAddressFormatter() { }
+  public EmailAddressFormatter() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void config() {
 
@@ -43,9 +44,9 @@ public class EmailAddressFormatter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisAddress  Description of the Parameter
+   * @param thisAddress Description of the Parameter
    */
   public void format(EmailAddress thisAddress) {
     String email = thisAddress.getEmail();

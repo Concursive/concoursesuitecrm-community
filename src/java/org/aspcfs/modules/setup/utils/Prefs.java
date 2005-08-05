@@ -15,26 +15,24 @@
  */
 package org.aspcfs.modules.setup.utils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.prefs.*;
+import java.util.prefs.Preferences;
 
 /**
- *  A class for loading preferences, only called when the initHook does not
- *  find any prefs in web.xml. Used for the initial setup code.
+ * A class for loading preferences, only called when the initHook does not
+ * find any prefs in web.xml. Used for the initial setup code.
  *
- *@author     matt rajkowski
- *@created    August 12, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created August 12, 2003
  */
 public class Prefs {
 
   /**
-   *  Saves the specified preference name and value to the store
+   * Saves the specified preference name and value to the store
    *
-   *@param  name   Description of the Parameter
-   *@param  value  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param name  Description of the Parameter
+   * @param value Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean savePref(String name, String value) {
     try {

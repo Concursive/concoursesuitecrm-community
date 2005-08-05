@@ -15,21 +15,23 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.Constants;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author
- *@created    November 1, 2002
- *@version    $Id: ActiveSurveyQuestionList.java,v 1.6 2003/01/14 16:11:33
- *      akhi_m Exp $
+ * @author
+ * @version $Id: ActiveSurveyQuestionList.java,v 1.6 2003/01/14 16:11:33
+ *          akhi_m Exp $
+ * @created November 1, 2002
  */
 public class ActiveSurveyQuestionList extends ArrayList {
 
@@ -40,21 +42,23 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestionList object
+   * Constructor for the ActiveSurveyQuestionList object
    */
-  public ActiveSurveyQuestionList() { }
+  public ActiveSurveyQuestionList() {
+  }
 
 
   /**
-   *  Builds a ActiveSurveyQuestionList from a SurveyQuestionList (copy)
+   * Builds a ActiveSurveyQuestionList from a SurveyQuestionList (copy)
    *
-   *@param  inactiveQuestions  Description of the Parameter
+   * @param inactiveQuestions Description of the Parameter
    */
   public ActiveSurveyQuestionList(SurveyQuestionList inactiveQuestions) {
     Iterator i = inactiveQuestions.iterator();
     while (i.hasNext()) {
       SurveyQuestion inactiveQuestion = (SurveyQuestion) i.next();
-      ActiveSurveyQuestion thisQuestion = new ActiveSurveyQuestion(inactiveQuestion);
+      ActiveSurveyQuestion thisQuestion = new ActiveSurveyQuestion(
+          inactiveQuestion);
       thisQuestion.setActiveSurveyId(activeSurveyId);
       this.add(thisQuestion);
     }
@@ -62,11 +66,11 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the ActiveSurveyQuestionList object
+   * Gets the object attribute of the ActiveSurveyQuestionList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestion getObject(ResultSet rs) throws SQLException {
     ActiveSurveyQuestion thisQuestion = new ActiveSurveyQuestion(rs);
@@ -75,9 +79,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the ActiveSurveyQuestionList object
+   * Gets the id attribute of the ActiveSurveyQuestionList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -85,9 +89,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurveyQuestionList object
+   * Sets the id attribute of the ActiveSurveyQuestionList object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -95,9 +99,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurveyQuestionList object
+   * Sets the id attribute of the ActiveSurveyQuestionList object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -105,9 +109,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActiveSurveyQuestionList object
+   * Sets the pagedListInfo attribute of the ActiveSurveyQuestionList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -115,9 +119,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the buildResults attribute of the ActiveSurveyQuestionList object
+   * Sets the buildResults attribute of the ActiveSurveyQuestionList object
    *
-   *@param  buildResults  The new buildResults value
+   * @param buildResults The new buildResults value
    */
   public void setBuildResults(boolean buildResults) {
     this.buildResults = buildResults;
@@ -125,9 +129,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the buildResults attribute of the ActiveSurveyQuestionList object
+   * Gets the buildResults attribute of the ActiveSurveyQuestionList object
    *
-   *@return    The buildResults value
+   * @return The buildResults value
    */
   public boolean getBuildResults() {
     return buildResults;
@@ -135,9 +139,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the activeSurveyId attribute of the ActiveSurveyQuestionList object
+   * Gets the activeSurveyId attribute of the ActiveSurveyQuestionList object
    *
-   *@return    The activeSurveyId value
+   * @return The activeSurveyId value
    */
   public int getActiveSurveyId() {
     return activeSurveyId;
@@ -145,9 +149,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the activeSurveyId attribute of the ActiveSurveyQuestionList object
+   * Sets the activeSurveyId attribute of the ActiveSurveyQuestionList object
    *
-   *@param  surveyId  The new activeSurveyId value
+   * @param surveyId The new activeSurveyId value
    */
   public void setActiveSurveyId(int surveyId) {
     this.activeSurveyId = surveyId;
@@ -155,9 +159,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the activeSurveyId attribute of the ActiveSurveyQuestionList object
+   * Sets the activeSurveyId attribute of the ActiveSurveyQuestionList object
    *
-   *@param  surveyId  The new activeSurveyId value
+   * @param surveyId The new activeSurveyId value
    */
   public void setActiveSurveyId(String surveyId) {
     this.activeSurveyId = Integer.parseInt(surveyId);
@@ -165,10 +169,10 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Build Question & associated ItemList if any
+   * Build Question & associated ItemList if any
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
 
   public void buildList(Connection db) throws SQLException {
@@ -204,7 +208,8 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString());
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
@@ -230,30 +235,25 @@ public class ActiveSurveyQuestionList extends ArrayList {
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append("sq.* " +
+    sqlSelect.append(
+        "sq.* " +
         "FROM active_survey_questions sq " +
         "WHERE sq.active_survey_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
 
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ActiveSurveyQuestion thisQuestion = this.getObject(rs);
       this.add(thisQuestion);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ActiveSurveyQuestionList -- > Added Question " + thisQuestion.getDescription());
+        System.out.println(
+            "ActiveSurveyQuestionList -- > Added Question " + thisQuestion.getDescription());
       }
     }
     rs.close();
@@ -283,9 +283,9 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -299,11 +299,11 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -316,12 +316,12 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
-   *@param  responseId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param contactId  Description of the Parameter
+   * @param responseId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResponse(Connection db, int contactId, int responseId) throws SQLException {
     Iterator thisList = this.iterator();

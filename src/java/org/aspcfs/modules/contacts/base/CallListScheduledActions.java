@@ -18,21 +18,25 @@ package org.aspcfs.modules.contacts.base;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.modules.mycfs.base.CallEventList;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.CalendarView;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.*;
-import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 2, 2002
- *@version    $Id: CallListScheduledActions.java,v 1.2 2002/10/04 19:25:45
- *      mrajkowski Exp $
+ * @author akhi_m
+ * @version $Id: CallListScheduledActions.java,v 1.2 2002/10/04 19:25:45
+ *          mrajkowski Exp $
+ * @created October 2, 2002
  */
 public class CallListScheduledActions extends CallList implements ScheduledActions {
 
@@ -42,15 +46,16 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Constructor for the CallListScheduledActions object
+   * Constructor for the CallListScheduledActions object
    */
-  public CallListScheduledActions() { }
+  public CallListScheduledActions() {
+  }
 
 
   /**
-   *  Sets the module attribute of the QuoteListScheduledActions object
+   * Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -58,9 +63,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Sets the context attribute of the QuoteListScheduledActions object
+   * Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -68,9 +73,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Sets the userId attribute of the CallListScheduledActions object
+   * Sets the userId attribute of the CallListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -78,9 +83,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Sets the userId attribute of the CallListScheduledActions object
+   * Sets the userId attribute of the CallListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -88,9 +93,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Gets the context attribute of the QuoteListScheduledActions object
+   * Gets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -98,9 +103,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Gets the module attribute of the QuoteListScheduledActions object
+   * Gets the module attribute of the QuoteListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -108,9 +113,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Gets the userId attribute of the CallListScheduledActions object
+   * Gets the userId attribute of the CallListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -118,11 +123,11 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -142,11 +147,14 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       Iterator m = this.iterator();
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
-        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisCall.getAlertDate());
-        CallEventList thisList = (CallEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[1]);
+        String alertDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, thisCall.getAlertDate());
+        CallEventList thisList = (CallEventList) companyCalendar.getEventList(
+            alertDate, CalendarEventList.EVENT_TYPES[1]);
         thisList.getPendingCalls().add(thisCall);
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CallListScheduledActions-> Pending Call: " + thisCall.getAlertText() + " added on " + alertDate);
+          System.out.println(
+              "CallListScheduledActions-> Pending Call: " + thisCall.getAlertText() + " added on " + alertDate);
         }
       }
 
@@ -160,11 +168,14 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       m = this.iterator();
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
-        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisCall.getEntered());
-        CallEventList thisList = (CallEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[1]);
+        String alertDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, thisCall.getEntered());
+        CallEventList thisList = (CallEventList) companyCalendar.getEventList(
+            alertDate, CalendarEventList.EVENT_TYPES[1]);
         thisList.getCompletedCalls().add(thisCall);
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CallListScheduledActions-> Complete Call: " + thisCall.getSubject() + " added on " + alertDate);
+          System.out.println(
+              "CallListScheduledActions-> Complete Call: " + thisCall.getSubject() + " added on " + alertDate);
         }
       }
     } catch (SQLException e) {
@@ -174,16 +185,17 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Build event categories and count of occurance of each category.
+   * Build event categories and count of occurance of each category.
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
 
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CallListScheduledActions --> Building Alert Counts ");
+      System.out.println(
+          "CallListScheduledActions --> Building Alert Counts ");
     }
     try {
       //get the userId
@@ -199,7 +211,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       Iterator j = pendingEvents.keySet().iterator();
       while (j.hasNext()) {
         String thisDay = (String) j.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[13], pendingEvents.get(thisDay));
+        companyCalendar.addEventCount(
+            thisDay, CalendarEventList.EVENT_TYPES[13], pendingEvents.get(
+                thisDay));
       }
 
       //add completed activities count
@@ -212,7 +226,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       Iterator comp = completedEvents.keySet().iterator();
       while (comp.hasNext()) {
         String thisDay = (String) comp.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[1], completedEvents.get(thisDay));
+        companyCalendar.addEventCount(
+            thisDay, CalendarEventList.EVENT_TYPES[1], completedEvents.get(
+                thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Call Calendar Alert Counts");

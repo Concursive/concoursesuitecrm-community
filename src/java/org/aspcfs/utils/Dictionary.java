@@ -24,178 +24,194 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @created    February 3, 2005
+ * @author Ananth
+ * @created February 3, 2005
  */
 public class Dictionary {
-	private String language = null;
-	private String defaultLanguage = "en_US";  //default language
-	private String languageFilePath = null;
-	private Map localizationPrefs = new LinkedHashMap();
+  private String language = null;
+  private String defaultLanguage = "en_US";  //default language
+  private String languageFilePath = null;
+  private Map localizationPrefs = new LinkedHashMap();
 
 
-	/**
-	 *  Gets the defaultLanguage attribute of the Dictionary object
-	 *
-	 * @return    The defaultLanguage value
-	 */
-	public String getDefaultLanguage() {
-		return defaultLanguage;
-	}
+  /**
+   * Gets the defaultLanguage attribute of the Dictionary object
+   *
+   * @return The defaultLanguage value
+   */
+  public String getDefaultLanguage() {
+    return defaultLanguage;
+  }
 
 
-	/**
-	 *  Sets the defaultLanguage attribute of the Dictionary object
-	 *
-	 * @param  tmp  The new defaultLanguage value
-	 */
-	public void setDefaultLanguage(String tmp) {
-		this.defaultLanguage = tmp;
-	}
+  /**
+   * Sets the defaultLanguage attribute of the Dictionary object
+   *
+   * @param tmp The new defaultLanguage value
+   */
+  public void setDefaultLanguage(String tmp) {
+    this.defaultLanguage = tmp;
+  }
 
 
-	/**
-	 *  Gets the language attribute of the Dictionary object
-	 *
-	 * @return    The language value
-	 */
-	public String getLanguage() {
-		return language;
-	}
+  /**
+   * Gets the language attribute of the Dictionary object
+   *
+   * @return The language value
+   */
+  public String getLanguage() {
+    return language;
+  }
 
 
-	/**
-	 *  Sets the language attribute of the Dictionary object
-	 *
-	 * @param  tmp  The new language value
-	 */
-	public void setLanguage(String tmp) {
-		this.language = tmp;
-	}
+  /**
+   * Sets the language attribute of the Dictionary object
+   *
+   * @param tmp The new language value
+   */
+  public void setLanguage(String tmp) {
+    this.language = tmp;
+  }
 
 
-	/**
-	 *  Gets the languageFilePath attribute of the Dictionary object
-	 *
-	 * @return    The languageFilePath value
-	 */
-	public String getLanguageFilePath() {
-		return languageFilePath;
-	}
+  /**
+   * Gets the languageFilePath attribute of the Dictionary object
+   *
+   * @return The languageFilePath value
+   */
+  public String getLanguageFilePath() {
+    return languageFilePath;
+  }
 
 
-	/**
-	 *  Sets the languageFilePath attribute of the Dictionary object
-	 *
-	 * @param  tmp  The new languageFilePath value
-	 */
-	public void setLanguageFilePath(String tmp) {
-		this.languageFilePath = tmp;
-	}
+  /**
+   * Sets the languageFilePath attribute of the Dictionary object
+   *
+   * @param tmp The new languageFilePath value
+   */
+  public void setLanguageFilePath(String tmp) {
+    this.languageFilePath = tmp;
+  }
 
 
-	/**
-	 *  Gets the localizationPrefs attribute of the Dictionary object
-	 *
-	 * @return    The localizationPrefs value
-	 */
-	public Map getLocalizationPrefs() {
-		return localizationPrefs;
-	}
+  /**
+   * Gets the localizationPrefs attribute of the Dictionary object
+   *
+   * @return The localizationPrefs value
+   */
+  public Map getLocalizationPrefs() {
+    return localizationPrefs;
+  }
 
 
-	/**
-	 *  Sets the localizationPrefs attribute of the Dictionary object
-	 *
-	 * @param  tmp  The new localizationPrefs value
-	 */
-	public void setLocalizationPrefs(Map tmp) {
-		this.localizationPrefs = tmp;
-	}
+  /**
+   * Sets the localizationPrefs attribute of the Dictionary object
+   *
+   * @param tmp The new localizationPrefs value
+   */
+  public void setLocalizationPrefs(Map tmp) {
+    this.localizationPrefs = tmp;
+  }
 
-
-
-	/**
-	 *Constructor for the Dictionary object
-	 */
-	public Dictionary() { }
-
-
-	/**
-	 *Constructor for the Dictionary object
-	 *
-	 * @param  languageFilePath  Description of the Parameter
-	 * @param  defaultLanguage   Description of the Parameter
-	 * @exception  Exception     Description of the Exception
-	 */
-	public Dictionary(String languageFilePath, String defaultLanguage) throws Exception {
-		this.languageFilePath = languageFilePath;
-		this.defaultLanguage = defaultLanguage;
-		// Load the default language
-		load(languageFilePath, defaultLanguage);
-	}
-
-
-	/**
-	 *  Description of the Method
-	 *
-	 * @param  languageFilePath  Description of the Parameter
-	 * @param  language          Description of the Parameter
-	 * @exception  Exception     Description of the Exception
-	 */
-	public void load(String languageFilePath, String language) throws Exception {
-		if (languageFilePath == null) {
-			throw new Exception("Dictionary file path not provided");
-		}
-		String languageFilename = "dictionary_" + language + ".xml";
-		if (System.getProperty("DEBUG") != null) {
-      System.out.println("Dictionary-> Loading dictionary preferences: " + languageFilePath + languageFilename);
+  public String getTerm(String section, String parameter, String tagName) {
+    Map prefGroup = (Map) localizationPrefs.get(section);
+    if (prefGroup != null) {
+      Node param = (Node) prefGroup.get(parameter);
+      if (param != null) {
+        return XMLUtils.getNodeText(
+            XMLUtils.getFirstChild((Element) param, tagName));
+      }
     }
-		File prefsFile = new File(languageFilePath + languageFilename);
-		if (prefsFile.exists()) {
-			XMLUtils xml = new XMLUtils(prefsFile);
-			//Traverse the prefs and add the config nodes to the LinkedHashMap,
-			//then for each config, add the param nodes into a child LinkedHashMap.
-			//This will provide quick access to the values, and will allow an
-			//editor to display the fields as ordered in the XML file
-			NodeList configNodes = xml.getDocumentElement().getElementsByTagName("config");
-			for (int i = 0; i < configNodes.getLength(); i++) {
-				Node configNode = configNodes.item(i);
-				if (configNode != null &&
-						configNode.getNodeType() == Node.ELEMENT_NODE &&
-						"config".equals(((Element) configNode).getTagName()) &&
-						(((Element) configNode).getAttribute("enabled") == null ||
-						"".equals(((Element) configNode).getAttribute("enabled")) ||
-						"true".equals(((Element) configNode).getAttribute("enabled")))) {
-					//For each config name, create a map for each of the params
-					String configName = ((Element) configNode).getAttribute("name");
-					Map preferenceGroup = null;
-					if (configName != null) {
-						if (localizationPrefs.containsKey(configName)) {
-							preferenceGroup = (LinkedHashMap) localizationPrefs.get(configName);
-						} else {
-							preferenceGroup = new LinkedHashMap();
-							localizationPrefs.put(configName, preferenceGroup);
-						}
-						//Process the params for this config
-						NodeList paramNodes = ((Element) configNode).getElementsByTagName("param");
-						for (int j = 0; j < paramNodes.getLength(); j++) {
-							Node paramNode = paramNodes.item(j);
-							if (paramNode != null &&
-									paramNode.getNodeType() == Node.ELEMENT_NODE &&
-									"param".equals(((Element) paramNode).getTagName())) {
-								String paramName = ((Element) paramNode).getAttribute("name");
-								if (paramName != null) {
-									preferenceGroup.put(paramName, paramNode);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    return null;
+  }
+
+
+  /**
+   * Constructor for the Dictionary object
+   */
+  public Dictionary() {
+  }
+
+
+  /**
+   * Constructor for the Dictionary object
+   *
+   * @param languageFilePath Description of the Parameter
+   * @param defaultLanguage  Description of the Parameter
+   * @throws Exception Description of the Exception
+   */
+  public Dictionary(String languageFilePath, String defaultLanguage) throws Exception {
+    this.languageFilePath = languageFilePath;
+    this.defaultLanguage = defaultLanguage;
+    // Load the default language
+    load(languageFilePath, defaultLanguage);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param languageFilePath Description of the Parameter
+   * @param language         Description of the Parameter
+   * @throws Exception Description of the Exception
+   */
+  public void load(String languageFilePath, String language) throws Exception {
+    if (languageFilePath == null) {
+      throw new Exception("Dictionary file path not provided");
+    }
+    String languageFilename = "dictionary_" + language + ".xml";
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println(
+          "Dictionary-> Loading dictionary preferences: " + languageFilePath + languageFilename);
+    }
+    File prefsFile = new File(languageFilePath + languageFilename);
+    if (prefsFile.exists()) {
+      XMLUtils xml = new XMLUtils(prefsFile);
+      //Traverse the prefs and add the config nodes to the LinkedHashMap,
+      //then for each config, add the param nodes into a child LinkedHashMap.
+      //This will provide quick access to the values, and will allow an
+      //editor to display the fields as ordered in the XML file
+      NodeList configNodes = xml.getDocumentElement().getElementsByTagName(
+          "config");
+      for (int i = 0; i < configNodes.getLength(); i++) {
+        Node configNode = configNodes.item(i);
+        if (configNode != null &&
+            configNode.getNodeType() == Node.ELEMENT_NODE &&
+            "config".equals(((Element) configNode).getTagName()) &&
+            (((Element) configNode).getAttribute("enabled") == null ||
+            "".equals(((Element) configNode).getAttribute("enabled")) ||
+            "true".equals(((Element) configNode).getAttribute("enabled")))) {
+          //For each config name, create a map for each of the params
+          String configName = ((Element) configNode).getAttribute("name");
+          Map preferenceGroup = null;
+          if (configName != null) {
+            if (localizationPrefs.containsKey(configName)) {
+              preferenceGroup = (LinkedHashMap) localizationPrefs.get(
+                  configName);
+            } else {
+              preferenceGroup = new LinkedHashMap();
+              localizationPrefs.put(configName, preferenceGroup);
+            }
+            //Process the params for this config
+            NodeList paramNodes = ((Element) configNode).getElementsByTagName(
+                "param");
+            for (int j = 0; j < paramNodes.getLength(); j++) {
+              Node paramNode = paramNodes.item(j);
+              if (paramNode != null &&
+                  paramNode.getNodeType() == Node.ELEMENT_NODE &&
+                  "param".equals(((Element) paramNode).getTagName())) {
+                String paramName = ((Element) paramNode).getAttribute("name");
+                if (paramName != null) {
+                  preferenceGroup.put(paramName, paramNode);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 

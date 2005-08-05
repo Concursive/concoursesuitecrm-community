@@ -44,10 +44,12 @@
   </tr>
 </table>
 <br>
-<zeroio:permission name="project-discussion-topics-add">
-<img border="0" src="images/icons/stock_new-callouts-16.gif" align="absmiddle">
-<a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>">New Topic</a><br>
-</zeroio:permission>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-discussion-topics-add">
+    <img border="0" src="images/icons/stock_new-callouts-16.gif" align="absmiddle">
+    <a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>">New Topic</a><br>
+  </zeroio:permission>
+</dhv:evaluate>
 <%-- Temp. fix for Weblogic --%>
 <%
 String actionError = showError(request, "actionError");
@@ -80,7 +82,7 @@ String actionError = showError(request, "actionError");
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisIssue.getId() %>, <%= IssueCategory.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisIssue.getId() %>, <%= IssueCategory.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>

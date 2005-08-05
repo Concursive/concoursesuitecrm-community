@@ -15,18 +15,14 @@
  */
 package com.zeroio.iteam.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.util.*;
-import org.aspcfs.utils.StringUtils;
-import com.zeroio.utils.SearchUtils;
+import com.darkhorseventures.framework.beans.SearchBean;
 
 /**
- *  Contains the properties of a search form
+ * Contains the properties of a search form
  *
- *@author     matt rajkowski
- *@created    May 17, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 17, 2004
  */
 public class IteamSearchBean extends SearchBean {
   public final static int UNDEFINED = -1;
@@ -46,15 +42,16 @@ public class IteamSearchBean extends SearchBean {
 
 
   /**
-   *  Constructor for the SearchBean object
+   * Constructor for the SearchBean object
    */
-  public IteamSearchBean() { }
+  public IteamSearchBean() {
+  }
 
 
   /**
-   *  Sets the scope attribute of the SearchBean object
+   * Sets the scope attribute of the SearchBean object
    *
-   *@param  tmp  The new scope value
+   * @param tmp The new scope value
    */
   public void setScope(String tmp) {
     // scope
@@ -87,9 +84,9 @@ public class IteamSearchBean extends SearchBean {
 
 
   /**
-   *  Gets the projectId attribute of the SearchBean object
+   * Gets the projectId attribute of the SearchBean object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -97,9 +94,9 @@ public class IteamSearchBean extends SearchBean {
 
 
   /**
-   *  Sets the projectId attribute of the SearchBean object
+   * Sets the projectId attribute of the SearchBean object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -107,9 +104,9 @@ public class IteamSearchBean extends SearchBean {
 
 
   /**
-   *  Sets the projectId attribute of the SearchBean object
+   * Sets the projectId attribute of the SearchBean object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);

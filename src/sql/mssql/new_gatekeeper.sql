@@ -17,7 +17,8 @@ CREATE TABLE sites (
   dbpw VARCHAR(255) NOT NULL DEFAULT '',
   driver VARCHAR(255) NOT NULL DEFAULT '',
   code VARCHAR(255),
-  enabled BIT NOT NULL DEFAULT 0
+  enabled BIT NOT NULL DEFAULT 0,
+  language VARCHAR(11)
 );
 
 

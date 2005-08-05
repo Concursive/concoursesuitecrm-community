@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -51,25 +51,42 @@
       <tr>
         <td><dhv:label name="account.contact.doesNotHavePortalAccess" param="<%= "contactName="+ContactDetails.getNameLastFirst() %>"><%=ContactDetails.getNameLastFirst()%> does not have portal access</dhv:label></td>
       </tr>
-      <dhv:permission name="portal-user-add">
+      <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+        <dhv:permission name="portal-user-add">
+          <tr>
+            <td><a href="ContactsPortal.do?command=Add&contactId=<%=ContactDetails.getId()%>"><dhv:label name="account.contact.grantPortalAccess">Grant Portal Access</dhv:label></td>
+          </tr>
+        </dhv:permission>
+      </dhv:evaluate>
+    </table>
+    <%} else if (portalUserDetails.getRoleType() == 0) {%>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" >
+      <dhv:evaluate if="<%= !portalUserDetails.getEnabled() %>">
         <tr>
-          <td><a href="ContactsPortal.do?command=Add&contactId=<%=ContactDetails.getId()%>"><dhv:label name="account.contact.grantPortalAccess">Grant Portal Access</dhv:label></td>
+          <td><dhv:label name="account.contact.hasDisabledUserAccount" param="<%= "contactName="+ContactDetails.getNameLastFirst() %>"><%=ContactDetails.getNameLastFirst()%> has a disabled user account</dhv:label></td>
         </tr>
-      </dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= portalUserDetails.getEnabled() %>">
+      <tr>
+        <td><dhv:label name="account.contact.hasUserAccount" param="<%= "contactName="+ContactDetails.getNameLastFirst() %>"><%=ContactDetails.getNameLastFirst()%> has a user account</dhv:label></td>
+      </tr>
+      </dhv:evaluate>
     </table>
     <%}else{%>
-      <dhv:permission name="portal-user-edit">
-        <%if (portalUserDetails.getEnabled()){%>
-          <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%>'" />
-        <%}else{%>
-          <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
-        <%}%>
-      </dhv:permission>
-      <dhv:permission name="portal-user-delete">
-        <dhv:evaluate if="<%= (portalUserDetails.getEnabled()) %>" >
-          <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
-        </dhv:evaluate>
-      </dhv:permission>
+      <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+        <dhv:permission name="portal-user-edit">
+          <%if (portalUserDetails.getEnabled()){%>
+            <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%>'" />
+          <%}else{%>
+            <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+          <%}%>
+        </dhv:permission>
+        <dhv:permission name="portal-user-delete">
+          <dhv:evaluate if="<%= (portalUserDetails.getEnabled()) %>" >
+            <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+          </dhv:evaluate>
+        </dhv:permission>
+      </dhv:evaluate>
       <br /> <br />
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr>
@@ -107,18 +124,20 @@
       </tr>
     </table>
       <br />
-      <dhv:permission name="portal-user-edit">
-        <%if (portalUserDetails.getEnabled()){%>
-          <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%>'" />
-        <%}else{%>
-          <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
-        <%}%>
-      </dhv:permission>
-      <dhv:permission name="portal-user-delete">
-        <dhv:evaluate if="<%= (portalUserDetails.getEnabled()) %>" >
-          <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
-         </dhv:evaluate>
-      </dhv:permission>
+      <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+        <dhv:permission name="portal-user-edit">
+          <%if (portalUserDetails.getEnabled()){%>
+            <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%>'" />
+          <%}else{%>
+            <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+          <%}%>
+        </dhv:permission>
+        <dhv:permission name="portal-user-delete">
+          <dhv:evaluate if="<%= (portalUserDetails.getEnabled()) %>" >
+            <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+           </dhv:evaluate>
+        </dhv:permission>
+      </dhv:evaluate>
     <%}%>
   </dhv:container>
 </dhv:container>

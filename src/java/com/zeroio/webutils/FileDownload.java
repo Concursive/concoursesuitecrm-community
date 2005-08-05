@@ -24,11 +24,11 @@ import java.io.FileInputStream;
 import java.io.StringReader;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    December 17, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created December 17, 2001
  */
 public class FileDownload {
 
@@ -37,10 +37,9 @@ public class FileDownload {
 
 
   /**
-   *  The complete path and filename of the file to be sent.
+   * The complete path and filename of the file to be sent.
    *
-   *@param  tmp  The new FullPath value
-   *@since
+   * @param tmp The new FullPath value
    */
   public void setFullPath(String tmp) {
     this.fullPath = tmp;
@@ -48,10 +47,9 @@ public class FileDownload {
 
 
   /**
-   *  The filename that should be shown to the user's browser.
+   * The filename that should be shown to the user's browser.
    *
-   *@param  tmp  The new DisplayName value
-   *@since
+   * @param tmp The new DisplayName value
    */
   public void setDisplayName(String tmp) {
     this.displayName = tmp;
@@ -59,10 +57,9 @@ public class FileDownload {
 
 
   /**
-   *  The complete path and filename of the file to be sent.
+   * The complete path and filename of the file to be sent.
    *
-   *@return    The FullPath value
-   *@since
+   * @return The FullPath value
    */
   public String getFullPath() {
     return fullPath;
@@ -70,10 +67,9 @@ public class FileDownload {
 
 
   /**
-   *  The filename that should be shown to the user's browser.
+   * The filename that should be shown to the user's browser.
    *
-   *@return    The DisplayName value
-   *@since
+   * @return The DisplayName value
    */
   public String getDisplayName() {
     return displayName;
@@ -81,18 +77,16 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
-   *
-   *@since
+   * Description of the Method
    */
-  public FileDownload() { }
+  public FileDownload() {
+  }
 
 
   /**
-   *  Returns whether the file exists.
+   * Returns whether the file exists.
    *
-   *@return    Description of the Returned Value
-   *@since
+   * @return Description of the Returned Value
    */
   public boolean fileExists() {
     File downloadFile = new File(fullPath);
@@ -101,10 +95,10 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void streamContent(ActionContext context) throws Exception {
     String contentType = "application/octet-stream";
@@ -180,6 +174,8 @@ public class FileDownload {
       contentType = "text/xml";
     } else if (this.getDisplayName().toLowerCase().endsWith(".zip")) {
       contentType = "application/x-zip-compressed";
+    } else if (this.getDisplayName().toLowerCase().endsWith(".vcf")) {
+      contentType = "text/x-vcard";
     } else if (this.getDisplayName().toLowerCase().endsWith("README")) {
       contentType = "text/plain";
     }
@@ -192,10 +188,10 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void sendFile(ActionContext context) throws Exception {
     sendFile(context, "application/octet-stream");
@@ -203,17 +199,18 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@param  contentType    Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context     Description of the Parameter
+   * @param contentType Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void sendFile(ActionContext context, String contentType) throws Exception {
     File downloadFile = new File(fullPath);
     context.getResponse().setContentType(contentType);
     if (contentType.startsWith("application")) {
-      context.getResponse().setHeader("Content-Disposition", "attachment; filename=\"" + displayName + "\";");
+      context.getResponse().setHeader(
+          "Content-Disposition", "attachment; filename=\"" + displayName + "\";");
       context.getResponse().setContentLength((int) downloadFile.length());
     }
     this.send(context);
@@ -221,17 +218,18 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@param  bytes          Description of the Parameter
-   *@param  contentType    Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context     Description of the Parameter
+   * @param bytes       Description of the Parameter
+   * @param contentType Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void sendFile(ActionContext context, byte[] bytes, String contentType) throws Exception {
     context.getResponse().setContentType(contentType);
     if (contentType.startsWith("application")) {
-      context.getResponse().setHeader("Content-Disposition", "attachment; filename=\"" + displayName + "\";");
+      context.getResponse().setHeader(
+          "Content-Disposition", "attachment; filename=\"" + displayName + "\";");
     }
     ServletOutputStream ouputStream = context.getResponse().getOutputStream();
     ouputStream.write(bytes, 0, bytes.length);
@@ -241,12 +239,12 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@param  bytes          Description of the Parameter
-   *@param  contentType    Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context     Description of the Parameter
+   * @param bytes       Description of the Parameter
+   * @param contentType Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void streamFile(ActionContext context, byte[] bytes, String contentType) throws Exception {
     context.getResponse().setContentType(contentType);
@@ -258,10 +256,10 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   private void send(ActionContext context) throws Exception {
     ServletOutputStream outputStream = context.getResponse().getOutputStream();
@@ -281,15 +279,16 @@ public class FileDownload {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@param  text           Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @param text    Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void sendTextAsFile(ActionContext context, String text) throws Exception {
     context.getResponse().setContentType("application/octet-stream");
-    context.getResponse().setHeader("Content-Disposition", "attachment;filename=" + displayName + ";");
+    context.getResponse().setHeader(
+        "Content-Disposition", "attachment;filename=" + displayName + ";");
     context.getResponse().setContentLength((int) text.length());
 
     ServletOutputStream outputStream = context.getResponse().getOutputStream();

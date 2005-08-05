@@ -15,20 +15,28 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.DateFormat;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
-import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     chris
- * @created    January 8, 2002
- * @version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created January 8, 2002
  */
 public class CallList extends ArrayList {
 
@@ -55,21 +63,23 @@ public class CallList extends ArrayList {
   protected boolean onlyCompleted = false;
   protected boolean allContactsInAccount = false;
   protected int contactOrgId = -1;
+  protected java.sql.Timestamp trashedDate = null;
+  protected boolean includeOnlyTrashed = false;
+  protected int oppCallsOnly = Constants.UNDEFINED;
+  protected int avoidDisabledContacts = Constants.UNDEFINED;
 
 
   /**
-   *  Constructor for the CallList object
-   *
-   * @since
+   * Constructor for the CallList object
    */
-  public CallList() { }
+  public CallList() {
+  }
 
 
   /**
-   *  Sets the PagedListInfo attribute of the CallList object
+   * Sets the PagedListInfo attribute of the CallList object
    *
-   * @param  tmp  The new PagedListInfo value
-   * @since
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -77,10 +87,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the ContactId attribute of the CallList object
+   * Sets the ContactId attribute of the CallList object
    *
-   * @param  tmp  The new ContactId value
-   * @since
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -88,10 +97,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the ContactId attribute of the CallList object
+   * Sets the ContactId attribute of the CallList object
    *
-   * @param  tmp  The new ContactId value
-   * @since
+   * @param tmp The new ContactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -99,10 +107,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the OrgId attribute of the CallList object
+   * Sets the OrgId attribute of the CallList object
    *
-   * @param  tmp  The new OrgId value
-   * @since
+   * @param tmp The new OrgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -110,9 +117,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the oppHeaderId attribute of the CallList object
+   * Sets the oppHeaderId attribute of the CallList object
    *
-   * @param  oppHeaderId  The new oppHeaderId value
+   * @param oppHeaderId The new oppHeaderId value
    */
   public void setOppHeaderId(int oppHeaderId) {
     this.oppHeaderId = oppHeaderId;
@@ -120,10 +127,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the EnteredBy attribute of the CallList object
+   * Sets the EnteredBy attribute of the CallList object
    *
-   * @param  tmp  The new EnteredBy value
-   * @since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -131,10 +137,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the AlertDate attribute of the CallList object
+   * Sets the AlertDate attribute of the CallList object
    *
-   * @param  alertDate  The new AlertDate value
-   * @since
+   * @param alertDate The new AlertDate value
    */
   public void setAlertDate(java.sql.Timestamp alertDate) {
     this.alertDate = alertDate;
@@ -142,10 +147,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the HasAlertDate attribute of the CallList object
+   * Sets the HasAlertDate attribute of the CallList object
    *
-   * @param  tmp  The new HasAlertDate value
-   * @since
+   * @param tmp The new HasAlertDate value
    */
   public void setHasAlertDate(boolean tmp) {
     this.hasAlertDate = tmp;
@@ -153,9 +157,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the oppHeaderId attribute of the CallList object
+   * Sets the oppHeaderId attribute of the CallList object
    *
-   * @param  oppHeaderId  The new oppHeaderId value
+   * @param oppHeaderId The new oppHeaderId value
    */
   public void setOppHeaderId(String oppHeaderId) {
     this.oppHeaderId = Integer.parseInt(oppHeaderId);
@@ -163,9 +167,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the Task object
+   * Sets the alertRangeStart attribute of the Task object
    *
-   * @param  alertRangeStart  The new alertRangeStart value
+   * @param alertRangeStart The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
@@ -173,9 +177,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the CallList object
+   * Sets the alertRangeStart attribute of the CallList object
    *
-   * @param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = java.sql.Timestamp.valueOf(tmp);
@@ -183,9 +187,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the CallList object
+   * Sets the owner attribute of the CallList object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -193,9 +197,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the CallList object
+   * Gets the owner attribute of the CallList object
    *
-   * @return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -209,9 +213,9 @@ public class CallList extends ArrayList {
    */
 
   /**
-   *  Sets the alertRangeEnd attribute of the CallList object
+   * Sets the alertRangeEnd attribute of the CallList object
    *
-   * @param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -219,9 +223,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the CallList object
+   * Sets the alertRangeEnd attribute of the CallList object
    *
-   * @param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Timestamp.valueOf(tmp);
@@ -229,9 +233,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the onlyPending attribute of the CallList object
+   * Sets the onlyPending attribute of the CallList object
    *
-   * @param  tmp  The new onlyPending value
+   * @param tmp The new onlyPending value
    */
   public void setOnlyPending(boolean tmp) {
     this.onlyPending = tmp;
@@ -239,9 +243,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the onlyPending attribute of the CallList object
+   * Sets the onlyPending attribute of the CallList object
    *
-   * @param  tmp  The new onlyPending value
+   * @param tmp The new onlyPending value
    */
   public void setOnlyPending(String tmp) {
     this.onlyPending = DatabaseUtils.parseBoolean(tmp);
@@ -249,9 +253,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the excludeCanceled attribute of the CallList object
+   * Sets the excludeCanceled attribute of the CallList object
    *
-   * @param  excludeCanceled  The new excludeCanceled value
+   * @param excludeCanceled The new excludeCanceled value
    */
   public void setExcludeCanceled(boolean excludeCanceled) {
     this.excludeCanceled = excludeCanceled;
@@ -259,9 +263,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the onlyCompleted attribute of the CallList object
+   * Sets the onlyCompleted attribute of the CallList object
    *
-   * @param  onlyCompleted  The new onlyCompleted value
+   * @param onlyCompleted The new onlyCompleted value
    */
   public void setOnlyCompleted(boolean onlyCompleted) {
     this.onlyCompleted = onlyCompleted;
@@ -269,9 +273,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the notificationRangeStart attribute of the CallList object
+   * Sets the notificationRangeStart attribute of the CallList object
    *
-   * @param  notificationRangeStart  The new notificationRangeStart value
+   * @param notificationRangeStart The new notificationRangeStart value
    */
   public void setNotificationRangeStart(java.sql.Timestamp notificationRangeStart) {
     this.notificationRangeStart = notificationRangeStart;
@@ -279,9 +283,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the notificationRangeEnd attribute of the CallList object
+   * Sets the notificationRangeEnd attribute of the CallList object
    *
-   * @param  notificationRangeEnd  The new notificationRangeEnd value
+   * @param notificationRangeEnd The new notificationRangeEnd value
    */
   public void setNotificationRangeEnd(java.sql.Timestamp notificationRangeEnd) {
     this.notificationRangeEnd = notificationRangeEnd;
@@ -289,10 +293,10 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the allContactsInAccount attribute of the CallList object
+   * Sets the allContactsInAccount attribute of the CallList object
    *
-   * @param  allContactsInAccount  The new allContactsInAccount value
-   * @param  contactOrgId          The new allContactsInAccount value
+   * @param allContactsInAccount The new allContactsInAccount value
+   * @param contactOrgId         The new allContactsInAccount value
    */
   public void setAllContactsInAccount(boolean allContactsInAccount, int contactOrgId) {
     this.allContactsInAccount = allContactsInAccount;
@@ -301,9 +305,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the allContactsInAccount attribute of the CallList object
+   * Gets the allContactsInAccount attribute of the CallList object
    *
-   * @return    The allContactsInAccount value
+   * @return The allContactsInAccount value
    */
   public boolean getAllContactsInAccount() {
     return allContactsInAccount;
@@ -311,9 +315,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the contactOrgId attribute of the CallList object
+   * Gets the contactOrgId attribute of the CallList object
    *
-   * @return    The contactOrgId value
+   * @return The contactOrgId value
    */
   public int getContactOrgId() {
     return contactOrgId;
@@ -321,9 +325,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the notificationRangeStart attribute of the CallList object
+   * Gets the notificationRangeStart attribute of the CallList object
    *
-   * @return    The notificationRangeStart value
+   * @return The notificationRangeStart value
    */
   public java.sql.Timestamp getNotificationRangeStart() {
     return notificationRangeStart;
@@ -331,9 +335,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the notificationRangeEnd attribute of the CallList object
+   * Gets the notificationRangeEnd attribute of the CallList object
    *
-   * @return    The notificationRangeEnd value
+   * @return The notificationRangeEnd value
    */
   public java.sql.Timestamp getNotificationRangeEnd() {
     return notificationRangeEnd;
@@ -341,9 +345,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the onlyCompleted attribute of the CallList object
+   * Gets the onlyCompleted attribute of the CallList object
    *
-   * @return    The onlyCompleted value
+   * @return The onlyCompleted value
    */
   public boolean getOnlyCompleted() {
     return onlyCompleted;
@@ -351,9 +355,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the excludeCanceled attribute of the CallList object
+   * Gets the excludeCanceled attribute of the CallList object
    *
-   * @return    The excludeCanceled value
+   * @return The excludeCanceled value
    */
   public boolean getExcludeCanceled() {
     return excludeCanceled;
@@ -361,9 +365,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeStart attribute of the CallList object
+   * Gets the alertRangeStart attribute of the CallList object
    *
-   * @return    The alertRangeStart value
+   * @return The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -371,9 +375,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeEnd attribute of the CallList object
+   * Gets the alertRangeEnd attribute of the CallList object
    *
-   * @return    The alertRangeEnd value
+   * @return The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -381,10 +385,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the AlertDate attribute of the CallList object
+   * Gets the AlertDate attribute of the CallList object
    *
-   * @return    The AlertDate value
-   * @since
+   * @return The AlertDate value
    */
   public java.sql.Timestamp getAlertDate() {
     return alertDate;
@@ -392,10 +395,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the EnteredBy attribute of the CallList object
+   * Gets the EnteredBy attribute of the CallList object
    *
-   * @return    The EnteredBy value
-   * @since
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -403,10 +405,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the HasAlertDate attribute of the CallList object
+   * Gets the HasAlertDate attribute of the CallList object
    *
-   * @return    The HasAlertDate value
-   * @since
+   * @return The HasAlertDate value
    */
   public boolean getHasAlertDate() {
     return hasAlertDate;
@@ -414,9 +415,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the tableName attribute of the CallList object
+   * Gets the tableName attribute of the CallList object
    *
-   * @return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -424,9 +425,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the uniqueField attribute of the CallList object
+   * Gets the uniqueField attribute of the CallList object
    *
-   * @return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -434,9 +435,69 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the CallList object
+   * Sets the includeOnlyTrashed attribute of the CallList object
    *
-   * @return    The lastAnchor value
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the CallList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the includeOnlyTrashed attribute of the CallList object
+   *
+   * @return The includeOnlyTrashed value
+   */
+  public boolean getIncludeOnlyTrashed() {
+    return includeOnlyTrashed;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the CallList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the CallList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the CallList object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the lastAnchor attribute of the CallList object
+   *
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -444,9 +505,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the CallList object
+   * Gets the nextAnchor attribute of the CallList object
    *
-   * @return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -454,9 +515,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the syncType attribute of the CallList object
+   * Gets the syncType attribute of the CallList object
    *
-   * @return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -464,9 +525,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the CallList object
+   * Sets the lastAnchor attribute of the CallList object
    *
-   * @param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -474,9 +535,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the CallList object
+   * Sets the nextAnchor attribute of the CallList object
    *
-   * @param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -484,9 +545,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Sets the syncType attribute of the CallList object
+   * Sets the syncType attribute of the CallList object
    *
-   * @param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -494,10 +555,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the PagedListInfo attribute of the CallList object
+   * Gets the PagedListInfo attribute of the CallList object
    *
-   * @return    The PagedListInfo value
-   * @since
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -505,10 +565,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the ContactId attribute of the CallList object
+   * Gets the ContactId attribute of the CallList object
    *
-   * @return    The ContactId value
-   * @since
+   * @return The ContactId value
    */
   public int getContactId() {
     return contactId;
@@ -516,10 +575,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the OrgId attribute of the CallList object
+   * Gets the OrgId attribute of the CallList object
    *
-   * @return    The OrgId value
-   * @since
+   * @return The OrgId value
    */
   public int getOrgId() {
     return orgId;
@@ -527,9 +585,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the oppHeaderId attribute of the CallList object
+   * Gets the oppHeaderId attribute of the CallList object
    *
-   * @return    The oppHeaderId value
+   * @return The oppHeaderId value
    */
   public int getOppHeaderId() {
     return oppHeaderId;
@@ -537,9 +595,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Gets the onlyPending attribute of the CallList object
+   * Gets the onlyPending attribute of the CallList object
    *
-   * @return    The onlyPending value
+   * @return The onlyPending value
    */
   public boolean getOnlyPending() {
     return onlyPending;
@@ -547,12 +605,72 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Gets the oppCallsOnly attribute of the CallList object
    *
-   * @param  db                Description of the Parameter
-   * @param  timeZone          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @return The oppCallsOnly value
+   */
+  public int getOppCallsOnly() {
+    return oppCallsOnly;
+  }
+
+
+  /**
+   * Sets the oppCallsOnly attribute of the CallList object
+   *
+   * @param tmp The new oppCallsOnly value
+   */
+  public void setOppCallsOnly(int tmp) {
+    this.oppCallsOnly = tmp;
+  }
+
+
+  /**
+   * Sets the oppCallsOnly attribute of the CallList object
+   *
+   * @param tmp The new oppCallsOnly value
+   */
+  public void setOppCallsOnly(String tmp) {
+    this.oppCallsOnly = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the avoidDisabledContacts attribute of the CallList object
+   *
+   * @return The avoidDisabledContacts value
+   */
+  public int getAvoidDisabledContacts() {
+    return avoidDisabledContacts;
+  }
+
+
+  /**
+   * Sets the avoidDisabledContacts attribute of the CallList object
+   *
+   * @param tmp The new avoidDisabledContacts value
+   */
+  public void setAvoidDisabledContacts(int tmp) {
+    this.avoidDisabledContacts = tmp;
+  }
+
+
+  /**
+   * Sets the avoidDisabledContacts attribute of the CallList object
+   *
+   * @param tmp The new avoidDisabledContacts value
+   */
+  public void setAvoidDisabledContacts(String tmp) {
+    this.avoidDisabledContacts = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db       Description of the Parameter
+   * @param timeZone Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
 
@@ -569,14 +687,16 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT " + sqlDate + " as date " +
+        "SELECT " + sqlDate + " AS \"date\" " +
         "FROM call_log c " +
         "WHERE call_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("date"));
+      String alertDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, rs.getTimestamp("date"));
       if (events.containsKey(alertDate)) {
         Integer count = (Integer) events.get(alertDate);
         int tmpCount = count.intValue();
@@ -592,10 +712,10 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -606,7 +726,7 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
     sqlSelect.append(
         "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
-        "c.owner, c.complete_date, ct.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " + "ct.company as ctcompany, ct.org_name as orgname, c.status_id, c.entered, p.description as priority " +
+        "c.owner, c.notes, c.length, c.followup_notes, c.complete_date, ct.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " + "ct.org_name as ctcompany, ct.org_name as orgname, c.status_id, c.entered, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
@@ -616,7 +736,8 @@ public class CallList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY c.alertdate, p.weight DESC ");
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -629,10 +750,14 @@ public class CallList extends ArrayList {
       thisCall.setAlertDate(rs.getTimestamp("alertdate"));
       thisCall.setAlertText(rs.getString("alert"));
       thisCall.setOwner(rs.getInt("owner"));
+      thisCall.setNotes(rs.getString("notes"));
+      thisCall.setLength(rs.getInt("length"));
+      thisCall.setFollowupNotes(rs.getString("followup_notes"));
       thisCall.setCompleteDate(rs.getTimestamp("complete_date"));
       //contact details
       thisCall.setContactOrgId(DatabaseUtils.getInt(rs, "contact_org_id"));
-      String contactName = Contact.getNameLastFirst(rs.getString("ctlast"), rs.getString("ctfirst"));
+      String contactName = Contact.getNameLastFirst(
+          rs.getString("ctlast"), rs.getString("ctfirst"));
       if (contactName == null || "".equals(contactName)) {
         contactName = rs.getString("ctcompany");
       }
@@ -657,11 +782,10 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of Parameter
-   * @exception  SQLException  Description of Exception
-   * @since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -673,8 +797,12 @@ public class CallList extends ArrayList {
     StringBuffer sqlOrder = new StringBuffer();
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        "SELECT COUNT(*) as recordcount " +
+        "SELECT COUNT(*) AS recordcount " +
         "FROM call_log c " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
+        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "WHERE call_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -706,28 +834,22 @@ public class CallList extends ArrayList {
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, t.*, talert.description as alertType, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany, p.description as priority " +
+        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description as alertType, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.org_name as ctcompany, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
         "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "WHERE call_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Call thisCall = new Call(rs);
       this.add(thisCall);
     }
@@ -737,10 +859,10 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of Parameter
-   * @exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator calls = this.iterator();
@@ -752,10 +874,9 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of Parameter
-   * @since
+   * @param sqlFilter Description of Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -767,9 +888,18 @@ public class CallList extends ArrayList {
 
     if (allContactsInAccount) {
       sqlFilter.append(
-        "AND c.contact_id IN ( SELECT contact_id " +
-        " FROM contact ct WHERE ct.org_id = ? ) "
-      );
+          "AND c.contact_id IN ( SELECT contact_id " +
+          " FROM contact cnt WHERE cnt.org_id = ? ");
+      if (this.getAvoidDisabledContacts() == Constants.TRUE) {
+        sqlFilter.append(
+            "AND cnt.enabled = ? " +
+            "AND cnt.trashed_date IS NULL ");
+      } else if (this.getAvoidDisabledContacts() == Constants.FALSE) {
+        sqlFilter.append(
+            "AND (cnt.enabled = ? " +
+            "OR cnt.trashed_date IS NOT NULL) ");
+      }
+      sqlFilter.append(") ");
     }
 
     if (hasAlertDate == true) {
@@ -827,16 +957,39 @@ public class CallList extends ArrayList {
     if (excludeCanceled) {
       sqlFilter.append("AND c.status_id != ? ");
     }
+
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND c.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND c.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND c.trashed_date IS NULL ");
+    }
+    if (oppCallsOnly == Constants.TRUE) {
+      sqlFilter.append("AND c.opp_id IS NOT NULL ");
+    } else if (oppCallsOnly == Constants.FALSE) {
+      sqlFilter.append("AND c.opp_id IS NULL ");
+    }
+    if (!allContactsInAccount) {
+      if (this.getAvoidDisabledContacts() == Constants.TRUE) {
+        sqlFilter.append(
+            "AND ct.enabled = ? " +
+            "AND ct.trashed_date IS NULL ");
+      } else if (this.getAvoidDisabledContacts() == Constants.FALSE) {
+        sqlFilter.append(
+            "AND (ct.enabled = ? " +
+            "OR ct.trashed_date IS NOT NULL) ");
+      }
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of Parameter
-   * @return                   Description of the Returned Value
-   * @exception  SQLException  Description of Exception
-   * @since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -846,6 +999,11 @@ public class CallList extends ArrayList {
 
     if (allContactsInAccount) {
       pst.setInt(++i, contactOrgId);
+      if (this.getAvoidDisabledContacts() == Constants.TRUE) {
+        pst.setBoolean(++i, true);
+      } else if (this.getAvoidDisabledContacts() == Constants.FALSE) {
+        pst.setBoolean(++i, false);
+      }
     }
 
     if (oppHeaderId != -1) {
@@ -885,18 +1043,32 @@ public class CallList extends ArrayList {
     if (excludeCanceled) {
       pst.setInt(++i, Call.CANCELED);
     }
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
+    }
+    if (!allContactsInAccount) {
+      if (this.getAvoidDisabledContacts() == Constants.TRUE) {
+        pst.setBoolean(++i, true);
+      } else if (this.getAvoidDisabledContacts() == Constants.FALSE) {
+        pst.setBoolean(++i, false);
+      }
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  context           Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, ActionContext context, int newOwner) throws SQLException {
     int total = 0;
@@ -912,14 +1084,14 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  context           Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, ActionContext context, int newOwner, int userId) throws SQLException {
     int total = 0;
@@ -936,13 +1108,13 @@ public class CallList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  context           Description of the Parameter
-   * @param  newOrgId          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param newOrgId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignAccount(Connection db, ActionContext context, int newOrgId) throws SQLException {
     int total = 0;
@@ -954,6 +1126,25 @@ public class CallList extends ArrayList {
       }
     }
     return total;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      Call tmpCall = (Call) itr.next();
+      tmpCall.updateStatus(db, toTrash, tmpUserId);
+    }
+    return true;
   }
 }
 

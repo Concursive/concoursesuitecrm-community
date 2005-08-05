@@ -63,11 +63,12 @@
   <tr class="subtab">
     <td>
       <% String documentLink = "DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId="+documentStore.getId(); %>
-      <zeroio:folderHierarchy module="Documents" link="<%= documentLink %>" showLastLink="true"/> >
+      <zeroio:folderHierarchy module="Documents" link="<%= documentLink %>" showLastLink="<%= FileItem.getId() > 0?"true":"false" %>"/>
+      <%= FileItem.getId() > 0? " > "+FileItem.getSubject():"" %>
     </td>
   </tr>
 </table>
-<dhv:formMessage />
+<dhv:formMessage showSpace="false" />
 <br />
   <input type="submit" value="<dhv:label name="documents.documents.upload">Upload</dhv:label>" name="upload" />
   <input type="submit" value="<dhv:label name="documents.documents.cancelUpload">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId=<%= documentStore.getId() %>&folderId=<%= request.getParameter("folderId") %>';" />

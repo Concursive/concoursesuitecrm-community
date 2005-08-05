@@ -15,19 +15,21 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
-import org.aspcfs.controller.SystemStatus;
-import com.darkhorseventures.database.ConnectionElement;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Ananth
- *@created    February 24, 2005
+ * @author Ananth
+ * @created February 24, 2005
  */
 public class ProductCategoryHierarchyHandler extends TagSupport {
   private boolean showLastLink = false;
@@ -36,9 +38,9 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the displayJS attribute of the ProductCategoryHierarchyHandler object
+   * Sets the displayJS attribute of the ProductCategoryHierarchyHandler object
    *
-   *@param  tmp  The new displayJS value
+   * @param tmp The new displayJS value
    */
   public void setDisplayJS(boolean tmp) {
     this.displayJS = tmp;
@@ -46,9 +48,9 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the displayJS attribute of the ProductCategoryHierarchyHandler object
+   * Sets the displayJS attribute of the ProductCategoryHierarchyHandler object
    *
-   *@param  tmp  The new displayJS value
+   * @param tmp The new displayJS value
    */
   public void setDisplayJS(String tmp) {
     this.displayJS = DatabaseUtils.parseBoolean(tmp);
@@ -56,10 +58,10 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the showLastLink attribute of the ProductCategoryHierarchyHandler
-   *  object
+   * Sets the showLastLink attribute of the ProductCategoryHierarchyHandler
+   * object
    *
-   *@param  tmp  The new showLastLink value
+   * @param tmp The new showLastLink value
    */
   public void setShowLastLink(boolean tmp) {
     this.showLastLink = tmp;
@@ -67,10 +69,10 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the showLastLink attribute of the ProductCategoryHierarchyHandler
-   *  object
+   * Sets the showLastLink attribute of the ProductCategoryHierarchyHandler
+   * object
    *
-   *@param  tmp  The new showLastLink value
+   * @param tmp The new showLastLink value
    */
   public void setShowLastLink(String tmp) {
     this.showLastLink = DatabaseUtils.parseBoolean(tmp);
@@ -78,43 +80,49 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the link attribute of the ProductCategoryHierarchyHandler object
+   * Sets the link attribute of the ProductCategoryHierarchyHandler object
    *
-   *@param  tmp  The new link value
+   * @param tmp The new link value
    */
   public void setLink(String tmp) {
     this.link = tmp;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
       SystemStatus thisSystem = null;
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce != null) {
-        thisSystem = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+        thisSystem = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
       }
       //Show the open category image
-      this.pageContext.getOut().write("<img border=\"0\" src=\"images/icons/stock_home-16.gif\" align=\"absmiddle\"> ");
+      this.pageContext.getOut().write(
+          "<img border=\"0\" src=\"images/icons/stock_home-16.gif\" align=\"absmiddle\"> ");
       //Generate the category path
-      LinkedHashMap categoryLevels = (LinkedHashMap) pageContext.getRequest().getAttribute("categoryLevels");
+      LinkedHashMap categoryLevels = (LinkedHashMap) pageContext.getRequest().getAttribute(
+          "categoryLevels");
       if (categoryLevels == null) {
         if (showLastLink) {
           if (displayJS) {
-            this.pageContext.getOut().write("<a href=\"javascript:submitForm('-1');\">");
+            this.pageContext.getOut().write(
+                "<a href=\"javascript:submitForm('-1');\">");
           } else {
-            this.pageContext.getOut().write("<a href=\"" + link + "&categoryId=-1\">");
+            this.pageContext.getOut().write(
+                "<a href=\"" + link + "&categoryId=-1\">");
           }
         }
         if (thisSystem != null) {
-          this.pageContext.getOut().write(thisSystem.getLabel("product.category.topCategories"));
+          this.pageContext.getOut().write(
+              thisSystem.getLabel("product.category.topCategories"));
         } else {
           this.pageContext.getOut().write("Top Categories");
         }
@@ -124,15 +132,19 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
       } else {
         Object[] hierarchy = categoryLevels.keySet().toArray();
         if (hierarchy.length > 0) {
-          String categoryId = (String) pageContext.getRequest().getParameter("categoryId");
+          String categoryId = (String) pageContext.getRequest().getParameter(
+              "categoryId");
           //Show a Home link
           if (displayJS) {
-            this.pageContext.getOut().write("<a href=\"javascript:submitForm('-1')\">");
+            this.pageContext.getOut().write(
+                "<a href=\"javascript:submitForm('-1')\">");
           } else {
-            this.pageContext.getOut().write("<a href=\"" + link + "&categoryId=-1\">");
+            this.pageContext.getOut().write(
+                "<a href=\"" + link + "&categoryId=-1\">");
           }
           if (thisSystem != null) {
-            this.pageContext.getOut().write(thisSystem.getLabel("product.category.topCategories"));
+            this.pageContext.getOut().write(
+                thisSystem.getLabel("product.category.topCategories"));
           } else {
             this.pageContext.getOut().write("Top Categories");
           }
@@ -145,9 +157,11 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
             String name = sa[0];
             if (i > 0 || showLastLink) {
               if (displayJS) {
-                this.pageContext.getOut().write("<a href=\"javascript:submitForm('" + thisId.intValue() + "');\">");
+                this.pageContext.getOut().write(
+                    "<a href=\"javascript:submitForm('" + thisId.intValue() + "');\">");
               } else {
-                this.pageContext.getOut().write("<a href=\"" + link + "&categoryId=" + thisId.intValue() + "\">");
+                this.pageContext.getOut().write(
+                    "<a href=\"" + link + "&categoryId=" + thisId.intValue() + "\">");
               }
             }
             this.pageContext.getOut().write(StringUtils.toHtml(name));
@@ -162,13 +176,16 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
           //Show home link
           if (showLastLink) {
             if (displayJS) {
-              this.pageContext.getOut().write("<a href=\"javascript:submitForm('-1');\">");
+              this.pageContext.getOut().write(
+                  "<a href=\"javascript:submitForm('-1');\">");
             } else {
-              this.pageContext.getOut().write("<a href=\"" + link + "&categoryId=-1\">");
+              this.pageContext.getOut().write(
+                  "<a href=\"" + link + "&categoryId=-1\">");
             }
           }
           if (thisSystem != null) {
-            this.pageContext.getOut().write(thisSystem.getLabel("product.category.topCategories"));
+            this.pageContext.getOut().write(
+                thisSystem.getLabel("product.category.topCategories"));
           } else {
             this.pageContext.getOut().write("Top Categories");
           }
@@ -178,16 +195,17 @@ public class ProductCategoryHierarchyHandler extends TagSupport {
         }
       }
     } catch (Exception e) {
-      throw new JspException("ProductCategoryHierarchyHandler Error: " + e.getMessage());
+      throw new JspException(
+          "ProductCategoryHierarchyHandler Error: " + e.getMessage());
     }
     return SKIP_BODY;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

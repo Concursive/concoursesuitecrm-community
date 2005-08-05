@@ -20,6 +20,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*" %>
+<jsp:useBean id="environmentSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="competitorsSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="compellingEventSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="budgetSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
@@ -261,6 +265,46 @@
       <input type="checkbox" name="<%= opportunityHeader.getId() > 0 ? "closeNow" : "component_closeNow" %>" value="true" <%= ComponentDetails.getCloseIt() ? " checked" : ""%>><dhv:label name="pipeline.closeThisComponent">Close this component</dhv:label>
     </td>
   </tr>
+  <% if (environmentSelect.getEnabledElementCount() > 0) { %>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.environment">Environment</dhv:label>
+      </td>
+      <td>
+        <%= environmentSelect.getHtmlSelect((opportunityHeader.getId() > 0 ? "environment" : "component_environment"),ComponentDetails.getEnvironment()) %>
+      </td>
+    </tr>
+  <%}%> 
+  <% if (competitorsSelect.getEnabledElementCount() > 0) { %>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.competitors">Competitors</dhv:label>
+      </td>
+      <td>
+        <%= competitorsSelect.getHtmlSelect((opportunityHeader.getId() > 0 ? "competitors" : "component_competitors"),ComponentDetails.getCompetitors()) %>
+      </td>
+    </tr>
+  <%}%> 
+  <% if (compellingEventSelect.getEnabledElementCount() > 0) { %>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.compellingEvent">Compelling Event</dhv:label>
+      </td>
+      <td>
+        <%= compellingEventSelect.getHtmlSelect((opportunityHeader.getId() > 0 ? "compellingEvent" : "component_compellingEvent"),ComponentDetails.getCompellingEvent()) %>
+      </td>
+    </tr>
+  <%}%> 
+  <% if (budgetSelect.getEnabledElementCount() > 0) { %>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="project.budget">Budget</dhv:label>
+      </td>
+      <td>
+        <%= budgetSelect.getHtmlSelect((opportunityHeader.getId() > 0 ? "budget" : "component_budget"),ComponentDetails.getBudget()) %>
+      </td>
+    </tr>
+  <%}%> 
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_contacts_oppcomponent_details.EstCommission">Est. Commission</dhv:label>

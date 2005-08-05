@@ -15,21 +15,24 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.utils.web.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    February 11, 2004
- *@version    $Id: TicketPerDayDescriptionList.java,v 1.1.2.3 2004/02/11
- *      19:26:19 kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: TicketPerDayDescriptionList.java,v 1.1.2.3 2004/02/11
+ *          19:26:19 kbhoopal Exp $
+ * @created February 11, 2004
  */
 public class TicketPerDayDescriptionList extends ArrayList {
 
@@ -43,16 +46,17 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Constructor for the TicketPerDayDescriptionList object
+   * Constructor for the TicketPerDayDescriptionList object
    */
-  public TicketPerDayDescriptionList() { }
+  public TicketPerDayDescriptionList() {
+  }
 
 
   /**
-   *  Constructor for the TicketPerDayDescriptionList object
+   * Constructor for the TicketPerDayDescriptionList object
    *
-   *@param  request  Description of the Parameter
-   *@param  errors   Description of the Parameter
+   * @param request Description of the Parameter
+   * @param errors  Description of the Parameter
    */
   public TicketPerDayDescriptionList(HttpServletRequest request, HashMap errors) {
     int i = 1;
@@ -62,18 +66,18 @@ public class TicketPerDayDescriptionList extends ArrayList {
     totalLaborMinutes = 0;
     while (request.getParameter("activityDate" + i) != null) {
       if (!(request.getParameter("activityDate" + i).trim().equals(""))) {
-          TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
+        TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
         try {
-            thisPerDayDescription.buildRecord(request, i);
-            this.totalTravelHours = totalTravelHours + thisPerDayDescription.getTravelHours();
-            this.totalTravelMinutes = totalTravelMinutes + thisPerDayDescription.getTravelMinutes();
-            this.totalLaborHours = totalLaborHours + thisPerDayDescription.getLaborHours();
-            this.totalLaborMinutes = totalLaborMinutes + thisPerDayDescription.getLaborMinutes();
+          thisPerDayDescription.buildRecord(request, i);
+          this.totalTravelHours = totalTravelHours + thisPerDayDescription.getTravelHours();
+          this.totalTravelMinutes = totalTravelMinutes + thisPerDayDescription.getTravelMinutes();
+          this.totalLaborHours = totalLaborHours + thisPerDayDescription.getLaborHours();
+          this.totalLaborMinutes = totalLaborMinutes + thisPerDayDescription.getLaborMinutes();
         } catch (Exception e) {
           errors.put("activityDate" + i + "Error", "invalid date");
-          }
-          this.add(thisPerDayDescription);
         }
+        this.add(thisPerDayDescription);
+      }
       i++;
     }
     totalTravelHours = totalTravelHours + totalTravelMinutes / 60;
@@ -84,9 +88,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TicketPerDayDescriptionList object
+   * Sets the pagedListInfo attribute of the TicketPerDayDescriptionList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -94,9 +98,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketPerDayDescriptionList object
+   * Sets the id attribute of the TicketPerDayDescriptionList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -104,9 +108,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketPerDayDescriptionList object
+   * Sets the id attribute of the TicketPerDayDescriptionList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -114,9 +118,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the formId attribute of the TicketPerDayDescriptionList object
+   * Sets the formId attribute of the TicketPerDayDescriptionList object
    *
-   *@param  tmp  The new formId value
+   * @param tmp The new formId value
    */
   public void setFormId(int tmp) {
     this.formId = tmp;
@@ -124,9 +128,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the formId attribute of the TicketPerDayDescriptionList object
+   * Sets the formId attribute of the TicketPerDayDescriptionList object
    *
-   *@param  tmp  The new formId value
+   * @param tmp The new formId value
    */
   public void setFormId(String tmp) {
     this.formId = Integer.parseInt(tmp);
@@ -134,10 +138,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalTravelHours attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalTravelHours attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalTravelHours value
+   * @param tmp The new totalTravelHours value
    */
   public void setTotalTravelHours(int tmp) {
     this.totalTravelHours = tmp;
@@ -145,10 +149,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalTravelHours attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalTravelHours attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalTravelHours value
+   * @param tmp The new totalTravelHours value
    */
   public void setTotalTravelHours(String tmp) {
     this.totalTravelHours = Integer.parseInt(tmp);
@@ -156,10 +160,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalTravelMinutes attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalTravelMinutes attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalTravelMinutes value
+   * @param tmp The new totalTravelMinutes value
    */
   public void setTotalTravelMinutes(int tmp) {
     this.totalTravelMinutes = tmp;
@@ -167,10 +171,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalTravelMinutes attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalTravelMinutes attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalTravelMinutes value
+   * @param tmp The new totalTravelMinutes value
    */
   public void setTotalTravelMinutes(String tmp) {
     this.totalTravelMinutes = Integer.parseInt(tmp);
@@ -178,10 +182,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalLaborHours attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalLaborHours attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalLaborHours value
+   * @param tmp The new totalLaborHours value
    */
   public void setTotalLaborHours(int tmp) {
     this.totalLaborHours = tmp;
@@ -189,10 +193,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalLaborHours attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalLaborHours attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalLaborHours value
+   * @param tmp The new totalLaborHours value
    */
   public void setTotalLaborHours(String tmp) {
     this.totalLaborHours = Integer.parseInt(tmp);
@@ -200,10 +204,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalLaborMinutes attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalLaborMinutes attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalLaborMinutes value
+   * @param tmp The new totalLaborMinutes value
    */
   public void setTotalLaborMinutes(int tmp) {
     this.totalLaborMinutes = tmp;
@@ -211,10 +215,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Sets the totalLaborMinutes attribute of the TicketPerDayDescriptionList
-   *  object
+   * Sets the totalLaborMinutes attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@param  tmp  The new totalLaborMinutes value
+   * @param tmp The new totalLaborMinutes value
    */
   public void setTotalLaborMinutes(String tmp) {
     this.totalLaborMinutes = Integer.parseInt(tmp);
@@ -222,9 +226,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the TicketPerDayDescriptionList object
+   * Gets the pagedListInfo attribute of the TicketPerDayDescriptionList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -232,9 +236,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the TicketPerDayDescriptionList object
+   * Gets the id attribute of the TicketPerDayDescriptionList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -242,9 +246,9 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the formId attribute of the TicketPerDayDescriptionList object
+   * Gets the formId attribute of the TicketPerDayDescriptionList object
    *
-   *@return    The formId value
+   * @return The formId value
    */
   public int getFormId() {
     return formId;
@@ -252,10 +256,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the totalTravelHours attribute of the TicketPerDayDescriptionList
-   *  object
+   * Gets the totalTravelHours attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@return    The totalTravelHours value
+   * @return The totalTravelHours value
    */
   public int getTotalTravelHours() {
     return totalTravelHours;
@@ -263,10 +267,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the totalTravelMinutes attribute of the TicketPerDayDescriptionList
-   *  object
+   * Gets the totalTravelMinutes attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@return    The totalTravelMinutes value
+   * @return The totalTravelMinutes value
    */
   public int getTotalTravelMinutes() {
     return totalTravelMinutes;
@@ -274,10 +278,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the totalLaborHours attribute of the TicketPerDayDescriptionList
-   *  object
+   * Gets the totalLaborHours attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@return    The totalLaborHours value
+   * @return The totalLaborHours value
    */
   public int getTotalLaborHours() {
     return totalLaborHours;
@@ -285,10 +289,10 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the totalLaborMinutes attribute of the TicketPerDayDescriptionList
-   *  object
+   * Gets the totalLaborMinutes attribute of the TicketPerDayDescriptionList
+   * object
    *
-   *@return    The totalLaborMinutes value
+   * @return The totalLaborMinutes value
    */
   public int getTotalLaborMinutes() {
     return totalLaborMinutes;
@@ -296,18 +300,15 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
-        break;
-      }
       TicketPerDayDescription thisDescription = this.getObject(rs);
       this.add(thisDescription);
     }
@@ -319,12 +320,12 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  fetches a list of activity items
+   * fetches a list of activity items
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -368,7 +369,8 @@ public class TicketPerDayDescriptionList extends ArrayList {
         " * " +
         "FROM ticket_activity_item " +
         "WHERE item_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -379,11 +381,11 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter         Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
     if (id > -1) {
@@ -397,11 +399,11 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -416,11 +418,11 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Deletes the activities from the database
+   * Deletes the activities from the database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deleteList(Connection db) throws SQLException {
     Iterator itr = this.iterator();
@@ -433,11 +435,11 @@ public class TicketPerDayDescriptionList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the TicketPerDayDescriptionList object
+   * Gets the object attribute of the TicketPerDayDescriptionList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public TicketPerDayDescription getObject(ResultSet rs) throws SQLException {
     TicketPerDayDescription thisDescription = new TicketPerDayDescription(rs);

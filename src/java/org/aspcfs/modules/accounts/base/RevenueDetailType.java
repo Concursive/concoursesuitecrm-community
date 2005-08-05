@@ -15,15 +15,14 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
+import java.sql.ResultSet;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class RevenueDetailType {
 
@@ -33,16 +32,17 @@ public class RevenueDetailType {
 
 
   /**
-   *  Constructor for the RevenueDetailType object
+   * Constructor for the RevenueDetailType object
    */
-  public RevenueDetailType() { }
+  public RevenueDetailType() {
+  }
 
 
   /**
-   *  Constructor for the RevenueDetailType object
+   * Constructor for the RevenueDetailType object
    *
-   *@param  rs                         Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public RevenueDetailType(ResultSet rs) throws java.sql.SQLException {
     id = rs.getInt("code");
@@ -52,9 +52,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Sets the id attribute of the RevenueDetailType object
+   * Sets the id attribute of the RevenueDetailType object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -62,9 +62,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Sets the id attribute of the RevenueDetailType object
+   * Sets the id attribute of the RevenueDetailType object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -72,9 +72,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Sets the description attribute of the RevenueDetailType object
+   * Sets the description attribute of the RevenueDetailType object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -82,9 +82,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Sets the enabled attribute of the RevenueDetailType object
+   * Sets the enabled attribute of the RevenueDetailType object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -92,9 +92,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Gets the id attribute of the RevenueDetailType object
+   * Gets the id attribute of the RevenueDetailType object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -102,9 +102,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Gets the description attribute of the RevenueDetailType object
+   * Gets the description attribute of the RevenueDetailType object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -112,9 +112,9 @@ public class RevenueDetailType {
 
 
   /**
-   *  Gets the enabled attribute of the RevenueDetailType object
+   * Gets the enabled attribute of the RevenueDetailType object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;

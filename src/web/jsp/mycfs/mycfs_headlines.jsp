@@ -30,7 +30,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <dhv:label name="Headlines">Headlines</dhv:label>
 </td>
 </tr>

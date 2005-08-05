@@ -15,16 +15,18 @@
  */
 package org.aspcfs.utils.web;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class CustomLookupElement extends HashMap {
 
@@ -38,16 +40,17 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Constructor for the CustomLookupElement object
+   * Constructor for the CustomLookupElement object
    */
-  public CustomLookupElement() { }
+  public CustomLookupElement() {
+  }
 
 
   /**
-   *  Constructor for the CustomLookupElement object
+   * Constructor for the CustomLookupElement object
    *
-   *@param  rs                         Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public CustomLookupElement(ResultSet rs) throws java.sql.SQLException {
     build(rs);
@@ -55,17 +58,18 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Constructor for the CustomLookupElement object
+   * Constructor for the CustomLookupElement object
    *
-   *@param  db                         Description of the Parameter
-   *@param  code                       Description of the Parameter
-   *@param  tableName                  Description of the Parameter
-   *@param  uniqueField                Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param code        Description of the Parameter
+   * @param tableName   Description of the Parameter
+   * @param uniqueField Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public CustomLookupElement(Connection db, int code, String tableName, String uniqueField) throws java.sql.SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomLookupElement-> Retrieving ID: " + code + " from table: " + tableName);
+      System.out.println(
+          "CustomLookupElement-> Retrieving ID: " + code + " from table: " + tableName);
     }
     String sql =
         "SELECT " + uniqueField + " " +
@@ -83,10 +87,10 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                         Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public void build(ResultSet rs) throws java.sql.SQLException {
     ResultSetMetaData meta = rs.getMetaData();
@@ -105,10 +109,10 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Adds a feature to the Field attribute of the CustomLookupElement object
+   * Adds a feature to the Field attribute of the CustomLookupElement object
    *
-   *@param  fieldName  The feature to be added to the Field attribute
-   *@param  value      The feature to be added to the Field attribute
+   * @param fieldName The feature to be added to the Field attribute
+   * @param value     The feature to be added to the Field attribute
    */
   public void addField(String fieldName, String value) {
     this.put(fieldName, value);
@@ -116,9 +120,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Sets the tableName attribute of the CustomLookupElement object
+   * Sets the tableName attribute of the CustomLookupElement object
    *
-   *@param  tmp  The new tableName value
+   * @param tmp The new tableName value
    */
   public void setTableName(String tmp) {
     this.tableName = tmp;
@@ -126,9 +130,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Sets the uniqueField attribute of the CustomLookupElement object
+   * Sets the uniqueField attribute of the CustomLookupElement object
    *
-   *@param  tmp  The new uniqueField value
+   * @param tmp The new uniqueField value
    */
   public void setUniqueField(String tmp) {
     this.uniqueField = tmp;
@@ -136,9 +140,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Sets the id attribute of the CustomLookupElement object
+   * Sets the id attribute of the CustomLookupElement object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -146,9 +150,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Sets the id attribute of the CustomLookupElement object
+   * Sets the id attribute of the CustomLookupElement object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -156,9 +160,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Sets the field attribute of the CustomLookupElement object
+   * Sets the field attribute of the CustomLookupElement object
    *
-   *@param  tmp  The new field value
+   * @param tmp The new field value
    */
   public void setField(String tmp) {
     currentField = tmp;
@@ -166,9 +170,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Sets the data attribute of the CustomLookupElement object
+   * Sets the data attribute of the CustomLookupElement object
    *
-   *@param  tmp  The new data value
+   * @param tmp The new data value
    */
   public void setData(String tmp) {
     currentValue = tmp;
@@ -177,7 +181,7 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Adds a feature to the Property attribute of the CustomLookupElement object
+   * Adds a feature to the Property attribute of the CustomLookupElement object
    */
   private void addProperty() {
     if (!"code".equals(currentField) && !"guid".equals(currentField)) {
@@ -191,9 +195,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Gets the id attribute of the CustomLookupElement object
+   * Gets the id attribute of the CustomLookupElement object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -201,9 +205,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Gets the tableName attribute of the CustomLookupElement object
+   * Gets the tableName attribute of the CustomLookupElement object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -211,9 +215,9 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Gets the uniqueField attribute of the CustomLookupElement object
+   * Gets the uniqueField attribute of the CustomLookupElement object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -221,10 +225,10 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Gets the value attribute of the CustomLookupElement object
+   * Gets the value attribute of the CustomLookupElement object
    *
-   *@param  tmp  Description of the Parameter
-   *@return      The value value
+   * @param tmp Description of the Parameter
+   * @return The value value
    */
   public String getValue(String tmp) {
     return (String) this.get(tmp);
@@ -232,11 +236,11 @@ public class CustomLookupElement extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (tableName == null) {
@@ -245,10 +249,22 @@ public class CustomLookupElement extends HashMap {
     if (this.size() == 0) {
       throw new SQLException("Fields not specified");
     }
+    String seqName = null;
+    if (tableName.length() > 22) {
+      seqName = tableName.substring(0, 22);
+    } else {
+      seqName = tableName;
+    }
+    if (this.getUniqueField() != null) {
+      id = DatabaseUtils.getNextSeq(
+          db, seqName + "_" + getUniqueField() + "_seq");
+    }
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO " + tableName + " ");
-
     sql.append("(");
+    if (this.getUniqueField() != null && id > -1) {
+      sql.append(this.getUniqueField() + ", ");
+    }
     Iterator fields = this.keySet().iterator();
     while (fields.hasNext()) {
       sql.append((String) fields.next());
@@ -257,6 +273,9 @@ public class CustomLookupElement extends HashMap {
       }
     }
     sql.append(") VALUES (");
+    if (this.getUniqueField() != null && id > -1) {
+      sql.append("?, ");
+    }
     for (int i = 0; i < this.size(); i++) {
       sql.append("?");
       if (i < this.size() - 1) {
@@ -266,8 +285,11 @@ public class CustomLookupElement extends HashMap {
     sql.append(")");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    Iterator paramters = this.keySet().iterator();
     int paramCount = 0;
+    if (this.getUniqueField() != null && id > -1) {
+      pst.setInt(++paramCount, id);
+    }
+    Iterator paramters = this.keySet().iterator();
     while (paramters.hasNext()) {
       String paramName = ((String) paramters.next());
       String value = (String) this.get(paramName);
@@ -275,19 +297,10 @@ public class CustomLookupElement extends HashMap {
     }
     pst.execute();
     pst.close();
-
-    String seqName = null;
-    if (tableName.length() > 22) {
-      seqName = tableName.substring(0, 22);
-    } else {
-      seqName = tableName;
-    }
-
-    //TODO: Update this to accomodate the length of uniqueField
     if (this.getUniqueField() != null) {
-      id = DatabaseUtils.getCurrVal(db, seqName + "_" + getUniqueField() + "_seq");
+      id = DatabaseUtils.getCurrVal(
+          db, seqName + "_" + getUniqueField() + "_seq", id);
     }
-
     return true;
   }
 }

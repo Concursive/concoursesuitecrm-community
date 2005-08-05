@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <mappings>
+    <map id="contactInformation.details" displayName="Contact Information"><![CDATA[
+Tenemos la siguiente información de contacto archivada para Ud. ...
+<br />
+<b>Nombre:</b> ${name}<br />
+<br />
+<b>Dirección Email:</b><br />
+${emailAddresses}
+${noEmailAddresses=No hay dirección Email en el registro.<br />}
+<br />
+<br />
+<b>Dirección para mensaje de Texto:</b><br />
+${textMessageAddresses}
+${noTextMessageAddresses=No hay dirección para mensaje de texto en el registro.<br />}
+<br />
+<br />
+<b>N˙meros Telefónicos:</b><br />
+${phoneNumbers}
+${noPhoneNumbers=No hay n˙mero telefónico en el registro.<br />}
+<br />
+<br />
+<b>Dirección Postal:</b><br />
+${postalAddresses}
+${noPostalAddresses=No hay dirección postal en el registro.<br />}
+]]></map>
+    <!-- Project Management User Added -->
+    <map id="projects.userAdded.subject" displayName="Project Management User Added"><![CDATA[Invitación para Proyecto]]></map>
+    <map id="projects.userAdded.body" displayName="Project Management User Added"><![CDATA[
+<body>
+Hola ${invite.name},<br />
+<br />
+${user.name} ha configurado el siguiente proyecto en Centric CRM y estan solicitando
+se integre al mismo:<br />
+<br />
+Nombre del Proyecto: ${project.name}<br />
+Descripción del Proyecto: ${project.description}<br />
+<br />
+Para aceptar o rechazar la invitación, ingrese al sistema y revise sus proyectos
+presionando el siguiente enlace:<br />
+<a href="${link}" target="_blank">${link}</a><br />
+<br />
+Una vez validado, navegue el módulo de Proyectos y seleccione ver las invitaciones.<br />
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+    <!-- Project Management News Email -->
+    <map id="projects.news.email.subject" displayName="Project Management News Email"><![CDATA[${news.subject}]]></map>
+    <map id="projects.news.email.body" displayName="Project Management News Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td>
+      ${news.intro}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ${news.continued=[continuación del mensaje...]}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">Ver este mensaje en lìnea</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+  </mappings>
+</templates>

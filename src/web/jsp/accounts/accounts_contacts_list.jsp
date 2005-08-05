@@ -52,7 +52,9 @@ function reopen() {
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a></dhv:permission>
+  <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
+    <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a></dhv:permission>
+  </dhv:evaluate>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="ContactListInfo"/></center></dhv:include>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
@@ -88,7 +90,7 @@ function reopen() {
 		<tr class="containerBody">
       <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>', 'menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>', '<%= thisContact.getPrimaryContact() %>');"
+         <a href="javascript:displayMenu('select<%= i %>', 'menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>', '<%= thisContact.getPrimaryContact() %>','<%= thisContact.isTrashed()%>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuContact');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="center" width="50%" class="row<%= rowid %>">

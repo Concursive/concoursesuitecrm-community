@@ -29,20 +29,20 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.Connection;
 
 /**
- *  Represents Tasks created for a Ticket
+ * Represents Tasks created for a Ticket
  *
- *@author     akhi_m
- *@created    May 14, 2003
- *@version    $Id: TroubleTicketTasks.java,v 1.11 2003/08/29 20:02:40 akhi_m Exp
- *      $
+ * @author akhi_m
+ * @version $Id: TroubleTicketTasks.java,v 1.11 2003/08/29 20:02:40 akhi_m Exp
+ *          $
+ * @created May 14, 2003
  */
 public final class TroubleTicketTasks extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!hasPermission(context, "tickets-tickets-tasks-view")) {
@@ -52,7 +52,8 @@ public final class TroubleTicketTasks extends CFSModule {
     Connection db = null;
     TaskList taskList = new TaskList();
 
-    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "TicketTaskListInfo");
+    PagedListInfo ticTaskListInfo = this.getPagedListInfo(
+        context, "TicketTaskListInfo");
     ticTaskListInfo.setItemsPerPage(0);
     try {
       db = this.getConnection(context);
@@ -76,10 +77,10 @@ public final class TroubleTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "tickets-tickets-tasks-view")) {
@@ -104,10 +105,10 @@ public final class TroubleTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     String permission = "tickets-tickets-tasks-edit";
@@ -135,6 +136,9 @@ public final class TroubleTicketTasks extends CFSModule {
         if (isValid) {
           recordInserted = thisTask.insert(db);
         }
+        if (recordInserted) {
+          this.processInsertHook(context, thisTask);
+        }
       } else {
         Task oldTask = new Task(db, thisTask.getId());
         if (!hasAuthority(context, oldTask.getOwner())) {
@@ -143,6 +147,9 @@ public final class TroubleTicketTasks extends CFSModule {
         isValid = this.validateObject(context, db, thisTask);
         if (isValid) {
           resultCount = thisTask.update(db);
+        }
+        if (resultCount == 1) {
+          this.processUpdateHook(context, oldTask, thisTask);
         }
       }
     } catch (Exception e) {
@@ -164,10 +171,10 @@ public final class TroubleTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "tickets-tickets-tasks-add")) {
@@ -186,10 +193,10 @@ public final class TroubleTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-tasks-edit"))) {
@@ -216,7 +223,8 @@ public final class TroubleTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Task", thisTask);
-    if (!hasAuthority(context, thisTask.getOwner()) || !(hasPermission(context, "tickets-tickets-tasks-edit"))) {
+    if (!hasAuthority(context, thisTask.getOwner()) || !(hasPermission(
+        context, "tickets-tickets-tasks-edit"))) {
       if (hasPermission(context, "tickets-tickets-tasks-view")) {
         return "TaskDetailsOK";
       }
@@ -227,10 +235,10 @@ public final class TroubleTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "tickets-tickets-tasks-delete")) {
@@ -254,16 +262,17 @@ public final class TroubleTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Task", thisTask);
-    context.getRequest().setAttribute("refreshUrl", "TroubleTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
+    context.getRequest().setAttribute(
+        "refreshUrl", "TroubleTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
     return ("DeleteOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-tasks-delete"))) {
@@ -279,18 +288,24 @@ public final class TroubleTicketTasks extends CFSModule {
       thisTask = new Task(db, Integer.parseInt(id));
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (!hasAuthority(context, thisTask.getOwner())) {
-        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.taskNotOwnerHeader"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
-      }else{
+        htmlDialog.setHeader(
+            systemStatus.getLabel("confirmdelete.taskNotOwnerHeader"));
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+      } else {
         DependencyList dependencies = thisTask.processDependencies(db);
-        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+        htmlDialog.addMessage(
+            systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
         if (dependencies.size() == 0) {
           htmlDialog.setShowAndConfirm(false);
-          htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+          htmlDialog.setDeleteUrl(
+              "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
         } else {
           htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-          htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
-          htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+          htmlDialog.addButton(
+              systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+          htmlDialog.addButton(
+              systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
         }
       }
     } catch (Exception e) {

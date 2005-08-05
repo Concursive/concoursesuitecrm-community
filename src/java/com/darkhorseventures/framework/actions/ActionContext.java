@@ -25,19 +25,19 @@ import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 
 /**
- *  ActionContext is created in the <code>DefaultAction</code> so that a single
- *  object is passed around to actions. ActionContext provides a place holder
- *  for the <code>HttpServletRequest</code> , <code>HttpServletResponse</code> ,
- *  <code>HttpSession</code> , and the Struts variables as well... <code>
- *  ActionServlet</code> , <code>ActionAction</code> and <code>ActionForm
- *  </code>.
+ * ActionContext is created in the <code>DefaultAction</code> so that a single
+ * object is passed around to actions. ActionContext provides a place holder
+ * for the <code>HttpServletRequest</code> , <code>HttpServletResponse</code> ,
+ * <code>HttpSession</code> , and the Struts variables as well... <code>
+ * ActionServlet</code> , <code>ActionAction</code> and <code>ActionForm
+ * </code>.
  *
- *@author     Kevin Duffey
- *@created    June 1, 2001
- *@version    1.0
+ * @author Kevin Duffey
+ * @version 1.0
+ * @created June 1, 2001
  */
 public class ActionContext
-     implements Serializable {
+    implements Serializable {
   private String command = "Default";
   private HttpServletRequest request = null;
   private HttpServletResponse response = null;
@@ -50,14 +50,14 @@ public class ActionContext
 
 
   /**
-   *  Constructor that creates the ActionContext object and sets the needed
-   *  object references that actions will need access to.
+   * Constructor that creates the ActionContext object and sets the needed
+   * object references that actions will need access to.
    *
-   *@param  servlet   Description of Parameter
-   *@param  bean      Description of Parameter
-   *@param  action    Description of Parameter
-   *@param  request   Description of Parameter
-   *@param  response  Description of Parameter
+   * @param servlet  Description of Parameter
+   * @param bean     Description of Parameter
+   * @param action   Description of Parameter
+   * @param request  Description of Parameter
+   * @param response Description of Parameter
    */
   public ActionContext(Servlet servlet, Object bean, Action action, HttpServletRequest request, HttpServletResponse response) {
     this.bean = bean;
@@ -83,11 +83,25 @@ public class ActionContext
 
 
   /**
-   *  Sets a request attribute that can be used by JSP pages to display an error
-   *  message or take some other course of action if the attribute exists when
-   *  the JSP page is forwarded to.
+   * Constructor that creates a ActionContext for a Webdav Request.
    *
-   *@param  value  the message to set into the request attribute
+   * @param servlet  Description of the Parameter
+   * @param request  Description of the Parameter
+   * @param response Description of the Parameter
+   */
+  public ActionContext(Servlet servlet, HttpServletRequest request, HttpServletResponse response) {
+    this.request = request;
+    this.response = response;
+    this.servlet = servlet;
+  }
+
+
+  /**
+   * Sets a request attribute that can be used by JSP pages to display an error
+   * message or take some other course of action if the attribute exists when
+   * the JSP page is forwarded to.
+   *
+   * @param value the message to set into the request attribute
    */
   public void setMessage(String value) {
     // if the bean object is an instance of the GenericBean class, set the message
@@ -99,39 +113,42 @@ public class ActionContext
   }
 
 
-
   /**
-   *  Returns the ServletContext if this servlet is an HttpServlet instance
+   * Returns the ServletContext if this servlet is an HttpServlet instance
    *
-   *@return    ServletContext the ServletContext for this servlet
+   * @return ServletContext the ServletContext for this servlet
    */
   public ServletContext getServletContext() {
     return servlet.getServletConfig().getServletContext();
   }
 
 
+  /**
+   * Gets the servlet attribute of the ActionContext object
+   *
+   * @return The servlet value
+   */
   public Servlet getServlet() {
     return servlet;
   }
 
-  
+
   /**
-   *  Returns a reference to a bean that is mapped to this action. The reference
-   *  is an HttpSession bean reference.
+   * Returns a reference to a bean that is mapped to this action. The reference
+   * is an HttpSession bean reference.
    *
-   *@return    Object the bean reference mapped to this action
+   * @return Object the bean reference mapped to this action
    */
   public Object getFormBean() {
     return bean;
   }
 
 
-
   /**
-   *  Gets the FormBean attribute of the ActionContext object
+   * Gets the FormBean attribute of the ActionContext object
    *
-   *@param  beanName  Description of Parameter
-   *@return           The FormBean value
+   * @param beanName Description of Parameter
+   * @return The FormBean value
    */
   public Object getFormBean(String beanName) {
     return action.getBeans().get(beanName);
@@ -139,73 +156,68 @@ public class ActionContext
 
 
   /**
-   *  Returns the Action for this action. This Action contains the action name
-   *  and fully qualifed class, the bean name and fully qualified class (if
-   *  specified), zero or more Resources to forward to which each contain the
-   *  name of the resource (which is what the action class methods would return
-   *  as a String for the lookup process), the JSP page to forward to, and
-   *  alternatively a XSL file to be used to transform the JSP output if the
-   *  XSLControllerServlet is used.
+   * Returns the Action for this action. This Action contains the action name
+   * and fully qualifed class, the bean name and fully qualified class (if
+   * specified), zero or more Resources to forward to which each contain the
+   * name of the resource (which is what the action class methods would return
+   * as a String for the lookup process), the JSP page to forward to, and
+   * alternatively a XSL file to be used to transform the JSP output if the
+   * XSLControllerServlet is used.
    *
-   *@return    Action the Action for this action
+   * @return Action the Action for this action
    */
   public Action getAction() {
     return action;
   }
 
 
-
   /**
-   *  Returns the clients browser information.
+   * Returns the clients browser information.
    *
-   *@return    String The description of the clients browser
+   * @return String The description of the clients browser
    */
   public String getBrowser() {
     return getRequest().getHeader("USER-AGENT");
   }
 
 
-
   /**
-   *  Returns the command value associated with this request
+   * Returns the command value associated with this request
    *
-   *@return    int The value of the command for this request
+   * @return int The value of the command for this request
    */
   public String getCommand() {
     return command;
   }
 
 
-
   /**
-   *  A helper method that returns a request parameter of the passed in param
-   *  name if it exists, or null otherwise.
+   * A helper method that returns a request parameter of the passed in param
+   * name if it exists, or null otherwise.
    *
-   *@param  paramName  Description of Parameter
-   *@return            String the value of the parameter or null if the
-   *      parameter does not exist
+   * @param paramName Description of Parameter
+   * @return String the value of the parameter or null if the
+   *         parameter does not exist
    */
   public String getParameter(String paramName) {
     return getRequest().getParameter(paramName);
   }
 
 
-
   /**
-   *  Returns the clients remote IP address
+   * Returns the clients remote IP address
    *
-   *@return    String The clients ip address to their computer.
+   * @return String The clients ip address to their computer.
    */
   public String getIpAddress() {
     return getRequest().getRemoteAddr();
   }
 
 
-
   /**
-   *  Returns the current request object associated with a client
+   * Returns the current request object associated with a client
    *
-   *@return    HttpServletRequest The request of this client
+   * @return HttpServletRequest The request of this client
    */
   public HttpServletRequest getRequest() {
     return request;
@@ -213,20 +225,19 @@ public class ActionContext
 
 
   /**
-   *  Returns the current response object associated with a client
+   * Returns the current response object associated with a client
    *
-   *@return    HttpServletResponse The response of this client
+   * @return HttpServletResponse The response of this client
    */
   public HttpServletResponse getResponse() {
     return response;
   }
 
 
-
   /**
-   *  Returns the session associated with a client
+   * Returns the session associated with a client
    *
-   *@return    HttpSession The session context for this client
+   * @return HttpSession The session context for this client
    */
   public HttpSession getSession() {
     return session;

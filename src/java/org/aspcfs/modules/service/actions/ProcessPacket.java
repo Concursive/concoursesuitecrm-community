@@ -37,24 +37,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- *  An HTTP connector for incoming XML packet requests. Requests must include
- *  credentials and transactions to perform. There can be multiple transactions
- *  per request.<p>
+ * An HTTP connector for incoming XML packet requests. Requests must include
+ * credentials and transactions to perform. There can be multiple transactions
+ * per request.<p>
+ * <p/>
+ * After processing is complete, a response is sent with a request status.
  *
- *  After processing is complete, a response is sent with a request status.
- *
- *@author     matt rajkowski
- *@created    April 24, 2002
- *@version    $Id: ProcessPacket.java,v 1.36 2003/01/13 22:01:24 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ProcessPacket.java,v 1.36 2003/01/13 22:01:24 mrajkowski Exp
+ *          $
+ * @created April 24, 2002
  */
 public final class ProcessPacket extends CFSModule {
 
   /**
-   *  XML API for HTTP requests.
+   * XML API for HTTP requests.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     TransactionStatusList statusMessages = new TransactionStatusList();
@@ -111,12 +111,14 @@ public final class ProcessPacket extends CFSModule {
         HashMap objectMap = this.getObjectMap(context, db, auth);
         packetContext.setObjectMap(objectMap);
 
-        ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+        ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+            "ConnectionPool");
         packetContext.setConnectionPool(sqlDriver);
         packetContext.setConnectionElement(ce);
 
         //Initialize the systemStatus for this request to reuse objects, if not already initialized
-        SystemStatus systemStatus = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+        SystemStatus systemStatus = SecurityHook.retrieveSystemStatus(
+            context.getServletContext(), db, ce);
 
         //Prepare the objectHooks that are cached
         ObjectHookManager hookManager = systemStatus.getHookManager();
@@ -127,7 +129,8 @@ public final class ProcessPacket extends CFSModule {
 
         //Process the transactions
         LinkedList transactionList = new LinkedList();
-        XMLUtils.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
+        XMLUtils.getAllChildren(
+            xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         try {
           dbLookup.setAutoCommit(false);
@@ -139,7 +142,8 @@ public final class ProcessPacket extends CFSModule {
 
             SyncTable metaMapping = new SyncTable();
             metaMapping.setName("meta");
-            metaMapping.setMappedClassName("org.aspcfs.modules.service.base.TransactionMeta");
+            metaMapping.setMappedClassName(
+                "org.aspcfs.modules.service.base.TransactionMeta");
             thisTransaction.addMapping("meta", metaMapping);
             thisTransaction.build(thisElement);
             //Execute the transaction
@@ -198,14 +202,17 @@ public final class ProcessPacket extends CFSModule {
       //Convert the result messages to XML
       int returnedRecordCount = 0;
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProcessPacket-> Processing StatusMessages for output: " + statusMessages.size());
+        System.out.println(
+            "ProcessPacket-> Processing StatusMessages for output: " + statusMessages.size());
       }
       //Process the status messages for output
       returnedRecordCount = statusMessages.appendResponse(document, app);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount);
+        System.out.println(
+            "ProcessPacket-> Total Records: " + returnedRecordCount);
       }
-      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, encoding));
+      context.getRequest().setAttribute(
+          "statusXML", XMLUtils.toString(document, encoding));
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
     }
@@ -214,11 +221,11 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
-   *  Clears the sync map that may have been cached in memory. The sync map only
-   *  needs to be cleared when the sync table has been modified.
+   * Clears the sync map that may have been cached in memory. The sync map only
+   * needs to be cleared when the sync table has been modified.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandReloadSyncMap(ActionContext context) {
     context.getServletContext().removeAttribute("SyncObjectMap");
@@ -227,18 +234,20 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
-   *  Gets the objectMap attribute of the ProcessPacket object
+   * Gets the objectMap attribute of the ProcessPacket object
    *
-   *@param  context  Description of Parameter
-   *@param  db       Description of Parameter
-   *@param  auth     Description of the Parameter
-   *@return          The objectMap value
+   * @param context Description of Parameter
+   * @param db      Description of Parameter
+   * @param auth    Description of the Parameter
+   * @return The objectMap value
    */
   private HashMap getObjectMap(ActionContext context, Connection db, AuthenticationItem auth) {
-    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + auth.getId());
+    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute(
+        "SyncObjectMap" + auth.getId());
     if (systemObjectMap == null) {
       synchronized (this) {
-        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + auth.getId());
+        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute(
+            "SyncObjectMap" + auth.getId());
         if (systemObjectMap == null) {
           systemObjectMap = new SyncTableList();
           systemObjectMap.setBuildTextFields(false);
@@ -247,11 +256,13 @@ public final class ProcessPacket extends CFSModule {
           } catch (SQLException e) {
             e.printStackTrace(System.out);
           }
-          context.getServletContext().setAttribute("SyncObjectMap" + auth.getId(), systemObjectMap);
+          context.getServletContext().setAttribute(
+              "SyncObjectMap" + auth.getId(), systemObjectMap);
         }
       }
     }
-    HashMap thisObjectMap = systemObjectMap.getObjectMapping(auth.getSystemId());
+    HashMap thisObjectMap = systemObjectMap.getObjectMapping(
+        auth.getSystemId());
     return thisObjectMap;
   }
 }

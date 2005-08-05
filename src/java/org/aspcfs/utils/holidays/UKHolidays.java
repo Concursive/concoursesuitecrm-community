@@ -1,24 +1,26 @@
 package org.aspcfs.utils.holidays;
 
-import org.aspcfs.utils.web.CalendarView;
-import java.util.*;
 import org.aspcfs.modules.mycfs.base.CalendarEvent;
 import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.utils.web.CalendarView;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
- *  UK Holidays for the CalendarView class
+ * UK Holidays for the CalendarView class
  *
- *@author     matt rajkowski
- *@created    April 6, 2005
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created April 6, 2005
  */
 public class UKHolidays {
 
   /**
-   *  Adds a feature to the To attribute of the USHolidays class
+   * Adds a feature to the To attribute of the USHolidays class
    *
-   *@param  calendarView  The feature to be added to the To attribute
-   *@param  theYear       The feature to be added to the To attribute
+   * @param calendarView The feature to be added to the To attribute
+   * @param theYear      The feature to be added to the To attribute
    */
   public final static void addTo(CalendarView calendarView, int theYear) {
 
@@ -29,7 +31,8 @@ public class UKHolidays {
     //New Year's Day
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("New Year's Day");
-    calendarView.addEvent("1/1/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        "1/1/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     //TODO: Bank Holiday adjustment?
 
 
@@ -38,13 +41,15 @@ public class UKHolidays {
     tmpCal.add(Calendar.DATE, -2);
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Good Friday");
-    calendarView.addEvent((tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DATE) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        (tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DATE) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Easter Sunday
     tmpCal = EasterHoliday.getCalendar(theYear);
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Easter");
-    calendarView.addEvent((tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DATE) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        (tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DATE) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Easter Monday
     tmpCal = EasterHoliday.getCalendar(theYear);
@@ -55,7 +60,8 @@ public class UKHolidays {
     }
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Easter Monday");
-    calendarView.addEvent((tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DATE) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        (tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DATE) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Early May Bank Holiday: first Monday in May
     tmpCal.set(theYear, Calendar.MAY, 1);
@@ -66,7 +72,8 @@ public class UKHolidays {
     }
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Early May Bank Holiday");
-    calendarView.addEvent("5/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        "5/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Spring Bank Holiday: last Monday in May;
     tmpCal.set(theYear, Calendar.MAY, 1);
@@ -82,7 +89,8 @@ public class UKHolidays {
     }
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Spring Bank Holiday");
-    calendarView.addEvent("5/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        "5/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Summer Bank Holiday: last Monday in August;
     tmpCal.set(theYear, Calendar.AUGUST, 1);
@@ -98,13 +106,15 @@ public class UKHolidays {
     }
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Summer Bank Holiday");
-    calendarView.addEvent("8/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        "8/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
 
     //Christmas : December 25
     thisEvent = new CalendarEvent();
     thisEvent.setSubject("Christmas Day");
-    calendarView.addEvent("12/25/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
+    calendarView.addEvent(
+        "12/25/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     //TODO: Bank Holiday adjustment?
     /*
     thisEvent = new CalendarEvent();

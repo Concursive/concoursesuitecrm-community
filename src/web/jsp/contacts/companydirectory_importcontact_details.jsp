@@ -33,7 +33,7 @@
 <table class="trails" cellspacing="0">
 <tr>
   <td>
-    <a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
+    <a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
     <a href="ExternalContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
     <a href="ExternalContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>"><dhv:label name="accounts.ImportDetails">Import Details</dhv:label></a> >
     <a href="ExternalContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>"><dhv:label name="global.button.ViewResults">View Results</dhv:label></a> >

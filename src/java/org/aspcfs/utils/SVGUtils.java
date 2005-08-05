@@ -16,56 +16,39 @@
 package org.aspcfs.utils;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.text.SimpleDateFormat;
-
-import java.net.URLEncoder;
-import java.util.*;
-import java.io.*;
-import javax.imageio.*;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-
-import org.apache.batik.dom.*;
-import org.apache.batik.dom.svg.*;
-import org.w3c.dom.svg.*;
-
-import org.apache.batik.bridge.UserAgent;
-import org.apache.batik.bridge.UserAgentAdapter;
-import org.apache.batik.bridge.DocumentLoader;
-import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.bridge.GVTBuilder;
-
+import org.apache.batik.bridge.*;
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.dom.svg.SVGOMTSpanElement;
+import org.apache.batik.dom.svg.SVGOMTextElement;
 import org.apache.batik.gvt.GraphicsNode;
-import org.apache.batik.gvt.renderer.StaticRenderer;
 import org.apache.batik.gvt.renderer.DynamicRenderer;
-
-import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.w3c.dom.*;
+import org.w3c.dom.svg.SVGElement;
+import org.w3c.dom.svg.SVGLocatable;
+import org.w3c.dom.svg.SVGMatrix;
 
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Attr;
-
-import javax.xml.transform.TransformerFactory;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Vector;
 
 /**
- *  Provides essestial utilities when working with Scalable Vector Graphics
+ * Provides essestial utilities when working with Scalable Vector Graphics
  *
- *@author     ananth
- *@created    April 2, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created April 2, 2004
  */
 public class SVGUtils {
   private final static String ADOBE_ENCODING = "adobe_illustrator_pgf";
@@ -88,9 +71,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the textElements attribute of the SVGUtils object
+   * Sets the textElements attribute of the SVGUtils object
    *
-   * @param  tmp  The new textElements value
+   * @param tmp The new textElements value
    */
   public void setTextElements(NodeList tmp) {
     this.textElements = tmp;
@@ -98,9 +81,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the textLayer attribute of the SVGUtils object
+   * Sets the textLayer attribute of the SVGUtils object
    *
-   * @param  tmp  The new textLayer value
+   * @param tmp The new textLayer value
    */
   public void setTextLayer(SVGElement tmp) {
     this.textLayer = tmp;
@@ -108,9 +91,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the textElements attribute of the SVGUtils object
+   * Gets the textElements attribute of the SVGUtils object
    *
-   * @return    The textElements value
+   * @return The textElements value
    */
   public NodeList getTextElements() {
     return textElements;
@@ -118,9 +101,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the textLayer attribute of the SVGUtils object
+   * Gets the textLayer attribute of the SVGUtils object
    *
-   * @return    The textLayer value
+   * @return The textLayer value
    */
   public SVGElement getTextLayer() {
     return textLayer;
@@ -128,9 +111,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the textItems attribute of the SVGUtils object
+   * Sets the textItems attribute of the SVGUtils object
    *
-   *@param  tmp  The new textItems value
+   * @param tmp The new textItems value
    */
   public void setTextItems(Vector tmp) {
     this.textItems = tmp;
@@ -138,9 +121,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the textItems attribute of the SVGUtils object
+   * Gets the textItems attribute of the SVGUtils object
    *
-   *@return    The textItems value
+   * @return The textItems value
    */
   public Vector getTextItems() {
     return textItems;
@@ -148,9 +131,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the renderer attribute of the SVGUtils object
+   * Sets the renderer attribute of the SVGUtils object
    *
-   *@param  tmp  The new renderer value
+   * @param tmp The new renderer value
    */
   public void setRenderer(DynamicRenderer tmp) {
     this.renderer = tmp;
@@ -158,9 +141,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the userAgent attribute of the SVGUtils object
+   * Sets the userAgent attribute of the SVGUtils object
    *
-   *@param  tmp  The new userAgent value
+   * @param tmp The new userAgent value
    */
   public void setUserAgent(UserAgent tmp) {
     this.userAgent = tmp;
@@ -168,9 +151,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the loader attribute of the SVGUtils object
+   * Sets the loader attribute of the SVGUtils object
    *
-   *@param  tmp  The new loader value
+   * @param tmp The new loader value
    */
   public void setLoader(DocumentLoader tmp) {
     this.loader = tmp;
@@ -178,9 +161,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the ctx attribute of the SVGUtils object
+   * Sets the ctx attribute of the SVGUtils object
    *
-   *@param  tmp  The new ctx value
+   * @param tmp The new ctx value
    */
   public void setCtx(BridgeContext tmp) {
     this.ctx = tmp;
@@ -188,9 +171,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the svgDoc attribute of the SVGUtils object
+   * Sets the svgDoc attribute of the SVGUtils object
    *
-   *@param  tmp  The new svgDoc value
+   * @param tmp The new svgDoc value
    */
   public void setSvgDoc(Document tmp) {
     this.svgDoc = tmp;
@@ -198,9 +181,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the builder attribute of the SVGUtils object
+   * Sets the builder attribute of the SVGUtils object
    *
-   *@param  tmp  The new builder value
+   * @param tmp The new builder value
    */
   public void setBuilder(GVTBuilder tmp) {
     this.builder = tmp;
@@ -208,9 +191,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the gvtRoot attribute of the SVGUtils object
+   * Sets the gvtRoot attribute of the SVGUtils object
    *
-   *@param  tmp  The new gvtRoot value
+   * @param tmp The new gvtRoot value
    */
   public void setGvtRoot(GraphicsNode tmp) {
     this.gvtRoot = tmp;
@@ -218,9 +201,9 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the textElement attribute of the SVGUtils object
+   * Sets the textElement attribute of the SVGUtils object
    *
-   *@param  tmp  The new textElement value
+   * @param tmp The new textElement value
    */
   public void setTextElement(SVGElement tmp) {
     this.textElement = tmp;
@@ -228,9 +211,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the renderer attribute of the SVGUtils object
+   * Gets the renderer attribute of the SVGUtils object
    *
-   *@return    The renderer value
+   * @return The renderer value
    */
   public DynamicRenderer getRenderer() {
     return renderer;
@@ -238,9 +221,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the userAgent attribute of the SVGUtils object
+   * Gets the userAgent attribute of the SVGUtils object
    *
-   *@return    The userAgent value
+   * @return The userAgent value
    */
   public UserAgent getUserAgent() {
     return userAgent;
@@ -248,9 +231,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the loader attribute of the SVGUtils object
+   * Gets the loader attribute of the SVGUtils object
    *
-   *@return    The loader value
+   * @return The loader value
    */
   public DocumentLoader getLoader() {
     return loader;
@@ -258,9 +241,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the ctx attribute of the SVGUtils object
+   * Gets the ctx attribute of the SVGUtils object
    *
-   *@return    The ctx value
+   * @return The ctx value
    */
   public BridgeContext getCtx() {
     return ctx;
@@ -268,9 +251,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the svgDoc attribute of the SVGUtils object
+   * Gets the svgDoc attribute of the SVGUtils object
    *
-   *@return    The svgDoc value
+   * @return The svgDoc value
    */
   public Document getSvgDoc() {
     return svgDoc;
@@ -278,9 +261,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the builder attribute of the SVGUtils object
+   * Gets the builder attribute of the SVGUtils object
    *
-   *@return    The builder value
+   * @return The builder value
    */
   public GVTBuilder getBuilder() {
     return builder;
@@ -288,9 +271,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the gvtRoot attribute of the SVGUtils object
+   * Gets the gvtRoot attribute of the SVGUtils object
    *
-   *@return    The gvtRoot value
+   * @return The gvtRoot value
    */
   public GraphicsNode getGvtRoot() {
     return gvtRoot;
@@ -298,9 +281,9 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the textElement attribute of the SVGUtils object
+   * Gets the textElement attribute of the SVGUtils object
    *
-   *@return    The textElement value
+   * @return The textElement value
    */
   public SVGElement getTextElement() {
     return textElement;
@@ -308,16 +291,17 @@ public class SVGUtils {
 
 
   /**
-   *  Constructor for the SVGUtils object
+   * Constructor for the SVGUtils object
    */
-  public SVGUtils() { }
+  public SVGUtils() {
+  }
 
 
   /**
-   *  Constructor for the SVGUtils object
+   * Constructor for the SVGUtils object
    *
-   *@param  svgFileName    Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param svgFileName Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public SVGUtils(String svgFileName) throws Exception {
     buildSVGDOM(svgFileName);
@@ -326,10 +310,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  svgFileName    Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param svgFileName Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void buildSVGDOM(String svgFileName) throws Exception {
     try {
@@ -349,7 +333,8 @@ public class SVGUtils {
       gvtRoot = builder.build(ctx, svgDoc);
       renderer.setTree(gvtRoot);
       // ---------------being used by the SVGTextHandler---------------------------------
-      textElements = svgDoc.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
+      textElements = svgDoc.getElementsByTagNameNS(
+          SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
       if (textElements.getLength() > 0) {
         textElement = (SVGElement) textElements.item(0);
       }
@@ -359,7 +344,8 @@ public class SVGUtils {
         textLayer = (SVGElement) svgDoc.getElementById("text");
       }
       if (textLayer != null) {
-        textElements = textLayer.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
+        textElements = textLayer.getElementsByTagNameNS(
+            SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
       }
     } catch (Exception e) {
       System.err.println("EXCEPTION: SVGTextHandler-> " + e.getMessage());
@@ -368,11 +354,11 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  svgFile        Description of the Parameter
-   * @return                Description of the Return Value
-   * @exception  Exception  Description of the Exception
+   * @param svgFile Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean processSvgFile(File svgFile) throws Exception {
     /*
@@ -403,7 +389,8 @@ public class SVGUtils {
          *  This means that the text element is not broken.
          *  Could also mean that the text element has no tspans at all
          */
-        NodeList tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+        NodeList tspans = textElement.getElementsByTagNameNS(
+            SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
         //System.out.println("SVGUtils --> processSvgFile --> verifying text elements tspan # : " + tspans.getLength());
         if (tspans.getLength() == 0) {
           //System.out.println("SVGUtils --> text element has no tspans");
@@ -429,20 +416,22 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean removeBlankTextElements() {
     //System.out.println("SVGUtils -> Inside method removeBlankTextElements");
     boolean discardTextElement = false;
     // check if empty text elements exist
-    textElements = textLayer.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
+    textElements = textLayer.getElementsByTagNameNS(
+        SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
     for (int i = 0; i < textElements.getLength(); ++i) {
       // get the next text element in the node list
       Element textElement = (Element) textElements.item(i);
       // get all the tspans of this text element
-      NodeList tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+      NodeList tspans = textElement.getElementsByTagNameNS(
+          SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
       if (tspans.getLength() == 0) {
         // this text element does not have any tspans. Determine if the text
         // element has a text node
@@ -475,15 +464,16 @@ public class SVGUtils {
         }
       }
     }
-    textElements = textLayer.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
+    textElements = textLayer.getElementsByTagNameNS(
+        SVGDOMImplementation.SVG_NAMESPACE_URI, "text");
     return discardTextElement;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  element  Description of the Parameter
+   * @param element Description of the Parameter
    */
   public void removeElement(Element element) {
     Element parent = (Element) element.getParentNode();
@@ -492,19 +482,21 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElementsWithNoTspans  Description of the Parameter
+   * @param textElementsWithNoTspans Description of the Parameter
    */
   protected void fixTextElements(Vector textElementsWithNoTspans) {
     for (int j = 0; j < textElementsWithNoTspans.size(); ++j) {
-      SVGOMTextElement textElement = (SVGOMTextElement) textElementsWithNoTspans.elementAt(j);
+      SVGOMTextElement textElement = (SVGOMTextElement) textElementsWithNoTspans.elementAt(
+          j);
       // The text element does not have a tspan. hence create a tspan and move all the attributes of the
       // text element and append them to the tspan. also create two attributes x and y with values 0
 
       Node text = textElement.getFirstChild();
       if (text != null) {
-        Element tspan = svgDoc.createElementNS("SVGDOMImplementation.SVG_NAMESPACE_URI", "tspan");
+        Element tspan = svgDoc.createElementNS(
+            "SVGDOMImplementation.SVG_NAMESPACE_URI", "tspan");
         tspan.appendChild(textElement.removeChild(text));
         tspan.setAttribute("x", "0");
         tspan.setAttribute("y", "0");
@@ -537,8 +529,10 @@ public class SVGUtils {
     int index = 0;
     while (index < textElementsWithNoTspans.size() - 1) {
       for (int i = index; i < textElementsWithNoTspans.size() - 1; ++i) {
-        SVGOMTextElement textElement1 = (SVGOMTextElement) textElementsWithNoTspans.elementAt(i);
-        SVGOMTextElement textElement2 = (SVGOMTextElement) textElementsWithNoTspans.elementAt(i + 1);
+        SVGOMTextElement textElement1 = (SVGOMTextElement) textElementsWithNoTspans.elementAt(
+            i);
+        SVGOMTextElement textElement2 = (SVGOMTextElement) textElementsWithNoTspans.elementAt(
+            i + 1);
 
         if (determineYAttributeMatch(textElement1, textElement2)) {
           // check to see if both text elements have tspans with identical attributes
@@ -570,10 +564,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected float determineTextLength(SVGOMTextElement textElement) {
     float length = 0;
@@ -585,26 +579,28 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElementsWithNoTspans  Description of the Parameter
+   * @param textElementsWithNoTspans Description of the Parameter
    */
   public void displayTextElements(Vector textElementsWithNoTspans) {
     for (int i = 0; i < textElementsWithNoTspans.size(); ++i) {
-      SVGOMTextElement textElement = (SVGOMTextElement) textElementsWithNoTspans.elementAt(i);
+      SVGOMTextElement textElement = (SVGOMTextElement) textElementsWithNoTspans.elementAt(
+          i);
       //SVGLocatable locate = (SVGLocatable) textElement;
       //SVGMatrix matrix = locate.getCTM();
-      int size = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan").getLength();
+      int size = textElement.getElementsByTagNameNS(
+          SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan").getLength();
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement1  Description of the Parameter
-   * @param  textElement2  Description of the Parameter
-   * @return               Description of the Return Value
+   * @param textElement1 Description of the Parameter
+   * @param textElement2 Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean determineYAttributeMatch(SVGOMTextElement textElement1, SVGOMTextElement textElement2) {
     SVGLocatable locate1 = (SVGLocatable) textElement1;
@@ -622,13 +618,14 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean multipleTspansExist(Element textElement) {
-    NodeList tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+    NodeList tspans = textElement.getElementsByTagNameNS(
+        SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
     if (tspans.getLength() > 1) {
       return true;
     } else {
@@ -638,10 +635,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean isTextElementBroken(Element textElement) {
     return (multipleTspansExist(textElement));
@@ -649,9 +646,9 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
+   * @param textElement Description of the Parameter
    */
   protected void fixTextElementTspans(Element textElement) {
     /*
@@ -660,7 +657,8 @@ public class SVGUtils {
      *  set of attributes.
      */
     // get all the tspans of this text element
-    NodeList tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+    NodeList tspans = textElement.getElementsByTagNameNS(
+        SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
     int index = 0;
     while (index < tspans.getLength() - 1) {
       for (int i = index; i < tspans.getLength() - 1; ++i) {
@@ -672,7 +670,8 @@ public class SVGUtils {
           // node i and node i+1 match, hence
           // merge them and repeat the process with index as the start
           mergeTspans(tspan1, tspan2);
-          tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+          tspans = textElement.getElementsByTagNameNS(
+              SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
           index = i;
           break;
         } else {
@@ -687,11 +686,11 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  attrs1  Description of the Parameter
-   * @param  attrs2  Description of the Parameter
-   * @return         Description of the Return Value
+   * @param attrs1 Description of the Parameter
+   * @param attrs2 Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean attributesMatch(NamedNodeMap attrs1, NamedNodeMap attrs2) {
     if (attrs1.getLength() != attrs1.getLength()) {
@@ -719,10 +718,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  tspan1  Description of the Parameter
-   * @param  tspan2  Description of the Parameter
+   * @param tspan1 Description of the Parameter
+   * @param tspan2 Description of the Parameter
    */
   protected void mergeTspans(Element tspan1, Element tspan2) {
     StringBuffer sb = new StringBuffer();
@@ -734,10 +733,10 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the text attribute of the SVGUtils object
+   * Gets the text attribute of the SVGUtils object
    *
-   * @param  element  Description of the Parameter
-   * @return          The text value
+   * @param element Description of the Parameter
+   * @return The text value
    */
   public String getText(Element element) {
     if (element == null) {
@@ -756,10 +755,10 @@ public class SVGUtils {
 
 
   /**
-   *  Sets the text attribute of the SVGUtils class
+   * Sets the text attribute of the SVGUtils class
    *
-   * @param  replace  The new text value
-   * This method is being used by one SVGTextHandler
+   * @param replace The new text value
+   *                This method is being used by one SVGTextHandler
    */
   public void setText(String replace) {
     // get all the child nodes this node has
@@ -787,12 +786,12 @@ public class SVGUtils {
 
 
   /**
-   *  This method assumes that there is only one 'tspan' element for every
-   *  'text' element. Hence if there is more than one 'tspan' element, then all
-   *  the tspans are replaced with the value replace
+   * This method assumes that there is only one 'tspan' element for every
+   * 'text' element. Hence if there is more than one 'tspan' element, then all
+   * the tspans are replaced with the value replace
    *
-   *@param  node     The new nodeText value
-   *@param  replace  The new nodeText value
+   * @param node    The new nodeText value
+   * @param replace The new nodeText value
    */
   public void setNodeText(Node node, String replace) {
     if (node.hasChildNodes()) {
@@ -810,12 +809,11 @@ public class SVGUtils {
   }
 
 
-
   /**
-   *  Sets the allTextElements attribute of the SVGUtils object
+   * Sets the allTextElements attribute of the SVGUtils object
    *
-   * @param  replace        The new allTextElements value
-   * @exception  Exception  Description of the Exception
+   * @param replace The new allTextElements value
+   * @throws Exception Description of the Exception
    */
   public void setAllTextElements(Vector replace) throws Exception {
     if (textLayer != null) {
@@ -824,21 +822,24 @@ public class SVGUtils {
       Vector textElems = this.sortTextItems();
       for (int i = 0; i < textElems.size(); ++i) {
         // get the first text element in the node list
-        SVGOMTextElement textElement = (SVGOMTextElement) textElems.elementAt(i);
+        SVGOMTextElement textElement = (SVGOMTextElement) textElems.elementAt(
+            i);
         // determine the type of the text element
         String textType = determineTextType(textElement);
         if (textType.equals(this.POINT_TEXT)) {
           // determine the text elements original width
           float oldWidth = textElement.getComputedTextLength();
           // get all the tspans of this text element
-          NodeList tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+          NodeList tspans = textElement.getElementsByTagNameNS(
+              SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
           for (int j = 0; j < tspans.getLength(); ++j) {
             Node tspan = tspans.item(j);
             if (j == 0) {
               setNodeText(tspan, ((String) replace.elementAt(index)).trim());
             } else {
               // every tspan after the first tspan will have a space prepended
-              setNodeText(tspan, " " + ((String) replace.elementAt(index)).trim());
+              setNodeText(
+                  tspan, " " + ((String) replace.elementAt(index)).trim());
             }
             ++index;
           }
@@ -892,10 +893,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected float determineTextWidth(SVGOMTextElement textElement) {
     float width = 0;
@@ -913,10 +914,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected float determineTextHeight(SVGOMTextElement textElement) {
     float height = 0;
@@ -933,10 +934,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected float determineLineSpacing(SVGOMTextElement textElement) {
     float spacing = 0;
@@ -957,14 +958,14 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @param  width        Description of the Parameter
-   * @param  height       Description of the Parameter
-   * @param  incrY        Description of the Parameter
-   * @param  replace      Description of the Parameter
-   * @param  textAlign    Description of the Parameter
+   * @param textElement Description of the Parameter
+   * @param width       Description of the Parameter
+   * @param height      Description of the Parameter
+   * @param incrY       Description of the Parameter
+   * @param replace     Description of the Parameter
+   * @param textAlign   Description of the Parameter
    */
   protected void flowText(SVGOMTextElement textElement, float width, float height, float incrY, String replace, String textAlign) {
     // The following code assumes that the tspans will have same style attributes
@@ -987,7 +988,8 @@ public class SVGUtils {
     int item = 0;
     String[] tokens = replace.split("\\s");
     while (cursorY <= height && item < tokens.length) {
-      SVGOMTSpanElement newtspan = (SVGOMTSpanElement) oldtspan.cloneNode(true);
+      SVGOMTSpanElement newtspan = (SVGOMTSpanElement) oldtspan.cloneNode(
+          true);
       //System.out.println("SVGUtils --> created new tspan : " + newtspan);
       textElement.appendChild(newtspan);
       StringBuffer sb = new StringBuffer();
@@ -1046,10 +1048,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected String determineTextType(SVGOMTextElement textElement) {
     NodeList tspans = textElement.getChildNodes();
@@ -1070,10 +1072,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   public float determineWidth(SVGOMTextElement textElement) {
     float width = 0;
@@ -1085,9 +1087,9 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
+   * @param textElement Description of the Parameter
    */
   public void fixTspanPositions(SVGOMTextElement textElement) {
     /*
@@ -1097,7 +1099,8 @@ public class SVGUtils {
      */
     if (isTextElementBroken(textElement)) {
       // Text Element has multiple tspans
-      NodeList tspans = textElement.getElementsByTagNameNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
+      NodeList tspans = textElement.getElementsByTagNameNS(
+          SVGDOMImplementation.SVG_NAMESPACE_URI, "tspan");
       for (int j = 0; j < tspans.getLength(); ++j) {
         SVGOMTSpanElement tspan = (SVGOMTSpanElement) tspans.item(j);
         tspan.removeAttribute("x");
@@ -1107,17 +1110,18 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the textAlignment attribute of the SVGUtils object
+   * Gets the textAlignment attribute of the SVGUtils object
    *
-   * @param  textElement  Description of the Parameter
-   * @return              The textAlignment value
+   * @param textElement Description of the Parameter
+   * @return The textAlignment value
    */
   public String getTextAlignment(SVGOMTextElement textElement) {
     String textAlign = "left";
     Element switchElm = (Element) textElement.getParentNode();
     Element rootElm = svgDoc.getDocumentElement();
     boolean switchExists = false;
-    while (!"switch".equals(switchElm.getNodeName()) || !switchElm.equals(rootElm)) {
+    while (!"switch".equals(switchElm.getNodeName()) || !switchElm.equals(
+        rootElm)) {
       switchElm = (Element) switchElm.getParentNode();
       if ("switch".equals(switchElm.getNodeName())) {
         switchExists = true;
@@ -1153,11 +1157,11 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @param  oldWidth     Description of the Parameter
-   * @param  newWidth     Description of the Parameter
+   * @param textElement Description of the Parameter
+   * @param oldWidth    Description of the Parameter
+   * @param newWidth    Description of the Parameter
    */
   public void fixTextAlignment(SVGOMTextElement textElement, float oldWidth, float newWidth) {
     /*
@@ -1193,11 +1197,11 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  tspanElement  Description of the Parameter
-   * @param  width         Description of the Parameter
-   * @param  textAlign     Description of the Parameter
+   * @param tspanElement Description of the Parameter
+   * @param width        Description of the Parameter
+   * @param textAlign    Description of the Parameter
    */
   public void fixTextAlignment(SVGOMTSpanElement tspanElement, float width, String textAlign) {
     /*
@@ -1227,16 +1231,17 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the textItems attribute of the SVGUtils object
+   * Gets the textItems attribute of the SVGUtils object
    *
-   *@return    The textItems value
+   * @return The textItems value
    */
   public Vector getTextValues() {
     if (textLayer != null) {
       Vector textElems = this.sortTextItems();
       for (int i = 0; i < textElems.size(); ++i) {
         // get the first text element in the node list
-        SVGOMTextElement textElement = (SVGOMTextElement) textElems.elementAt(i);
+        SVGOMTextElement textElement = (SVGOMTextElement) textElems.elementAt(
+            i);
         NodeList childNodes = textElement.getChildNodes();
         String textType = this.determineTextType(textElement);
         if (textType.equals(this.POINT_TEXT)) {
@@ -1280,10 +1285,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected float determineX(SVGOMTextElement textElement) {
     SVGMatrix matrix = textElement.getTransform().getBaseVal().consolidate().getMatrix();
@@ -1293,10 +1298,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textElement  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param textElement Description of the Parameter
+   * @return Description of the Return Value
    */
   protected float determineY(SVGOMTextElement textElement) {
     SVGMatrix matrix = textElement.getTransform().getBaseVal().consolidate().getMatrix();
@@ -1305,24 +1310,26 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  textItems  Description of the Parameter
+   * @param textItems Description of the Parameter
    */
   protected Vector sortTextItems() {
-    
+
     Vector textElems = new Vector();
     for (int i = 0; i < textElements.getLength(); ++i) {
       //System.out.println("adding element to vector..");
       textElems.add(textElements.item(i));
     }
-    
+
     for (int i = 0; i < textElems.size(); ++i) {
       for (int j = 0; j < textElems.size(); ++j) {
         //System.out.println("i : " + i);
         //System.out.println("j : " + j);
-        SVGOMTextElement textElement1 = (SVGOMTextElement) textElems.elementAt(i);
-        SVGOMTextElement textElement2 = (SVGOMTextElement) textElems.elementAt(j);
+        SVGOMTextElement textElement1 = (SVGOMTextElement) textElems.elementAt(
+            i);
+        SVGOMTextElement textElement2 = (SVGOMTextElement) textElems.elementAt(
+            j);
         if (determineY(textElement1) < determineY(textElement2)) {
           // text elements need to be swapped
           SVGOMTextElement tmp = (SVGOMTextElement) textElems.elementAt(i);
@@ -1337,16 +1344,16 @@ public class SVGUtils {
         }
       }
     }
-    
+
     return textElems;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  out            Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   * @param out Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void saveAsJPEG(File out) throws Exception {
     JPEGTranscoder t = new JPEGTranscoder();
@@ -1361,16 +1368,16 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  originalFile   Description of the Parameter
-   *@param  thumbnailFile  Description of the Parameter
-   *@param  maxWidth       Description of the Parameter
-   *@param  maxHeight      Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param originalFile  Description of the Parameter
+   * @param thumbnailFile Description of the Parameter
+   * @param maxWidth      Description of the Parameter
+   * @param maxHeight     Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void saveAsJPEG(File originalFile, File thumbnailFile, float maxWidth, float maxHeight)
-       throws Exception {
+      throws Exception {
     BufferedImage originalImage = ImageIO.read(originalFile);
     /*
      *  double ratioWidth = maxWidth / originalImage.getWidth();
@@ -1402,10 +1409,10 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void saveAsJPEG(ActionContext context) throws Exception {
     try {
@@ -1426,11 +1433,11 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the fileSavePath attribute of the SVGUtils class
+   * Gets the fileSavePath attribute of the SVGUtils class
    *
-   * @param  id    Description of the Parameter
-   * @param  base  Description of the Parameter
-   * @return       The fileSavePath value
+   * @param id   Description of the Parameter
+   * @param base Description of the Parameter
+   * @return The fileSavePath value
    */
   public static String getFilePath(String base, int id) {
     String path = base + DateUtils.getDatePath(new java.util.Date());
@@ -1444,10 +1451,10 @@ public class SVGUtils {
 
 
   /**
-   *  Gets the fileName attribute of the SVGUtils class
+   * Gets the fileName attribute of the SVGUtils class
    *
-   * @param  id  Description of the Parameter
-   * @return     The fileName value
+   * @param id Description of the Parameter
+   * @return The fileName value
    */
   public static String getFileName(int id) {
     Date d = new java.util.Date();
@@ -1456,11 +1463,11 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  svgFile         Description of the Parameter
-   * @param  removeEncoding  Description of the Parameter
-   * @exception  Exception   Description of the Exception
+   * @param svgFile        Description of the Parameter
+   * @param removeEncoding Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void saveAsSVG(File svgFile, boolean removeEncoding) throws Exception {
     /*
@@ -1479,9 +1486,9 @@ public class SVGUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @exception  Exception  Description of the Exception
+   * @throws Exception Description of the Exception
    */
   private void removeIllustratorEncoding() throws Exception {
     Element encodedInfo = (Element) svgDoc.getElementById(this.ADOBE_ENCODING);

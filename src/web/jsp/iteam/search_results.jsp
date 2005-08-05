@@ -122,6 +122,9 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
     String highlightedText = SearchHTMLUtils.highlightText(searchBean.getTerms(), document.get("contents"));
     boolean hasHighlightedText = hasText(highlightedText);
 %>
+     <dhv:evaluate if="<%=!"".equals(document.get("trashed"))%>">
+       <font color="red">(<%= toHtml(document.get("trashed")) %>)</font><br />
+     </dhv:evaluate>
       <dhv:evaluate if="<%= hasHighlightedText %>">
         <%= toHtml(highlightedText) %>
       </dhv:evaluate>

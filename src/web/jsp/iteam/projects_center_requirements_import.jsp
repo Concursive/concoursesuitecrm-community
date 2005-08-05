@@ -5,7 +5,7 @@
   -          place.
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- Note: When cancel is submitted, the encoding of the form has to be processed differently
      or the id can be added to the action --%>
@@ -20,16 +20,16 @@
     var formTest = true;
     var messageText = "";
     if (form.file.value.length < 5) {
-      messageText += "- File is required\r\n";
+      messageText += label("file.required","- File is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("File.not.submitted","The file could not be submitted.\r\nPlease verify the following items:\r\n\r\n") + messageText;
       alert(messageText);
       return false;
     } else {
-      if (form.upload.value != 'Please Wait...') {
-        form.upload.value='Please Wait...';
+      if (form.upload.value != label("button.pleasewait","Please Wait...")) {
+        form.upload.value=label("button.pleasewait","Please Wait...");
         return true;
       } else {
         return false;
@@ -38,26 +38,28 @@
   }
 </script>
 <form method="POST" name="inputForm" action="ProjectManagementRequirements.do?command=Import&pid=<%= Project.getId() %>&rid=<%= Requirement.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-  A project plan can be imported from either a Microsoft Excel spreadsheet or
-  from an Omni Outliner template.<br />
+  <dhv:label name="projects.projectPlanCanBeImported.text">A project plan can be imported from either a Microsoft Excel spreadsheet or
+  from an Omni Outliner template.</dhv:label><br />
   <br />
+  <img border="0" src="images/mime/gnome-application-x-generic-spreadsheet-23.gif" align="absmiddle" alt="">&nbsp;<a href="iteam/Plan%20Outline%20Template.xlt">Excel Template</a><br />
+  <img border="0" src="images/mime/gnome-application-x-generic-spreadsheet-23.gif" align="absmiddle" alt="">&nbsp;<a href="iteam/Plan%20Outline%20Template.ooutline">OmniOutliner Template</a><br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <%= showError(request,"actionError") %>
     <tr>
       <th colspan="2" align="left">
-          Upload File
+          <dhv:label name="documents.documents.uploadFile">Upload File</dhv:label>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">File</td>
+      <td nowrap class="formLabel"><dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label></td>
       <td>
         <input type="file" name="file" size="45">
       </td>
     </tr>
   </table>
-  <p align="center">* Large files may take awhile to upload.<br />
-     Wait for file completion message when upload finishes.
+  <p align="center"><dhv:label name="documents.documents.largeFileUploadMessage" param="break=<br />">* Large files may take awhile to upload.<br />Wait for file completion message when upload finishes.</dhv:label>
   </p>
-  <input type="submit" value="Upload" name="upload">
+  <input type="submit" value="<dhv:label name="button.upload">Upload</dhv:label>" name="upload">
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
   <input type="hidden" name="rid" value="<%= Requirement.getId() %>">
 </form>

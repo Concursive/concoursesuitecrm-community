@@ -22,34 +22,30 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.quotes.base.Quote;
-import org.aspcfs.modules.quotes.base.QuoteProduct;
-import org.aspcfs.modules.quotes.base.QuoteProductList;
-import org.aspcfs.modules.quotes.base.QuoteProductOption;
-import org.aspcfs.modules.quotes.base.QuoteProductOptionList;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.products.configurator.*;
 
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    May 5, 2004
- *@version    $Id: ProductsCatalog.java,v 1.2 2004/05/04 15:52:27 mrajkowski Exp
- *      $
+ * @author ananth
+ * @version $Id: ProductsCatalog.java,v 1.2 2004/05/04 15:52:27 mrajkowski Exp
+ *          $
+ * @created May 5, 2004
  */
 public final class ProductsCatalog extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandCategories(context);
@@ -57,10 +53,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCategoryList(ActionContext context) {
     ProductCategoryList categoryList = null;
@@ -70,11 +66,15 @@ public final class ProductsCatalog extends CFSModule {
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
       if (moduleId != null && !"".equals(moduleId)) {
-        PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-        context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+        PermissionCategory permissionCategory = new PermissionCategory(
+            db, Integer.parseInt(moduleId));
+        context.getRequest().setAttribute(
+            "PermissionCategory", permissionCategory);
       }
-      String displayFieldId = (String) context.getRequest().getParameter("displayFieldId");
-      String hiddenFieldId = (String) context.getRequest().getParameter("hiddenFieldId");
+      String displayFieldId = (String) context.getRequest().getParameter(
+          "displayFieldId");
+      String hiddenFieldId = (String) context.getRequest().getParameter(
+          "hiddenFieldId");
       categoryList = new ProductCategoryList();
       categoryList.setTypeName("Publication");
       categoryList.setEnabled(Constants.TRUE);
@@ -94,15 +94,18 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProductList(ActionContext context) {
-    int categoryId = Integer.parseInt((String) context.getRequest().getParameter("id"));
-    String displayFieldId = (String) context.getRequest().getParameter("displayFieldId");
-    String hiddenFieldId = (String) context.getRequest().getParameter("hiddenFieldId");
+    int categoryId = Integer.parseInt(
+        (String) context.getRequest().getParameter("id"));
+    String displayFieldId = (String) context.getRequest().getParameter(
+        "displayFieldId");
+    String hiddenFieldId = (String) context.getRequest().getParameter(
+        "hiddenFieldId");
     ProductCategoryList trails = new ProductCategoryList();
     ProductCategory category = null;
     Connection db = null;
@@ -111,14 +114,16 @@ public final class ProductsCatalog extends CFSModule {
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
       if (moduleId != null && !"".equals(moduleId)) {
-        PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-        context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+        PermissionCategory permissionCategory = new PermissionCategory(
+            db, Integer.parseInt(moduleId));
+        context.getRequest().setAttribute(
+            "PermissionCategory", permissionCategory);
       }
 
       category = new ProductCategory();
       category.setBuildChildList(true);
       category.setBuildProductList(true);
-      category.setBuildEnabledProducts(Constants.TRUE);
+      category.setBuildActiveProducts(Constants.TRUE);
       category.queryRecord(db, categoryId);
 
       int parentId = category.getParentId();
@@ -143,10 +148,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCategories(ActionContext context) {
     Quote quote = null;
@@ -156,14 +161,15 @@ public final class ProductsCatalog extends CFSModule {
       db = getConnection(context);
       ProductCategoryList categoryList = new ProductCategoryList();
       ProductCatalogList productList = new ProductCatalogList();
-      
+
       String quoteId = context.getRequest().getParameter("quoteId");
       String categoryId = context.getRequest().getParameter("categoryId");
-      
-      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(categoryId) != -1) {
+
+      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
+          categoryId) != -1) {
         categoryList.setParentId(Integer.parseInt(categoryId));
         productList.setCategoryId(Integer.parseInt(categoryId));
-        
+
         thisCategory = new ProductCategory(db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("parentCategory", thisCategory);
         // Category Trails
@@ -177,15 +183,15 @@ public final class ProductsCatalog extends CFSModule {
       if (categoryList.size() > 0) {
         categoryList.removeNonProductCategories(db);
       }
-      productList.setEnabled(Constants.TRUE);
+      productList.setActive(Constants.TRUE);
       productList.setBuildResources(true);
       productList.setBuildActivePrice(true);
-      productList.setBuildEnabledProductsOnly(Constants.TRUE);
+      productList.setBuildActiveProductsOnly(Constants.TRUE);
       productList.buildList(db);
-      
+
       context.getRequest().setAttribute("categoryList", categoryList);
       context.getRequest().setAttribute("productList", productList);
-        
+
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
@@ -202,10 +208,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddProducts(ActionContext context) {
     Quote quote = null;
@@ -225,8 +231,10 @@ public final class ProductsCatalog extends CFSModule {
       context.getRequest().setAttribute("quoteProductList", quoteProductList);
 
       String categoryId = context.getRequest().getParameter("categoryId");
-      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(categoryId) != -1) {
-        ProductCategory thisCategory = new ProductCategory(db, Integer.parseInt(categoryId));
+      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
+          categoryId) != -1) {
+        ProductCategory thisCategory = new ProductCategory(
+            db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("parentCategory", thisCategory);
         // Category Trails
         ProductCategories.buildHierarchy(db, context);
@@ -243,13 +251,14 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddOptions(ActionContext context) {
-    String categoryIdString = (String) context.getRequest().getParameter("categoryId");
+    String categoryIdString = (String) context.getRequest().getParameter(
+        "categoryId");
     Quote quote = null;
     boolean isValid = false;
     QuoteProduct quoteProduct = null;
@@ -261,13 +270,16 @@ public final class ProductsCatalog extends CFSModule {
       String quoteId = context.getRequest().getParameter("quoteId");
       quote = new Quote(db, Integer.parseInt(quoteId));
       for (int i = 1; ; i++) {
-        String productIdString = (String) context.getRequest().getParameter("product_" + i);
+        String productIdString = (String) context.getRequest().getParameter(
+            "product_" + i);
         if (productIdString == null || "".equals(productIdString)) {
           break;
         } else {
-          String quantityString = (String) context.getRequest().getParameter("qty_" + i);
+          String quantityString = (String) context.getRequest().getParameter(
+              "qty_" + i);
           if (quantityString != null && !"".equals(quantityString)) {
-            ProductCatalog product = new ProductCatalog(db, Integer.parseInt(productIdString));
+            ProductCatalog product = new ProductCatalog(
+                db, Integer.parseInt(productIdString));
             product.buildActivePrice(db);
             quoteProduct = new QuoteProduct();
             quoteProduct.setProductCatalog(product);
@@ -280,26 +292,33 @@ public final class ProductsCatalog extends CFSModule {
             if (isValid) {
               QuoteProductOptionList optionList = new QuoteProductOptionList();
               for (int j = 1; ; j++) {
-                String optionIdString = (String) context.getRequest().getParameter("option_" + productIdString + "_" + j);
+                String optionIdString = (String) context.getRequest().getParameter(
+                    "option_" + productIdString + "_" + j);
                 if (optionIdString != null && !"".equals(optionIdString)) {
-                  ProductOption option = new ProductOption(db, Integer.parseInt(optionIdString.trim()));
+                  ProductOption option = new ProductOption(
+                      db, Integer.parseInt(optionIdString.trim()));
                   quoteProductOption = new QuoteProductOption();
                   //Load the option configurator and verify users input and ask the
                   //configurator to determine the price for this option
                   OptionConfigurator configurator =
-                                (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
-                  
+                      (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+                          db, option.getConfiguratorId());
+
                   configurator.queryProperties(db, option.getId(), false);
                   if (configurator.validateUserInput(context.getRequest())) {
-                    double priceAdjust = configurator.computePriceAdjust(context.getRequest());
-                    quoteProductOption.setProductOptionId(option.getProductOptionId(db, product.getId()));
+                    double priceAdjust = configurator.computePriceAdjust(
+                        context.getRequest());
+                    quoteProductOption.setProductOptionId(
+                        option.getProductOptionId(db, product.getId()));
                     quoteProductOption.setQuantity(1);
                     quoteProductOption.setPriceAmount(priceAdjust);
                     quoteProductOption.setTotalPrice(priceAdjust);
-                    isValid = this.validateObject(context, db, quoteProductOption);
+                    isValid = this.validateObject(
+                        context, db, quoteProductOption);
                     if (isValid) {
                       quoteProductOption.setOptionId(option.getId());
-                      quoteProductOption.setConfiguratorId(option.getConfiguratorId());
+                      quoteProductOption.setConfiguratorId(
+                          option.getConfiguratorId());
                       optionList.add(quoteProductOption);
                     } else {
                       break;
@@ -308,8 +327,11 @@ public final class ProductsCatalog extends CFSModule {
                     //check to see if user input is empty. If not empty
                     //return back to form
                     if (configurator.hasUserInput(context.getRequest())) {
-                      SystemStatus systemStatus = this.getSystemStatus(context);
-                      context.getRequest().setAttribute("actionError", systemStatus.getLabel("quoteProduct.option.validation.actionError"));
+                      SystemStatus systemStatus = this.getSystemStatus(
+                          context);
+                      context.getRequest().setAttribute(
+                          "actionError", systemStatus.getLabel(
+                              "quoteProduct.option.validation.actionError"));
                       return (executeCommandAddProducts(context));
                     }
                   }
@@ -328,7 +350,8 @@ public final class ProductsCatalog extends CFSModule {
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
 
-      if (categoryIdString != null && !"".equals(categoryIdString) && !"-1".equals(categoryIdString)) {
+      if (categoryIdString != null && !"".equals(categoryIdString) && !"-1".equals(
+          categoryIdString)) {
         category = new ProductCategory(db, Integer.parseInt(categoryIdString));
         context.getRequest().setAttribute("category", category);
       }
@@ -347,10 +370,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Lists all ProductCatalogs
+   * Lists all ProductCatalogs
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListAllProducts(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-view")) {
@@ -359,14 +382,18 @@ public final class ProductsCatalog extends CFSModule {
     }
     String moduleId = context.getRequest().getParameter("moduleId");
     ProductCatalogList productList = null;
-    PagedListInfo productCatalogListInfo = this.getPagedListInfo(context, "productCatalogListInfo");
-    productCatalogListInfo.setLink("ProductsCatalog.do?command=ListAllProducts&moduleId=" + moduleId);
+    PagedListInfo productCatalogListInfo = this.getPagedListInfo(
+        context, "productCatalogListInfo");
+    productCatalogListInfo.setLink(
+        "ProductsCatalog.do?command=ListAllProducts&moduleId=" + moduleId);
     Connection db = null;
     try {
       db = this.getConnection(context);
       // Populate the permission category for trails
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       productList = new ProductCatalogList();
       productList.setPagedListInfo(productCatalogListInfo);
@@ -386,10 +413,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  View ProductCatalog details
+   * View ProductCatalog details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewProductDetails(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-view")) {
@@ -403,10 +430,13 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+      int id = Integer.parseInt(
+          (String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
       categoryList = new ProductCategoryList();
@@ -425,10 +455,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Prepares the add ProductCatalog Screen
+   * Prepares the add ProductCatalog Screen
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddProduct(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-add")) {
@@ -442,8 +472,10 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       categoryList = new ProductCategoryList();
       categoryList.buildList(db);
@@ -462,10 +494,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Saves a ProductCatalog details
+   * Saves a ProductCatalog details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveProduct(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-add")) {
@@ -479,8 +511,10 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       ProductCatalog thisProduct = (ProductCatalog) context.getFormBean();
       thisProduct.setEnteredBy(getUserId(context));
@@ -490,7 +524,9 @@ public final class ProductsCatalog extends CFSModule {
         // TODO: check if product inserted?
         inserted = thisProduct.insert(db);
       }
-      thisProduct.addCategoryMapping(db, Integer.parseInt((String) context.getRequest().getParameter("categoryId")));
+      thisProduct.addCategoryMapping(
+          db, Integer.parseInt(
+              (String) context.getRequest().getParameter("categoryId")));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
@@ -503,10 +539,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Retrieves ProductCatalog details for modification
+   * Retrieves ProductCatalog details for modification
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyProduct(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-edit")) {
@@ -520,10 +556,13 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+      int id = Integer.parseInt(
+          (String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
       categoryList = new ProductCategoryList();
@@ -542,10 +581,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Updates ProductCatalog details
+   * Updates ProductCatalog details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateProduct(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-edit")) {
@@ -559,8 +598,10 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       ProductCatalog thisProduct = (ProductCatalog) context.getFormBean();
       thisProduct.setModifiedBy(getUserId(context));
@@ -583,10 +624,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Confirm deletion of product
+   * Confirm deletion of product
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDeleteProduct(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-delete")) {
@@ -600,24 +641,32 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       // Populate the permission category for trails
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
       SystemStatus systemStatus = this.getSystemStatus(context);
-      int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+      int id = Integer.parseInt(
+          (String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
       htmlDialog.setTitle("Centric CRM: Products - Product");
       DependencyList dependencies = productDetails.processDependencies(db);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (dependencies.canDelete()) {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header3"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ProductsCatalog.do?command=DeleteProduct&action=delete&productId=" + id + "&moduleId=" + moduleId + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ProductsCatalog.do?command=DeleteProduct&action=delete&productId=" + id + "&moduleId=" + moduleId + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.unableHeader"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        htmlDialog.setHeader(
+            systemStatus.getLabel("confirmdelete.unableHeader"));
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -632,10 +681,10 @@ public final class ProductsCatalog extends CFSModule {
 
 
   /**
-   *  Delete ProductCatalog
+   * Delete ProductCatalog
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteProduct(ActionContext context) {
     //if (!hasPermission(context, "product-catalog-product-delete")) {
@@ -651,36 +700,44 @@ public final class ProductsCatalog extends CFSModule {
     try {
       db = this.getConnection(context);
       // Populate the permission category for trails
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+      id = Integer.parseInt(
+          (String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
-      recordDeleted = productDetails.delete(db, "");
+      recordDeleted = productDetails.delete(db, this.getDbNamePath(context));
 
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
-      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.productDeletion"));
-      context.getRequest().setAttribute("refreshUrl", "ProductsCatalog.do?command=ViewProduct&productId=" + id + "&moduleId=" + moduleId);
+      context.getRequest().setAttribute(
+          "actionError", systemStatus.getLabel(
+              "object.validation.actionError.productDeletion"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "ProductsCatalog.do?command=ViewProduct&productId=" + id + "&moduleId=" + moduleId);
       return ("DeleteError");
     } finally {
       this.freeConnection(context, db);
     }
 
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "ProductsCatalog.do?command=ListAllProducts&moduleId=" + moduleId);
+      context.getRequest().setAttribute(
+          "refreshUrl", "ProductsCatalog.do?command=ListAllProducts&moduleId=" + moduleId);
       return getReturn(context, "Delete");
     }
-    context.getRequest().setAttribute("refreshUrl", "ProductsCatalog.do?command=ViewProduct&productId=" + id + "&moduleId=" + moduleId);
+    context.getRequest().setAttribute(
+        "refreshUrl", "ProductsCatalog.do?command=ViewProduct&productId=" + id + "&moduleId=" + moduleId);
     return getReturn(context, "Delete");
   }
 
   /**
-   *  Prepares a multi select popup for labor categories
+   * Prepares a multi select popup for labor categories
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPopupSelector(ActionContext context) {
     Connection db = null;
@@ -690,12 +747,15 @@ public final class ProductsCatalog extends CFSModule {
       context.getSession().removeAttribute("ProductCatalogSelectorInfo");
     }
     HashMap selectedList = new HashMap();
-    
-    String previousSelection = context.getRequest().getParameter("previousSelection");
-    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "ProductCatalogSelectorInfo");
+
+    String previousSelection = context.getRequest().getParameter(
+        "previousSelection");
+    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(
+        context, "ProductCatalogSelectorInfo");
     if (previousSelection != null) {
       StringTokenizer st = new StringTokenizer(previousSelection, "|");
-      StringTokenizer st1 = new StringTokenizer(context.getRequest().getParameter("previousSelectionDisplay"), "|");
+      StringTokenizer st1 = new StringTokenizer(
+          context.getRequest().getParameter("previousSelectionDisplay"), "|");
       while (st.hasMoreTokens() && st1.hasMoreTokens()) {
         selectedList.put(new Integer(st.nextToken()), st1.nextToken());
       }
@@ -705,18 +765,22 @@ public final class ProductsCatalog extends CFSModule {
     }
     //Flush the selectedList if its a new selection
     if ("true".equals(context.getRequest().getParameter("reset"))) {
-      if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter("previousSelection") == null) {
-        selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalElements")).clone();
+      if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter(
+          "previousSelection") == null) {
+        selectedList = (HashMap) ((HashMap) context.getSession().getAttribute(
+            "finalElements")).clone();
       }
     }
     int rowCount = 1;
     while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
       int elementId = 0;
       String elementValue = "";
-      elementId = Integer.parseInt(context.getRequest().getParameter("hiddenelementid" + rowCount));
+      elementId = Integer.parseInt(
+          context.getRequest().getParameter("hiddenelementid" + rowCount));
       if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
         if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
-          elementValue = context.getRequest().getParameter("elementvalue" + rowCount);
+          elementValue = context.getRequest().getParameter(
+              "elementvalue" + rowCount);
         }
 
         if (selectedList.get(new Integer(elementId)) == null) {
@@ -734,13 +798,15 @@ public final class ProductsCatalog extends CFSModule {
       db = this.getConnection(context);
       productList = new ProductCatalogList();
       ProductCategoryList categoryList = new ProductCategoryList();
-      
+
       String categoryId = context.getRequest().getParameter("categoryId");
-      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(categoryId) != -1) {
+      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
+          categoryId) != -1) {
         categoryList.setParentId(Integer.parseInt(categoryId));
         productList.setCategoryId(Integer.parseInt(categoryId));
-        
-        ProductCategory thisCategory = new ProductCategory(db, Integer.parseInt(categoryId));
+
+        ProductCategory thisCategory = new ProductCategory(
+            db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("parentCategory", thisCategory);
         // Category Trails
         ProductCategories.buildHierarchy(db, context);
@@ -752,25 +818,32 @@ public final class ProductsCatalog extends CFSModule {
       productList.setPagedListInfo(lookupSelectorInfo);
       productList.setBuildResources(false);
       productList.setSelectedItems(selectedList);
-      
+
       String listType = context.getRequest().getParameter("listType");
-      if (context.getRequest().getParameter("contractId") != null && !"".equals(context.getRequest().getParameter("contractId"))) {
+      if (context.getRequest().getParameter("contractId") != null && !"".equals(
+          context.getRequest().getParameter("contractId"))) {
         if ("single".equals(listType)) {
-          categoryList.setServiceContractId(context.getRequest().getParameter("contractId"));
-          productList.setServiceContractId(context.getRequest().getParameter("contractId"));
+          categoryList.setServiceContractId(
+              context.getRequest().getParameter("contractId"));
+          productList.setServiceContractId(
+              context.getRequest().getParameter("contractId"));
         }
       }
       productList.buildList(db);
       categoryList.buildList(db);
       context.getRequest().setAttribute("categoryList", categoryList);
       context.getRequest().setAttribute("productList", productList);
-      
-      if ("true".equals((String) context.getRequest().getParameter("finalsubmit"))) {
+
+      if ("true".equals(
+          (String) context.getRequest().getParameter("finalsubmit"))) {
         //Handle single selection case
         if ("single".equals(listType)) {
-          rowCount = Integer.parseInt(context.getRequest().getParameter("rowcount"));
-          int elementId = Integer.parseInt(context.getRequest().getParameter("hiddenelementid" + rowCount));
-          String elementValue = context.getRequest().getParameter("elementvalue" + rowCount);
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          int elementId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenelementid" + rowCount));
+          String elementValue = context.getRequest().getParameter(
+              "elementvalue" + rowCount);
           selectedList.clear();
           selectedList.put(new Integer(elementId), elementValue);
         }

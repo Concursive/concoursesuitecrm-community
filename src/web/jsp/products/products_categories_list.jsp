@@ -21,6 +21,7 @@
 <jsp:useBean id="categoryList" class="org.aspcfs.modules.products.base.ProductCategoryList" scope="request"/>
 <jsp:useBean id="productList" class="org.aspcfs.modules.products.base.ProductCatalogList" scope="request"/>
 <jsp:useBean id="parentCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request"/>
+<jsp:useBean id="productListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -56,19 +57,21 @@
         </tr>
       </table>
       <br />
-      <dhv:permission name="admin-sysconfig-products-add">
-      <table border="0" cellpadding="1" cellspacing="0" width="100%">
-        <tr>
-          <td>
-            <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle">
-            <a href="ProductCategories.do?command=Add&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= parentCategory.getId() %>"><dhv:label name="product.newCategory">New Category</dhv:label></a>
-            &nbsp;|&nbsp;
-            <a href="ProductCatalogs.do?command=Add&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= parentCategory.getId() %>"><dhv:label name="product.newProduct">New Product</dhv:label></a>
-          </td>
-        </tr>
-      </table>
-      <br>
-      </dhv:permission>
+      <form name="productCategories" action="ProductCatalogEditor.do?command=List&auto-populate=true&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= parentCategory.getId() %>" method="post">
+        <dhv:permission name="admin-sysconfig-products-add">
+          <table border="0" cellpadding="1" cellspacing="0" width="100%">
+            <tr>
+              <td>
+                <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle">
+                <a href="ProductCategories.do?command=Add&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= parentCategory.getId() %>"><dhv:label name="product.newCategory">New Category</dhv:label></a>
+                &nbsp;|&nbsp;
+                <a href="ProductCatalogs.do?command=Add&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= parentCategory.getId() %>"><dhv:label name="product.newProduct">New Product</dhv:label></a>
+               </td>
+            </tr>
+          </table>
+          <br />
+        </dhv:permission>
+      </form>
       <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
         <tr>
           <th width="8" align="center" nowrap>&nbsp;</th>
@@ -95,7 +98,7 @@
       %>
         <tr>
           <td class="row<%= rowid %>" align="center" nowrap>
-          <a href="javascript:displayMenu('select<%= count %>', 'menuCatalog', -1, <%= thisCategory.getId() %>, '<%= thisCategory.getParentId() %>', 'CATEGORY');"
+          <a href="javascript:displayMenu('select<%= count %>', 'menuCatalog', -1, <%= thisCategory.getId() %>, '<%= thisCategory.getParentId() %>', 'CATEGORY','false');"
              onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuCatalog');">
              <img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
@@ -131,7 +134,7 @@
       %>
         <tr>
           <td class="row<%= rowid %>" align="center" nowrap>
-          <a href="javascript:displayMenu('select<%= count %>', 'menuCatalog', <%= thisProduct.getId() %>,<%= parentCategory.getId() %>, -1, 'PRODUCT');"
+          <a href="javascript:displayMenu('select<%= count %>', 'menuCatalog', <%= thisProduct.getId() %>,<%= parentCategory.getId() %>, -1, 'PRODUCT','<%= thisProduct.isTrashed() %>');"
              onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuCatalog');">
              <img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
@@ -156,7 +159,7 @@
             <zeroio:tz timestamp="<%= thisProduct.getExpirationDate() %>" dateOnly="true" default="&nbsp;"/>
           </td>
           <td class="row<%= rowid %>" align="center" nowrap>
-            <% if (thisProduct.getEnabled()) { %>
+            <% if (thisProduct.getActive()) { %>
                 <dhv:label name="account.yes">Yes</dhv:label>
             <% } else { %>
                 <dhv:label name="account.no">No</dhv:label>

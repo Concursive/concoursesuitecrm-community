@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.admin.base.AccessType,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -24,6 +25,7 @@
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -31,6 +33,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -153,7 +156,7 @@ function reopenContact(id) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-  <a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+  <a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
     <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
@@ -320,6 +323,31 @@ function reopenContact(id) {
       </td>
     </tr>
     <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+      </td>
+      <td>
+        <zeroio:dateSelect form="addContact" field="birthDate" timestamp="<%= ContactDetails.getBirthDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false"/>
+        <%= showAttribute(request, "birthDateError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
         </td>
@@ -339,6 +367,14 @@ function reopenContact(id) {
       </td>
       <td>
         <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
       </td>
     </tr>
   </table>
@@ -362,6 +398,7 @@ function reopenContact(id) {
   <input type="hidden" name="conversionDate" value="<%=ContactDetails.getConversionDate()%>">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="primaryContact" value="<%= ContactDetails.getPrimaryContact() %>">
+  <input type="hidden" name="trashedDate" value="<%= ContactDetails.getTrashedDate() %>">
   <% if (request.getParameter("return") != null) {%>
     <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
   <% } %>

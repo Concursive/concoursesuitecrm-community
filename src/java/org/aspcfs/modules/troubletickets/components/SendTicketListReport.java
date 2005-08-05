@@ -15,23 +15,26 @@
  */
 package org.aspcfs.modules.troubletickets.components;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.components.SendUserNotification;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ComponentInterface;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 import org.aspcfs.modules.components.EmailDigestUtil;
-import java.util.*;
+import org.aspcfs.modules.components.SendUserNotification;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Using a supplied ticket list, SendTicketListReport will compile the tickets
- *  and send notifications based on the process parameters.
+ * Using a supplied ticket list, SendTicketListReport will compile the tickets
+ * and send notifications based on the process parameters.
  *
- *@author     matt rajkowski
- *@created    May 22, 2003
- *@version    $Id: SendTicketListReport.java,v 1.2 2003/05/22 19:29:44
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: SendTicketListReport.java,v 1.2 2003/05/22 19:29:44
+ *          mrajkowski Exp $
+ * @created May 22, 2003
  */
 public class SendTicketListReport extends ObjectHookComponent implements ComponentInterface {
 
@@ -40,9 +43,9 @@ public class SendTicketListReport extends ObjectHookComponent implements Compone
 
 
   /**
-   *  Gets the description attribute of the SendTicketListReport object
+   * Gets the description attribute of the SendTicketListReport object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Sends a ticket report to specified users with the specified parameters";
@@ -50,10 +53,10 @@ public class SendTicketListReport extends ObjectHookComponent implements Compone
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     if (!context.hasObjects()) {
@@ -73,13 +76,19 @@ public class SendTicketListReport extends ObjectHookComponent implements Compone
         context.setThisObject(thisTicket);
         loadTicket.execute(context);
         //Determine the content of the message to send
-        String thisMessage = context.getParameter(REPORT_TICKET_CONTENT, thisTicket, null);
+        String thisMessage = context.getParameter(
+            REPORT_TICKET_CONTENT, thisTicket, null);
         //emailTo gets all the messages
-        EmailDigestUtil.appendEmailAddresses(mailList, context.getParameter(SendUserNotification.EMAIL_TO), thisMessage, PREFIX + thisTicket.getId());
+        EmailDigestUtil.appendEmailAddresses(
+            mailList, context.getParameter(SendUserNotification.EMAIL_TO), thisMessage, PREFIX + thisTicket.getId());
         //Users: Lookup each user id specified
-        EmailDigestUtil.appendEmailUsers(db, mailList, context.getParameter(SendUserNotification.USER_TO, thisTicket, null), thisMessage, PREFIX + thisTicket.getId());
+        EmailDigestUtil.appendEmailUsers(
+            db, mailList, context.getParameter(
+                SendUserNotification.USER_TO, thisTicket, null), thisMessage, PREFIX + thisTicket.getId());
         //Contacts: Lookup each contact id specified
-        EmailDigestUtil.appendEmailContacts(db, mailList, context.getParameter(SendUserNotification.CONTACT_TO, thisTicket, null), thisMessage, PREFIX + thisTicket.getId());
+        EmailDigestUtil.appendEmailContacts(
+            db, mailList, context.getParameter(
+                SendUserNotification.CONTACT_TO, thisTicket, null), thisMessage, PREFIX + thisTicket.getId());
         //Departments: Get list of enabled users in the specified department, lookup each user id
         //EmailDigestUtil.appendDepartmentContacts(db, mailList, context.getParameter(SendUserNotification.DEPARTMENT_TO, thisTicket, null), thisMessage, PREFIX + thisTicket.getId());
       }

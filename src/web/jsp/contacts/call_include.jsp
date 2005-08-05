@@ -140,6 +140,7 @@
 <%-- include completed activity form --%>
 <%@ include file="../contacts/call_completed_include.jsp" %>
 <dhv:evaluate if="<%= !("cancel".equals(request.getParameter("action"))) || CallDetails.getStatusId() != Call.CANCELED %>">
+<zeroio:debug value="call_followup_include.jsp is being included" />
 <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
 <br>
 <%-- include pending activity form --%>

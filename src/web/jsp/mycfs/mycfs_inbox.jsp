@@ -37,8 +37,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
-<dhv:label name="Mailbox">Mailbox</dhv:label>
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
+<dhv:label name="myitems.mailbox">Mailbox</dhv:label>
 </td>
 </tr>
 </table>

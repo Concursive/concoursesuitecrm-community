@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.HtmlSelect" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.HtmlSelect, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="SearchOppListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -32,6 +32,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></script>
 <script language="JavaScript">
   function clearForm() {
     document.forms['searchLeads'].searchDescription.value="";
@@ -67,6 +68,12 @@
       hideSpan('ownedby');
     <% } %>
   }
+
+ function resetFieldValue(fieldId){
+  document.getElementById(fieldId).value = "";
+ }
+
+  
 </script>
 <body onLoad="javascript:document.searchLeads.searchDescription.focus();checkOwnedBy();">
 <form name="searchLeads" action="Leads.do?command=Search" method="post">
@@ -114,6 +121,7 @@
           <td>
             <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId" value="<%= SearchOppListInfo.getSearchOptionValue("searchcodeOrgId") %>">
             &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp [<a href="javascript:changeDivContent('changeaccount',label('quotes.all','All'));javascript:resetFieldValue('searchcodeOrgId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
           </td>
         </tr>
       </table>
@@ -138,6 +146,7 @@
           <td>
             <input type="hidden" id="contactId" name="searchcodeContactId" value="<%= SearchOppListInfo.getSearchOptionValue("searchcodeContactId") %>">
             &nbsp;[<a href="javascript:popContactsListSingle('contactId','changecontact', 'reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp [<a href="javascript:changeDivContent('changecontact',label('pipeline.any','Any'));javascript:resetFieldValue('contactId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
           </td>
         </tr>
       </table>
@@ -194,6 +203,16 @@
       <%= userSelect.getHtml("listFilter2", SearchOppListInfo.getFilterKey("listFilter2")) %>
     </td>
   </tr>
+  <%--
+  <tr>
+    <td class="formLabel">
+      <dhv:label name="global.trashed">Trashed</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="searchcodeIncludeOnlyTrashed" value="true" <%= "true".equals(SearchOppListInfo.getSearchOptionValue("searchcodeIncludeOnlyTrashed"))? "checked":""%> />
+    </td>
+	</tr>
+  --%>
 </table>
 &nbsp;<br>
 <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">

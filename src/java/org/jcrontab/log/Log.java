@@ -28,44 +28,48 @@ import org.jcrontab.Crontab;
 
 /**
  * This class helps the testing process to make easier testing
+ *
  * @author Israel Olalla
  * @version $Revision$
  */
 public class Log {
-	
-	public static Logger logger = null;
-	/**
-	 *	This block builds the logger. To do so needs to initialize 
-	 *  the logger and load the logger class
-	 */
-	static {
-		if (logger == null) {
-			try {
-			Class cl = Class.forName(Crontab.getInstance().getProperty(
-										"org.jcrontab.log.Logger"));
-			 logger = (Logger)cl.newInstance();
-			 logger.init();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	/**
-	 *	This method reports a info level message to the log
-	 */
-	public static void info(String message){
-		logger.info(message);
-	}
-	/**
-	 *	This method reports an Exception or Error  message to the log
-	 */
-	public static void error(String message, Throwable t){
-		logger.error(message, t);
-	}
-	/**
-	 *	This method reports a debug level message to the log
-	 */
-	public static void debug(String message){
-		logger.debug(message);
-	}
+
+  public static Logger logger = null;
+  /**
+   *	This block builds the logger. To do so needs to initialize
+   *  the logger and load the logger class
+   */
+  static {
+    if (logger == null) {
+      try {
+        Class cl = Class.forName(
+            Crontab.getInstance().getProperty("org.jcrontab.log.Logger"));
+        logger = (Logger) cl.newInstance();
+        logger.init();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  /**
+   * This method reports a info level message to the log
+   */
+  public static void info(String message) {
+    logger.info(message);
+  }
+
+  /**
+   * This method reports an Exception or Error  message to the log
+   */
+  public static void error(String message, Throwable t) {
+    logger.error(message, t);
+  }
+
+  /**
+   * This method reports a debug level message to the log
+   */
+  public static void debug(String message) {
+    logger.debug(message);
+  }
 }

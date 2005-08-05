@@ -14,99 +14,100 @@
 
 package org.jcrontab.data;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Vector;
+import org.jcrontab.Crontab;
+import org.jcrontab.log.Log;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import org.jcrontab.Crontab;
-import org.jcrontab.log.Log;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Vector;
 
 /**
- *  This class is only a generic example and doesn't aim to solve all the needs
- *  for the differents system's. if you want to make this class to fit your
- *  needs feel free to do it and remember the license. On of the things this
- *  class does is to open a connection to the database , this is nasty and very
- *  expensive, y you want to integrate jcrontab with a pool like poolman or
- *  jboss it's quite easy, should substitute connection logic with particular
- *  one.
+ * This class is only a generic example and doesn't aim to solve all the needs
+ * for the differents system's. if you want to make this class to fit your
+ * needs feel free to do it and remember the license. On of the things this
+ * class does is to open a connection to the database , this is nasty and very
+ * expensive, y you want to integrate jcrontab with a pool like poolman or
+ * jboss it's quite easy, should substitute connection logic with particular
+ * one.
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Id$
+ * @author iolalla
+ * @version $Id$
+ * @created February 4, 2003
  */
 public class GenericSQLSource implements DataSource {
 
   private CrontabParser cp = new CrontabParser();
 
   /**
-   *  This is the database driver being used.
+   * This is the database driver being used.
    */
   private static Object dbDriver = null;
   private static GenericSQLSource instance;
 
   /**
-   *  This Query gets all the Crontab entries from the events table
+   * This Query gets all the Crontab entries from the events table
    */
   public static String queryAll =
-      "SELECT second, minute, hour, dayofmonth, " +
-      "month, dayofweek, year, task, extrainfo, businessDays " +
+      "SELECT \"second\", \"minute\', \"hour\', dayofmonth, " +
+      "\"month\", dayofweek, \"year\", task, extrainfo, businessDays " +
       "FROM events " +
       "WHERE enabled = ?";
 
   /**
-   *  This Query gets all the Crontab entries from the events table but
-   *  searching by the name
+   * This Query gets all the Crontab entries from the events table but
+   * searching by the name
    */
   public static String querySearching =
-      "SELECT second, minute, hour, dayofmonth, " +
-      "month, dayofweek, year, task, extrainfo, businessDays " +
+      "SELECT \"second\", \"minute\", \"hour\", dayofmonth, " +
+      "\"month\", dayofweek, \"year\", task, extrainfo, businessDays " +
       "FROM events " +
       "WHERE task = ? ";
 
   /**
-   *  This Query stores the Crontab entries
+   * This Query stores the Crontab entries
    */
   public static String queryStoring =
       "INSERT INTO events(" +
-      "second, minute, hour, dayofmonth, " +
-      "month, dayofweek, year, " +
+      "\"second\", \"minute\", \"hour\", dayofmonth, " +
+      "\"month\", dayofweek, \"year\", " +
       "task, extrainfo, businessDays) " +
       "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
   /**
-   *  This Query removes the given Crontab Entries
+   * This Query removes the given Crontab Entries
    */
   public static String queryRemoving =
       "DELETE FROM events WHERE " +
-      "second = ? AND " +
-      "minute = ? AND " +
-      "hour = ? AND " +
+      "\"second\" = ? AND " +
+      "\"minute\" = ? AND " +
+      "\"hour\" = ? AND " +
       "dayofmonth = ? AND " +
-      "month = ? AND " +
+      "\"month\" = ? AND " +
       "dayofweek = ? AND " +
-      "year = ? AND " +
+      "\"year\" = ? AND " +
       "task = ? AND " +
       "extrainfo = ? AND " +
       "businessDays = ?";
 
 
   /**
-   *  Creates new GenericSQLSource
+   * Creates new GenericSQLSource
    */
 
-  protected GenericSQLSource() { }
+  protected GenericSQLSource() {
+  }
 
 
   /**
-   *  This method grants this class to be a singleton and grants data access
-   *  integrity
+   * This method grants this class to be a singleton and grants data access
+   * integrity
    *
-   *@return    returns the instance
+   * @return returns the instance
    */
   public DataSource getInstance() {
     if (instance == null) {
@@ -117,15 +118,15 @@ public class GenericSQLSource implements DataSource {
 
 
   /**
-   *  This method searches the Crontab Entry that the class has the given name
+   * This method searches the Crontab Entry that the class has the given name
    *
-   *@param  ceb                        Description of the Parameter
-   *@return                            Description of the Return Value
-   *@exception  DataNotFoundException  Description of the Exception
-   *@throws  CrontabEntryException     when it can't parse the line correctly
-   *@throws  ClassNotFoundException    cause loading the driver can throw an
-   *      ClassNotFoundException
-   *@throws  SQLException              Yep can throw an SQLException too
+   * @param ceb Description of the Parameter
+   * @return Description of the Return Value
+   * @throws DataNotFoundException  Description of the Exception
+   * @throws CrontabEntryException  when it can't parse the line correctly
+   * @throws ClassNotFoundException cause loading the driver can throw an
+   *                                ClassNotFoundException
+   * @throws SQLException           Yep can throw an SQLException too
    */
   public CrontabEntryBean find(CrontabEntryBean ceb) throws CrontabEntryException,
       ClassNotFoundException, SQLException, DataNotFoundException {
@@ -140,14 +141,14 @@ public class GenericSQLSource implements DataSource {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  cp                          Description of the Parameter
-   *@return                             Description of the Return Value
-   *@exception  CrontabEntryException   Description of the Exception
-   *@exception  ClassNotFoundException  Description of the Exception
-   *@exception  SQLException            Description of the Exception
-   *@exception  DataNotFoundException   Description of the Exception
+   * @param cp Description of the Parameter
+   * @return Description of the Return Value
+   * @throws CrontabEntryException  Description of the Exception
+   * @throws ClassNotFoundException Description of the Exception
+   * @throws SQLException           Description of the Exception
+   * @throws DataNotFoundException  Description of the Exception
    */
   public synchronized CrontabEntryBean[] findAll(Object cp) throws CrontabEntryException,
       ClassNotFoundException, SQLException, DataNotFoundException {
@@ -156,15 +157,15 @@ public class GenericSQLSource implements DataSource {
 
 
   /**
-   *  This method searches all the CrontabEntries from the DataSource
+   * This method searches all the CrontabEntries from the DataSource
    *
-   *@return                            CrontabEntryBean[] the array of
-   *      CrontabEntryBeans.
-   *@exception  DataNotFoundException  Description of the Exception
-   *@throws  CrontabEntryException     when it can't parse the line correctly
-   *@throws  ClassNotFoundException    cause loading the driver can throw an
-   *      ClassNotFoundException
-   *@throws  SQLException              Yep can throw an SQLException too
+   * @return CrontabEntryBean[] the array of
+   *         CrontabEntryBeans.
+   * @throws DataNotFoundException  Description of the Exception
+   * @throws CrontabEntryException  when it can't parse the line correctly
+   * @throws ClassNotFoundException cause loading the driver can throw an
+   *                                ClassNotFoundException
+   * @throws SQLException           Yep can throw an SQLException too
    */
   public CrontabEntryBean[] findAll() throws CrontabEntryException,
       ClassNotFoundException, SQLException, DataNotFoundException {
@@ -191,8 +192,8 @@ public class GenericSQLSource implements DataSource {
         String extrainfo = rs.getString("extrainfo");
         String line =
             minute + " " + hour + " " + dayofmonth
-             + " " + month + " "
-             + dayofweek + " " + task + " " + extrainfo;
+            + " " + month + " "
+            + dayofweek + " " + task + " " + extrainfo;
         boolean businessDays = rs.getBoolean("businessDays");
 
         CrontabEntryBean ceb = cp.marshall(line);
@@ -228,16 +229,16 @@ public class GenericSQLSource implements DataSource {
 
 
   /**
-   *  This method removes the given Crontab Entries
+   * This method removes the given Crontab Entries
    *
-   *@param  beans                    Description of the Parameter
-   *@throws  CrontabEntryException   when it can't parse the line correctly
-   *@throws  ClassNotFoundException  cause loading the driver can throw an
-   *      ClassNotFoundException
-   *@throws  SQLException            Yep can throw an SQLException too
+   * @param beans Description of the Parameter
+   * @throws CrontabEntryException  when it can't parse the line correctly
+   * @throws ClassNotFoundException cause loading the driver can throw an
+   *                                ClassNotFoundException
+   * @throws SQLException           Yep can throw an SQLException too
    */
   public void remove(CrontabEntryBean[] beans)
-       throws CrontabEntryException,
+      throws CrontabEntryException,
       ClassNotFoundException, SQLException {
 
     Connection conn = null;
@@ -276,21 +277,22 @@ public class GenericSQLSource implements DataSource {
     } finally {
       try {
         conn.close();
-      } catch (Exception e2) {}
+      } catch (Exception e2) {
+      }
     }
   }
 
 
   /**
-   *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that it doesn't store comments and blank lines from the original file,
-   *  any ideas?
+   * This method saves the CrontabEntryBean the actual problem with this method
+   * is that it doesn't store comments and blank lines from the original file,
+   * any ideas?
    *
-   *@param  beans                    Description of the Parameter
-   *@throws  CrontabEntryException   when it can't parse the line correctly
-   *@throws  ClassNotFoundException  cause loading the driver can throw an
-   *      ClassNotFoundException
-   *@throws  SQLException            Yep can throw an SQLException too
+   * @param beans Description of the Parameter
+   * @throws CrontabEntryException  when it can't parse the line correctly
+   * @throws ClassNotFoundException cause loading the driver can throw an
+   *                                ClassNotFoundException
+   * @throws SQLException           Yep can throw an SQLException too
    */
   public void store(CrontabEntryBean[] beans) throws CrontabEntryException,
       ClassNotFoundException, SQLException {
@@ -330,21 +332,22 @@ public class GenericSQLSource implements DataSource {
     } finally {
       try {
         conn.close();
-      } catch (Exception e2) {}
+      } catch (Exception e2) {
+      }
     }
   }
 
 
   /**
-   *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that doesn't store comments and blank lines from the original file any
-   *  ideas?
+   * This method saves the CrontabEntryBean the actual problem with this method
+   * is that doesn't store comments and blank lines from the original file any
+   * ideas?
    *
-   *@param  bean                     Description of the Parameter
-   *@throws  CrontabEntryException   when it can't parse the line correctly
-   *@throws  ClassNotFoundException  cause loading the driver can throw an
-   *      ClassNotFoundException
-   *@throws  SQLException            Yep can throw an SQLException too
+   * @param bean Description of the Parameter
+   * @throws CrontabEntryException  when it can't parse the line correctly
+   * @throws ClassNotFoundException cause loading the driver can throw an
+   *                                ClassNotFoundException
+   * @throws SQLException           Yep can throw an SQLException too
    */
   public void store(CrontabEntryBean bean) throws CrontabEntryException,
       ClassNotFoundException, SQLException {
@@ -354,11 +357,11 @@ public class GenericSQLSource implements DataSource {
 
 
   /**
-   *  Retrieves a connection to the database. May use a Connection Pool
-   *  DataSource or JDBC driver depending on the properties.
+   * Retrieves a connection to the database. May use a Connection Pool
+   * DataSource or JDBC driver depending on the properties.
    *
-   *@return                   a <code>Connection</code>
-   *@exception  SQLException  if there is an error retrieving the Connection.
+   * @return a <code>Connection</code>
+   * @throws SQLException if there is an error retrieving the Connection.
    */
   protected Connection getConnection() throws SQLException {
     Crontab crontab = Crontab.getInstance();
@@ -370,7 +373,8 @@ public class GenericSQLSource implements DataSource {
         "org.jcrontab.data.GenericSQLSource.url");
     if (dbDriver == null) {
       dbDriver = loadDatabaseDriver(
-          crontab.getProperty("org.jcrontab.data.GenericSQLSource.dbDataSource"));
+          crontab.getProperty(
+              "org.jcrontab.data.GenericSQLSource.dbDataSource"));
     }
     if (dbDriver instanceof javax.sql.DataSource) {
       if (dbUser != null && dbPwd != null) {
@@ -385,15 +389,15 @@ public class GenericSQLSource implements DataSource {
 
 
   /**
-   *  Initializes the database engine/data source. It first tries to load the
-   *  given DataSource name. If that fails it will load the database driver. If
-   *  the driver cannot be loaded it will check the DriverManager to see if
-   *  there is a driver loaded that can server the URL.
+   * Initializes the database engine/data source. It first tries to load the
+   * given DataSource name. If that fails it will load the database driver. If
+   * the driver cannot be loaded it will check the DriverManager to see if
+   * there is a driver loaded that can server the URL.
    *
-   *@param  srcName           is the JDBC DataSource name or null to load the
-   *      driver.
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param srcName is the JDBC DataSource name or null to load the
+   *                driver.
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected Object loadDatabaseDriver(String srcName) throws SQLException {
     String dbDataSource = srcName;
@@ -407,8 +411,8 @@ public class GenericSQLSource implements DataSource {
         return Class.forName(dbDriver).newInstance();
       } catch (Exception ie) {
         Log.error("GenericSQLSource-> Error loading " + dbDriver, ie);
-        return DriverManager.getDriver(crontab.getProperty(
-            "org.jcrontab.data.GenericSQLSource.url"));
+        return DriverManager.getDriver(
+            crontab.getProperty("org.jcrontab.data.GenericSQLSource.url"));
       }
     } else {
       try {

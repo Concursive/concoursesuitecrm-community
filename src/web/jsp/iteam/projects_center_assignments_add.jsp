@@ -162,9 +162,10 @@ int assignmentIndent = Assignment.getIndent() > -1 ? Assignment.getIndent() : In
     while (iTeam.hasNext()) {
       TeamMember thisMember = (TeamMember)iTeam.next();
       User thisUser = (User)thisMember.getUser();
-      if (thisUser.getEnabled() && !(thisUser.getExpires() != null && thisUser.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))) {
+      if ((thisUser.getEnabled() || (!thisUser.getEnabled() && Assignment.getUserAssignedId() == thisUser.getId())) && 
+          !(thisUser.getExpires() != null && thisUser.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))) {
         team.addItem(thisMember.getUserId(), 
-          ((User) thisMember.getUser()).getContact().getNameLastFirst());
+          ((User) thisMember.getUser()).getContact().getNameLastFirst() + (thisUser.getEnabled()?"":" *"));
       }
     }
 %>

@@ -25,9 +25,9 @@
 <%--<jsp:useBean id="SalesListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session" /> --%>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="foundDuplicateLastName" class="java.lang.String" scope="request" />
-<jsp:useBean id="foundDuplicateEmailAddress" class="java.util.HashMap" scope="request" />
-<jsp:useBean id="foundDuplicateCompany" class="org.aspcfs.modules.contacts.base.ContactList" scope="request" />
+<jsp:useBean id="hasDuplicateLastName" class="java.lang.String" scope="request" />
+<jsp:useBean id="hasDuplicateEmailAddress" class="java.util.HashMap" scope="request" />
+<jsp:useBean id="hasDuplicateCompany" class="java.lang.String" scope="request" />
 <jsp:useBean id="readStatus" class="java.lang.String" scope="request" />
 <jsp:useBean id="nextValue" class="java.lang.String" scope="request" />
 <jsp:useBean id="from" class="java.lang.String" scope="request" />
@@ -44,14 +44,14 @@
     if ('<%= from %>' == 'dashboard') {
       scrollReload('Sales.do?command=Dashboard');
     } else {
-      scrollReload('Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=true');
+      scrollReload('Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=<%= nextValue!=null?""+("true".equals(nextValue)?"true":"false"):"" %>&listForm=<%= listForm!=null?listForm:"" %>');
     }
   }
   function reopenOnDelete() {
     if ('<%= from %>' == 'dashboard') {
       scrollReload('Sales.do?command=Dashboard');
     } else {
-      scrollReload('Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=true');
+      scrollReload('Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=<%= nextValue!=null?""+("true".equals(nextValue)?"true":"false"):"" %>&listForm=<%= listForm!=null?listForm:"" %>');
     }
   }
 
@@ -99,7 +99,14 @@
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>&owner='+owner;
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner='+owner;
     window.frames['server_commands'].location.href=url;
   }
 
@@ -111,13 +118,27 @@
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
-    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>";
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
     url += "&comments="+comments+"&rating="+rating;
     window.location.href= url;
   }
 
   function trashLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=trash&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=trash&from='+nextTo+'&listForm=<%= (listForm != null?listForm:"") %>';
     window.frames['server_commands'].location.href=url;
   }
 
@@ -126,18 +147,32 @@
     var comments = document.forms['details'].comments.value;
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
     var contactId = '<%= ContactDetails.getId() %>';
-    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&leadStatus="+leadStatus+'&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&leadStatus="+leadStatus+'&from='+nextTo+'&listForm=<%= (listForm != null?listForm:"") %>';
     url += "&comments="+comments+"&rating="+rating;
     window.location.href= url;
   }
 
   function skipLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=skip&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=skip&from='+nextTo+'&listForm=<%= (listForm != null?listForm:"") %>';
     window.frames['server_commands'].location.href=url;
   }
 
   function deleteLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=delete&from=<%= from %>&listForm=<%= listForm!=null?listForm:"" %>';
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=delete&from=<%= from %>&nextValue=<%= nextValue %>&listForm=<%= listForm!=null?listForm:"" %>';
     popURL(url+'&popup=true','DeleteLead','330','200','yes','yes');
   }
 
@@ -180,23 +215,26 @@
 	    <strong><dhv:label name="sales.contactInformation">Contact Information</dhv:label></strong>
 	  </th>
   </tr>
+  <dhv:evaluate if="<%= ContactDetails.getNameLast() != null && !"".equals(ContactDetails.getNameLast()) %>">
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="reports.accounts.name">Name</dhv:label>
     </td>
     <td>
       <%= toHtml(ContactDetails.getNameFull()) %>
-      <dhv:evaluate if="<%= foundDuplicateLastName != null && !"".equals(foundDuplicateLastName) %>">&nbsp;&nbsp;
-        <span class="duplicate"><dhv:label name="sales.foundDuplicateLastName">Duplicate last name found</dhv:label></span>
-      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+      <dhv:evaluate if="<%= hasDuplicateLastName != null && "true".equals(hasDuplicateLastName) %>">&nbsp;&nbsp;
+      <a href="javascript:popURL('Sales.do?command=ContactList&searchcodeLastName=<%= ContactDetails.getNameLast() %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
+      <span class="duplicate"><dhv:label name="sales.foundDuplicateLastName">Duplicate last name found</dhv:label></span></a></dhv:evaluate>
+        &nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getNameFull())+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
-        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
+        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+StringUtils.jsEscape(ContactDetails.getNameFull())+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
 <%--        &nbsp;<a href="http://www.hotbot.com/default.asp?query=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/hotbot_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
-        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
-        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
+        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getNameFull())+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getNameFull())+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
 
-</td>
+    </td>
   </tr>
+</dhv:evaluate>
 <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
   <tr class="containerBody">
     <td class="formLabel">
@@ -214,14 +252,15 @@
     </td>
     <td>
       <%= toHtml(ContactDetails.getCompany()) %>
-      <dhv:evaluate if="<%= foundDuplicateCompany != null && (foundDuplicateCompany.size() > 1) %>">&nbsp;&nbsp;
-        <span class="duplicate"><dhv:label name="sales.foundDuplicateCompanyName">Duplicate company name found</dhv:label></span>
-      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+      <dhv:evaluate if="<%= hasDuplicateCompany != null && !"".equals(hasDuplicateCompany) %>">&nbsp;&nbsp;
+      <a href="javascript:popURL('Sales.do?command=ContactList&searchcodeCompany=<%= ContactDetails.getCompany() %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
+        <span class="duplicate"><dhv:label name="sales.foundDuplicateCompanyName">Duplicate company name found</dhv:label></span></a>
+      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a>--%>
-        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
+        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
 <%--        &nbsp;<a href="http://www.hotbot.com/default.asp?query=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/hotbot_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a>--%>
-        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
-        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
+        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
     </td>
   </tr>
 </dhv:evaluate>
@@ -264,8 +303,9 @@
       <dhv:evaluate if="<%=thisEmailAddress.getPrimaryEmail()%>">
         <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
       </dhv:evaluate>
-        <dhv:evaluate if="<%= foundDuplicateEmailAddress != null && (foundDuplicateEmailAddress.size() > 0) && (foundDuplicateEmailAddress.get(thisEmailAddress.getEmail()) != null) %>">&nbsp;&nbsp;
-          <span class="duplicate"><dhv:label name="sales.foundDuplicateEmailAddress">Duplicate email address found</dhv:label></span>
+        <dhv:evaluate if="<%= hasDuplicateEmailAddress.get(thisEmailAddress.getEmail()) != null && ((Boolean) hasDuplicateEmailAddress.get(thisEmailAddress.getEmail())).booleanValue() %>">&nbsp;&nbsp; 
+        <a href="javascript:popURL('Sales.do?command=ContactList&searchcodeEmailAddress=<%= thisEmailAddress.getEmail() %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
+          <span class="duplicate"><dhv:label name="sales.foundDuplicateEmailAddress">Duplicate email address found</dhv:label></span></a>
         </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
         &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
@@ -361,7 +401,7 @@
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= ContactDetails.getOwner() == -1 ? User.getUserRecord().getId() : ContactDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&searchcodePermission=sales-leads-edit&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp; [<a href="javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
           </td>
         </tr>
@@ -391,7 +431,11 @@
 <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" /></dhv:permission>
 <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.trashLeadR">Trash Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
 <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission>
-<dhv:permission name="sales-leads-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:deleteLead();" /></dhv:permission>
+<dhv:permission name="sales-leads-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:deleteLead();" /></dhv:permission><br />
+<% if ((listForm != null && !"".equals(listForm)) || (from != null && "list".equals(from) && !"dashboard".equals(from))) { %>
+  <input type="checkbox" id="toNextLead" name="toNextLead" value="true" checked /> <dhv:label name="sales.continueToNextLead.text">Continue to next lead after assigning, trashing or skipping lead</dhv:label>
+<% } %>
+
 </span>
 <span name="nextlead" id="nextlead" style="display:none">
 <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>" onClick="javascript:contactDetails();" /></dhv:permission>

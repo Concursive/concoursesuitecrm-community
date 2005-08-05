@@ -15,22 +15,23 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+
 /**
- *  Used for maintaining the work-in-progress state of a Category.<br />
- *  NOTE: This class is not dependent on tickets anymore and is used for working
- *  on drafts for Category objects.
+ * Used for maintaining the work-in-progress state of a Category.<br />
+ * NOTE: This class is not dependent on tickets anymore and is used for working
+ * on drafts for Category objects.
  *
- *@author     akhi_m
- *@created    May 23, 2003
- *@version    $id: exp$
+ * @author akhi_m
+ * @version $id: exp$
+ * @created May 23, 2003
  */
 public class TicketCategoryDraft extends GenericBean {
 
@@ -45,16 +46,17 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketCategoryDraft object
+   * Constructor for the TicketCategoryDraft object
    */
-  public TicketCategoryDraft() { }
+  public TicketCategoryDraft() {
+  }
 
 
   /**
-   *  Constructor for the TicketCategoryDraft object
+   * Constructor for the TicketCategoryDraft object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TicketCategoryDraft(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -62,12 +64,12 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketCategoryDraft object
+   * Constructor for the TicketCategoryDraft object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param id        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TicketCategoryDraft(Connection db, int id, String tableName) throws SQLException {
     if (id < 0) {
@@ -93,10 +95,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the Code attribute of the TicketCategoryDraft object
+   * Sets the Code attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new Code value
-   *@since
+   * @param tmp The new Code value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -104,9 +105,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketCategoryDraft object
+   * Sets the id attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -114,9 +115,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the categoryLevel attribute of the TicketCategoryDraft object
+   * Sets the categoryLevel attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new categoryLevel value
+   * @param tmp The new categoryLevel value
    */
   public void setCategoryLevel(int tmp) {
     this.categoryLevel = tmp;
@@ -124,9 +125,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the categoryLevel attribute of the TicketCategoryDraft object
+   * Sets the categoryLevel attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new categoryLevel value
+   * @param tmp The new categoryLevel value
    */
   public void setCategoryLevel(String tmp) {
     this.categoryLevel = Integer.parseInt(tmp);
@@ -134,10 +135,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the Level attribute of the TicketCategoryDraft object
+   * Sets the Level attribute of the TicketCategoryDraft object
    *
-   *@param  level  The new Level value
-   *@since
+   * @param level The new Level value
    */
   public void setLevel(int level) {
     this.level = level;
@@ -145,10 +145,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the Level attribute of the TicketCategoryDraft object
+   * Sets the Level attribute of the TicketCategoryDraft object
    *
-   *@param  level  The new Level value
-   *@since
+   * @param level The new Level value
    */
   public void setLevel(String level) {
     this.level = Integer.parseInt(level);
@@ -156,10 +155,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategoryDraft object
+   * Sets the ParentCode attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new ParentCode value
-   *@since
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -167,10 +165,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategoryDraft object
+   * Sets the ParentCode attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new ParentCode value
-   *@since
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -178,10 +175,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the Description attribute of the TicketCategoryDraft object
+   * Sets the Description attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new Description value
-   *@since
+   * @param tmp The new Description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -189,10 +185,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the TicketCategoryDraft object
+   * Sets the Enabled attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new Enabled value
-   *@since
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -200,9 +195,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TicketCategoryDraft object
+   * Sets the enabled attribute of the TicketCategoryDraft object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -210,9 +205,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the actualCatId attribute of the TicketCategoryDraft object
+   * Sets the actualCatId attribute of the TicketCategoryDraft object
    *
-   *@param  actualCatId  The new actualCatId value
+   * @param actualCatId The new actualCatId value
    */
   public void setActualCatId(int actualCatId) {
     this.actualCatId = actualCatId;
@@ -220,9 +215,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the actualCatId attribute of the TicketCategoryDraft object
+   * Sets the actualCatId attribute of the TicketCategoryDraft object
    *
-   *@param  actualCatId  The new actualCatId value
+   * @param actualCatId The new actualCatId value
    */
   public void setActualCatId(String actualCatId) {
     this.actualCatId = Integer.parseInt(actualCatId);
@@ -230,9 +225,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Sets the shortChildList attribute of the TicketCategoryDraft object
+   * Sets the shortChildList attribute of the TicketCategoryDraft object
    *
-   *@param  shortChildList  The new shortChildList value
+   * @param shortChildList The new shortChildList value
    */
   public void setShortChildList(TicketCategoryDraftList shortChildList) {
     this.shortChildList = shortChildList;
@@ -240,9 +235,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the shortChildList attribute of the TicketCategoryDraft object
+   * Gets the shortChildList attribute of the TicketCategoryDraft object
    *
-   *@return    The shortChildList value
+   * @return The shortChildList value
    */
   public TicketCategoryDraftList getShortChildList() {
     return shortChildList;
@@ -250,9 +245,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the actualCatId attribute of the TicketCategoryDraft object
+   * Gets the actualCatId attribute of the TicketCategoryDraft object
    *
-   *@return    The actualCatId value
+   * @return The actualCatId value
    */
   public int getActualCatId() {
     return actualCatId;
@@ -260,10 +255,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the Level attribute of the TicketCategoryDraft object
+   * Gets the Level attribute of the TicketCategoryDraft object
    *
-   *@return    The Level value
-   *@since
+   * @return The Level value
    */
   public int getLevel() {
     return level;
@@ -271,10 +265,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the Code attribute of the TicketCategoryDraft object
+   * Gets the Code attribute of the TicketCategoryDraft object
    *
-   *@return    The Code value
-   *@since
+   * @return The Code value
    */
   public int getId() {
     return id;
@@ -282,9 +275,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the categoryLevel attribute of the TicketCategoryDraft object
+   * Gets the categoryLevel attribute of the TicketCategoryDraft object
    *
-   *@return    The categoryLevel value
+   * @return The categoryLevel value
    */
   public int getCategoryLevel() {
     return categoryLevel;
@@ -292,10 +285,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the ParentCode attribute of the TicketCategoryDraft object
+   * Gets the ParentCode attribute of the TicketCategoryDraft object
    *
-   *@return    The ParentCode value
-   *@since
+   * @return The ParentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -303,10 +295,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the Description attribute of the TicketCategoryDraft object
+   * Gets the Description attribute of the TicketCategoryDraft object
    *
-   *@return    The Description value
-   *@since
+   * @return The Description value
    */
   public String getDescription() {
     return description;
@@ -314,9 +305,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the TicketCategoryDraft object
+   * Gets the Enabled attribute of the TicketCategoryDraft object
    *
-   *@return    The Enabled value
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -324,22 +315,25 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  baseTableName     Description of the Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db            Description of Parameter
+   * @param baseTableName Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db, String baseTableName) throws SQLException {
     try {
       db.setAutoCommit(false);
       int i = 0;
+      id = DatabaseUtils.getNextSeq(db, baseTableName + "_draft_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO " + baseTableName + "_draft " +
-          "(cat_level, link_id, parent_cat_code, description, level, enabled) " +
-          "VALUES (?, ?, ?, ?, ?, ?) "
-          );
+          "(" + (id > -1 ? "id, " : "") + "cat_level, link_id, parent_cat_code, description, \"level\", enabled) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getCategoryLevel());
       pst.setInt(++i, this.getActualCatId());
       if (parentCode > 0) {
@@ -352,7 +346,7 @@ public class TicketCategoryDraft extends GenericBean {
       pst.setBoolean(++i, this.getEnabled());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, baseTableName + "_draft_id_seq");
+      id = DatabaseUtils.getCurrVal(db, baseTableName + "_draft_id_seq", id);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -365,12 +359,12 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, String tableName) throws SQLException {
     if (id == -1) {
@@ -382,7 +376,7 @@ public class TicketCategoryDraft extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE " + tableName + "_draft " +
-          "SET description = ?, cat_level = ?, level = ?, enabled = ? " +
+          "SET description = ?, cat_level = ?, \"level\" = ?, enabled = ? " +
           "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());
@@ -403,12 +397,12 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String tableName) throws SQLException {
     if (this.getId() == -1) {
@@ -432,9 +426,9 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  childId  Description of the Parameter
+   * @param childId Description of the Parameter
    */
   public void removeChild(int childId) {
     TicketCategoryDraft child = null;
@@ -452,11 +446,10 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");

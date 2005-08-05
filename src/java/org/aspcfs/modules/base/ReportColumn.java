@@ -15,15 +15,15 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.*;
+
 
 /**
- *  ReportColumn is an object that defines the properties of a report column for
- *  a Report object.
+ * ReportColumn is an object that defines the properties of a report column for
+ * a Report object.
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class ReportColumn {
 
@@ -37,15 +37,16 @@ public class ReportColumn {
 
 
   /**
-   *  Constructor for the ReportColumn object
+   * Constructor for the ReportColumn object
    */
-  public ReportColumn() { }
+  public ReportColumn() {
+  }
 
 
   /**
-   *  Constructor for the ReportColumn object
+   * Constructor for the ReportColumn object
    *
-   *@param  tmp  Description of the Parameter
+   * @param tmp Description of the Parameter
    */
   public ReportColumn(String tmp) {
     this.name = tmp;
@@ -53,10 +54,10 @@ public class ReportColumn {
 
 
   /**
-   *  Constructor for the ReportColumn object
+   * Constructor for the ReportColumn object
    *
-   *@param  tmp   Description of the Parameter
-   *@param  tmp2  Description of the Parameter
+   * @param tmp  Description of the Parameter
+   * @param tmp2 Description of the Parameter
    */
   public ReportColumn(String tmp, String tmp2) {
     this.name = tmp;
@@ -66,9 +67,9 @@ public class ReportColumn {
 
   //Set
   /**
-   *  Sets the name attribute of the ReportColumn object
+   * Sets the name attribute of the ReportColumn object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -76,9 +77,9 @@ public class ReportColumn {
 
 
   /**
-   *  Sets the htmlName attribute of the ReportColumn object
+   * Sets the htmlName attribute of the ReportColumn object
    *
-   *@param  tmp  The new htmlName value
+   * @param tmp The new htmlName value
    */
   public void setHtmlName(String tmp) {
     this.htmlName = tmp;
@@ -86,9 +87,9 @@ public class ReportColumn {
 
 
   /**
-   *  Sets the formatting attribute of the ReportColumn object
+   * Sets the formatting attribute of the ReportColumn object
    *
-   *@param  tmp  The new formatting value
+   * @param tmp The new formatting value
    */
   public void setFormatting(String tmp) {
     this.htmlFormatting = tmp;
@@ -96,9 +97,9 @@ public class ReportColumn {
 
 
   /**
-   *  Sets the type attribute of the ReportColumn object
+   * Sets the type attribute of the ReportColumn object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = tmp;
@@ -107,9 +108,9 @@ public class ReportColumn {
 
   //Get
   /**
-   *  Gets the name attribute of the ReportColumn object
+   * Gets the name attribute of the ReportColumn object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -117,9 +118,9 @@ public class ReportColumn {
 
 
   /**
-   *  Gets the htmlName attribute of the ReportColumn object
+   * Gets the htmlName attribute of the ReportColumn object
    *
-   *@return    The htmlName value
+   * @return The htmlName value
    */
   public String getHtmlName() {
     if (htmlName != null) {
@@ -131,9 +132,9 @@ public class ReportColumn {
 
 
   /**
-   *  Gets the type attribute of the ReportColumn object
+   * Gets the type attribute of the ReportColumn object
    *
-   *@return    The type value
+   * @return The type value
    */
   public String getType() {
     return type;
@@ -141,9 +142,9 @@ public class ReportColumn {
 
 
   /**
-   *  Gets the runningTotal attribute of the ReportColumn object
+   * Gets the runningTotal attribute of the ReportColumn object
    *
-   *@return    The runningTotal value
+   * @return The runningTotal value
    */
   public float getRunningTotal() {
     return runningTotal;
@@ -151,9 +152,9 @@ public class ReportColumn {
 
 
   /**
-   *  Gets the runningTotalString attribute of the ReportColumn object
+   * Gets the runningTotalString attribute of the ReportColumn object
    *
-   *@return    The runningTotalString value
+   * @return The runningTotalString value
    */
   public String getRunningTotalString() {
     return "" + runningTotal;
@@ -161,9 +162,9 @@ public class ReportColumn {
 
 
   /**
-   *  Gets the formatting attribute of the ReportColumn object
+   * Gets the formatting attribute of the ReportColumn object
    *
-   *@return    The formatting value
+   * @return The formatting value
    */
   public String getFormatting() {
     return htmlFormatting;
@@ -171,9 +172,9 @@ public class ReportColumn {
 
 
   /**
-   *  Gets the formatted attribute of the ReportColumn object
+   * Gets the formatted attribute of the ReportColumn object
    *
-   *@return    The formatted value
+   * @return The formatted value
    */
   public boolean isFormatted() {
     return !htmlFormatting.equals("");

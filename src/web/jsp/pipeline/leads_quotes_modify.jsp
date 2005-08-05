@@ -30,6 +30,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popOpportunities.js"></script>
@@ -58,7 +59,7 @@ function reopenOpportunity(id) {
 }
 </script>
 <body onLoad="javascript:document.addQuote.shortDescription.focus();">
-<form method="post" name="addQuote" action="LeadsQuotes.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>&quoteId=<%= quoteBean.getId() %>&auto-populate=true<%= addLinkParams(request, "viewSource") %>" onSubmit="return checkForm(this);">
+<form method="post" name="addQuote" action="LeadsQuotes.do?command=Modify&version=<%= version %>&quoteId=<%= quoteBean.getId() %>&auto-populate=true<%= addLinkParams(request, "viewSource") %>" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>

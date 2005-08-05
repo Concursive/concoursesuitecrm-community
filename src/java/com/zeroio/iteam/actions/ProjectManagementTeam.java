@@ -15,40 +15,42 @@
  */
 package com.zeroio.iteam.actions;
 
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
-import java.sql.*;
-import java.util.*;
-import java.io.File;
-
-import org.aspcfs.utils.web.*;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.admin.base.UserList;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.TeamMember;
+import com.zeroio.iteam.base.TeamMemberList;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.RequestUtils;
 import org.w3c.dom.Element;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Project Management module for CFS
+ * Project Management module for CFS
  *
- *@author     matt rajkowski
- *@created    November 12, 2001
- *@version    $Id: ProjectManagementTeam.java,v 1.11 2002/12/23 16:12:28
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProjectManagementTeam.java,v 1.11 2002/12/23 16:12:28
+ *          mrajkowski Exp $
+ * @created November 12, 2001
  */
 public final class ProjectManagementTeam extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -56,13 +58,15 @@ public final class ProjectManagementTeam extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-team-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("team_modify").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("team_modify").toLowerCase());
       //Load the team members
       TeamMemberList team = new TeamMemberList();
       team.setProjectId(thisProject.getId());
@@ -75,16 +79,20 @@ public final class ProjectManagementTeam extends CFSModule {
       Iterator iTeam = team.iterator();
       while (iTeam.hasNext()) {
         TeamMember thisMember = (TeamMember) iTeam.next();
-        User tmpUser =  getUser(context, thisMember.getUserId());
-        if (tmpUser.getContact().getOrgId() == 0){
-          selCurrentTeam.addItem(thisMember.getUserId(), tmpUser.getContact().getNameFirstLast());
+        User tmpUser = getUser(context, thisMember.getUserId());
+        if (tmpUser.getContact().getOrgId() == 0) {
+          selCurrentTeam.addItem(
+              thisMember.getUserId(), tmpUser.getContact().getNameFirstLast() + (!tmpUser.getEnabled() ? " (X)" : ""));
         } else {
           //Append organization name if this user is not a primary contact of his organization
-          Organization organization = new Organization(db,tmpUser.getContact().getOrgId());
-          String userNameForDisplay = tmpUser.getContact().getNameFirstLast() + " (" + organization.getName() + ")";
-          if (organization.getPrimaryContact() !=  null){
-            if (organization.getPrimaryContact().getId() == tmpUser.getContact().getId()){
-              userNameForDisplay =  tmpUser.getContact().getNameFirstLast();
+          Organization organization = new Organization(
+              db, tmpUser.getContact().getOrgId());
+          String userNameForDisplay = tmpUser.getContact().getNameFirstLast() + " (" + organization.getName() + ")" +
+              (!tmpUser.getEnabled() || !tmpUser.getContact().getEnabled() || tmpUser.getContact().isTrashed() ? " (X)" : "");
+          if (organization.getPrimaryContact() != null) {
+            if (organization.getPrimaryContact().getId() == tmpUser.getContact().getId()) {
+              userNameForDisplay = tmpUser.getContact().getNameFirstLast() +
+                  (!tmpUser.getEnabled() || !tmpUser.getContact().getEnabled() || tmpUser.getContact().isTrashed() ? " (X)" : "");
             }
           }
           selCurrentTeam.addItem(thisMember.getUserId(), userNameForDisplay);
@@ -97,7 +105,8 @@ public final class ProjectManagementTeam extends CFSModule {
         }
       }
       context.getRequest().setAttribute("currentTeam", selCurrentTeam);
-      context.getRequest().setAttribute("vectorUserId", vectorUserId.toString());
+      context.getRequest().setAttribute(
+          "vectorUserId", vectorUserId.toString());
       context.getRequest().setAttribute("vectorState", vectorState.toString());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -110,13 +119,14 @@ public final class ProjectManagementTeam extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateUserList(ActionContext context) {
-    if (!"true".equals((String) context.getServletContext().getAttribute("DEPARTMENT"))) {
+    if (!"true".equals(
+        (String) context.getServletContext().getAttribute("DEPARTMENT"))) {
       return "PermissionError";
     }
     Connection db = null;
@@ -140,10 +150,10 @@ public final class ProjectManagementTeam extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     Connection db = null;
@@ -153,13 +163,15 @@ public final class ProjectManagementTeam extends CFSModule {
     try {
       db = getConnection(context);
       //Project permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-team-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("team_modify").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("team_modify").toLowerCase());
       context.getRequest().setAttribute("pid", projectId);
       //Array of added users, not invited users
       ArrayList addedUsers = new ArrayList();
@@ -173,40 +185,61 @@ public final class ProjectManagementTeam extends CFSModule {
       if (recordInserted) {
         // Added users will get an email
         if (addedUsers.size() > 0) {
-          ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+          ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+              "applicationPrefs");
           // Send each user a message
           Iterator users = addedUsers.iterator();
           while (users.hasNext()) {
             DatabaseUtils.renewConnection(context, db);
-            Contact projectContact = new Contact(db, getUser(context, getUserId(context)).getContact().getId());
+            Contact projectContact = new Contact(
+                db, getUser(context, getUserId(context)).getContact().getId());
             User thisUser = (User) users.next();
             Contact thisContact = new Contact(db, thisUser.getContactId());
-            // Load the templates
-            String templateFile = getDbNamePath(context) + "templates.xml";
+            // Load the template for the specific user
+            String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(
+                context, thisUser) + ".xml";
+            if (!FileUtils.fileExists(templateFile)) {
+              templateFile = getDbNamePath(context) + "templates_en_US.xml";
+            }
             File configFile = new File(templateFile);
             XMLUtils xml = new XMLUtils(configFile);
             Element mappings = xml.getFirstChild("mappings");
 
             Template inviteSubject = new Template();
-            inviteSubject.setText(XMLUtils.getNodeText(XMLUtils.getElement(mappings, "map", "id", "projects.userAdded.subject")));
+            inviteSubject.setText(
+                XMLUtils.getNodeText(
+                    XMLUtils.getElement(
+                        mappings, "map", "id", "projects.userAdded.subject")));
             inviteSubject.addParseElement("\r\n", "");
             inviteSubject.addParseElement("\r", "");
             inviteSubject.addParseElement("\n", "");
 
             Template inviteBody = new Template();
-            inviteBody.setText(XMLUtils.getNodeText(XMLUtils.getElement(mappings, "map", "id", "projects.userAdded.body")));
-            inviteBody.addParseElement("${invite.firstName}", thisContact.getNameFirst());
-            inviteBody.addParseElement("${invite.lastName}", thisContact.getNameLast());
-            inviteBody.addParseElement("${invite.name}", thisContact.getNameFirstLast());
-            inviteBody.addParseElement("${user.name}", projectContact.getNameFirstLast());
-            inviteBody.addParseElement("${project.name}", thisProject.getTitle());
-            inviteBody.addParseElement("${project.description}", thisProject.getShortDescription());
-            inviteBody.addParseElement("${link}", RequestUtils.getLink(context, "ProjectManagement.do?command=RSVP"));
+            inviteBody.setText(
+                XMLUtils.getNodeText(
+                    XMLUtils.getElement(
+                        mappings, "map", "id", "projects.userAdded.body")));
+            inviteBody.addParseElement(
+                "${invite.firstName}", thisContact.getNameFirst());
+            inviteBody.addParseElement(
+                "${invite.lastName}", thisContact.getNameLast());
+            inviteBody.addParseElement(
+                "${invite.name}", thisContact.getNameFirstLast());
+            inviteBody.addParseElement(
+                "${user.name}", projectContact.getNameFirstLast());
+            inviteBody.addParseElement(
+                "${project.name}", thisProject.getTitle());
+            inviteBody.addParseElement(
+                "${project.description}", thisProject.getShortDescription());
+            inviteBody.addParseElement(
+                "${link}", RequestUtils.getLink(
+                    context, "ProjectManagement.do?command=RSVP"));
             //Send the message
             SMTPMessage message = new SMTPMessage();
             message.setHost(prefs.get("MAILSERVER"));
             message.setFrom(prefs.get("EMAILADDRESS"));
-            message.addReplyTo(projectContact.getPrimaryEmailAddress(), projectContact.getNameFirstLast());
+            message.addReplyTo(
+                projectContact.getPrimaryEmailAddress(), projectContact.getNameFirstLast());
             message.addTo(thisContact.getPrimaryEmailAddress());
             message.setSubject(inviteSubject.getParsedText());
             message.setBody(inviteBody.getParsedText());
@@ -220,7 +253,8 @@ public final class ProjectManagementTeam extends CFSModule {
           return ("ModifyOK");
         } else {
           //Some users not in the system
-          if (!"true".equals((String) context.getServletContext().getAttribute("INVITE"))) {
+          if (!"true".equals(
+              (String) context.getServletContext().getAttribute("INVITE"))) {
             return "PermissionError";
           }
           //Allow user to invite some users
@@ -240,10 +274,10 @@ public final class ProjectManagementTeam extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandChangeRole(ActionContext context) {
     Connection db = null;
@@ -254,18 +288,23 @@ public final class ProjectManagementTeam extends CFSModule {
     try {
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-team-edit-role")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-team-edit-role")) {
         return "PermissionError";
       }
       //Make sure user can change roles
-      TeamMember currentMember = new TeamMember(db, thisProject.getId(), getUserId(context));
+      TeamMember currentMember = new TeamMember(
+          db, thisProject.getId(), getUserId(context));
       if (currentMember.getRoleId() <= TeamMember.PROJECT_LEAD) {
-        boolean changed = TeamMember.changeRole(db, thisProject.getId(), Integer.parseInt(userId), Integer.parseInt(newRole));
+        boolean changed = TeamMember.changeRole(
+            db, thisProject.getId(), Integer.parseInt(userId), Integer.parseInt(
+                newRole));
         if (!changed) {
           return ("ChangeRoleERROR");
         }

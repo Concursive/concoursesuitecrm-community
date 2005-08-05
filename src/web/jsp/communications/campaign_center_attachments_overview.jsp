@@ -55,7 +55,7 @@
 <a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
 <a href="CampaignManager.do?command=View"><dhv:label name="campaign.campaignList">Campaign List</dhv:label></a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
-<dhv:label name="Attachments">Attachments</dhv:label>
+<dhv:label name="campaign.attachments">Attachments</dhv:label>
 </td>
 </tr>
 </table>
@@ -73,7 +73,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><dhv:label name="Configured attachments for this campaign">Configured attachments for this campaign</dhv:label></strong>
+      <strong><dhv:label name="campaign.configureAttachments.text">Configured attachments for this campaign</dhv:label></strong>
     </th>
   </tr>
 <dhv:permission name="campaign-campaigns-surveys-view">
@@ -113,10 +113,25 @@
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
-            <div id="changeAddressRequest" name="changeAddressRequest"><%=Campaign.getHasAddressRequest()? "Yes":"No"%> &nbsp;</div>
+            <div id="changeAddressRequest" name="changeAddressRequest">
+              <% if (Campaign.getHasAddressRequest()) { %>
+                  <dhv:label name="account.yes">Yes</dhv:label>
+              <% } else { %>
+                  <dhv:label name="account.no">No</dhv:label>
+              <% } %> 
+              &nbsp;
+            </div>
           </td>
           <td>
-            <input type="button" name="addAddressUpdateAccess" value="<%=Campaign.getHasAddressRequest()? "Remove":"Attach"%>" onClick="javascript:updateAddressRequest(this, <%=Campaign.getId()%>);" />
+          <% if (Campaign.getHasAddressRequest()) {  %>
+            <input type="button" name="addAddressUpdateAccess"  
+                value="<dhv:label name="button.remove">Remove</dhv:label>"
+                onClick="javascript:updateAddressRequest(this, <%=Campaign.getId()%>);" />
+          <% } else { %>
+            <input type="button" name="addAddressUpdateAccess"  
+                value="<dhv:label name="button.attach">Attach</dhv:label>"
+                onClick="javascript:updateAddressRequest(this, <%=Campaign.getId()%>);" />
+          <% } %>
           </td>
         </tr>
       </table>

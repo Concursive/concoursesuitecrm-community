@@ -15,23 +15,26 @@
  */
 package org.aspcfs.apps.transfer.reader.cfs;
 
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.reader.csvreader.CSVReader;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.apps.transfer.*;
-import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.formatter.*;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.formatter.AddressFormatter;
+import org.aspcfs.utils.formatter.EmailAddressFormatter;
+import org.aspcfs.utils.formatter.PhoneNumberFormatter;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Locale;
 
 /**
- *  Imports a list of contacts into CFS General Contacts
+ * Imports a list of contacts into CFS General Contacts
  *
- *@author     matt rajkowski
- *@created    March 3, 2003
- *@version    $Id: ImportGeneralContacts.java,v 1.1.2.3 2003/03/05 21:19:14
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ImportGeneralContacts.java,v 1.1.2.3 2003/03/05 21:19:14
+ *          mrajkowski Exp $
+ * @created March 3, 2003
  */
 public class ImportGeneralContacts extends CSVReader {
 
@@ -73,9 +76,9 @@ public class ImportGeneralContacts extends CSVReader {
 
 
   /**
-   *  Gets the version attribute of the ImportGeneralContacts object
+   * Gets the version attribute of the ImportGeneralContacts object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -83,9 +86,9 @@ public class ImportGeneralContacts extends CSVReader {
 
 
   /**
-   *  Gets the name attribute of the ImportGeneralContacts object
+   * Gets the name attribute of the ImportGeneralContacts object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Centric CRM General Contacts Importer";
@@ -93,9 +96,9 @@ public class ImportGeneralContacts extends CSVReader {
 
 
   /**
-   *  Gets the description attribute of the ImportGeneralContacts object
+   * Gets the description attribute of the ImportGeneralContacts object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Reads general contacts from a text file based on specifications";
@@ -103,17 +106,18 @@ public class ImportGeneralContacts extends CSVReader {
 
 
   /**
-   *  A required method which actually performs the processing of reading
-   *  contact records.
+   * A required method which actually performs the processing of reading
+   * contact records.
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
 
     try {
-      PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("import.out", false)));
+      PrintWriter out = new PrintWriter(
+          new BufferedWriter(new FileWriter("import.out", false)));
 
       //Create a new invisible user who will import these records (enterdBy) so
       //that records can be backed out if necessary
@@ -159,43 +163,74 @@ public class ImportGeneralContacts extends CSVReader {
       while ((line = in.readLine()) != null) {
         ++lineNumber;
         //For each line use the parseExcelCSVLine method to get a record
-        ArrayList thisRecord = new ArrayList(StringUtils.parseExcelCSVLine(line));
+        ArrayList thisRecord = new ArrayList(
+            StringUtils.parseExcelCSVLine(line));
         if (lineNumber == 1) {
           //Process the column mappings
           OWNER = findColumn(thisRecord, new String[]{"OWNER", "Owner"});
-          NAME_SALUTATION = findColumn(thisRecord, new String[]{"NAME_SALUTATION", "Salutation"});
-          FIRST_NAME = findColumn(thisRecord, new String[]{"FIRST_NAME", "FirstName", "First Name"});
-          MIDDLE_NAME = findColumn(thisRecord, new String[]{"MIDDLE_NAME", "Middle Name"});
-          LAST_NAME = findColumn(thisRecord, new String[]{"LAST_NAME", "LastName", "Last Name"});
+          NAME_SALUTATION = findColumn(
+              thisRecord, new String[]{"NAME_SALUTATION", "Salutation"});
+          FIRST_NAME = findColumn(
+              thisRecord, new String[]{"FIRST_NAME", "FirstName", "First Name"});
+          MIDDLE_NAME = findColumn(
+              thisRecord, new String[]{"MIDDLE_NAME", "Middle Name"});
+          LAST_NAME = findColumn(
+              thisRecord, new String[]{"LAST_NAME", "LastName", "Last Name"});
           SUFFIX = findColumn(thisRecord, new String[]{"SUFFIX", "Suffix"});
-          COMPANY_NAME = findColumn(thisRecord, new String[]{"COMPANY_NAME", "Company", "Company Name", "Account Name"});
+          COMPANY_NAME = findColumn(
+              thisRecord, new String[]{"COMPANY_NAME", "Company", "Company Name", "Account Name"});
           TITLE = findColumn(thisRecord, new String[]{"TITLE", "Title"});
-          BUSINESS_ADDRESS_1 = findColumn(thisRecord, new String[]{"BUSINESS_ADDRESS_1", "Business Address Line 1", "Mailing Street"});
-          BUSINESS_ADDRESS_2 = findColumn(thisRecord, new String[]{"BUSINESS_ADDRESS_2", "Business Address Line 2", "Mailing Address Line2"});
-          BUSINESS_ADDRESS_3 = findColumn(thisRecord, new String[]{"BUSINESS_ADDRESS_3", "Business Address Line 3", "Mailing Address Line3"});
-          BUSINESS_CITY = findColumn(thisRecord, new String[]{"BUSINESS_CITY", "BusinessCity", "Business City", "Mailing City"});
-          BUSINESS_STATE = findColumn(thisRecord, new String[]{"BUSINESS_STATE", "Business State", "Business State/Province", "Mailing State"});
-          BUSINESS_ZIP = findColumn(thisRecord, new String[]{"BUSINESS_ZIP", "Business Zip", "Business Postal Code", "Mailing Zip/Postal Code"});
-          BUSINESS_COUNTRY = findColumn(thisRecord, new String[]{"BUSINES_COUNTRY", "Business Country", "Mailing Country"});
-          HOME_ADDRESS_1 = findColumn(thisRecord, new String[]{"HOME_ADDRESS_1", "Home Address Line 1"});
-          HOME_ADDRESS_2 = findColumn(thisRecord, new String[]{"HOME_ADDRESS_2", "Home Address Line 2"});
-          HOME_ADDRESS_3 = findColumn(thisRecord, new String[]{"HOME_ADDRESS_3", "Home Address Line 3"});
-          HOME_CITY = findColumn(thisRecord, new String[]{"HOME_CITY", "HomeCity", "Home City"});
-          HOME_STATE = findColumn(thisRecord, new String[]{"HOME_STATE", "Home State/Province"});
-          HOME_ZIP = findColumn(thisRecord, new String[]{"HOME_ZIP", "Home Postal Code"});
-          HOME_COUNTRY = findColumn(thisRecord, new String[]{"HOME_COUNTRY", "Home Country"});
-          BUSINESS_PHONE = findColumn(thisRecord, new String[]{"BUSINESS_PHONE", "BusinessPhone", "Business Phone", "Phone"});
-          BUSINESS_2_PHONE = findColumn(thisRecord, new String[]{"BUSINESS_2_PHONE", "Business2 Phone"});
-          BUSINESS_FAX = findColumn(thisRecord, new String[]{"BUSINESS_FAX", "BusinessFax", "Business Fax", "Fax"});
-          HOME_PHONE = findColumn(thisRecord, new String[]{"HOME_HOME", "Home Phone"});
-          HOME_2_PHONE = findColumn(thisRecord, new String[]{"HOME_2_PHONE", "Home2 Phone"});
-          HOME_FAX = findColumn(thisRecord, new String[]{"HOME_FAX", "Home Fax"});
-          MOBILE_PHONE = findColumn(thisRecord, new String[]{"MOBILE_PHONE", "Mobile Phone", "Mobile"});
-          OTHER_PHONE = findColumn(thisRecord, new String[]{"OTHER_PHONE", "Other Phone"});
+          BUSINESS_ADDRESS_1 = findColumn(
+              thisRecord, new String[]{"BUSINESS_ADDRESS_1", "Business Address Line 1", "Mailing Street"});
+          BUSINESS_ADDRESS_2 = findColumn(
+              thisRecord, new String[]{"BUSINESS_ADDRESS_2", "Business Address Line 2", "Mailing Address Line2"});
+          BUSINESS_ADDRESS_3 = findColumn(
+              thisRecord, new String[]{"BUSINESS_ADDRESS_3", "Business Address Line 3", "Mailing Address Line3"});
+          BUSINESS_CITY = findColumn(
+              thisRecord, new String[]{"BUSINESS_CITY", "BusinessCity", "Business City", "Mailing City"});
+          BUSINESS_STATE = findColumn(
+              thisRecord, new String[]{"BUSINESS_STATE", "Business State", "Business State/Province", "Mailing State"});
+          BUSINESS_ZIP = findColumn(
+              thisRecord, new String[]{"BUSINESS_ZIP", "Business Zip", "Business Postal Code", "Mailing Zip/Postal Code"});
+          BUSINESS_COUNTRY = findColumn(
+              thisRecord, new String[]{"BUSINES_COUNTRY", "Business Country", "Mailing Country"});
+          HOME_ADDRESS_1 = findColumn(
+              thisRecord, new String[]{"HOME_ADDRESS_1", "Home Address Line 1"});
+          HOME_ADDRESS_2 = findColumn(
+              thisRecord, new String[]{"HOME_ADDRESS_2", "Home Address Line 2"});
+          HOME_ADDRESS_3 = findColumn(
+              thisRecord, new String[]{"HOME_ADDRESS_3", "Home Address Line 3"});
+          HOME_CITY = findColumn(
+              thisRecord, new String[]{"HOME_CITY", "HomeCity", "Home City"});
+          HOME_STATE = findColumn(
+              thisRecord, new String[]{"HOME_STATE", "Home State/Province"});
+          HOME_ZIP = findColumn(
+              thisRecord, new String[]{"HOME_ZIP", "Home Postal Code"});
+          HOME_COUNTRY = findColumn(
+              thisRecord, new String[]{"HOME_COUNTRY", "Home Country"});
+          BUSINESS_PHONE = findColumn(
+              thisRecord, new String[]{"BUSINESS_PHONE", "BusinessPhone", "Business Phone", "Phone"});
+          BUSINESS_2_PHONE = findColumn(
+              thisRecord, new String[]{"BUSINESS_2_PHONE", "Business2 Phone"});
+          BUSINESS_FAX = findColumn(
+              thisRecord, new String[]{"BUSINESS_FAX", "BusinessFax", "Business Fax", "Fax"});
+          HOME_PHONE = findColumn(
+              thisRecord, new String[]{"HOME_HOME", "Home Phone"});
+          HOME_2_PHONE = findColumn(
+              thisRecord, new String[]{"HOME_2_PHONE", "Home2 Phone"});
+          HOME_FAX = findColumn(
+              thisRecord, new String[]{"HOME_FAX", "Home Fax"});
+          MOBILE_PHONE = findColumn(
+              thisRecord, new String[]{"MOBILE_PHONE", "Mobile Phone", "Mobile"});
+          OTHER_PHONE = findColumn(
+              thisRecord, new String[]{"OTHER_PHONE", "Other Phone"});
           PAGER = findColumn(thisRecord, new String[]{"PAGER", "Pager"});
-          BUSINESS_EMAIL = findColumn(thisRecord, new String[]{"BUSINESS_EMAIL", "Business Email", "Email"});
-          PERSONAL_EMAIL = findColumn(thisRecord, new String[]{"PERSONAL_EMAIL", "Home Email", "Personal Email"});
-          OTHER_EMAIL = findColumn(thisRecord, new String[]{"OTHER_EMAIL", "Other Email"});
+          BUSINESS_EMAIL = findColumn(
+              thisRecord, new String[]{"BUSINESS_EMAIL", "Business Email", "Email"});
+          PERSONAL_EMAIL = findColumn(
+              thisRecord, new String[]{"PERSONAL_EMAIL", "Home Email", "Personal Email"});
+          OTHER_EMAIL = findColumn(
+              thisRecord, new String[]{"OTHER_EMAIL", "Other Email"});
           NOTES = findColumn(thisRecord, new String[]{"NOTES", "Notes"});
           continue;
         }
@@ -232,9 +267,12 @@ public class ImportGeneralContacts extends CSVReader {
         businessAddress.setEnteredBy(userId);
         businessAddress.setModifiedBy(userId);
         //ContactAddress Fields
-        businessAddress.setStreetAddressLine1(getValue(thisRecord, BUSINESS_ADDRESS_1));
-        businessAddress.setStreetAddressLine2(getValue(thisRecord, BUSINESS_ADDRESS_2));
-        businessAddress.setStreetAddressLine3(getValue(thisRecord, BUSINESS_ADDRESS_3));
+        businessAddress.setStreetAddressLine1(
+            getValue(thisRecord, BUSINESS_ADDRESS_1));
+        businessAddress.setStreetAddressLine2(
+            getValue(thisRecord, BUSINESS_ADDRESS_2));
+        businessAddress.setStreetAddressLine3(
+            getValue(thisRecord, BUSINESS_ADDRESS_3));
         businessAddress.setCity(getValue(thisRecord, BUSINESS_CITY));
         businessAddress.setState(getValue(thisRecord, BUSINESS_STATE));
         businessAddress.setZip(getValue(thisRecord, BUSINESS_ZIP));
@@ -251,9 +289,12 @@ public class ImportGeneralContacts extends CSVReader {
         homeAddress.setEnteredBy(userId);
         homeAddress.setModifiedBy(userId);
         //ContactAddress Fields
-        homeAddress.setStreetAddressLine1(getValue(thisRecord, HOME_ADDRESS_1));
-        homeAddress.setStreetAddressLine2(getValue(thisRecord, HOME_ADDRESS_2));
-        homeAddress.setStreetAddressLine3(getValue(thisRecord, HOME_ADDRESS_3));
+        homeAddress.setStreetAddressLine1(
+            getValue(thisRecord, HOME_ADDRESS_1));
+        homeAddress.setStreetAddressLine2(
+            getValue(thisRecord, HOME_ADDRESS_2));
+        homeAddress.setStreetAddressLine3(
+            getValue(thisRecord, HOME_ADDRESS_3));
         homeAddress.setCity(getValue(thisRecord, HOME_CITY));
         homeAddress.setState(getValue(thisRecord, HOME_STATE));
         homeAddress.setZip(getValue(thisRecord, HOME_ZIP));
@@ -403,7 +444,8 @@ public class ImportGeneralContacts extends CSVReader {
 
         thisContact.setNotes(getValue(thisRecord, NOTES));
 
-        processOK = writer.save(mappings.createDataRecord(thisContact, "insert"));
+        processOK = writer.save(
+            mappings.createDataRecord(thisContact, "insert"));
         if (processOK) {
           processOK = mappings.saveList(writer, addressList, "insert");
           processOK = mappings.saveList(writer, phoneNumberList, "insert");

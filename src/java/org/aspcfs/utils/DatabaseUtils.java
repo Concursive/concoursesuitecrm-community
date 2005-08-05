@@ -15,22 +15,23 @@
  */
 package org.aspcfs.utils;
 
-import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.base.Constants;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import java.io.*;
 import javax.servlet.ServletContext;
+import java.io.*;
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.Locale;
 
 /**
- *  Useful methods for working with multiple databases and database fields
+ * Useful methods for working with multiple databases and database fields
  *
- *@author     matt rajkowski
- *@created    March 18, 2002
- *@version    $Id: DatabaseUtils.java,v 1.13 2002/11/04 13:21:16 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: DatabaseUtils.java,v 1.13 2002/11/04 13:21:16 mrajkowski Exp
+ *          $
+ * @created March 18, 2002
  */
 public class DatabaseUtils {
 
@@ -38,89 +39,108 @@ public class DatabaseUtils {
   public final static int MSSQL = 2;
   public final static int ORACLE = 3;
   public final static int FIREBIRD = 4;
-
+  public final static int DAFFODILDB = 5;
+  public final static int DB2 = 6;
   public final static String CRLF = System.getProperty("line.separator");
-
+  //intervals
+  public final static int DAY = 1;
+  public final static int WEEK = 2;
+  public final static int MONTH = 3;
+  public final static int YEAR = 4;
 
   /**
-   *  Gets the true attribute of the DatabaseUtils class
+   * Gets the true attribute of the DatabaseUtils class
    *
-   *@param  db  Description of Parameter
-   *@return     The true value
+   * @param db Description of Parameter
+   * @return The true value
    */
   public static String getTrue(Connection db) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return "true";
-        case DatabaseUtils.MSSQL:
-          return "1";
-        case DatabaseUtils.ORACLE:
-          return "true";
-        case DatabaseUtils.FIREBIRD:
-          return "1";
-        default:
-          return "true";
+      case DatabaseUtils.POSTGRESQL:
+        return "true";
+      case DatabaseUtils.MSSQL:
+        return "1";
+      case DatabaseUtils.DAFFODILDB:
+        return "true";
+      case DatabaseUtils.ORACLE:
+        return "true";
+      case DatabaseUtils.DB2:
+        return "true";
+      case DatabaseUtils.FIREBIRD:
+        return "1";
+      default:
+        return "true";
     }
   }
 
 
   /**
-   *  Gets the false attribute of the DatabaseUtils class
+   * Gets the false attribute of the DatabaseUtils class
    *
-   *@param  db  Description of Parameter
-   *@return     The false value
+   * @param db Description of Parameter
+   * @return The false value
    */
   public static String getFalse(Connection db) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return "false";
-        case DatabaseUtils.MSSQL:
-          return "0";
-        case DatabaseUtils.ORACLE:
-          return "false";
-        case DatabaseUtils.FIREBIRD:
-          return "0";
-        default:
-          return "false";
+      case DatabaseUtils.POSTGRESQL:
+        return "false";
+      case DatabaseUtils.MSSQL:
+        return "0";
+      case DatabaseUtils.DAFFODILDB:
+        return "false";
+      case DatabaseUtils.ORACLE:
+        return "false";
+      case DatabaseUtils.DB2:
+        return "false";
+      case DatabaseUtils.FIREBIRD:
+        return "0";
+      default:
+        return "false";
     }
   }
 
 
   /**
-   *  Gets the currentTimestamp attribute of the DatabaseUtils class
+   * Gets the currentTimestamp attribute of the DatabaseUtils class
    *
-   *@param  db  Description of Parameter
-   *@return     The currentTimestamp value
+   * @param db Description of Parameter
+   * @return The currentTimestamp value
    */
   public static String getCurrentTimestamp(Connection db) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return "CURRENT_TIMESTAMP";
-        case DatabaseUtils.MSSQL:
-          return "CURRENT_TIMESTAMP";
-        case DatabaseUtils.ORACLE:
-          return "CURRENT_TIMESTAMP";
-        case DatabaseUtils.FIREBIRD:
-          return "CURRENT_TIMESTAMP";
-        default:
-          return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.POSTGRESQL:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.MSSQL:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.DAFFODILDB:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.ORACLE:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.DB2:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.FIREBIRD:
+        return "CURRENT_TIMESTAMP";
+      default:
+        return "CURRENT_TIMESTAMP";
     }
   }
 
 
   /**
-   *  Gets the type attribute of the DatabaseUtils class
+   * Gets the type attribute of the DatabaseUtils class
    *
-   *@param  db  Description of Parameter
-   *@return     The type value
+   * @param db Description of Parameter
+   * @return The type value
    */
   public static int getType(Connection db) {
     String databaseName = db.getClass().getName();
     if (databaseName.indexOf("postgresql") > -1) {
       return POSTGRESQL;
-    } else if ("net.sourceforge.jtds.jdbc.ConnectionJDBC3".equals(databaseName)) {
+    } else if ("net.sourceforge.jtds.jdbc.ConnectionJDBC3".equals(
+        databaseName)) {
       return MSSQL;
-    } else if ("net.sourceforge.jtds.jdbc.TdsConnectionJDBC3".equals(databaseName)) {
+    } else if ("net.sourceforge.jtds.jdbc.TdsConnectionJDBC3".equals(
+        databaseName)) {
       return MSSQL;
     } else if (databaseName.indexOf("sqlserver") > -1) {
       return MSSQL;
@@ -130,6 +150,11 @@ public class DatabaseUtils {
       return FIREBIRD;
     } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
+    } else if (databaseName.startsWith(
+        "in.co.daffodil.db.jdbc.DaffodilDBConnection")) {
+      return DAFFODILDB;
+    } else if (databaseName.indexOf("db2") > -1) {
+      return DB2;
     } else {
       System.out.println("DatabaseUtils-> Driver: " + databaseName);
       return -1;
@@ -138,49 +163,142 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Gets the typeName attribute of the DatabaseUtils class
    *
-   *@param  db    Description of the Parameter
-   *@param  date  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param db Description of the Parameter
+   * @return The typeName value
+   */
+  public static String getTypeName(Connection db) {
+    switch (getType(db)) {
+      case POSTGRESQL:
+        return "postgresql";
+      case MSSQL:
+        return "mssql";
+      case FIREBIRD:
+        return "firebird";
+      case ORACLE:
+        return "oracle";
+      case DAFFODILDB:
+        return "daffodildb";
+      case DB2:
+        return "db2";
+      default:
+        return "unknown";
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db   Description of the Parameter
+   * @param date Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String castDateTimeToDate(Connection db, String date) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return (date + "::date");
-        case DatabaseUtils.MSSQL:
-          return ("CONVERT(char(10), " + date + ", 101)");
-        case DatabaseUtils.FIREBIRD:
-          return ("EXTRACT(DATE FROM " + date + ")");
-        default:
-          return "";
+      case DatabaseUtils.POSTGRESQL:
+        return (date + "::date");
+      case DatabaseUtils.MSSQL:
+        return ("CONVERT(char(10), " + date + ", 101)");
+      case DatabaseUtils.FIREBIRD:
+        return ("EXTRACT(DATE FROM " + date + ")");
+      case DatabaseUtils.DAFFODILDB:
+        return ("DATE(" + date + ")");
+      case DatabaseUtils.ORACLE:
+        return ("DATE(" + date + ")");
+        //case DatabaseUtils.ORACLE:
+        //  return ("CAST(" + date + " AS DATE)");
+      default:
+        return "";
     }
   }
 
 
   /**
-   *  Gets the nextSeq attribute of the DatabaseUtils class, used before an
-   *  insert statement has been executed
+   * Adds a feature to the TimeStampInterval attribute of the DatabaseUtils
+   * class
    *
-   *@param  db                Description of the Parameter
-   *@param  sequenceName      Description of the Parameter
-   *@return                   The nextSeq value
-   *@exception  SQLException  Description of the Exception
+   * @param db                  The feature to be added to the
+   *                            TimeStampInterval attribute
+   * @param units               The feature to be added to the
+   *                            TimeStampInterval attribute
+   * @param termsColumnName     The feature to be added to the
+   *                            TimeStampInterval attribute
+   * @param timeStampColumnName The feature to be added to the
+   *                            TimeStampInterval attribute
+   * @return Description of the Return Value
+   */
+  public static String addTimeStampInterval(Connection db, int units, String termsColumnName, String timeStampColumnName) {
+    String addTimeStampIntervalString = "";
+    String customUnits = "";
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        if (units == DAY) {
+        } else if (units == WEEK) {
+        } else if (units == MONTH) {
+          customUnits = "months";
+        } else if (units == YEAR) {
+        }
+        addTimeStampIntervalString = timeStampColumnName + " + ( (" + termsColumnName + " + 1 )::text || ' " + customUnits + "')::interval ";
+        break;
+      case DatabaseUtils.MSSQL:
+        if (units == DAY) {
+        } else if (units == WEEK) {
+        } else if (units == MONTH) {
+          customUnits = "MONTH";
+        } else if (units == YEAR) {
+        }
+        addTimeStampIntervalString = " DATEADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timeStampColumnName + ")";
+        break;
+      case DatabaseUtils.FIREBIRD:
+        break;
+      case DatabaseUtils.DAFFODILDB:
+        if (units == DAY) {
+        } else if (units == WEEK) {
+        } else if (units == MONTH) {
+          customUnits = "SQL_TSI_MONTH";
+        } else if (units == YEAR) {
+        }
+        addTimeStampIntervalString = " TIMESTAMPADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timeStampColumnName + ")";
+        break;
+      case DatabaseUtils.ORACLE:
+        break;
+    }
+    return addTimeStampIntervalString;
+  }
+
+
+  /**
+   * Gets the nextSeq attribute of the DatabaseUtils class, used before an
+   * insert statement has been executed
+   *
+   * @param db           Description of the Parameter
+   * @param sequenceName Description of the Parameter
+   * @return The nextSeq value
+   * @throws SQLException Description of the Exception
    */
   public static int getNextSeq(Connection db, String sequenceName) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
-    if (typeId != FIREBIRD) {
+    if (typeId == POSTGRESQL || typeId == MSSQL) {
       return -1;
     }
     int id = -1;
     Statement st = db.createStatement();
     ResultSet rs = null;
     switch (typeId) {
-        case DatabaseUtils.FIREBIRD:
-          rs = st.executeQuery("SELECT GEN_ID (" + sequenceName + ",1) FROM RDB$DATABASE");
-          break;
-        default:
-          break;
+      case DatabaseUtils.FIREBIRD:
+        rs = st.executeQuery(
+            "SELECT GEN_ID (" + sequenceName + ",1) FROM RDB$DATABASE");
+        break;
+      case DatabaseUtils.DAFFODILDB:
+        rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
+        break;
+      case DatabaseUtils.ORACLE:
+        rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
+        break;
+      default:
+        break;
     }
     if (rs.next()) {
       id = rs.getInt(1);
@@ -192,34 +310,32 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the currVal attribute of the DatabaseUtils class, used after an
-   *  insert statement has been executed
+   * Gets the currVal attribute of the DatabaseUtils class, used after an
+   * insert statement has been executed
    *
-   *@param  db                Description of the Parameter
-   *@param  sequenceName      Description of the Parameter
-   *@return                   The currVal value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param sequenceName Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The currVal value
+   * @throws SQLException Description of the Exception
    */
-  public static int getCurrVal(Connection db, String sequenceName) throws SQLException {
+  public static int getCurrVal(Connection db, String sequenceName, int defaultValue) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
     if (typeId != POSTGRESQL && typeId != MSSQL) {
-      return -1;
+      return defaultValue;
     }
     int id = -1;
     Statement st = db.createStatement();
     ResultSet rs = null;
     switch (typeId) {
-        case DatabaseUtils.POSTGRESQL:
-          rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
-          break;
-        case DatabaseUtils.MSSQL:
-          rs = st.executeQuery("SELECT @@IDENTITY");
-          break;
-        case DatabaseUtils.FIREBIRD:
-          // Cannot be retrieved after the insert since another record might
-          break;
-        default:
-          break;
+      case DatabaseUtils.POSTGRESQL:
+        rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
+        break;
+      case DatabaseUtils.MSSQL:
+        rs = st.executeQuery("SELECT @@IDENTITY");
+        break;
+      default:
+        break;
     }
     if (rs.next()) {
       id = rs.getInt(1);
@@ -231,83 +347,192 @@ public class DatabaseUtils {
 
 
   /**
-   *  Useful when generating a SQL order by clause to sort by year for the given
-   *  timestamp field
+   * Useful when generating a SQL order by clause to sort by year for the given
+   * timestamp field
    *
-   *@param  db         Description of the Parameter
-   *@param  fieldname  Description of the Parameter
-   *@return            The yearPart value
+   * @param db        Description of the Parameter
+   * @param fieldname Description of the Parameter
+   * @return The yearPart value
    */
   public static String getYearPart(Connection db, String fieldname) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return "date_part('year', " + fieldname + ")";
-        case DatabaseUtils.MSSQL:
-          return "DATEPART(YY, " + fieldname + ")";
-        case DatabaseUtils.FIREBIRD:
-          return "EXTRACT(YEAR FROM " + fieldname + ")";
-        case DatabaseUtils.ORACLE:
-          return "";
-        default:
-          return "";
+      case DatabaseUtils.POSTGRESQL:
+        return "date_part('year', " + fieldname + ")";
+      case DatabaseUtils.MSSQL:
+        return "DATEPART(YY, " + fieldname + ")";
+      case DatabaseUtils.FIREBIRD:
+        return "EXTRACT(YEAR FROM " + fieldname + ")";
+      case DatabaseUtils.DAFFODILDB:
+        return "YEAR(" + fieldname + ")";
+      case DatabaseUtils.ORACLE:
+        return "EXTRACT(YEAR FROM " + fieldname + ")";
+      default:
+        return "";
     }
   }
 
 
   /**
-   *  Useful when generating a SQL order by clause to sort by month for the
-   *  given timestamp field
+   * Useful when generating a SQL order by clause to sort by month for the
+   * given timestamp field
    *
-   *@param  db         Description of the Parameter
-   *@param  fieldname  Description of the Parameter
-   *@return            The orderByMonth value
+   * @param db        Description of the Parameter
+   * @param fieldname Description of the Parameter
+   * @return The orderByMonth value
    */
   public static String getMonthPart(Connection db, String fieldname) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return "date_part('month', " + fieldname + ")";
-        case DatabaseUtils.MSSQL:
-          return "DATEPART(MM, " + fieldname + ")";
-        case DatabaseUtils.FIREBIRD:
-          return "EXTRACT(MONTH FROM " + fieldname + ")";
-        case DatabaseUtils.ORACLE:
-          return "";
-        default:
-          return "";
+      case DatabaseUtils.POSTGRESQL:
+        return "date_part('month', " + fieldname + ")";
+      case DatabaseUtils.MSSQL:
+        return "DATEPART(MM, " + fieldname + ")";
+      case DatabaseUtils.FIREBIRD:
+        return "EXTRACT(MONTH FROM " + fieldname + ")";
+      case DatabaseUtils.DAFFODILDB:
+        return "MONTH(" + fieldname + ")";
+      case DatabaseUtils.ORACLE:
+        return "EXTRACT(MONTH FROM " + fieldname + ")";
+      default:
+        return "";
     }
   }
 
 
   /**
-   *  Useful when generating a SQL order by clause to sort by day for the given
-   *  timestamp field
+   * Useful when generating a SQL order by clause to sort by day for the given
+   * timestamp field
    *
-   *@param  db         Description of the Parameter
-   *@param  fieldname  Description of the Parameter
-   *@return            The orderByDay value
+   * @param db        Description of the Parameter
+   * @param fieldname Description of the Parameter
+   * @return The orderByDay value
    */
   public static String getDayPart(Connection db, String fieldname) {
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          return "date_part('day', " + fieldname + ")";
-        case DatabaseUtils.MSSQL:
-          return "DATEPART(DD, " + fieldname + ")";
-        case DatabaseUtils.FIREBIRD:
-          return "EXTRACT(DAY FROM " + fieldname + ")";
-        case DatabaseUtils.ORACLE:
-          return "";
-        default:
-          return "";
+      case DatabaseUtils.POSTGRESQL:
+        return "date_part('day', " + fieldname + ")";
+      case DatabaseUtils.MSSQL:
+        return "DATEPART(DD, " + fieldname + ")";
+      case DatabaseUtils.FIREBIRD:
+        return "EXTRACT(DAY FROM " + fieldname + ")";
+      case DatabaseUtils.DAFFODILDB:
+        return "DAYOFWEEK(" + fieldname + ")";
+      case DatabaseUtils.ORACLE:
+        return "EXTRACT(DAY FROM " + fieldname + ")";
+      default:
+        return "";
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp           Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static String toLowerCase(Connection db) {
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return "lower";
+      case DatabaseUtils.MSSQL:
+        return "lower";
+      case DatabaseUtils.ORACLE:
+        return "lower";
+      case DatabaseUtils.FIREBIRD:
+        return "lower";
+      case DatabaseUtils.DAFFODILDB:
+        return "lcase";
+      default:
+        return "lower";
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db    Description of the Parameter
+   * @param field Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static String toLowerCase(Connection db, String field) {
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return "lower(" + field + ")";
+      case DatabaseUtils.MSSQL:
+        return "lower(" + field + ")";
+      case DatabaseUtils.ORACLE:
+        return "lower(" + field + ")";
+      case DatabaseUtils.FIREBIRD:
+        return "lower(" + field + ")";
+      case DatabaseUtils.DAFFODILDB:
+        return "lcase(" + field + ")";
+      default:
+        return "lower(" + field + ")";
+    }
+  }
+
+
+  /**
+   * Gets the substring function for the given database
+   *
+   * @param db    Description of the Parameter
+   * @param field Description of the Parameter
+   * @param first Description of the Parameter
+   * @param size  Description of the Parameter
+   * @return The subString value
+   */
+  public static String getSubString(Connection db, String field, int first, int size) {
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.MSSQL:
+        return "substring(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.ORACLE:
+        return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.FIREBIRD:
+        return "substr(" + field + " FROM " + first + (size < 0 ? "" : " FOR " + size) + " ) ";
+      case DatabaseUtils.DAFFODILDB:
+        return "substring(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+      default:
+        return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db    Description of the Parameter
+   * @param field Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static String convertToVarChar(Connection db, String field) {
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return field;
+      case DatabaseUtils.MSSQL:
+        return "CONVERT(VARCHAR(2000), " + field + ")";
+      case DatabaseUtils.ORACLE:
+        return "SUBSTR(" + field + ", 2000, 1)";
+      case DatabaseUtils.FIREBIRD:
+        return field;
+      case DatabaseUtils.DAFFODILDB:
+        // TODO: This doesn't work for DaffodilDB, so use a VARCHAR(4192) instead of CLOB
+        return field;
+      default:
+        return field;
+    }
+
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param tmp          Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int parseInt(String tmp, int defaultValue) {
     try {
@@ -319,10 +544,10 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean parseBoolean(String tmp) {
     return ("ON".equalsIgnoreCase(tmp) ||
@@ -334,15 +559,16 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Date parseDate(String tmp) {
     java.sql.Date dateValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(
+          tmp);
       dateValue = new java.sql.Date(new java.util.Date().getTime());
       dateValue.setTime(tmpDate.getTime());
       return dateValue;
@@ -357,10 +583,10 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestamp(String tmp) {
     return parseTimestamp(tmp, Locale.getDefault());
@@ -368,16 +594,17 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp     Description of the Parameter
-   *@param  locale  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param tmp    Description of the Parameter
+   * @param locale Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestamp(String tmp, Locale locale) {
     java.sql.Timestamp timestampValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.LONG, locale).parse(tmp);
       timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
       timestampValue.setTime(tmpDate.getTime());
       return timestampValue;
@@ -392,10 +619,10 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Timestamp parseDateToTimestamp(String tmp) {
     return parseDateToTimestamp(tmp, Locale.getDefault());
@@ -403,17 +630,19 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp     Description of the Parameter
-   *@param  locale  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param tmp    Description of the Parameter
+   * @param locale Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Timestamp parseDateToTimestamp(String tmp, Locale locale) {
-    java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(tmp, locale);
+    java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(
+        tmp, locale);
     if (timestampValue == null) {
       try {
-        DateFormat tmpDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+        DateFormat tmpDateFormat = DateFormat.getDateInstance(
+            DateFormat.SHORT, locale);
         tmpDateFormat.setLenient(false);
         java.util.Date tmpDate = tmpDateFormat.parse(tmp);
         timestampValue = new java.sql.Timestamp(System.currentTimeMillis());
@@ -428,13 +657,13 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the int attribute of the DatabaseUtils class
+   * Gets the int attribute of the DatabaseUtils class
    *
-   *@param  rs                Description of the Parameter
-   *@param  column            Description of the Parameter
-   *@param  defaultValue      Description of the Parameter
-   *@return                   The int value
-   *@exception  SQLException  Description of the Exception
+   * @param rs           Description of the Parameter
+   * @param column       Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The int value
+   * @throws SQLException Description of the Exception
    */
   public static int getInt(ResultSet rs, String column, int defaultValue) throws SQLException {
     int fieldValue = rs.getInt(column);
@@ -446,13 +675,13 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the double attribute of the DatabaseUtils class
+   * Gets the double attribute of the DatabaseUtils class
    *
-   *@param  rs                Description of the Parameter
-   *@param  column            Description of the Parameter
-   *@param  defaultValue      Description of the Parameter
-   *@return                   The double value
-   *@exception  SQLException  Description of the Exception
+   * @param rs           Description of the Parameter
+   * @param column       Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The double value
+   * @throws SQLException Description of the Exception
    */
   public static double getDouble(ResultSet rs, String column, double defaultValue) throws SQLException {
     double fieldValue = rs.getDouble(column);
@@ -464,12 +693,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the int attribute of the DatabaseUtils class
+   * Gets the int attribute of the DatabaseUtils class
    *
-   *@param  rs                Description of the Parameter
-   *@param  column            Description of the Parameter
-   *@return                   The int value
-   *@exception  SQLException  Description of the Exception
+   * @param rs     Description of the Parameter
+   * @param column Description of the Parameter
+   * @return The int value
+   * @throws SQLException Description of the Exception
    */
   public static int getInt(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getInt(rs, column, -1);
@@ -477,12 +706,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the double attribute of the DatabaseUtils class
+   * Gets the double attribute of the DatabaseUtils class
    *
-   *@param  rs                Description of the Parameter
-   *@param  column            Description of the Parameter
-   *@return                   The double value
-   *@exception  SQLException  Description of the Exception
+   * @param rs     Description of the Parameter
+   * @param column Description of the Parameter
+   * @return The double value
+   * @throws SQLException Description of the Exception
    */
   public static double getDouble(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getDouble(rs, column, -1.0);
@@ -490,12 +719,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the long attribute of the DatabaseUtils class
+   * Gets the long attribute of the DatabaseUtils class
    *
-   *@param  rs                Description of the Parameter
-   *@param  column            Description of the Parameter
-   *@return                   The long value
-   *@exception  SQLException  Description of the Exception
+   * @param rs     Description of the Parameter
+   * @param column Description of the Parameter
+   * @return The long value
+   * @throws SQLException Description of the Exception
    */
   public static long getLong(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getLong(rs, column, -1);
@@ -503,13 +732,13 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the long attribute of the DatabaseUtils class
+   * Gets the long attribute of the DatabaseUtils class
    *
-   *@param  rs                Description of the Parameter
-   *@param  column            Description of the Parameter
-   *@param  defaultValue      Description of the Parameter
-   *@return                   The long value
-   *@exception  SQLException  Description of the Exception
+   * @param rs           Description of the Parameter
+   * @param column       Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The long value
+   * @throws SQLException Description of the Exception
    */
   public static long getLong(ResultSet rs, String column, long defaultValue) throws SQLException {
     long fieldValue = rs.getLong(column);
@@ -521,12 +750,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Sets the int attribute of the DatabaseUtils class
+   * Sets the int attribute of the DatabaseUtils class
    *
-   *@param  pst               The new int value
-   *@param  paramCount        The new int value
-   *@param  value             The new int value
-   *@exception  SQLException  Description of the Exception
+   * @param pst        The new int value
+   * @param paramCount The new int value
+   * @param value      The new int value
+   * @throws SQLException Description of the Exception
    */
   public static void setInt(PreparedStatement pst, int paramCount, int value) throws SQLException {
     if (value == -1) {
@@ -538,12 +767,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Sets the double attribute of the DatabaseUtils class
+   * Sets the double attribute of the DatabaseUtils class
    *
-   *@param  pst               The new double value
-   *@param  paramCount        The new double value
-   *@param  value             The new double value
-   *@exception  SQLException  Description of the Exception
+   * @param pst        The new double value
+   * @param paramCount The new double value
+   * @param value      The new double value
+   * @throws SQLException Description of the Exception
    */
   public static void setDouble(PreparedStatement pst, int paramCount, double value) throws SQLException {
     if (value == -1.0) {
@@ -555,12 +784,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Sets the long attribute of the DatabaseUtils class
+   * Sets the long attribute of the DatabaseUtils class
    *
-   *@param  pst               The new long value
-   *@param  paramCount        The new long value
-   *@param  value             The new long value
-   *@exception  SQLException  Description of the Exception
+   * @param pst        The new long value
+   * @param paramCount The new long value
+   * @param value      The new long value
+   * @throws SQLException Description of the Exception
    */
   public static void setLong(PreparedStatement pst, int paramCount, long value) throws SQLException {
     if (value == -1) {
@@ -572,12 +801,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Sets the timestamp attribute of the DatabaseUtils class
+   * Sets the timestamp attribute of the DatabaseUtils class
    *
-   *@param  pst               The new timestamp value
-   *@param  paramCount        The new timestamp value
-   *@param  value             The new timestamp value
-   *@exception  SQLException  Description of the Exception
+   * @param pst        The new timestamp value
+   * @param paramCount The new timestamp value
+   * @param value      The new timestamp value
+   * @throws SQLException Description of the Exception
    */
   public static void setTimestamp(PreparedStatement pst, int paramCount, java.sql.Timestamp value) throws SQLException {
     if (value == null) {
@@ -589,12 +818,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Sets the date attribute of the DatabaseUtils class
+   * Sets the date attribute of the DatabaseUtils class
    *
-   *@param  pst               The new date value
-   *@param  paramCount        The new date value
-   *@param  value             The new date value
-   *@exception  SQLException  Description of the Exception
+   * @param pst        The new date value
+   * @param paramCount The new date value
+   * @param value      The new date value
+   * @throws SQLException Description of the Exception
    */
   public static void setDate(PreparedStatement pst, int paramCount, java.sql.Date value) throws SQLException {
     if (value == null) {
@@ -606,13 +835,13 @@ public class DatabaseUtils {
 
 
   /**
-   *  Reads in a text file of SQL statements from the filesystem, and executes
-   *  them
+   * Reads in a text file of SQL statements from the filesystem, and executes
+   * them
    *
-   *@param  db                Description of the Parameter
-   *@param  filename          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param db       Description of the Parameter
+   * @param filename Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void executeSQL(Connection db, String filename) throws SQLException, IOException {
     BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -622,14 +851,14 @@ public class DatabaseUtils {
 
 
   /**
-   *  Reads in a text file of SQL statements from the servlet context, and
-   *  executes them
+   * Reads in a text file of SQL statements from the servlet context, and
+   * executes them
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@param  filename          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param db       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param filename Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void executeSQL(Connection db, ServletContext context, String filename) throws SQLException, IOException {
     InputStream source = context.getResourceAsStream(filename);
@@ -640,12 +869,12 @@ public class DatabaseUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  in                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param db Description of the Parameter
+   * @param in Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void executeSQL(Connection db, BufferedReader in) throws SQLException, IOException {
     // Read the file and execute each statement
@@ -672,7 +901,8 @@ public class DatabaseUtils {
         try {
           st.execute(sql.substring(0, sql.length() - 1));
         } catch (SQLException e) {
-          System.out.println("DatabaseUtils-> ERROR(1), line: " + lineCount + " message: " + e.getMessage());
+          System.out.println(
+              "DatabaseUtils-> ERROR(1), line: " + lineCount + " message: " + e.getMessage());
           throw new SQLException(e.getMessage());
         }
         sql.setLength(0);
@@ -682,7 +912,8 @@ public class DatabaseUtils {
         try {
           st.execute(sql.substring(0, sql.length() - 2));
         } catch (SQLException e) {
-          System.out.println("DatabaseUtils-> ERROR(2), line: " + lineCount + " message: " + e.getMessage());
+          System.out.println(
+              "DatabaseUtils-> ERROR(2), line: " + lineCount + " message: " + e.getMessage());
           throw new SQLException(e.getMessage());
         }
         sql.setLength(0);
@@ -692,12 +923,14 @@ public class DatabaseUtils {
       }
     }
     // Statement didn't end with a delimiter
-    if (sql.toString().trim().length() > 0 && !CRLF.equals(sql.toString().trim())) {
+    if (sql.toString().trim().length() > 0 && !CRLF.equals(
+        sql.toString().trim())) {
       ++tCount;
       try {
         st.execute(sql.toString());
       } catch (SQLException e) {
-        System.out.println("DatabaseUtils-> ERROR(3), line: " + lineCount + " message: " + e.getMessage());
+        System.out.println(
+            "DatabaseUtils-> ERROR(3), line: " + lineCount + " message: " + e.getMessage());
         throw new SQLException(e.getMessage());
       }
     }
@@ -707,11 +940,19 @@ public class DatabaseUtils {
     }
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   */
   public static void renewConnection(ActionContext context, Connection db) {
     //Connections are usually checked out and expire, this will renew the expiration
     //time
     if (db != null) {
-      ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+      ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+          "ConnectionPool");
       if (sqlDriver != null) {
         sqlDriver.renew(db);
       }

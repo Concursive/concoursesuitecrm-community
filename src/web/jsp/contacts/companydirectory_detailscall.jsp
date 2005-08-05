@@ -55,19 +55,21 @@ function reopenContact(id) {
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|popup|popupType|actionId") %>'"></dhv:sharing>
-  </dhv:evaluate>
-  <% if("pending".equals(request.getParameter("view"))){ %>
-  <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
-  <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
-   <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
-  <%}%>
-  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view") %>';"></dhv:sharing>
-  </dhv:evaluate>
-  <dhv:evaluate if="<%= !isPopup(request) %>">
-    <dhv:permission name="contacts-external_contacts-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward"></dhv:label>" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %>&forwardType=<%= Constants.TASKS %><%= addLinkParams(request, "popup|popupType|actionId|view") %>'"></dhv:permission>
+  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !CallDetails.isTrashed() %>">
+    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|popup|popupType|actionId") %>'"></dhv:sharing>
+    </dhv:evaluate>
+    <% if("pending".equals(request.getParameter("view"))){ %>
+    <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
+    <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
+     <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
+    <%}%>
+    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view") %>';"></dhv:sharing>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= !isPopup(request) %>">
+      <dhv:permission name="contacts-external_contacts-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward"></dhv:label>" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %>&forwardType=<%= Constants.TASKS %><%= addLinkParams(request, "popup|popupType|actionId|view") %>'"></dhv:permission>
+    </dhv:evaluate>
   </dhv:evaluate>
   <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br>&nbsp;</dhv:permission>
   <% if("pending".equals(request.getParameter("view"))){ %>
@@ -114,18 +116,20 @@ function reopenContact(id) {
     </tr>
   </table>
   <br>
-  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|popup|popupType|actionId") %>'"></dhv:sharing>
-  </dhv:evaluate>
- <% if("pending".equals(request.getParameter("view"))){ %>
-  <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
-  <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
-   <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
-  <%}%>
-  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view") %>';"></dhv:sharing></dhv:evaluate>
-    <dhv:evaluate if="<%= !isPopup(request) %>">
-    <dhv:permission name="contacts-external_contacts-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&forwardType=<%= Constants.TASKS %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view") %>'"></dhv:permission>
+  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !CallDetails.isTrashed() %>">
+    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|popup|popupType|actionId") %>'"></dhv:sharing>
+    </dhv:evaluate>
+   <% if("pending".equals(request.getParameter("view"))){ %>
+    <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
+    <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
+     <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:sharing>
+    <%}%>
+    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view") %>';"></dhv:sharing></dhv:evaluate>
+      <dhv:evaluate if="<%= !isPopup(request) %>">
+      <dhv:permission name="contacts-external_contacts-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&forwardType=<%= Constants.TASKS %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view") %>'"></dhv:permission>
+    </dhv:evaluate>
   </dhv:evaluate>
   <%= addHiddenParams(request, "popup|popupType|actionId|view") %>
 </dhv:container>

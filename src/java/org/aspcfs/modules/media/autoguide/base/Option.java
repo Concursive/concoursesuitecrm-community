@@ -15,14 +15,17 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents an available option that any vehicle object has
+ * Represents an available option that any vehicle object has
  *
- *@author     matt rajkowski
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class Option {
   private int id = -1;
@@ -33,16 +36,17 @@ public class Option {
 
 
   /**
-   *  Constructor for the Option object
+   * Constructor for the Option object
    */
-  public Option() { }
+  public Option() {
+  }
 
 
   /**
-   *  Constructor for the Option object
+   * Constructor for the Option object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Option(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -50,9 +54,9 @@ public class Option {
 
 
   /**
-   *  Sets the id attribute of the Option object
+   * Sets the id attribute of the Option object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -60,9 +64,9 @@ public class Option {
 
 
   /**
-   *  Sets the inventoryId attribute of the Option object
+   * Sets the inventoryId attribute of the Option object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
@@ -70,9 +74,9 @@ public class Option {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the Option object
+   * Sets the accountInventoryId attribute of the Option object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
@@ -80,9 +84,9 @@ public class Option {
 
 
   /**
-   *  Sets the optionId attribute of the Option object
+   * Sets the optionId attribute of the Option object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -90,9 +94,9 @@ public class Option {
 
 
   /**
-   *  Sets the name attribute of the Option object
+   * Sets the name attribute of the Option object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -100,9 +104,9 @@ public class Option {
 
 
   /**
-   *  Sets the entered attribute of the Option object
+   * Sets the entered attribute of the Option object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -110,9 +114,9 @@ public class Option {
 
 
   /**
-   *  Sets the modified attribute of the Option object
+   * Sets the modified attribute of the Option object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -120,9 +124,9 @@ public class Option {
 
 
   /**
-   *  Gets the id attribute of the Option object
+   * Gets the id attribute of the Option object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -130,9 +134,9 @@ public class Option {
 
 
   /**
-   *  Gets the name attribute of the Option object
+   * Gets the name attribute of the Option object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -140,9 +144,9 @@ public class Option {
 
 
   /**
-   *  Gets the entered attribute of the Option object
+   * Gets the entered attribute of the Option object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -150,9 +154,9 @@ public class Option {
 
 
   /**
-   *  Gets the modified attribute of the Option object
+   * Gets the modified attribute of the Option object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -160,9 +164,9 @@ public class Option {
 
 
   /**
-   *  Gets the accountInventoryId attribute of the Option object
+   * Gets the accountInventoryId attribute of the Option object
    *
-   *@return    The accountInventoryId value
+   * @return The accountInventoryId value
    */
   public int getAccountInventoryId() {
     return this.inventoryId;
@@ -170,9 +174,9 @@ public class Option {
 
 
   /**
-   *  Gets the optionId attribute of the Option object
+   * Gets the optionId attribute of the Option object
    *
-   *@return    The optionId value
+   * @return The optionId value
    */
   public int getOptionId() {
     return this.id;
@@ -180,10 +184,10 @@ public class Option {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -200,10 +204,10 @@ public class Option {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -219,10 +223,10 @@ public class Option {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("option_id");

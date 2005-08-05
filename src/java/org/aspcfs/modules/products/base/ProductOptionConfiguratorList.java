@@ -15,23 +15,22 @@
  */
 package org.aspcfs.modules.products.base;
 
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
 
 /**
- *  List class for a Option Configurator
+ * List class for a Option Configurator
  *
- *@author     ananth
- *@created    September 2, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created September 2, 2004
  */
 public class ProductOptionConfiguratorList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -42,16 +41,17 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Constructor for the ProductOptionConfiguratorList object
+   * Constructor for the ProductOptionConfiguratorList object
    */
-  public ProductOptionConfiguratorList() { }
+  public ProductOptionConfiguratorList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -67,8 +67,7 @@ public class ProductOptionConfiguratorList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM product_option_configurator AS poptconfig " +
-        "WHERE poptconfig.configurator_id > 0"
-        );
+        "WHERE poptconfig.configurator_id > 0");
 
     createFilter(sqlFilter, db);
 
@@ -93,23 +92,17 @@ public class ProductOptionConfiguratorList extends ArrayList {
     sqlSelect.append(
         "conf.* " +
         "FROM product_option_configurator AS conf " +
-        "WHERE conf.configurator_id > -1 "
-        );
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+        "WHERE conf.configurator_id > -1 ");
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-      ProductOptionConfigurator productOptionConfigurator = new ProductOptionConfigurator(rs);
+      ProductOptionConfigurator productOptionConfigurator = new ProductOptionConfigurator(
+          rs);
       this.add(productOptionConfigurator);
     }
     rs.close();
@@ -119,11 +112,11 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  basePath          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param basePath Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator configurators = this.iterator();
@@ -135,10 +128,10 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
-   *@param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
 
@@ -149,11 +142,11 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -165,11 +158,11 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ProductOptionConfiguratorList object
+   * Gets the htmlSelect attribute of the ProductOptionConfiguratorList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect select = new HtmlSelect();
@@ -183,9 +176,9 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ProductOptionConfiguratorList object
+   * Gets the htmlSelect attribute of the ProductOptionConfiguratorList object
    *
-   *@return    The htmlSelect value
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect() {
     HtmlSelect select = new HtmlSelect();
@@ -199,11 +192,11 @@ public class ProductOptionConfiguratorList extends ArrayList {
 
 
   /**
-   *  Gets the configuratorFromId attribute of the ProductOptionConfiguratorList object
+   * Gets the configuratorFromId attribute of the ProductOptionConfiguratorList object
    *
-   * @param  id                Description of the Parameter
-   * @return                   The configuratorFromId value
-   * @exception  SQLException  Description of the Exception
+   * @param id Description of the Parameter
+   * @return The configuratorFromId value
+   * @throws SQLException Description of the Exception
    */
   public ProductOptionConfigurator getConfiguratorFromId(int id) throws SQLException {
     ProductOptionConfigurator result = null;

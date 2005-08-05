@@ -18,30 +18,29 @@ package org.aspcfs.modules.search.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 
 /**
- *  The Search module.
+ * The Search module.
  *
- *@author     mrajkowski
- *@created    July 12, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 12, 2001
  */
 public final class Search extends CFSModule {
 
   /**
-   *  Currently does nothing important.
+   * Currently does nothing important.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandSiteSearch(ActionContext context) {
     int ITEMS_PER_PAGE = 15;
@@ -50,11 +49,15 @@ public final class Search extends CFSModule {
     Connection db = null;
     if (searchCriteria != null && !(searchCriteria.equals(""))) {
       searchCriteria = "%" + searchCriteria + "%";
+    } else {
+      searchCriteria = "*";
     }
     try {
       db = this.getConnection(context);
-      if (hasPermission(context, "contacts-external_contacts-view") || hasPermission(context, "accounts-accounts-contacts-view")) {
-        PagedListInfo contactSearchInfo = this.getPagedListInfo(context, "SearchSiteContactInfo");
+      if (hasPermission(context, "contacts-external_contacts-view") || hasPermission(
+          context, "accounts-accounts-contacts-view")) {
+        PagedListInfo contactSearchInfo = this.getPagedListInfo(
+            context, "SearchSiteContactInfo");
         contactSearchInfo.setLink("Search.do?command=SiteSearch");
         contactSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
 
@@ -63,7 +66,8 @@ public final class Search extends CFSModule {
         contactList.setPagedListInfo(contactSearchInfo);
         contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
-        contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
+        contactList.setAllContacts(
+            true, this.getUserId(context), this.getUserRange(context));
         contactList.setBuildDetails(true);
         contactList.setBuildTypes(false);
         contactList.buildList(db);
@@ -71,7 +75,8 @@ public final class Search extends CFSModule {
       }
 
       if (hasPermission(context, "contacts-internal_contacts-view")) {
-        PagedListInfo employeeSearchInfo = this.getPagedListInfo(context, "SearchSiteEmployeeInfo");
+        PagedListInfo employeeSearchInfo = this.getPagedListInfo(
+            context, "SearchSiteEmployeeInfo");
         employeeSearchInfo.setLink("Search.do?command=SiteSearch");
         employeeSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
 
@@ -87,7 +92,8 @@ public final class Search extends CFSModule {
       }
 
       if (hasPermission(context, "accounts-accounts-view")) {
-        PagedListInfo accountSearchInfo = this.getPagedListInfo(context, "SearchSiteAccountInfo");
+        PagedListInfo accountSearchInfo = this.getPagedListInfo(
+            context, "SearchSiteAccountInfo");
         accountSearchInfo.setLink("Search.do?command=SiteSearch");
         accountSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
 
@@ -96,11 +102,13 @@ public final class Search extends CFSModule {
         organizationList.setMinerOnly(false);
         organizationList.setPagedListInfo(accountSearchInfo);
         organizationList.buildList(db);
-        context.getRequest().setAttribute("OrganizationList", organizationList);
+        context.getRequest().setAttribute(
+            "OrganizationList", organizationList);
       }
 
       if (hasPermission(context, "pipeline-opportunities-view")) {
-        PagedListInfo opportuntySearchInfo = this.getPagedListInfo(context, "SearchSiteOppInfo");
+        PagedListInfo opportuntySearchInfo = this.getPagedListInfo(
+            context, "SearchSiteOppInfo");
         opportuntySearchInfo.setLink("Search.do?command=SiteSearch");
         opportuntySearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
 
@@ -113,7 +121,8 @@ public final class Search extends CFSModule {
       }
 
       if (hasPermission(context, "tickets-tickets-view")) {
-        PagedListInfo ticSearchInfo = this.getPagedListInfo(context, "SearchSiteTicketInfo");
+        PagedListInfo ticSearchInfo = this.getPagedListInfo(
+            context, "SearchSiteTicketInfo");
         ticSearchInfo.setLink("Search.do?command=SiteSearch");
         ticSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
 

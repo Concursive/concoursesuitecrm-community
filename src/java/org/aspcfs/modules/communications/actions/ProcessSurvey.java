@@ -15,35 +15,33 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.database.ConnectionPool;
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.utils.web.CustomForm;
+import org.aspcfs.modules.communications.base.ActiveSurvey;
+import org.aspcfs.modules.communications.base.SurveyResponse;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.utils.PrivateString;
+
+import java.sql.Connection;
+import java.util.StringTokenizer;
 
 /**
- *  Allows respondants to take part in a survey in which they were invited to
+ * Allows respondants to take part in a survey in which they were invited to
  *
- *@author     chris price
- *@created    August 7, 2002
- *@version    $Id: ProcessSurvey.java,v 1.13 2004/03/23 14:04:47 mrajkowski Exp
- *      $
+ * @author chris price
+ * @version $Id: ProcessSurvey.java,v 1.13 2004/03/23 14:04:47 mrajkowski Exp
+ *          $
+ * @created August 7, 2002
  */
 public final class ProcessSurvey extends CFSModule {
 
   /**
-   *  Generates the survey for presentation, decodes URL for a non-user of this
-   *  system.
+   * Generates the survey for presentation, decodes URL for a non-user of this
+   * system.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     ActiveSurvey thisSurvey = null;
@@ -59,8 +57,7 @@ public final class ProcessSurvey extends CFSModule {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
       // Load the survey key which decodes the url
-      String dbName = auth.getConnectionElement(context).getDbName();
-      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
+      String filename = getDbNamePath(context) + fs + "keys" + fs + "survey.key";
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
@@ -91,10 +88,10 @@ public final class ProcessSurvey extends CFSModule {
 
 
   /**
-   *  Processes the user's answers and inserts them
+   * Processes the user's answers and inserts them
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Connection db = null;
@@ -103,8 +100,7 @@ public final class ProcessSurvey extends CFSModule {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
       // Load the survey key which decodes the url
-      String dbName = auth.getConnectionElement(context).getDbName();
-      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
+      String filename = getDbNamePath(context) + fs + "keys" + fs + "survey.key";
       String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;

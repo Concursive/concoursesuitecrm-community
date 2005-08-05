@@ -29,12 +29,12 @@ import java.text.DateFormat;
 import java.util.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    August 9, 2002
- *@version    $Id: ProjectList.java,v 1.3.50.2 2004/04/08 14:55:53 rvasista Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ProjectList.java,v 1.3.50.2 2004/04/08 14:55:53 rvasista Exp
+ *          $
+ * @created August 9, 2002
  */
 public class ProjectList extends ArrayList {
   // main project filters
@@ -72,6 +72,9 @@ public class ProjectList extends ArrayList {
   private String portalKey = null;
   private boolean publicOnly = false;
   private boolean approvedOnly = false;
+  private java.sql.Timestamp trashedDate = null;
+  private boolean includeOnlyTrashed = false;
+
   // calendar filters
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
@@ -80,15 +83,16 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Constructor for the ProjectList object
+   * Constructor for the ProjectList object
    */
-  public ProjectList() { }
+  public ProjectList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ProjectList object
+   * Sets the pagedListInfo attribute of the ProjectList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -96,9 +100,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the ProjectList object
+   * Sets the emptyHtmlSelectRecord attribute of the ProjectList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -106,9 +110,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the groupId attribute of the ProjectList object
+   * Sets the groupId attribute of the ProjectList object
    *
-   *@param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -116,9 +120,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the ProjectList object
+   * Sets the projectId attribute of the ProjectList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -126,9 +130,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the openProjectsOnly attribute of the ProjectList object
+   * Sets the openProjectsOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new openProjectsOnly value
+   * @param tmp The new openProjectsOnly value
    */
   public void setOpenProjectsOnly(boolean tmp) {
     this.openProjectsOnly = tmp;
@@ -136,9 +140,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the closedProjectsOnly attribute of the ProjectList object
+   * Sets the closedProjectsOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new closedProjectsOnly value
+   * @param tmp The new closedProjectsOnly value
    */
   public void setClosedProjectsOnly(boolean tmp) {
     this.closedProjectsOnly = tmp;
@@ -146,9 +150,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the closedProjectsOnly attribute of the ProjectList object
+   * Sets the closedProjectsOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new closedProjectsOnly value
+   * @param tmp The new closedProjectsOnly value
    */
   public void setClosedProjectsOnly(String tmp) {
     this.closedProjectsOnly = DatabaseUtils.parseBoolean(tmp);
@@ -156,9 +160,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the withProjectDaysComplete attribute of the ProjectList object
+   * Sets the withProjectDaysComplete attribute of the ProjectList object
    *
-   *@param  tmp  The new withProjectDaysComplete value
+   * @param tmp The new withProjectDaysComplete value
    */
   public void setWithProjectDaysComplete(int tmp) {
     this.withProjectDaysComplete = tmp;
@@ -166,9 +170,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the projectsWithAssignmentsOnly attribute of the ProjectList object
+   * Sets the projectsWithAssignmentsOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new projectsWithAssignmentsOnly value
+   * @param tmp The new projectsWithAssignmentsOnly value
    */
   public void setProjectsWithAssignmentsOnly(boolean tmp) {
     this.projectsWithAssignmentsOnly = tmp;
@@ -176,9 +180,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the invitationPendingOnly attribute of the ProjectList object
+   * Sets the invitationPendingOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new invitationPendingOnly value
+   * @param tmp The new invitationPendingOnly value
    */
   public void setInvitationPendingOnly(boolean tmp) {
     this.invitationPendingOnly = tmp;
@@ -186,9 +190,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the invitationAcceptedOnly attribute of the ProjectList object
+   * Sets the invitationAcceptedOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new invitationAcceptedOnly value
+   * @param tmp The new invitationAcceptedOnly value
    */
   public void setInvitationAcceptedOnly(boolean tmp) {
     this.invitationAcceptedOnly = tmp;
@@ -196,9 +200,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the invitationPendingOnly attribute of the ProjectList object
+   * Gets the invitationPendingOnly attribute of the ProjectList object
    *
-   *@return    The invitationPendingOnly value
+   * @return The invitationPendingOnly value
    */
   public boolean getInvitationPendingOnly() {
     return invitationPendingOnly;
@@ -206,9 +210,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the invitationAcceptedOnly attribute of the ProjectList object
+   * Gets the invitationAcceptedOnly attribute of the ProjectList object
    *
-   *@return    The invitationAcceptedOnly value
+   * @return The invitationAcceptedOnly value
    */
   public boolean getInvitationAcceptedOnly() {
     return invitationAcceptedOnly;
@@ -216,9 +220,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the daysLastAccessed attribute of the ProjectList object
+   * Gets the daysLastAccessed attribute of the ProjectList object
    *
-   *@return    The daysLastAccessed value
+   * @return The daysLastAccessed value
    */
   public int getDaysLastAccessed() {
     return daysLastAccessed;
@@ -226,9 +230,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the daysLastAccessed attribute of the ProjectList object
+   * Sets the daysLastAccessed attribute of the ProjectList object
    *
-   *@param  tmp  The new daysLastAccessed value
+   * @param tmp The new daysLastAccessed value
    */
   public void setDaysLastAccessed(int tmp) {
     this.daysLastAccessed = tmp;
@@ -236,9 +240,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the daysLastAccessed attribute of the ProjectList object
+   * Sets the daysLastAccessed attribute of the ProjectList object
    *
-   *@param  tmp  The new daysLastAccessed value
+   * @param tmp The new daysLastAccessed value
    */
   public void setDaysLastAccessed(String tmp) {
     this.daysLastAccessed = Integer.parseInt(tmp);
@@ -246,9 +250,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the includeGuestProjects attribute of the ProjectList object
+   * Gets the includeGuestProjects attribute of the ProjectList object
    *
-   *@return    The includeGuestProjects value
+   * @return The includeGuestProjects value
    */
   public boolean getIncludeGuestProjects() {
     return includeGuestProjects;
@@ -256,9 +260,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the includeGuestProjects attribute of the ProjectList object
+   * Sets the includeGuestProjects attribute of the ProjectList object
    *
-   *@param  tmp  The new includeGuestProjects value
+   * @param tmp The new includeGuestProjects value
    */
   public void setIncludeGuestProjects(boolean tmp) {
     this.includeGuestProjects = tmp;
@@ -266,31 +270,49 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the includeGuestProjects attribute of the ProjectList object
+   * Sets the includeGuestProjects attribute of the ProjectList object
    *
-   *@param  tmp  The new includeGuestProjects value
+   * @param tmp The new includeGuestProjects value
    */
   public void setIncludeGuestProjects(String tmp) {
     this.includeGuestProjects = DatabaseUtils.parseBoolean(tmp);
   }
 
 
+  /**
+   * Gets the categoryId attribute of the ProjectList object
+   *
+   * @return The categoryId value
+   */
   public int getCategoryId() {
     return categoryId;
   }
 
+
+  /**
+   * Sets the categoryId attribute of the ProjectList object
+   *
+   * @param categoryId The new categoryId value
+   */
   public void setCategoryId(int categoryId) {
     this.categoryId = categoryId;
   }
 
+
+  /**
+   * Sets the categoryId attribute of the ProjectList object
+   *
+   * @param tmp The new categoryId value
+   */
   public void setCategoryId(String tmp) {
     categoryId = Integer.parseInt(tmp);
   }
 
+
   /**
-   *  Sets the openAssignmentsOnly attribute of the ProjectList object
+   * Sets the openAssignmentsOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new openAssignmentsOnly value
+   * @param tmp The new openAssignmentsOnly value
    */
   public void setOpenAssignmentsOnly(boolean tmp) {
     this.openAssignmentsOnly = tmp;
@@ -298,9 +320,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the withAssignmentDaysComplete attribute of the ProjectList object
+   * Sets the withAssignmentDaysComplete attribute of the ProjectList object
    *
-   *@param  tmp  The new withAssignmentDaysComplete value
+   * @param tmp The new withAssignmentDaysComplete value
    */
   public void setWithAssignmentDaysComplete(int tmp) {
     this.withAssignmentDaysComplete = tmp;
@@ -308,9 +330,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the projectsForUser attribute of the ProjectList object
+   * Sets the projectsForUser attribute of the ProjectList object
    *
-   *@param  tmp  The new projectsForUser value
+   * @param tmp The new projectsForUser value
    */
   public void setProjectsForUser(int tmp) {
     this.projectsForUser = tmp;
@@ -318,9 +340,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the enteredByUser attribute of the ProjectList object
+   * Sets the enteredByUser attribute of the ProjectList object
    *
-   *@param  tmp  The new enteredByUser value
+   * @param tmp The new enteredByUser value
    */
   public void setEnteredByUser(int tmp) {
     this.enteredByUser = tmp;
@@ -328,9 +350,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the enteredByUser attribute of the ProjectList object
+   * Sets the enteredByUser attribute of the ProjectList object
    *
-   *@param  tmp  The new enteredByUser value
+   * @param tmp The new enteredByUser value
    */
   public void setEnteredByUser(String tmp) {
     this.enteredByUser = Integer.parseInt(tmp);
@@ -338,9 +360,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the userRange attribute of the ProjectList object
+   * Sets the userRange attribute of the ProjectList object
    *
-   *@param  tmp  The new userRange value
+   * @param tmp The new userRange value
    */
   public void setUserRange(String tmp) {
     this.userRange = tmp;
@@ -348,9 +370,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the enteredByUserRange attribute of the ProjectList object
+   * Sets the enteredByUserRange attribute of the ProjectList object
    *
-   *@param  tmp  The new enteredByUserRange value
+   * @param tmp The new enteredByUserRange value
    */
   public void setEnteredByUserRange(String tmp) {
     this.enteredByUserRange = tmp;
@@ -358,9 +380,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the buildAssignments attribute of the ProjectList object
+   * Sets the buildAssignments attribute of the ProjectList object
    *
-   *@param  tmp  The new buildAssignments value
+   * @param tmp The new buildAssignments value
    */
   public void setBuildAssignments(boolean tmp) {
     this.buildAssignments = tmp;
@@ -368,9 +390,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the buildIssues attribute of the ProjectList object
+   * Sets the buildIssues attribute of the ProjectList object
    *
-   *@param  tmp  The new buildIssues value
+   * @param tmp The new buildIssues value
    */
   public void setBuildIssues(boolean tmp) {
     this.buildIssues = tmp;
@@ -378,9 +400,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the buildNews attribute of the ProjectList object
+   * Sets the buildNews attribute of the ProjectList object
    *
-   *@param  tmp  The new buildNews value
+   * @param tmp The new buildNews value
    */
   public void setBuildNews(boolean tmp) {
     this.buildNews = tmp;
@@ -388,9 +410,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the assignmentsForUser attribute of the ProjectList object
+   * Sets the assignmentsForUser attribute of the ProjectList object
    *
-   *@param  tmp  The new assignmentsForUser value
+   * @param tmp The new assignmentsForUser value
    */
   public void setAssignmentsForUser(int tmp) {
     this.assignmentsForUser = tmp;
@@ -398,9 +420,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the lastIssues attribute of the ProjectList object
+   * Sets the lastIssues attribute of the ProjectList object
    *
-   *@param  tmp  The new lastIssues value
+   * @param tmp The new lastIssues value
    */
   public void setLastIssues(int tmp) {
     this.lastIssues = tmp;
@@ -408,9 +430,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the lastNews attribute of the ProjectList object
+   * Sets the lastNews attribute of the ProjectList object
    *
-   *@param  tmp  The new lastNews value
+   * @param tmp The new lastNews value
    */
   public void setLastNews(int tmp) {
     this.lastNews = tmp;
@@ -418,9 +440,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the currentNews attribute of the ProjectList object
+   * Sets the currentNews attribute of the ProjectList object
    *
-   *@param  tmp  The new currentNews value
+   * @param tmp The new currentNews value
    */
   public void setCurrentNews(int tmp) {
     this.currentNews = tmp;
@@ -428,9 +450,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the portalState attribute of the ProjectList object
+   * Gets the portalState attribute of the ProjectList object
    *
-   *@return    The portalState value
+   * @return The portalState value
    */
   public int getPortalState() {
     return portalState;
@@ -438,9 +460,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the portalState attribute of the ProjectList object
+   * Sets the portalState attribute of the ProjectList object
    *
-   *@param  tmp  The new portalState value
+   * @param tmp The new portalState value
    */
   public void setPortalState(int tmp) {
     this.portalState = tmp;
@@ -448,9 +470,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the portalState attribute of the ProjectList object
+   * Sets the portalState attribute of the ProjectList object
    *
-   *@param  tmp  The new portalState value
+   * @param tmp The new portalState value
    */
   public void setPortalState(String tmp) {
     this.portalState = Integer.parseInt(tmp);
@@ -458,9 +480,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the portalDefaultOnly attribute of the ProjectList object
+   * Gets the portalDefaultOnly attribute of the ProjectList object
    *
-   *@return    The portalDefaultOnly value
+   * @return The portalDefaultOnly value
    */
   public boolean getPortalDefaultOnly() {
     return portalDefaultOnly;
@@ -468,9 +490,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the portalDefaultOnly attribute of the ProjectList object
+   * Sets the portalDefaultOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new portalDefaultOnly value
+   * @param tmp The new portalDefaultOnly value
    */
   public void setPortalDefaultOnly(boolean tmp) {
     this.portalDefaultOnly = tmp;
@@ -478,9 +500,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the portalDefaultOnly attribute of the ProjectList object
+   * Sets the portalDefaultOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new portalDefaultOnly value
+   * @param tmp The new portalDefaultOnly value
    */
   public void setPortalDefaultOnly(String tmp) {
     this.portalDefaultOnly = DatabaseUtils.parseBoolean(tmp);
@@ -488,9 +510,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the portalKey attribute of the ProjectList object
+   * Gets the portalKey attribute of the ProjectList object
    *
-   *@return    The portalKey value
+   * @return The portalKey value
    */
   public String getPortalKey() {
     return portalKey;
@@ -498,9 +520,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the portalKey attribute of the ProjectList object
+   * Sets the portalKey attribute of the ProjectList object
    *
-   *@param  tmp  The new portalKey value
+   * @param tmp The new portalKey value
    */
   public void setPortalKey(String tmp) {
     this.portalKey = tmp;
@@ -508,9 +530,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the publicOnly attribute of the ProjectList object
+   * Sets the publicOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new publicOnly value
+   * @param tmp The new publicOnly value
    */
   public void setPublicOnly(boolean tmp) {
     this.publicOnly = tmp;
@@ -518,9 +540,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the publicOnly attribute of the ProjectList object
+   * Sets the publicOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new publicOnly value
+   * @param tmp The new publicOnly value
    */
   public void setPublicOnly(String tmp) {
     this.publicOnly = DatabaseUtils.parseBoolean(tmp);
@@ -528,9 +550,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the approvedOnly attribute of the ProjectList object
+   * Gets the approvedOnly attribute of the ProjectList object
    *
-   *@return    The approvedOnly value
+   * @return The approvedOnly value
    */
   public boolean getApprovedOnly() {
     return approvedOnly;
@@ -538,9 +560,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the approvedOnly attribute of the ProjectList object
+   * Sets the approvedOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new approvedOnly value
+   * @param tmp The new approvedOnly value
    */
   public void setApprovedOnly(boolean tmp) {
     this.approvedOnly = tmp;
@@ -548,22 +570,89 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the approvedOnly attribute of the ProjectList object
+   * Sets the approvedOnly attribute of the ProjectList object
    *
-   *@param  tmp  The new approvedOnly value
+   * @param tmp The new approvedOnly value
    */
   public void setApprovedOnly(String tmp) {
     this.approvedOnly = DatabaseUtils.parseBoolean(tmp);
   }
 
+
+  /**
+   * Sets the trashedDate attribute of the ProjectList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the ProjectList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the ProjectList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the ProjectList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the ProjectList object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the includeOnlyTrashed attribute of the ProjectList object
+   *
+   * @return The includeOnlyTrashed value
+   */
+  public boolean getIncludeOnlyTrashed() {
+    return includeOnlyTrashed;
+  }
+
+
+  /**
+   * Sets the buildIssueCategories attribute of the ProjectList object
+   *
+   * @param buildIssueCategories The new buildIssueCategories value
+   */
   public void setBuildIssueCategories(boolean buildIssueCategories) {
     this.buildIssueCategories = buildIssueCategories;
   }
 
+
   /**
-   *  Sets the alertRangeStart attribute of the ProjectList object
+   * Sets the alertRangeStart attribute of the ProjectList object
    *
-   *@param  alertRangeStart  The new alertRangeStart value
+   * @param alertRangeStart The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
@@ -571,23 +660,30 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the ProjectList object
+   * Sets the alertRangeEnd attribute of the ProjectList object
    *
-   *@param  alertRangeEnd  The new alertRangeEnd value
+   * @param alertRangeEnd The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
   }
 
+
+  /**
+   * Sets the buildPermissions attribute of the ProjectList object
+   *
+   * @param buildPermissions The new buildPermissions value
+   */
   public void setBuildPermissions(boolean buildPermissions) {
     this.buildPermissions = buildPermissions;
   }
 
+
   /**
-   *  Gets the htmlSelect attribute of the ProjectList object
+   * Gets the htmlSelect attribute of the ProjectList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -595,11 +691,11 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ProjectList object
+   * Gets the htmlSelect attribute of the ProjectList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect listSelect = this.getHtmlSelect();
@@ -608,9 +704,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ProjectList object
+   * Gets the htmlSelect attribute of the ProjectList object
    *
-   *@return    The htmlSelect value
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect() {
     HtmlSelect listSelect = new HtmlSelect();
@@ -629,10 +725,10 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -668,9 +764,10 @@ public class ProjectList extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
-          "AND lower(title) < ? ");
+          "AND " + DatabaseUtils.toLowerCase(db) + "(title) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -692,20 +789,14 @@ public class ProjectList extends ArrayList {
         "* " +
         "FROM projects p " +
         "WHERE project_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Project thisProject = new Project(rs);
       this.add(thisProject);
     }
@@ -747,9 +838,9 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -762,23 +853,26 @@ public class ProjectList extends ArrayList {
       sqlFilter.append("AND (project_id = ?) ");
     }
     if (projectsWithAssignmentsOnly) {
-      sqlFilter.append("AND (p.project_id IN (SELECT DISTINCT project_id FROM project_assignments)) ");
+      sqlFilter.append(
+          "AND (p.project_id IN (SELECT DISTINCT project_id FROM project_assignments)) ");
     }
     if (openProjectsOnly && withProjectDaysComplete > -1) {
-      sqlFilter.append("AND (closedate IS NULL OR closedate LIKE '' OR closedate > ?) ");
+      sqlFilter.append(
+          "AND (closedate IS NULL OR closedate LIKE '' OR closedate > ?) ");
     } else {
       if (openProjectsOnly) {
-        sqlFilter.append("AND (closedate IS NULL OR closedate LIKE '') ");
+        sqlFilter.append("AND (closedate IS NULL) ");
       }
       if (withProjectDaysComplete > -1) {
         sqlFilter.append("AND (closeDate > ?) ");
       }
     }
     if (closedProjectsOnly) {
-      sqlFilter.append("AND (closedate IS NOT NULL AND closedate NOT LIKE '') ");
+      sqlFilter.append("AND (closedate IS NOT NULL) ");
     }
     if (projectsForUser > -1) {
-      sqlFilter.append("AND (p.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+      sqlFilter.append(
+          "AND (p.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           (invitationAcceptedOnly ? "AND status IS NULL " : "") +
           (invitationPendingOnly ? "AND status = ? " : "") +
           (daysLastAccessed > -1 ? "AND last_accessed > ? " : "") + ") " +
@@ -786,7 +880,8 @@ public class ProjectList extends ArrayList {
           ") ");
     }
     if (userRange != null) {
-      sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ")) " +
+      sqlFilter.append(
+          "AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ")) " +
           "OR p.enteredBy IN (" + userRange + ")) ");
     }
     if (enteredByUser > -1) {
@@ -814,17 +909,25 @@ public class ProjectList extends ArrayList {
       sqlFilter.append("AND p.category_id = ? ");
     }
     if (projectsForOrgId > -1) {
-      sqlFilter.append("AND p.project_id IN (SELECT project_id FROM project_accounts WHERE org_id = ?) ");
+      sqlFilter.append(
+          "AND p.project_id IN (SELECT project_id FROM project_accounts WHERE org_id = ?) ");
+    }
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND p.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND p.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND p.trashed_date IS NULL ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -880,17 +983,24 @@ public class ProjectList extends ArrayList {
     if (projectsForOrgId > -1) {
       pst.setInt(++i, projectsForOrgId);
     }
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  timeZone          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param timeZone Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public HashMap queryAssignmentRecordCount(Connection db, TimeZone timeZone) throws SQLException {
     PreparedStatement pst = null;
@@ -900,7 +1010,7 @@ public class ProjectList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
     sqlSelect.append(
-        "SELECT a.due_date, count(*) " +
+        "SELECT a.due_date, COUNT(*) AS ascount " +
         "FROM projects p, project_assignments a " +
         "WHERE p.project_id > -1 " +
         "AND p.project_id = a.project_id ");
@@ -918,7 +1028,8 @@ public class ProjectList extends ArrayList {
     if (alertRangeEnd != null) {
       sqlFilter.append("AND a.due_date <= ? ");
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     int i = prepareFilter(pst);
     if (assignmentsForUser > -1) {
       pst.setInt(++i, assignmentsForUser);
@@ -931,10 +1042,12 @@ public class ProjectList extends ArrayList {
     }
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("due_date"));
-      int alertCount = rs.getInt("count");
+      String alertDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, rs.getTimestamp("due_date"));
+      int alertCount = rs.getInt("ascount");
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProjectList-> Added Days Assignments " + alertDate + ":" + alertCount);
+        System.out.println(
+            "ProjectList-> Added Days Assignments " + alertDate + ":" + alertCount);
       }
       events.put(alertDate, new Integer(alertCount));
     }
@@ -945,11 +1058,11 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static HashMap buildNameList(Connection db) throws SQLException {
     HashMap nameList = new HashMap();
@@ -958,7 +1071,8 @@ public class ProjectList extends ArrayList {
         "FROM projects");
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      nameList.put(new Integer(rs.getInt("project_id")), rs.getString("title"));
+      nameList.put(
+          new Integer(rs.getInt("project_id")), rs.getString("title"));
     }
     rs.close();
     pst.close();
@@ -967,11 +1081,11 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int buildProjectCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -988,12 +1102,12 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int buildProjectCount(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1009,12 +1123,12 @@ public class ProjectList extends ArrayList {
     pst.close();
     return count;
   }
-  
-  
+
+
   /**
-   *  Checks to see if any of the projects in the list are user only projects
+   * Checks to see if any of the projects in the list are user only projects
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasUserProjects() {
     Iterator i = this.iterator();
@@ -1027,6 +1141,13 @@ public class ProjectList extends ArrayList {
     return false;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
   public void buildTeam(Connection db) throws SQLException {
     Iterator i = this.iterator();
     while (i.hasNext()) {
@@ -1035,12 +1156,41 @@ public class ProjectList extends ArrayList {
     }
   }
 
+
+  /**
+   * Sets the buildOverallProgress attribute of the ProjectList object
+   *
+   * @param buildOverallProgress The new buildOverallProgress value
+   */
   public void setBuildOverallProgress(boolean buildOverallProgress) {
     this.buildOverallProgress = buildOverallProgress;
   }
 
+
+  /**
+   * Sets the projectsForOrgId attribute of the ProjectList object
+   *
+   * @param projectsForOrgId The new projectsForOrgId value
+   */
   public void setProjectsForOrgId(int projectsForOrgId) {
     this.projectsForOrgId = projectsForOrgId;
   }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db       Description of the Parameter
+   * @param filePath Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void delete(Connection db, String filePath) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      Project thisProject = (Project) itr.next();
+      thisProject.delete(db, filePath);
+    }
+  }
+
 }
 

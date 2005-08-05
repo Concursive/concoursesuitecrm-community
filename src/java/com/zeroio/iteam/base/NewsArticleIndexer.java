@@ -15,35 +15,39 @@
  */
 package com.zeroio.iteam.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.utils.ContentUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import java.sql.*;
-import java.io.IOException;
 import org.aspcfs.utils.DatabaseUtils;
-import java.text.*;
-import com.zeroio.utils.ContentUtils;
-import com.darkhorseventures.framework.actions.ActionContext;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id: NewsArticleIndexer.java,v 1.2 2004/07/21 19:00:43 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: NewsArticleIndexer.java,v 1.2 2004/07/21 19:00:43 mrajkowski
+ *          Exp $
+ * @created May 27, 2004
  */
 public class NewsArticleIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -77,30 +81,39 @@ public class NewsArticleIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  article          Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param article  Description of the Parameter
+   * @param modified Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, NewsArticle article, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "news"));
     document.add(Field.Keyword("newsId", String.valueOf(article.getId())));
-    document.add(Field.Keyword("projectId", String.valueOf(article.getProjectId())));
+    document.add(
+        Field.Keyword("projectId", String.valueOf(article.getProjectId())));
     document.add(Field.Text("title", article.getSubject()));
-    document.add(Field.Text("contents",
-        article.getSubject() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            article.getSubject() + " " +
         ContentUtils.toText(ContentUtils.stripHTML(article.getIntro())) + " " +
         ContentUtils.toText(ContentUtils.stripHTML(article.getMessage()))));
     if (article.getStartDate() != null) {
-      document.add(Field.Keyword("modified", String.valueOf(article.getStartDate().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(article.getStartDate().getTime())));
       SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-      document.add(Field.Keyword("newsDate", String.valueOf(formatter.format(article.getStartDate()))));
+      document.add(
+          Field.Keyword(
+              "newsDate", String.valueOf(
+                  formatter.format(article.getStartDate()))));
     }
-    document.add(Field.Keyword("newsStatus", String.valueOf(article.getStatus())));
+    document.add(
+        Field.Keyword("newsStatus", String.valueOf(article.getStatus())));
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
       System.out.println("NewsArticleIndexer-> Added: " + article.getId());
@@ -109,10 +122,10 @@ public class NewsArticleIndexer implements Indexer {
 
 
   /**
-   *  Gets the unique searchTerm attribute of the NewsArticleIndexer class
+   * Gets the unique searchTerm attribute of the NewsArticleIndexer class
    *
-   *@param  article  Description of the Parameter
-   *@return          The searchTerm value
+   * @param article Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(NewsArticle article) {
     Term searchTerm = new Term("newsId", String.valueOf(article.getId()));
@@ -121,10 +134,10 @@ public class NewsArticleIndexer implements Indexer {
 
 
   /**
-   *  Gets the deleteTerm attribute of the NewsArticleIndexer class
+   * Gets the deleteTerm attribute of the NewsArticleIndexer class
    *
-   *@param  article  Description of the Parameter
-   *@return          The deleteTerm value
+   * @param article Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(NewsArticle article) {
     Term searchTerm = new Term("newsId", String.valueOf(article.getId()));

@@ -15,15 +15,18 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents an available option that an Inventory object has
+ * Represents an available option that an Inventory object has
  *
- *@author     matt rajkowski
- *@created    June 16, 2002
- *@version    $Id: InventoryOption.java,v 1.1 2002/06/16 19:49:40 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: InventoryOption.java,v 1.1 2002/06/16 19:49:40 mrajkowski Exp
+ *          $
+ * @created June 16, 2002
  */
 public class InventoryOption {
   private int inventoryId = -1;
@@ -31,16 +34,17 @@ public class InventoryOption {
 
 
   /**
-   *  Constructor for the Option object
+   * Constructor for the Option object
    */
-  public InventoryOption() { }
+  public InventoryOption() {
+  }
 
 
   /**
-   *  Constructor for the Option object
+   * Constructor for the Option object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public InventoryOption(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -48,9 +52,9 @@ public class InventoryOption {
 
 
   /**
-   *  Sets the optionId attribute of the InventoryOption object
+   * Sets the optionId attribute of the InventoryOption object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(int tmp) {
     this.optionId = tmp;
@@ -58,9 +62,9 @@ public class InventoryOption {
 
 
   /**
-   *  Sets the inventoryId attribute of the Option object
+   * Sets the inventoryId attribute of the Option object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
@@ -68,10 +72,10 @@ public class InventoryOption {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the InventoryOption object, used
-   *  for the XML API
+   * Sets the accountInventoryId attribute of the InventoryOption object, used
+   * for the XML API
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
@@ -79,9 +83,9 @@ public class InventoryOption {
 
 
   /**
-   *  Sets the optionId attribute of the InventoryOption object
+   * Sets the optionId attribute of the InventoryOption object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(String tmp) {
     this.optionId = Integer.parseInt(tmp);
@@ -89,9 +93,9 @@ public class InventoryOption {
 
 
   /**
-   *  Gets the id attribute of the Option object
+   * Gets the id attribute of the Option object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getOptionId() {
     return optionId;
@@ -99,9 +103,9 @@ public class InventoryOption {
 
 
   /**
-   *  Gets the accountInventoryId attribute of the InventoryOption object
+   * Gets the accountInventoryId attribute of the InventoryOption object
    *
-   *@return    The accountInventoryId value
+   * @return The accountInventoryId value
    */
   public int getAccountInventoryId() {
     return this.inventoryId;
@@ -109,10 +113,10 @@ public class InventoryOption {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -129,10 +133,10 @@ public class InventoryOption {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -148,10 +152,10 @@ public class InventoryOption {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     inventoryId = rs.getInt("inventory_id");

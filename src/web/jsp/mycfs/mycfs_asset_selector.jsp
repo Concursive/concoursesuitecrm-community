@@ -38,11 +38,11 @@
 		String contractNumber = request.getParameter("contractNumber") ;
 		if (serialNumber == null || "".equals(serialNumber.trim())){
 	%>
-		  document.assetListView.serialNumber.value = "Serial Number";
+		  document.assetListView.serialNumber.value = label("label.account.sc.serialnumber", "Serial Number");
 	<%}		
 		if (contractNumber == null || "".equals(contractNumber.trim())){
 	%>
-		  document.assetListView.contractNumber.value = "Service Contract Number";
+		  document.assetListView.contractNumber.value = label("label.account.sc.number", "Service Contract Number");
 	<%}%>		
 
 	}
@@ -50,14 +50,14 @@
 	function clearSearchFields(clear, field) {
 		if (clear) {
 			// Clear the search fields since clear button was clicked
-			document.assetListView.serialNumber.value = "Serial Number";
-			document.assetListView.contractNumber.value = "Service Contract Number";
+			document.assetListView.serialNumber.value = label("label.account.sc.serialnumber", "Serial Number");
+			document.assetListView.contractNumber.value = label("label.account.sc.number", "Service Contract Number");
 		} else {
 			// The search fields recieved focus
-			if (field.value == "Serial Number" ) {
+			if (field.value == label("label.account.sc.serialnumber", "Serial Number")) {
 				field.value = "" ;
 			}
-			if (field.value == "Service Contract Number" ) {
+			if (field.value == label("label.account.sc.number", "Service Contract Number")) {
 				field.value = "" ;
 			}
 		}

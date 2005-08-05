@@ -28,7 +28,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <a href="MyCFSInbox.do?command=Inbox"><dhv:label name="Mailbox">Mailbox</dhv:label></a> >
 <dhv:label name="accounts.MessageDetails">Message Details</dhv:label>
 </td>

@@ -15,27 +15,28 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.pipeline.base.OpportunityHeader;
-import org.aspcfs.modules.contacts.base.Call;
 import com.darkhorseventures.database.ConnectionElement;
-import java.util.StringTokenizer;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.contacts.base.Call;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 /**
- *  Implements sharing based on objects<br>
- *  NOTES: Can be expanded to account for complex cases like Account -> Contact
- *  -> Opportunity -> Tasks <br>
- *  by allowing for multiple object passing in the tag. For example <dhv:sharing
- *  name=<CallDetails, ContactDetails, OpportunityHeader> action=<VIEW>/>
+ * Implements sharing based on objects<br>
+ * NOTES: Can be expanded to account for complex cases like Account -> Contact
+ * -> Opportunity -> Tasks <br>
+ * by allowing for multiple object passing in the tag. For example <dhv:sharing
+ * name=<CallDetails, ContactDetails, OpportunityHeader> action=<VIEW>/>
  *
- *@author     Mathur
- *@created    August 20, 2003
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created August 20, 2003
  */
 public class SharingHandler extends TagSupport {
 
@@ -54,10 +55,10 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Sets the Name attribute of the PermissionHandler object
+   * Sets the Name attribute of the PermissionHandler object
    *
-   *@param  tmp  The new Name value
-   *@since       1.1
+   * @param tmp The new Name value
+   * @since 1.1
    */
   public final void setPrimaryBean(String tmp) {
     primaryComponent = tmp;
@@ -65,9 +66,9 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Sets the secondaryBeans attribute of the SharingHandler object
+   * Sets the secondaryBeans attribute of the SharingHandler object
    *
-   *@param  tmp  The new secondaryBeans value
+   * @param tmp The new secondaryBeans value
    */
   public final void setSecondaryBeans(String tmp) {
     secondaryComponents = tmp;
@@ -75,9 +76,9 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Sets the action attribute of the SharingHandler object
+   * Sets the action attribute of the SharingHandler object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public final void setAction(String tmp) {
     if ("view".equalsIgnoreCase(tmp)) {
@@ -91,11 +92,11 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Sets the All attribute of the PermissionHandler object. If set to true
-   *  then the user must have all permissions passed in.
+   * Sets the All attribute of the PermissionHandler object. If set to true
+   * then the user must have all permissions passed in.
    *
-   *@param  tmp  The new All value
-   *@since       1.1
+   * @param tmp The new All value
+   * @since 1.1
    */
   public void setAll(String tmp) {
     Boolean checkAll = new Boolean(tmp);
@@ -104,10 +105,10 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Sets the None attribute of the PermissionHandler object
+   * Sets the None attribute of the PermissionHandler object
    *
-   *@param  tmp  The new None value
-   *@since       1.1
+   * @param tmp The new None value
+   * @since 1.1
    */
   public void setNone(String tmp) {
     Boolean checkNone = new Boolean(tmp);
@@ -116,13 +117,13 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Checks to see if the user has permission to access the body of the tag. A
-   *  comma-separated list of permissions can be used to match any of the
-   *  permissions.
+   * Checks to see if the user has permission to access the body of the tag. A
+   * comma-separated list of permissions can be used to match any of the
+   * permissions.
    *
-   *@return                   Description of the Returned Value
-   *@exception  JspException  Description of Exception
-   *@since                    1.1
+   * @return Description of the Returned Value
+   * @throws JspException Description of Exception
+   * @since 1.1
    */
   public final int doStartTag() throws JspException {
     boolean result = false;
@@ -142,12 +143,12 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Creates permission based on the Business Object<br>
-   *  Can be expanded to use for other Business Objects like Opportunities as
-   *  well
+   * Creates permission based on the Business Object<br>
+   * Can be expanded to use for other Business Objects like Opportunities as
+   * well
    *
-   *@param  obj  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param obj Description of the Parameter
+   * @return Description of the Return Value
    */
   public final String createPermission(Object obj) {
     String permission = null;
@@ -160,29 +161,29 @@ public class SharingHandler extends TagSupport {
       }
       //handle contact type cases(account and general)
       switch (action) {
-          case VIEW:
-            if (thisContact.getOrgId() > 0) {
-              permission = "contacts-external_contacts-view,accounts-accounts-contacts-view";
-            } else {
-              permission = "contacts-external_contacts-view";
-            }
-            break;
-          case EDIT:
-            if (thisContact.getOrgId() > 0) {
-              permission = "contacts-external_contacts-edit,accounts-accounts-contacts-edit";
-            } else {
-              permission = "contacts-external_contacts-edit";
-            }
-            break;
-          case DELETE:
-            if (thisContact.getOrgId() > 0) {
-              permission = "contacts-external_contacts-delete,accounts-accounts-contacts-delete";
-            } else {
-              permission = "contacts-external_contacts-delete";
-            }
-            break;
-          default:
-            break;
+        case VIEW:
+          if (thisContact.getOrgId() > 0) {
+            permission = "contacts-external_contacts-view,accounts-accounts-contacts-view";
+          } else {
+            permission = "contacts-external_contacts-view";
+          }
+          break;
+        case EDIT:
+          if (thisContact.getOrgId() > 0) {
+            permission = "contacts-external_contacts-edit,accounts-accounts-contacts-edit";
+          } else {
+            permission = "contacts-external_contacts-edit";
+          }
+          break;
+        case DELETE:
+          if (thisContact.getOrgId() > 0) {
+            permission = "contacts-external_contacts-delete,accounts-accounts-contacts-delete";
+          } else {
+            permission = "contacts-external_contacts-delete";
+          }
+          break;
+        default:
+          break;
       }
     }
 
@@ -203,65 +204,65 @@ public class SharingHandler extends TagSupport {
 
       //handle call types
       switch (action) {
-          case VIEW:
-            if (thisCall.getContactId() > 0) {
-              //Contact Calls
-              if (thisContact != null) {
-                if (thisContact.getOrgId() > -1) {
-                  //Account Contact Calls
-                  permission = "contacts-external_contacts-calls-view,accounts-accounts-contacts-calls-view";
-                  allRequired = true;
-                } else {
-                  //General Contact Call
-                  permission = "contacts-external_contacts-calls-view";
-                }
+        case VIEW:
+          if (thisCall.getContactId() > 0) {
+            //Contact Calls
+            if (thisContact != null) {
+              if (thisContact.getOrgId() > -1) {
+                //Account Contact Calls
+                permission = "contacts-external_contacts-calls-view,accounts-accounts-contacts-calls-view";
+                allRequired = true;
+              } else {
+                //General Contact Call
+                permission = "contacts-external_contacts-calls-view";
               }
-            } else if (thisCall.getOrgId() > 0) {
-              //Account Calls
-            } else if (thisCall.getOppHeaderId() > 0) {
-              //Opportunity Calls
             }
-            break;
-          case EDIT:
-            if (thisCall.getContactId() > 0) {
-              //Contact Calls
-              if (thisContact != null) {
-                if (thisContact.getOrgId() > -1) {
-                  //Account Contact Calls
-                  permission = "contacts-external_contacts-calls-edit,accounts-accounts-contacts-calls-edit";
-                  allRequired = true;
-                } else {
-                  //General Contact Call
-                  permission = "contacts-external_contacts-calls-edit";
-                }
+          } else if (thisCall.getOrgId() > 0) {
+            //Account Calls
+          } else if (thisCall.getOppHeaderId() > 0) {
+            //Opportunity Calls
+          }
+          break;
+        case EDIT:
+          if (thisCall.getContactId() > 0) {
+            //Contact Calls
+            if (thisContact != null) {
+              if (thisContact.getOrgId() > -1) {
+                //Account Contact Calls
+                permission = "contacts-external_contacts-calls-edit,accounts-accounts-contacts-calls-edit";
+                allRequired = true;
+              } else {
+                //General Contact Call
+                permission = "contacts-external_contacts-calls-edit";
               }
-            } else if (thisCall.getOrgId() > 0) {
-              //Account Calls
-            } else if (thisCall.getOppHeaderId() > 0) {
-              //Opportunity Calls
             }
-            break;
-          case DELETE:
-            if (thisCall.getContactId() > 0) {
-              //Contact Calls
-              if (thisContact != null) {
-                if (thisContact.getOrgId() > -1) {
-                  //Account Contact Calls
-                  permission = "contacts-external_contacts-calls-delete,accounts-accounts-contacts-calls-delete";
-                  allRequired = true;
-                } else {
-                  //General Contact Call
-                  permission = "contacts-external_contacts-calls-delete";
-                }
+          } else if (thisCall.getOrgId() > 0) {
+            //Account Calls
+          } else if (thisCall.getOppHeaderId() > 0) {
+            //Opportunity Calls
+          }
+          break;
+        case DELETE:
+          if (thisCall.getContactId() > 0) {
+            //Contact Calls
+            if (thisContact != null) {
+              if (thisContact.getOrgId() > -1) {
+                //Account Contact Calls
+                permission = "contacts-external_contacts-calls-delete,accounts-accounts-contacts-calls-delete";
+                allRequired = true;
+              } else {
+                //General Contact Call
+                permission = "contacts-external_contacts-calls-delete";
               }
-            } else if (thisCall.getOrgId() > 0) {
-              //Account Calls
-            } else if (thisCall.getOppHeaderId() > 0) {
-              //Opportunity Calls
             }
-            break;
-          default:
-            break;
+          } else if (thisCall.getOrgId() > 0) {
+            //Account Calls
+          } else if (thisCall.getOppHeaderId() > 0) {
+            //Opportunity Calls
+          }
+          break;
+        default:
+          break;
       }
     }
 
@@ -282,59 +283,59 @@ public class SharingHandler extends TagSupport {
 
       //handle opportunity types
       switch (action) {
-          case VIEW:
-            if (thisOpp.getContactLink() > 0) {
-              //Contact Opportunity
-              if (thisContact != null) {
-                if (thisContact.getOrgId() > -1) {
-                  //Account Contact Opportunity
-                  permission = "contacts-external_contacts-opportunities-view,accounts-accounts-contacts-opportunities-view";
-                  allRequired = true;
-                } else {
-                  //General Contact Opportunity
-                  permission = "contacts-external_contacts-opportunities-view";
-                }
+        case VIEW:
+          if (thisOpp.getContactLink() > 0) {
+            //Contact Opportunity
+            if (thisContact != null) {
+              if (thisContact.getOrgId() > -1) {
+                //Account Contact Opportunity
+                permission = "contacts-external_contacts-opportunities-view,accounts-accounts-contacts-opportunities-view";
+                allRequired = true;
+              } else {
+                //General Contact Opportunity
+                permission = "contacts-external_contacts-opportunities-view";
+              }
+            }
+          } else if (thisOpp.getAccountLink() > 0) {
+            //Account Opportunities
+          }
+          break;
+        case EDIT:
+          if (thisOpp.getContactLink() > 0) {
+            //Contact Calls
+            if (thisContact != null) {
+              if (thisContact.getOrgId() > -1) {
+                //Account Contact Calls
+                permission = "contacts-external_contacts-opportunities-edit,accounts-accounts-contacts-opportunities-edit";
+                allRequired = true;
+              } else {
+                //General Contact Call
+                permission = "contacts-external_contacts-opportunities-edit";
               }
             } else if (thisOpp.getAccountLink() > 0) {
               //Account Opportunities
             }
-            break;
-          case EDIT:
-            if (thisOpp.getContactLink() > 0) {
-              //Contact Calls
-              if (thisContact != null) {
-                if (thisContact.getOrgId() > -1) {
-                  //Account Contact Calls
-                  permission = "contacts-external_contacts-opportunities-edit,accounts-accounts-contacts-opportunities-edit";
-                  allRequired = true;
-                } else {
-                  //General Contact Call
-                  permission = "contacts-external_contacts-opportunities-edit";
-                }
-              } else if (thisOpp.getAccountLink() > 0) {
-                //Account Opportunities
+          }
+          break;
+        case DELETE:
+          if (thisOpp.getContactLink() > 0) {
+            //Contact Opportunity
+            if (thisContact != null) {
+              if (thisContact.getOrgId() > -1) {
+                //Account Contact Opportunity
+                permission = "contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-delete";
+                allRequired = true;
+              } else {
+                //General Contact Opportunity
+                permission = "contacts-external_contacts-opportunities-delete";
               }
+            } else if (thisOpp.getAccountLink() > 0) {
+              //Account Opportunity
             }
-            break;
-          case DELETE:
-            if (thisOpp.getContactLink() > 0) {
-              //Contact Opportunity
-              if (thisContact != null) {
-                if (thisContact.getOrgId() > -1) {
-                  //Account Contact Opportunity
-                  permission = "contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-delete";
-                  allRequired = true;
-                } else {
-                  //General Contact Opportunity
-                  permission = "contacts-external_contacts-opportunities-delete";
-                }
-              } else if (thisOpp.getAccountLink() > 0) {
-                //Account Opportunity
-              }
-            }
-            break;
-          default:
-            break;
+          }
+          break;
+        default:
+          break;
       }
     }
     return permission;
@@ -342,24 +343,27 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Checks to see if the user has the specified permissions
+   * Checks to see if the user has the specified permissions
    *
-   *@param  permissionName  Description of the Parameter
-   *@return                 Description of the Return Value
+   * @param permissionName Description of the Parameter
+   * @return Description of the Return Value
    */
   public final boolean hasPermission(String permissionName) {
     int matches = 0;
     int checks = 0;
     boolean result = false;
-    UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+    UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
+        "User");
     if (thisUser != null) {
       ConnectionElement ce = thisUser.getConnectionElement();
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       StringTokenizer st = new StringTokenizer(permissionName, ",");
       while (st.hasMoreTokens()) {
         String thisPermission = st.nextToken();
         ++checks;
-        if (systemStatus.hasPermission(thisUser.getUserId(), thisPermission.trim())) {
+        if (systemStatus.hasPermission(
+            thisUser.getUserId(), thisPermission.trim())) {
           ++matches;
         }
       }

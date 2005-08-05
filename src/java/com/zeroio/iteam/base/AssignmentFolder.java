@@ -15,22 +15,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  An AssignmentFolder represents a folder in which assignments can go in
+ * An AssignmentFolder represents a folder in which assignments can go in
  *
- *@author     matt rajkowski
- *@created    February 24, 2003
- *@version    $Id: AssignmentFolder.java,v 1.1.2.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AssignmentFolder.java,v 1.1.2.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created February 24, 2003
  */
 public class AssignmentFolder extends GenericBean {
   private int id = -1;
@@ -55,18 +55,19 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
-  public AssignmentFolder() { }
+  public AssignmentFolder() {
+  }
 
 
   /**
-   *  Constructor for the AssignmentFolder object
+   * Constructor for the AssignmentFolder object
    *
-   *@param  db                Description of the Parameter
-   *@param  folderId          Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param folderId  Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AssignmentFolder(Connection db, int folderId, int projectId) throws SQLException {
     this.setProjectId(projectId);
@@ -75,10 +76,10 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AssignmentFolder(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -90,11 +91,11 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  folderId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param folderId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int folderId) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -103,7 +104,8 @@ public class AssignmentFolder extends GenericBean {
         "FROM project_assignments_folder " +
         "WHERE folder_id = ? ");
     if (projectId > -1) {
-      sql.append("AND requirement_id IN (SELECT requirement_id FROM project_requirements WHERE project_id = ?) ");
+      sql.append(
+          "AND requirement_id IN (SELECT requirement_id FROM project_requirements WHERE project_id = ?) ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -124,9 +126,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the AssignmentFolder object
+   * Sets the id attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -134,9 +136,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the AssignmentFolder object
+   * Sets the id attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -144,9 +146,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the requirementId attribute of the AssignmentFolder object
+   * Sets the requirementId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(int tmp) {
     this.requirementId = tmp;
@@ -154,9 +156,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the requirementId attribute of the AssignmentFolder object
+   * Sets the requirementId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(String tmp) {
     this.requirementId = Integer.parseInt(tmp);
@@ -164,9 +166,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the AssignmentFolder object
+   * Sets the projectId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -174,9 +176,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the AssignmentFolder object
+   * Sets the projectId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -184,9 +186,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the AssignmentFolder object
+   * Sets the parentId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -194,9 +196,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the AssignmentFolder object
+   * Sets the parentId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -204,9 +206,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the AssignmentFolder object
+   * Sets the name attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -214,9 +216,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the AssignmentFolder object
+   * Sets the description attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -224,9 +226,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the AssignmentFolder object
+   * Sets the entered attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -234,9 +236,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the AssignmentFolder object
+   * Sets the entered attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -244,9 +246,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the AssignmentFolder object
+   * Sets the enteredBy attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -254,9 +256,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the AssignmentFolder object
+   * Sets the enteredBy attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -264,9 +266,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the AssignmentFolder object
+   * Sets the modified attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -274,9 +276,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the AssignmentFolder object
+   * Sets the modified attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     modified = DatabaseUtils.parseTimestamp(tmp);
@@ -284,9 +286,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the AssignmentFolder object
+   * Sets the modifiedBy attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -294,9 +296,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the AssignmentFolder object
+   * Sets the modifiedBy attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.setModifiedBy(Integer.parseInt(tmp));
@@ -304,9 +306,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the treeOpen attribute of the AssignmentFolder object
+   * Sets the treeOpen attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new treeOpen value
+   * @param tmp The new treeOpen value
    */
   public void setTreeOpen(boolean tmp) {
     this.treeOpen = tmp;
@@ -314,9 +316,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the displayLevel attribute of the AssignmentFolder object
+   * Sets the displayLevel attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new displayLevel value
+   * @param tmp The new displayLevel value
    */
   public void setDisplayLevel(int tmp) {
     this.displayLevel = tmp;
@@ -324,9 +326,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the levelOpen attribute of the AssignmentFolder object
+   * Sets the levelOpen attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new levelOpen value
+   * @param tmp The new levelOpen value
    */
   public void setLevelOpen(boolean tmp) {
     this.levelOpen = tmp;
@@ -334,9 +336,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the indent attribute of the AssignmentFolder object
+   * Sets the indent attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new indent value
+   * @param tmp The new indent value
    */
   public void setIndent(int tmp) {
     this.indent = tmp;
@@ -344,9 +346,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the indent attribute of the AssignmentFolder object
+   * Sets the indent attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new indent value
+   * @param tmp The new indent value
    */
   public void setIndent(String tmp) {
     this.indent = Integer.parseInt(tmp);
@@ -354,9 +356,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the prevIndent attribute of the AssignmentFolder object
+   * Sets the prevIndent attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new prevIndent value
+   * @param tmp The new prevIndent value
    */
   public void setPrevIndent(int tmp) {
     this.prevIndent = tmp;
@@ -364,9 +366,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the prevIndent attribute of the AssignmentFolder object
+   * Sets the prevIndent attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new prevIndent value
+   * @param tmp The new prevIndent value
    */
   public void setPrevIndent(String tmp) {
     this.prevIndent = Integer.parseInt(tmp);
@@ -374,9 +376,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the prevMapId attribute of the AssignmentFolder object
+   * Sets the prevMapId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new prevMapId value
+   * @param tmp The new prevMapId value
    */
   public void setPrevMapId(int tmp) {
     this.prevMapId = tmp;
@@ -384,9 +386,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Sets the prevMapId attribute of the AssignmentFolder object
+   * Sets the prevMapId attribute of the AssignmentFolder object
    *
-   *@param  tmp  The new prevMapId value
+   * @param tmp The new prevMapId value
    */
   public void setPrevMapId(String tmp) {
     this.prevMapId = Integer.parseInt(tmp);
@@ -394,9 +396,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the AssignmentFolder object
+   * Gets the id attribute of the AssignmentFolder object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -404,9 +406,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the requirementId attribute of the AssignmentFolder object
+   * Gets the requirementId attribute of the AssignmentFolder object
    *
-   *@return    The requirementId value
+   * @return The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
@@ -414,9 +416,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the AssignmentFolder object
+   * Gets the projectId attribute of the AssignmentFolder object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -424,9 +426,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the parentId attribute of the AssignmentFolder object
+   * Gets the parentId attribute of the AssignmentFolder object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -434,9 +436,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the AssignmentFolder object
+   * Gets the name attribute of the AssignmentFolder object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -444,9 +446,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the AssignmentFolder object
+   * Gets the description attribute of the AssignmentFolder object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -454,9 +456,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the AssignmentFolder object
+   * Gets the entered attribute of the AssignmentFolder object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -464,9 +466,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the AssignmentFolder object
+   * Gets the enteredString attribute of the AssignmentFolder object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -478,13 +480,14 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the AssignmentFolder object
+   * Gets the enteredDateTimeString attribute of the AssignmentFolder object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -492,9 +495,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the AssignmentFolder object
+   * Gets the enteredBy attribute of the AssignmentFolder object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -502,9 +505,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the AssignmentFolder object
+   * Gets the modified attribute of the AssignmentFolder object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -512,9 +515,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the AssignmentFolder object
+   * Gets the modifiedString attribute of the AssignmentFolder object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     if (modified != null) {
@@ -526,9 +529,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the AssignmentFolder object
+   * Gets the modifiedBy attribute of the AssignmentFolder object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -536,9 +539,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the treeOpen attribute of the AssignmentFolder object
+   * Gets the treeOpen attribute of the AssignmentFolder object
    *
-   *@return    The treeOpen value
+   * @return The treeOpen value
    */
   public boolean getTreeOpen() {
     return treeOpen;
@@ -546,9 +549,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the displayLevel attribute of the AssignmentFolder object
+   * Gets the displayLevel attribute of the AssignmentFolder object
    *
-   *@return    The displayLevel value
+   * @return The displayLevel value
    */
   public int getDisplayLevel() {
     return displayLevel;
@@ -556,9 +559,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the levelOpen attribute of the AssignmentFolder object
+   * Gets the levelOpen attribute of the AssignmentFolder object
    *
-   *@return    The levelOpen value
+   * @return The levelOpen value
    */
   public boolean getLevelOpen() {
     return levelOpen;
@@ -566,9 +569,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the folders attribute of the AssignmentFolder object
+   * Gets the folders attribute of the AssignmentFolder object
    *
-   *@return    The folders value
+   * @return The folders value
    */
   public AssignmentFolderList getFolders() {
     return folders;
@@ -576,9 +579,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the assignments attribute of the AssignmentFolder object
+   * Gets the assignments attribute of the AssignmentFolder object
    *
-   *@return    The assignments value
+   * @return The assignments value
    */
   public AssignmentList getAssignments() {
     return assignments;
@@ -586,9 +589,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the indent attribute of the AssignmentFolder object
+   * Gets the indent attribute of the AssignmentFolder object
    *
-   *@return    The indent value
+   * @return The indent value
    */
   public int getIndent() {
     return indent;
@@ -596,9 +599,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the prevIndent attribute of the AssignmentFolder object
+   * Gets the prevIndent attribute of the AssignmentFolder object
    *
-   *@return    The prevIndent value
+   * @return The prevIndent value
    */
   public int getPrevIndent() {
     return prevIndent;
@@ -606,9 +609,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the prevMapId attribute of the AssignmentFolder object
+   * Gets the prevMapId attribute of the AssignmentFolder object
    *
-   *@return    The prevMapId value
+   * @return The prevMapId value
    */
   public int getPrevMapId() {
     return prevMapId;
@@ -616,10 +619,10 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("folder_id");
@@ -635,17 +638,21 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_assignmen_folder_id_seq");
     sql.append(
         "INSERT INTO project_assignments_folder " +
         "(requirement_id, parent_id, name, description, ");
+    if (id > -1) {
+      sql.append("folder_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -654,6 +661,9 @@ public class AssignmentFolder extends GenericBean {
     }
     sql.append("enteredBy, modifiedBy) ");
     sql.append("VALUES (?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -667,6 +677,9 @@ public class AssignmentFolder extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, parentId);
     pst.setString(++i, name);
     pst.setString(++i, description);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -677,7 +690,7 @@ public class AssignmentFolder extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_assignmen_folder_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "project_assignmen_folder_id_seq", id);
     //Record the position of this entry
     RequirementMapItem mapItem = new RequirementMapItem();
     mapItem.setProjectId(projectId);
@@ -695,9 +708,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the assignmentIterator attribute of the AssignmentFolder object
+   * Gets the assignmentIterator attribute of the AssignmentFolder object
    *
-   *@return    The assignmentIterator value
+   * @return The assignmentIterator value
    */
   public Iterator getAssignmentIterator() {
     ArrayList assignmentList = new ArrayList();
@@ -707,9 +720,9 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the planIterator attribute of the AssignmentFolder object
+   * Gets the planIterator attribute of the AssignmentFolder object
    *
-   *@return    The planIterator value
+   * @return The planIterator value
    */
   public Iterator getPlanIterator() {
     ArrayList itemList = new ArrayList();
@@ -719,11 +732,11 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Adds a feature to the PlanItems attribute of the AssignmentFolder object
+   * Adds a feature to the PlanItems attribute of the AssignmentFolder object
    *
-   *@param  itemList      The feature to be added to the PlanItems attribute
-   *@param  folderObject  The feature to be added to the PlanItems attribute
-   *@param  level         The feature to be added to the PlanItems attribute
+   * @param itemList     The feature to be added to the PlanItems attribute
+   * @param folderObject The feature to be added to the PlanItems attribute
+   * @param level        The feature to be added to the PlanItems attribute
    */
   private void addPlanItems(ArrayList itemList, AssignmentFolder folderObject, int level) {
     Iterator assignments = folderObject.getAssignments().iterator();
@@ -748,11 +761,11 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1 || this.requirementId == -1) {
@@ -817,12 +830,12 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     return this.update(db);
@@ -830,11 +843,11 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {

@@ -15,20 +15,25 @@
  */
 package org.aspcfs.apps.reportRunner;
 
-import org.aspcfs.modules.system.base.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import java.lang.reflect.*;
-import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.AppUtils;
+import org.aspcfs.utils.SiteUtils;
+
+import java.lang.reflect.Constructor;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Cleans up all Jasper Reports, either as a standalone application or as a
- *  jcron task
+ * Cleans up all Jasper Reports, either as a standalone application or as a
+ * jcron task
  *
- *@author     matt rajkowski
- *@created    November 11, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created November 11, 2003
  */
 public class ReportCleanup {
 
@@ -40,9 +45,9 @@ public class ReportCleanup {
 
 
   /**
-   *  Commandline startup
+   * Commandline startup
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void main(String args[]) {
     if (args.length == 0) {
@@ -58,9 +63,9 @@ public class ReportCleanup {
 
 
   /**
-   *  jcrontab startup
+   * jcrontab startup
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void doTask(String args[]) {
     if (args.length == 0) {
@@ -77,9 +82,9 @@ public class ReportCleanup {
 
 
   /**
-   *  process the reports
+   * process the reports
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   private void execute(String args[]) {
     String filename = args[0];
@@ -110,7 +115,8 @@ public class ReportCleanup {
             try {
               //Construct the object, which executes the task
               Class thisClass = Class.forName((String) classes.next());
-              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), Site.class, HashMap.class};
+              Class[] paramClass = new Class[]{Class.forName(
+                  "java.sql.Connection"), Site.class, HashMap.class};
               Constructor constructor = thisClass.getConstructor(paramClass);
               Object[] paramObject = new Object[]{db, thisSite, config};
               Object theTask = constructor.newInstance(paramObject);

@@ -14,7 +14,8 @@ CREATE TABLE sites (
   dbpw VARCHAR(255) NOT NULL DEFAULT '',
   driver VARCHAR(255) NOT NULL DEFAULT '',
   code VARCHAR(255),
-  enabled BOOLEAN NOT NULL DEFAULT false
+  enabled BOOLEAN NOT NULL DEFAULT false,
+  language VARCHAR(11)
 );
 
 

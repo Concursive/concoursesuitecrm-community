@@ -46,10 +46,11 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:permission name="accounts-accounts-tickets-add"><a href="AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.tickets.add">Add New Ticket</dhv:label></a>
+  <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
+    <dhv:permission name="accounts-accounts-tickets-add"><a href="AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.tickets.add">Add New Ticket</dhv:label></a></dhv:permission>
+  </dhv:evaluate>
     <input type=hidden name="orgId" value="<%= OrgDetails.getOrgId() %>">
     <br>
-  </dhv:permission>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountTicketInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
@@ -90,7 +91,7 @@
       <td rowspan="2" width="8" valign="top" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-        <a href="javascript:displayMenu('select<%= i %>','menuTic','<%= OrgDetails.getId() %>','<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTic');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        <a href="javascript:displayMenu('select<%= i %>','menuTic','<%= OrgDetails.getId() %>','<%= thisTic.getId() %>', '<%= thisTic.isTrashed() || OrgDetails.isTrashed() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTic');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td width="15" valign="top" nowrap>
         <a href="AccountTickets.do?command=TicketDetails&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>

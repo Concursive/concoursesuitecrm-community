@@ -15,7 +15,7 @@
  */
 package org.aspcfs.modules.tasks.base;
 
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -27,29 +27,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Queries the task category list depending on the supplied parameters
+ * Queries the task category list depending on the supplied parameters
  *
- *@author     matt rajkowski
- *@created    November 17, 2002
- *@version    $Id: TaskCategoryList.java,v 1.3 2002/12/04 13:12:42 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: TaskCategoryList.java,v 1.3 2002/12/04 13:12:42 mrajkowski
+ *          Exp $
+ * @created November 17, 2002
  */
 public class TaskCategoryList extends ArrayList {
-  
+
   protected PagedListInfo pagedListInfo = null;
   protected int projectId = -1;
 
 
   /**
-   *  Constructor for the TaskCategoryList object
+   * Constructor for the TaskCategoryList object
    */
-  public TaskCategoryList() { }
+  public TaskCategoryList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TaskCategoryList object
+   * Sets the pagedListInfo attribute of the TaskCategoryList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -57,9 +58,9 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the TaskCategoryList object
+   * Sets the projectId attribute of the TaskCategoryList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -67,10 +68,10 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -105,7 +106,8 @@ public class TaskCategoryList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND c.description > ? ");
         items = prepareFilter(pst);
@@ -120,10 +122,10 @@ public class TaskCategoryList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("c.level, c.description", null);
+      pagedListInfo.setDefaultSort("c.\"level\", c.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY c.level, c.description ");
+      sqlOrder.append("ORDER BY c.\"level\", c.description ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -133,24 +135,17 @@ public class TaskCategoryList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.code, c.description, c.default_item, c.level, c.enabled " +
+        "c.code, c.description, c.default_item, c.\"level\", c.enabled " +
         "FROM lookup_task_category c " +
         "WHERE c.code > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       TaskCategory thisCategory = new TaskCategory(rs);
       this.add(thisCategory);
     }
@@ -166,9 +161,9 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -176,17 +171,18 @@ public class TaskCategoryList extends ArrayList {
     }
 
     if (projectId > 0) {
-      sqlFilter.append("AND c.code IN (SELECT category_id FROM taskcategory_project WHERE project_id = ?) ");
+      sqlFilter.append(
+          "AND c.code IN (SELECT category_id FROM taskcategory_project WHERE project_id = ?) ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -199,10 +195,10 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator categories = this.iterator();
@@ -211,18 +207,18 @@ public class TaskCategoryList extends ArrayList {
       thisCategory.delete(db);
     }
   }
-  
-  
+
+
   /**
-   *  Gets the htmlSelect attribute of the TaskCategoryList object
+   * Gets the htmlSelect attribute of the TaskCategoryList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  selectedId  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param selectedId Description of the Parameter
+   * @return The htmlSelect value
    */
-  public String getHtmlSelect(String selectName, int selectedId) {
+  public String getHtmlSelect(SystemStatus thisSystem, String selectName, int selectedId) {
     HtmlSelect thisSelect = new HtmlSelect();
-    thisSelect.addItem(-1, "-- None --");
+    thisSelect.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
     Iterator i = this.iterator();
     while (i.hasNext()) {
       TaskCategory thisCategory = (TaskCategory) i.next();
@@ -235,10 +231,10 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the valueFromId attribute of the TaskCategoryList object
+   * Gets the valueFromId attribute of the TaskCategoryList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The valueFromId value
+   * @param id Description of the Parameter
+   * @return The valueFromId value
    */
   public String getValueFromId(int id) {
     Iterator i = this.iterator();
@@ -253,9 +249,9 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the TaskCategoryList object
+   * Gets the htmlSelect attribute of the TaskCategoryList object
    *
-   *@return    The htmlSelect value
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect() {
     HtmlSelect thisSelect = new HtmlSelect();

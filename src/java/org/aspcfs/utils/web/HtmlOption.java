@@ -15,14 +15,16 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
- *  Represents a Html Option component of a combo box
+ * Represents a Html Option component of a combo box
  *
- *@author     akhi_m
- *@created    June 9, 2003
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created June 9, 2003
  */
 public class HtmlOption {
 
@@ -35,16 +37,17 @@ public class HtmlOption {
 
 
   /**
-   *  Constructor for the HtmlOption object
+   * Constructor for the HtmlOption object
    */
-  public HtmlOption() { }
+  public HtmlOption() {
+  }
 
 
   /**
-   *  Constructor for the Option object
+   * Constructor for the Option object
    *
-   *@param  value  Description of the Parameter
-   *@param  text   Description of the Parameter
+   * @param value Description of the Parameter
+   * @param text  Description of the Parameter
    */
   public HtmlOption(String value, String text) {
     this.value = value;
@@ -53,11 +56,11 @@ public class HtmlOption {
 
 
   /**
-   *  Constructor for the HtmlOption object
+   * Constructor for the HtmlOption object
    *
-   *@param  value    Description of the Parameter
-   *@param  text     Description of the Parameter
-   *@param  jsEvent  Description of the Parameter
+   * @param value   Description of the Parameter
+   * @param text    Description of the Parameter
+   * @param jsEvent Description of the Parameter
    */
   public HtmlOption(String value, String text, String jsEvent) {
     this.value = value;
@@ -67,11 +70,11 @@ public class HtmlOption {
 
 
   /**
-   *  Constructor for the HtmlOption object
+   * Constructor for the HtmlOption object
    *
-   *@param  value          Description of the Parameter
-   *@param  text           Description of the Parameter
-   *@param  attributeList  Description of the Parameter
+   * @param value         Description of the Parameter
+   * @param text          Description of the Parameter
+   * @param attributeList Description of the Parameter
    */
   public HtmlOption(String value, String text, HashMap attributeList) {
     this.value = value;
@@ -81,12 +84,12 @@ public class HtmlOption {
 
 
   /**
-   *  Constructor for the HtmlOption object
+   * Constructor for the HtmlOption object
    *
-   *@param  value          Description of the Parameter
-   *@param  text           Description of the Parameter
-   *@param  attributeList  Description of the Parameter
-   *@param  enabled        Description of the Parameter
+   * @param value         Description of the Parameter
+   * @param text          Description of the Parameter
+   * @param attributeList Description of the Parameter
+   * @param enabled       Description of the Parameter
    */
   public HtmlOption(String value, String text, HashMap attributeList, boolean enabled) {
     this.value = value;
@@ -97,9 +100,9 @@ public class HtmlOption {
 
 
   /**
-   *  Sets the value attribute of the Option object
+   * Sets the value attribute of the Option object
    *
-   *@param  value  The new value value
+   * @param value The new value value
    */
   public void setValue(String value) {
     this.value = value;
@@ -107,9 +110,9 @@ public class HtmlOption {
 
 
   /**
-   *  Sets the jsEvent attribute of the Option object
+   * Sets the jsEvent attribute of the Option object
    *
-   *@param  jsEvent  The new jsEvent value
+   * @param jsEvent The new jsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -117,9 +120,9 @@ public class HtmlOption {
 
 
   /**
-   *  Sets the text attribute of the HtmlOption object
+   * Sets the text attribute of the HtmlOption object
    *
-   *@param  text  The new text value
+   * @param text The new text value
    */
   public void setText(String text) {
     this.text = text;
@@ -127,9 +130,9 @@ public class HtmlOption {
 
 
   /**
-   *  Sets the attributeList attribute of the HtmlOption object
+   * Sets the attributeList attribute of the HtmlOption object
    *
-   *@param  attributeList  The new attributeList value
+   * @param attributeList The new attributeList value
    */
   public void setAttributeList(HashMap attributeList) {
     this.attributeList = attributeList;
@@ -137,9 +140,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the attributeList attribute of the HtmlOption object
+   * Gets the attributeList attribute of the HtmlOption object
    *
-   *@return    The attributeList value
+   * @return The attributeList value
    */
   public HashMap getAttributeList() {
     return attributeList;
@@ -147,9 +150,9 @@ public class HtmlOption {
 
 
   /**
-   *  Sets the enabled attribute of the HtmlOption object
+   * Sets the enabled attribute of the HtmlOption object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -157,9 +160,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the enabled attribute of the HtmlOption object
+   * Gets the enabled attribute of the HtmlOption object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -167,9 +170,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the text attribute of the HtmlOption object
+   * Gets the text attribute of the HtmlOption object
    *
-   *@return    The text value
+   * @return The text value
    */
   public String getText() {
     return text;
@@ -177,9 +180,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the value attribute of the Option object
+   * Gets the value attribute of the Option object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -187,9 +190,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the jsEvent attribute of the Option object
+   * Gets the jsEvent attribute of the Option object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -197,9 +200,9 @@ public class HtmlOption {
 
 
   /**
-   *  Sets the group attribute of the HtmlOption object
+   * Sets the group attribute of the HtmlOption object
    *
-   *@param  tmp  The new group value
+   * @param tmp The new group value
    */
   public void setGroup(boolean tmp) {
     this.group = tmp;
@@ -207,9 +210,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the group attribute of the HtmlOption object
+   * Gets the group attribute of the HtmlOption object
    *
-   *@return    The group value
+   * @return The group value
    */
   public boolean getGroup() {
     return group;
@@ -217,9 +220,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the group attribute of the HtmlOption object
+   * Gets the group attribute of the HtmlOption object
    *
-   *@return    The group value
+   * @return The group value
    */
   public boolean isGroup() {
     return group;
@@ -227,10 +230,10 @@ public class HtmlOption {
 
 
   /**
-   *  Adds a feature to the Attribute attribute of the Option object
+   * Adds a feature to the Attribute attribute of the Option object
    *
-   *@param  attrName   The feature to be added to the Attribute attribute
-   *@param  attrValue  The feature to be added to the Attribute attribute
+   * @param attrName  The feature to be added to the Attribute attribute
+   * @param attrValue The feature to be added to the Attribute attribute
    */
   public void addAttribute(String attrName, String attrValue) {
     if (attributeList == null) {
@@ -241,9 +244,9 @@ public class HtmlOption {
 
 
   /**
-   *  Gets the attributeList attribute of the Option object
+   * Gets the attributeList attribute of the Option object
    *
-   *@return    The attributeList value
+   * @return The attributeList value
    */
   public String getAttributes() {
     StringBuffer tmpList = new StringBuffer();
@@ -253,7 +256,8 @@ public class HtmlOption {
       tmpList.append(" ");
       while (i.hasNext()) {
         Object name = i.next();
-        tmpList.append(name.toString() + "='" + attributeList.get(name).toString() + "' ");
+        tmpList.append(
+            name.toString() + "='" + attributeList.get(name).toString() + "' ");
       }
     }
     return tmpList.toString();

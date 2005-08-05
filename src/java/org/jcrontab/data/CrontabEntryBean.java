@@ -17,19 +17,17 @@ package org.jcrontab.data;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Calendar;
 import java.util.Date;
-import org.jcrontab.CrontabBean;
 
 /**
- *  CrontabEntryBeans represents each entry into crontab "DataSource" usually a
- *  file. This Bean allows jcrontab to interact with the information from
- *  CrontabEntry
+ * CrontabEntryBeans represents each entry into crontab "DataSource" usually a
+ * file. This Bean allows jcrontab to interact with the information from
+ * CrontabEntry
  *
- *@author     Israel Olalla
- *@created    November, 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November, 2002
  */
 public class CrontabEntryBean implements Serializable {
 
@@ -46,7 +44,7 @@ public class CrontabEntryBean implements Serializable {
   private String years;
   private Date startDate;
   private Date endDate;
-    
+
   private String className;
   private String methodName = "";
   private String[] extraInfo;
@@ -64,9 +62,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Id setter
+   * Id setter
    *
-   *@param  id  this integer identifies the CrontabEntryBean
+   * @param id this integer identifies the CrontabEntryBean
    */
   public void setId(int id) {
     this.id = id;
@@ -74,9 +72,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  ClassName Setter
+   * ClassName Setter
    *
-   *@param  className  This is the name of the class to execute
+   * @param className This is the name of the class to execute
    */
   public void setClassName(String className) {
     this.className = className;
@@ -84,9 +82,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  MethodName setter
+   * MethodName setter
    *
-   *@param  methodName  the name of the method to execute
+   * @param methodName the name of the method to execute
    */
   public void setMethodName(String methodName) {
     this.methodName = methodName;
@@ -94,9 +92,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Extra info setter
+   * Extra info setter
    *
-   *@param  extraInfo  this array represents the parameters passed to the task
+   * @param extraInfo this array represents the parameters passed to the task
    */
   public void setExtraInfo(String[] extraInfo) {
     this.extraInfo = extraInfo;
@@ -105,10 +103,10 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Hours setter
+   * Hours setter
    *
-   *@param  hours  The hours to execute the Class, the values can take are [ * ,
-   *      2-4 , 2,3,4,5 , 3/5]
+   * @param hours The hours to execute the Class, the values can take are [ * ,
+   *              2-4 , 2,3,4,5 , 3/5]
    */
   public void setHours(String hours) {
     this.hours = hours;
@@ -116,10 +114,10 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Minutes setter
+   * Minutes setter
    *
-   *@param  minutes  The minutes to execute the Class, the values can take are [
-   *      * , 2-4 , 2,3,4,5 , 3/5]
+   * @param minutes The minutes to execute the Class, the values can take are [
+   *                * , 2-4 , 2,3,4,5 , 3/5]
    */
   public void setMinutes(String minutes) {
     this.minutes = minutes;
@@ -127,10 +125,10 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Seconds setter
+   * Seconds setter
    *
-   *@param  seconds  The seconds to execute the Class, the values can take are [
-   *      * , 2-4 , 2,3,4,5 , 3/5]
+   * @param seconds The seconds to execute the Class, the values can take are [
+   *                * , 2-4 , 2,3,4,5 , 3/5]
    */
   public void setSeconds(String seconds) {
     this.seconds = seconds;
@@ -138,10 +136,10 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Months setter
+   * Months setter
    *
-   *@param  months  The Monts to execute the Class, the values can take are [ *
-   *      , 2-4 , 2,3,4,5 , 3/5]
+   * @param months The Monts to execute the Class, the values can take are [ *
+   *               , 2-4 , 2,3,4,5 , 3/5]
    */
   public void setMonths(String months) {
     this.months = months;
@@ -149,9 +147,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Week
+   * Days of Week
    *
-   *@param  daysOfWeek  The days of the week
+   * @param daysOfWeek The days of the week
    */
   public void setDaysOfWeek(String daysOfWeek) {
     this.daysOfWeek = daysOfWeek;
@@ -159,9 +157,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Month setter
+   * Days of Month setter
    *
-   *@param  daysOfMonth  The days of the month
+   * @param daysOfMonth The days of the month
    */
   public void setDaysOfMonth(String daysOfMonth) {
     this.daysOfMonth = daysOfMonth;
@@ -169,9 +167,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Years Setter
+   * Years Setter
    *
-   *@param  years  to be executed this task
+   * @param years to be executed this task
    */
   public void setYears(String years) {
     this.years = years;
@@ -179,9 +177,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Hours setter
+   * Hours setter
    *
-   *@param  bHours  The new bHours value
+   * @param bHours The new bHours value
    */
   public void setBHours(boolean[] bHours) {
     this.bHours = bHours;
@@ -189,9 +187,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Minutes setter
+   * Minutes setter
    *
-   *@param  bMinutes  The new bMinutes value
+   * @param bMinutes The new bMinutes value
    */
   public void setBMinutes(boolean[] bMinutes) {
     this.bMinutes = bMinutes;
@@ -199,9 +197,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Months setter
+   * Months setter
    *
-   *@param  bMonths  The new bMonths value
+   * @param bMonths The new bMonths value
    */
   public void setBMonths(boolean[] bMonths) {
     this.bMonths = bMonths;
@@ -209,9 +207,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Week
+   * Days of Week
    *
-   *@param  bDaysOfWeek  The new bDaysOfWeek value
+   * @param bDaysOfWeek The new bDaysOfWeek value
    */
   public void setBDaysOfWeek(boolean[] bDaysOfWeek) {
     this.bDaysOfWeek = bDaysOfWeek;
@@ -219,9 +217,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Month setter
+   * Days of Month setter
    *
-   *@param  bDaysOfMonth  The new bDaysOfMonth value
+   * @param bDaysOfMonth The new bDaysOfMonth value
    */
   public void setBDaysOfMonth(boolean[] bDaysOfMonth) {
     this.bDaysOfMonth = bDaysOfMonth;
@@ -229,9 +227,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Seconds setter
+   * Seconds setter
    *
-   *@param  bSeconds  Of ecah minute
+   * @param bSeconds Of ecah minute
    */
   public void setBSeconds(boolean[] bSeconds) {
     this.bSeconds = bSeconds;
@@ -239,9 +237,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Years setter
+   * Years setter
    *
-   *@param  bYears  Of ecah century
+   * @param bYears Of ecah century
    */
   public void setBYears(boolean[] bYears) {
     this.bYears = bYears;
@@ -249,9 +247,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  bextraInfo setter
+   * bextraInfo setter
    *
-   *@param  bextraInfo  The new bExtraInfo value
+   * @param bextraInfo The new bExtraInfo value
    */
   public void setBExtraInfo(boolean bextraInfo) {
     this.bextraInfo = bextraInfo;
@@ -259,9 +257,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Description setter
+   * Description setter
    *
-   *@param  description  The desciption
+   * @param description The desciption
    */
   public void setDescription(String description) {
     this.description = description;
@@ -269,9 +267,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Sets the connectionContext attribute of the CrontabEntryBean object
+   * Sets the connectionContext attribute of the CrontabEntryBean object
    *
-   *@param  tmp  The new connectionContext value
+   * @param tmp The new connectionContext value
    */
   public void setConnectionContext(Object tmp) {
     this.connectionContext = tmp;
@@ -279,32 +277,37 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  runInBusinessDays getter
+   * runInBusinessDays getter
    *
-   *@param  runInBusinessDays  The new businessDays value
+   * @param runInBusinessDays The new businessDays value
    */
   public void setBusinessDays(boolean runInBusinessDays) {
     this.runInBusinessDays = runInBusinessDays;
   }
-  
-  /**startDate setter
+
+  /**
+   * startDate setter
+   *
    * @param the starting date of this Task
    */
-   public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-   }
-   /**endDate setter
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  /**
+   * endDate setter
+   *
    * @param the ending date of this Task
    */
-   public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-   }
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
 
 
   /**
-   *  Id getter
+   * Id getter
    *
-   *@return    the Id of this CrontabBean
+   * @return the Id of this CrontabBean
    */
   public int getId() {
     return id;
@@ -312,9 +315,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Class Name getter
+   * Class Name getter
    *
-   *@return    the Class's Name of this CrontabBean
+   * @return the Class's Name of this CrontabBean
    */
   public String getClassName() {
     return className;
@@ -322,9 +325,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Method Name getter
+   * Method Name getter
    *
-   *@return    the Method's Name of this CrontabBean
+   * @return the Method's Name of this CrontabBean
    */
   public String getMethodName() {
     return methodName;
@@ -332,9 +335,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Extra Info getter
+   * Extra Info getter
    *
-   *@return    the extraInfo of this CrontabBean
+   * @return the extraInfo of this CrontabBean
    */
   public String[] getExtraInfo() {
     return extraInfo;
@@ -342,9 +345,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Hours getter
+   * Hours getter
    *
-   *@return    the hours of this CrontabBean
+   * @return the hours of this CrontabBean
    */
   public String getHours() {
     return hours;
@@ -352,9 +355,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Minutes getter
+   * Minutes getter
    *
-   *@return    the minutes of this CrontabBean
+   * @return the minutes of this CrontabBean
    */
   public String getMinutes() {
     return minutes;
@@ -362,9 +365,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Minutes getter
+   * Minutes getter
    *
-   *@return    the minutes of this CrontabBean
+   * @return the minutes of this CrontabBean
    */
   public String getSeconds() {
     return seconds;
@@ -372,9 +375,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Months getter
+   * Months getter
    *
-   *@return    the months of this CrontabBean
+   * @return the months of this CrontabBean
    */
   public String getMonths() {
     return months;
@@ -382,9 +385,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Hours booleans getter
+   * Hours booleans getter
    *
-   *@return    boolean[] The hours to execute the Class,
+   * @return boolean[] The hours to execute the Class,
    */
   public boolean[] getBHours() {
     return bHours;
@@ -392,9 +395,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Minutes getter
+   * Minutes getter
    *
-   *@return    boolean[] The minutes to execute the Class,
+   * @return boolean[] The minutes to execute the Class,
    */
   public boolean[] getBMinutes() {
     return bMinutes;
@@ -402,9 +405,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Months Boolean getter
+   * Months Boolean getter
    *
-   *@return    months The Months to execute the Class,
+   * @return months The Months to execute the Class,
    */
   public boolean[] getBMonths() {
     return bMonths;
@@ -412,9 +415,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Getter Days of Week
+   * Getter Days of Week
    *
-   *@return    daysOfWeek The days of the week
+   * @return daysOfWeek The days of the week
    */
   public boolean[] getBDaysOfWeek() {
     return bDaysOfWeek;
@@ -422,9 +425,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Month getter
+   * Days of Month getter
    *
-   *@return    daysOfMonth The days of the month
+   * @return daysOfMonth The days of the month
    */
   public boolean[] getBDaysOfMonth() {
     return bDaysOfMonth;
@@ -432,9 +435,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Month setter
+   * Days of Month setter
    *
-   *@return    daysOfMonth The days of the month
+   * @return daysOfMonth The days of the month
    */
   public boolean[] getBSeconds() {
     return bSeconds;
@@ -442,9 +445,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  bYears getter
+   * bYears getter
    *
-   *@return    bYears Of ecah century
+   * @return bYears Of ecah century
    */
   public boolean[] setBYears() {
     return bYears;
@@ -452,9 +455,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Returns true if theres extra info false otherwise.
+   * Returns true if theres extra info false otherwise.
    *
-   *@return    extraInfo
+   * @return extraInfo
    */
   public boolean getBExtraInfo() {
     return bextraInfo;
@@ -462,9 +465,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of week getter
+   * Days of week getter
    *
-   *@return    the Days of week of this CrontabBean
+   * @return the Days of week of this CrontabBean
    */
   public String getDaysOfWeek() {
     return daysOfWeek;
@@ -472,9 +475,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Days of Month getter
+   * Days of Month getter
    *
-   *@return    the Id of this CrontabBean
+   * @return the Id of this CrontabBean
    */
   public String getDaysOfMonth() {
     return daysOfMonth;
@@ -482,9 +485,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Year getter
+   * Year getter
    *
-   *@return    the year of this CrontabEntryBean
+   * @return the year of this CrontabEntryBean
    */
   public String getYear() {
     return years;
@@ -492,9 +495,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Description getter
+   * Description getter
    *
-   *@return    the Description of this CrontabBean
+   * @return the Description of this CrontabBean
    */
   public String getDescription() {
     return description;
@@ -502,9 +505,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Gets the connectionContext attribute of the CrontabEntryBean object
+   * Gets the connectionContext attribute of the CrontabEntryBean object
    *
-   *@return    The connectionContext value
+   * @return The connectionContext value
    */
   public Object getConnectionContext() {
     return connectionContext;
@@ -512,32 +515,37 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  runOnlyInBusinessDays getter
+   * runOnlyInBusinessDays getter
    *
-   *@return    true if shouldRun only in Business Days false otherwise
+   * @return true if shouldRun only in Business Days false otherwise
    */
   public boolean getBusinessDays() {
     return runInBusinessDays;
   }
-  
-  /**startDate setter
-  * @param the starting date of this Task
-  */
+
+  /**
+   * startDate setter
+   *
+   * @param the starting date of this Task
+   */
   public Date getStartDate() {
-      return startDate;
+    return startDate;
   }
-  /**endDate setter
-  * @param the ending date of this Task
-  */
+
+  /**
+   * endDate setter
+   *
+   * @param the ending date of this Task
+   */
   public Date getEndDate() {
-      return endDate;
+    return endDate;
   }
 
 
   /**
-   *  Represents the CrotnabEntryBean in ASCII format
+   * Represents the CrotnabEntryBean in ASCII format
    *
-   *@return    the returning string
+   * @return the returning string
    */
   public String toString() {
     try {
@@ -550,9 +558,9 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Represents the CrotnabEntryBean in XML format
+   * Represents the CrotnabEntryBean in XML format
    *
-   *@return    the returning XML
+   * @return the returning XML
    */
   public String toXML() {
     StringWriter stringWriter = new StringWriter();
@@ -563,12 +571,12 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Returns the XML that represents this Crontab EntryBean
+   * Returns the XML that represents this Crontab EntryBean
    *
-   *@param  pw  The printWritter to write the XML
+   * @param pw The printWritter to write the XML
    */
   public void toXML(PrintWriter pw) {
-    pw.println("<crontabentry id=\""+ id + "\">");
+    pw.println("<crontabentry id=\"" + id + "\">");
     pw.println("<seconds>" + seconds + "</seconds> ");
     pw.println("<minutes>" + minutes + "</minutes> ");
     pw.println("<hours>" + hours + "</hours> ");
@@ -576,9 +584,9 @@ public class CrontabEntryBean implements Serializable {
     pw.println("<months>" + months + "</months> ");
     pw.println("<daysofweek>" + daysOfWeek + "</daysofweek> ");
     pw.println("<years>" + years + "</years> ");
-    pw.println("<bussinesdays>" + runInBusinessDays +"</bussinesdays> " );
-    pw.println("<startDate>" + startDate +"</startDate> " );
-    pw.println("<endDate>" + endDate +"</endDate> " );
+    pw.println("<bussinesdays>" + runInBusinessDays + "</bussinesdays> ");
+    pw.println("<startDate>" + startDate + "</startDate> ");
+    pw.println("<endDate>" + endDate + "</endDate> ");
     pw.println("<class>" + className + "</class> ");
     pw.println("<method>" + methodName + "</method> ");
     if (bextraInfo) {
@@ -593,11 +601,11 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  This method is here to wrap other two avaiable equals
+   * This method is here to wrap other two avaiable equals
    *
-   *@param  obj  Object to compare with the time table entry
-   *@return      true if the time table entry matchs with the Object given false
-   *      otherwise
+   * @param obj Object to compare with the time table entry
+   * @return true if the time table entry matchs with the Object given false
+   *         otherwise
    */
 
   public boolean equals(Object obj) {
@@ -612,10 +620,10 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Helps to do the castings in a more simple way.
+   * Helps to do the castings in a more simple way.
    *
-   *@param  obj  Object to cast to CrontabEntryBean
-   *@return      The resulting array of CrontabEntryBean
+   * @param obj Object to cast to CrontabEntryBean
+   * @return The resulting array of CrontabEntryBean
    */
   public static CrontabEntryBean[] toArray(Object[] obj) {
     CrontabEntryBean[] ceb = new CrontabEntryBean[obj.length];
@@ -627,10 +635,10 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Returns true if the time table entry matchs with the calendar given
+   * Returns true if the time table entry matchs with the calendar given
    *
-   *@param  cal  Calendar to compare with the time table entry
-   *@return      true if the time table entry matchs with the calendar given
+   * @param cal Calendar to compare with the time table entry
+   * @return true if the time table entry matchs with the calendar given
    */
   private boolean equalsCalendar(Calendar cal) {
     // IMPORTANT: Day of week and day of month in Calendar begin in
@@ -647,11 +655,11 @@ public class CrontabEntryBean implements Serializable {
 
 
   /**
-   *  Returns true if the CrontabEntryBean equals the given
+   * Returns true if the CrontabEntryBean equals the given
    *
-   *@param  ceb  CrontabEntryBean to compare with the CrontabEntryBean
-   *@return      true if the CrontabEntryBean entry equals the CrontabEntryBean
-   *      given
+   * @param ceb CrontabEntryBean to compare with the CrontabEntryBean
+   * @return true if the CrontabEntryBean entry equals the CrontabEntryBean
+   *         given
    */
 
   private boolean equalCrontabEntryBean(CrontabEntryBean ceb) {

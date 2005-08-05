@@ -13,31 +13,30 @@
  */
 package org.jcrontab.data;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
-import java.util.Random;
 import org.jcrontab.log.Log;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
- *  This class processes a CrontabEntryBean and returns a Calendar. This class
- *  is a "conversor" to convert from CrontabEntries to Calendars. Thanks to
- *  Javier Pardo for the idea and for the Algorithm
+ * This class processes a CrontabEntryBean and returns a Calendar. This class
+ * is a "conversor" to convert from CrontabEntries to Calendars. Thanks to
+ * Javier Pardo for the idea and for the Algorithm
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public class CalendarBuilder {
 
   /**
-   *  This method gets thes next CrontabEntry in the given Array. Yep i know
-   *  this can be plural.... i mean not only one CrontabEntry but in this case
-   *  we care only for one cause only need to know the next execution time.
+   * This method gets thes next CrontabEntry in the given Array. Yep i know
+   * this can be plural.... i mean not only one CrontabEntry but in this case
+   * we care only for one cause only need to know the next execution time.
    *
-   *@param  cebs  CrontabEntryBean[]
-   *@return       CrontabEntryBean
+   * @param cebs CrontabEntryBean[]
+   * @return CrontabEntryBean
    */
 
   public CrontabEntryBean getNextCrontabEntry(CrontabEntryBean[] cebs) {
@@ -63,11 +62,11 @@ public class CalendarBuilder {
 
 
   /**
-   *  This method builds a Date from a CrontabEntryBean. launching the same
-   *  method with now as parameter
+   * This method builds a Date from a CrontabEntryBean. launching the same
+   * method with now as parameter
    *
-   *@param  ceb  CrontabEntryBean
-   *@return      Date
+   * @param ceb CrontabEntryBean
+   * @return Date
    */
   public Date buildCalendar(CrontabEntryBean ceb) {
     Date now = new Date(System.currentTimeMillis());
@@ -76,11 +75,11 @@ public class CalendarBuilder {
 
 
   /**
-   *  This method builds a Date from a CrontabEntryBean and from a starting Date
+   * This method builds a Date from a CrontabEntryBean and from a starting Date
    *
-   *@param  ceb        CrontabEntryBean
-   *@param  afterDate  Date
-   *@return            Date
+   * @param ceb       CrontabEntryBean
+   * @param afterDate Date
+   * @return Date
    */
   public Date buildCalendar(CrontabEntryBean ceb, Date afterDate) {
     Calendar after = Calendar.getInstance();
@@ -107,7 +106,8 @@ public class CalendarBuilder {
       after.add(Calendar.DAY_OF_MONTH, 1);
     }
 
-    int dayOfMonth = getNextIndex(ceb.getBDaysOfMonth(), after.get(Calendar.DAY_OF_MONTH) - 1);
+    int dayOfMonth = getNextIndex(
+        ceb.getBDaysOfMonth(), after.get(Calendar.DAY_OF_MONTH) - 1);
 
     if (dayOfMonth == -1) {
       second = getNextIndex(ceb.getBSeconds(), 0);
@@ -119,7 +119,8 @@ public class CalendarBuilder {
 
     boolean dayMatchRealDate = false;
     while (!dayMatchRealDate) {
-      if (checkDayValidInMonth(dayOfMonth + 1, after.get(Calendar.MONTH),
+      if (checkDayValidInMonth(
+          dayOfMonth + 1, after.get(Calendar.MONTH),
           after.get(Calendar.YEAR))) {
         dayMatchRealDate = true;
       } else {
@@ -137,7 +138,8 @@ public class CalendarBuilder {
       after.add(Calendar.YEAR, 1);
     }
 
-    Date byMonthDays = getTime(second, minute, hour, dayOfMonth + 1,
+    Date byMonthDays = getTime(
+        second, minute, hour, dayOfMonth + 1,
         month, after.get(Calendar.YEAR));
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(byMonthDays);
@@ -154,22 +156,22 @@ public class CalendarBuilder {
 
 
   /**
-   *  This method builds a Date from a CrontabEntryBean and from a starting Date
+   * This method builds a Date from a CrontabEntryBean and from a starting Date
    *
-   *@param  minutes     int the minutes of this time
-   *@param  hour        int the hour of this time
-   *@param  dayOfMonth  int the dayOfMonth of this time
-   *@param  month       int the month of this time
-   *@param  year        int the year of this time
-   *@param  seconds     Description of the Parameter
-   *@return             Date builded with those parameters
+   * @param minutes    int the minutes of this time
+   * @param hour       int the hour of this time
+   * @param dayOfMonth int the dayOfMonth of this time
+   * @param month      int the month of this time
+   * @param year       int the year of this time
+   * @param seconds    Description of the Parameter
+   * @return Date builded with those parameters
    */
   private Date getTime(int seconds,
-      int minutes,
-      int hour,
-      int dayOfMonth,
-      int month,
-      int year) {
+                       int minutes,
+                       int hour,
+                       int dayOfMonth,
+                       int month,
+                       int year) {
     try {
       Calendar cl = Calendar.getInstance();
       cl.set(year, month, dayOfMonth, hour, minutes, seconds);
@@ -181,11 +183,11 @@ public class CalendarBuilder {
   }
 
   /**
-   *  This method says wich is next index of this array
+   * This method says wich is next index of this array
    *
-   *@param  array  the list of booleans to check
-   *@param  start  int the id where starts the search
-   *@return        index int
+   * @param array the list of booleans to check
+   * @param start int the id where starts the search
+   * @return index int
    */
   private int getNextIndex(boolean[] array, int start) {
     for (int i = start; i < array.length; i++) {
@@ -198,15 +200,15 @@ public class CalendarBuilder {
 
 
   /**
-   *  This says if this month has this day or not, basically this problem
-   *  occurrs with 31 days in months with less days.
+   * This says if this month has this day or not, basically this problem
+   * occurrs with 31 days in months with less days.
    *
-   *@param  day    int the day so see if exists or not
-   *@param  month  int the month to see it has this day or not.
-   *@param  year   to see if valid ... to work with 366 days years and February
-   *      :-)
-   *@return        Description of the Return Value
-   *@thanks        to Javier Pardo :-)
+   * @param day   int the day so see if exists or not
+   * @param month int the month to see it has this day or not.
+   * @param year  to see if valid ... to work with 366 days years and February
+   *              :-)
+   * @return Description of the Return Value
+   * @thanks to Javier Pardo :-)
    */
   private boolean checkDayValidInMonth(int day, int month, int year) {
     try {

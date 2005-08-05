@@ -15,16 +15,18 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.communications.base.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class ExcludedRecipient {
 
@@ -34,15 +36,16 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Constructor for the ExcludedRecipient object
+   * Constructor for the ExcludedRecipient object
    */
-  public ExcludedRecipient() { }
+  public ExcludedRecipient() {
+  }
 
 
   /**
-   *  Sets the id attribute of the ExcludedRecipient object
+   * Sets the id attribute of the ExcludedRecipient object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -50,9 +53,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Sets the id attribute of the ExcludedRecipient object
+   * Sets the id attribute of the ExcludedRecipient object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -60,9 +63,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Sets the campaignId attribute of the ExcludedRecipient object
+   * Sets the campaignId attribute of the ExcludedRecipient object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -70,9 +73,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Sets the campaignId attribute of the ExcludedRecipient object
+   * Sets the campaignId attribute of the ExcludedRecipient object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
@@ -80,9 +83,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Sets the contactId attribute of the ExcludedRecipient object
+   * Sets the contactId attribute of the ExcludedRecipient object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -90,9 +93,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Sets the contactId attribute of the ExcludedRecipient object
+   * Sets the contactId attribute of the ExcludedRecipient object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -100,9 +103,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Gets the id attribute of the ExcludedRecipient object
+   * Gets the id attribute of the ExcludedRecipient object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -110,9 +113,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Gets the campaignId attribute of the ExcludedRecipient object
+   * Gets the campaignId attribute of the ExcludedRecipient object
    *
-   *@return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -120,9 +123,9 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Gets the contactId attribute of the ExcludedRecipient object
+   * Gets the contactId attribute of the ExcludedRecipient object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -130,11 +133,11 @@ public class ExcludedRecipient {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (campaignId == -1) {
@@ -143,25 +146,30 @@ public class ExcludedRecipient {
     if (contactId == -1) {
       throw new SQLException("Contact ID not specified");
     }
+    id = DatabaseUtils.getNextSeq(db, "excluded_recipient_id_seq");
+    int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO excluded_recipient " +
-        "(campaign_id, contact_id) VALUES " +
-        "(?, ?) ");
-    pst.setInt(1, campaignId);
-    pst.setInt(2, contactId);
+        "(" + (id > -1 ? "id, " : "") + "campaign_id, contact_id) VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, campaignId);
+    pst.setInt(++i, contactId);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "excluded_recipient_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "excluded_recipient_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {

@@ -48,9 +48,11 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="sidetabs">
-  <dhv:permission name="accounts-assets-add">
-    <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
-  </dhv:permission>
+  <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
+    <dhv:permission name="accounts-assets-add">
+      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
+    </dhv:permission>
+  </dhv:evaluate>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo"/>
   <%@ include file="accounts_asset_list_include.jsp" %>
   <br />

@@ -14,33 +14,32 @@
 
 package org.jcrontab.data;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
- *  This Bean reresents the basis to build BussnesDays logic, basically
- *  represents the Holiday
+ * This Bean reresents the basis to build BussnesDays logic, basically
+ * represents the Holiday
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 public class HoliDay {
 
   /**
-   *  This id is the primay key of this Bean
+   * This id is the primay key of this Bean
    */
   private int id;
   /**
-   *  This string stores the info necesary to get the right date
+   * This string stores the info necesary to get the right date
    */
   private Date date;
 
 
   /**
-   *  This id setter
+   * This id setter
    *
-   *@param  id  int the id of this bean
+   * @param id int the id of this bean
    */
   public void setId(int id) {
     this.id = id;
@@ -48,9 +47,9 @@ public class HoliDay {
 
 
   /**
-   *  This id getter
+   * This id getter
    *
-   *@return    id int the id of this bean
+   * @return id int the id of this bean
    */
   public int getId() {
     return this.id;
@@ -58,9 +57,9 @@ public class HoliDay {
 
 
   /**
-   *  This date setter
+   * This date setter
    *
-   *@param  date    The new date value
+   * @param date The new date value
    */
   public void setDate(Date date) {
     this.date = date;
@@ -68,9 +67,9 @@ public class HoliDay {
 
 
   /**
-   *  date Getter
+   * date Getter
    *
-   *@return    String the date of this holiday
+   * @return String the date of this holiday
    */
   public Date getDate() {
     return this.date;
@@ -78,9 +77,9 @@ public class HoliDay {
 
 
   /**
-   *  Represents the HoliDay in ASCII format
+   * Represents the HoliDay in ASCII format
    *
-   *@return    the returning string
+   * @return the returning string
    */
   public String toString() {
     StringBuffer sb = new StringBuffer();
@@ -91,9 +90,9 @@ public class HoliDay {
 
 
   /**
-   *@param  obj  Object to compare with the Holidays Bean
-   *@return      true if the time table entry matchs with the Object given false
-   *      otherwise
+   * @param obj Object to compare with the Holidays Bean
+   * @return true if the time table entry matchs with the Object given false
+   *         otherwise
    */
 
   public boolean equals(Object obj) {
@@ -114,10 +113,10 @@ public class HoliDay {
 
 
   /**
-   *  Helps to do the castings in a more simple way.
+   * Helps to do the castings in a more simple way.
    *
-   *@param  obj  Object to cast to CrontabEntryBean
-   *@return      The resulting array of CrontabEntryBean
+   * @param obj Object to cast to CrontabEntryBean
+   * @return The resulting array of CrontabEntryBean
    */
   public static HoliDay[] toArray(Object[] obj) {
     HoliDay[] holiday = new HoliDay[obj.length];

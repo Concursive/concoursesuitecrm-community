@@ -15,26 +15,26 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
+import org.aspcfs.utils.StringUtils;
+
 import java.text.NumberFormat;
 
 /**
- *  Presents an HTML currency selection based on allowed Java currencies
+ * Presents an HTML currency selection based on allowed Java currencies
  *
- *@author     matt rajkowski
- *@created    March 17, 2004
- *@version    $Id: HtmlSelectCurrency.java,v 1.2 2004/07/21 19:00:44 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HtmlSelectCurrency.java,v 1.2 2004/07/21 19:00:44 mrajkowski
+ *          Exp $
+ * @created March 17, 2004
  */
 public class HtmlSelectCurrency {
 
   /**
-   *  Gets the select attribute of the HtmlSelectCurrency class
+   * Gets the select attribute of the HtmlSelectCurrency class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, String defaultValue) {
     if (defaultValue == null) {
@@ -43,11 +43,16 @@ public class HtmlSelectCurrency {
     HtmlSelect select = new HtmlSelect();
     select.setSelectName(name);
     select.setDefaultValue(defaultValue);
-    select.addItem("AUD", "Australian Currency (AUD)");
+    select.addItem("ARS", "Argentine Peso (ARS)");
+    select.addItem("AUD", "Australian Dollar (AUD)");
     //select.addItem("ATS", "Austrian Schillings (ATS)");
     //select.addItem("BHD", "Bahrain Dinars (BHD)");
     //select.addItem("BEF", "Belgian Franc (BEF)");
-    select.addItem("CAD", "Canadian Dollars (CAD)");
+    select.addItem("BRL", "Brazilian Real (BRL)");
+    select.addItem("CAD", "Canadian Dollar (CAD)");
+    select.addItem("CLP", "Chilean Peso (CLP)");
+    select.addItem("COP", "Columbian Peso (COP)");
+    select.addItem("CNY", "Chinese Yuan Renminbi (CNY)");
     //select.addItem("XPF", "Cfp Francs (XPF)");
     select.addItem("HRK", "Croatian Kuna (HRK)");
     //select.addItem("CYP", "Cyprus Pounds (CYP)");
@@ -58,33 +63,42 @@ public class HtmlSelectCurrency {
     //select.addItem("DEM", "German D'Marks (DEM)");
     //select.addItem("GRD", "Greek Drachma (GRD)");
     //select.addItem("HKD", "Hong Kong Dollars (HKD)");
+    select.addItem("HUF", "Hungarian Forint");
     //select.addItem("INR", "Indian Rupees (INR)");
     //select.addItem("IEP", "Irish Pounds (IEP)");
     //select.addItem("ITL", "Italian Lira (ITL)");
     select.addItem("JPY", "Japanese Yen (JPY)");
     //select.addItem("KES", "Kenyan Shilling (KES)");
     //select.addItem("KWD", "Kuwaiti Dinars (KWD)");
+    //select.addItem("LVL", "Latvian Lats (LVL)");
+    select.addItem("LTL", "Lithuanian Litas (LTL)");
     //select.addItem("MTL", "Maltese Lira (MTL)");
+    select.addItem("MXP", "Mexican Peso (MXP)");
     //select.addItem("NLG", "Netherlands Guilder (NLG)");
     //select.addItem("NZD", "New Zealand Dollars (NZD)");
     //select.addItem("NOK", "Norwegian Krone (NOK)");
     //select.addItem("PGK", "P.N.G. Kina (PGK)");
     //select.addItem("PKR", "Pakistani Rupees (PKR)");
     //select.addItem("PHP", "Philippine Pesos (PHP)");
-    //select.addItem("PTE", "Portugese Escudos (PTE)");
+    select.addItem("PTE", "Portugese Escudos (PTE)");
+    select.addItem("PEN", "Peruvian Nuevo Sol (PEN)");
     //select.addItem("SAR", "Saudi Arabian Riyals (SAR)");
     //select.addItem("SGD", "Singapore Dollars (SGD)");
-    //select.addItem("ESP", "Spanish Pesetas (ESP)");
+    select.addItem("ESP", "Spanish Pesetas (ESP)");
     //select.addItem("LKR", "Sri Lanka Rupees (LKR)");
     //select.addItem("ZAR", "South African Rand (ZAR)");
     //select.addItem("SEK", "Swedish Krona (SEK)");
     //select.addItem("CHF", "Swiss Francs (CHF)");
-    //select.addItem("THB", "Thai Bahts (THB)");
+    select.addItem("THB", "Thai Bahts (THB)");
     //select.addItem("AED", "Uae Dirhams (AED)");
     select.addItem("GBP", "UK Pounds Sterling (GBP)");
     select.addItem("USD", "United States Dollar (USD)");
-    //select.addItem("WST", "Western Samoa Tala (WST)");
     select.addItem("SIT", "Slovenian Tolar (SIT)");
+    select.addItem("THB", "Thai Baht (THB)");
+    select.addItem("VEB", StringUtils.toHtml("Venezuelan Bol\u00edvar (VEB)"));
+    //select.addItem("WST", "Western Samoa Tala (WST)");
+
+
     if (!select.hasKey(defaultValue)) {
       select.addItem(defaultValue);
     }

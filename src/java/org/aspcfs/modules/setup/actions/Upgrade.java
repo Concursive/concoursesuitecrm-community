@@ -25,27 +25,27 @@ import org.aspcfs.modules.system.base.ApplicationVersion;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.FileUtils;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.io.File;
 
 /**
- *  Actions that facilitate upgrading an installation of Centric CRM
+ * Actions that facilitate upgrading an installation of Centric CRM
  *
- *@author     matt rajkowski
- *@created    June 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 16, 2004
  */
 public class Upgrade extends CFSModule {
 
   /**
-   *  Prepares instruction page
+   * Prepares instruction page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     addModuleBean(context, null, "Upgrade");
@@ -54,10 +54,10 @@ public class Upgrade extends CFSModule {
 
 
   /**
-   *  Checks to see what version is installed and what the version should be
+   * Checks to see what version is installed and what the version should be
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCheck(ActionContext context) {
     if (!isAdministrator(context)) {
@@ -65,7 +65,8 @@ public class Upgrade extends CFSModule {
     }
     addModuleBean(context, null, "Upgrade");
     // Check version info
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     if (prefs.isUpgradeable()) {
       // Something needs updating
       context.getRequest().setAttribute("status", "1");
@@ -73,31 +74,36 @@ public class Upgrade extends CFSModule {
       // All ok
       context.getRequest().setAttribute("status", "0");
     }
-    context.getRequest().setAttribute("installedVersion", ApplicationVersion.getInstalledVersion(prefs));
-    context.getRequest().setAttribute("newVersion", ApplicationVersion.VERSION);
+    context.getRequest().setAttribute(
+        "installedVersion", ApplicationVersion.getInstalledVersion(prefs));
+    context.getRequest().setAttribute(
+        "newVersion", ApplicationVersion.VERSION);
     return "CheckOK";
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public synchronized String executeCommandPerformUpgrade(ActionContext context) {
     if (!isAdministrator(context)) {
       return "NeedUpgradeOK";
     }
     addModuleBean(context, null, "Upgrade");
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     if (prefs.isUpgradeable()) {
       // Create a log of upgrade events
       ArrayList installLog = new ArrayList();
       context.getRequest().setAttribute("installLog", installLog);
       // Display upgrade information
-      context.getRequest().setAttribute("installedVersion", ApplicationVersion.getInstalledVersion(prefs));
-      context.getRequest().setAttribute("newVersion", ApplicationVersion.VERSION);
+      context.getRequest().setAttribute(
+          "installedVersion", ApplicationVersion.getInstalledVersion(prefs));
+      context.getRequest().setAttribute(
+          "newVersion", ApplicationVersion.VERSION);
       Connection db = null;
       String versionToInstall = null;
       try {
@@ -105,57 +111,108 @@ public class Upgrade extends CFSModule {
         // Get a connection from the connection pool for this user
         db = this.getConnection(context);
         // BEGIN DHV CODE ONLY
-        // Prepare bean shell script, if needed
-        Interpreter script = new Interpreter();
-        script.set("db", db);
-        script.set("dbFileLibraryPath", prefs.get("FILELIBRARY"));
         // Determine if an upgrade needs to be executed (2.9)
         versionToInstall = "2004-06-15";
         if (!isInstalled(db, versionToInstall)) {
           upgradeSQL(context, db, "2004-06-15.sql");
-          upgradeBSH(context, script, "2004-06-15.bsh");
-          installLog.add("2004-06-15 database changes installed");
+          upgradeBSH(context, db, prefs, "2004-06-15.bsh");
+          installLog.add(versionToInstall + " database changes installed");
           buildHelp = true;
         }
         // Determine if an upgrade needs to be executed (2.9.1)
         versionToInstall = "2004-08-30";
         if (!isInstalled(db, versionToInstall)) {
           upgradeSQL(context, db, "2004-08-30.sql");
-          upgradeBSH(context, script, "2004-08-19.bsh");
-          upgradeBSH(context, script, "2004-08-20.bsh");
-          upgradeBSH(context, script, "2004-08-31.bsh");
-          installLog.add("2004-08-30 database changes installed");
+          upgradeBSH(context, db, prefs, "2004-08-19.bsh");
+          upgradeBSH(context, db, prefs, "2004-08-20.bsh");
+          upgradeBSH(context, db, prefs, "2004-08-31.bsh");
+          installLog.add(versionToInstall + " database changes installed");
           buildHelp = true;
         }
         // Determine if an upgrade needs to be executed (2.9.2)
         versionToInstall = "2005-01-14";
         if (!isInstalled(db, versionToInstall)) {
           upgradeSQL(context, db, "2005-01-14.sql");
-          installLog.add("2005-01-14 database changes installed");
+          installLog.add(versionToInstall + " database changes installed");
         }
         // Determine if an upgrade needs to be executed (3.0)
         versionToInstall = "2005-03-30";
         if (!isInstalled(db, versionToInstall)) {
           String setupPath =
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
-          FileUtils.copyFile(new File(setupPath + "templates.xml"), new File(getDbNamePath(context) + "templates.xml"), false);
-          installLog.add("2005-03-30 files installed");
+              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
+          //FileUtils.copyFile(new File(setupPath + "templates.xml"), new File(getDbNamePath(context) + "templates.xml"), true);
+          //installLog.add(versionToInstall +" files installed");
           upgradeSQL(context, db, "2005-03-30.sql");
-          installLog.add("2005-03-30 database changes installed");
+          upgradeBSH(context, db, prefs, "2005-03-30-01.bsh");
+          upgradeBSH(context, db, prefs, "2005-03-30-02.bsh");
+          installLog.add(versionToInstall + " database changes installed");
+        }
+        // Determine if an upgrade needs to be executed (3.0.1)
+        versionToInstall = "2005-05-02";
+        if (!isInstalled(db, versionToInstall)) {
+          upgradeBSH(context, db, prefs, "2005-05-02-01.bsh");
+          upgradeSQL(context, db, "2005-05-02.sql");
+          installLog.add(versionToInstall + " database changes installed");
+        }
+        // Determine if an upgrade needs to be executed (3.1)
+        versionToInstall = "2005-07-08";
+        if (!isInstalled(db, versionToInstall)) {
+          String setupPath =
+              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
+          // Translated template files
+          FileUtils.copyFile(
+              new File(setupPath + "workflow_*.xml"), new File(
+                  getDbNamePath(context)), true);
+          FileUtils.copyFile(
+              new File(setupPath + "templates_*.xml"), new File(
+                  getDbNamePath(context)), true);
+          FileUtils.copyFile(
+              new File(setupPath + "application.xml"), new File(
+                  getDbNamePath(context) + "application.xml"), true);
+          installLog.add(versionToInstall + " files installed");
+          // Schema changes
+          upgradeSQL(context, db, "2005-07-08.sql");
+          installLog.add(versionToInstall + " database changes installed");
+          // Data changes
+          upgradeBSH(context, db, prefs, "2005-06-21-script02.bsh");
+          upgradeBSH(context, db, prefs, "2005-06-27-script02.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script01-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script02-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script03-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script04-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script05-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script06-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script07-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script08-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script09-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script10-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script11-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script12-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script13-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-05-25-script14-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-07-01-script01.bsh");
+          upgradeBSH(context, db, prefs, "2005-07-07-script01-partha.bsh");
+          upgradeBSH(context, db, prefs, "2005-07-14-script01-partha.bsh");
+          installLog.add(versionToInstall + " data additions installed");
+          //TODO: Insert database_version here since this is end of upgrade process
         }
         // Reinstall the help file if requested...
         if (buildHelp) {
+          renewConnection(context, db);
           // Install the help (blank tables should already exist)
           ImportHelp help = new ImportHelp();
-          help.buildHelpInformation(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "help.xml");
+          help.buildHelpInformation(
+              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "help.xml");
           help.buildExistingPermissionCategories(db);
           help.insertHelpRecords(db);
           help.buildTableOfContents();
           help.insertTableOfContents(db);
+          renewConnection(context, db);
         }
         // END DHV CODE ONLY
         if (!prefs.save()) {
-          context.getRequest().setAttribute("errorMessage", "No write permission on file library, build.properties");
+          context.getRequest().setAttribute(
+              "errorMessage", "No write permission on file library, build.properties");
           return "UpgradeERROR";
         }
       } catch (Exception e) {
@@ -171,10 +228,10 @@ public class Upgrade extends CFSModule {
 
 
   /**
-   *  Gets the administrator attribute of the Upgrade object
+   * Gets the administrator attribute of the Upgrade object
    *
-   *@param  context  Description of the Parameter
-   *@return          The administrator value
+   * @param context Description of the Parameter
+   * @return The administrator value
    */
   private boolean isAdministrator(ActionContext context) {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
@@ -187,11 +244,11 @@ public class Upgrade extends CFSModule {
 
 
   /**
-   *  Gets the installedVersion attribute of the Upgrade object
+   * Gets the installedVersion attribute of the Upgrade object
    *
-   *@param  db                Description of the Parameter
-   *@return                   The installedVersion value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The installedVersion value
+   * @throws SQLException Description of the Exception
    */
   private String getLastVersion(Connection db) throws SQLException {
     String installedVersion = null;
@@ -213,12 +270,12 @@ public class Upgrade extends CFSModule {
 
 
   /**
-   *  Gets the installed attribute of the Upgrade object
+   * Gets the installed attribute of the Upgrade object
    *
-   *@param  db                Description of the Parameter
-   *@param  version           Description of the Parameter
-   *@return                   The installed value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param version Description of the Parameter
+   * @return The installed value
+   * @throws SQLException Description of the Exception
    */
   private boolean isInstalled(Connection db, String version) throws SQLException {
     boolean isInstalled = false;
@@ -239,46 +296,85 @@ public class Upgrade extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  baseName          Description of the Parameter
-   *@exception  Exception     Description of the Exception
+   * @param context  Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param baseName Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   private void upgradeSQL(ActionContext context, Connection db, String baseName) throws Exception {
+    renewConnection(context, db);
     switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          System.out.println("Upgrade-> Executing PostgreSQL script " + baseName);
-          DatabaseUtils.executeSQL(db,
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_" + baseName);
-          break;
-        case DatabaseUtils.MSSQL:
-          System.out.println("Upgrade-> Executing MSSQL script " + baseName);
-          DatabaseUtils.executeSQL(db,
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_" + baseName);
-          break;
-        default:
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(db));
-          }
-          break;
+      case DatabaseUtils.POSTGRESQL:
+        System.out.println(
+            "Upgrade-> Executing PostgreSQL script " + baseName);
+        DatabaseUtils.executeSQL(
+            db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_" + baseName);
+        break;
+      case DatabaseUtils.DAFFODILDB:
+        System.out.println(
+            "Upgrade-> Executing DaffodilDB script " + baseName);
+        DatabaseUtils.executeSQL(
+            db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "daffodildb_" + baseName);
+        break;
+      case DatabaseUtils.DB2:
+        System.out.println("Upgrade-> Executing DB2 script " + baseName);
+        DatabaseUtils.executeSQL(
+            db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "db2_" + baseName);
+        break;
+      case DatabaseUtils.FIREBIRD:
+        System.out.println("Upgrade-> Executing Firebird script " + baseName);
+        DatabaseUtils.executeSQL(
+            db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "firebird_" + baseName);
+        break;
+      case DatabaseUtils.MSSQL:
+        System.out.println("Upgrade-> Executing MSSQL script " + baseName);
+        DatabaseUtils.executeSQL(
+            db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_" + baseName);
+        break;
+      case DatabaseUtils.ORACLE:
+        System.out.println("Upgrade-> Executing Oracle script " + baseName);
+        DatabaseUtils.executeSQL(
+            db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "oracle_" + baseName);
+        break;
+      default:
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println(
+              "Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(
+                  db));
+        }
+        break;
     }
 
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context        Description of the Parameter
-   *@param  script         Description of the Parameter
-   *@param  scriptName     Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context    Description of the Parameter
+   * @param scriptName Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  private void upgradeBSH(ActionContext context, Interpreter script, String scriptName) throws Exception {
+  private void upgradeBSH(ActionContext context, Connection db, ApplicationPrefs prefs, String scriptName) throws Exception {
     System.out.println("Upgrade-> Executing BeanShell script " + scriptName);
-    script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + scriptName);
+    renewConnection(context, db);
+    // Prepare bean shell script, if needed
+    Interpreter script = new Interpreter();
+    script.set("db", db);
+    script.set("dbFileLibraryPath", prefs.get("FILELIBRARY"));
+    script.set(
+        "fileLibraryPath", context.getServletContext().getRealPath("/"));
+    script.set("locale", prefs.get("SYSTEM.LANGUAGE"));
+    script.source(
+        context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + scriptName);
   }
 }
 

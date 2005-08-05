@@ -34,19 +34,19 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.Connection;
 
 /**
- *  Actions for working with the search page
+ * Actions for working with the search page
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public final class DocumentManagementSearch extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public synchronized String executeCommandIndex(ActionContext context) {
     //setMaximized(context);
@@ -63,7 +63,8 @@ public final class DocumentManagementSearch extends CFSModule {
       // Add some data
       db = getConnection(context);
       DocumentStoreIndexer.add(writer, db, context);
-      FileItemIndexer.add(writer, db, this.getPath(context, "documents"), context);
+      FileItemIndexer.add(
+          writer, db, this.getPath(context, "documents"), context);
       // Finish up
       writer.optimize();
       // Update the shared searcher
@@ -95,10 +96,10 @@ public final class DocumentManagementSearch extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShowForm(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -109,10 +110,10 @@ public final class DocumentManagementSearch extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -120,7 +121,8 @@ public final class DocumentManagementSearch extends CFSModule {
     }
     //setMaximized(context);
     DocumentsSearchBean search = (DocumentsSearchBean) context.getFormBean();
-    PagedListInfo searchBeanInfo = this.getPagedListInfo(context, "searchBeanInfo");
+    PagedListInfo searchBeanInfo = this.getPagedListInfo(
+        context, "searchBeanInfo");
     searchBeanInfo.setLink("DocumentManagementSearch.do?command=Default");
     Connection db = null;
     try {
@@ -129,36 +131,42 @@ public final class DocumentManagementSearch extends CFSModule {
         return "SearchResultsERROR";
       }
       // Get the shared searcher
-      IndexSearcher searcher = SearchUtils.getSharedSearcher(context, this.getDirectory(context));
+      IndexSearcher searcher = SearchUtils.getSharedSearcher(
+          context, this.getDirectory(context));
 
       db = getConnection(context);
-      
-      if (System.getProperty("DEBUG") != null){
-        FilterIndexReader fir = new FilterIndexReader(IndexReader.open(getDirectory(context)));
+
+      if (System.getProperty("DEBUG") != null) {
+        FilterIndexReader fir = new FilterIndexReader(
+            IndexReader.open(getDirectory(context)));
         int nd = fir.numDocs();
         int i = 0;
-        while  (i < nd){
-         org.apache.lucene.document.Document d = fir.document(i++);
+        while (i < nd) {
+          org.apache.lucene.document.Document d = fir.document(i++);
         }
-      }      
-      
+      }
+
       String queryString = null;
       if (search.getScope() != DocumentsSearchBean.THIS) {
         search.setDocumentStoreId(-1);
       }
       // Check for project access and get acceptable query string
       if (search.getDocumentStoreId() > -1) {
-        DocumentStore thisDocumentStore = new DocumentStore(db, search.getDocumentStoreId());
+        DocumentStore thisDocumentStore = new DocumentStore(
+            db, search.getDocumentStoreId());
         context.getRequest().setAttribute("DocumentStore", thisDocumentStore);
-        queryString = "(" + DocumentsSearchQuery.buildDocumentStoreSearchQuery(context, search, db, getUserId(context), search.getDocumentStoreId()) + ") AND (" + search.getParsedQuery() + ")";
+        queryString = "(" + DocumentsSearchQuery.buildDocumentStoreSearchQuery(
+            context, search, db, getUserId(context), search.getDocumentStoreId()) + ") AND (" + search.getParsedQuery() + ")";
       } else {
-        queryString = "(" + DocumentsSearchQuery.buildDocumentStoreSearchQuery(context, search, db, getUserId(context), -1) + ") AND (" + search.getParsedQuery() + ")";
+        queryString = "(" + DocumentsSearchQuery.buildDocumentStoreSearchQuery(
+            context, search, db, getUserId(context), -1) + ") AND (" + search.getParsedQuery() + ")";
       }
-      if (System.getProperty("DEBUG") != null){
+      if (System.getProperty("DEBUG") != null) {
         System.out.println("Query String --> " + queryString);
       }
       // Execute the query and build search results
-      SearchUtils.buildSearchResults(context, queryString, searcher, searchBeanInfo);
+      SearchUtils.buildSearchResults(
+          context, queryString, searcher, searchBeanInfo);
 
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -171,10 +179,10 @@ public final class DocumentManagementSearch extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandTips(ActionContext context) {
     return "TipsOK";

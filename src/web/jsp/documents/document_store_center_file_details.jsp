@@ -80,10 +80,12 @@
         <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         <a href="javascript:popURL('DocumentStoreManagementFiles.do?command=Download&documentStoreId=<%= documentStore.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&view=true', 'Content', 640,480, 1, 1);"><dhv:label name="accounts.accounts_documents_list_menu.ViewFileContents">View File Contents</dhv:label></a><br />
       </dhv:documentPermission>
-      <dhv:documentPermission name="documentcenter-documents-files-delete">
-        <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        <a href="javascript:confirmDelete('DocumentStoreManagementFiles.do?command=Delete&documentStoreId=<%= documentStore.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&folderId=<%= FileItem.getFolderId() %>');"><dhv:label name="project.deleteVersion">Delete Version</dhv:label></a><br />
-      </dhv:documentPermission>
+      <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
+        <dhv:documentPermission name="documentcenter-documents-files-delete">
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          <a href="javascript:confirmDelete('DocumentStoreManagementFiles.do?command=Delete&documentStoreId=<%= documentStore.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&folderId=<%= FileItem.getFolderId() %>');"><dhv:label name="project.deleteVersion">Delete Version</dhv:label></a><br />
+        </dhv:documentPermission>
+      </dhv:evaluate>
       &nbsp;
     </td>
     <td width="100%">

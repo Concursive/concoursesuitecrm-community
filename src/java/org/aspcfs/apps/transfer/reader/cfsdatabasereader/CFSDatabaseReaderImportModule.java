@@ -15,30 +15,33 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
-import java.util.logging.*;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.apps.transfer.Transfer;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Logger;
 
 /**
- *  Interface for all modules that will be executed by the CFSDatabaseReader
+ * Interface for all modules that will be executed by the CFSDatabaseReader
  *
- *@author     matt rajkowski
- *@created    September 4, 2002
- *@version    $Id: CFSDatabaseReaderImportModule.java,v 1.3 2003/01/14 22:53:33
- *      akhi_m Exp $
+ * @author matt rajkowski
+ * @version $Id: CFSDatabaseReaderImportModule.java,v 1.3 2003/01/14 22:53:33
+ *          akhi_m Exp $
+ * @created September 4, 2002
  */
 public interface CFSDatabaseReaderImportModule {
   public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException;
 }

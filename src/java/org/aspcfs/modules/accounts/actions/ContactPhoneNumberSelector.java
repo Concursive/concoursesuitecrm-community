@@ -1,42 +1,31 @@
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.sql.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.HtmlDialog;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.modules.admin.base.AccessTypeList;
-import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.modules.admin.base.Role;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.communications.base.Campaign;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.controller.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactPhoneNumber;
+import org.aspcfs.modules.contacts.base.ContactPhoneNumberList;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    November 4, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created November 4, 2004
  */
 public final class ContactPhoneNumberSelector extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     Connection db = null;
@@ -44,7 +33,8 @@ public final class ContactPhoneNumberSelector extends CFSModule {
     User user = this.getUser(context, getUserId(context));
     Contact contact = null;
     String contactId = (String) context.getRequest().getParameter("contactId");
-    String hiddenField = (String) context.getRequest().getParameter("hiddenField");
+    String hiddenField = (String) context.getRequest().getParameter(
+        "hiddenField");
     try {
       db = this.getConnection(context);
       if (hiddenField != null && !"".equals(hiddenField)) {
@@ -61,12 +51,14 @@ public final class ContactPhoneNumberSelector extends CFSModule {
         contact = new Contact();
         contact.setBuildDetails(true);
         contact.queryRecord(db, Integer.parseInt(contactId));
-        context.getRequest().setAttribute("contactPhoneNumberList", contact.getPhoneNumberList());
+        context.getRequest().setAttribute(
+            "contactPhoneNumberList", contact.getPhoneNumberList());
       } else {
         user.setBuildContact(true);
         user.setBuildContactDetails(true);
         user.buildRecord(db, user.getId());
-        context.getRequest().setAttribute("contactPhoneNumberList", user.getContact().getPhoneNumberList());
+        context.getRequest().setAttribute(
+            "contactPhoneNumberList", user.getContact().getPhoneNumberList());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -79,10 +71,10 @@ public final class ContactPhoneNumberSelector extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
@@ -93,7 +85,8 @@ public final class ContactPhoneNumberSelector extends CFSModule {
     Contact contact = null;
     ContactPhoneNumber deleteItem = null;
     String contactId = (String) context.getRequest().getParameter("contactId");
-    String hiddenField = (String) context.getRequest().getParameter("hiddenField");
+    String hiddenField = (String) context.getRequest().getParameter(
+        "hiddenField");
     try {
       db = this.getConnection(context);
       if (hiddenField != null && !"".equals(hiddenField)) {
@@ -128,10 +121,12 @@ public final class ContactPhoneNumberSelector extends CFSModule {
         contact = new Contact();
         contact.setBuildDetails(true);
         contact.queryRecord(db, Integer.parseInt(contactId));
-        context.getRequest().setAttribute("contactPhoneNumberList", contact.getPhoneNumberList());
+        context.getRequest().setAttribute(
+            "contactPhoneNumberList", contact.getPhoneNumberList());
       } else {
         user.buildRecord(db, user.getId());
-        context.getRequest().setAttribute("contactPhoneNumberList", user.getContact().getPhoneNumberList());
+        context.getRequest().setAttribute(
+            "contactPhoneNumberList", user.getContact().getPhoneNumberList());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -144,16 +139,17 @@ public final class ContactPhoneNumberSelector extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPhoneNumberForm(ActionContext context) {
     Connection db = null;
     Contact contact = null;
     String contactId = (String) context.getRequest().getParameter("contactId");
-    String hiddenField = (String) context.getRequest().getParameter("hiddenField");
+    String hiddenField = (String) context.getRequest().getParameter(
+        "hiddenField");
     try {
       db = this.getConnection(context);
       if (hiddenField != null && !"".equals(hiddenField)) {
@@ -167,7 +163,8 @@ public final class ContactPhoneNumberSelector extends CFSModule {
         context.getRequest().setAttribute("contact", contact);
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_contactphone_types");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_contactphone_types");
       context.getRequest().setAttribute("typeSelect", typeSelect);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -180,10 +177,10 @@ public final class ContactPhoneNumberSelector extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Connection db = null;
@@ -193,7 +190,8 @@ public final class ContactPhoneNumberSelector extends CFSModule {
     ContactPhoneNumber deleteItem = null;
     Contact contact = null;
     String contactId = (String) context.getRequest().getParameter("contactId");
-    String hiddenField = (String) context.getRequest().getParameter("hiddenField");
+    String hiddenField = (String) context.getRequest().getParameter(
+        "hiddenField");
     try {
       db = this.getConnection(context);
       if (hiddenField != null && !"".equals(hiddenField)) {
@@ -214,11 +212,14 @@ public final class ContactPhoneNumberSelector extends CFSModule {
         contact = new Contact();
         contact.setBuildDetails(true);
         contact.queryRecord(db, Integer.parseInt(contactId));
-        context.getRequest().setAttribute("contactPhoneNumberList", contact.getPhoneNumberList());
+        context.getRequest().setAttribute(
+            "contactPhoneNumberList", contact.getPhoneNumberList());
       } else {
-        phoneNumber.process(db, user.getContact().getId(), user.getId(), user.getId());
+        phoneNumber.process(
+            db, user.getContact().getId(), user.getId(), user.getId());
         user.buildRecord(db, user.getId());
-        context.getRequest().setAttribute("contactPhoneNumberList", user.getContact().getPhoneNumberList());
+        context.getRequest().setAttribute(
+            "contactPhoneNumberList", user.getContact().getPhoneNumberList());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);

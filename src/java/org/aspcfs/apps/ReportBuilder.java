@@ -15,21 +15,23 @@
  */
 package org.aspcfs.apps;
 
-import java.sql.*;
-import java.util.Vector;
-import java.util.Iterator;
-import java.io.*;
-import java.net.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.SMTPMessage;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 13, 2001
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 13, 2001
  */
 public class ReportBuilder {
 
@@ -42,9 +44,9 @@ public class ReportBuilder {
 
 
   /**
-   *  Gets the iP attribute of the ReportBuilder object
+   * Gets the iP attribute of the ReportBuilder object
    *
-   *@return    The iP value
+   * @return The iP value
    */
   protected String getIP() {
     String tmp = "";
@@ -58,9 +60,9 @@ public class ReportBuilder {
 
 
   /**
-   *  Gets the hostName attribute of the ReportBuilder object
+   * Gets the hostName attribute of the ReportBuilder object
    *
-   *@return    The hostName value
+   * @return The hostName value
    */
   protected String getHostName() {
     String tmp = "";
@@ -77,12 +79,12 @@ public class ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  flag              Description of the Parameter
-   *@param  output            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param flag   Description of the Parameter
+   * @param output Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void sendReport(Connection db, String flag, StringBuffer output) throws SQLException {
     //Get list of recipients...
@@ -105,7 +107,8 @@ public class ReportBuilder {
         mail.setHost("127.0.0.1");
         mail.setFrom(baseName + "@" + this.getHostName());
         mail.addTo(thisUser.getContact().getEmailAddress("Business"));
-        mail.setSubject("Report [1 day: " + totalRecords + " record" + ((totalRecords != 1) ? "s" : "") + "]");
+        mail.setSubject(
+            "Report [1 day: " + totalRecords + " record" + ((totalRecords != 1) ? "s" : "") + "]");
         mail.setBody(output.toString());
         mail.setType("text/html");
         if (mail.send() == 2) {
@@ -121,8 +124,10 @@ public class ReportBuilder {
     mail.setHost("mail.darkhorseventures.com");
     mail.setFrom("notifier_error@" + this.getHostName());
     mail.addTo("mrajkowski@darkhorseventures.com");
-    mail.setSubject("Report [1 day: " + totalRecords + " record" + ((totalRecords != 1) ? "s" : "") + "]");
-    mail.setBody("Emails generated: " + userList.size() + "<br><br>" + log.toString());
+    mail.setSubject(
+        "Report [1 day: " + totalRecords + " record" + ((totalRecords != 1) ? "s" : "") + "]");
+    mail.setBody(
+        "Emails generated: " + userList.size() + "<br><br>" + log.toString());
     mail.setType("text/html");
     if (mail.send() == 2) {
       System.err.println("ReportBuilder Error: Report could not be sent");
@@ -132,9 +137,9 @@ public class ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  exc  Description of the Parameter
+   * @param exc Description of the Parameter
    */
   protected void sendAdminReport(String exc) {
     SMTPMessage mail = new SMTPMessage();

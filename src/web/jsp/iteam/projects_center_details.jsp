@@ -36,11 +36,15 @@
 </table>
 <br>
 <dhv:evaluate if="<%= currentMember.getRoleId() <= TeamMember.PROJECT_LEAD %>">
+<dhv:evaluate if="<%= !Project.isTrashed() %>">
 <a href="ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter"><dhv:label name="project.modifyProject">Modify Project</dhv:label></a>
 |
-<a href="javascript:confirmDelete('ProjectManagement.do?command=DeleteProject&pid=<%= Project.getId() %>');"><dhv:label name="project.deleteProject">Delete Project</dhv:label></a>
-<br>
-<br>
+<a href="javascript:confirmDelete('ProjectManagement.do?command=TrashProject&pid=<%= Project.getId() %>');"><dhv:label name="project.deleteProject">Delete Project</dhv:label></a>
+</dhv:evaluate>
+<dhv:evaluate if="<%= Project.isTrashed() %>">
+  <a href="javascript:confirmDelete('ProjectManagement.do?command=RestoreProject&pid=<%= Project.getId() %>');"><dhv:label name="project.restoreProject">Restore Project</dhv:label></a>
+</dhv:evaluate>
+<br /><br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

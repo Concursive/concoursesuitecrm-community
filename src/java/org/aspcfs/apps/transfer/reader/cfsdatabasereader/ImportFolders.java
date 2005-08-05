@@ -15,36 +15,38 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
-import com.zeroio.iteam.base.*;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
 import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.*;
-import java.util.*;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Retrieves data in the appropriate order for reconstructing folders
+ * Retrieves data in the appropriate order for reconstructing folders
  *
- *@author     matt rajkowski
- *@created    9/15/2002
- *@version    $Id: ImportFolders.java,v 1.11 2004/06/04 17:27:24 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ImportFolders.java,v 1.11 2004/06/04 17:27:24 mrajkowski Exp
+ *          $
+ * @created 9/15/2002
  */
 public class ImportFolders implements CFSDatabaseReaderImportModule {
 
   /**
-   *  Reads folder data and sends to a writer
+   * Reads folder data and sends to a writer
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   *@deprecated               The system_modules table has been replaced so this
-   *      method needs to be updated
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   * @deprecated The system_modules table has been replaced so this
+   *             method needs to be updated
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     logger.info("ImportBaseData-> Inserting folders");
@@ -106,11 +108,17 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
                 thisRecord.setName("customFieldLookup");
                 thisRecord.setAction("insert");
                 thisRecord.addField("tableName", "custom_field_lookup");
-                thisRecord.addField("fieldId", String.valueOf(thisField.getId()), "customField", null);
-                thisRecord.addField("guid", String.valueOf(thisElement.getCode()));
-                thisRecord.addField("description", thisElement.getDescription());
-                thisRecord.addField("defaultItem", String.valueOf(thisElement.getDefaultItem()));
-                thisRecord.addField("level", String.valueOf(thisElement.getLevel()));
+                thisRecord.addField(
+                    "fieldId", String.valueOf(thisField.getId()), "customField", null);
+                thisRecord.addField(
+                    "guid", String.valueOf(thisElement.getCode()));
+                thisRecord.addField(
+                    "description", thisElement.getDescription());
+                thisRecord.addField(
+                    "defaultItem", String.valueOf(
+                        thisElement.getDefaultItem()));
+                thisRecord.addField(
+                    "level", String.valueOf(thisElement.getLevel()));
                 processOK = writer.save(thisRecord);
                 if (!processOK) {
                   return false;
@@ -135,24 +143,33 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           DataRecord thisRecord = new DataRecord();
           thisRecord.setName("customFieldRecord");
           thisRecord.setAction("insert");
-          thisRecord.addField("linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "systemModules", null);
+          thisRecord.addField(
+              "linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "systemModules", null);
           switch (thisCFRecord.getLinkModuleId()) {
-              case 1:
-                thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "account", null);
-                break;
-              case 2:
-                thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "contact", null);
-                break;
-              default:
-                break;
+            case 1:
+              thisRecord.addField(
+                  "linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "account", null);
+              break;
+            case 2:
+              thisRecord.addField(
+                  "linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "contact", null);
+              break;
+            default:
+              break;
           }
-          thisRecord.addField("categoryId", String.valueOf(thisCFRecord.getCategoryId()), "customFieldCategory", null);
+          thisRecord.addField(
+              "categoryId", String.valueOf(thisCFRecord.getCategoryId()), "customFieldCategory", null);
           thisRecord.addField("guid", String.valueOf(thisCFRecord.getId()));
-          thisRecord.addField("entered", ObjectUtils.getParam(thisCFRecord, "entered"));
-          thisRecord.addField("enteredBy", String.valueOf(thisCFRecord.getEnteredBy()), "user", null);
-          thisRecord.addField("modified", ObjectUtils.getParam(thisCFRecord, "modified"));
-          thisRecord.addField("modifiedBy", String.valueOf(thisCFRecord.getModifiedBy()), "user", null);
-          thisRecord.addField("enabled", ObjectUtils.getParam(thisCFRecord, "enabled"));
+          thisRecord.addField(
+              "entered", ObjectUtils.getParam(thisCFRecord, "entered"));
+          thisRecord.addField(
+              "enteredBy", String.valueOf(thisCFRecord.getEnteredBy()), "user", null);
+          thisRecord.addField(
+              "modified", ObjectUtils.getParam(thisCFRecord, "modified"));
+          thisRecord.addField(
+              "modifiedBy", String.valueOf(thisCFRecord.getModifiedBy()), "user", null);
+          thisRecord.addField(
+              "enabled", ObjectUtils.getParam(thisCFRecord, "enabled"));
           processOK = writer.save(thisRecord);
           if (!processOK) {
             return false;
@@ -168,16 +185,25 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             DataRecord thisFieldRecord = new DataRecord();
             thisFieldRecord.setName("customFieldData");
             thisFieldRecord.setAction("insert");
-            thisFieldRecord.addField("recordId", String.valueOf(thisData.getRecordId()), "customFieldRecord", null);
-            thisFieldRecord.addField("fieldId", String.valueOf(thisData.getFieldId()), "customField", null);
+            thisFieldRecord.addField(
+                "recordId", String.valueOf(thisData.getRecordId()), "customFieldRecord", null);
+            thisFieldRecord.addField(
+                "fieldId", String.valueOf(thisData.getFieldId()), "customField", null);
             if (fieldLookup.contains(new Integer(thisData.getFieldId()))) {
-              thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()), "customFieldLookup", null);
+              thisFieldRecord.addField(
+                  "selectedItemId", String.valueOf(
+                      thisData.getSelectedItemId()), "customFieldLookup", null);
             } else {
-              thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()));
+              thisFieldRecord.addField(
+                  "selectedItemId", String.valueOf(
+                      thisData.getSelectedItemId()));
             }
-            thisFieldRecord.addField("enteredValue", String.valueOf(thisData.getEnteredValue()));
-            thisFieldRecord.addField("enteredNumber", String.valueOf(thisData.getEnteredNumber()));
-            thisFieldRecord.addField("enteredDouble", String.valueOf(thisData.getEnteredDouble()));
+            thisFieldRecord.addField(
+                "enteredValue", String.valueOf(thisData.getEnteredValue()));
+            thisFieldRecord.addField(
+                "enteredNumber", String.valueOf(thisData.getEnteredNumber()));
+            thisFieldRecord.addField(
+                "enteredDouble", String.valueOf(thisData.getEnteredDouble()));
             processOK = writer.save(thisFieldRecord);
           }
         }

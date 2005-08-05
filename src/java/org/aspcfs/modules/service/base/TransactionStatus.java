@@ -15,16 +15,16 @@
  */
 package org.aspcfs.modules.service.base;
 
-import org.w3c.dom.*;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
 
 /**
- *  Represents the status for a processed or attempted to process transaction
+ * Represents the status for a processed or attempted to process transaction
  *
- *@author     matt rajkowski
- *@created    April 10, 2002
- *@version    $Id: TransactionStatus.java,v 1.1 2002/04/10 19:38:29 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: TransactionStatus.java,v 1.1 2002/04/10 19:38:29 mrajkowski
+ *          Exp $
+ * @created April 10, 2002
  */
 public class TransactionStatus {
 
@@ -35,15 +35,16 @@ public class TransactionStatus {
 
 
   /**
-   *  Constructor for the TransactionStatus object
+   * Constructor for the TransactionStatus object
    */
-  public TransactionStatus() { }
+  public TransactionStatus() {
+  }
 
 
   /**
-   *  Constructor for the TransactionStatus object
+   * Constructor for the TransactionStatus object
    *
-   *@param  statusCode  Description of Parameter
+   * @param statusCode Description of Parameter
    */
   public TransactionStatus(int statusCode) {
     this.statusCode = statusCode;
@@ -51,9 +52,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Constructor for the TransactionStatus object
+   * Constructor for the TransactionStatus object
    *
-   *@param  message  Description of Parameter
+   * @param message Description of Parameter
    */
   public TransactionStatus(String message) {
     this.message = message;
@@ -61,10 +62,10 @@ public class TransactionStatus {
 
 
   /**
-   *  Constructor for the TransactionStatus object
+   * Constructor for the TransactionStatus object
    *
-   *@param  statusCode  Description of Parameter
-   *@param  message     Description of Parameter
+   * @param statusCode Description of Parameter
+   * @param message    Description of Parameter
    */
   public TransactionStatus(int statusCode, String message) {
     this.statusCode = statusCode;
@@ -73,14 +74,17 @@ public class TransactionStatus {
 
 
   /**
-   *  Constructor for the TransactionStatus object
+   * Constructor for the TransactionStatus object
    *
-   *@param  responseNode  Description of the Parameter
+   * @param responseNode Description of the Parameter
    */
   public TransactionStatus(Element responseNode) {
     this.setId(responseNode.getAttribute("id"));
-    this.setStatusCode(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")));
-    this.setMessage(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
+    this.setStatusCode(
+        XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")));
+    this.setMessage(
+        XMLUtils.getNodeText(
+            XMLUtils.getFirstChild(responseNode, "errorText")));
     //Process the record list if there is one
     Element recordListNode = XMLUtils.getFirstChild(responseNode, "recordSet");
     if (recordListNode != null) {
@@ -90,9 +94,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Sets the id attribute of the TransactionStatus object
+   * Sets the id attribute of the TransactionStatus object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     id = tmp;
@@ -100,9 +104,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Sets the id attribute of the TransactionStatus object
+   * Sets the id attribute of the TransactionStatus object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     try {
@@ -114,9 +118,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Sets the statusCode attribute of the TransactionStatus object
+   * Sets the statusCode attribute of the TransactionStatus object
    *
-   *@param  tmp  The new statusCode value
+   * @param tmp The new statusCode value
    */
   public void setStatusCode(int tmp) {
     statusCode = tmp;
@@ -124,9 +128,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Sets the statusCode attribute of the TransactionStatus object
+   * Sets the statusCode attribute of the TransactionStatus object
    *
-   *@param  tmp  The new statusCode value
+   * @param tmp The new statusCode value
    */
   public void setStatusCode(String tmp) {
     try {
@@ -138,9 +142,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Sets the message attribute of the TransactionStatus object
+   * Sets the message attribute of the TransactionStatus object
    *
-   *@param  tmp  The new message value
+   * @param tmp The new message value
    */
   public void setMessage(String tmp) {
     message = tmp;
@@ -148,9 +152,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Sets the recordList attribute of the TransactionStatus object
+   * Sets the recordList attribute of the TransactionStatus object
    *
-   *@param  tmp  The new recordList value
+   * @param tmp The new recordList value
    */
   public void setRecordList(RecordList tmp) {
     recordList = tmp;
@@ -158,9 +162,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Gets the id attribute of the TransactionStatus object
+   * Gets the id attribute of the TransactionStatus object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -168,9 +172,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Gets the statusCode attribute of the TransactionStatus object
+   * Gets the statusCode attribute of the TransactionStatus object
    *
-   *@return    The statusCode value
+   * @return The statusCode value
    */
   public int getStatusCode() {
     return statusCode;
@@ -178,9 +182,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Gets the message attribute of the TransactionStatus object
+   * Gets the message attribute of the TransactionStatus object
    *
-   *@return    The message value
+   * @return The message value
    */
   public String getMessage() {
     return message;
@@ -188,9 +192,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Gets the recordList attribute of the TransactionStatus object
+   * Gets the recordList attribute of the TransactionStatus object
    *
-   *@return    The recordList value
+   * @return The recordList value
    */
   public RecordList getRecordList() {
     return recordList;
@@ -198,9 +202,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasError() {
     return statusCode > 0;
@@ -208,9 +212,9 @@ public class TransactionStatus {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasRecordList() {
     return (recordList != null);

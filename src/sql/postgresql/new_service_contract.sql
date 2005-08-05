@@ -96,7 +96,8 @@ CREATE TABLE service_contract (
   service_model_notes TEXT,
   initial_start_date_timezone VARCHAR(255),
   current_start_date_timezone VARCHAR(255),
-  current_end_date_timezone VARCHAR(255)
+  current_end_date_timezone VARCHAR(255),
+  trashed_date TIMESTAMP(3)
   );
 
 CREATE TABLE service_contract_hours (
@@ -176,5 +177,6 @@ CREATE TABLE asset (
   purchase_cost FLOAT,
   date_listed_timezone VARCHAR(255),
   expiration_date_timezone VARCHAR(255),
-  purchase_date_timezone VARCHAR(255)
+  purchase_date_timezone VARCHAR(255),
+  trashed_date TIMESTAMP(3)
 );

@@ -15,15 +15,17 @@
  */
 package org.aspcfs.controller;
 
-import java.util.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Represents a main menu item, along with any submenu items.
+ * Represents a main menu item, along with any submenu items.
  *
- *@author     mrajkowski
- *@created    August 21, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created August 21, 2001
  */
 public class MainMenuItem {
 
@@ -46,18 +48,19 @@ public class MainMenuItem {
 
 
   /**
-   *  Constructor for the MainMenuItem object
+   * Constructor for the MainMenuItem object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public MainMenuItem() { }
+  public MainMenuItem() {
+  }
 
 
   /**
-   *  Sets the PageTitle attribute of the MainMenuItem object
+   * Sets the PageTitle attribute of the MainMenuItem object
    *
-   *@param  tmp  The new PageTitle value
-   *@since       1.1
+   * @param tmp The new PageTitle value
+   * @since 1.1
    */
   public void setPageTitle(String tmp) {
     this.pageTitle = tmp;
@@ -65,10 +68,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the ActionNames attribute of the MainMenuItem object
+   * Sets the ActionNames attribute of the MainMenuItem object
    *
-   *@param  tmp  The new Name value
-   *@since       1.1
+   * @param tmp The new Name value
+   * @since 1.1
    */
   public void setActionNames(ArrayList tmp) {
     this.actionNames = tmp;
@@ -76,10 +79,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the Permission attribute of the MainMenuItem object
+   * Sets the Permission attribute of the MainMenuItem object
    *
-   *@param  tmp  The new Permission value
-   *@since       1.1
+   * @param tmp The new Permission value
+   * @since 1.1
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -87,10 +90,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the Html attribute of the MainMenuItem object
+   * Sets the Html attribute of the MainMenuItem object
    *
-   *@param  tmp  The new Html value
-   *@since       1.1
+   * @param tmp The new Html value
+   * @since 1.1
    */
   public void setLongHtml(String tmp) {
     this.longHtml = tmp;
@@ -98,9 +101,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the longHtmlRollover attribute of the MainMenuItem object
+   * Sets the longHtmlRollover attribute of the MainMenuItem object
    *
-   *@param  tmp  The new longHtmlRollover value
+   * @param tmp The new longHtmlRollover value
    */
   public void setLongHtmlRollover(boolean tmp) {
     this.longHtmlRollover = tmp;
@@ -108,21 +111,20 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the longHtmlRollover attribute of the MainMenuItem object
+   * Sets the longHtmlRollover attribute of the MainMenuItem object
    *
-   *@param  tmp  The new longHtmlRollover value
+   * @param tmp The new longHtmlRollover value
    */
   public void setLongHtmlRollover(String tmp) {
     this.longHtmlRollover = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Sets the ShortHtml attribute of the MainMenuItem object
+   * Sets the ShortHtml attribute of the MainMenuItem object
    *
-   *@param  tmp  The new ShortHtml value
-   *@since       1.1
+   * @param tmp The new ShortHtml value
+   * @since 1.1
    */
   public void setShortHtml(String tmp) {
     this.shortHtml = tmp;
@@ -130,9 +132,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the shortHtmlRollover attribute of the MainMenuItem object
+   * Sets the shortHtmlRollover attribute of the MainMenuItem object
    *
-   *@param  tmp  The new shortHtmlRollover value
+   * @param tmp The new shortHtmlRollover value
    */
   public void setShortHtmlRollover(boolean tmp) {
     this.shortHtmlRollover = tmp;
@@ -140,21 +142,20 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the shortHtmlRollover attribute of the MainMenuItem object
+   * Sets the shortHtmlRollover attribute of the MainMenuItem object
    *
-   *@param  tmp  The new shortHtmlRollover value
+   * @param tmp The new shortHtmlRollover value
    */
   public void setShortHtmlRollover(String tmp) {
     this.shortHtmlRollover = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Sets the Link attribute of the MainMenuItem object
+   * Sets the Link attribute of the MainMenuItem object
    *
-   *@param  tmp  The new Link value
-   *@since       1.1
+   * @param tmp The new Link value
+   * @since 1.1
    */
   public void setLink(String tmp) {
     this.link = tmp;
@@ -162,9 +163,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the classNormal attribute of the MainMenuItem object
+   * Sets the classNormal attribute of the MainMenuItem object
    *
-   *@param  tmp  The new classNormal value
+   * @param tmp The new classNormal value
    */
   public void setClassNormal(String tmp) {
     this.classNormal = tmp;
@@ -172,9 +173,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the classSelected attribute of the MainMenuItem object
+   * Sets the classSelected attribute of the MainMenuItem object
    *
-   *@param  tmp  The new classSelected value
+   * @param tmp The new classSelected value
    */
   public void setClassSelected(String tmp) {
     this.classSelected = tmp;
@@ -182,10 +183,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the GraphicWidth attribute of the MainMenuItem object
+   * Sets the GraphicWidth attribute of the MainMenuItem object
    *
-   *@param  tmp  The new GraphicWidth value
-   *@since       1.1
+   * @param tmp The new GraphicWidth value
+   * @since 1.1
    */
   public void setGraphicWidth(String tmp) {
     this.graphicWidth = tmp;
@@ -193,10 +194,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the GraphicHeight attribute of the MainMenuItem object
+   * Sets the GraphicHeight attribute of the MainMenuItem object
    *
-   *@param  tmp  The new GraphicHeight value
-   *@since       1.1
+   * @param tmp The new GraphicHeight value
+   * @since 1.1
    */
   public void setGraphicHeight(String tmp) {
     this.graphicHeight = tmp;
@@ -204,10 +205,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the GraphicOn attribute of the MainMenuItem object
+   * Sets the GraphicOn attribute of the MainMenuItem object
    *
-   *@param  tmp  The new GraphicOn value
-   *@since       1.1
+   * @param tmp The new GraphicOn value
+   * @since 1.1
    */
   public void setGraphicOn(String tmp) {
     this.graphicOn = tmp;
@@ -215,10 +216,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the GraphicOff attribute of the MainMenuItem object
+   * Sets the GraphicOff attribute of the MainMenuItem object
    *
-   *@param  tmp  The new GraphicOff value
-   *@since       1.1
+   * @param tmp The new GraphicOff value
+   * @since 1.1
    */
   public void setGraphicOff(String tmp) {
     this.graphicOff = tmp;
@@ -226,10 +227,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the GraphicRollover attribute of the MainMenuItem object
+   * Sets the GraphicRollover attribute of the MainMenuItem object
    *
-   *@param  tmp  The new GraphicRollover value
-   *@since       1.1
+   * @param tmp The new GraphicRollover value
+   * @since 1.1
    */
   public void setGraphicRollover(String tmp) {
     this.graphicRollover = tmp;
@@ -237,10 +238,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Sets the SubmenuItems attribute of the MainMenuItem object
+   * Sets the SubmenuItems attribute of the MainMenuItem object
    *
-   *@param  tmp  The new SubmenuItems value
-   *@since       1.1
+   * @param tmp The new SubmenuItems value
+   * @since 1.1
    */
   public void setSubmenuItems(ArrayList tmp) {
     this.submenuItems = tmp;
@@ -248,22 +249,21 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the PageTitle attribute of the MainMenuItem object
+   * Gets the PageTitle attribute of the MainMenuItem object
    *
-   *@return    The PageTitle value
-   *@since     1.1
+   * @return The PageTitle value
+   * @since 1.1
    */
   public String getPageTitle() {
     return pageTitle;
   }
 
 
-
   /**
-   *  Gets the actionNames attribute of the MainMenuItem object
+   * Gets the actionNames attribute of the MainMenuItem object
    *
-   *@return    The Names value
-   *@since     1.2
+   * @return The Names value
+   * @since 1.2
    */
   public ArrayList getActionNames() {
     return actionNames;
@@ -271,10 +271,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the Permission attribute of the MainMenuItem object
+   * Gets the Permission attribute of the MainMenuItem object
    *
-   *@return    The Permission value
-   *@since     1.1
+   * @return The Permission value
+   * @since 1.1
    */
   public String getPermission() {
     return permission;
@@ -282,10 +282,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the Html attribute of the MainMenuItem object
+   * Gets the Html attribute of the MainMenuItem object
    *
-   *@return    The Html value
-   *@since     1.1
+   * @return The Html value
+   * @since 1.1
    */
   public String getLongHtml() {
     return longHtml;
@@ -293,9 +293,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the longHtmlRollover attribute of the MainMenuItem object
+   * Gets the longHtmlRollover attribute of the MainMenuItem object
    *
-   *@return    The longHtmlRollover value
+   * @return The longHtmlRollover value
    */
   public boolean getLongHtmlRollover() {
     return longHtmlRollover;
@@ -303,10 +303,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the ShortHtml attribute of the MainMenuItem object
+   * Gets the ShortHtml attribute of the MainMenuItem object
    *
-   *@return    The ShortHtml value
-   *@since     1.1
+   * @return The ShortHtml value
+   * @since 1.1
    */
   public String getShortHtml() {
     return shortHtml;
@@ -314,21 +314,20 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the shortHtmlRollover attribute of the MainMenuItem object
+   * Gets the shortHtmlRollover attribute of the MainMenuItem object
    *
-   *@return    The shortHtmlRollover value
+   * @return The shortHtmlRollover value
    */
   public boolean getShortHtmlRollover() {
     return shortHtmlRollover;
   }
 
 
-
   /**
-   *  Gets the Link attribute of the MainMenuItem object
+   * Gets the Link attribute of the MainMenuItem object
    *
-   *@return    The Link value
-   *@since     1.1
+   * @return The Link value
+   * @since 1.1
    */
   public String getLink() {
     return link;
@@ -336,9 +335,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the classNormal attribute of the MainMenuItem object
+   * Gets the classNormal attribute of the MainMenuItem object
    *
-   *@return    The classNormal value
+   * @return The classNormal value
    */
   public String getClassNormal() {
     return classNormal;
@@ -346,9 +345,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the classSelected attribute of the MainMenuItem object
+   * Gets the classSelected attribute of the MainMenuItem object
    *
-   *@return    The classSelected value
+   * @return The classSelected value
    */
   public String getClassSelected() {
     return classSelected;
@@ -356,10 +355,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the GraphicWidth attribute of the MainMenuItem object
+   * Gets the GraphicWidth attribute of the MainMenuItem object
    *
-   *@return    The GraphicWidth value
-   *@since     1.1
+   * @return The GraphicWidth value
+   * @since 1.1
    */
   public String getGraphicWidth() {
     return graphicWidth;
@@ -367,10 +366,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the GraphicHeight attribute of the MainMenuItem object
+   * Gets the GraphicHeight attribute of the MainMenuItem object
    *
-   *@return    The GraphicHeight value
-   *@since     1.1
+   * @return The GraphicHeight value
+   * @since 1.1
    */
   public String getGraphicHeight() {
     return graphicHeight;
@@ -378,10 +377,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the GraphicOn attribute of the MainMenuItem object
+   * Gets the GraphicOn attribute of the MainMenuItem object
    *
-   *@return    The GraphicOn value
-   *@since     1.1
+   * @return The GraphicOn value
+   * @since 1.1
    */
   public String getGraphicOn() {
     return graphicOn;
@@ -389,10 +388,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the GraphicOff attribute of the MainMenuItem object
+   * Gets the GraphicOff attribute of the MainMenuItem object
    *
-   *@return    The GraphicOff value
-   *@since     1.1
+   * @return The GraphicOff value
+   * @since 1.1
    */
   public String getGraphicOff() {
     return graphicOff;
@@ -400,10 +399,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the GraphicRollover attribute of the MainMenuItem object
+   * Gets the GraphicRollover attribute of the MainMenuItem object
    *
-   *@return    The GraphicRollover value
-   *@since     1.1
+   * @return The GraphicRollover value
+   * @since 1.1
    */
   public String getGraphicRollover() {
     return graphicRollover;
@@ -411,10 +410,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the SubmenuItems attribute of the MainMenuItem object
+   * Gets the SubmenuItems attribute of the MainMenuItem object
    *
-   *@return    The SubmenuItems value
-   *@since     1.1
+   * @return The SubmenuItems value
+   * @since 1.1
    */
   public ArrayList getSubmenuItems() {
     return submenuItems;
@@ -422,10 +421,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Gets the SubmenuSize attribute of the MainMenuItem object
+   * Gets the SubmenuSize attribute of the MainMenuItem object
    *
-   *@return    The SubmenuSize value
-   *@since     1.1
+   * @return The SubmenuSize value
+   * @since 1.1
    */
   public int getSubmenuSize() {
     return submenuItems.size();
@@ -433,10 +432,10 @@ public class MainMenuItem {
 
 
   /**
-   *  Adds a feature to the Name attribute of the MainMenuItem object
+   * Adds a feature to the Name attribute of the MainMenuItem object
    *
-   *@param  tmp  The feature to be added to the Name attribute
-   *@since       1.2
+   * @param tmp The feature to be added to the Name attribute
+   * @since 1.2
    */
   public void addActionName(String tmp) {
     this.actionNames.add(tmp);
@@ -444,11 +443,11 @@ public class MainMenuItem {
 
 
   /**
-   *  If this main menu item contains
+   * If this main menu item contains
    *
-   *@param  tmp  Description of Parameter
-   *@return      Description of the Returned Value
-   *@since       1.2
+   * @param tmp Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.2
    */
   public boolean hasActionName(String tmp) {
     return actionNames.contains(tmp);
@@ -456,9 +455,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasGraphicRollover() {
     return (graphicRollover != null && !graphicRollover.equals(""));
@@ -466,9 +465,9 @@ public class MainMenuItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     StringBuffer out = new StringBuffer();

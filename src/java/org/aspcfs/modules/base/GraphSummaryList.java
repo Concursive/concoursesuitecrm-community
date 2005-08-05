@@ -17,17 +17,16 @@ package org.aspcfs.modules.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Hashtable;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    October 30, 2001
- *@version    $Id: GraphSummaryList.java,v 1.7 2003/01/09 18:07:35 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: GraphSummaryList.java,v 1.7 2003/01/09 18:07:35 mrajkowski
+ *          Exp $
+ * @created October 30, 2001
  */
 public class GraphSummaryList extends Hashtable {
 
@@ -45,7 +44,7 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Constructor for the GraphSummaryList object
+   * Constructor for the GraphSummaryList object
    */
   public GraphSummaryList() {
     String[] valKeys = getRange(12);
@@ -57,11 +56,11 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Constructor for the GraphSummaryList object
+   * Constructor for the GraphSummaryList object
    *
-   * @param  range     Description of the Parameter
-   * @param  type      Description of the Parameter
-   * @param  inFuture  Description of the Parameter
+   * @param range    Description of the Parameter
+   * @param type     Description of the Parameter
+   * @param inFuture Description of the Parameter
    */
   public GraphSummaryList(int range, int type, boolean inFuture) {
     this.isFutureDateRange = inFuture;
@@ -86,9 +85,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the LastFileName attribute of the GraphSummaryList object
+   * Sets the LastFileName attribute of the GraphSummaryList object
    *
-   *@param  lastFileName  The new LastFileName value
+   * @param lastFileName The new LastFileName value
    */
   public void setLastFileName(String lastFileName) {
     this.lastFileName = lastFileName;
@@ -96,9 +95,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the Id attribute of the GraphSummaryList object
+   * Sets the Id attribute of the GraphSummaryList object
    *
-   *@param  id  The new Id value
+   * @param id The new Id value
    */
   public void setId(int id) {
     this.id = id;
@@ -106,10 +105,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the Value attribute of the GraphSummaryList object
+   * Sets the Value attribute of the GraphSummaryList object
    *
-   *@param  val        The new Value value
-   *@param  yearMonth  The new value value
+   * @param val       The new Value value
+   * @param yearMonth The new value value
    */
   public void setValue(String yearMonth, Double val) {
     if (!this.values.containsKey(yearMonth)) {
@@ -121,9 +120,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the IsValid attribute of the GraphSummaryList object
+   * Sets the IsValid attribute of the GraphSummaryList object
    *
-   *@param  isValid  The new IsValid value
+   * @param isValid The new IsValid value
    */
   public void setIsValid(boolean isValid) {
     this.isValid = isValid;
@@ -131,9 +130,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the LastFileName attribute of the GraphSummaryList object
+   * Gets the LastFileName attribute of the GraphSummaryList object
    *
-   *@return    The LastFileName value
+   * @return The LastFileName value
    */
   public String getLastFileName() {
     return lastFileName;
@@ -141,9 +140,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the Id attribute of the GraphSummaryList object
+   * Gets the Id attribute of the GraphSummaryList object
    *
-   *@return    The Id value
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -151,11 +150,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the Value attribute of the GraphSummaryList object
+   * Gets the Value attribute of the GraphSummaryList object
    *
-   *@param  which  Description of Parameter
-   *@return        The Value value
-   *@since
+   * @param which Description of Parameter
+   * @return The Value value
    */
   public Double getValue(String which) {
     if (!this.values.containsKey(which)) {
@@ -167,10 +165,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the Range attribute of the GraphSummaryList object
+   * Gets the Range attribute of the GraphSummaryList object
    *
-   *@param  size  Description of Parameter
-   *@return       The Range value
+   * @param size Description of Parameter
+   * @return The Range value
    */
   public String[] getRange(int size) {
     String[] valKeys = new String[size];
@@ -189,10 +187,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the monthRange attribute of the GraphSummaryList object
+   * Gets the monthRange attribute of the GraphSummaryList object
    *
-   * @param  size  Description of the Parameter
-   * @return       The monthRange value
+   * @param size Description of the Parameter
+   * @return The monthRange value
    */
   public String[] getMonthRange(int size) {
     String[] valKeys = new String[size];
@@ -214,10 +212,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the tenDayRange attribute of the GraphSummaryList object
+   * Gets the tenDayRange attribute of the GraphSummaryList object
    *
-   * @param  size  Description of the Parameter
-   * @return       The tenDayRange value
+   * @param size Description of the Parameter
+   * @return The tenDayRange value
    */
   public String[] getTenDayRange(int size) {
     String[] valKeys = new String[size];
@@ -226,7 +224,8 @@ public class GraphSummaryList extends Hashtable {
     int year = rightNow.get(Calendar.YEAR);
     int month = rightNow.get(Calendar.MONTH);
     for (int x = 0; x < size; x++) {
-      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(
+          day);
       if (day <= 10) {
         if (isFutureDateRange) {
           rightNow.add(Calendar.DATE, +(10 - rightNow.get(Calendar.DATE)));
@@ -241,7 +240,10 @@ public class GraphSummaryList extends Hashtable {
         }
       } else if (day <= 31 && day > 20) {
         if (isFutureDateRange) {
-          rightNow.add(Calendar.DATE, +(getDaysInMonth(rightNow.get(Calendar.MONTH), rightNow.get(Calendar.YEAR)) - rightNow.get(Calendar.DATE)));
+          rightNow.add(
+              Calendar.DATE, +(getDaysInMonth(
+                  rightNow.get(Calendar.MONTH), rightNow.get(Calendar.YEAR)) - rightNow.get(
+                      Calendar.DATE)));
         } else {
           rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DATE) - 20));
         }
@@ -255,26 +257,29 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the weekRange attribute of the GraphSummaryList object
+   * Gets the weekRange attribute of the GraphSummaryList object
    *
-   * @param  size  Description of the Parameter
-   * @return       The weekRange value
+   * @param size Description of the Parameter
+   * @return The weekRange value
    */
   public String[] getWeekRange(int size) {
     String[] valKeys = new String[size];
     Calendar rightNow = Calendar.getInstance();
-    rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DAY_OF_WEEK) - rightNow.getFirstDayOfWeek()));
+    rightNow.add(
+        Calendar.DATE, -(rightNow.get(Calendar.DAY_OF_WEEK) - rightNow.getFirstDayOfWeek()));
     int day = rightNow.get(Calendar.DATE);
     int year = rightNow.get(Calendar.YEAR);
     int month = rightNow.get(Calendar.MONTH);
     for (int x = 0; x < size; x++) {
-      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(
+          day);
       if (isFutureDateRange) {
         rightNow.add(Calendar.WEEK_OF_YEAR, +1);
       } else {
         rightNow.add(Calendar.WEEK_OF_YEAR, -1);
       }
-      rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DAY_OF_WEEK) - rightNow.getFirstDayOfWeek()));
+      rightNow.add(
+          Calendar.DATE, -(rightNow.get(Calendar.DAY_OF_WEEK) - rightNow.getFirstDayOfWeek()));
       year = rightNow.get(Calendar.YEAR);
       month = rightNow.get(Calendar.MONTH);
       day = rightNow.get(Calendar.DATE);
@@ -284,10 +289,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the dayRange attribute of the GraphSummaryList object
+   * Gets the dayRange attribute of the GraphSummaryList object
    *
-   * @param  size  Description of the Parameter
-   * @return       The dayRange value
+   * @param size Description of the Parameter
+   * @return The dayRange value
    */
   public String[] getDayRange(int size) {
     String[] valKeys = new String[size];
@@ -296,7 +301,8 @@ public class GraphSummaryList extends Hashtable {
     int year = rightNow.get(Calendar.YEAR);
     int month = rightNow.get(Calendar.MONTH);
     for (int x = 0; x < size; x++) {
-      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(
+          day);
       if (isFutureDateRange) {
         rightNow.add(Calendar.DATE, +1);
       } else {
@@ -311,11 +317,11 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the yearRange attribute of the GraphSummaryList object
+   * Gets the yearRange attribute of the GraphSummaryList object
    *
-   *@param  size  Description of the Parameter
-   *@param  y     Description of the Parameter
-   *@return       The yearRange value
+   * @param size Description of the Parameter
+   * @param y    Description of the Parameter
+   * @return The yearRange value
    */
   public String[] getYearRange(int size, int y) {
     String[] valKeys = new String[size];
@@ -332,9 +338,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the IsValid attribute of the GraphSummaryList object
+   * Gets the IsValid attribute of the GraphSummaryList object
    *
-   *@return    The IsValid value
+   * @return The IsValid value
    */
   public boolean getIsValid() {
     return isValid;
@@ -342,10 +348,10 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Adds a feature to the ToValue attribute of the GraphSummaryList object
+   * Adds a feature to the ToValue attribute of the GraphSummaryList object
    *
-   *@param  which  The feature to be added to the ToValue attribute
-   *@param  val    The feature to be added to the ToValue attribute
+   * @param which The feature to be added to the ToValue attribute
+   * @param val   The feature to be added to the ToValue attribute
    */
   public void addToValue(String which, Double val) {
     Double tempValue = (Double) this.values.get(which);
@@ -355,9 +361,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the size attribute of the GraphSummaryList object
+   * Gets the size attribute of the GraphSummaryList object
    *
-   * @return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -365,9 +371,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the size attribute of the GraphSummaryList object
+   * Sets the size attribute of the GraphSummaryList object
    *
-   * @param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(int tmp) {
     this.size = tmp;
@@ -375,9 +381,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the size attribute of the GraphSummaryList object
+   * Sets the size attribute of the GraphSummaryList object
    *
-   * @param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(String tmp) {
     this.size = Integer.parseInt(tmp);
@@ -385,9 +391,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the isFutureDateRange attribute of the GraphSummaryList object
+   * Gets the isFutureDateRange attribute of the GraphSummaryList object
    *
-   * @return    The isFutureDateRange value
+   * @return The isFutureDateRange value
    */
   public boolean getIsFutureDateRange() {
     return isFutureDateRange;
@@ -395,9 +401,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the isFutureDateRange attribute of the GraphSummaryList object
+   * Sets the isFutureDateRange attribute of the GraphSummaryList object
    *
-   * @param  tmp  The new isFutureDateRange value
+   * @param tmp The new isFutureDateRange value
    */
   public void setIsFutureDateRange(boolean tmp) {
     this.isFutureDateRange = tmp;
@@ -405,9 +411,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the isFutureDateRange attribute of the GraphSummaryList object
+   * Sets the isFutureDateRange attribute of the GraphSummaryList object
    *
-   * @param  tmp  The new isFutureDateRange value
+   * @param tmp The new isFutureDateRange value
    */
   public void setIsFutureDateRange(String tmp) {
     this.isFutureDateRange = DatabaseUtils.parseBoolean(tmp);
@@ -415,11 +421,11 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the daysInMonth attribute of the GraphSummaryList object
+   * Gets the daysInMonth attribute of the GraphSummaryList object
    *
-   * @param  month  Description of the Parameter
-   * @param  year   Description of the Parameter
-   * @return        The daysInMonth value
+   * @param month Description of the Parameter
+   * @param year  Description of the Parameter
+   * @return The daysInMonth value
    */
   public int getDaysInMonth(int month, int year) {
     switch (month) {
@@ -436,9 +442,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Gets the values attribute of the GraphSummaryList object
+   * Gets the values attribute of the GraphSummaryList object
    *
-   * @return    The values value
+   * @return The values value
    */
   public Hashtable getValues() {
     return values;
@@ -446,9 +452,9 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
-   *  Sets the values attribute of the GraphSummaryList object
+   * Sets the values attribute of the GraphSummaryList object
    *
-   * @param  tmp  The new values value
+   * @param tmp The new values value
    */
   public void setValues(Hashtable tmp) {
     this.values = tmp;

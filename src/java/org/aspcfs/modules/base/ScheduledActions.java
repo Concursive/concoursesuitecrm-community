@@ -19,44 +19,44 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
 
 /**
- *  All scheduled actions should implement this interface to ensure the required
- *  properties for generating a list of scheduled actions are met.
+ * All scheduled actions should implement this interface to ensure the required
+ * properties for generating a list of scheduled actions are met.
  *
- *@author     mathur
- *@created    July 16, 2004
- *@version    $Id: ScheduledActions.java,v 1.5 2004/08/04 20:01:56 mrajkowski
- *      Exp $
+ * @author mathur
+ * @version $Id: ScheduledActions.java,v 1.5 2004/08/04 20:01:56 mrajkowski
+ *          Exp $
+ * @created July 16, 2004
  */
 public interface ScheduledActions {
 
   /**
-   *  Sets the module attribute of the ScheduledActions object
+   * Sets the module attribute of the ScheduledActions object
    *
-   *@param  thisModule  The new module value
+   * @param thisModule The new module value
    */
   public void setModule(CFSModule thisModule);
 
 
   /**
-   *  Sets the context attribute of the ScheduledActions object
+   * Sets the context attribute of the ScheduledActions object
    *
-   *@param  thisContext  The new context value
+   * @param thisContext The new context value
    */
   public void setContext(ActionContext thisContext);
 
 
   /**
-   *  Sets the alertRangeStart attribute of the ScheduledActions object
+   * Sets the alertRangeStart attribute of the ScheduledActions object
    *
-   *@param  startDate  The new alertRangeStart value
+   * @param startDate The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp startDate);
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the ScheduledActions object
+   * Sets the alertRangeEnd attribute of the ScheduledActions object
    *
-   *@param  endDate  The new alertRangeEnd value
+   * @param endDate The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp endDate);
 }

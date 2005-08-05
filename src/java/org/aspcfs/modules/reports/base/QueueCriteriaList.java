@@ -30,12 +30,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *  Contains all criteria items for a report queue
+ * Contains all criteria items for a report queue
  *
- *@author     matt rajkowski
- *@created    October 3, 2003
- *@version    $Id: QueueCriteriaList.java,v 1.1.2.1 2003/10/03 20:54:54
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: QueueCriteriaList.java,v 1.1.2.1 2003/10/03 20:54:54
+ *          mrajkowski Exp $
+ * @created October 3, 2003
  */
 public class QueueCriteriaList extends ArrayList {
 
@@ -44,15 +44,16 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Constructor for the QueueCriteriaList object
+   * Constructor for the QueueCriteriaList object
    */
-  public QueueCriteriaList() { }
+  public QueueCriteriaList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the QueueCriteriaList object
+   * Sets the pagedListInfo attribute of the QueueCriteriaList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -60,9 +61,9 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the QueueCriteriaList object
+   * Gets the pagedListInfo attribute of the QueueCriteriaList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -70,9 +71,9 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the queueId attribute of the QueueCriteriaList object
+   * Sets the queueId attribute of the QueueCriteriaList object
    *
-   *@param  tmp  The new queueId value
+   * @param tmp The new queueId value
    */
   public void setQueueId(int tmp) {
     this.queueId = tmp;
@@ -80,9 +81,9 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the queueId attribute of the QueueCriteriaList object
+   * Sets the queueId attribute of the QueueCriteriaList object
    *
-   *@param  tmp  The new queueId value
+   * @param tmp The new queueId value
    */
   public void setQueueId(String tmp) {
     this.queueId = Integer.parseInt(tmp);
@@ -90,9 +91,9 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the queueId attribute of the QueueCriteriaList object
+   * Gets the queueId attribute of the QueueCriteriaList object
    *
-   *@return    The queueId value
+   * @return The queueId value
    */
   public int getQueueId() {
     return queueId;
@@ -100,10 +101,10 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Builds a list of objects by querying a database
+   * Builds a list of objects by querying a database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -147,20 +148,14 @@ public class QueueCriteriaList extends ArrayList {
         "qc.* " +
         "FROM report_queue_criteria qc " +
         "WHERE criteria_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       QueueCriteria thisCriteria = new QueueCriteria(rs);
       this.add(thisCriteria);
     }
@@ -170,9 +165,9 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Defines additional parameters to be used in the query
+   * Defines additional parameters to be used in the query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -185,11 +180,11 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the additional parameters used in the query
+   * Sets the additional parameters used in the query
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -201,18 +196,21 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the parameters attribute of the QueueCriteriaList object
+   * Gets the parameters attribute of the QueueCriteriaList object
    *
-   *@param  jasperReport                                     Description of the
-   *      Parameter
-   *@return                                                  The parameters
-   *      value
-   *@exception  java.lang.NoSuchMethodException              Description of the
-   *      Exception
-   *@exception  java.lang.IllegalAccessException             Description of the
-   *      Exception
-   *@exception  java.lang.reflect.InvocationTargetException  Description of the
-   *      Exception
+   * @param jasperReport Description of the
+   *                     Parameter
+   * @return The parameters
+   *         value
+   * @throws java.lang.NoSuchMethodException
+   *          Description of the
+   *          Exception
+   * @throws java.lang.IllegalAccessException
+   *          Description of the
+   *          Exception
+   * @throws java.lang.reflect.InvocationTargetException
+   *          Description of the
+   *          Exception
    */
   public Map getParameters(JasperReport jasperReport) throws java.lang.NoSuchMethodException,
       java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException {
@@ -221,20 +219,23 @@ public class QueueCriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the parameters attribute of the QueueCriteriaList object
+   * Gets the parameters attribute of the QueueCriteriaList object
    *
-   *@param  jasperReport                                     Description of the
-   *      Parameter
-   *@param  path                                             Description of the
-   *      Parameter
-   *@return                                                  The parameters
-   *      value
-   *@exception  java.lang.NoSuchMethodException              Description of the
-   *      Exception
-   *@exception  java.lang.IllegalAccessException             Description of the
-   *      Exception
-   *@exception  java.lang.reflect.InvocationTargetException  Description of the
-   *      Exception
+   * @param jasperReport Description of the
+   *                     Parameter
+   * @param path         Description of the
+   *                     Parameter
+   * @return The parameters
+   *         value
+   * @throws java.lang.NoSuchMethodException
+   *          Description of the
+   *          Exception
+   * @throws java.lang.IllegalAccessException
+   *          Description of the
+   *          Exception
+   * @throws java.lang.reflect.InvocationTargetException
+   *          Description of the
+   *          Exception
    */
   public Map getParameters(JasperReport jasperReport, String path) throws java.lang.NoSuchMethodException,
       java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException {
@@ -248,10 +249,15 @@ public class QueueCriteriaList extends ArrayList {
       QueueCriteria thisCriteria = (QueueCriteria) i.next();
       //Add to map based on parameter type, converting from a string
       Class classValue = params.getValueClass(thisCriteria.getParameter());
-      if (classValue.getName().equals("java.sql.Timestamp") && thisCriteria.getParameter().startsWith("date_")) {
-        parameters.put(thisCriteria.getParameter(), DatabaseUtils.parseDateToTimestamp(thisCriteria.getValue()));
+      if (classValue.getName().equals("java.sql.Timestamp") && thisCriteria.getParameter().startsWith(
+          "date_")) {
+        parameters.put(
+            thisCriteria.getParameter(), DatabaseUtils.parseDateToTimestamp(
+                thisCriteria.getValue()));
       } else if (classValue.getName().equals("java.sql.Timestamp")) {
-        parameters.put(thisCriteria.getParameter(), DatabaseUtils.parseTimestamp(thisCriteria.getValue()));
+        parameters.put(
+            thisCriteria.getParameter(), DatabaseUtils.parseTimestamp(
+                thisCriteria.getValue()));
       } else if (classValue.getName().equals("java.lang.Boolean")) {
         //do nothing
       } else if (classValue.getName().equals("java.util.Map")) {
@@ -259,7 +265,8 @@ public class QueueCriteriaList extends ArrayList {
       } else if (!classValue.getName().equals("java.lang.String")) {
         Class[] argTypes = new Class[]{String.class};
         Method method = classValue.getMethod("valueOf", argTypes);
-        Object result = method.invoke(null, new Object[]{thisCriteria.getValue()});
+        Object result = method.invoke(
+            null, new Object[]{thisCriteria.getValue()});
         parameters.put(thisCriteria.getParameter(), result);
       } else {
         parameters.put(thisCriteria.getParameter(), thisCriteria.getValue());

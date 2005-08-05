@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow>
+  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  that executes the WorkflowManager when a ticket is updated or inserted,
+  the corresponding process is activated -->
+  <hooks>
+    <hook class="org.aspcfs.modules.troubletickets.base.Ticket" module="8">
+      <actions>
+        <action type="update" process="dhv.ticket.insert" enabled="true"/>
+        <action type="insert" process="dhv.ticket.insert" enabled="true"/>
+      </actions>
+    </hook>
+  </hooks>
+
+  <schedules>
+    <schedule>
+      <events>
+        <event process="dhv.report.ticketList.overdue" second="0" minute="*/10" hour="8-18" dayOfMonth="*" month="*" dayOfWeek="*" year="*" extraInfo="" businessDays="true" enabled="false"/>
+      </events>
+    </schedule>
+  </schedules>
+
+  <processes>
+    <process name="dhv.ticket.insert" description="Informationen über Belegsänderungen" startId="2" type="OBJECT_EVENT" module="8">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="2" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed"/>
+        <component id="3" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
+        <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="notification.module" value="Belege"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
+            <parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedId}</parameter>
+<parameter name="notification.body"><![CDATA[Folgender Beleg aus dem Centric CRM wurde geschlossen:
+
+--- Belegdetails ---
+
+Beleg # ${this.paddedId}
+Priorität: ${ticketPriorityLookup.description}
+Wichtigkeit: ${ticketSeverityLookup.description}
+Thema: ${this.problem}
+
+Kommentar: ${this.comment}
+
+geschlossen von: ${ticketModifiedByContact.nameFirstLast}
+
+Lösung: ${this.solution}
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+          <parameters>
+            <parameter name="notification.module" value="Belege"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
+            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedId}</parameter>
+            <parameter name="notification.body"><![CDATA[Folgender Beleg aus dem CRM wurde Ihnen zugeordnet:
+
+--- Belegdetails ---
+
+Beleg # ${this.paddedId}
+Priorität: ${ticketPriorityLookup.description}
+Wichtigkeit: ${ticketSeverityLookup.description}
+Thema: ${this.problem}
+
+zugeordnet von: ${ticketModifiedByContact.nameFirstLast}
+Kommentar: ${this.comment}
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="2" if="true" class="org.aspcfs.modules.troubletickets.components.SendTicketSurvey" enabled="false"/>
+      </components>
+    </process>
+    
+    <!-- Example of a Scheduled Event -->
+    <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="8">
+      <parameters>
+        <!--
+        <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
+        <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+        -->
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.GenerateTicketList" enabled="true">
+          <parameters>
+            <parameter name="ticketList.onlyOpen" value="true"/>
+            <parameter name="ticketList.onlyAssigned" value="true" enabled="false"/>
+            <parameter name="ticketList.onlyUnassigned" value="true" enabled="true"/>
+            <parameter name="ticketList.minutesOlderThan" value="10" enabled="true"/>
+            <parameter name="ticketList.lastAnchor" value="${process.lastAnchor}" enabled="true"/>
+            <parameter name="ticketList.nextAnchor" value="${process.nextAnchor}" enabled="true"/>
+          </parameters>
+        </component>
+        <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.SendTicketListReport" enabled="true">
+          <parameters>
+            <!--
+            <parameter name="notification.to" value="support@darkhorseventures.com" enabled="false"/>
+            -->
+            <parameter name="notification.users.to" value="${this.enteredBy}"/>
+            <parameter name="notification.contacts.to" value="${this.contactId}" enabled="false"/>
+            <!-- not implemented
+            <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
+            -->
+            <parameter name="notification.subject">Bericht über im CRM nichtzugeordnete Belege (${objects.size})</parameter>
+            <parameter name="notification.body"><![CDATA[** Diese Nachricht wurde automatisch generiert **
+
+Folgende Belege sind in Centric CRM niemandem zugeordnet:
+
+]]></parameter>
+            <parameter name="report.ticket.content"><![CDATA[----- Belegdetails -----
+Beleg # ${this.paddedId}
+angelegt am: ${this.enteredString}
+Organisation: ${ticketOrganization.name}
+Priorität: ${ticketPriorityLookup.description}
+Wichtigkeit: ${ticketSeverityLookup.description}
+Thema: ${this.problem}
+
+zuletzt geändert von: ${ticketModifiedByContact.nameFirstLast}
+Kommentar: ${this.comment}
+
+
+]]></parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+  </processes>
+</workflow>

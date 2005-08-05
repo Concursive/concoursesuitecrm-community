@@ -15,31 +15,29 @@
  */
 package org.aspcfs.modules.healthcare.edit.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.login.base.AuthenticationItem;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
-import org.aspcfs.utils.*;
-import com.zeroio.iteam.base.FileItemList;
-import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.utils.StringUtils;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
- *  Module for processing a generated report and storing into a database
+ * Module for processing a generated report and storing into a database
  *
- *@author     chris
- *@created    January 15, 2003
- *@version    $Id: ProcessEditData.java,v 1.19 2004/07/21 19:00:43 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: ProcessEditData.java,v 1.19 2004/07/21 19:00:43 mrajkowski
+ *          Exp $
+ * @created January 15, 2003
  */
 public final class ProcessEditData extends CFSModule {
 
@@ -49,11 +47,11 @@ public final class ProcessEditData extends CFSModule {
 
 
   /**
-   *  This action processes a supplied CSV report and inserts the data into
-   *  folder tables
+   * This action processes a supplied CSV report and inserts the data into
+   * folder tables
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
@@ -95,7 +93,8 @@ public final class ProcessEditData extends CFSModule {
       while (x.hasNext()) {
         thisOrganization = (Organization) x.next();
         //Check the PAYOR_DETAILS folder
-        CustomFieldCategory thisCategory = thisList.getCategory(PAYOR_DETAILS_CATEGORY);
+        CustomFieldCategory thisCategory = thisList.getCategory(
+            PAYOR_DETAILS_CATEGORY);
         thisCategory.setBuildResources(true);
         thisCategory.buildResources(db);
         //Get the records in this folder
@@ -121,7 +120,9 @@ public final class ProcessEditData extends CFSModule {
                 thisField.buildResources(db);
                 //!!!!
                 if (thisField.getNameHtml().indexOf("Provider ID Number") > -1) {
-                  thisMap.put(((Object) thisField.getValueHtml()), (new Integer(thisOrganization.getOrgId())));
+                  thisMap.put(
+                      ((Object) thisField.getValueHtml()), (new Integer(
+                          thisOrganization.getOrgId())));
                 }
               }
             }
@@ -131,7 +132,8 @@ public final class ProcessEditData extends CFSModule {
       }
 
       //GET FIELD IDS FOR THE PROVIDER TRANS DETAILS
-      CustomFieldCategory thisCategory2 = thisList.getCategory(PROVIDER_TRANSACTION_CATEGORY);
+      CustomFieldCategory thisCategory2 = thisList.getCategory(
+          PROVIDER_TRANSACTION_CATEGORY);
       thisCategory2.setBuildResources(true);
       thisCategory2.buildResources(db);
       Iterator groups2 = thisCategory2.iterator();
@@ -147,7 +149,8 @@ public final class ProcessEditData extends CFSModule {
       }
 
       //GET FINAL IDS
-      CustomFieldCategory thisCategory3 = thisList.getCategory(OFFICE_TRANSACTION_CATEGORY);
+      CustomFieldCategory thisCategory3 = thisList.getCategory(
+          OFFICE_TRANSACTION_CATEGORY);
       thisCategory3.setBuildResources(true);
       thisCategory3.buildResources(db);
       Iterator groups3 = thisCategory3.iterator();
@@ -182,7 +185,8 @@ public final class ProcessEditData extends CFSModule {
       while ((line = in.readLine()) != null) {
         ++lineNumber;
         //For each line use the parseExcelCSVLine method to get a record
-        ArrayList thisRecord = new ArrayList(StringUtils.parseExcelCSVLine(line));
+        ArrayList thisRecord = new ArrayList(
+            StringUtils.parseExcelCSVLine(line));
         Iterator values = thisRecord.iterator();
         while (values.hasNext()) {
           t = (String) values.next();
@@ -206,9 +210,11 @@ public final class ProcessEditData extends CFSModule {
                   subsub = (String) values.next();
                   compareDate = subsub;
                   if (thisMap.get(t) != null) {
-                    thisCategory = new CustomFieldCategory(db, PROVIDER_TRANSACTION_CATEGORY);
+                    thisCategory = new CustomFieldCategory(
+                        db, PROVIDER_TRANSACTION_CATEGORY);
                     thisCategory.setLinkModuleId(Constants.ACCOUNTS);
-                    thisCategory.setLinkItemId(((Integer) thisMap.get(t)).intValue());
+                    thisCategory.setLinkItemId(
+                        ((Integer) thisMap.get(t)).intValue());
                     thisCategory.setIncludeEnabled(Constants.TRUE);
                     thisCategory.setIncludeScheduled(Constants.TRUE);
                     thisCategory.setEnteredBy(2);
@@ -231,16 +237,20 @@ public final class ProcessEditData extends CFSModule {
                     }
                     if (providerMap.get(compareDate) != null) {
                       //has this date in the hashmap already
-                      ArrayList tempArrayList = (ArrayList) providerMap.get(compareDate);
+                      ArrayList tempArrayList = (ArrayList) providerMap.get(
+                          compareDate);
                       int tempNum = ((Integer) tempArrayList.get(transType)).intValue();
-                      ((ArrayList) providerMap.get(compareDate)).set(transType, new Integer(tempNum + 1));
+                      ((ArrayList) providerMap.get(compareDate)).set(
+                          transType, new Integer(tempNum + 1));
                     } else {
                       //not in hashmap already
                       providerArray = new ArrayList();
                       for (int k = 0; k < 5; k++) {
                         providerArray.add(k, new Integer(0));
                       }
-                      providerArray.add(transType, new Integer(((Integer) providerArray.get(transType)).intValue() + 1));
+                      providerArray.add(
+                          transType, new Integer(
+                              ((Integer) providerArray.get(transType)).intValue() + 1));
                       providerMap.put(((Object) compareDate), providerArray);
                     }
                     while (moreToProcess) {
@@ -252,21 +262,31 @@ public final class ProcessEditData extends CFSModule {
                           //second consecutive date.  Increment value.
                           if (providerMap.get(compareDate) != null) {
                             //has this date in the hashmap already
-                            ArrayList tempArrayList = (ArrayList) providerMap.get(compareDate);
-                            int tempNum = ((Integer) tempArrayList.get(transType)).intValue();
-                            ((ArrayList) providerMap.get(compareDate)).set(transType, new Integer(tempNum + 1));
+                            ArrayList tempArrayList = (ArrayList) providerMap.get(
+                                compareDate);
+                            int tempNum = ((Integer) tempArrayList.get(
+                                transType)).intValue();
+                            ((ArrayList) providerMap.get(compareDate)).set(
+                                transType, new Integer(tempNum + 1));
                           } else {
                             //not in hashmap already
-                            providerArray.add(transType, new Integer(((Integer) providerArray.get(transType)).intValue() + 1));
-                            providerMap.put(((Object) compareDate), providerArray);
+                            providerArray.add(
+                                transType, new Integer(
+                                    ((Integer) providerArray.get(transType)).intValue() + 1));
+                            providerMap.put(
+                                ((Object) compareDate), providerArray);
                           }
                         } else {
                           //new date, not the same as the previous
                           if (providerMap.get(subsub) != null) {
-                            ArrayList tempArrayList = (ArrayList) providerMap.get(subsub);
-                            int tempNum = ((Integer) tempArrayList.get(transType)).intValue();
-                            ((ArrayList) providerMap.get(subsub)).set(transType, new Integer(tempNum + 1));
-                            providerArray = ((ArrayList) providerMap.get(subsub));
+                            ArrayList tempArrayList = (ArrayList) providerMap.get(
+                                subsub);
+                            int tempNum = ((Integer) tempArrayList.get(
+                                transType)).intValue();
+                            ((ArrayList) providerMap.get(subsub)).set(
+                                transType, new Integer(tempNum + 1));
+                            providerArray = ((ArrayList) providerMap.get(
+                                subsub));
                           } else {
                             providerMap.put(compareDate, providerArray);
                             providerArray = new ArrayList();
@@ -287,7 +307,8 @@ public final class ProcessEditData extends CFSModule {
                     if (!(notFoundIds.contains(t))) {
                       notFoundIds.add(t);
                     }
-                    testBuffer.append("Skipping ID " + t + "- could not locate in Centric CRM!\n");
+                    testBuffer.append(
+                        "Skipping ID " + t + "- could not locate in Centric CRM!\n");
                   }
                 } else if (sub.indexOf("TOTAL TRANSACTIONS") > -1) {
                   break;
@@ -301,7 +322,8 @@ public final class ProcessEditData extends CFSModule {
                 context.getRequest().setAttribute("cf" + ids.get(6), t);
                 context.getRequest().setAttribute("cf" + ids.get(0), tempKey);
                 for (int h = 0; h < 5; h++) {
-                  context.getRequest().setAttribute("cf" + ids.get(h + 1), anotherList.get(h) + "");
+                  context.getRequest().setAttribute(
+                      "cf" + ids.get(h + 1), anotherList.get(h) + "");
                 }
                 thisCategory.setParameters(context);
                 int resultCode = thisCategory.insert(db);
@@ -312,7 +334,8 @@ public final class ProcessEditData extends CFSModule {
                   context.getRequest().setAttribute("cf" + ids.get(z), "");
                 }
                 if (orgTotalsMap.get(((Integer) thisMap.get(t))) != null) {
-                  perDayTotalsMap = (HashMap) (orgTotalsMap.get(((Integer) thisMap.get(t))));
+                  perDayTotalsMap = (HashMap) (orgTotalsMap.get(
+                      ((Integer) thisMap.get(t))));
                   ArrayList tempList = null;
                   if (perDayTotalsMap.get(tempKey) != null) {
                     tempList = (ArrayList) perDayTotalsMap.get(tempKey);
@@ -326,10 +349,14 @@ public final class ProcessEditData extends CFSModule {
                     int number = ((Integer) tempList.get(y)).intValue();
                     if (perDayTotalsMap.get(tempKey) != null) {
                       //testBuffer.append(((Integer)thisMap.get(t)) + ", " + new Integer( number + ((Integer)anotherList.get(y)).intValue() ) + "\n");
-                      ((ArrayList) perDayTotalsMap.get(tempKey)).set(y, new Integer(number + ((Integer) anotherList.get(y)).intValue()));
+                      ((ArrayList) perDayTotalsMap.get(tempKey)).set(
+                          y, new Integer(
+                              number + ((Integer) anotherList.get(y)).intValue()));
                     } else {
                       //testBuffer.append(((Integer)thisMap.get(t)) + ", " + new Integer( number + ((Integer)anotherList.get(y)).intValue() ) + "\n");
-                      tempList.set(y, new Integer(number + ((Integer) anotherList.get(y)).intValue()));
+                      tempList.set(
+                          y, new Integer(
+                              number + ((Integer) anotherList.get(y)).intValue()));
                       perDayTotalsMap.put(tempKey, tempList);
                     }
                   }
@@ -352,7 +379,8 @@ public final class ProcessEditData extends CFSModule {
           }
         }
       }
-      testBuffer.append(insertCount + " provider transaction records were successfully inserted.\n");
+      testBuffer.append(
+          insertCount + " provider transaction records were successfully inserted.\n");
       //totals
       Iterator firstIterator = orgTotalsMap.keySet().iterator();
       while (firstIterator.hasNext()) {
@@ -361,7 +389,8 @@ public final class ProcessEditData extends CFSModule {
         Iterator secondIterator = secondMap.keySet().iterator();
         while (secondIterator.hasNext()) {
           String anotherKey = (String) secondIterator.next();
-          CustomFieldCategory thisCat = new CustomFieldCategory(db, OFFICE_TRANSACTION_CATEGORY);
+          CustomFieldCategory thisCat = new CustomFieldCategory(
+              db, OFFICE_TRANSACTION_CATEGORY);
           thisCat.setLinkModuleId(Constants.ACCOUNTS);
           thisCat.setLinkItemId(tempKey.intValue());
           thisCat.setIncludeEnabled(Constants.TRUE);
@@ -370,10 +399,12 @@ public final class ProcessEditData extends CFSModule {
           thisCat.setModifiedBy(2);
           thisCat.setBuildResources(true);
           thisCat.buildResources(db);
-          context.getRequest().setAttribute("cf" + finalIds.get(0), anotherKey);
+          context.getRequest().setAttribute(
+              "cf" + finalIds.get(0), anotherKey);
           ArrayList finalList = (ArrayList) secondMap.get(anotherKey);
           for (int h = 0; h < 5; h++) {
-            context.getRequest().setAttribute("cf" + finalIds.get(h + 1), finalList.get(h) + "");
+            context.getRequest().setAttribute(
+                "cf" + finalIds.get(h + 1), finalList.get(h) + "");
           }
           thisCat.setParameters(context);
           int resultCode = thisCat.insert(db);
@@ -385,9 +416,11 @@ public final class ProcessEditData extends CFSModule {
           }
         }
       }
-      testBuffer.append(totalsCount + " office transaction records (totals) were successfully inserted.\n\n");
+      testBuffer.append(
+          totalsCount + " office transaction records (totals) were successfully inserted.\n\n");
       if (notFoundIds.size() > 0) {
-        testBuffer.append("The following " + notFoundIds.size() + " provider IDs were not found in Centric CRM:\n\n");
+        testBuffer.append(
+            "The following " + notFoundIds.size() + " provider IDs were not found in Centric CRM:\n\n");
         for (int z = 0; z < notFoundIds.size(); z++) {
           testBuffer.append(notFoundIds.get(z) + "\n");
         }

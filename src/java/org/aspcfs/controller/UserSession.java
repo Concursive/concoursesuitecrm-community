@@ -15,18 +15,25 @@
  */
 package org.aspcfs.controller;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.http.HttpSession;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.Viewpoint;
+import org.aspcfs.modules.admin.base.ViewpointList;
+import org.aspcfs.modules.admin.base.ViewpointPermissionList;
+
+import javax.servlet.http.HttpSession;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Stores a user's session data
+ * Stores a user's session data
  *
- *@author     Mathur
- *@created    November 22, 2002
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created November 22, 2002
  */
 
 public class UserSession {
@@ -40,15 +47,16 @@ public class UserSession {
 
 
   /**
-   *  Constructor for the UserSession object
+   * Constructor for the UserSession object
    */
-  public UserSession() { }
+  public UserSession() {
+  }
 
 
   /**
-   *  Constructor for the UserSession object
+   * Constructor for the UserSession object
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public UserSession(ActionContext context) {
     build(context);
@@ -56,9 +64,9 @@ public class UserSession {
 
 
   /**
-   *  Sets the id attribute of the UserSession object
+   * Sets the id attribute of the UserSession object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = id;
@@ -66,9 +74,9 @@ public class UserSession {
 
 
   /**
-   *  Sets the maxInactiveTimeInterval attribute of the UserSession object
+   * Sets the maxInactiveTimeInterval attribute of the UserSession object
    *
-   *@param  maxInactiveInterval  The new maxInactiveInterval value
+   * @param maxInactiveInterval The new maxInactiveInterval value
    */
   public void setMaxInactiveInterval(int maxInactiveInterval) {
     this.maxInactiveInterval = maxInactiveInterval;
@@ -76,9 +84,9 @@ public class UserSession {
 
 
   /**
-   *  Sets the lastAccessed attribute of the UserSession object
+   * Sets the lastAccessed attribute of the UserSession object
    *
-   *@param  lastAccessed  The new lastAccessed value
+   * @param lastAccessed The new lastAccessed value
    */
   public void setLastAccessed(long lastAccessed) {
     this.lastAccessed = lastAccessed;
@@ -86,9 +94,9 @@ public class UserSession {
 
 
   /**
-   *  Sets the ipAddress attribute of the UserSession object
+   * Sets the ipAddress attribute of the UserSession object
    *
-   *@param  ipAddress  The new ipAddress value
+   * @param ipAddress The new ipAddress value
    */
   public void setIpAddress(String ipAddress) {
     this.ipAddress = ipAddress;
@@ -96,9 +104,9 @@ public class UserSession {
 
 
   /**
-   *  Sets the creationTime attribute of the UserSession object
+   * Sets the creationTime attribute of the UserSession object
    *
-   *@param  creationTime  The new creationTime value
+   * @param creationTime The new creationTime value
    */
   public void setCreationTime(long creationTime) {
     this.creationTime = creationTime;
@@ -106,9 +114,9 @@ public class UserSession {
 
 
   /**
-   *  Sets the viewpoints attribute of the UserSession object
+   * Sets the viewpoints attribute of the UserSession object
    *
-   *@param  viewpoints  The new viewpoints value
+   * @param viewpoints The new viewpoints value
    */
   public void setViewpoints(HashMap viewpoints) {
     this.viewpoints = viewpoints;
@@ -116,9 +124,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the viewpoints attribute of the UserSession object
+   * Gets the viewpoints attribute of the UserSession object
    *
-   *@return    The viewpoints value
+   * @return The viewpoints value
    */
   public HashMap getViewpoints() {
     return viewpoints;
@@ -126,9 +134,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the creationTime attribute of the UserSession object
+   * Gets the creationTime attribute of the UserSession object
    *
-   *@return    The creationTime value
+   * @return The creationTime value
    */
   public long getCreationTime() {
     return creationTime;
@@ -136,9 +144,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the id attribute of the UserSession object
+   * Gets the id attribute of the UserSession object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -146,9 +154,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the maxInactiveTimeInterval attribute of the UserSession object
+   * Gets the maxInactiveTimeInterval attribute of the UserSession object
    *
-   *@return    The maxInactiveTimeInterval value
+   * @return The maxInactiveTimeInterval value
    */
   public int getMaxInactiveInterval() {
     return maxInactiveInterval;
@@ -156,9 +164,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the lastAccessed attribute of the UserSession object
+   * Gets the lastAccessed attribute of the UserSession object
    *
-   *@return    The lastAccessed value
+   * @return The lastAccessed value
    */
   public long getLastAccessed() {
     return lastAccessed;
@@ -166,9 +174,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the ipAddress attribute of the UserSession object
+   * Gets the ipAddress attribute of the UserSession object
    *
-   *@return    The ipAddress value
+   * @return The ipAddress value
    */
   public String getIpAddress() {
     return ipAddress;
@@ -176,9 +184,9 @@ public class UserSession {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void build(ActionContext context) {
     HttpSession session = context.getSession();
@@ -189,9 +197,9 @@ public class UserSession {
 
 
   /**
-   *  updates session attributes which might change with time
+   * updates session attributes which might change with time
    *
-   *@param  session  Description of the Parameter
+   * @param session Description of the Parameter
    */
   private void update(HttpSession session) {
     lastAccessed = session.getLastAccessedTime();
@@ -199,7 +207,7 @@ public class UserSession {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void invalidateViewpoints() {
     viewpoints = null;
@@ -207,12 +215,12 @@ public class UserSession {
 
 
   /**
-   *  Builds Viewpoints for a single permission
+   * Builds Viewpoints for a single permission
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  permName          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @param permName Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildViewpoints(Connection db, String permName, int userId) throws SQLException {
     if (viewpoints == null) {
@@ -232,7 +240,8 @@ public class UserSession {
       ViewpointPermissionList vpPermList = thisVp.getPermissionList();
       Iterator j = vpPermList.keySet().iterator();
       while (j.hasNext()) {
-        Permission thisPermission = (Permission) vpPermList.get((String) j.next());
+        Permission thisPermission = (Permission) vpPermList.get(
+            (String) j.next());
         String pName = thisPermission.getName();
         if (permName.equals(pName)) {
           if (viewpoints.containsKey(pName)) {
@@ -257,17 +266,18 @@ public class UserSession {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  permName          Description of the Parameter
-   *@return                   The viewpoints value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @param permName Description of the Parameter
+   * @return The viewpoints value
+   * @throws SQLException Description of the Exception
    */
   public HashMap getViewpoints(Connection db, String permName, int userId) throws SQLException {
     // if viewpoints is null because viewpoints were updated or this module has never been demanded then build Viewpoints
-    if (viewpoints == null || (viewpoints != null && !viewpoints.containsKey(permName))) {
+    if (viewpoints == null || (viewpoints != null && !viewpoints.containsKey(
+        permName))) {
       buildViewpoints(db, permName, userId);
     }
     return viewpoints;
@@ -275,9 +285,9 @@ public class UserSession {
 
 
   /**
-   *  Gets the viewpointValid attribute of the UserSession object
+   * Gets the viewpointValid attribute of the UserSession object
    *
-   *@return    The viewpointValid value
+   * @return The viewpointValid value
    */
   public boolean isViewpointsValid() {
     if (viewpoints == null) {

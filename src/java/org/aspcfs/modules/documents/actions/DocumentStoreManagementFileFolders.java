@@ -16,47 +16,57 @@
 package org.aspcfs.modules.documents.actions;
 
 //import org.theseus.actions.ActionContext;
+
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileFolder;
+import com.zeroio.iteam.base.FileFolderHierarchy;
+import com.zeroio.iteam.base.FileFolderList;
 import org.aspcfs.modules.actions.CFSModule;
-import com.zeroio.iteam.base.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.documents.base.*;
-import java.sql.*;
-import java.util.*;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.documents.base.DocumentStore;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author
- *@created
- *@version    $Id: DocumentStoreManagementFileFolders.java,v 1.1.4.1 2004/12/02
- *      21:33:40 mrajkowski Exp $
+ * @author
+ * @version $Id: DocumentStoreManagementFileFolders.java,v 1.1.4.1 2004/12/02
+ *          21:33:40 mrajkowski Exp $
+ * @created
  */
 public final class DocumentStoreManagementFileFolders extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
     //Load document store
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     Connection db = null;
     try {
       FileFolder thisFolder = (FileFolder) context.getFormBean();
       thisFolder.setParentId(context.getRequest().getParameter("parentId"));
       db = getConnection(context);
       //Load the document store
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-add")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-documents-folders-add")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
-      context.getRequest().setAttribute("IncludeSection", ("file_folder").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_folder").toLowerCase());
       //Build array of folder trails
       DocumentStoreManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
@@ -74,21 +84,23 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
     boolean isValid = false;
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     try {
       db = this.getConnection(context);
       //Load the document store
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
       //Insert or update the folder
       FileFolder thisFolder = (FileFolder) context.getFormBean();
@@ -100,7 +112,8 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
       thisFolder.setLinkModuleId(Constants.DOCUMENTS_DOCUMENTS);
       thisFolder.setLinkItemId(thisDocumentStore.getId());
       if (newFolder) {
-        if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-add")) {
+        if (!hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-documents-folders-add")) {
           return "PermissionError";
         }
         isValid = this.validateObject(context, db, thisFolder);
@@ -109,7 +122,8 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
         }
         //indexAddItem(context, thisFolder);
       } else {
-        if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-edit")) {
+        if (!hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-documents-folders-edit")) {
           return "PermissionError";
         }
         isValid = this.validateObject(context, db, thisFolder);
@@ -137,15 +151,16 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
     boolean recordDeleted = false;
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     //Delete the itemId, and the folderId will be the location to return to
     String itemId = (String) context.getRequest().getParameter("id");
     String folderId = (String) context.getRequest().getParameter("folderId");
@@ -153,12 +168,14 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
     try {
       db = getConnection(context);
       //Load the document store
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       if (thisDocumentStore.getId() == -1) {
         throw new Exception("Invalid access to document store");
       }
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-delete")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-documents-folders-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
@@ -187,15 +204,16 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteRecursive(ActionContext context) {
     Exception errorMessage = null;
     boolean recordDeleted = false;
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     //Delete the itemId, and the folderId will be the location to return to
     String itemId = (String) context.getRequest().getParameter("id");
     String folderId = (String) context.getRequest().getParameter("folderId");
@@ -203,12 +221,14 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
     try {
       db = getConnection(context);
       //Load the document store
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       if (thisDocumentStore.getId() == -1) {
         throw new Exception("Invalid access to document store");
       }
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-delete")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-documents-folders-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
@@ -216,7 +236,7 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
       //Load the file folder
       FileFolder thisFolder = new FileFolder(db, Integer.parseInt(itemId));
       //Delete then indexed items for files in this folder
-      this.indexDeleteItem(context,thisFolder);
+      this.indexDeleteItem(context, thisFolder);
       
       //Load all the sub folder
       FileFolderHierarchy thisFolderHierarchy = new FileFolderHierarchy();
@@ -227,12 +247,13 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
       FileFolderList hierarchy = thisFolderHierarchy.getHierarchy();
       Iterator itr = hierarchy.iterator();
       //Deleting index entries
-      while (itr.hasNext()){
-        FileFolder tmpFolder = (FileFolder)itr.next();
+      while (itr.hasNext()) {
+        FileFolder tmpFolder = (FileFolder) itr.next();
         indexDeleteItem(context, tmpFolder);
       }
       //Deleting sub folders and files
-      recordDeleted = thisFolderHierarchy.deleteFolderHierarchy(db, "documents", Integer.parseInt(itemId));
+      recordDeleted = thisFolderHierarchy.deleteFolderHierarchy(
+          db, "documents", Integer.parseInt(itemId));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -252,10 +273,10 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     //TODO: Add some permissions to get here!
@@ -280,14 +301,17 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public final static void buildHierarchy(Connection db, ActionContext context) throws SQLException {
     String folderId = context.getRequest().getParameter("folderId");
+    if (folderId == null) {
+      folderId = (String) context.getRequest().getAttribute("folderId");
+    }
     if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId)) {
       LinkedHashMap folderLevels = new LinkedHashMap();
       FileFolder.buildHierarchy(db, folderLevels, Integer.parseInt(folderId));
@@ -297,25 +321,28 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     Connection db = null;
     //Parameters
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     String itemId = (String) context.getRequest().getParameter("id");
     try {
       db = getConnection(context);
       //Load the document store
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       if (thisDocumentStore.getId() == -1) {
         throw new Exception("Invalid access to document store");
       }
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-edit")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-documents-folders-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
@@ -339,26 +366,30 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     Connection db = null;
     //Parameters
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("id");
     try {
       db = getConnection(context);
       //Load the document store
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       if (thisDocumentStore.getId() == -1) {
         throw new Exception("Invalid access to document store");
       }
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-folders-edit")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-documents-folders-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
@@ -372,7 +403,8 @@ public final class DocumentStoreManagementFileFolders extends CFSModule {
         thisHierarchy.setLinkModuleId(Constants.DOCUMENTS_DOCUMENTS);
         thisHierarchy.setLinkItemId(thisDocumentStore.getId());
         thisHierarchy.build(db, thisFolder.getId());
-        if (thisHierarchy.getHierarchy().hasFolder(Integer.parseInt(newFolderId))) {
+        if (thisHierarchy.getHierarchy().hasFolder(
+            Integer.parseInt(newFolderId))) {
           thisFolder.buildSubFolders(db);
           Iterator iterator = (Iterator) thisFolder.getSubFolders().iterator();
           while (iterator.hasNext()) {

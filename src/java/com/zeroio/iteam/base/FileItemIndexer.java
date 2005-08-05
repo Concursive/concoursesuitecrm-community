@@ -15,46 +15,50 @@
  */
 package com.zeroio.iteam.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.utils.ContentUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import java.sql.*;
-import java.io.IOException;
-import com.zeroio.utils.ContentUtils;
-import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id: FileItemIndexer.java,v 1.3 2004/09/13 19:01:28 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: FileItemIndexer.java,v 1.3 2004/09/13 19:01:28 mrajkowski Exp
+ *          $
+ * @created May 27, 2004
  */
 public class FileItemIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  path              Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @param path   Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, String path, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT item_id, folder_id, link_module_id, link_item_id, subject, client_filename, modified, size, filename " +
+        "SELECT item_id, folder_id, link_module_id, link_item_id, subject, client_filename, modified, \"size\", filename " +
         "FROM project_files " +
-        "WHERE link_module_id = ? " + 
+        "WHERE link_module_id = ? " +
         "OR link_module_id = ? ");
     pst.setInt(1, Constants.PROJECTS_FILES);
-    pst.setInt(2, Constants.DOCUMENTS_DOCUMENTS );
+    pst.setInt(2, Constants.DOCUMENTS_DOCUMENTS);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       ++count;
@@ -81,12 +85,12 @@ public class FileItemIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  fileItem         Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param fileItem Description of the Parameter
+   * @param modified Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, FileItem fileItem, boolean modified) throws IOException {
     String contents = ContentUtils.getText(fileItem);
@@ -94,23 +98,35 @@ public class FileItemIndexer implements Indexer {
     Document document = new Document();
     document.add(Field.Keyword("type", "file"));
     document.add(Field.Keyword("fileId", String.valueOf(fileItem.getId())));
-    document.add(Field.Keyword("folderId", String.valueOf(fileItem.getFolderId())));
+    document.add(
+        Field.Keyword("folderId", String.valueOf(fileItem.getFolderId())));
     if (fileItem.getLinkModuleId() == Constants.PROJECTS_FILES) {
-      document.add(Field.Keyword("projectId", String.valueOf(fileItem.getLinkItemId())));
+      document.add(
+          Field.Keyword("projectId", String.valueOf(fileItem.getLinkItemId())));
     } else if (fileItem.getLinkModuleId() == Constants.DOCUMENTS_DOCUMENTS) {
-      document.add(Field.Keyword("documentStoreId", String.valueOf(fileItem.getLinkItemId())));
+      document.add(
+          Field.Keyword(
+              "documentStoreId", String.valueOf(fileItem.getLinkItemId())));
     }
-    document.add(Field.Text("title", fileItem.getSubject() + " - " + fileItem.getClientFilename()));
+    document.add(
+        Field.Text(
+            "title", fileItem.getSubject() + " - " + fileItem.getClientFilename()));
     document.add(Field.Text("filename", fileItem.getClientFilename()));
     document.add(Field.Text("extension", fileItem.getExtension()));
-    document.add(Field.Text("contents",
-        fileItem.getSubject() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            fileItem.getSubject() + " " +
         fileItem.getClientFilename() + " " +
         ContentUtils.toText(contents)));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(fileItem.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(fileItem.getModified().getTime())));
     }
     document.add(Field.Keyword("size", String.valueOf(fileItem.getSize())));
     writer.addDocument(document);
@@ -121,10 +137,10 @@ public class FileItemIndexer implements Indexer {
 
 
   /**
-   *  Gets the searchTerm attribute of the FileItemIndexer class
+   * Gets the searchTerm attribute of the FileItemIndexer class
    *
-   *@param  fileItem  Description of the Parameter
-   *@return           The searchTerm value
+   * @param fileItem Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(FileItem fileItem) {
     Term searchTerm = new Term("fileId", String.valueOf(fileItem.getId()));
@@ -133,10 +149,10 @@ public class FileItemIndexer implements Indexer {
 
 
   /**
-   *  Gets the deleteTerm attribute of the FileItemIndexer class
+   * Gets the deleteTerm attribute of the FileItemIndexer class
    *
-   *@param  fileItem  Description of the Parameter
-   *@return           The deleteTerm value
+   * @param fileItem Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(FileItem fileItem) {
     Term searchTerm = new Term("fileId", String.valueOf(fileItem.getId()));

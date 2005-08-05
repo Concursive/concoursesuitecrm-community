@@ -15,16 +15,19 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.util.*;
-import org.w3c.dom.*;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
- *  Represents a database record, with fields, used in the XML API.
+ * Represents a database record, with fields, used in the XML API.
  *
- *@author     matt rajkowski
- *@created    May 29, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 29, 2002
  */
 public class Record extends LinkedHashMap {
 
@@ -33,15 +36,16 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the Record object
+   * Constructor for the Record object
    */
-  public Record() { }
+  public Record() {
+  }
 
 
   /**
-   *  Constructor for the Record object
+   * Constructor for the Record object
    *
-   *@param  thisAction  Description of Parameter
+   * @param thisAction Description of Parameter
    */
   public Record(String thisAction) {
     action = thisAction;
@@ -49,9 +53,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the Record object
+   * Constructor for the Record object
    *
-   *@param  recordNode  Description of the Parameter
+   * @param recordNode Description of the Parameter
    */
   public Record(Element recordNode) {
     //Attributes that a record might have
@@ -68,9 +72,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Sets the action attribute of the Record object
+   * Sets the action attribute of the Record object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(String tmp) {
     this.action = tmp;
@@ -78,9 +82,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Sets the recordId attribute of the Record object
+   * Sets the recordId attribute of the Record object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(int tmp) {
     this.recordId = tmp;
@@ -88,9 +92,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Sets the recordId attribute of the Record object
+   * Sets the recordId attribute of the Record object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(Integer tmp) {
     this.recordId = tmp.intValue();
@@ -98,9 +102,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Sets the recordId attribute of the Record object
+   * Sets the recordId attribute of the Record object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(String tmp) {
     this.recordId = Integer.parseInt(tmp);
@@ -108,9 +112,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Gets the action attribute of the Record object
+   * Gets the action attribute of the Record object
    *
-   *@return    The action value
+   * @return The action value
    */
   public String getAction() {
     return action;
@@ -118,9 +122,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Gets the recordId attribute of the Record object
+   * Gets the recordId attribute of the Record object
    *
-   *@return    The recordId value
+   * @return The recordId value
    */
   public int getRecordId() {
     return recordId;
@@ -128,9 +132,9 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasAction() {
     return (action != null);
@@ -138,10 +142,10 @@ public class Record extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name   Description of the Parameter
-   *@param  value  Description of the Parameter
+   * @param name  Description of the Parameter
+   * @param value Description of the Parameter
    */
   public void put(String name, int value) {
     this.put(name, String.valueOf(value));

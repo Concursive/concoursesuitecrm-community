@@ -15,24 +15,20 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.utils.web.*;
-import java.util.*;
-import org.aspcfs.modules.admin.base.PermissionList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Reads all roles and permissions, and re-reads the user data for updating
- *  them with roles.
+ * Reads all roles and permissions, and re-reads the user data for updating
+ * them with roles.
  *
- *@author     matt rajkowski
- *@created    September 18, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 18, 2002
  */
 public class ImportRoles implements CFSDatabaseReaderImportModule {
 
@@ -41,13 +37,13 @@ public class ImportRoles implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -81,7 +77,8 @@ public class ImportRoles implements CFSDatabaseReaderImportModule {
     }
 
     logger.info("ImportRoles-> Inserting Role Permissions");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "rolePermission");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "rolePermission");
     if (!processOK) {
       return false;
     }

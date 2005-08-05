@@ -44,7 +44,7 @@
   }
   
   function deleteField() {
-    window.location.href = 'CompanyDirectory.do?command=DeleteFields&empid=' + thisContactId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list';
+    confirmDelete('CompanyDirectory.do?command=DeleteFields&empid=' + thisContactId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
   
 </script>

@@ -15,17 +15,15 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.util.*;
-import java.text.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author
- *@created    October 14, 2002
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created October 14, 2002
  */
 public class SurveyBase extends GenericBean {
 
@@ -40,15 +38,16 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Constructor for the SurveyBase object
+   * Constructor for the SurveyBase object
    */
-  public SurveyBase() { }
+  public SurveyBase() {
+  }
 
 
   /**
-   *  Sets the outro attribute of the SurveyBase object
+   * Sets the outro attribute of the SurveyBase object
    *
-   *@param  outro  The new outro value
+   * @param outro The new outro value
    */
   public void setOutro(String outro) {
     this.outro = outro;
@@ -56,9 +55,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the outro attribute of the SurveyBase object
+   * Gets the outro attribute of the SurveyBase object
    *
-   *@return    The outro value
+   * @return The outro value
    */
   public String getOutro() {
     return outro;
@@ -66,9 +65,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the SurveyBase object
+   * Gets the name attribute of the SurveyBase object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -76,9 +75,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the SurveyBase object
+   * Gets the description attribute of the SurveyBase object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -86,9 +85,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the intro attribute of the SurveyBase object
+   * Gets the intro attribute of the SurveyBase object
    *
-   *@return    The intro value
+   * @return The intro value
    */
   public String getIntro() {
     return intro;
@@ -96,9 +95,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the itemLength attribute of the SurveyBase object
+   * Gets the itemLength attribute of the SurveyBase object
    *
-   *@return    The itemLength value
+   * @return The itemLength value
    */
   public int getItemLength() {
     return itemLength;
@@ -106,9 +105,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the SurveyBase object
+   * Gets the type attribute of the SurveyBase object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -116,9 +115,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Gets the expirationDate attribute of the SurveyBase object
+   * Gets the expirationDate attribute of the SurveyBase object
    *
-   *@return    The expirationDate value
+   * @return The expirationDate value
    */
   public java.sql.Date getExpirationDate() {
     return expirationDate;
@@ -126,9 +125,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Survey object
+   * Sets the expirationDate attribute of the Survey object
    *
-   *@param  expirationDate  The new expirationDate value
+   * @param expirationDate The new expirationDate value
    */
   public void setExpirationDate(java.sql.Date expirationDate) {
     this.expirationDate = expirationDate;
@@ -136,9 +135,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Survey object
+   * Sets the expirationDate attribute of the Survey object
    *
-   *@param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(String tmp) {
     this.expirationDate = DatabaseUtils.parseDate(tmp);
@@ -146,9 +145,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the SurveyBase object
+   * Sets the name attribute of the SurveyBase object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -156,9 +155,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the SurveyBase object
+   * Sets the description attribute of the SurveyBase object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -166,9 +165,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the intro attribute of the SurveyBase object
+   * Sets the intro attribute of the SurveyBase object
    *
-   *@param  tmp  The new intro value
+   * @param tmp The new intro value
    */
   public void setIntro(String tmp) {
     this.intro = tmp;
@@ -176,9 +175,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the itemLength attribute of the SurveyBase object
+   * Sets the itemLength attribute of the SurveyBase object
    *
-   *@param  tmp  The new itemLength value
+   * @param tmp The new itemLength value
    */
   public void setItemLength(int tmp) {
     this.itemLength = tmp;
@@ -186,9 +185,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the itemLength attribute of the SurveyBase object
+   * Sets the itemLength attribute of the SurveyBase object
    *
-   *@param  tmp  The new itemLength value
+   * @param tmp The new itemLength value
    */
   public void setItemLength(String tmp) {
     this.itemLength = Integer.parseInt(tmp);
@@ -196,9 +195,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the SurveyBase object
+   * Sets the type attribute of the SurveyBase object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -206,9 +205,9 @@ public class SurveyBase extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the SurveyBase object
+   * Sets the type attribute of the SurveyBase object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);

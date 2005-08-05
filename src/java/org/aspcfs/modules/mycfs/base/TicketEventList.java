@@ -15,18 +15,20 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
-import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    July 16, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created July 16, 2004
  */
 public class TicketEventList {
+  public final static int OPEN_PRODUCT_TICKET = 1;
+  public final static int OPEN_TICKET = 2;
+  public final static int OPEN_PROJECT_TICKET = 3;
+
   TicketList openProductTickets = new TicketList();
   TicketList openTickets = new TicketList();
   TicketList openProjectTickets = new TicketList();
@@ -34,20 +36,19 @@ public class TicketEventList {
 
 
   /**
-   *  Sets the size attribute of the TaskEventList object
+   * Sets the size attribute of the TaskEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
   }
 
 
-
   /**
-   *  Gets the size attribute of the TicketEventList object
+   * Gets the size attribute of the TicketEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -55,9 +56,9 @@ public class TicketEventList {
 
 
   /**
-   *  Sets the openProductTickets attribute of the TicketEventList object
+   * Sets the openProductTickets attribute of the TicketEventList object
    *
-   *@param  tmp  The new openProductTickets value
+   * @param tmp The new openProductTickets value
    */
   public void setOpenProductTickets(TicketList tmp) {
     this.openProductTickets = tmp;
@@ -65,9 +66,9 @@ public class TicketEventList {
 
 
   /**
-   *  Gets the openProductTickets attribute of the TicketEventList object
+   * Gets the openProductTickets attribute of the TicketEventList object
    *
-   *@return    The openProductTickets value
+   * @return The openProductTickets value
    */
   public TicketList getOpenProductTickets() {
     return openProductTickets;
@@ -75,9 +76,9 @@ public class TicketEventList {
 
 
   /**
-   *  Gets the openTickets attribute of the TicketEventList object
+   * Gets the openTickets attribute of the TicketEventList object
    *
-   *@return    The openTickets value
+   * @return The openTickets value
    */
   public TicketList getOpenTickets() {
     return openTickets;
@@ -85,9 +86,9 @@ public class TicketEventList {
 
 
   /**
-   *  Gets the openProjectTickets attribute of the TicketEventList object
+   * Gets the openProjectTickets attribute of the TicketEventList object
    *
-   *@return    The openProjectTickets value
+   * @return The openProjectTickets value
    */
   public TicketList getOpenProjectTickets() {
     return openProjectTickets;
@@ -95,9 +96,9 @@ public class TicketEventList {
 
 
   /**
-   *  Sets the openTickets attribute of the TicketEventList object
+   * Sets the openTickets attribute of the TicketEventList object
    *
-   *@param  tmp  The new openTickets value
+   * @param tmp The new openTickets value
    */
   public void setOpenTickets(TicketList tmp) {
     this.openTickets = tmp;
@@ -105,9 +106,9 @@ public class TicketEventList {
 
 
   /**
-   *  Sets the openProjectTickets attribute of the TicketEventList object
+   * Sets the openProjectTickets attribute of the TicketEventList object
    *
-   *@param  tmp  The new openProjectTickets value
+   * @param tmp The new openProjectTickets value
    */
   public void setOpenProjectTickets(TicketList tmp) {
     this.openProjectTickets = tmp;
@@ -115,9 +116,9 @@ public class TicketEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the TaskEventList object
+   * Gets the sizeString attribute of the TaskEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);

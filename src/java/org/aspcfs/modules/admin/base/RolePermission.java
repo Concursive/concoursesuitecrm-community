@@ -15,18 +15,20 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class RolePermission extends GenericBean {
 
@@ -40,16 +42,17 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Constructor for the RolePermission object
+   * Constructor for the RolePermission object
    */
-  public RolePermission() { }
+  public RolePermission() {
+  }
 
 
   /**
-   *  Constructor for the RolePermission object
+   * Constructor for the RolePermission object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public RolePermission(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -57,11 +60,11 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Constructor for the RolePermission object
+   * Constructor for the RolePermission object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public RolePermission(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -82,9 +85,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the RolePermission object
+   * Sets the id attribute of the RolePermission object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -92,9 +95,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the RolePermission object
+   * Sets the id attribute of the RolePermission object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -102,9 +105,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the roleId attribute of the RolePermission object
+   * Sets the roleId attribute of the RolePermission object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(int tmp) {
     this.roleId = tmp;
@@ -112,9 +115,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the roleId attribute of the RolePermission object
+   * Sets the roleId attribute of the RolePermission object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(String tmp) {
     this.roleId = Integer.parseInt(tmp);
@@ -122,9 +125,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the permissionId attribute of the RolePermission object
+   * Sets the permissionId attribute of the RolePermission object
    *
-   *@param  tmp  The new permissionId value
+   * @param tmp The new permissionId value
    */
   public void setPermissionId(int tmp) {
     this.permissionId = tmp;
@@ -132,9 +135,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the permissionId attribute of the RolePermission object
+   * Sets the permissionId attribute of the RolePermission object
    *
-   *@param  tmp  The new permissionId value
+   * @param tmp The new permissionId value
    */
   public void setPermissionId(String tmp) {
     this.permissionId = Integer.parseInt(tmp);
@@ -142,9 +145,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the add attribute of the RolePermission object
+   * Sets the add attribute of the RolePermission object
    *
-   *@param  tmp  The new add value
+   * @param tmp The new add value
    */
   public void setAdd(boolean tmp) {
     this.add = tmp;
@@ -152,9 +155,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the add attribute of the RolePermission object
+   * Sets the add attribute of the RolePermission object
    *
-   *@param  tmp  The new add value
+   * @param tmp The new add value
    */
   public void setAdd(String tmp) {
     this.add = DatabaseUtils.parseBoolean(tmp);
@@ -162,9 +165,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the view attribute of the RolePermission object
+   * Sets the view attribute of the RolePermission object
    *
-   *@param  tmp  The new view value
+   * @param tmp The new view value
    */
   public void setView(boolean tmp) {
     this.view = tmp;
@@ -172,9 +175,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the view attribute of the RolePermission object
+   * Sets the view attribute of the RolePermission object
    *
-   *@param  tmp  The new view value
+   * @param tmp The new view value
    */
   public void setView(String tmp) {
     this.view = DatabaseUtils.parseBoolean(tmp);
@@ -182,9 +185,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the edit attribute of the RolePermission object
+   * Sets the edit attribute of the RolePermission object
    *
-   *@param  tmp  The new edit value
+   * @param tmp The new edit value
    */
   public void setEdit(boolean tmp) {
     this.edit = tmp;
@@ -192,9 +195,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the edit attribute of the RolePermission object
+   * Sets the edit attribute of the RolePermission object
    *
-   *@param  tmp  The new edit value
+   * @param tmp The new edit value
    */
   public void setEdit(String tmp) {
     this.edit = DatabaseUtils.parseBoolean(tmp);
@@ -202,9 +205,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the delete attribute of the RolePermission object
+   * Sets the delete attribute of the RolePermission object
    *
-   *@param  tmp  The new delete value
+   * @param tmp The new delete value
    */
   public void setDelete(boolean tmp) {
     this.delete = tmp;
@@ -212,9 +215,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Sets the delete attribute of the RolePermission object
+   * Sets the delete attribute of the RolePermission object
    *
-   *@param  tmp  The new delete value
+   * @param tmp The new delete value
    */
   public void setDelete(String tmp) {
     this.delete = DatabaseUtils.parseBoolean(tmp);
@@ -222,9 +225,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the RolePermission object
+   * Gets the id attribute of the RolePermission object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -232,9 +235,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the roleId attribute of the RolePermission object
+   * Gets the roleId attribute of the RolePermission object
    *
-   *@return    The roleId value
+   * @return The roleId value
    */
   public int getRoleId() {
     return roleId;
@@ -242,9 +245,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the permissionId attribute of the RolePermission object
+   * Gets the permissionId attribute of the RolePermission object
    *
-   *@return    The permissionId value
+   * @return The permissionId value
    */
   public int getPermissionId() {
     return permissionId;
@@ -252,9 +255,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the add attribute of the RolePermission object
+   * Gets the add attribute of the RolePermission object
    *
-   *@return    The add value
+   * @return The add value
    */
   public boolean getAdd() {
     return add;
@@ -262,9 +265,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the view attribute of the RolePermission object
+   * Gets the view attribute of the RolePermission object
    *
-   *@return    The view value
+   * @return The view value
    */
   public boolean getView() {
     return view;
@@ -272,9 +275,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the edit attribute of the RolePermission object
+   * Gets the edit attribute of the RolePermission object
    *
-   *@return    The edit value
+   * @return The edit value
    */
   public boolean getEdit() {
     return edit;
@@ -282,9 +285,9 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Gets the delete attribute of the RolePermission object
+   * Gets the delete attribute of the RolePermission object
    *
-   *@return    The delete value
+   * @return The delete value
    */
   public boolean getDelete() {
     return delete;
@@ -292,10 +295,10 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //role_permission table
@@ -310,18 +313,22 @@ public class RolePermission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "role_permission_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO role_permission (role_id, permission_id, role_view, " +
+        "INSERT INTO role_permission (" + (id > -1 ? "id, " : "") + "role_id, permission_id, role_view, " +
         "role_add, role_edit, role_delete) " +
-        "VALUES (?, ?, ?, ?, ?, ?) ");
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?,?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, roleId);
     pst.setInt(++i, permissionId);
     pst.setBoolean(++i, view);
@@ -329,7 +336,7 @@ public class RolePermission extends GenericBean {
     pst.setBoolean(++i, edit);
     pst.setBoolean(++i, delete);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "role_permission_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "role_permission_id_seq", id);
     return true;
   }
 }

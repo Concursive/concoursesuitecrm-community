@@ -16,6 +16,9 @@
 package com.zeroio.iteam.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
@@ -1109,10 +1112,14 @@ public class FileItem extends GenericBean {
         db.setAutoCommit(false);
       }
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "project_files_item_id_seq");
       sql.append(
           "INSERT INTO project_files " +
-          "(folder_id, subject, client_filename, filename, version, size, ");
+          "(folder_id, subject, client_filename, filename, version, \"size\", ");
       sql.append("enabled, downloads, ");
+      if (id > -1) {
+        sql.append("item_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1123,6 +1130,9 @@ public class FileItem extends GenericBean {
           " link_module_id, link_item_id, " +
           " enteredBy, modifiedBy, default_file) " +
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?,");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1145,6 +1155,9 @@ public class FileItem extends GenericBean {
       pst.setInt(++i, size);
       pst.setBoolean(++i, enabled);
       pst.setInt(++i, downloads);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1158,7 +1171,7 @@ public class FileItem extends GenericBean {
       pst.setBoolean(++i, defaultFile);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "project_files_item_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "project_files_item_id_seq", id);
       // New default item
       if (defaultFile) {
         updateDefaultRecord(db, linkModuleId, linkItemId, id);
@@ -1225,7 +1238,7 @@ public class FileItem extends GenericBean {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_files " +
           "SET subject = ?, client_filename = ?, filename = ?, version = ?, " +
-          "size = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+          "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
           "WHERE item_id = ? ");
       pst.setString(++i, subject);
       pst.setString(++i, clientFilename);
@@ -1269,13 +1282,14 @@ public class FileItem extends GenericBean {
     }
     String sql =
         "UPDATE project_files " +
-        "SET subject = ?, client_filename = ?, default_file = ? " +
+        "SET subject = ?, client_filename = ?, default_file = ?, \"size\" = ? " +
         "WHERE item_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, subject);
     pst.setString(++i, clientFilename);
     pst.setBoolean(++i, defaultFile);
+    pst.setInt(++i, this.getSize());
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
@@ -1292,6 +1306,7 @@ public class FileItem extends GenericBean {
           Double.toString(latestVersion.getVersion()))) {
         latestVersion.setClientFilename(this.getClientFilename());
         latestVersion.setSubject(this.getSubject());
+        latestVersion.setSize(this.getSize());
         latestVersion.update(db);
         break;
       }
@@ -1321,7 +1336,7 @@ public class FileItem extends GenericBean {
     String sql =
         "UPDATE project_files " +
         "SET subject = ?, client_filename = ?, filename = ?, version = ?, " +
-        "size = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE item_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1402,6 +1417,12 @@ public class FileItem extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
+      //Delete the Account History
+      if (this.getLinkModuleId() == Constants.DOCUMENTS_ACCOUNTS) {
+        ContactHistory.deleteObject(
+            db, OrganizationHistory.ACCOUNT_DOCUMENT, this.getId());
+      }
+
       //Delete the log of downloads
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
@@ -1418,6 +1439,7 @@ public class FileItem extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
+      
       //Delete all of the versions
       i = 0;
       pst = db.prepareStatement(
@@ -1491,16 +1513,22 @@ public class FileItem extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   private void logUpload(Connection db) throws SQLException {
+    int usageId = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO usage_log " +
-        "(enteredby, action, record_id, record_size) VALUES (?, ?, ?, ?) ");
+        "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
+        "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
+    if (usageId > -1) {
+      pst.setInt(++i, usageId);
+    }
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, 1);
     pst.setInt(++i, id);
     pst.setInt(++i, size);
     pst.execute();
     pst.close();
+    usageId = DatabaseUtils.getCurrVal(db, "usage_log_usage_id_seq", usageId);
   }
 
 

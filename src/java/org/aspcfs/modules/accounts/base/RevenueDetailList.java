@@ -15,18 +15,21 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class RevenueDetailList extends Vector {
 
@@ -35,16 +38,17 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Constructor for the RevenueDetailList object
+   * Constructor for the RevenueDetailList object
    */
-  public RevenueDetailList() { }
+  public RevenueDetailList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -82,9 +86,10 @@ public class RevenueDetailList extends Vector {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(rd.description) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(rd.description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -119,22 +124,15 @@ public class RevenueDetailList extends Vector {
         "LEFT JOIN lookup_revenuedetail_types rdt ON (rd.type = rdt.code) " +
         "WHERE rd.id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       RevenueDetail thisRevenueDetail = new RevenueDetail(rs);
       this.addElement(thisRevenueDetail);
     }
@@ -144,9 +142,9 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Gets the revenueId attribute of the RevenueDetailList object
+   * Gets the revenueId attribute of the RevenueDetailList object
    *
-   *@return    The revenueId value
+   * @return The revenueId value
    */
   public int getRevenueId() {
     return revenueId;
@@ -154,9 +152,9 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Sets the revenueId attribute of the RevenueDetailList object
+   * Sets the revenueId attribute of the RevenueDetailList object
    *
-   *@param  revenueId  The new revenueId value
+   * @param revenueId The new revenueId value
    */
   public void setRevenueId(int revenueId) {
     this.revenueId = revenueId;
@@ -164,9 +162,9 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Sets the revenueId attribute of the RevenueDetailList object
+   * Sets the revenueId attribute of the RevenueDetailList object
    *
-   *@param  revenueId  The new revenueId value
+   * @param revenueId The new revenueId value
    */
   public void setRevenueId(String revenueId) {
     this.revenueId = Integer.parseInt(revenueId);
@@ -174,9 +172,9 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the RevenueDetailList object
+   * Sets the pagedListInfo attribute of the RevenueDetailList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -184,9 +182,9 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the RevenueDetailList object
+   * Gets the pagedListInfo attribute of the RevenueDetailList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -194,9 +192,9 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -209,11 +207,11 @@ public class RevenueDetailList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

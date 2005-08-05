@@ -15,20 +15,19 @@
  */
 package org.aspcfs.modules.components;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
-import org.aspcfs.utils.StringUtils;
-import java.sql.*;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ComponentInterface;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 import org.aspcfs.modules.base.Notification;
+import org.aspcfs.utils.StringUtils;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: SendSSLNotification.java,v 1.4 2003/04/14 02:42:22 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: SendSSLNotification.java,v 1.4 2003/04/14 02:42:22 mrajkowski
+ *          Exp $
+ * @created January 14, 2003
  */
 public class SendSSLNotification extends ObjectHookComponent implements ComponentInterface {
   public final static String HOST = "notification.host";
@@ -37,9 +36,9 @@ public class SendSSLNotification extends ObjectHookComponent implements Componen
 
 
   /**
-   *  Gets the description attribute of the SendSSLNotification object
+   * Gets the description attribute of the SendSSLNotification object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Post text data to a remote system using SSL";
@@ -47,18 +46,20 @@ public class SendSSLNotification extends ObjectHookComponent implements Componen
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     boolean result = false;
     try {
       Notification thisNotification = new Notification(Notification.SSL);
       thisNotification.setHost(context.getParameter(SendSSLNotification.HOST));
-      thisNotification.setPort(context.getParameterAsInt(SendSSLNotification.PORT));
-      thisNotification.setMessageToSend(StringUtils.toHtml(context.getParameter(SendSSLNotification.BODY)));
+      thisNotification.setPort(
+          context.getParameterAsInt(SendSSLNotification.PORT));
+      thisNotification.setMessageToSend(
+          StringUtils.toHtml(context.getParameter(SendSSLNotification.BODY)));
       thisNotification.setContext(context);
       thisNotification.notifySystem();
       result = true;

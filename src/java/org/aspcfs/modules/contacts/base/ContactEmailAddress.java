@@ -15,83 +15,88 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.EmailAddress;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 13, 2003
- *@version    $Id: ContactEmailAddress.java,v 1.13 2004/04/13 19:06:33
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ContactEmailAddress.java,v 1.13 2004/04/13 19:06:33
+ *          mrajkowski Exp $
+ * @created January 13, 2003
  */
-public class ContactEmailAddress extends EmailAddress {
+public class ContactEmailAddress
+    extends EmailAddress {
 
   /**
-   *  Constructor for the ContactEmailAddress object
+   * Constructor for the ContactEmailAddress object
    */
   public ContactEmailAddress() {
     isContact = true;
   }
 
-
   /**
-   *  Constructor for the ContactEmailAddress object
+   * Constructor for the ContactEmailAddress object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactEmailAddress(ResultSet rs) throws SQLException {
     isContact = true;
     buildRecord(rs);
   }
 
-
   /**
-   *  Constructor for the ContactEmailAddress object
+   * Constructor for the ContactEmailAddress object
    *
-   *@param  db                Description of the Parameter
-   *@param  emailAddressId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param emailAddressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public ContactEmailAddress(Connection db, int emailAddressId) throws SQLException {
+  public ContactEmailAddress(Connection db, int emailAddressId) throws
+      SQLException {
     queryRecord(db, emailAddressId);
   }
 
-
   /**
-   *  Constructor for the ContactEmailAddress object
+   * Constructor for the ContactEmailAddress object
    *
-   *@param  db                Description of the Parameter
-   *@param  emailAddressId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param emailAddressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public ContactEmailAddress(Connection db, String emailAddressId) throws SQLException {
+  public ContactEmailAddress(Connection db, String emailAddressId) throws
+      SQLException {
     queryRecord(db, Integer.parseInt(emailAddressId));
   }
 
-
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  emailAddressId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param emailAddressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void queryRecord(Connection db, int emailAddressId) throws SQLException {
+  public void queryRecord(Connection db, int emailAddressId) throws
+      SQLException {
     isContact = true;
 
     if (emailAddressId < 0) {
       throw new SQLException("Valid Email Address ID not specified.");
     }
 
-    PreparedStatement pst = db.prepareStatement("SELECT * " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
         "FROM contact_emailaddress c, lookup_contactemail_types l " +
         "WHERE c.emailaddress_type = l.code " +
-        "AND emailaddress_id = " + emailAddressId + " ");
+        "AND emailaddress_id = " +
+        emailAddressId + " ");
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -103,19 +108,18 @@ public class ContactEmailAddress extends EmailAddress {
     }
   }
 
-
   /**
-   *  Determines what to do if this record is marked for INSERT, UPDATE, or
-   *  DELETE
+   * Determines what to do if this record is marked for INSERT, UPDATE, or
+   * DELETE
    *
-   *@param  db                Description of Parameter
-   *@param  contactId         Description of Parameter
-   *@param  enteredBy         Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param contactId  Description of Parameter
+   * @param enteredBy  Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
-  public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
+  public void process(Connection db, int contactId, int enteredBy,
+                      int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
         this.setContactId(contactId);
@@ -131,31 +135,36 @@ public class ContactEmailAddress extends EmailAddress {
     }
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     insert(db, this.getContactId(), this.getEnteredBy());
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param enteredBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
+  public void insert(Connection db, int contactId, int enteredBy) throws
+      SQLException {
     StringBuffer sql = new StringBuffer();
-
-    sql.append("INSERT INTO contact_emailaddress " +
+    this.setId(
+        DatabaseUtils.getNextSeq(db, "contact_email_emailaddress__seq"));
+    int id = getId();
+    sql.append(
+        "INSERT INTO contact_emailaddress " +
         "(contact_id, emailaddress_type, email, primary_email, ");
+    if (id > -1) {
+      sql.append("emailaddress_id, ");
+    }
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -164,6 +173,9 @@ public class ContactEmailAddress extends EmailAddress {
     }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -187,7 +199,9 @@ public class ContactEmailAddress extends EmailAddress {
 
     pst.setString(++i, this.getEmail());
     pst.setBoolean(++i, this.getPrimaryEmail());
-
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -200,17 +214,16 @@ public class ContactEmailAddress extends EmailAddress {
     pst.execute();
     pst.close();
 
-    this.setId(DatabaseUtils.getCurrVal(db, "contact_email_emailaddress__seq"));
+    this.setId(
+        DatabaseUtils.getCurrVal(db, "contact_email_emailaddress__seq", id));
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -232,13 +245,11 @@ public class ContactEmailAddress extends EmailAddress {
     pst.close();
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -251,4 +262,3 @@ public class ContactEmailAddress extends EmailAddress {
   }
 
 }
-

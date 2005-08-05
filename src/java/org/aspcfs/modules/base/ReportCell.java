@@ -15,16 +15,16 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.*;
 import java.text.DateFormat;
+import java.util.Comparator;
 
 /**
- *  ReportCell is an object that defines the properties of a report cell for a
- *  Report object.
+ * ReportCell is an object that defines the properties of a report cell for a
+ * Report object.
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class ReportCell implements Comparable {
 
@@ -34,15 +34,16 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Constructor for the ReportCell object
+   * Constructor for the ReportCell object
    */
-  public ReportCell() { }
+  public ReportCell() {
+  }
 
 
   /**
-   *  Constructor for the ReportCell object
+   * Constructor for the ReportCell object
    *
-   *@param  tmp  Description of the Parameter
+   * @param tmp Description of the Parameter
    */
   public ReportCell(String tmp) {
     this.data = tmp;
@@ -50,10 +51,10 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Constructor for the ReportCell object
+   * Constructor for the ReportCell object
    *
-   *@param  tmp   Description of the Parameter
-   *@param  tmp2  Description of the Parameter
+   * @param tmp  Description of the Parameter
+   * @param tmp2 Description of the Parameter
    */
   public ReportCell(String tmp, String tmp2) {
     this.data = tmp;
@@ -63,9 +64,9 @@ public class ReportCell implements Comparable {
 
   //Set
   /**
-   *  Sets the data attribute of the ReportCell object
+   * Sets the data attribute of the ReportCell object
    *
-   *@param  tmp  The new data value
+   * @param tmp The new data value
    */
   public void setData(String tmp) {
     this.data = tmp;
@@ -73,9 +74,9 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Sets the formatting attribute of the ReportCell object
+   * Sets the formatting attribute of the ReportCell object
    *
-   *@param  tmp  The new formatting value
+   * @param tmp The new formatting value
    */
   public void setFormatting(String tmp) {
     this.formatting = tmp;
@@ -84,9 +85,9 @@ public class ReportCell implements Comparable {
 
   //Get
   /**
-   *  Gets the data attribute of the ReportCell object
+   * Gets the data attribute of the ReportCell object
    *
-   *@return    The data value
+   * @return The data value
    */
   public String getData() {
     return data;
@@ -94,9 +95,9 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Gets the dataInt attribute of the ReportCell object
+   * Gets the dataInt attribute of the ReportCell object
    *
-   *@return    The dataInt value
+   * @return The dataInt value
    */
   public int getDataInt() {
     return Integer.parseInt(data);
@@ -104,9 +105,9 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Gets the dataDate attribute of the ReportCell object
+   * Gets the dataDate attribute of the ReportCell object
    *
-   *@return    The dataDate value
+   * @return The dataDate value
    */
   public java.util.Date getDataDate() {
     try {
@@ -120,9 +121,9 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Gets the formatting attribute of the ReportCell object
+   * Gets the formatting attribute of the ReportCell object
    *
-   *@return    The formatting value
+   * @return The formatting value
    */
   public String getFormatting() {
     return formatting;
@@ -130,9 +131,9 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Gets the formatted attribute of the ReportCell object
+   * Gets the formatted attribute of the ReportCell object
    *
-   *@return    The formatted value
+   * @return The formatted value
    */
   public boolean isFormatted() {
     return !formatting.equals("");
@@ -145,31 +146,32 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     matt rajkowski
-   *@created    September 16, 2004
-   *@version    $Id$
+   * @author matt rajkowski
+   * @version $Id$
+   * @created September 16, 2004
    */
   class cellComparator implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of the Parameter
-     *@param  right  Description of the Parameter
-     *@return        Description of the Return Value
+     * @param left  Description of the Parameter
+     * @param right Description of the Parameter
+     * @return Description of the Return Value
      */
     public int compare(Object left, Object right) {
-      return (((ReportCell) left).getData().compareTo(((ReportCell) right).getData()));
+      return (((ReportCell) left).getData().compareTo(
+          ((ReportCell) right).getData()));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  object  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param object Description of the Parameter
+   * @return Description of the Return Value
    */
   public int compareTo(Object object) {
     return (stringComparator.compare(this, object));
@@ -177,19 +179,19 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     matt rajkowski
-   *@created    September 16, 2004
-   *@version    $Id$
+   * @author matt rajkowski
+   * @version $Id$
+   * @created September 16, 2004
    */
   class cellComparatorInt implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of the Parameter
-     *@param  right  Description of the Parameter
-     *@return        Description of the Return Value
+     * @param left  Description of the Parameter
+     * @param right Description of the Parameter
+     * @return Description of the Return Value
      */
     public int compare(Object left, Object right) {
       return (((ReportCell) left).getDataInt() - ((ReportCell) right).getDataInt());
@@ -198,10 +200,10 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  object  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param object Description of the Parameter
+   * @return Description of the Return Value
    */
   public int compareIntTo(Object object) {
     return (intComparator.compare(this, object));
@@ -209,31 +211,32 @@ public class ReportCell implements Comparable {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     matt rajkowski
-   *@created    September 16, 2004
-   *@version    $Id$
+   * @author matt rajkowski
+   * @version $Id$
+   * @created September 16, 2004
    */
   class cellComparatorDate implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of the Parameter
-     *@param  right  Description of the Parameter
-     *@return        Description of the Return Value
+     * @param left  Description of the Parameter
+     * @param right Description of the Parameter
+     * @return Description of the Return Value
      */
     public int compare(Object left, Object right) {
-      return (((ReportCell) left).getDataDate().compareTo(((ReportCell) right).getDataDate()));
+      return (((ReportCell) left).getDataDate().compareTo(
+          ((ReportCell) right).getDataDate()));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  object  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param object Description of the Parameter
+   * @return Description of the Return Value
    */
   public int compareDateTo(Object object) {
     return (dateComparator.compare(this, object));

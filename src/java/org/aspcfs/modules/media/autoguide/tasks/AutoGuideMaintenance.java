@@ -15,20 +15,25 @@
  */
 package org.aspcfs.modules.media.autoguide.tasks;
 
-import java.sql.*;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.media.autoguide.base.*;
-import java.util.*;
-import com.zeroio.iteam.base.*;
-import com.isavvix.tools.*;
+import org.aspcfs.modules.media.autoguide.base.Inventory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Deletes old inventory from Auto Guide
+ * Deletes old inventory from Auto Guide
  *
- *@author     matt rajkowski
- *@created    February 5, 2003
- *@version    $Id: AutoGuideMaintenance.java,v 1.7 2004/03/15 23:19:01
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: AutoGuideMaintenance.java,v 1.7 2004/03/15 23:19:01
+ *          mrajkowski Exp $
+ * @created February 5, 2003
  */
 public class AutoGuideMaintenance {
 
@@ -36,15 +41,16 @@ public class AutoGuideMaintenance {
 
 
   /**
-   *  Constructor for the AutoGuideMaintenance object
+   * Constructor for the AutoGuideMaintenance object
    *
-   *@param  db        Description of the Parameter
-   *@param  config    Description of the Parameter
-   *@param  siteInfo  Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param config   Description of the Parameter
+   * @param siteInfo Description of the Parameter
    */
   public AutoGuideMaintenance(Connection db, HashMap siteInfo, HashMap config) {
     try {
-      String filePath = (String) config.get("FileLibrary") + (String) siteInfo.get("name") + fs + "autoguide" + fs;
+      String filePath = (String) config.get("FileLibrary") + (String) siteInfo.get(
+          "name") + fs + "autoguide" + fs;
       ArrayList deleteList = new ArrayList();
       //Determine the oldest date
       Calendar dateCheck = Calendar.getInstance();
@@ -69,11 +75,13 @@ public class AutoGuideMaintenance {
       rs.close();
       pst.close();
 
-      System.out.println("AutoGuideMaintenance-> Vehicles to delete: " + deleteList.size());
+      System.out.println(
+          "AutoGuideMaintenance-> Vehicles to delete: " + deleteList.size());
 
       Iterator i = deleteList.iterator();
       while (i.hasNext()) {
-        Inventory thisItem = new Inventory(db, ((Integer) i.next()).intValue());
+        Inventory thisItem = new Inventory(
+            db, ((Integer) i.next()).intValue());
         //Delete the picture
         FileItemList previousFiles = new FileItemList();
         previousFiles.setLinkModuleId(Constants.AUTOGUIDE);

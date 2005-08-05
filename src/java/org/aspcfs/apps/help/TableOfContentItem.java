@@ -15,19 +15,20 @@
  */
 package org.aspcfs.apps.help;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.database.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    December 1, 2003
- *@version    $Id: TableOfContentItem.java,v 1.1.2.1 2003/12/02 20:29:04
- *      kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: TableOfContentItem.java,v 1.1.2.1 2003/12/02 20:29:04
+ *          kbhoopal Exp $
+ * @created December 1, 2003
  */
 public class TableOfContentItem {
 
@@ -41,16 +42,17 @@ public class TableOfContentItem {
 
 
   /**
-   *  Constructor for the TableOfContentItem object
+   * Constructor for the TableOfContentItem object
    */
-  public TableOfContentItem() { }
+  public TableOfContentItem() {
+  }
 
 
   /**
-   *  Constructor for the TableOfContentItem object
+   * Constructor for the TableOfContentItem object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TableOfContentItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -58,9 +60,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the id attribute of the TableOfContentItem object
+   * Sets the id attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -68,9 +70,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the id attribute of the TableOfContentItem object
+   * Sets the id attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -78,9 +80,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the categoryId attribute of the TableOfContentItem object
+   * Sets the categoryId attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -88,9 +90,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the displayText attribute of the TableOfContentItem object
+   * Sets the displayText attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new displayText value
+   * @param tmp The new displayText value
    */
   public void setDisplayText(String tmp) {
     this.displayText = tmp;
@@ -98,9 +100,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the parent attribute of the TableOfContentItem object
+   * Sets the parent attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new parent value
+   * @param tmp The new parent value
    */
   public void setParent(int tmp) {
     this.parent = tmp;
@@ -108,9 +110,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the level attribute of the TableOfContentItem object
+   * Sets the level attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -118,9 +120,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the order attribute of the TableOfContentItem object
+   * Sets the order attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new order value
+   * @param tmp The new order value
    */
   public void setOrder(int tmp) {
     this.order = tmp;
@@ -128,20 +130,19 @@ public class TableOfContentItem {
 
 
   /**
-   *  Sets the pageId attribute of the TableOfContentItem object
+   * Sets the pageId attribute of the TableOfContentItem object
    *
-   *@param  tmp  The new pageId value
+   * @param tmp The new pageId value
    */
   public void setPageId(int tmp) {
     this.pageId = tmp;
   }
 
 
-
   /**
-   *  Gets the id attribute of the TableOfContentItem object
+   * Gets the id attribute of the TableOfContentItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -149,9 +150,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Gets the categoryId attribute of the TableOfContentItem object
+   * Gets the categoryId attribute of the TableOfContentItem object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -159,9 +160,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Gets the displayText attribute of the TableOfContentItem object
+   * Gets the displayText attribute of the TableOfContentItem object
    *
-   *@return    The displayText value
+   * @return The displayText value
    */
   public String getDisplayText() {
     return displayText;
@@ -169,9 +170,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Gets the parent attribute of the TableOfContentItem object
+   * Gets the parent attribute of the TableOfContentItem object
    *
-   *@return    The parent value
+   * @return The parent value
    */
   public int getParent() {
     return parent;
@@ -179,9 +180,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Gets the level attribute of the TableOfContentItem object
+   * Gets the level attribute of the TableOfContentItem object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -189,9 +190,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Gets the order attribute of the TableOfContentItem object
+   * Gets the order attribute of the TableOfContentItem object
    *
-   *@return    The order value
+   * @return The order value
    */
   public int getOrder() {
     return order;
@@ -199,9 +200,9 @@ public class TableOfContentItem {
 
 
   /**
-   *  Gets the pageId attribute of the TableOfContentItem object
+   * Gets the pageId attribute of the TableOfContentItem object
    *
-   *@return    The pageId value
+   * @return The pageId value
    */
   public int getPageId() {
     return pageId;
@@ -209,22 +210,26 @@ public class TableOfContentItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Table of Content Id for the item
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Table of Content Id for the item
+   * @throws SQLException Description of the Exception
    */
   int insert(Connection db) throws SQLException {
-
+    id = DatabaseUtils.getNextSeq(db, "help_tableof_contents_content_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_tableof_contents " +
-        "(displaytext" +
-        ((categoryId == -1) ? "" : ",category_id ") + ((parent == -1) ? "" : ",parent") +
+        "(" + (id > -1 ? "content_id, " : "") + "displaytext " +
+        ((categoryId == -1) ? "" : ",category_id ") +
+        ((parent == -1) ? "" : ",parent") +
         ",contentlevel,contentorder, enteredby, modifiedby) " +
-        "VALUES (?" + ((categoryId == -1) ? "" : ",?") + ((parent == -1) ? "" : ",?") + ",?,?,?,?)");
-
+        "VALUES (" + (id > -1 ? "?, " : "") + "?" + ((categoryId == -1) ? "" : ",?") +
+        ((parent == -1) ? "" : ",?") + ",?,?,?,?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setString(++i, displayText);
     if (categoryId != -1) {
       pst.setInt(++i, categoryId);
@@ -236,36 +241,40 @@ public class TableOfContentItem {
     pst.setInt(++i, order);
     pst.setInt(++i, 0);
     pst.setInt(++i, 0);
-
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "help_tableof_contents_content_id_seq");
+    id = DatabaseUtils.getCurrVal(
+        db, "help_tableof_contents_content_id_seq",
+        id);
 
     // inserting a link to a TOC item if a link page exists
     // Link page may not exist for top level items
     if (pageId != -1) {
+      int linkId = DatabaseUtils.getNextSeq(
+          db, "help_tableofcontentitem_links_link_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO help_tableofcontentitem_links " +
-          "(global_link_id, linkto_content_id,enteredby, modifiedby) " +
-          "VALUES (?,?,?,?)");
-
+          "(" + (linkId > -1 ? "link_id, " : "") + "global_link_id, linkto_content_id, enteredby, modifiedby) " +
+          "VALUES (" + (linkId > -1 ? "?, " : "") + "?,?,?,?)");
       i = 0;
-
+      if (linkId > -1) {
+        pst.setInt(++i, linkId);
+      }
       pst.setInt(++i, id);
       pst.setInt(++i, pageId);
       pst.setInt(++i, 0);
       pst.setInt(++i, 0);
       pst.execute();
       pst.close();
+      linkId = DatabaseUtils.getCurrVal(
+          db, "help_tableofcontentitem_links_link_id_seq", id);
     }
     return id;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildRecord() {
     id = 1;
@@ -277,11 +286,11 @@ public class TableOfContentItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmpCategory    Description of the Parameter
-   *@param  tmpCategoryId  Description of the Parameter
-   *@param  tmpOrder       Description of the Parameter
+   * @param tmpCategory   Description of the Parameter
+   * @param tmpCategoryId Description of the Parameter
+   * @param tmpOrder      Description of the Parameter
    */
   public void buildRecord(String tmpCategory, int tmpCategoryId, int tmpOrder) {
 
@@ -294,15 +303,14 @@ public class TableOfContentItem {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmpCategoryId  Description of the Parameter
-   *@param  tmpTitle       Description of the Parameter
-   *@param  tmpOrder       Description of the Parameter
-   *@param  tmpLevel       Description of the Parameter
-   *@param  tmpPageId      Description of the Parameter
+   * @param tmpCategoryId Description of the Parameter
+   * @param tmpTitle      Description of the Parameter
+   * @param tmpOrder      Description of the Parameter
+   * @param tmpLevel      Description of the Parameter
+   * @param tmpPageId     Description of the Parameter
    */
   public void buildRecord(int tmpCategoryId, String tmpTitle, int tmpOrder, int tmpLevel, int tmpPageId) {
 
@@ -316,10 +324,10 @@ public class TableOfContentItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("content_id");

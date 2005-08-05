@@ -22,29 +22,40 @@
   var thisCompId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, headerId, compId) {
+  function displayMenu(loc, id, headerId, compId, trashed) {
     thisHeaderId = headerId;
     thisCompId = compId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
     }
+    updateMenu(trashed);
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
+  function updateMenu(trashed){
+    if (trashed == 'true' ){
+      hideSpan("menuRenameOppComponent");
+      hideSpan("menuDeleteOppComponent");
+    } else {
+      showSpan("menuRenameOppComponent");
+      showSpan("menuDeleteOppComponent");
+    }
+  }
+
   //Menu link functions
   function details() {
     window.location.href = 'Leads.do?command=DetailsOpp&headerId=' + thisHeaderId + '&reset=true';
   }
-  
+
   function modify() {
     window.location.href = 'LeadsComponents.do?command=ModifyComponent&id=' + thisCompId + '&return=list';
   }
-  
+
   function deleteOpp() {
     popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=' + thisCompId + '&return=list&popup=true','Leads.do?command=Search', 'Delete_opp','320','200','yes','no');
   }
-  
+
 </script>
 <div id="menuOppContainer" class="menu">
   <div id="menuOppContent">
@@ -60,7 +71,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuRenameOppComponent" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -70,7 +81,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOpp()">
+      <tr id="menuDeleteOppComponent" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOpp()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

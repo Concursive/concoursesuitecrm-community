@@ -15,38 +15,39 @@
  */
 package com.zeroio.iteam.actions;
 
-import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.beans.IteamSearchBean;
-import com.zeroio.iteam.search.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.SearchBean;
 import com.zeroio.iteam.base.*;
-import com.zeroio.utils.*;
-import java.sql.*;
-import org.apache.lucene.index.IndexWriter;
+import com.zeroio.iteam.beans.IteamSearchBean;
+import com.zeroio.iteam.search.IteamSearchQuery;
+import com.zeroio.utils.SearchUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.troubletickets.base.TicketIndexer;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.documents.base.DocumentStoreIndexer;
 import org.aspcfs.modules.tasks.base.TaskCategoryIndexer;
 import org.aspcfs.modules.tasks.base.TaskIndexer;
-import org.aspcfs.modules.documents.base.DocumentStoreIndexer;
+import org.aspcfs.modules.troubletickets.base.TicketIndexer;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
 
 /**
- *  Actions for working with the search page
+ * Actions for working with the search page
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 27, 2004
  */
 public final class Search extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public synchronized String executeCommandIndex(ActionContext context) {
     //setMaximized(context);
@@ -73,7 +74,8 @@ public final class Search extends CFSModule {
       IssueCategoryIndexer.add(writer, db, context);
       IssueIndexer.add(writer, db, context);
       IssueReplyIndexer.add(writer, db, context);
-      FileItemIndexer.add(writer, db, this.getPath(context, "projects"), context);
+      FileItemIndexer.add(
+          writer, db, this.getPath(context, "projects"), context);
       TaskCategoryIndexer.add(writer, db, context);
       TaskIndexer.add(writer, db, context);
       TicketIndexer.add(writer, db, context);
@@ -127,10 +129,10 @@ public final class Search extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -138,7 +140,8 @@ public final class Search extends CFSModule {
     }
     //setMaximized(context);
     IteamSearchBean search = (IteamSearchBean) context.getFormBean();
-    PagedListInfo searchBeanInfo = this.getPagedListInfo(context, "searchBeanInfo");
+    PagedListInfo searchBeanInfo = this.getPagedListInfo(
+        context, "searchBeanInfo");
     searchBeanInfo.setLink("ProjectManagementSearch.do?command=Default");
     Connection db = null;
     try {
@@ -147,7 +150,8 @@ public final class Search extends CFSModule {
         return "SearchResultsERROR";
       }
       // Get the shared searcher
-      IndexSearcher searcher = SearchUtils.getSharedSearcher(context, this.getDirectory(context));
+      IndexSearcher searcher = SearchUtils.getSharedSearcher(
+          context, this.getDirectory(context));
       db = getConnection(context);
       String queryString = null;
       if (search.getScope() != SearchBean.THIS) {
@@ -157,12 +161,15 @@ public final class Search extends CFSModule {
       if (search.getProjectId() > -1) {
         Project thisProject = loadProject(db, search.getProjectId(), context);
         context.getRequest().setAttribute("Project", thisProject);
-        queryString = "(" + IteamSearchQuery.buildIteamSearchQuery(search, db, getUserId(context), search.getProjectId()) + ") AND (" + search.getParsedQuery() + ")";
+        queryString = "(" + IteamSearchQuery.buildIteamSearchQuery(
+            search, db, getUserId(context), search.getProjectId()) + ") AND (" + search.getParsedQuery() + ")";
       } else {
-        queryString = "(" + IteamSearchQuery.buildIteamSearchQuery(search, db, getUserId(context), -1) + ") AND (" + search.getParsedQuery() + ")";
+        queryString = "(" + IteamSearchQuery.buildIteamSearchQuery(
+            search, db, getUserId(context), -1) + ") AND (" + search.getParsedQuery() + ")";
       }
       // Execute the query and build search results
-      SearchUtils.buildSearchResults(context, queryString, searcher, searchBeanInfo);
+      SearchUtils.buildSearchResults(
+          context, queryString, searcher, searchBeanInfo);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return "SearchResultsERROR";
@@ -174,10 +181,10 @@ public final class Search extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandTips(ActionContext context) {
     return "TipsOK";

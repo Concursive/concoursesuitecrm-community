@@ -141,10 +141,15 @@ public class AssignmentNote extends GenericBean {
   }
 
   public void insert(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("INSERT INTO project_assignments_status " +
-        "(assignment_id, user_id, description, percent_complete, project_status_id, user_assign_id) " +
-        "VALUES (?, ?, ?, ?, ?, ?)");
+    id = DatabaseUtils.getNextSeq(db, "project_assignmen_status_id_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO project_assignments_status " +
+        "(" + (id > -1 ? "status_id, " : "") + "assignment_id, user_id, description, percent_complete, project_status_id, user_assign_id) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, assignmentId);
     pst.setInt(++i, userId);
     pst.setString(++i, description);
@@ -153,7 +158,7 @@ public class AssignmentNote extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, userAssignedId);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_assignmen_status_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "project_assignmen_status_id_seq", id);
   }
 
 

@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.quotes.base.*, org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.quotes.base.*, org.aspcfs.modules.base.EmailAddress " %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
 <jsp:useBean id="customerProduct" class="org.aspcfs.modules.products.base.CustomerProduct" scope="request"/>
@@ -46,7 +46,11 @@
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="details" object="TicketDetails" param="<%= param1 %>">
     <%@ include file="ticket_header_include.jsp" %>
-    <% if (TicketDetails.getClosed() != null) { %>
+    <% if (TicketDetails.isTrashed()) {%>
+      <dhv:permission name="tickets-tickets-delete">
+        <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Restore&id=<%= TicketDetails.getId()%>';submit();">
+      </dhv:permission>
+    <% }else if (TicketDetails.getClosed() != null) { %>
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
     <%} else {%>
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
@@ -80,19 +84,21 @@
       <dhv:label name="contacts.name">Name</dhv:label>
     </td>
     <td>
-      <% if (!TicketDetails.getThisContact().getEmployee()) { %>
+      <dhv:evaluate if="<%= !TicketDetails.getThisContact().getEmployee() %>" >
         <dhv:permission name="accounts-accounts-contacts-view">
-          <a href="Contacts.do?command=Details&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameFull()) %></a>
-        </dhv:permission><dhv:permission name="accounts-accounts-contacts-view" none="true">
+          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= TicketDetails.getContactId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><%= toHtml(TicketDetails.getThisContact().getNameFull()) %></a>
+        </dhv:permission>
+        <dhv:permission name="accounts-accounts-contacts-view" none="true">
           <%= toHtml(TicketDetails.getThisContact().getNameFull()) %>
         </dhv:permission>
-      <% } else { %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= TicketDetails.getThisContact().getEmployee() %>" >
         <dhv:permission name="contacts-internal_contacts-view">
           <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
         </dhv:permission><dhv:permission name="contacts-internal_contacts-view" none="true">
           <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
         </dhv:permission>
-      <% } %>
+      </dhv:evaluate>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -422,7 +428,11 @@
 </table>
 &nbsp;
 <br />
-<% if (TicketDetails.getClosed() != null) { %>
+<% if (TicketDetails.isTrashed()) {%>
+  <dhv:permission name="tickets-tickets-delete">
+    <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Restore&id=<%= TicketDetails.getId()%>';submit();">
+  </dhv:permission>
+<% }else if (TicketDetails.getClosed() != null) { %>
   <dhv:permission name="tickets-tickets-edit">
     <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
   </dhv:permission>

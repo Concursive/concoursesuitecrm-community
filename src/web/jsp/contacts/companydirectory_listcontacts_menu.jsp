@@ -22,59 +22,63 @@
   var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, editPermission, deletePermission, clonePermission, addressRequestPermission, orgId) {
+  function displayMenu(loc, id, contactId, editPermission, deletePermission, clonePermission, addressRequestPermission, orgId, trashed) {
     thisContactId = contactId;
     thisOrgId = orgId;
-    updateMenu(editPermission, deletePermission, clonePermission,addressRequestPermission);
+    updateMenu(editPermission, deletePermission, clonePermission,addressRequestPermission, trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Update menu for this Contact based on permissions
-  function updateMenu(hasEditPermission, hasDeletePermission, hasClonePermission, hasAddressRequestPermission){
-    if(hasEditPermission == 0){
+  function updateMenu(hasEditPermission, hasDeletePermission, hasClonePermission, hasAddressRequestPermission, trashed){
+    if (trashed == 'true') {
       hideSpan('menuEdit');
-    }else{
-      showSpan('menuEdit');
-    }
-    
-    if(hasDeletePermission == 0){
       hideSpan('menuDelete');
-    }else{
-      showSpan('menuDelete');
-    }
-    
-    if(hasClonePermission == 0){
       hideSpan('menuClone');
-    }else{
-      showSpan('menuClone');
-    }
-
-    if(hasAddressRequestPermission == 0){
       hideSpan('menuAddressRequest');
-    }else{
-      showSpan('menuAddressRequest');
-    }
-
-    if (thisOrgId == -1) {
       hideSpan('menuMove');
     } else {
-      showSpan('menuMove');
+      if (hasEditPermission == 0){
+        hideSpan('menuEdit');
+      }else{
+        showSpan('menuEdit');
+      }
+
+      if (hasDeletePermission == 0){
+        hideSpan('menuDelete');
+      }else{
+        showSpan('menuDelete');
+      }
+
+      if(hasClonePermission == 0){
+        hideSpan('menuClone');
+      }else{
+        showSpan('menuClone');
+      }
+
+      if(hasAddressRequestPermission == 0){
+        hideSpan('menuAddressRequest');
+      }else{
+        showSpan('menuAddressRequest');
+      }
+
+      if (thisOrgId == -1) {
+        hideSpan('menuMove');
+      } else {
+        showSpan('menuMove');
+      }
     }
   }
-  
+
   //Menu link functions
   function details() {
     window.location.href = 'ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
-  function modify() {
-    window.location.href = 'ExternalContacts.do?command=ModifyContact&id=' + thisContactId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
-  }
-
   function modify() {
     window.location.href = 'ExternalContacts.do?command=ModifyContact&id=' + thisContactId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
@@ -90,11 +94,15 @@
   function moveTheContact() {
     popURLReturn('ExternalContacts.do?command=MoveToAccount&orgId='+ thisOrgId + '&id='+ thisContactId + '&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','no');
   }
-  
+
   function sendMessage() {
     popURL('MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&messageType=addressRequest' + '&popup=true','Message','700','550','yes','yes');
-  }  
-  
+  }
+
+  function exportVCard() {
+    window.location.href = 'ExternalContacts.do?command=DownloadVCard&id=' + thisContactId;
+  }
+
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
@@ -119,7 +127,7 @@
       </tr>
       <tr id="menuMove" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="moveTheContact()">
         <th>
-          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          <img src="images/icons/stock_move-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
           <dhv:label name="global.button.move">Move</dhv:label>
@@ -133,20 +141,30 @@
           <dhv:label name="global.button.Clone">Clone</dhv:label>
         </td>
       </tr>
-      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContact()">
-        <th>
-          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </th>
-        <td width="100%">
-          <dhv:label name="global.button.delete">Delete</dhv:label>
-        </td>
-      </tr>
       <tr id="menuAddressRequest" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="sendMessage()">
         <th>
           <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
           <dhv:label name="global.button.sendAddressRequest">Send Address Request</dhv:label>
+        </td>
+      </tr>
+      <dhv:permission name="contacts-external_contacts-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="exportVCard()">
+        <th>
+          <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.downloadVcard">Download VCard</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContact()">
+        <th>
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
     </table>

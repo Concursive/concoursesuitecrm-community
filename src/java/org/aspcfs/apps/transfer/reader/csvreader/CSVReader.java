@@ -15,21 +15,23 @@
  */
 package org.aspcfs.apps.transfer.reader.csvreader;
 
-import org.aspcfs.apps.transfer.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.formatter.*;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.*;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 /**
- *  A base class that can be extended when reading CSV files for import, not to
- *  be used directly.
+ * A base class that can be extended when reading CSV files for import, not to
+ * be used directly.
  *
- *@author     matt rajkowski
- *@created    June 9, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 9, 2003
  */
 public class CSVReader implements DataReader {
 
@@ -43,9 +45,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the CSVReader object
+   * Gets the version attribute of the CSVReader object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -53,9 +55,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the CSVReader object
+   * Gets the name attribute of the CSVReader object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "CSVReader";
@@ -63,9 +65,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the description attribute of the CSVReader object
+   * Gets the description attribute of the CSVReader object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Base class for processing CSV files for import, should not be used directly by Reader application";
@@ -73,9 +75,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Sets the csvFile attribute of the CSVReader object
+   * Sets the csvFile attribute of the CSVReader object
    *
-   *@param  tmp  The new csvFile value
+   * @param tmp The new csvFile value
    */
   public void setCsvFile(String tmp) {
     this.csvFile = tmp;
@@ -83,9 +85,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Sets the propertyFile attribute of the CSVReader object
+   * Sets the propertyFile attribute of the CSVReader object
    *
-   *@param  tmp  The new propertyFile value
+   * @param tmp The new propertyFile value
    */
   public void setPropertyFile(String tmp) {
     this.propertyFile = tmp;
@@ -93,9 +95,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Sets the mappings attribute of the CSVReader object
+   * Sets the mappings attribute of the CSVReader object
    *
-   *@param  tmp  The new mappings value
+   * @param tmp The new mappings value
    */
   public void setMappings(PropertyMapList tmp) {
     this.mappings = tmp;
@@ -103,9 +105,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Sets the ignoreRow1 attribute of the CSVReader object
+   * Sets the ignoreRow1 attribute of the CSVReader object
    *
-   *@param  tmp  The new ignoreRow1 value
+   * @param tmp The new ignoreRow1 value
    */
   public void setIgnoreRow1(boolean tmp) {
     this.ignoreRow1 = tmp;
@@ -113,9 +115,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Sets the ignoreRow1 attribute of the CSVReader object
+   * Sets the ignoreRow1 attribute of the CSVReader object
    *
-   *@param  tmp  The new ignoreRow1 value
+   * @param tmp The new ignoreRow1 value
    */
   public void setIgnoreRow1(String tmp) {
     this.ignoreRow1 = DatabaseUtils.parseBoolean(tmp);
@@ -123,9 +125,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the csvFile attribute of the CSVReader object
+   * Gets the csvFile attribute of the CSVReader object
    *
-   *@return    The csvFile value
+   * @return The csvFile value
    */
   public String getCsvFile() {
     return csvFile;
@@ -133,9 +135,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the mappings attribute of the CSVReader object
+   * Gets the mappings attribute of the CSVReader object
    *
-   *@return    The mappings value
+   * @return The mappings value
    */
   public PropertyMapList getMappings() {
     return mappings;
@@ -143,9 +145,9 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the ignoreRow1 attribute of the CSVReader object
+   * Gets the ignoreRow1 attribute of the CSVReader object
    *
-   *@return    The ignoreRow1 value
+   * @return The ignoreRow1 value
    */
   public boolean getIgnoreRow1() {
     return ignoreRow1;
@@ -153,10 +155,10 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Checks to see if the file to be processed exists, as well as processes the
-   *  CSV reader configuration file.
+   * Checks to see if the file to be processed exists, as well as processes the
+   * CSV reader configuration file.
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     boolean configOK = true;
@@ -180,10 +182,10 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     return false;
@@ -191,11 +193,11 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  Gets the value attribute of the CSVReader object
+   * Gets the value attribute of the CSVReader object
    *
-   *@param  record  Description of the Parameter
-   *@param  column  Description of the Parameter
-   *@return         The value value
+   * @param record Description of the Parameter
+   * @param column Description of the Parameter
+   * @return The value value
    */
   public String getValue(ArrayList record, int column) {
     if (column > record.size() || column < 1) {
@@ -211,12 +213,12 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  After the column row is processed, an array of column names can be queried
-   *  to find the corresponding column id.
+   * After the column row is processed, an array of column names can be queried
+   * to find the corresponding column id.
    *
-   *@param  record  Description of the Parameter
-   *@param  names   Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @param names  Description of the Parameter
+   * @return Description of the Return Value
    */
   protected int findColumn(ArrayList record, String[] names) {
     int result = 0;
@@ -231,12 +233,12 @@ public class CSVReader implements DataReader {
 
 
   /**
-   *  After the column row is processed, the column names can be queried to find
-   *  the corresponding column id.
+   * After the column row is processed, the column names can be queried to find
+   * the corresponding column id.
    *
-   *@param  record  Description of the Parameter
-   *@param  name    Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @param name   Description of the Parameter
+   * @return Description of the Return Value
    */
   protected int findColumn(ArrayList record, String name) {
     //Columns represent the worksheet column, starting with 1
@@ -245,19 +247,21 @@ public class CSVReader implements DataReader {
       column = (record.indexOf(name) + 1);
     }
     if (column == 0) {
-      System.out.println("ImportAccounts-> Column not found for parsing: " + name);
+      System.out.println(
+          "ImportAccounts-> Column not found for parsing: " + name);
     } else {
-      System.out.println("ImportAccounts-> Column found for parsing: " + name + " (" + column + ")");
+      System.out.println(
+          "ImportAccounts-> Column found for parsing: " + name + " (" + column + ")");
     }
     return column;
   }
 
 
   /**
-   *  Debug method to inspect the current line.
+   * Debug method to inspect the current line.
    *
-   *@param  out         Description of the Parameter
-   *@param  thisRecord  Description of the Parameter
+   * @param out        Description of the Parameter
+   * @param thisRecord Description of the Parameter
    */
   protected void writeln(PrintWriter out, ArrayList thisRecord) {
     System.out.println("Fields in line: " + thisRecord.size());

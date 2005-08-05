@@ -10,6 +10,11 @@
       <permission value=""/>
       <link value="Accounts.do?command=Details&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="accounts-accounts-history-view"/>
+      <link value="AccountsHistory.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="vehicles">
       <long_html value="Vehicle Inventory"/>
       <permission value="accounts-autoguide-inventory-view"/>
@@ -98,6 +103,11 @@
       <permission value=""/>
       <link value="ExternalContacts.do?command=ContactDetails&amp;id=${id}"/>
     </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="contacts-external_contacts-history-view"/>
+      <link value="ExternalContactsHistory.do?command=List&amp;contactId=${id}"/>
+    </submenu>
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value="contacts-external_contacts-folders-view"/>
@@ -161,6 +171,11 @@
       <permission value="accounts-accounts-contacts-view"/>
       <link value="Contacts.do?command=Details&amp;id=${id}"/>
     </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="accounts-accounts-contacts-history-view"/>
+      <link value="AccountContactsHistory.do?command=View&amp;contactId=${id}"/>
+    </submenu>
     <submenu name="calls">
       <long_html value="Activities"/>
       <permission value="accounts-accounts-contacts-calls-view"/>
@@ -203,7 +218,7 @@
   <container name="opportunities">
     <properties>
       <icon>images/icons/stock_form-currency-field-16.gif</icon>
-      <label>${description}</label>
+      <label>${description} / ${displayName}</label>
     </properties>
     <submenu name="details">
       <long_html value="Components"/>
@@ -214,6 +229,11 @@
       <long_html value="Activities"/>
       <permission value="pipeline-opportunities-calls-view"/>
       <link value="LeadsCalls.do?command=View&amp;headerId=${id}"/>
+    </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="pipeline-folders-view"/>
+      <link value="LeadsFolders.do?command=FolderList&amp;headerId=${id}"/>
     </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>

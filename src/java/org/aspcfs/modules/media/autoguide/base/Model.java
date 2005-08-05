@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.ObjectUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a specific vehicle model for a given make
+ * Represents a specific vehicle model for a given make
  *
- *@author     matt
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class Model {
-
   private int id = -1;
   private int makeId = -1;
   private String name = null;
@@ -41,15 +42,16 @@ public class Model {
 
 
   /**
-   *  Constructor for the Model object
+   * Constructor for the Model object
    */
-  public Model() { }
+  public Model() {
+  }
 
 
   /**
-   *  Constructor for the Model object
+   * Constructor for the Model object
    *
-   *@param  tmp  Description of Parameter
+   * @param tmp Description of Parameter
    */
   public Model(String tmp) {
     name = tmp;
@@ -57,10 +59,10 @@ public class Model {
 
 
   /**
-   *  Constructor for the Model object
+   * Constructor for the Model object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Model(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -69,9 +71,9 @@ public class Model {
 
 
   /**
-   *  Sets the id attribute of the Model object
+   * Sets the id attribute of the Model object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -79,9 +81,9 @@ public class Model {
 
 
   /**
-   *  Sets the id attribute of the Model object
+   * Sets the id attribute of the Model object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -89,9 +91,9 @@ public class Model {
 
 
   /**
-   *  Sets the makeId attribute of the Model object
+   * Sets the makeId attribute of the Model object
    *
-   *@param  tmp  The new makeId value
+   * @param tmp The new makeId value
    */
   public void setMakeId(int tmp) {
     this.makeId = tmp;
@@ -99,9 +101,9 @@ public class Model {
 
 
   /**
-   *  Sets the makeId attribute of the Model object
+   * Sets the makeId attribute of the Model object
    *
-   *@param  tmp  The new makeId value
+   * @param tmp The new makeId value
    */
   public void setMakeId(String tmp) {
     this.makeId = Integer.parseInt(tmp);
@@ -109,9 +111,9 @@ public class Model {
 
 
   /**
-   *  Sets the name attribute of the Model object
+   * Sets the name attribute of the Model object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -119,9 +121,9 @@ public class Model {
 
 
   /**
-   *  Sets the entered attribute of the Model object
+   * Sets the entered attribute of the Model object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -129,9 +131,9 @@ public class Model {
 
 
   /**
-   *  Sets the entered attribute of the Model object
+   * Sets the entered attribute of the Model object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = java.sql.Timestamp.valueOf(tmp);
@@ -139,9 +141,9 @@ public class Model {
 
 
   /**
-   *  Sets the enteredBy attribute of the Model object
+   * Sets the enteredBy attribute of the Model object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -149,9 +151,9 @@ public class Model {
 
 
   /**
-   *  Sets the enteredBy attribute of the Model object
+   * Sets the enteredBy attribute of the Model object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -159,9 +161,9 @@ public class Model {
 
 
   /**
-   *  Sets the modified attribute of the Model object
+   * Sets the modified attribute of the Model object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -169,9 +171,9 @@ public class Model {
 
 
   /**
-   *  Sets the modified attribute of the Model object
+   * Sets the modified attribute of the Model object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = java.sql.Timestamp.valueOf(tmp);
@@ -179,9 +181,9 @@ public class Model {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Model object
+   * Sets the modifiedBy attribute of the Model object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -189,9 +191,9 @@ public class Model {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Model object
+   * Sets the modifiedBy attribute of the Model object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -199,9 +201,9 @@ public class Model {
 
 
   /**
-   *  Sets the make attribute of the Model object
+   * Sets the make attribute of the Model object
    *
-   *@param  tmp  The new make value
+   * @param tmp The new make value
    */
   public void setMake(Make tmp) {
     this.make = tmp;
@@ -209,9 +211,9 @@ public class Model {
 
 
   /**
-   *  Gets the id attribute of the Model object
+   * Gets the id attribute of the Model object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -219,9 +221,9 @@ public class Model {
 
 
   /**
-   *  Gets the makeId attribute of the Model object
+   * Gets the makeId attribute of the Model object
    *
-   *@return    The makeId value
+   * @return The makeId value
    */
   public int getMakeId() {
     return makeId;
@@ -229,9 +231,9 @@ public class Model {
 
 
   /**
-   *  Gets the name attribute of the Model object
+   * Gets the name attribute of the Model object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -239,9 +241,9 @@ public class Model {
 
 
   /**
-   *  Gets the entered attribute of the Model object
+   * Gets the entered attribute of the Model object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -249,9 +251,9 @@ public class Model {
 
 
   /**
-   *  Gets the enteredBy attribute of the Model object
+   * Gets the enteredBy attribute of the Model object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -259,9 +261,9 @@ public class Model {
 
 
   /**
-   *  Gets the modified attribute of the Model object
+   * Gets the modified attribute of the Model object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -269,9 +271,9 @@ public class Model {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Model object
+   * Gets the modifiedBy attribute of the Model object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -279,9 +281,9 @@ public class Model {
 
 
   /**
-   *  Gets the make attribute of the Model object
+   * Gets the make attribute of the Model object
    *
-   *@return    The make value
+   * @return The make value
    */
   public Make getMake() {
     return make;
@@ -289,9 +291,9 @@ public class Model {
 
 
   /**
-   *  Gets the guid attribute of the Model object
+   * Gets the guid attribute of the Model object
    *
-   *@return    The guid value
+   * @return The guid value
    */
   public String getGuid() {
     //return ObjectUtils.generateGuid(entered, enteredBy, id);
@@ -300,11 +302,11 @@ public class Model {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean exists(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -312,7 +314,7 @@ public class Model {
         "model.entered, model.enteredby, " +
         "model.modified, model.modifiedby " +
         "FROM autoguide_model model " +
-        "WHERE lower(model_name) = ? " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(model_name) = ? " +
         "AND model.make_id = ? ");
     pst.setString(1, name.toLowerCase());
     pst.setInt(2, makeId);
@@ -327,38 +329,39 @@ public class Model {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO autoguide_model " +
-        "(make_id, model_name, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?) ");
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    id = DatabaseUtils.getNextSeq(db, "autoguide_model_model_id_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO autoguide_model " +
+        "(" + (id > -1 ? "model_id, " : "") + "make_id, model_name, enteredby, modifiedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, makeId);
     pst.setString(++i, name);
     pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getEnteredBy());
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "autoguide_model_model_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "autoguide_model_model_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
@@ -387,12 +390,12 @@ public class Model {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     if (this.getId() == -1) {
@@ -422,10 +425,10 @@ public class Model {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildResources(Connection db) throws SQLException {
     make = new Make(db, makeId);
@@ -433,10 +436,10 @@ public class Model {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("model_id");

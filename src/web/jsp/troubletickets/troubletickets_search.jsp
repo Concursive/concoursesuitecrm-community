@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -181,6 +182,16 @@
       </table>
     </td>
 	</tr>
+  <%--
+  <tr>
+    <td class="formLabel">
+      <dhv:label name="global.trashed">Trashed</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="searchcodeIncludeOnlyTrashed" value="true" <%= "true".equals(TicListInfo.getSearchOptionValue("searchcodeIncludeOnlyTrashed"))? "checked":""%> />
+    </td>
+	</tr>
+  --%>
 </table>
 <br>
 <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">

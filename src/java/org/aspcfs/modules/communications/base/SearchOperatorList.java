@@ -15,36 +15,34 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Wesley S. Gillette
- *@created    November 1, 2001
- *@version    $Id: SearchOperatorList.java,v 1.6 2003/03/07 14:13:39 mrajkowski
- *      Exp $
+ * @author Wesley S. Gillette
+ * @version $Id: SearchOperatorList.java,v 1.6 2003/03/07 14:13:39 mrajkowski
+ *          Exp $
+ * @created November 1, 2001
  */
 public class SearchOperatorList extends ArrayList {
 
   /**
-   *  Constructor for the SearchOperatorList object
-   *
-   *@since
+   * Constructor for the SearchOperatorList object
    */
-  public SearchOperatorList() { }
+  public SearchOperatorList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildOperatorList(Connection db) throws SQLException {
 
@@ -67,12 +65,11 @@ public class SearchOperatorList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  typeID            Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db     Description of Parameter
+   * @param typeID Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildOperatorList(Connection db, int typeID) throws SQLException {
 

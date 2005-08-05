@@ -15,18 +15,23 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  A collection of ReportQueue objects
+ * A collection of ReportQueue objects
  *
- *@author     matt rajkowski
- *@created    October 1, 2003
- *@version    $Id: CriteriaList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: CriteriaList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
+ *          Exp $
+ * @created October 1, 2003
  */
 public class ReportQueueList extends ArrayList {
 
@@ -42,15 +47,16 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Constructor for the CategoryList object
+   * Constructor for the CategoryList object
    */
-  public ReportQueueList() { }
+  public ReportQueueList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ReportList object
+   * Sets the pagedListInfo attribute of the ReportList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -58,9 +64,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ReportList object
+   * Gets the pagedListInfo attribute of the ReportList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -68,9 +74,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ReportQueueList object
+   * Sets the enteredBy attribute of the ReportQueueList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -78,9 +84,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ReportQueueList object
+   * Sets the enteredBy attribute of the ReportQueueList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -88,9 +94,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the ReportQueueList object
+   * Gets the enteredBy attribute of the ReportQueueList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -98,9 +104,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the ReportQueueList object
+   * Sets the buildResources attribute of the ReportQueueList object
    *
-   *@param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -108,9 +114,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the ReportQueueList object
+   * Sets the buildResources attribute of the ReportQueueList object
    *
-   *@param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -118,9 +124,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the buildResources attribute of the ReportQueueList object
+   * Gets the buildResources attribute of the ReportQueueList object
    *
-   *@return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -128,9 +134,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the processedOnly attribute of the ReportQueueList object
+   * Sets the processedOnly attribute of the ReportQueueList object
    *
-   *@param  tmp  The new processedOnly value
+   * @param tmp The new processedOnly value
    */
   public void setProcessedOnly(boolean tmp) {
     this.processedOnly = tmp;
@@ -138,9 +144,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the processedOnly attribute of the ReportQueueList object
+   * Sets the processedOnly attribute of the ReportQueueList object
    *
-   *@param  tmp  The new processedOnly value
+   * @param tmp The new processedOnly value
    */
   public void setProcessedOnly(String tmp) {
     this.processedOnly = DatabaseUtils.parseBoolean(tmp);
@@ -148,9 +154,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the unprocessedOnly attribute of the ReportQueueList object
+   * Sets the unprocessedOnly attribute of the ReportQueueList object
    *
-   *@param  tmp  The new unprocessedOnly value
+   * @param tmp The new unprocessedOnly value
    */
   public void setUnprocessedOnly(boolean tmp) {
     this.unprocessedOnly = tmp;
@@ -158,9 +164,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the unprocessedOnly attribute of the ReportQueueList object
+   * Sets the unprocessedOnly attribute of the ReportQueueList object
    *
-   *@param  tmp  The new unprocessedOnly value
+   * @param tmp The new unprocessedOnly value
    */
   public void setUnprocessedOnly(String tmp) {
     this.unprocessedOnly = DatabaseUtils.parseBoolean(tmp);
@@ -168,9 +174,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the inQueueOnly attribute of the ReportQueueList object
+   * Sets the inQueueOnly attribute of the ReportQueueList object
    *
-   *@param  tmp  The new inQueueOnly value
+   * @param tmp The new inQueueOnly value
    */
   public void setInQueueOnly(boolean tmp) {
     this.inQueueOnly = tmp;
@@ -178,9 +184,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the inQueueOnly attribute of the ReportQueueList object
+   * Sets the inQueueOnly attribute of the ReportQueueList object
    *
-   *@param  tmp  The new inQueueOnly value
+   * @param tmp The new inQueueOnly value
    */
   public void setInQueueOnly(String tmp) {
     this.inQueueOnly = DatabaseUtils.parseBoolean(tmp);
@@ -188,9 +194,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the sortAscending attribute of the ReportQueueList object
+   * Sets the sortAscending attribute of the ReportQueueList object
    *
-   *@param  tmp  The new sortAscending value
+   * @param tmp The new sortAscending value
    */
   public void setSortAscending(boolean tmp) {
     this.sortAscending = tmp;
@@ -198,9 +204,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the sortAscending attribute of the ReportQueueList object
+   * Sets the sortAscending attribute of the ReportQueueList object
    *
-   *@param  tmp  The new sortAscending value
+   * @param tmp The new sortAscending value
    */
   public void setSortAscending(String tmp) {
     this.sortAscending = DatabaseUtils.parseBoolean(tmp);
@@ -208,9 +214,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the rangeStart attribute of the ReportQueueList object
+   * Sets the rangeStart attribute of the ReportQueueList object
    *
-   *@param  tmp  The new rangeStart value
+   * @param tmp The new rangeStart value
    */
   public void setRangeStart(java.sql.Timestamp tmp) {
     this.rangeStart = tmp;
@@ -218,9 +224,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the rangeStart attribute of the ReportQueueList object
+   * Sets the rangeStart attribute of the ReportQueueList object
    *
-   *@param  tmp  The new rangeStart value
+   * @param tmp The new rangeStart value
    */
   public void setRangeStart(String tmp) {
     this.rangeStart = DatabaseUtils.parseTimestamp(tmp);
@@ -228,9 +234,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the rangeEnd attribute of the ReportQueueList object
+   * Sets the rangeEnd attribute of the ReportQueueList object
    *
-   *@param  tmp  The new rangeEnd value
+   * @param tmp The new rangeEnd value
    */
   public void setRangeEnd(java.sql.Timestamp tmp) {
     this.rangeEnd = tmp;
@@ -238,20 +244,19 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the rangeEnd attribute of the ReportQueueList object
+   * Sets the rangeEnd attribute of the ReportQueueList object
    *
-   *@param  tmp  The new rangeEnd value
+   * @param tmp The new rangeEnd value
    */
   public void setRangeEnd(String tmp) {
     this.rangeEnd = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
-
   /**
-   *  Gets the processedOnly attribute of the ReportQueueList object
+   * Gets the processedOnly attribute of the ReportQueueList object
    *
-   *@return    The processedOnly value
+   * @return The processedOnly value
    */
   public boolean getProcessedOnly() {
     return processedOnly;
@@ -259,9 +264,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the unprocessedOnly attribute of the ReportQueueList object
+   * Gets the unprocessedOnly attribute of the ReportQueueList object
    *
-   *@return    The unprocessedOnly value
+   * @return The unprocessedOnly value
    */
   public boolean getUnprocessedOnly() {
     return unprocessedOnly;
@@ -269,9 +274,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the inQueueOnly attribute of the ReportQueueList object
+   * Gets the inQueueOnly attribute of the ReportQueueList object
    *
-   *@return    The inQueueOnly value
+   * @return The inQueueOnly value
    */
   public boolean getInQueueOnly() {
     return inQueueOnly;
@@ -279,9 +284,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the sortAscending attribute of the ReportQueueList object
+   * Gets the sortAscending attribute of the ReportQueueList object
    *
-   *@return    The sortAscending value
+   * @return The sortAscending value
    */
   public boolean getSortAscending() {
     return sortAscending;
@@ -289,9 +294,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the rangeStart attribute of the ReportQueueList object
+   * Gets the rangeStart attribute of the ReportQueueList object
    *
-   *@return    The rangeStart value
+   * @return The rangeStart value
    */
   public java.sql.Timestamp getRangeStart() {
     return rangeStart;
@@ -299,9 +304,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Gets the rangeEnd attribute of the ReportQueueList object
+   * Gets the rangeEnd attribute of the ReportQueueList object
    *
-   *@return    The rangeEnd value
+   * @return The rangeEnd value
    */
   public java.sql.Timestamp getRangeEnd() {
     return rangeEnd;
@@ -309,11 +314,11 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Builds a list of ReportQueue objects based on the filter properties that
-   *  have been set
+   * Builds a list of ReportQueue objects based on the filter properties that
+   * have been set
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -344,7 +349,8 @@ public class ReportQueueList extends ArrayList {
       pagedListInfo.setDefaultSort("q.entered", "DESC");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY q.entered " + (sortAscending ? "" : "DESC") + " ");
+      sqlOrder.append(
+          "ORDER BY q.entered " + (sortAscending ? "" : "DESC") + " ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -357,20 +363,14 @@ public class ReportQueueList extends ArrayList {
         "q.* " +
         "FROM report_queue q " +
         "WHERE queue_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ReportQueue thisQueue = new ReportQueue(rs);
       this.add(thisQueue);
     }
@@ -387,9 +387,9 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Defines additional parameters to be used by the query
+   * Defines additional parameters to be used by the query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -419,12 +419,11 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Sets the additional parameters for the query
+   * Sets the additional parameters for the query
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -442,13 +441,13 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
-   *  Returns whether the specified report was just locked, false if it already
-   *  locked
+   * Returns whether the specified report was just locked, false if it already
+   * locked
    *
-   *@param  thisReport        Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param thisReport Description of the Parameter
+   * @param db         Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean lockReport(ReportQueue thisReport, Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

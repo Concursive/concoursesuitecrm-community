@@ -14,18 +14,33 @@ import java.io.File;
 import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
 
-File xmlFile = new File(dbFileLibraryPath + System.getProperty("file.separator") + "workflow.xml");
+
+String workflowFile =
+    dbFileLibraryPath + "workflow_en_US.xml";
+File checkWorkflowFile = new File(
+    dbFileLibraryPath + "workflow_" + locale + ".xml");
+if (checkWorkflowFile.exists()) {
+  workflowFile = dbFileLibraryPath + "workflow_" + locale + ".xml";
+}
+File xmlFile = new File(workflowFile);
 if (xmlFile.exists()) {
-  //Read in any workflow business processes
+  // Read in workflow business processes
   BusinessProcessList processList = new BusinessProcessList();
+  processList.setBuildScheduledEvents(true);
   processList.buildList(xmlFile);
-  print("Importing business processes... " + processList.size() + " item" + (processList.size() != 1 ? "s" : ""));
+
+  // Read in scheduled events
+  ScheduledEventList events = new ScheduledEventList();
+  events.buildList(xmlFile);
+  events.buildResources(processList);
   processList.insert(db);
-  //Read in any object hooks
+
+  // Read in any object hooks
   ObjectHookList hookList = new ObjectHookList();
   hookList.buildList(xmlFile);
+
   print("Importing object hooks..." + hookList.size() + " item" + (hookList.size() != 1 ? "s" : ""));
   hookList.insert(db);
 } else {
-  print("No workflow.xml to import");
+  print("No " + workflowFile + " to import");
 }

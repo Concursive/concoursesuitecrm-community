@@ -2,6 +2,8 @@
  $Id$
 
  Notes: 
+   The easiest way to get started is to run "ant deploy"
+
    The build process will instruct you to have several environment variables
    and to customize the build.properties.  The build will fail until all
    installation conditions are met.
@@ -19,7 +21,8 @@
   <!-- constants -->
   <property name="POSTGRESQL" value="postgresql"/>
   <property name="MSSQL" value="mssql"/>
-  
+  <property name="DAFFODILDB" value="daffodildb"/>
+
   <!-- computed properties -->
   <property name="fs" value="${file.separator}"/>
   <property name="lf" value="${line.separator}"/>
@@ -44,7 +47,10 @@
   <!-- Typical usage -->
   <target name="usage">
     <echo message="ant deploy: compile code and create .war file in dist directory"/>
+    <echo message="ant copy: compile, build, and copy changed files for development"/>
     <echo message="ant installdb: install database schema into a new/clean database"/>
+    <echo message="ant upgradesql: upgrades database with a specified .sql script file"/>
+    <echo message="ant upgradebsh: upgrades database with a specified .bsh script file"/>
     <echo message="ant docs: generate JavaDocs for all packages"/>
     <echo message="ant clean: delete the temporary build folder used by the install"/>
   </target>
@@ -57,9 +63,10 @@
     <record name="${base.dir}/build.log" append="no"/>
     <fail unless="env.CATALINA_HOME">Initialization aborted ${lf}${lf}SOLUTION: Setup the environment variable CATALINA_HOME to point at your Tomcat installation.</fail>
     <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
+    <property name="CRM_HOME" value="${env.CRM_HOME}"/>
   </target>
   
-  <!-- See if servlet API file exists for classpath -->
+  <!-- See if servlet API file exists -->
   <target name="init.servlet4.exists" depends="init.environment">
     <available file="${CATALINA_HOME}/common/lib/servlet.jar" 
                property="build.servlet4.present"/>
@@ -113,6 +120,16 @@
     <fail unless="CONTROL">Initialization aborted ${lf}${lf}SOLUTION: Edit the properties file at ${base.dir}${fs}build.properties, make sure to uncomment the control parameter at the top of the file</fail>
   </target>
   
+  <!-- Copy the common jars -->
+  <target name="init.classpath.uptodate">
+    <mkdir dir="${CRM_HOME}/WEB-INF/lib"/>
+    <copy todir="${CRM_HOME}/WEB-INF/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
   <!-- Configure classpath as both object and a property -->
   <target name="init.classpath">
     <path id="cfs2.classpath">
@@ -143,6 +160,7 @@
     <property name="SITE.DBTYPE" value=""/>
     <property name="SITE.DRIVER" value=""/>
     <property name="SITE.URL" value=""/>
+    <property name="SITE.APPEND" value=""/>
     <property name="SITE.USER" value=""/>
     <property name="SITE.PASSWORD" value=""/>
     <!-- External Servers -->
@@ -157,6 +175,7 @@
     <echo message="Ant version: ${ant.version}"/>
     <echo message="Java version: ${java.version}"/>
     <echo message="Source Path: ${base.dir}"/>
+    <echo message="Destination Path: ${base.dir}"/>
   </target>
   
   <target name="taskdef.upgradeDatabase" depends="init">
@@ -186,26 +205,16 @@
         </classpath>
     </taskdef>
   </target>
-  
-  <target name="taskdef.register" depends="init">
-    <taskdef name="register" 
-        classname="org.aspcfs.ant.tasks.RegisterTask">
-        <classpath>
-          <fileset dir="${build.lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-          <fileset dir="${lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-        </classpath>
-    </taskdef>
+
+  <target name="confirm.directory">
+    <fail unless="CRM_HOME">Initialization aborted ${lf}${lf}SOLUTION: Create an environment variable CRM_HOME which points to Tomcat's Centric CRM webapp directory.  Ex. "CRM_HOME=/path/to/tomcat/webapps/centric"</fail>
   </target>
-  
+
   <!-- See if files are up-to-date so only new files are installed during development -->
-  <target name="classes.prepare" depends="init">
+  <target name="classes.prepare" depends="init, confirm.directory">
     <uptodate property="classes.uptodate">
       <srcfiles dir="${src.classes.dir}" includes="**/*.java"/>
-      <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+      <mapper type="merge" to="${CRM_HOME}/WEB-INF/lib/aspcfs.jar"/>
     </uptodate>
   </target>
   
@@ -241,10 +250,6 @@
           depends="init,compile.delete"
           unless="classes.uptodate">
     <!-- Compile the code -->
-    <!--
-    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
-           debug="true" debuglevel="lines, vars, source">
-    -->
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off"
         fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
       <classpath>
@@ -295,11 +300,141 @@
           depends="init,compile,jar">
     <mkdir dir="${build.lib.dir}"/>
   </target>
-  
+
+  <!-- Delete outdated files -->
+  <target name="deploy.delete" depends="confirm.directory" description="Removes outdated files from web application">
+    <delete verbose="true" >
+      <fileset dir="${CRM_HOME}" includesfile="${base.dir}/build.cleanup"/>
+    </delete>
+  </target>
+
+  <target name="deploy.copy" depends="confirm.directory">
+    <!-- Copy the .jars, only if new -->
+    <copy todir="${CRM_HOME}/WEB-INF/lib">
+      <fileset dir="${build.lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <!-- Copy the web data, only if new -->
+    <copy todir="${CRM_HOME}">
+      <fileset dir="${src.web.dir}/jsp">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${CRM_HOME}">
+      <fileset dir="${src.web.dir}/html">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${CRM_HOME}" >
+      <fileset dir="${src.web.dir}">
+        <include name="images/**" />
+        <include name="javascript/**" />
+        <include name="css/**" />
+      </fileset>
+    </copy>
+    <!-- Copy the configuration files -->
+    <copy todir="${CRM_HOME}/WEB-INF" verbose="true">
+      <fileset dir="${src.web.dir}/WEB-INF">
+        <include name="*.xml"/>
+        <include name="*.tld"/>
+        <exclude name="web.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy the language files -->
+    <mkdir dir="${CRM_HOME}/WEB-INF/languages"/>
+    <copy todir="${CRM_HOME}/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${CRM_HOME}/javascript/languages"/>
+    <copy todir="${CRM_HOME}/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
+    <!-- Copy the font files-->
+    <mkdir dir="${CRM_HOME}/WEB-INF/fonts"/>
+    <copy todir="${CRM_HOME}/WEB-INF/fonts">
+      <fileset dir="${src.dir}/fonts">
+        <include name="*.ttf"/>
+      </fileset>
+    </copy>
+    <!-- Copy this build file -->
+    <copy file="${base.dir}/build.xml" todir="${CRM_HOME}/WEB-INF/fileLibrary" verbose="true"/>
+  </target>
+
+  <target name="deploy.jasper.check" depends="init">
+    <uptodate property="deploy.jasper.uptodate">
+      <srcfiles dir="${src.dir}/jasper_reports" includes="*.xml"/>
+      <mapper type="merge" to="${CRM_HOME}/WEB-INF/reports/accounts_type.jasper"/>
+    </uptodate>
+  </target>
+
+  <target name="deploy.jasper" depends="confirm.directory,deploy.jasper.check,taskdef.jasper" unless="deploy.jasper.uptodate">
+    <echo message="Installing JasperReport files"/>
+    <!-- Copy the jasperreports, only if new -->
+    <copy todir="${CRM_HOME}/WEB-INF/reports">
+      <fileset dir="${src.dir}/jasper_reports">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <!-- The old .jasper file must be removed when a new .xml is copied -->
+    <delete>
+        <fileset dir= "${CRM_HOME}/WEB-INF/reports" includes="*.jasper"/>
+    </delete>
+    <!-- Compile the reports -->
+    <compileJasperReport
+        srcdir="${CRM_HOME}/WEB-INF/reports"
+        destdir="${CRM_HOME}/WEB-INF/reports"
+        compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
+  </target>
+
+  <!-- See if there is an updated file to merge -->
+  <target name="deploy.merge.prepare">
+    <!-- Generate a new CRM_HOME web.xml if any of the following: -->
+    <!-- 1. cvs web.xml is newer than CRM_HOME web.xml -->
+    <!-- 2. CRM_HOME build.properties is newer than CRM_HOME web.xml -->
+    <!-- 3. Any of the CRM_HOME xml or tld files are newer than CRM_HOME web.xml -->
+    <condition property="deploy.merge.uptodate">
+      <and>
+        <available file="${CRM_HOME}/WEB-INF/web.xml"/>
+        <available file="${CRM_HOME}/WEB-INF/fileLibrary/build.properties"/>
+        <uptodate srcfile="${src.web.dir}/WEB-INF/web.xml"
+                  targetfile="${CRM_HOME}/WEB-INF/web.xml"/>
+        <uptodate srcfile="${CRM_HOME}/WEB-INF/fileLibrary/build.properties"
+                  targetfile="${CRM_HOME}/WEB-INF/web.xml"/>
+        <uptodate targetfile="${CRM_HOME}/WEB-INF/web.xml">
+          <srcfiles dir="${CRM_HOME}/WEB-INF" includes="*.xml,*.tld" excludes="web.xml"/>
+        </uptodate>
+      </and>
+    </condition>
+  </target>
+
+  <!-- Merge meta-data with build.properties, only if changed so reload doesn't kick in -->
+  <target name="deploy.merge" depends="confirm.directory,deploy.merge.prepare" unless="deploy.merge.uptodate">
+    <echo message="Installing web.xml configuration file"/>
+    <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CRM_HOME}/WEB-INF" overwrite="true"/>
+    <replace file="${CRM_HOME}/WEB-INF/web.xml"
+             token="@KEYSTORE@" value="${CRM_HOME}${fs}WEB-INF${fs}fileLibrary${fs}keystore"/>
+  </target>
+
+  <!-- Deploy to an exploded web application directory -->
+  <target name="copy"
+          description="Compile, build, copy, and configure web application"
+          depends="init,confirm.directory,classes.prepare,build,deploy.delete,deploy.copy,deploy.merge,deploy.jasper">
+    <mkdir dir="${CRM_HOME}/graphs"/>
+  </target>
+
+  <target name="dev.configure">
+    <property name="compile.donotdelete.property" value="true"/>
+  </target>
+
   <!-- Create a WAR -->
   <target name="deploy"
           description="Compile, build, and generate web archive"
-          depends="classes.prepare,build,dist.archive">
+          depends="build,dist.archive">
   </target>
   
   <target name="dist.archive" depends="taskdef.jasper">
@@ -349,19 +484,6 @@
         <exclude name="web.xml"/>
       </fileset>
     </copy>
-    <!-- Copy the language files -->
-    <mkdir dir="${dist.dir}/cfs/WEB-INF/languages"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/languages">
-      <fileset dir="${src.dir}/languages">
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
-    <mkdir dir="${dist.dir}/cfs/javascript/languages"/>
-    <copy todir="${dist.dir}/cfs/javascript/languages">
-      <fileset dir="${src.dir}/languages">
-        <include name="*.js"/>
-      </fileset>
-    </copy>
     <!-- Copy the default preference files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup" verbose="true">
       <fileset dir="${pref.dir}/cfs/system">
@@ -382,6 +504,26 @@
     <delete>
         <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>
+    <!-- Copy the language files -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/languages"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/cfs/javascript/languages"/>
+    <copy todir="${dist.dir}/cfs/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
+    <!-- Copy the fonts -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/fonts"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/fonts">
+      <fileset dir="${src.dir}/fonts">
+        <include name="*.ttf"/>
+      </fileset>
+    </copy>
     <!-- Archive the folder -->
     <war destfile="${dist.dir}/centric.war"
          webxml="${src.web.dir}/WEB-INF/web.xml"
@@ -407,7 +549,7 @@
     <input message="Enter database name: " addproperty="DATABASE.NAME"/>
     <!-- Display all information about database here, except password -->
     <echo message="Driver: ${SITE.DRIVER}"/>
-    <echo message="URL: ${SITE.URL}${DATABASE.NAME}"/>
+    <echo message="URL: ${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
     <echo message="Username: ${SITE.USER}"/>
   </target>
   
@@ -427,6 +569,9 @@
     </condition>
     <condition property="DBTYPE.MSSQL">
       <equals arg1="${SITE.DBTYPE}" arg2="${MSSQL}" casesensitive="false" trim="true"/>
+    </condition>
+    <condition property="DBTYPE.DAFFODILDB">
+      <equals arg1="${SITE.DBTYPE}" arg2="${DAFFODILDB}" casesensitive="false" trim="true"/>
     </condition>
     <!-- Copy template files to be used -->
     <delete dir="${build.sql.dir}" failonerror="false"/>
@@ -458,18 +603,36 @@
     </replace>
   </target>
   
-  <target name="install.prepare" depends="install.check.postgresql,install.check.mssql">
+  <!-- Prepare the DaffodilDB files -->
+  <target name="install.check.daffodildb" depends="install.prepare.init" if="DBTYPE.DAFFODILDB">
+    <replace dir="${build.sql.dir}" token="@TRUE@" value="true">
+      <include name="*.sql"/>
+    </replace>
+    <replace dir="${build.sql.dir}" token="@FALSE@" value="false">
+      <include name="*.sql"/>
+    </replace>
+  </target>
+
+  <target name="install.abortOnDB">
+    <condition property="ABORT">
+      <equals arg1="${SITE.DBTYPE}" arg2="${DAFFODILDB}" casesensitive="false" trim="true"/>
+    </condition>
+    <fail if="ABORT">This database type requires additional ant installdb commands.${lf}${lf}SOLUTION: Now execute "ant installdb${INSTALL.NEXT_ID}"</fail>
+  </target>
+
+  <target name="install.prepare" depends="install.check.postgresql,install.check.mssql,install.check.daffodildb">
     <echo message="SQL files prepared for database type: ${SITE.DBTYPE}"/>
   </target>
   
-  <target name="install.database" depends="init,install.prepare,install.language">
+  <target name="install.database" depends="init,install.prepare,install.prepare.dbname,install.language">
+    <property name="INSTALL.NEXT_ID" value="2"/>
     <echo message="Building database"/>
     <!-- TODO: Optionally create database -->
     
     <!-- Create database and initialize data -->
     <sql
         driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
         userid="${SITE.USER}"
         password="${SITE.PASSWORD}">
       <classpath>
@@ -477,11 +640,7 @@
       </classpath>
       <!-- base data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_gatekeeper.sql"/>
-      <transaction src="${build.sql.dir}/gatekeeper.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
-      <transaction src="${build.sql.dir}/code_tables.sql"/>
-      <transaction src="${build.sql.dir}/access.sql"/>
-      <transaction src="${build.sql.dir}/organization.sql"/>
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
       <!-- project management -->
@@ -503,7 +662,6 @@
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
       <!-- synchronization api -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_sync.sql"/>
-      <transaction src="${build.sql.dir}/sync.sql"/>
       <!-- revenue manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
       <!-- task management -->
@@ -515,13 +673,43 @@
       <!-- additional fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms_append_fields.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote_adjustment.sql" />
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_history.sql" />
     </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
   
+  <!-- Insert required default data -->
+  <target name="install.system" depends="init,taskdef.upgradeDatabase,install.prepare.dbname,install.language">
+    <property name="INSTALL.NEXT_ID" value="3"/>
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CRM_HOME}"
+      baseFile="${src.sql.dir}${fs}init${fs}database.bsh"
+      specificDatabase="${DATABASE.NAME}"
+      processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CRM_HOME}"
+      baseFile="${src.sql.dir}${fs}init${fs}sync.bsh"
+      specificDatabase="${DATABASE.NAME}"
+      processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+  </target>
+
   <!-- Install permissions -->
-  <target name="install.permissions" depends="init,install.prepare">
-    <echo message="Process file: ${src.sql.dir}${fs}init${fs}permissions.xml"/>
+  <target name="install.permissions" depends="init,install.prepare.dbname,install.language">
+    <echo message="Process file: ${src.sql.dir}${fs}init${fs}permissions_${LOCALE.NAME}.xml"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -529,9 +717,9 @@
           <include name="*.jar"/>
         </fileset>
       </classpath>
-      <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions.xml"/>
+      <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions_${LOCALE.NAME}.xml"/>
       <sysproperty key="driver" value="${SITE.DRIVER}"/>
-      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <sysproperty key="user" value="${SITE.USER}"/>
       <sysproperty key="pass" value="${SITE.PASSWORD}"/>
       <arg value="${src.sql.dir}${fs}init${fs}permissions-dataimport.xml"/>
@@ -548,7 +736,7 @@
     <!-- Delete the old help -->
     <sql
         driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
         userid="${SITE.USER}"
         password="${SITE.PASSWORD}">
       <classpath>
@@ -570,7 +758,7 @@
   </target>
   
   <!-- Install help contents into blank database -->
-  <target name="install.help" depends="init,install.prepare">
+  <target name="install.help" depends="init,install.prepare.dbname,install.language">
     <echo message="Installing help contents from: ${src.sql.dir}${fs}init${fs}help.xml"/>
     <java classname="org.aspcfs.apps.help.ImportHelp" fork="yes" failonerror="yes">
       <classpath>
@@ -581,7 +769,7 @@
       </classpath>
       <arg value="${src.sql.dir}${fs}init${fs}help.xml"/>
       <arg value="${SITE.DRIVER}"/>
-      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <arg value="${SITE.USER}"/>
       <arg value="${SITE.PASSWORD}"/>
     </java>
@@ -592,7 +780,7 @@
     <echo message="Only available locales can be selected..."/>
     <input message="Which locale should be used for the data? "
            addproperty="LOCALE.NAME"
-           validargs="en_US"/>
+           validargs="de_DE,en_US,es_VE,pt_BR"/>
   </target>
 
   <target name="install.lookup" depends="init,install.prepare.dbname,install.language">
@@ -612,14 +800,14 @@
       </classpath>
       <arg value="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}/lookuplists_${LOCALE.NAME}.xml"/>
       <arg value="${SITE.DRIVER}"/>
-      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <arg value="${SITE.USER}"/>
       <arg value="${SITE.PASSWORD}"/>
     </java>
   </target>
 
   <!-- Copy the default .XML preferences for this system -->
-  <target name="install.copyprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
+  <target name="install.copyprefs" depends="init,taskdef.upgradeDatabase,install.prepare.dbname,install.language">
     <mkdir dir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
     <copy todir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}">
       <fileset dir="${pref.dir}/cfs/system">
@@ -630,38 +818,116 @@
     <upgradeDatabase
         sitecode="${SITE.APPCODE}"
         driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
         user="${SITE.USER}"
         password="${SITE.PASSWORD}"
         servletJar="${servletJar}"
-        webPath="${build.web.dir}"
+        webPath="${build.web.dir}${fs}"
         baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
         specificDatabase="${DATABASE.NAME}"
-        processSpecifiedDatabaseOnly="true">
+        processSpecifiedDatabaseOnly="true"
+        locale="${LOCALE.NAME}">
     </upgradeDatabase>
   </target>
   <!-- Delete the preferences from this system -->
-  <target name="install.deleteprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
+  <target name="install.deleteprefs" depends="init,taskdef.upgradeDatabase,install.prepare.dbname,install.language">
     <!-- Delete the workflow from the database -->
     <upgradeDatabase
         sitecode="${SITE.APPCODE}"
         driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
         user="${SITE.USER}"
         password="${SITE.PASSWORD}"
         servletJar="${servletJar}"
-        webPath="${build.web.dir}"
+        webPath="${build.web.dir}${fs}"
         baseFile="${src.sql.dir}${fs}init${fs}workflow-delete.bsh"
         specificDatabase="${DATABASE.NAME}"
         processSpecifiedDatabaseOnly="true">
     </upgradeDatabase>
   </target>
-  
+  <!-- Copy the default .XML preferences for this system -->
+  <target name="install.events" depends="init,taskdef.upgradeDatabase,install.prepare.dbname,install.language">
+    <!-- Install the default events to the database -->
+    <upgradeDatabase
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
+        servletJar="${servletJar}"
+        webPath="${build.web.dir}"
+        baseFile="${src.sql.dir}${fs}init${fs}events_gk.bsh"
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true"
+        locale="${LOCALE.NAME}">
+    </upgradeDatabase>
+  </target>
+
   <!-- Installs a new database -->
-  <target name="installdb" depends="install.database,install.permissions,install.lookup,install.help,install.copyprefs"
+  <target name="installdb" depends="install.database,install.abortOnDB,install.system,install.permissions,install.lookup,install.help,install.copyprefs,install.events"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
-  
+  <!-- Embedded DB currently locks database so run these separately -->
+  <target name="installdb2" depends="install.system,install.abortOnDB"
+    description="Create tables, insert base records and permissions into new database, copy XML files">
+  </target>
+  <target name="installdb3" depends="install.permissions,install.lookup,install.help,install.copyprefs,install.events"
+    description="Create tables, insert base records and permissions into new database, copy XML files">
+  </target>
+
+  <!-- Programmatically upgrades installed databases for
+       the specified appcode and file, runs against the build code,
+       not the installed code so that scripts can be run before OR after
+       a site has been deployed -->
+  <target name="upgradedb.name" unless="arg1">
+    <input message="Enter file to process, include the file extension: " addproperty="arg1"/>
+  </target>
+  <target name="upgradedb.site" unless="arg2">
+    <input message="Enter database to upgrade: " addproperty="arg2"/>
+  </target>
+  <target name="upgradedb.uptodate">
+    <uptodate property="classes.uptodate">
+      <srcfiles dir="${src.classes.dir}" includes="**/*.java"/>
+      <mapper type="merge" to="${build.lib.dir}/aspcfs.jar"/>
+    </uptodate>
+  </target>
+  <target name="upgradesql" depends="taskdef.upgradeDatabase,taskdef.jasper,upgradedb.name,upgradedb.site,upgradedb.uptodate,build"
+    description="Upgrades database with a specified .sql script file">
+    <fail unless="arg1">Missing arg1 -- the file to process</fail>
+    <fail unless="arg2">Missing arg2 -- the database to upgrade</fail>
+    <upgradeDatabase
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
+        servletJar="${servletJar}"
+        webPath="${build.web.dir}"
+        baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}"
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true"
+        locale="${LOCALE.NAME}">
+    </upgradeDatabase>
+  </target>
+  <target name="upgradebsh" depends="taskdef.upgradeDatabase,taskdef.jasper,upgradedb.name,upgradedb.site,upgradedb.uptodate,build"
+    description="Upgrades database with a specified .bsh script file">
+    <fail unless="arg1">Missing arg1 -- the file to process</fail>
+    <fail unless="arg2">Missing arg2 -- the database to upgrade</fail>
+    <upgradeDatabase
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
+        servletJar="${servletJar}"
+        webPath="${build.web.dir}"
+        baseFile="${src.sql.dir}${fs}upgrade${fs}${arg1}"
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true"
+        locale="${LOCALE.NAME}">
+    </upgradeDatabase>
+  </target>
+
   <!-- Generate Java Docs -->
   <target name="docs" description="Generate JavaDocs" depends="compile">
     <mkdir dir="${build.docs.dir}"/>
@@ -675,7 +941,7 @@
           excludepackagenames="javax.servlet">
       <tag name="created" description="Date file was created"/>
       <header>Centric CRM</header>
-      <footer>Copyright 2001-2004 Dark Horse Ventures</footer>
+      <footer>Copyright 2001-2005 Dark Horse Ventures, LLC</footer>
       <classpath>
         <path refid="cfs2.classpath"/>
         <!--

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.admin.base.*,java.util.*" %>
@@ -49,7 +49,7 @@
   <tr class="containerBack">
     <td align="left">
       <dhv:label name="admin.disableUserAccount.text.1" param="<%= "username="+User.getUsername()+"|contactName="+User.getContact().getNameLastFirst() %>">You have requested to disable the user account <b><%=User.getUsername()%></b> (<%=User.getContact().getNameLastFirst()%>).</dhv:label><p>
-      <dhv:label name="admin.disableUserAccount.text.2">Nearly every object within ultimately depends on a user account, so it is imperative that any data directly associated with the user account you wish to disable gets re-assigned to an active user within the system.<p>If you click "Proceed", the following actions will occur:</dhv:label>
+      <dhv:label name="admin.disableUserAccount.text.2" param="page=<p>">Nearly every object within ultimately depends on a user account, so it is imperative that any data directly associated with the user account you wish to disable gets re-assigned to an active user within the system.<p>If you click "Proceed", the following actions will occur:</dhv:label>
       <ul>
       <li><dhv:label name="admin.userImmediatelyDisabled" param="<%= "username="+User.getUsername() %>"><b><%= User.getUsername() %></b> will be immediately disabled</dhv:label></li>
       <li><dhv:label name="admin.userdisable.ticketCreated.text">A Ticket will be created and assigned to the direct manager, if there is one, of the newly disabled User in reference to any data re-assignment that needs to occur</dhv:label></li>

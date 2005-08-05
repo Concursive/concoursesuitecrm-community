@@ -7,10 +7,10 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.text.*;
-
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.text.SimpleDateFormat;
 
 /**
  * Represents one day on the timesheet
@@ -20,7 +20,6 @@ import org.aspcfs.utils.DatabaseUtils;
  * @created November 8, 2004
  */
 public class DailyTimesheet {
-
   // properties
   private int id = -1;
   private int userId = -1;
@@ -657,12 +656,16 @@ public class DailyTimesheet {
     // TODO: Add transaction
     // Avoid saving empty records
     if (totalHours != 0 || unavailable || vacation || verified) {
+      id = DatabaseUtils.getNextSeq(db, "timesheet_timesheet_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO timesheet " +
-          "(user_id, entry_date, hours, verified, approved, approved_by, " +
+          "(" + (id > -1 ? "timesheet_id, " : "") + "user_id, entry_date, hours, verified, approved, approved_by, " +
           "available, unavailable, vacation, enteredby, modifiedby) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
       int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, userId);
       pst.setTimestamp(++i, entryDate);
       pst.setDouble(++i, totalHours);
@@ -676,9 +679,9 @@ public class DailyTimesheet {
       pst.setInt(++i, modifiedBy);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "timesheet_timesheet_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "timesheet_timesheet_id_seq", id);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("DailyTimesheetList-> INSERTED: " + id);
+        System.out.println("DailyTimesheet-> INSERTED: " + id);
       }
       // Insert any project data
       if (projectTimesheetList != null) {

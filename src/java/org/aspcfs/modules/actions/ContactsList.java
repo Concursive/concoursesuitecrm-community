@@ -17,6 +17,7 @@ package org.aspcfs.modules.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.ProjectList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.FilterList;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -30,22 +31,22 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
- *  Creates a Contacts List with 5 filters & subfilters . Can be used in two
- *  variants : Single/Multiple<br>
- *  Single and mutiple define if the selection can be single/multiple
+ * Creates a Contacts List with 5 filters & subfilters . Can be used in two
+ * variants : Single/Multiple<br>
+ * Single and mutiple define if the selection can be single/multiple
  *
- *@author     akhi_m
- *@created    September 5, 2002
- *@version    $Id: ContactsList.java,v 1.16.66.1 2004/01/23 15:33:26 ananth Exp
- *      $
+ * @author akhi_m
+ * @version $Id: ContactsList.java,v 1.16.66.1 2004/01/23 15:33:26 ananth Exp
+ *          $
+ * @created September 5, 2002
  */
 public final class ContactsList extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandContactList(ActionContext context) {
     Connection db = null;
@@ -58,28 +59,37 @@ public final class ContactsList extends CFSModule {
     //initialize from page, if list...
     //put in session
     if (context.getRequest().getParameter("previousSelection") != null) {
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
-      StringTokenizer st1 = new StringTokenizer(context.getRequest().getParameter("previousSelectionDisplay"), "|");
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("previousSelection"), "|");
+      StringTokenizer st1 = new StringTokenizer(
+          context.getRequest().getParameter("previousSelectionDisplay"), "|");
       while (st.hasMoreTokens()) {
         selectedList.put(new Integer(st.nextToken()), st1.nextToken());
       }
     } else {
       //get selected list from the session
-      selectedList = (HashMap) context.getSession().getAttribute("selectedContacts");
+      selectedList = (HashMap) context.getSession().getAttribute(
+          "selectedContacts");
     }
     //Flush the selectedList if its a new selection
-    if ("true".equals(((String) context.getRequest().getParameter("flushtemplist")))) {
-      if (context.getSession().getAttribute("finalContacts") != null && context.getRequest().getParameter("previousSelection") == null) {
-        selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalContacts")).clone();
+    if ("true".equals(
+        ((String) context.getRequest().getParameter("flushtemplist")))) {
+      if (context.getSession().getAttribute("finalContacts") != null && context.getRequest().getParameter(
+          "previousSelection") == null) {
+        selectedList = (HashMap) ((HashMap) context.getSession().getAttribute(
+            "finalContacts")).clone();
       }
     }
-    HashMap finalContactList = (HashMap) context.getSession().getAttribute("finalContacts");
+    HashMap finalContactList = (HashMap) context.getSession().getAttribute(
+        "finalContacts");
     try {
       db = this.getConnection(context);
+      SystemStatus thisSystem = this.getSystemStatus(context);
       //Build Department List if empty
       if (context.getSession().getAttribute("DepartmentList") == null) {
         LookupList departmentList = new LookupList(db, "lookup_department");
-        departmentList.addItem(-1, "--All Departments--");
+        departmentList.addItem(
+            -1, "--" + thisSystem.getLabel("contact.allDepartments") + "--"); //All Departments
         context.getSession().setAttribute("DepartmentList", departmentList);
       }
       //Build Project List if empty
@@ -91,7 +101,8 @@ public final class ContactsList extends CFSModule {
         projects.setGroupId(-1);
         projects.buildList(db);
         HtmlSelect htmlSelect = projects.getHtmlSelect();
-        htmlSelect.addItem(-1, "--All Projects--", 0);
+        htmlSelect.addItem(
+            -1, "--" + thisSystem.getLabel("contact.allProjects") + "--", 0); //All Projects
         context.getSession().setAttribute("ProjectListSelect", htmlSelect);
       }
       contactList = new ContactList();
@@ -107,23 +118,29 @@ public final class ContactsList extends CFSModule {
         while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
           int contactId = 0;
           String emailAddress = "";
-          contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+          contactId = Integer.parseInt(
+              context.getRequest().getParameter("hiddencontactid" + rowCount));
 
           if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
             if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
 
               //we want this "emailAddress" variable to be the email only if we are not in Campaign Mgr.
               if (context.getRequest().getParameter("campaign") == null) {
-                emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
-              } else if (!(((String) context.getRequest().getParameter("campaign")).equalsIgnoreCase("true"))) {
-                emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
+                emailAddress = context.getRequest().getParameter(
+                    "contactemail" + rowCount);
+              } else if (!(((String) context.getRequest().getParameter(
+                  "campaign")).equalsIgnoreCase("true"))) {
+                emailAddress = context.getRequest().getParameter(
+                    "contactemail" + rowCount);
               }
             }
 
             //If User does not have a emailAddress or if it is not a message use Name(LastFirst)
-            if (emailAddress.equals("") || "single".equals(listType) || "name".equals(displayType)) {
+            if (emailAddress.equals("") || "single".equals(listType) || "name".equals(
+                displayType)) {
               if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
-                emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
+                emailAddress = "P:" + context.getRequest().getParameter(
+                    "hiddenname" + rowCount);
               }
             }
 
@@ -147,12 +164,16 @@ public final class ContactsList extends CFSModule {
           selectedList.put(new Integer(Integer.parseInt(selectedIds)), "");
         }
       }
-      if ("true".equals((String) context.getRequest().getParameter("finalsubmit"))) {
+      if ("true".equals(
+          (String) context.getRequest().getParameter("finalsubmit"))) {
         //Handle single selection case
         if ("single".equals(listType)) {
-          rowCount = Integer.parseInt(context.getRequest().getParameter("rowcount"));
-          String emailAddress = context.getRequest().getParameter("hiddenname" + rowCount);
-          int contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          String emailAddress = context.getRequest().getParameter(
+              "hiddenname" + rowCount);
+          int contactId = Integer.parseInt(
+              context.getRequest().getParameter("hiddencontactid" + rowCount));
           selectedList.clear();
           selectedList.put(new Integer(contactId), emailAddress);
         }
@@ -160,7 +181,7 @@ public final class ContactsList extends CFSModule {
         finalContactList = selectedList;
       }
       //Set ContactList Parameters and build the list
-      setParameters(contactList, context);
+      setParameters(contactList, context, db);
       contactList.buildList(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -170,7 +191,8 @@ public final class ContactsList extends CFSModule {
     }
     context.getRequest().setAttribute("ContactList", contactList);
     if ("true".equals((String) context.getRequest().getParameter("campaign"))) {
-      context.getRequest().setAttribute("Campaign", (String) context.getRequest().getParameter("campaign"));
+      context.getRequest().setAttribute(
+          "Campaign", (String) context.getRequest().getParameter("campaign"));
     }
 
     context.getSession().setAttribute("selectedContacts", selectedList);
@@ -182,29 +204,37 @@ public final class ContactsList extends CFSModule {
 
 
   /**
-   *  Sets the parameters attribute of the ContactsList object
+   * Sets the parameters attribute of the ContactsList object
    *
-   *@param  contactList  The new parameters value
-   *@param  context      The new parameters value
+   * @param contactList The new parameters value
+   * @param context     The new parameters value
    */
-  private void setParameters(ContactList contactList, ActionContext context) {
+  private void setParameters(ContactList contactList, ActionContext context, Connection db) {
+    SystemStatus thisSystem = this.getSystemStatus(context);
     // search for a particular contact
+    String defaultFirstName = thisSystem.getLabel(
+        "accounts.accounts_add.FirstName");
+    String defaultLastName = thisSystem.getLabel(
+        "accounts.accounts_add.LastName");
+
     String firstName = context.getRequest().getParameter("firstName");
     String lastName = context.getRequest().getParameter("lastName");
+
     if (firstName != null) {
-      if (!"First Name".equals(firstName) && !"".equals(firstName.trim())) {
+      if (!defaultFirstName.equals(firstName) && !"".equals(firstName.trim())) {
         contactList.setFirstName("%" + firstName + "%");
       }
     }
     if (lastName != null) {
-      if (!"Last Name".equals(lastName) && !"".equals(lastName.trim())) {
+      if (!defaultLastName.equals(lastName) && !"".equals(lastName.trim())) {
         contactList.setLastName("%" + lastName + "%");
       }
     }
     if (context.getRequest().getParameter("reset") != null) {
       context.getSession().removeAttribute("ContactListInfo");
     }
-    PagedListInfo contactListInfo = this.getPagedListInfo(context, "ContactListInfo");
+    PagedListInfo contactListInfo = this.getPagedListInfo(
+        context, "ContactListInfo");
 
     //filter for departments & project teams
     if (!contactListInfo.hasListFilters()) {
@@ -217,7 +247,7 @@ public final class ContactsList extends CFSModule {
     String nonUsersOnly = context.getRequest().getParameter("nonUsersOnly");
 
     //add filters
-    FilterList filters = new FilterList(context.getRequest());
+    FilterList filters = new FilterList(thisSystem, context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
 
     //  set Filter for retrieving addresses depending on typeOfContact
@@ -226,7 +256,8 @@ public final class ContactsList extends CFSModule {
     if (firstFilter.equalsIgnoreCase("all")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
-      contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
+      contactList.setAllContacts(
+          true, this.getUserId(context), this.getUserRange(context));
     }
     if (firstFilter.equalsIgnoreCase("employees")) {
       contactList.setEmployeesOnly(Constants.TRUE);
@@ -253,6 +284,7 @@ public final class ContactsList extends CFSModule {
     contactList.setPagedListInfo(contactListInfo);
     contactList.setCheckUserAccess(true);
     contactList.setBuildDetails(true);
+    contactListInfo.setSearchCriteria(contactList, context);
     contactList.setBuildTypes(true);
     if ("true".equals(usersOnly)) {
       if (System.getProperty("DEBUG") != null) {

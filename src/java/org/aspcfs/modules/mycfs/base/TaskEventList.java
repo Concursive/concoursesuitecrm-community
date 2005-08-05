@@ -15,16 +15,15 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.tasks.base.TaskList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    October 22, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created October 22, 2003
  */
 public class TaskEventList {
   TaskList pendingTasks = new TaskList();
@@ -33,9 +32,9 @@ public class TaskEventList {
 
 
   /**
-   *  Sets the pendingTasks attribute of the TaskEventList object
+   * Sets the pendingTasks attribute of the TaskEventList object
    *
-   *@param  pendingTasks  The new pendingTasks value
+   * @param pendingTasks The new pendingTasks value
    */
   public void setPendingTasks(TaskList pendingTasks) {
     this.pendingTasks = pendingTasks;
@@ -43,9 +42,9 @@ public class TaskEventList {
 
 
   /**
-   *  Sets the completedTasks attribute of the TaskEventList object
+   * Sets the completedTasks attribute of the TaskEventList object
    *
-   *@param  completedTasks  The new completedTasks value
+   * @param completedTasks The new completedTasks value
    */
   public void setCompletedTasks(TaskList completedTasks) {
     this.completedTasks = completedTasks;
@@ -53,9 +52,9 @@ public class TaskEventList {
 
 
   /**
-   *  Sets the size attribute of the TaskEventList object
+   * Sets the size attribute of the TaskEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(int size) {
     this.size = size;
@@ -63,9 +62,9 @@ public class TaskEventList {
 
 
   /**
-   *  Sets the size attribute of the TaskEventList object
+   * Sets the size attribute of the TaskEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
@@ -73,9 +72,9 @@ public class TaskEventList {
 
 
   /**
-   *  Gets the size attribute of the TaskEventList object
+   * Gets the size attribute of the TaskEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -83,9 +82,9 @@ public class TaskEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the TaskEventList object
+   * Gets the sizeString attribute of the TaskEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);
@@ -93,9 +92,9 @@ public class TaskEventList {
 
 
   /**
-   *  Gets the pendingTasks attribute of the TaskEventList object
+   * Gets the pendingTasks attribute of the TaskEventList object
    *
-   *@return    The pendingTasks value
+   * @return The pendingTasks value
    */
   public TaskList getPendingTasks() {
     return pendingTasks;
@@ -103,9 +102,9 @@ public class TaskEventList {
 
 
   /**
-   *  Gets the completedTasks attribute of the TaskEventList object
+   * Gets the completedTasks attribute of the TaskEventList object
    *
-   *@return    The completedTasks value
+   * @return The completedTasks value
    */
   public TaskList getCompletedTasks() {
     return completedTasks;
@@ -113,9 +112,9 @@ public class TaskEventList {
 
 
   /**
-   *  Adds a call to the list depending on the status of the Task
+   * Adds a call to the list depending on the status of the Task
    *
-   *@param  thisTask  The feature to be added to the Event attribute
+   * @param thisTask The feature to be added to the Event attribute
    */
   public void addEvent(Task thisTask) {
     if (thisTask != null) {

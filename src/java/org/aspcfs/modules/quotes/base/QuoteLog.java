@@ -15,26 +15,18 @@
  */
 package org.aspcfs.modules.quotes.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.accounts.base.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    October 28, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created October 28, 2004
  */
 public class QuoteLog extends GenericBean {
   private int id = -1;
@@ -66,9 +58,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteLog object
+   * Gets the id attribute of the QuoteLog object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -76,9 +68,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteLog object
+   * Sets the id attribute of the QuoteLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -86,9 +78,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteLog object
+   * Sets the id attribute of the QuoteLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -96,9 +88,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the sourceId attribute of the QuoteLog object
+   * Gets the sourceId attribute of the QuoteLog object
    *
-   *@return    The sourceId value
+   * @return The sourceId value
    */
   public int getSourceId() {
     return sourceId;
@@ -106,9 +98,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the sourceId attribute of the QuoteLog object
+   * Sets the sourceId attribute of the QuoteLog object
    *
-   *@param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(int tmp) {
     this.sourceId = tmp;
@@ -116,9 +108,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the sourceId attribute of the QuoteLog object
+   * Sets the sourceId attribute of the QuoteLog object
    *
-   *@param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(String tmp) {
     this.sourceId = Integer.parseInt(tmp);
@@ -126,9 +118,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the grandTotal attribute of the QuoteLog object
+   * Gets the grandTotal attribute of the QuoteLog object
    *
-   *@return    The grandTotal value
+   * @return The grandTotal value
    */
   public double getGrandTotal() {
     return grandTotal;
@@ -136,9 +128,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the grandTotal attribute of the QuoteLog object
+   * Sets the grandTotal attribute of the QuoteLog object
    *
-   *@param  tmp  The new grandTotal value
+   * @param tmp The new grandTotal value
    */
   public void setGrandTotal(double tmp) {
     this.grandTotal = tmp;
@@ -146,9 +138,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the grandTotal attribute of the QuoteLog object
+   * Sets the grandTotal attribute of the QuoteLog object
    *
-   *@param  tmp  The new grandTotal value
+   * @param tmp The new grandTotal value
    */
   public void setGrandTotal(String tmp) {
     this.grandTotal = Double.parseDouble(tmp);
@@ -156,9 +148,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the QuoteLog object
+   * Gets the statusId attribute of the QuoteLog object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -166,9 +158,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the QuoteLog object
+   * Sets the statusId attribute of the QuoteLog object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -176,9 +168,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the QuoteLog object
+   * Sets the statusId attribute of the QuoteLog object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -186,9 +178,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the termsId attribute of the QuoteLog object
+   * Gets the termsId attribute of the QuoteLog object
    *
-   *@return    The termsId value
+   * @return The termsId value
    */
   public int getTermsId() {
     return termsId;
@@ -196,9 +188,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the termsId attribute of the QuoteLog object
+   * Sets the termsId attribute of the QuoteLog object
    *
-   *@param  tmp  The new termsId value
+   * @param tmp The new termsId value
    */
   public void setTermsId(int tmp) {
     this.termsId = tmp;
@@ -206,9 +198,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the termsId attribute of the QuoteLog object
+   * Sets the termsId attribute of the QuoteLog object
    *
-   *@param  tmp  The new termsId value
+   * @param tmp The new termsId value
    */
   public void setTermsId(String tmp) {
     this.termsId = Integer.parseInt(tmp);
@@ -216,9 +208,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the typeId attribute of the QuoteLog object
+   * Gets the typeId attribute of the QuoteLog object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -226,9 +218,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the typeId attribute of the QuoteLog object
+   * Sets the typeId attribute of the QuoteLog object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -236,9 +228,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the typeId attribute of the QuoteLog object
+   * Sets the typeId attribute of the QuoteLog object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -246,9 +238,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the QuoteLog object
+   * Gets the notes attribute of the QuoteLog object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -256,9 +248,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the QuoteLog object
+   * Sets the notes attribute of the QuoteLog object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -266,9 +258,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the deliveryId attribute of the QuoteLog object
+   * Gets the deliveryId attribute of the QuoteLog object
    *
-   *@return    The deliveryId value
+   * @return The deliveryId value
    */
   public int getDeliveryId() {
     return deliveryId;
@@ -276,9 +268,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the deliveryId attribute of the QuoteLog object
+   * Sets the deliveryId attribute of the QuoteLog object
    *
-   *@param  tmp  The new deliveryId value
+   * @param tmp The new deliveryId value
    */
   public void setDeliveryId(int tmp) {
     this.deliveryId = tmp;
@@ -286,9 +278,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the deliveryId attribute of the QuoteLog object
+   * Sets the deliveryId attribute of the QuoteLog object
    *
-   *@param  tmp  The new deliveryId value
+   * @param tmp The new deliveryId value
    */
   public void setDeliveryId(String tmp) {
     this.deliveryId = Integer.parseInt(tmp);
@@ -296,9 +288,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the QuoteLog object
+   * Gets the entered attribute of the QuoteLog object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -306,9 +298,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the QuoteLog object
+   * Sets the entered attribute of the QuoteLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -316,9 +308,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the QuoteLog object
+   * Sets the entered attribute of the QuoteLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -326,9 +318,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the QuoteLog object
+   * Gets the enteredBy attribute of the QuoteLog object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -336,9 +328,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the QuoteLog object
+   * Sets the enteredBy attribute of the QuoteLog object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -346,9 +338,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the QuoteLog object
+   * Sets the enteredBy attribute of the QuoteLog object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -356,9 +348,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the QuoteLog object
+   * Gets the modified attribute of the QuoteLog object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -366,9 +358,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the QuoteLog object
+   * Sets the modified attribute of the QuoteLog object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -376,9 +368,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the QuoteLog object
+   * Sets the modified attribute of the QuoteLog object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -386,9 +378,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the QuoteLog object
+   * Gets the modifiedBy attribute of the QuoteLog object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -396,9 +388,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the QuoteLog object
+   * Sets the modifiedBy attribute of the QuoteLog object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -406,9 +398,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the QuoteLog object
+   * Sets the modifiedBy attribute of the QuoteLog object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -416,9 +408,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the sourceName attribute of the QuoteLog object
+   * Gets the sourceName attribute of the QuoteLog object
    *
-   *@return    The sourceName value
+   * @return The sourceName value
    */
   public String getSourceName() {
     return sourceName;
@@ -426,9 +418,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the sourceName attribute of the QuoteLog object
+   * Sets the sourceName attribute of the QuoteLog object
    *
-   *@param  tmp  The new sourceName value
+   * @param tmp The new sourceName value
    */
   public void setSourceName(String tmp) {
     this.sourceName = tmp;
@@ -436,9 +428,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the statusName attribute of the QuoteLog object
+   * Gets the statusName attribute of the QuoteLog object
    *
-   *@return    The statusName value
+   * @return The statusName value
    */
   public String getStatusName() {
     return statusName;
@@ -446,9 +438,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the statusName attribute of the QuoteLog object
+   * Sets the statusName attribute of the QuoteLog object
    *
-   *@param  tmp  The new statusName value
+   * @param tmp The new statusName value
    */
   public void setStatusName(String tmp) {
     this.statusName = tmp;
@@ -456,9 +448,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the termsName attribute of the QuoteLog object
+   * Gets the termsName attribute of the QuoteLog object
    *
-   *@return    The termsName value
+   * @return The termsName value
    */
   public String getTermsName() {
     return termsName;
@@ -466,9 +458,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the termsName attribute of the QuoteLog object
+   * Sets the termsName attribute of the QuoteLog object
    *
-   *@param  tmp  The new termsName value
+   * @param tmp The new termsName value
    */
   public void setTermsName(String tmp) {
     this.termsName = tmp;
@@ -476,9 +468,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the typeName attribute of the QuoteLog object
+   * Gets the typeName attribute of the QuoteLog object
    *
-   *@return    The typeName value
+   * @return The typeName value
    */
   public String getTypeName() {
     return typeName;
@@ -486,9 +478,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the typeName attribute of the QuoteLog object
+   * Sets the typeName attribute of the QuoteLog object
    *
-   *@param  tmp  The new typeName value
+   * @param tmp The new typeName value
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -496,9 +488,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the deliveryName attribute of the QuoteLog object
+   * Gets the deliveryName attribute of the QuoteLog object
    *
-   *@return    The deliveryName value
+   * @return The deliveryName value
    */
   public String getDeliveryName() {
     return deliveryName;
@@ -506,9 +498,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the deliveryName attribute of the QuoteLog object
+   * Sets the deliveryName attribute of the QuoteLog object
    *
-   *@param  tmp  The new deliveryName value
+   * @param tmp The new deliveryName value
    */
   public void setDeliveryName(String tmp) {
     this.deliveryName = tmp;
@@ -516,9 +508,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the lastName attribute of the QuoteLog object
+   * Gets the lastName attribute of the QuoteLog object
    *
-   *@return    The lastName value
+   * @return The lastName value
    */
   public String getLastName() {
     return lastName;
@@ -526,9 +518,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the lastName attribute of the QuoteLog object
+   * Sets the lastName attribute of the QuoteLog object
    *
-   *@param  tmp  The new lastName value
+   * @param tmp The new lastName value
    */
   public void setLastName(String tmp) {
     this.lastName = tmp;
@@ -536,9 +528,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the firstName attribute of the QuoteLog object
+   * Gets the firstName attribute of the QuoteLog object
    *
-   *@return    The firstName value
+   * @return The firstName value
    */
   public String getFirstName() {
     return firstName;
@@ -546,9 +538,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the firstName attribute of the QuoteLog object
+   * Sets the firstName attribute of the QuoteLog object
    *
-   *@param  tmp  The new firstName value
+   * @param tmp The new firstName value
    */
   public void setFirstName(String tmp) {
     this.firstName = tmp;
@@ -556,9 +548,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteLog object
+   * Gets the quoteId attribute of the QuoteLog object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -566,9 +558,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteLog object
+   * Sets the quoteId attribute of the QuoteLog object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -576,9 +568,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteLog object
+   * Sets the quoteId attribute of the QuoteLog object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -586,9 +578,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the systemMessage attribute of the QuoteLog object
+   * Gets the systemMessage attribute of the QuoteLog object
    *
-   *@return    The systemMessage value
+   * @return The systemMessage value
    */
   public boolean getSystemMessage() {
     return systemMessage;
@@ -596,9 +588,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the systemMessage attribute of the QuoteLog object
+   * Sets the systemMessage attribute of the QuoteLog object
    *
-   *@param  tmp  The new systemMessage value
+   * @param tmp The new systemMessage value
    */
   public void setSystemMessage(boolean tmp) {
     this.systemMessage = tmp;
@@ -606,9 +598,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the systemMessage attribute of the QuoteLog object
+   * Sets the systemMessage attribute of the QuoteLog object
    *
-   *@param  tmp  The new systemMessage value
+   * @param tmp The new systemMessage value
    */
   public void setSystemMessage(String tmp) {
     this.systemMessage = DatabaseUtils.parseBoolean(tmp);
@@ -616,9 +608,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the issuedDate attribute of the QuoteLog object
+   * Gets the issuedDate attribute of the QuoteLog object
    *
-   *@return    The issuedDate value
+   * @return The issuedDate value
    */
   public Timestamp getIssuedDate() {
     return issuedDate;
@@ -626,9 +618,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the issuedDate attribute of the QuoteLog object
+   * Sets the issuedDate attribute of the QuoteLog object
    *
-   *@param  tmp  The new issuedDate value
+   * @param tmp The new issuedDate value
    */
   public void setIssuedDate(Timestamp tmp) {
     this.issuedDate = tmp;
@@ -636,9 +628,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the issuedDate attribute of the QuoteLog object
+   * Sets the issuedDate attribute of the QuoteLog object
    *
-   *@param  tmp  The new issuedDate value
+   * @param tmp The new issuedDate value
    */
   public void setIssuedDate(String tmp) {
     this.issuedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -646,9 +638,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the submitAction attribute of the QuoteLog object
+   * Gets the submitAction attribute of the QuoteLog object
    *
-   *@return    The submitAction value
+   * @return The submitAction value
    */
   public int getSubmitAction() {
     return submitAction;
@@ -656,9 +648,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the submitAction attribute of the QuoteLog object
+   * Sets the submitAction attribute of the QuoteLog object
    *
-   *@param  tmp  The new submitAction value
+   * @param tmp The new submitAction value
    */
   public void setSubmitAction(int tmp) {
     this.submitAction = tmp;
@@ -666,9 +658,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the submitAction attribute of the QuoteLog object
+   * Sets the submitAction attribute of the QuoteLog object
    *
-   *@param  tmp  The new submitAction value
+   * @param tmp The new submitAction value
    */
   public void setSubmitAction(String tmp) {
     this.submitAction = Integer.parseInt(tmp);
@@ -676,9 +668,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the QuoteLog object
+   * Gets the closed attribute of the QuoteLog object
    *
-   *@return    The closed value
+   * @return The closed value
    */
   public Timestamp getClosed() {
     return closed;
@@ -686,9 +678,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the QuoteLog object
+   * Sets the closed attribute of the QuoteLog object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(Timestamp tmp) {
     this.closed = tmp;
@@ -696,9 +688,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the QuoteLog object
+   * Sets the closed attribute of the QuoteLog object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     this.closed = DatabaseUtils.parseTimestamp(tmp);
@@ -706,16 +698,17 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteLog object
+   * Constructor for the QuoteLog object
    */
-  public QuoteLog() { }
+  public QuoteLog() {
+  }
 
 
   /**
-   *  Constructor for the QuoteLog object
+   * Constructor for the QuoteLog object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -723,11 +716,11 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteLog object
+   * Constructor for the QuoteLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteLog(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -748,8 +741,7 @@ public class QuoteLog extends GenericBean {
         "LEFT JOIN lookup_quote_terms AS lqtm ON (q.terms_id = lqtm.code) " +
         "LEFT JOIN lookup_quote_type AS lqty ON (q.type_id = lqty.code) " +
         "LEFT JOIN lookup_quote_delivery AS lqd ON (q.delivery_id = lqd.code) " +
-        "WHERE q.id = ? "
-        );
+        "WHERE q.id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -764,11 +756,11 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (quoteId == -1) {
@@ -780,9 +772,13 @@ public class QuoteLog extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
-
+      id = DatabaseUtils.getNextSeq(db, "quotelog_id_seq");
       sql.append("INSERT INTO quotelog (quote_id, source_id, status_id,");
-      sql.append("terms_id, type_id, delivery_id, issued_date, submit_action, closed, ");
+      sql.append(
+          "terms_id, type_id, delivery_id, notes, grand_total, issued_date, submit_action, closed, ");
+      if (id > -1) {
+        sql.append("id, ");
+      }
       if (entered != null) {
         sql.append(" entered, ");
       }
@@ -790,7 +786,10 @@ public class QuoteLog extends GenericBean {
         sql.append(" modified, ");
       }
       sql.append(" enteredby, modifiedby) ");
-      sql.append("VALUES (?,?,?,?,?,?,?,?,?, ");
+      sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?, ");
+      if (id > -1) {
+        sql.append("?,");
+      }
       if (entered != null) {
         sql.append("?,");
       }
@@ -806,9 +805,14 @@ public class QuoteLog extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, termsId);
       DatabaseUtils.setInt(pst, ++i, typeId);
       DatabaseUtils.setInt(pst, ++i, deliveryId);
+      pst.setString(++i, this.getNotes());
+      pst.setDouble(++i, this.getGrandTotal());
       DatabaseUtils.setTimestamp(pst, ++i, issuedDate);
       DatabaseUtils.setInt(pst, ++i, submitAction);
       DatabaseUtils.setTimestamp(pst, ++i, closed);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -819,7 +823,7 @@ public class QuoteLog extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "quotelog_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "quotelog_id_seq", id);
       if (commit) {
         db.commit();
       }
@@ -838,13 +842,13 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@param  modifiedBy        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param quoteId    Description of the Parameter
+   * @param enteredBy  Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void process(Connection db, int quoteId, int enteredBy, int modifiedBy) throws SQLException {
     if (quoteId != -1) {
@@ -863,11 +867,11 @@ public class QuoteLog extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -898,9 +902,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the QuoteLog object
+   * Gets the valid attribute of the QuoteLog object
    *
-   *@return    The valid value
+   * @return The valid value
    */
   protected boolean isValid() {
     errors.clear();
@@ -913,10 +917,10 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //quotelog table
@@ -926,6 +930,7 @@ public class QuoteLog extends GenericBean {
     statusId = DatabaseUtils.getInt(rs, "status_id");
     termsId = DatabaseUtils.getInt(rs, "terms_id");
     typeId = DatabaseUtils.getInt(rs, "type_id");
+    deliveryId = DatabaseUtils.getInt(rs, "delivery_id");
     notes = rs.getString("notes");
     grandTotal = rs.getDouble("grand_total");
     enteredBy = DatabaseUtils.getInt(rs, "enteredby");
@@ -953,9 +958,9 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   protected void buildRecord(HttpServletRequest request) {
     this.setNotes(request.getParameter("notes"));
@@ -964,13 +969,15 @@ public class QuoteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  source  Description of the Parameter
+   * @param source Description of the Parameter
    */
   public void createSysMsg(QuoteLog source) {
     this.setEnteredBy(source.getModifiedBy());
     this.setEntered(source.getEntered());
+    this.setModifiedBy(source.getModifiedBy());
+    this.setModified(source.getEntered());
     this.setQuoteId(source.getQuoteId());
     this.setSourceId(source.getSourceId());
     this.setStatusId(source.getStatusId());

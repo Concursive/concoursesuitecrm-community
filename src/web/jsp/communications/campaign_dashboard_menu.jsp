@@ -49,6 +49,10 @@
     window.location.href='CampaignManager.do?command=ExportReport&id=' + thisCampaignId;
   }
   
+  function deleteCampaign() {
+    popURLReturn('CampaignManager.do?command=ConfirmDelete&id=' + thisCampaignId,'CampaignManager.do?command=Dashboard','Delete_campaign','330','200','yes','no');
+  }
+
   function cancel() {
     confirmForward('CampaignManager.do?command=Cancel&id=' + thisCampaignId + '&notify=true');
   }
@@ -63,6 +67,16 @@
         </th>
         <td width="100%">
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="campaign-campaigns-delete">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCampaign()">
+        <th>
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td>
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>

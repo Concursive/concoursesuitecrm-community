@@ -15,20 +15,20 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Represents a list of possible permissions for a permission category
+ * Represents a list of possible permissions for a permission category
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public class DocumentStorePermissionLookupList extends ArrayList {
 
@@ -37,18 +37,19 @@ public class DocumentStorePermissionLookupList extends ArrayList {
 
 
   /**
-   *  Constructor for the DocumentStorePermissionLookupList object
+   * Constructor for the DocumentStorePermissionLookupList object
    */
-  public DocumentStorePermissionLookupList() { }
+  public DocumentStorePermissionLookupList() {
+  }
 
 
   /**
-   *  Constructor for the DocumentStorePermissionLookupList object
+   * Constructor for the DocumentStorePermissionLookupList object
    *
-   *@param  db                Description of the Parameter
-   *@param  categoryId        Description of the Parameter
-   *@param  includeEnabled    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param categoryId     Description of the Parameter
+   * @param includeEnabled Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStorePermissionLookupList(Connection db, int categoryId, int includeEnabled) throws SQLException {
     this.categoryId = categoryId;
@@ -58,9 +59,9 @@ public class DocumentStorePermissionLookupList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the DocumentStorePermissionLookupList object
+   * Sets the categoryId attribute of the DocumentStorePermissionLookupList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -68,9 +69,9 @@ public class DocumentStorePermissionLookupList extends ArrayList {
 
 
   /**
-   *  Sets the includeEnabled attribute of the DocumentStorePermissionLookupList object
+   * Sets the includeEnabled attribute of the DocumentStorePermissionLookupList object
    *
-   *@param  tmp  The new includeEnabled value
+   * @param tmp The new includeEnabled value
    */
   public void setIncludeEnabled(int tmp) {
     this.includeEnabled = tmp;
@@ -78,10 +79,10 @@ public class DocumentStorePermissionLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -90,12 +91,13 @@ public class DocumentStorePermissionLookupList extends ArrayList {
         "FROM lookup_document_store_permission " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY category_id, level, description ");
+    sql.append("ORDER BY category_id, \"level\", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      DocumentStorePermissionLookup thisPermission = new DocumentStorePermissionLookup(rs);
+      DocumentStorePermissionLookup thisPermission = new DocumentStorePermissionLookup(
+          rs);
       this.add(thisPermission);
     }
     rs.close();
@@ -104,9 +106,9 @@ public class DocumentStorePermissionLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -122,11 +124,11 @@ public class DocumentStorePermissionLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

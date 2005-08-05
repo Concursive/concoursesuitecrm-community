@@ -7,22 +7,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
-import java.text.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    November 8, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created November 8, 2004
  */
 public class DailyTimesheetList extends HashMap {
 
@@ -34,31 +34,35 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Constructor for the DailyTimesheetList object
+   * Constructor for the DailyTimesheetList object
    */
-  public DailyTimesheetList() { }
+  public DailyTimesheetList() {
+  }
 
 
   /**
-   *  Constructor for the ProjectTimesheetList object
+   * Constructor for the ProjectTimesheetList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public DailyTimesheetList(HttpServletRequest request) {
     int count = -1;
     String projectValue = null;
     // Check project hours
-    while ((projectValue = (String) request.getParameter("project" + (++count))) != null) {
+    while ((projectValue = (String) request.getParameter(
+        "project" + (++count))) != null) {
       int projectId = Integer.parseInt(projectValue);
       for (int j = 0; j < 7; j++) {
         // Date based
-        String dateValue = (String) request.getParameter("line" + count + "day" + j + "date");
+        String dateValue = (String) request.getParameter(
+            "line" + count + "day" + j + "date");
         long dateMillis = Long.parseLong(dateValue);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(dateMillis);
         DailyTimesheet dailyTimesheet = this.getTimesheet(cal);
         // Add any hours
-        String hoursValue = ((String) request.getParameter("line" + count + "day" + j));
+        String hoursValue = ((String) request.getParameter(
+            "line" + count + "day" + j));
         if (hoursValue != null) {
           hoursValue = hoursValue.trim();
           if (!"".equals(hoursValue)) {
@@ -73,18 +77,21 @@ public class DailyTimesheetList extends HashMap {
           }
         }
         // Check availability
-        dailyTimesheet.setUnavailable((String) request.getParameter("unavailable" + j));
-        dailyTimesheet.setVacation((String) request.getParameter("vacation" + j));
-        dailyTimesheet.setVerified((String) request.getParameter("verified" + j));
+        dailyTimesheet.setUnavailable(
+            (String) request.getParameter("unavailable" + j));
+        dailyTimesheet.setVacation(
+            (String) request.getParameter("vacation" + j));
+        dailyTimesheet.setVerified(
+            (String) request.getParameter("verified" + j));
       }
     }
   }
 
 
   /**
-   *  Gets the userId attribute of the DailyTimesheetList object
+   * Gets the userId attribute of the DailyTimesheetList object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -92,9 +99,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the userId attribute of the DailyTimesheetList object
+   * Sets the userId attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -102,9 +109,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the userId attribute of the DailyTimesheetList object
+   * Sets the userId attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -112,9 +119,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Gets the startDate attribute of the DailyTimesheetList object
+   * Gets the startDate attribute of the DailyTimesheetList object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public Timestamp getStartDate() {
     return startDate;
@@ -122,9 +129,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the startDate attribute of the DailyTimesheetList object
+   * Sets the startDate attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(Timestamp tmp) {
     this.startDate = tmp;
@@ -132,9 +139,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the startDate attribute of the DailyTimesheetList object
+   * Sets the startDate attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -142,9 +149,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Gets the endDate attribute of the DailyTimesheetList object
+   * Gets the endDate attribute of the DailyTimesheetList object
    *
-   *@return    The endDate value
+   * @return The endDate value
    */
   public Timestamp getEndDate() {
     return endDate;
@@ -152,9 +159,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the endDate attribute of the DailyTimesheetList object
+   * Sets the endDate attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(Timestamp tmp) {
     this.endDate = tmp;
@@ -162,9 +169,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the endDate attribute of the DailyTimesheetList object
+   * Sets the endDate attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(String tmp) {
     this.endDate = DatabaseUtils.parseTimestamp(tmp);
@@ -172,9 +179,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Gets the enteredBy attribute of the DailyTimesheetList object
+   * Gets the enteredBy attribute of the DailyTimesheetList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -182,9 +189,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the enteredBy attribute of the DailyTimesheetList object
+   * Sets the enteredBy attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -192,9 +199,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the enteredBy attribute of the DailyTimesheetList object
+   * Sets the enteredBy attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -202,9 +209,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Gets the modifiedBy attribute of the DailyTimesheetList object
+   * Gets the modifiedBy attribute of the DailyTimesheetList object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -212,9 +219,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the modifiedBy attribute of the DailyTimesheetList object
+   * Sets the modifiedBy attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -222,9 +229,9 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Sets the modifiedBy attribute of the DailyTimesheetList object
+   * Sets the modifiedBy attribute of the DailyTimesheetList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -232,10 +239,10 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     if (startDate == null || endDate == null || userId == -1) {
@@ -264,15 +271,16 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Gets the timesheet attribute of the DailyTimesheetList object
+   * Gets the timesheet attribute of the DailyTimesheetList object
    *
-   *@param  cal  Description of the Parameter
-   *@return      The timesheet value
+   * @param cal Description of the Parameter
+   * @return The timesheet value
    */
   public DailyTimesheet getTimesheet(Calendar cal) {
     SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
     formatter.applyPattern("M/d/yyyy");
-    DailyTimesheet thisTimesheet = (DailyTimesheet) this.get(formatter.format(cal.getTime()));
+    DailyTimesheet thisTimesheet = (DailyTimesheet) this.get(
+        formatter.format(cal.getTime()));
     if (thisTimesheet == null) {
       thisTimesheet = new DailyTimesheet();
       thisTimesheet.setEntryDate(new Timestamp(cal.getTimeInMillis()));
@@ -305,12 +313,13 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  dailyTimesheet  Description of the Parameter
+   * @param dailyTimesheet Description of the Parameter
    */
   public void add(DailyTimesheet dailyTimesheet) {
-    DailyTimesheet temp = (DailyTimesheet) this.get(dailyTimesheet.getFormattedEntryDate());
+    DailyTimesheet temp = (DailyTimesheet) this.get(
+        dailyTimesheet.getFormattedEntryDate());
     if (temp == null) {
       this.put(dailyTimesheet.getFormattedEntryDate(), dailyTimesheet);
     } else {
@@ -320,10 +329,10 @@ public class DailyTimesheetList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void save(Connection db) throws SQLException {
     // TODO: Transaction needed here

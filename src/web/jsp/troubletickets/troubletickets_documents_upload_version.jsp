@@ -78,13 +78,22 @@
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
   <%@ include file="ticket_header_include.jsp" %>
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+        <% String documentLink = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+        <zeroio:folderHierarchy module="TroubleTickets" link="<%= documentLink %>" showLastLink="true"/> >
+        <%= FileItem.getSubject() %>
+      </td>
+    </tr>
+  </table>
+  <dhv:formMessage showSpace="false"/>
   <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
     <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" />
     </font><br>
     &nbsp;<br>
   </dhv:evaluate>
-  <dhv:formMessage showSpace="false" />
   <%-- include add version form --%>
   <%@ include file="documents_addversion_include.jsp" %>
   <p align="center">

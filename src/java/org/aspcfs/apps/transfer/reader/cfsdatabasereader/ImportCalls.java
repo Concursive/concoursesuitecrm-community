@@ -15,20 +15,18 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
-import com.zeroio.iteam.base.*;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
 import org.aspcfs.modules.contacts.base.CallList;
-import java.util.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Processes Opportunities
+ * Processes Opportunities
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created January 14, 2003
  */
 public class ImportCalls implements CFSDatabaseReaderImportModule {
 
@@ -37,13 +35,13 @@ public class ImportCalls implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;

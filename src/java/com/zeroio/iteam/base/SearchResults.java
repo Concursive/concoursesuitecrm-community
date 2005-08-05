@@ -15,24 +15,25 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Hits;
 
+import java.util.ArrayList;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 27, 2004
  */
 public class SearchResults extends ArrayList {
 
   /**
-   *  Constructor for the SearchResults object
+   * Constructor for the SearchResults object
    *
-   *@param  hits           Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param hits Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public SearchResults(Hits hits) throws Exception {
     for (int i = 0; i < hits.length(); i++) {

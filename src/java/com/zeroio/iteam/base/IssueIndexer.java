@@ -15,34 +15,37 @@
  */
 package com.zeroio.iteam.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.utils.ContentUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.*;
 import java.io.IOException;
-import com.zeroio.utils.ContentUtils;
-import com.darkhorseventures.framework.actions.ActionContext;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 27, 2004
  */
 public class IssueIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -72,12 +75,12 @@ public class IssueIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  issue            Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param issue    Description of the Parameter
+   * @param modified Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, Issue issue, boolean modified) throws IOException {
     // add the document
@@ -85,16 +88,25 @@ public class IssueIndexer implements Indexer {
     document.add(Field.Keyword("type", "issue"));
     document.add(Field.Keyword("issueKeyId", String.valueOf(issue.getId())));
     document.add(Field.Keyword("issueId", String.valueOf(issue.getId())));
-    document.add(Field.Keyword("issueCategoryId", String.valueOf(issue.getCategoryId())));
-    document.add(Field.Keyword("projectId", String.valueOf(issue.getProjectId())));
+    document.add(
+        Field.Keyword(
+            "issueCategoryId", String.valueOf(issue.getCategoryId())));
+    document.add(
+        Field.Keyword("projectId", String.valueOf(issue.getProjectId())));
     document.add(Field.Text("title", issue.getSubject()));
-    document.add(Field.Text("contents",
-        issue.getSubject() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            issue.getSubject() + " " +
         ContentUtils.toText(issue.getBody())));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(issue.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(issue.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
@@ -104,10 +116,10 @@ public class IssueIndexer implements Indexer {
 
 
   /**
-   *  Gets the searchTerm attribute of the IssueIndexer class
+   * Gets the searchTerm attribute of the IssueIndexer class
    *
-   *@param  issue  Description of the Parameter
-   *@return        The searchTerm value
+   * @param issue Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(Issue issue) {
     Term searchTerm = new Term("issueKeyId", String.valueOf(issue.getId()));
@@ -116,10 +128,10 @@ public class IssueIndexer implements Indexer {
 
 
   /**
-   *  Gets the deleteTerm attribute of the IssueIndexer class
+   * Gets the deleteTerm attribute of the IssueIndexer class
    *
-   *@param  issue  Description of the Parameter
-   *@return        The deleteTerm value
+   * @param issue Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(Issue issue) {
     Term searchTerm = new Term("issueId", String.valueOf(issue.getId()));

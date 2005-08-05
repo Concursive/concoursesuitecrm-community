@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.Permission;
-import org.aspcfs.modules.base.Constants;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class RolePermissionList extends Hashtable {
 
@@ -39,17 +39,18 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Constructor for the RolePermissionList object
+   * Constructor for the RolePermissionList object
    */
-  public RolePermissionList() { }
+  public RolePermissionList() {
+  }
 
 
   /**
-   *  Constructor for the RolePermissionList object
+   * Constructor for the RolePermissionList object
    *
-   *@param  db                Description of the Parameter
-   *@param  roleId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param roleId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public RolePermissionList(Connection db, int roleId) throws SQLException {
     this.roleId = roleId;
@@ -58,9 +59,9 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Constructor for the RolePermissionList object
+   * Constructor for the RolePermissionList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public RolePermissionList(HttpServletRequest request) {
     int i = 0;
@@ -73,9 +74,9 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Sets the enabledState attribute of the RolePermissionList object
+   * Sets the enabledState attribute of the RolePermissionList object
    *
-   *@param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -83,9 +84,9 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Gets the enabledState attribute of the RolePermissionList object
+   * Gets the enabledState attribute of the RolePermissionList object
    *
-   *@return    The enabledState value
+   * @return The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -93,10 +94,10 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildCombinedList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -113,9 +114,10 @@ public class RolePermissionList extends Hashtable {
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = r.permission_id ");
-    sqlOrder.append("ORDER BY r.role_id, c.level, p.level ");
+    sqlOrder.append("ORDER BY r.role_id, c.\"level\", p.\"level\" ");
     createFilter(sqlFilter);
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -132,9 +134,9 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -153,11 +155,11 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -175,11 +177,11 @@ public class RolePermissionList extends Hashtable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisName  Description of the Parameter
-   *@param  thisType  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param thisName Description of the Parameter
+   * @param thisType Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasPermission(String thisName, String thisType) {
     Iterator i = this.keySet().iterator();
@@ -194,7 +196,8 @@ public class RolePermissionList extends Hashtable {
       if ("edit".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getEdit()) {
         return true;
       }
-      if ("delete".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getDelete()) {
+      if ("delete".equals(thisType) && thisName.equals(
+          thisPermission.getName()) && thisPermission.getDelete()) {
         return true;
       }
     }

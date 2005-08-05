@@ -16,12 +16,12 @@
 package org.aspcfs.apps.common;
 
 /**
- *  Resuable variables for applications
+ * Resuable variables for applications
  *
- *@author     matt rajkowski
- *@created    October 3, 2003
- *@version    $Id: ReportConstants.java,v 1.2 2003/10/10 13:59:27 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ReportConstants.java,v 1.2 2003/10/10 13:59:27 mrajkowski Exp
+ *          $
+ * @created October 3, 2003
  */
 public class ReportConstants {
 

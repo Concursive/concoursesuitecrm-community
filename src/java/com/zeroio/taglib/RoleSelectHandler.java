@@ -15,21 +15,21 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.controller.SystemStatus;
 import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.web.LookupList;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 19, 2003
- *@version    $Id: RoleSelectHandler.java,v 1.1.2.2 2004/04/08 14:55:53 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: RoleSelectHandler.java,v 1.1.2.2 2004/04/08 14:55:53 rvasista
+ *          Exp $
+ * @created June 19, 2003
  */
 public class RoleSelectHandler extends TagSupport {
 
@@ -39,9 +39,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the name attribute of the RoleSelectHandler object
+   * Sets the name attribute of the RoleSelectHandler object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -49,9 +49,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the RoleSelectHandler object
+   * Sets the value attribute of the RoleSelectHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = Integer.parseInt(tmp);
@@ -59,9 +59,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the RoleSelectHandler object
+   * Sets the value attribute of the RoleSelectHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(int tmp) {
     this.value = tmp;
@@ -69,9 +69,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the onChange attribute of the RoleSelectHandler object
+   * Sets the onChange attribute of the RoleSelectHandler object
    *
-   *@param  tmp  The new onChange value
+   * @param tmp The new onChange value
    */
   public void setOnChange(String tmp) {
     this.onChange = tmp;
@@ -79,21 +79,24 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce == null) {
         System.out.println("RoleHandler-> ConnectionElement is null");
       }
       boolean output = false;
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus != null) {
-        LookupList roleList = (LookupList) systemStatus.getLookupList(null, "lookup_project_role");
+        LookupList roleList = (LookupList) systemStatus.getLookupList(
+            null, "lookup_project_role");
         if (roleList != null) {
           if (onChange != null) {
             roleList.setJsEvent("onChange=\"" + onChange + "\"");
@@ -113,9 +116,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

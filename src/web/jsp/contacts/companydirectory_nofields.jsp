@@ -38,7 +38,7 @@ function reopenContact(id) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContacts.do?command=Fields&contactId=<%=ContactDetails.getId()%>"><dhv:label name="accounts.folders.long_html">Folders</dhv:label></a> >

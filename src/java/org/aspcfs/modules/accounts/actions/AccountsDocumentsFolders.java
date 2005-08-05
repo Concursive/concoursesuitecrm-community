@@ -27,19 +27,19 @@ import java.sql.Connection;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    July 26, 2004
- * @version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created July 26, 2004
  */
 public final class AccountsDocumentsFolders extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
@@ -71,10 +71,10 @@ public final class AccountsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
@@ -123,10 +123,10 @@ public final class AccountsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -166,10 +166,10 @@ public final class AccountsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -201,10 +201,10 @@ public final class AccountsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     //Parameters
@@ -237,15 +237,16 @@ public final class AccountsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     //Parameters
     String orgId = (String) context.getRequest().getParameter("orgId");
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("id");
     Organization orgDetails = null;
     Connection db = null;
@@ -263,7 +264,8 @@ public final class AccountsDocumentsFolders extends CFSModule {
         thisHierarchy.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS);
         thisHierarchy.setLinkItemId(orgDetails.getOrgId());
         thisHierarchy.build(db, thisFolder.getId());
-        if (thisHierarchy.getHierarchy().hasFolder(Integer.parseInt(newFolderId))) {
+        if (thisHierarchy.getHierarchy().hasFolder(
+            Integer.parseInt(newFolderId))) {
           thisFolder.buildSubFolders(db);
           Iterator iterator = (Iterator) thisFolder.getSubFolders().iterator();
           while (iterator.hasNext()) {

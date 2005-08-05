@@ -40,27 +40,31 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Imports data from other formats into an outline
+ * Imports data from other formats into an outline
  *
- *@author     matt rajkowski
- *@created    June 30, 2004
- *@version    $Id: AssignmentImporter.java,v 1.3 2004/08/31 12:48:25 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AssignmentImporter.java,v 1.3 2004/08/31 12:48:25 mrajkowski
+ *          Exp $
+ * @created June 30, 2004
  */
 public class AssignmentImporter {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  fileInfo       Description of the Parameter
-   *@param  requirement    Description of the Parameter
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param fileInfo    Description of the Parameter
+   * @param requirement Description of the Parameter
+   * @param db          Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public static boolean parse(FileInfo fileInfo, Requirement requirement, Connection db) throws Exception {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AssignmentImporter-> trying to parse: " + fileInfo.getClientFileName().toLowerCase());
+      System.out.println(
+          "AssignmentImporter-> trying to parse: " + fileInfo.getClientFileName().toLowerCase());
+    }
+    if (fileInfo == null) {
+      return false;
     }
     if (fileInfo.getClientFileName().toLowerCase().endsWith(".xls")) {
       return parseExcel(fileInfo.getFileContents(), requirement, db);
@@ -72,15 +76,14 @@ public class AssignmentImporter {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  requirement       Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  buffer            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param requirement Description of the Parameter
+   * @param db          Description of the Parameter
+   * @param buffer      Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean parseExcel(byte[] buffer, Requirement requirement, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -123,30 +126,30 @@ public class AssignmentImporter {
             for (short c = 0; c < cells; c++) {
               HSSFCell cell = currentRow.getCell(c);
               if (cell != null) {
-                if ("Item".equals(cell.getStringCellValue())) {
+                if ("Item".equals(getValue(cell))) {
                   columnHeader = r;
                   itemColumn = c;
                   columnMax = c;
                 } else if (itemColumn > -1 && !columnItemComplete && c > itemColumn) {
-                  if ("".equals(cell.getStringCellValue().trim())) {
+                  if ("".equals(getValue(cell))) {
                     columnMax = c;
-                  } else if (!"".equals(cell.getStringCellValue().trim())) {
+                  } else if (!"".equals(getValue(cell))) {
                     columnItemComplete = true;
                   }
                 }
-                if ("Priority".equals(cell.getStringCellValue())) {
+                if ("Priority".equals(getValue(cell))) {
                   columnHeader = r;
                   priorityColumn = c;
-                } else if ("Assigned To".equals(cell.getStringCellValue())) {
+                } else if ("Assigned To".equals(getValue(cell))) {
                   columnHeader = r;
                   assignedToColumn = c;
-                } else if ("Effort".equals(cell.getStringCellValue())) {
+                } else if ("Effort".equals(getValue(cell))) {
                   columnHeader = r;
                   effortColumn = c;
-                } else if ("Start".equals(cell.getStringCellValue())) {
+                } else if ("Start".equals(getValue(cell))) {
                   columnHeader = r;
                   startColumn = c;
-                } else if ("End".equals(cell.getStringCellValue())) {
+                } else if ("End".equals(getValue(cell))) {
                   columnHeader = r;
                   endColumn = c;
                 }
@@ -164,8 +167,8 @@ public class AssignmentImporter {
               // Get the first indent level that has data
               for (short c = itemColumn; c <= columnMax; c++) {
                 HSSFCell cell = currentRow.getCell(c);
-                if (cell != null && !"".equals(cell.getStringCellValue().trim())) {
-                  assignment.setRole(cell.getStringCellValue());
+                if (cell != null && !"".equals(getValue(cell))) {
+                  assignment.setRole(getValue(cell));
                   assignment.setIndent(c);
                   gotOne = true;
                   break;
@@ -199,16 +202,16 @@ public class AssignmentImporter {
               }
               // Start Date
               if (startColumn > -1) {
-                HSSFCell cell = currentRow.getCell(effortColumn);
+                HSSFCell cell = currentRow.getCell(startColumn);
                 if (cell != null) {
-                  assignment.setEstStartDate(getValue(cell));
+                  assignment.setEstStartDate(getDateValue(cell));
                 }
               }
               // Due Date
               if (endColumn > -1) {
-                HSSFCell cell = currentRow.getCell(effortColumn);
+                HSSFCell cell = currentRow.getCell(endColumn);
                 if (cell != null) {
-                  assignment.setDueDate(getValue(cell));
+                  assignment.setDueDate(getDateValue(cell));
                 }
               }
               assignment.setEnteredBy(requirement.getEnteredBy());
@@ -220,14 +223,16 @@ public class AssignmentImporter {
               }
               // Make sure user is on team, before adding, else unset the field
               if (assignment.getUserAssignedId() > 0) {
-                if (!TeamMemberList.isOnTeam(db, requirement.getProjectId(), assignment.getUserAssignedId())) {
+                if (!TeamMemberList.isOnTeam(
+                    db, requirement.getProjectId(), assignment.getUserAssignedId())) {
                   assignment.setUserAssignedId(-1);
                 }
               }
               // Insert the assignment
               assignment.insert(db);
               if (System.getProperty("DEBUG") != null) {
-                System.out.println("AssignmentImporter-> Assignment Inserted: " + assignment.getId());
+                System.out.println(
+                    "AssignmentImporter-> Assignment Inserted: " + assignment.getId());
               }
             }
           }
@@ -246,32 +251,59 @@ public class AssignmentImporter {
 
 
   /**
-   *  Gets the value attribute of the AssignmentImporter class
+   * Gets the value attribute of the AssignmentImporter class
    *
-   *@param  cell  Description of the Parameter
-   *@return       The value value
+   * @param cell Description of the Parameter
+   * @return The value value
    */
   private static String getValue(HSSFCell cell) {
+    if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+      return String.valueOf(cell.getNumericCellValue());
+    }
+    if (cell.getCellType() == HSSFCell.CELL_TYPE_BOOLEAN) {
+      return String.valueOf(cell.getBooleanCellValue());
+    }
+    if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+      return cell.getStringCellValue().trim();
+    }
+    if (cell.getCellType() == HSSFCell.CELL_TYPE_BLANK) {
+      return "";
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AssignmentImporter-> NONE: " + cell.getCellType());
+    }
     try {
-      return cell.getStringCellValue();
+      return cell.getStringCellValue().trim();
     } catch (Exception e) {
     }
     try {
       return String.valueOf(cell.getNumericCellValue());
     } catch (Exception e) {
     }
+    try {
+      return String.valueOf(cell.getBooleanCellValue());
+    } catch (Exception e) {
+    }
     return null;
+  }
+
+  private static java.util.Date getDateValue(HSSFCell cell) {
+    try {
+      return cell.getDateCellValue();
+    } catch (Exception e) {
+      return null;
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  buffer            Description of the Parameter
-   *@param  requirement       Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param buffer      Description of the Parameter
+   * @param requirement Description of the Parameter
+   * @param db          Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean parseOmniOutliner(byte[] buffer, Requirement requirement, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -283,12 +315,14 @@ public class AssignmentImporter {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(
-        new EntityResolver() {
-          public InputSource resolveEntity(java.lang.String publicId, java.lang.String systemId)
-               throws SAXException, java.io.IOException {
-            return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
-          }
-        });
+          new EntityResolver() {
+            public InputSource resolveEntity(java.lang.String publicId, java.lang.String systemId)
+                throws SAXException, java.io.IOException {
+              return new InputSource(
+                  new ByteArrayInputStream(
+                      "<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
+            }
+          });
       Document document = builder.parse(new ByteArrayInputStream(buffer));
       // Position
       boolean positionItemComplete = false;
@@ -304,7 +338,8 @@ public class AssignmentImporter {
       Element columnElement = XMLUtils.getFirstChild(document, "oo:columns");
       XMLUtils.getAllChildren(columnElement, columnList);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("AssignmentImporter-> Columns: " + columnList.size());
+        System.out.println(
+            "AssignmentImporter-> Columns: " + columnList.size());
       }
       Iterator columnIterator = columnList.iterator();
       short position = -1;
@@ -313,8 +348,12 @@ public class AssignmentImporter {
         Element columnNode = (Element) columnIterator.next();
         Element column = XMLUtils.getFirstChild(columnNode, "oo:title");
         String columnName = XMLUtils.getNodeText(column);
-        System.out.println("AssignmentImporter-> Column name: " + columnName);
-        if ("yes".equals((String) columnNode.getAttribute("is-outline-column"))) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println(
+              "AssignmentImporter-> Column name: " + columnName);
+        }
+        if ("yes".equals(
+            (String) columnNode.getAttribute("is-outline-column"))) {
           foundOutline = true;
         }
         if (foundOutline) {
@@ -350,7 +389,8 @@ public class AssignmentImporter {
         Iterator itemIterator = itemList.iterator();
         while (itemIterator.hasNext()) {
           Element itemElement = (Element) itemIterator.next();
-          parseItemElement(itemElement, db, 0, requirement.getProjectId(), requirement.getId(),
+          parseItemElement(
+              itemElement, db, 0, requirement.getProjectId(), requirement.getId(),
               requirement.getEnteredBy(), requirement.getModifiedBy(),
               itemPosition, priorityPosition, assignedToPosition, effortPosition, startPosition, endPosition);
         }
@@ -368,26 +408,26 @@ public class AssignmentImporter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  item                Description of the Parameter
-   *@param  db                  Description of the Parameter
-   *@param  indent              Description of the Parameter
-   *@param  projectId           Description of the Parameter
-   *@param  requirementId       Description of the Parameter
-   *@param  enteredBy           Description of the Parameter
-   *@param  modifiedBy          Description of the Parameter
-   *@param  itemPosition        Description of the Parameter
-   *@param  priorityPosition    Description of the Parameter
-   *@param  assignedToPosition  Description of the Parameter
-   *@param  effortPosition      Description of the Parameter
-   *@param  startPosition       Description of the Parameter
-   *@param  endPosition         Description of the Parameter
-   *@exception  Exception       Description of the Exception
+   * @param item               Description of the Parameter
+   * @param db                 Description of the Parameter
+   * @param indent             Description of the Parameter
+   * @param projectId          Description of the Parameter
+   * @param requirementId      Description of the Parameter
+   * @param enteredBy          Description of the Parameter
+   * @param modifiedBy         Description of the Parameter
+   * @param itemPosition       Description of the Parameter
+   * @param priorityPosition   Description of the Parameter
+   * @param assignedToPosition Description of the Parameter
+   * @param effortPosition     Description of the Parameter
+   * @param startPosition      Description of the Parameter
+   * @param endPosition        Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   private static void parseItemElement(Element item, Connection db, int indent, int projectId, int requirementId,
-      int enteredBy, int modifiedBy,
-      int itemPosition, int priorityPosition, int assignedToPosition, int effortPosition, int startPosition, int endPosition) throws Exception {
+                                       int enteredBy, int modifiedBy,
+                                       int itemPosition, int priorityPosition, int assignedToPosition, int effortPosition, int startPosition, int endPosition) throws Exception {
     // Get the values for the item
     ArrayList valuesList = new ArrayList();
     Element valuesElement = XMLUtils.getFirstChild(item, "oo:values");
@@ -399,13 +439,16 @@ public class AssignmentImporter {
     assignment.setRole(extractText((Element) valuesList.get(itemPosition)));
     assignment.setIndent(indent);
     if (effortPosition > -1) {
-      assignment.setEstimatedLoe(extractText((Element) valuesList.get(effortPosition)));
+      assignment.setEstimatedLoe(
+          extractText((Element) valuesList.get(effortPosition)));
     }
     if (startPosition > -1) {
-      assignment.setEstStartDate(extractText((Element) valuesList.get(startPosition)));
+      assignment.setEstStartDate(
+          extractText((Element) valuesList.get(startPosition)));
     }
     if (endPosition > -1) {
-      assignment.setDueDate(extractText((Element) valuesList.get(endPosition)));
+      assignment.setDueDate(
+          extractText((Element) valuesList.get(endPosition)));
     }
     assignment.setEnteredBy(enteredBy);
     assignment.setModifiedBy(modifiedBy);
@@ -413,7 +456,8 @@ public class AssignmentImporter {
     assignment.setPriorityId(2);
     assignment.insert(db);
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AssignmentImporter-> Assignment Inserted: " + assignment.getId());
+      System.out.println(
+          "AssignmentImporter-> Assignment Inserted: " + assignment.getId());
     }
 
     // See if there are children, then parse the children items
@@ -422,13 +466,15 @@ public class AssignmentImporter {
       ArrayList itemList = new ArrayList();
       XMLUtils.getAllChildren(childrenElement, itemList);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("AssignmentImporter-> Children items: " + itemList.size());
+        System.out.println(
+            "AssignmentImporter-> Children items: " + itemList.size());
       }
       // Go through the items, for each item see if it has children, with items, etc.
       Iterator itemIterator = itemList.iterator();
       while (itemIterator.hasNext()) {
         Element itemElement = (Element) itemIterator.next();
-        parseItemElement(itemElement, db, (indent + 1), projectId, requirementId,
+        parseItemElement(
+            itemElement, db, (indent + 1), projectId, requirementId,
             enteredBy, modifiedBy,
             itemPosition, priorityPosition, assignedToPosition, effortPosition, startPosition, endPosition);
       }
@@ -437,19 +483,25 @@ public class AssignmentImporter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  element        Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param element Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public static String extractText(Element element) throws Exception {
     Element p = XMLUtils.getFirstChild(element, "oo:p");
     if (p == null) {
-      System.out.println("TEXT: " + XMLUtils.getNodeText(element));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "AssignmentImporter-> TEXT: " + XMLUtils.getNodeText(element));
+      }
       return XMLUtils.getNodeText(element);
     }
-    System.out.println("TEXT: " + XMLUtils.getNodeText(p));
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println(
+          "AssignmentImporter-> TEXT: " + XMLUtils.getNodeText(p));
+    }
     return XMLUtils.getNodeText(p);
   }
 }

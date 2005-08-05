@@ -15,19 +15,18 @@
  */
 package org.aspcfs.modules.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.text.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a note
+ * Represents a note
  *
- *@author     chris
- *@created    September 6, 2001
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created September 6, 2001
  */
 public class Note extends GenericBean {
 
@@ -48,9 +47,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the Subject attribute of the Note object
+   * Sets the Subject attribute of the Note object
    *
-   *@param  subject  The new Subject value
+   * @param subject The new Subject value
    */
   public void setSubject(String subject) {
     this.subject = subject;
@@ -58,9 +57,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Note object
+   * Sets the Id attribute of the Note object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -68,9 +67,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Note object
+   * Sets the Id attribute of the Note object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -78,9 +77,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the IsContact attribute of the Note object
+   * Sets the IsContact attribute of the Note object
    *
-   *@param  tmp  The new IsContact value
+   * @param tmp The new IsContact value
    */
   public void setIsContact(boolean tmp) {
     this.isContact = tmp;
@@ -88,9 +87,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the IsOrg attribute of the Note object
+   * Sets the IsOrg attribute of the Note object
    *
-   *@param  tmp  The new IsOrg value
+   * @param tmp The new IsOrg value
    */
   public void setIsOrg(boolean tmp) {
     this.isOrg = tmp;
@@ -98,9 +97,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the IsOpp attribute of the Note object
+   * Sets the IsOpp attribute of the Note object
    *
-   *@param  tmp  The new IsOpp value
+   * @param tmp The new IsOpp value
    */
   public void setIsOpp(boolean tmp) {
     this.isOpp = tmp;
@@ -108,9 +107,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Note object
+   * Sets the OrgId attribute of the Note object
    *
-   *@param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -118,9 +117,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the Note object
+   * Sets the ContactId attribute of the Note object
    *
-   *@param  tmp  The new ContactId value
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -128,9 +127,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the OppHeaderId attribute of the Note object
+   * Sets the OppHeaderId attribute of the Note object
    *
-   *@param  tmp  The new OppHeaderId value
+   * @param tmp The new OppHeaderId value
    */
   public void setOppHeaderId(int tmp) {
     this.oppHeaderId = tmp;
@@ -138,9 +137,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the DateEntered attribute of the Note object
+   * Sets the DateEntered attribute of the Note object
    *
-   *@param  tmp  The new DateEntered value
+   * @param tmp The new DateEntered value
    */
   public void setDateEntered(String tmp) {
     this.dateEntered = tmp;
@@ -148,9 +147,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the Body attribute of the Note object
+   * Sets the Body attribute of the Note object
    *
-   *@param  tmp  The new Body value
+   * @param tmp The new Body value
    */
   public void setBody(String tmp) {
     this.body = tmp;
@@ -158,9 +157,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Note object
+   * Sets the EnteredBy attribute of the Note object
    *
-   *@param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -168,9 +167,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Note object
+   * Sets the ModifiedBy attribute of the Note object
    *
-   *@param  tmp  The new ModifiedBy value
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -178,9 +177,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Note object
+   * Sets the Enabled attribute of the Note object
    *
-   *@param  tmp  The new Enabled value
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -188,19 +187,20 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the Valid attribute of the Note object
+   * Gets the Valid attribute of the Note object
    *
-   *@return    The Valid value
+   * @return The Valid value
    */
   public boolean isValid() {
-    return (subject != null && !subject.trim().equals("") && body != null && !body.trim().equals(""));
+    return (subject != null && !subject.trim().equals("") && body != null && !body.trim().equals(
+        ""));
   }
 
 
   /**
-   *  Gets the Subject attribute of the Note object
+   * Gets the Subject attribute of the Note object
    *
-   *@return    The Subject value
+   * @return The Subject value
    */
   public String getSubject() {
     return subject;
@@ -208,9 +208,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the IsContact attribute of the Note object
+   * Gets the IsContact attribute of the Note object
    *
-   *@return    The IsContact value
+   * @return The IsContact value
    */
   public boolean getIsContact() {
     return isContact;
@@ -218,9 +218,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the IsOrg attribute of the Note object
+   * Gets the IsOrg attribute of the Note object
    *
-   *@return    The IsOrg value
+   * @return The IsOrg value
    */
   public boolean getIsOrg() {
     return isOrg;
@@ -228,9 +228,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the IsOpp attribute of the Note object
+   * Gets the IsOpp attribute of the Note object
    *
-   *@return    The IsOpp value
+   * @return The IsOpp value
    */
   public boolean getIsOpp() {
     return isOpp;
@@ -238,9 +238,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Note object
+   * Gets the Id attribute of the Note object
    *
-   *@return    The Id value
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -248,9 +248,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the OrgId attribute of the Note object
+   * Gets the OrgId attribute of the Note object
    *
-   *@return    The OrgId value
+   * @return The OrgId value
    */
   public int getOrgId() {
     return orgId;
@@ -258,9 +258,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the ContactId attribute of the Note object
+   * Gets the ContactId attribute of the Note object
    *
-   *@return    The ContactId value
+   * @return The ContactId value
    */
   public int getContactId() {
     return contactId;
@@ -268,9 +268,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the OppHeaderId attribute of the Note object
+   * Gets the OppHeaderId attribute of the Note object
    *
-   *@return    The OppHeaderId value
+   * @return The OppHeaderId value
    */
   public int getOppHeaderId() {
     return oppHeaderId;
@@ -278,9 +278,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the DateEntered attribute of the Note object
+   * Gets the DateEntered attribute of the Note object
    *
-   *@return    The DateEntered value
+   * @return The DateEntered value
    */
   public String getDateEntered() {
     return dateEntered;
@@ -288,9 +288,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the Body attribute of the Note object
+   * Gets the Body attribute of the Note object
    *
-   *@return    The Body value
+   * @return The Body value
    */
   public String getBody() {
     return body;
@@ -298,9 +298,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Note object
+   * Gets the EnteredBy attribute of the Note object
    *
-   *@return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -308,9 +308,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Note object
+   * Gets the ModifiedBy attribute of the Note object
    *
-   *@return    The ModifiedBy value
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -318,9 +318,9 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the Note object
+   * Gets the Enabled attribute of the Note object
    *
-   *@return    The Enabled value
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -328,11 +328,11 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.4
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.4
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("id"));
@@ -352,11 +352,11 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of Parameter
-   *@param  parseItem  Description of Parameter
-   *@since             1.4
+   * @param request   Description of Parameter
+   * @param parseItem Description of Parameter
+   * @since 1.4
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setDateEntered(request.getParameter("note" + parseItem + "date"));

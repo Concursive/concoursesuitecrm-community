@@ -23,7 +23,7 @@
 <script language="JavaScript">
   function checkForm(form) {
     <%-- BEGIN DHV CODE ONLY --%>
-    if (form.doReg[0].checked == 0 && form.doReg[1].checked == 0) {
+    if (form.doReg[0].checked == 0 && form.doReg[1].checked == 0 && form.doReg[2].checked == 0) {
       alert(label("check.registration.option","Please select a registration option to continue"));
       return false;
     }
@@ -52,6 +52,8 @@
       <dhv:label name="setup.requestNewLicense.text">Request a <b>new</b> license for this installation<br /></dhv:label>
       <input type="radio" name="doReg" value="have" <%= !"true".equals(found) ? "disabled" : "checked" %> />
       <dhv:evaluate if="<%= !"true".equals(found) %>"><font color="#888888"></dhv:evaluate><dhv:label name="setup.continueSetupFromPreviousSession.text">Continue setup from a previously started session</dhv:label><dhv:evaluate if="<%= !"true".equals(found) %>"></font></dhv:evaluate><br />
+      <input type="radio" name="doReg" value="restore" />
+      <dhv:label name="setup.restoreBackup">Restore an existing backup<br /></dhv:label>
       <br />
 <%-- END DHV CODE ONLY --%>
       <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>

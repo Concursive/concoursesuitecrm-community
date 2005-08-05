@@ -22,7 +22,6 @@ import org.aspcfs.modules.admin.base.PermissionList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.Viewpoint;
 import org.aspcfs.modules.admin.base.ViewpointList;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -30,19 +29,19 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    February 24, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created February 24, 2003
  */
 public final class Viewpoints extends CFSModule {
 
   /**
-   *  Default action, calls list Viewpoints
+   * Default action, calls list Viewpoints
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListViewpoints(context);
@@ -50,10 +49,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to list Viewpoints
+   * Action to list Viewpoints
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListViewpoints(ActionContext context) {
 
@@ -63,9 +62,11 @@ public final class Viewpoints extends CFSModule {
 
     Exception errorMessage = null;
 
-    PagedListInfo viewpointInfo = this.getPagedListInfo(context, "ViewpointListInfo");
+    PagedListInfo viewpointInfo = this.getPagedListInfo(
+        context, "ViewpointListInfo");
     String userId = context.getRequest().getParameter("userId");
-    viewpointInfo.setLink("Viewpoints.do?command=ListViewpoints&userId=" + userId);
+    viewpointInfo.setLink(
+        "Viewpoints.do?command=ListViewpoints&userId=" + userId);
 
     Connection db = null;
     ViewpointList viewpointList = new ViewpointList();
@@ -100,10 +101,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to view Viewpoint details
+   * Action to view Viewpoint details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewpointDetails(ActionContext context) {
 
@@ -127,7 +128,8 @@ public final class Viewpoints extends CFSModule {
       permissionList.buildList(db);
       context.getRequest().setAttribute("PermissionList", permissionList);
 
-      Viewpoint thisViewpoint = new Viewpoint(db, Integer.parseInt(viewpointId));
+      Viewpoint thisViewpoint = new Viewpoint(
+          db, Integer.parseInt(viewpointId));
       context.getRequest().setAttribute("Viewpoint", thisViewpoint);
 
       //build User Info for submenu
@@ -157,10 +159,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to process updating a Viewpoint based on html form
+   * Action to process updating a Viewpoint based on html form
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateViewpoint(ActionContext context) {
 
@@ -211,10 +213,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to generate delete dialog box for user
+   * Action to generate delete dialog box for user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -237,7 +239,8 @@ public final class Viewpoints extends CFSModule {
       thisViewpoint = new Viewpoint(db, id);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='Viewpoints.do?command=DeleteViewpoint&id=" + id + "&userId=" + userId + "'");
+      htmlDialog.setDeleteUrl(
+          "javascript:window.location.href='Viewpoints.do?command=DeleteViewpoint&id=" + id + "&userId=" + userId + "'");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -254,10 +257,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to generate a Viewpoint insert form
+   * Action to generate a Viewpoint insert form
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertViewpointForm(ActionContext context) {
 
@@ -298,10 +301,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to insert a Viewpoint, based on html form entered by user
+   * Action to insert a Viewpoint, based on html form entered by user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertViewpoint(ActionContext context) {
     if (!(hasPermission(context, "admin-roles-add"))) {
@@ -325,7 +328,9 @@ public final class Viewpoints extends CFSModule {
       if (viewpoints.checkForDuplicates(thisViewpoint.getVpUserId()) != 0) {
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.duplicateViewpointUserCanNotBeInserted"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.duplicateViewpointUserCanNotBeInserted"));
         processErrors(context, errors);
         isValid = false;
       }
@@ -348,7 +353,8 @@ public final class Viewpoints extends CFSModule {
         thisUser.buildRecord(db, Integer.parseInt(userId));
         context.getRequest().setAttribute("UserRecord", thisUser);
       } else {
-        context.getRequest().setAttribute("vpUserId", ""+thisViewpoint.getVpUserId());
+        context.getRequest().setAttribute(
+            "vpUserId", "" + thisViewpoint.getVpUserId());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -366,10 +372,10 @@ public final class Viewpoints extends CFSModule {
 
 
   /**
-   *  Action to delete a specific Viewpoint
+   * Action to delete a specific Viewpoint
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteViewpoint(ActionContext context) {
 
@@ -388,11 +394,13 @@ public final class Viewpoints extends CFSModule {
       db = this.getConnection(context);
       thisViewpoint = new Viewpoint(db, Integer.parseInt(viewpointId));
       recordDeleted = thisViewpoint.delete(db);
-      if(recordDeleted){
+      if (recordDeleted) {
         //mark the viewpoints as invalid
         this.invalidateViewpoints(context);
       } else {
-        thisViewpoint.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.viewPointDeletion"));
+        thisViewpoint.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.viewPointDeletion"));
         processErrors(context, thisViewpoint.getErrors());
       }
     } catch (Exception e) {
@@ -404,11 +412,13 @@ public final class Viewpoints extends CFSModule {
     addModuleBean(context, "Users", "Delete a Viewpoint");
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "Viewpoints.do?command=ListViewpoints&userId=" + userId);
+        context.getRequest().setAttribute(
+            "refreshUrl", "Viewpoints.do?command=ListViewpoints&userId=" + userId);
         return ("DeleteOK");
       } else {
         processErrors(context, thisViewpoint.getErrors());
-        context.getRequest().setAttribute("refreshUrl", "Viewpoints.do?command=ListViewpoints&userId=" + userId);
+        context.getRequest().setAttribute(
+            "refreshUrl", "Viewpoints.do?command=ListViewpoints&userId=" + userId);
         return ("DeleteOK");
       }
     } else {

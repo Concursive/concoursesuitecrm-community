@@ -15,23 +15,30 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.controller.SystemStatus;
-import com.darkhorseventures.database.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.StateSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.*;
-import java.text.*;
 
 /**
- *  Represents a CustomField, used for both the definition of a custom field and
- *  also the data included in the custom field.
+ * Represents a CustomField, used for both the definition of a custom field and
+ * also the data included in the custom field.
  *
- *@author     mrajkowski
- *@created    December 27, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created December 27, 2001
  */
 public class CustomField extends GenericBean implements Cloneable {
 
@@ -113,19 +120,20 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Constructor for the CustomField object
+   * Constructor for the CustomField object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public CustomField() { }
+  public CustomField() {
+  }
 
 
   /**
-   *  Constructor for the CustomField object
+   * Constructor for the CustomField object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CustomField(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -146,11 +154,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Constructor for the CustomField object
+   * Constructor for the CustomField object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public CustomField(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -158,9 +166,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the linkItemId attribute of the CustomField object
+   * Gets the linkItemId attribute of the CustomField object
    *
-   *@return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -168,9 +176,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the validateData attribute of the CustomField object
+   * Gets the validateData attribute of the CustomField object
    *
-   *@return    The validateData value
+   * @return The validateData value
    */
   public boolean getValidateData() {
     return validateData;
@@ -178,9 +186,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the validateData attribute of the CustomField object
+   * Sets the validateData attribute of the CustomField object
    *
-   *@param  tmp  The new validateData value
+   * @param tmp The new validateData value
    */
   public void setValidateData(boolean tmp) {
     this.validateData = tmp;
@@ -188,9 +196,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the validateData attribute of the CustomField object
+   * Sets the validateData attribute of the CustomField object
    *
-   *@param  tmp  The new validateData value
+   * @param tmp The new validateData value
    */
   public void setValidateData(String tmp) {
     this.validateData = DatabaseUtils.parseBoolean(tmp);
@@ -198,9 +206,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the elementData attribute of the CustomField object
+   * Sets the elementData attribute of the CustomField object
    *
-   *@param  elementData  The new elementData value
+   * @param elementData The new elementData value
    */
   public void setElementData(Object elementData) {
     this.elementData = elementData;
@@ -208,12 +216,12 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Constructor for the CustomField object
+   * Constructor for the CustomField object
    *
-   *@param  rs                Description of Parameter
-   *@param  populated         Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs        Description of Parameter
+   * @param populated Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public CustomField(ResultSet rs, boolean populated) throws SQLException {
     if (populated) {
@@ -224,9 +232,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the textAsCode attribute of the CustomField object
+   * Sets the textAsCode attribute of the CustomField object
    *
-   *@param  textAsCode  The new textAsCode value
+   * @param textAsCode The new textAsCode value
    */
   public void setTextAsCode(boolean textAsCode) {
     this.textAsCode = textAsCode;
@@ -234,10 +242,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Id attribute of the CustomField object
+   * Sets the Id attribute of the CustomField object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -245,9 +252,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the lengthVar attribute of the CustomField object
+   * Gets the lengthVar attribute of the CustomField object
    *
-   *@return    The lengthVar value
+   * @return The lengthVar value
    */
   public String getLengthVar() {
     return lengthVar;
@@ -255,9 +262,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the lengthVar attribute of the CustomField object
+   * Sets the lengthVar attribute of the CustomField object
    *
-   *@param  lengthVar  The new lengthVar value
+   * @param lengthVar The new lengthVar value
    */
   public void setLengthVar(String lengthVar) {
     this.lengthVar = lengthVar;
@@ -265,10 +272,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the parameter attribute of the CustomField object
+   * Sets the parameter attribute of the CustomField object
    *
-   *@param  parameterName  The new parameter value
-   *@param  value          The new parameter value
+   * @param parameterName The new parameter value
+   * @param value         The new parameter value
    */
   public void setParameter(String parameterName, String value) {
     parameters.put(parameterName, value);
@@ -276,10 +283,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Id attribute of the CustomField object
+   * Sets the Id attribute of the CustomField object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -287,9 +293,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the onChange attribute of the CustomField object
+   * Sets the onChange attribute of the CustomField object
    *
-   *@param  onChange  The new onChange value
+   * @param onChange The new onChange value
    */
   public void setOnChange(String onChange) {
     this.onChange = onChange;
@@ -297,9 +303,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the listItemName attribute of the CustomField object
+   * Sets the listItemName attribute of the CustomField object
    *
-   *@param  listItemName  The new listItemName value
+   * @param listItemName The new listItemName value
    */
   public void setListItemName(String listItemName) {
     this.listItemName = listItemName;
@@ -307,9 +313,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the listItemName attribute of the CustomField object
+   * Gets the listItemName attribute of the CustomField object
    *
-   *@return    The listItemName value
+   * @return The listItemName value
    */
   public String getListItemName() {
     return listItemName;
@@ -317,9 +323,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the onChange attribute of the CustomField object
+   * Gets the onChange attribute of the CustomField object
    *
-   *@return    The onChange value
+   * @return The onChange value
    */
   public String getOnChange() {
     return onChange;
@@ -327,9 +333,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the delimiter attribute of the CustomField object
+   * Gets the delimiter attribute of the CustomField object
    *
-   *@return    The delimiter value
+   * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -337,9 +343,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the delimiter attribute of the CustomField object
+   * Sets the delimiter attribute of the CustomField object
    *
-   *@param  delimiter  The new delimiter value
+   * @param delimiter The new delimiter value
    */
   public void setDelimiter(String delimiter) {
     this.delimiter = delimiter;
@@ -347,9 +353,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the textAsCode attribute of the CustomField object
+   * Gets the textAsCode attribute of the CustomField object
    *
-   *@return    The textAsCode value
+   * @return The textAsCode value
    */
   public boolean getTextAsCode() {
     return textAsCode;
@@ -357,9 +363,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the textAsCode attribute of the CustomField object
+   * Sets the textAsCode attribute of the CustomField object
    *
-   *@param  textAsCode  The new textAsCode value
+   * @param textAsCode The new textAsCode value
    */
   public void setTextAsCode(String textAsCode) {
     this.textAsCode = textAsCode.equalsIgnoreCase("ON");
@@ -367,10 +373,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the GroupId attribute of the CustomField object
+   * Sets the GroupId attribute of the CustomField object
    *
-   *@param  tmp  The new GroupId value
-   *@since
+   * @param tmp The new GroupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -378,10 +383,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the GroupId attribute of the CustomField object
+   * Sets the GroupId attribute of the CustomField object
    *
-   *@param  tmp  The new GroupId value
-   *@since
+   * @param tmp The new GroupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -389,9 +393,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the maxRowItems attribute of the CustomField object
+   * Sets the maxRowItems attribute of the CustomField object
    *
-   *@param  maxRowItems  The new maxRowItems value
+   * @param maxRowItems The new maxRowItems value
    */
   public void setMaxRowItems(int maxRowItems) {
     this.maxRowItems = maxRowItems;
@@ -399,9 +403,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the listName attribute of the CustomField object
+   * Sets the listName attribute of the CustomField object
    *
-   *@param  listName  The new listName value
+   * @param listName The new listName value
    */
   public void setListName(String listName) {
     this.listName = listName;
@@ -409,9 +413,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the listName attribute of the CustomField object
+   * Gets the listName attribute of the CustomField object
    *
-   *@return    The listName value
+   * @return The listName value
    */
   public String getListName() {
     return listName;
@@ -419,9 +423,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the maxRowItems attribute of the CustomField object
+   * Gets the maxRowItems attribute of the CustomField object
    *
-   *@return    The maxRowItems value
+   * @return The maxRowItems value
    */
   public int getMaxRowItems() {
     if (maxRowItems == 0) {
@@ -435,9 +439,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the maxRowItems attribute of the CustomField object
+   * Sets the maxRowItems attribute of the CustomField object
    *
-   *@param  maxRowItems  The new maxRowItems value
+   * @param maxRowItems The new maxRowItems value
    */
   public void setMaxRowItems(String maxRowItems) {
     if (maxRowItems != null) {
@@ -447,10 +451,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Name attribute of the CustomField object
+   * Sets the Name attribute of the CustomField object
    *
-   *@param  tmp  The new Name value
-   *@since
+   * @param tmp The new Name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -458,9 +461,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the display attribute of the CustomField object
+   * Gets the display attribute of the CustomField object
    *
-   *@return    The display value
+   * @return The display value
    */
   public String getDisplay() {
     return display;
@@ -468,9 +471,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the displayHtml attribute of the CustomField object
+   * Gets the displayHtml attribute of the CustomField object
    *
-   *@return    The displayHtml value
+   * @return The displayHtml value
    */
   public String getDisplayHtml() {
     return StringUtils.toHtml(display);
@@ -478,9 +481,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the display attribute of the CustomField object
+   * Sets the display attribute of the CustomField object
    *
-   *@param  display  The new display value
+   * @param display The new display value
    */
   public void setDisplay(String display) {
     this.display = display;
@@ -488,21 +491,19 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the additionalText attribute of the CustomField object
+   * Sets the additionalText attribute of the CustomField object
    *
-   *@param  additionalText  The new additionalText value
+   * @param additionalText The new additionalText value
    */
   public void setAdditionalText(String additionalText) {
     this.additionalText = additionalText;
   }
 
 
-
   /**
-   *  Sets the Level attribute of the CustomField object
+   * Sets the Level attribute of the CustomField object
    *
-   *@param  tmp  The new Level value
-   *@since
+   * @param tmp The new Level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -510,9 +511,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the level attribute of the CustomField object
+   * Sets the level attribute of the CustomField object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -520,10 +521,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Type attribute of the CustomField object
+   * Sets the Type attribute of the CustomField object
    *
-   *@param  tmp  The new Type value
-   *@since
+   * @param tmp The new Type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -531,10 +531,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Type attribute of the CustomField object
+   * Sets the Type attribute of the CustomField object
    *
-   *@param  tmp  The new Type value
-   *@since
+   * @param tmp The new Type value
    */
   public void setType(String tmp) {
     try {
@@ -574,10 +573,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the ValidationType attribute of the CustomField object
+   * Sets the ValidationType attribute of the CustomField object
    *
-   *@param  tmp  The new ValidationType value
-   *@since
+   * @param tmp The new ValidationType value
    */
   public void setValidationType(int tmp) {
     this.validationType = tmp;
@@ -585,9 +583,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the validationType attribute of the CustomField object
+   * Sets the validationType attribute of the CustomField object
    *
-   *@param  tmp  The new validationType value
+   * @param tmp The new validationType value
    */
   public void setValidationType(String tmp) {
     this.validationType = Integer.parseInt(tmp);
@@ -595,10 +593,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Required attribute of the CustomField object
+   * Sets the Required attribute of the CustomField object
    *
-   *@param  tmp  The new Required value
-   *@since
+   * @param tmp The new Required value
    */
   public void setRequired(boolean tmp) {
     this.required = tmp;
@@ -606,21 +603,20 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Required attribute of the CustomField object
+   * Sets the Required attribute of the CustomField object
    *
-   *@param  tmp  The new Required value
-   *@since
+   * @param tmp The new Required value
    */
   public void setRequired(String tmp) {
-    this.required = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.required = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the StartDate attribute of the CustomField object
+   * Sets the StartDate attribute of the CustomField object
    *
-   *@param  tmp  The new StartDate value
-   *@since
+   * @param tmp The new StartDate value
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
@@ -628,9 +624,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the startDate attribute of the CustomField object
+   * Sets the startDate attribute of the CustomField object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DateUtils.parseTimestampString(tmp);
@@ -638,10 +634,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the EndDate attribute of the CustomField object
+   * Sets the EndDate attribute of the CustomField object
    *
-   *@param  tmp  The new EndDate value
-   *@since
+   * @param tmp The new EndDate value
    */
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
@@ -649,9 +644,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the endDate attribute of the CustomField object
+   * Sets the endDate attribute of the CustomField object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(String tmp) {
     this.endDate = DateUtils.parseTimestampString(tmp);
@@ -659,10 +654,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Entered attribute of the CustomField object
+   * Sets the Entered attribute of the CustomField object
    *
-   *@param  tmp  The new Entered value
-   *@since
+   * @param tmp The new Entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -670,9 +664,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the entered attribute of the CustomField object
+   * Sets the entered attribute of the CustomField object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -680,9 +674,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the modified attribute of the CustomField object
+   * Sets the modified attribute of the CustomField object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -690,9 +684,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the modified attribute of the CustomField object
+   * Sets the modified attribute of the CustomField object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -700,10 +694,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Enabled attribute of the CustomField object
+   * Sets the Enabled attribute of the CustomField object
    *
-   *@param  tmp  The new Enabled value
-   *@since
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -711,9 +704,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the enabled attribute of the CustomField object
+   * Sets the enabled attribute of the CustomField object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -721,10 +714,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Error attribute of the CustomField object
+   * Sets the Error attribute of the CustomField object
    *
-   *@param  tmp  The new Error value
-   *@since
+   * @param tmp The new Error value
    */
   public void setError(String tmp) {
     this.error = tmp;
@@ -732,10 +724,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the LinkModuleId attribute of the CustomField object
+   * Sets the LinkModuleId attribute of the CustomField object
    *
-   *@param  tmp  The new LinkModuleId value
-   *@since
+   * @param tmp The new LinkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -743,10 +734,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the LinkItemId attribute of the CustomField object
+   * Sets the LinkItemId attribute of the CustomField object
    *
-   *@param  tmp  The new LinkItemId value
-   *@since
+   * @param tmp The new LinkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -754,10 +744,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the RecordId attribute of the CustomField object
+   * Sets the RecordId attribute of the CustomField object
    *
-   *@param  tmp  The new RecordId value
-   *@since
+   * @param tmp The new RecordId value
    */
   public void setRecordId(int tmp) {
     this.recordId = tmp;
@@ -765,9 +754,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the recordId attribute of the CustomField object
+   * Sets the recordId attribute of the CustomField object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(String tmp) {
     this.recordId = Integer.parseInt(tmp);
@@ -775,10 +764,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the SelectedItemId attribute of the CustomField object
+   * Sets the SelectedItemId attribute of the CustomField object
    *
-   *@param  tmp  The new SelectedItemId value
-   *@since
+   * @param tmp The new SelectedItemId value
    */
   public void setSelectedItemId(int tmp) {
     this.selectedItemId = tmp;
@@ -786,9 +774,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the selectedItemId attribute of the CustomField object
+   * Sets the selectedItemId attribute of the CustomField object
    *
-   *@param  tmp  The new selectedItemId value
+   * @param tmp The new selectedItemId value
    */
   public void setSelectedItemId(String tmp) {
     if (tmp != null) {
@@ -804,10 +792,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the EnteredValue attribute of the CustomField object
+   * Sets the EnteredValue attribute of the CustomField object
    *
-   *@param  tmp  The new EnteredValue value
-   *@since
+   * @param tmp The new EnteredValue value
    */
   public void setEnteredValue(String tmp) {
     if (tmp != null) {
@@ -819,9 +806,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the enteredNumber attribute of the CustomField object
+   * Sets the enteredNumber attribute of the CustomField object
    *
-   *@param  tmp  The new enteredNumber value
+   * @param tmp The new enteredNumber value
    */
   public void setEnteredNumber(int tmp) {
     this.enteredNumber = tmp;
@@ -829,9 +816,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the enteredDouble attribute of the CustomField object
+   * Sets the enteredDouble attribute of the CustomField object
    *
-   *@param  tmp  The new enteredDouble value
+   * @param tmp The new enteredDouble value
    */
   public void setEnteredDouble(double tmp) {
     this.enteredDouble = tmp;
@@ -839,10 +826,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the Length attribute of the CustomField object
+   * Sets the Length attribute of the CustomField object
    *
-   *@param  tmp  The new Length value
-   *@since
+   * @param tmp The new Length value
    */
   public void setMaxLength(String tmp) {
     if (tmp != null && !tmp.equals("")) {
@@ -852,29 +838,29 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Builds the lookupList from using the System Status.
+   * Builds the lookupList from using the System Status.
    *
-   *@param  context           The new lookupList value
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context The new lookupList value
+   * @param db      Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean buildLookupList(Connection db, ActionContext context) throws SQLException {
-    Exception errorMessage = null;
     elementData = new LookupList();
     if (lookupList != null && !lookupList.equals("")) {
-      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-      elementData = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getLookupList(db, lookupList);
+      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+          "ConnectionElement");
+      elementData = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl())).getLookupList(db, lookupList);
     }
     return true;
   }
 
 
   /**
-   *  Sets the Parameters attribute of the CustomField object
+   * Sets the Parameters attribute of the CustomField object
    *
-   *@param  context  The new Parameters value
-   *@since
+   * @param context The new Parameters value
    */
   public void setParameters(ActionContext context) {
     String newValue = null;
@@ -890,7 +876,8 @@ public class CustomField extends GenericBean implements Cloneable {
       switch (type) {
         case SELECT:
           selectedItemId = Integer.parseInt(newValue);
-          enteredValue = ((LookupList) elementData).getSelectedValue(selectedItemId);
+          enteredValue = ((LookupList) elementData).getSelectedValue(
+              selectedItemId);
           break;
         case CHECKBOX:
           if ("ON".equalsIgnoreCase(newValue)) {
@@ -901,18 +888,32 @@ public class CustomField extends GenericBean implements Cloneable {
             enteredValue = "No";
           }
           break;
+        case STATE_SELECT:
+          if ("-1".equals(newValue)) {
+            enteredValue = "--"; //displays -1 otherwise
+          } else {
+            enteredValue = newValue;
+          }
+          break;
         default:
           enteredValue = newValue;
           break;
+      }
+    } else {
+      // If the field is now found in the request, the item is either no
+      // longer enabled (so leave the existing value) or it is a CHECKBOX
+      if (enabled && type == CHECKBOX) {
+        selectedItemId = 0;
+        enteredValue = "No";
       }
     }
   }
 
 
   /**
-   *  Sets the parameters attribute of the CustomField object
+   * Sets the parameters attribute of the CustomField object
    *
-   *@param  param  The new parameters value
+   * @param param The new parameters value
    */
   public void setParameters(String param) {
     StringTokenizer st = new StringTokenizer(param, "^");
@@ -926,9 +927,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the jsEvent attribute of the CustomField object
+   * Sets the jsEvent attribute of the CustomField object
    *
-   *@param  jsEvent  The new jsEvent value
+   * @param jsEvent The new jsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -936,9 +937,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the isStatic attribute of the CustomField object
+   * Sets the isStatic attribute of the CustomField object
    *
-   *@param  isStatic  The new isStatic value
+   * @param isStatic The new isStatic value
    */
   public void setIsStatic(boolean isStatic) {
     this.isStatic = isStatic;
@@ -946,9 +947,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the lookupList attribute of the CustomField object
+   * Sets the lookupList attribute of the CustomField object
    *
-   *@param  tmp  The new lookupList value
+   * @param tmp The new lookupList value
    */
   public void setLookupList(String tmp) {
     lookupList = tmp;
@@ -956,9 +957,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the lookupList attribute of the CustomField object
+   * Sets the lookupList attribute of the CustomField object
    *
-   *@param  tmp  The new lookupList value
+   * @param tmp The new lookupList value
    */
   public void setLookupListText(String tmp) {
     elementData = new LookupList();
@@ -986,9 +987,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the enteredDouble attribute of the CustomField object
+   * Gets the enteredDouble attribute of the CustomField object
    *
-   *@return    The enteredDouble value
+   * @return The enteredDouble value
    */
   public double getEnteredDouble() {
     return enteredDouble;
@@ -996,9 +997,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the isStatic attribute of the CustomField object
+   * Gets the isStatic attribute of the CustomField object
    *
-   *@return    The isStatic value
+   * @return The isStatic value
    */
   public boolean getIsStatic() {
     return isStatic;
@@ -1006,9 +1007,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the jsEvent attribute of the CustomField object
+   * Gets the jsEvent attribute of the CustomField object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -1016,9 +1017,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the recordId attribute of the CustomField object
+   * Gets the recordId attribute of the CustomField object
    *
-   *@return    The recordId value
+   * @return The recordId value
    */
   public int getRecordId() {
     return recordId;
@@ -1026,9 +1027,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the lookupList attribute of the CustomField object
+   * Gets the lookupList attribute of the CustomField object
    *
-   *@return    The lookupList value
+   * @return The lookupList value
    */
   public String getLookupList() {
     return lookupList;
@@ -1036,10 +1037,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  When building a folder, this method generates the text for the HTML form
-   *  for a new LookupList
+   * When building a folder, this method generates the text for the HTML form
+   * for a new LookupList
    *
-   *@return    The LookupList value
+   * @return The LookupList value
    */
   public String getLookupListText() {
     StringBuffer sb = new StringBuffer();
@@ -1058,10 +1059,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Id attribute of the CustomField object
+   * Gets the Id attribute of the CustomField object
    *
-   *@return    The Id value
-   *@since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -1069,10 +1069,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the GroupId attribute of the CustomField object
+   * Gets the GroupId attribute of the CustomField object
    *
-   *@return    The GroupId value
-   *@since
+   * @return The GroupId value
    */
   public int getGroupId() {
     return groupId;
@@ -1080,10 +1079,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Name attribute of the CustomField object
+   * Gets the Name attribute of the CustomField object
    *
-   *@return    The Name value
-   *@since
+   * @return The Name value
    */
   public String getName() {
     return name;
@@ -1091,21 +1089,19 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the additionalText attribute of the CustomField object
+   * Gets the additionalText attribute of the CustomField object
    *
-   *@return    The additionalText value
+   * @return The additionalText value
    */
   public String getAdditionalText() {
     return additionalText;
   }
 
 
-
   /**
-   *  Gets the NameHtml attribute of the CustomField object
+   * Gets the NameHtml attribute of the CustomField object
    *
-   *@return    The NameHtml value
-   *@since
+   * @return The NameHtml value
    */
   public String getNameHtml() {
     return StringUtils.toHtml(name);
@@ -1113,10 +1109,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Level attribute of the CustomField object
+   * Gets the Level attribute of the CustomField object
    *
-   *@return    The Level value
-   *@since
+   * @return The Level value
    */
   public int getLevel() {
     return level;
@@ -1124,10 +1119,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Type attribute of the CustomField object
+   * Gets the Type attribute of the CustomField object
    *
-   *@return    The Type value
-   *@since
+   * @return The Type value
    */
   public int getType() {
     return type;
@@ -1135,10 +1129,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the TypeString attribute of the CustomField object
+   * Gets the TypeString attribute of the CustomField object
    *
-   *@return    The TypeString value
-   *@since
+   * @return The TypeString value
    */
   public String getTypeString() {
     return getTypeString(type, true);
@@ -1146,10 +1139,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the ValidationType attribute of the CustomField object
+   * Gets the ValidationType attribute of the CustomField object
    *
-   *@return    The ValidationType value
-   *@since
+   * @return The ValidationType value
    */
   public int getValidationType() {
     return validationType;
@@ -1157,10 +1149,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Required attribute of the CustomField object
+   * Gets the Required attribute of the CustomField object
    *
-   *@return    The Required value
-   *@since
+   * @return The Required value
    */
   public boolean getRequired() {
     return required;
@@ -1168,10 +1159,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the StartDate attribute of the CustomField object
+   * Gets the StartDate attribute of the CustomField object
    *
-   *@return    The StartDate value
-   *@since
+   * @return The StartDate value
    */
   public java.sql.Timestamp getStartDate() {
     return startDate;
@@ -1179,10 +1169,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the EndDate attribute of the CustomField object
+   * Gets the EndDate attribute of the CustomField object
    *
-   *@return    The EndDate value
-   *@since
+   * @return The EndDate value
    */
   public java.sql.Timestamp getEndDate() {
     return endDate;
@@ -1190,10 +1179,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Entered attribute of the CustomField object
+   * Gets the Entered attribute of the CustomField object
    *
-   *@return    The Entered value
-   *@since
+   * @return The Entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1201,9 +1189,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the modified attribute of the CustomField object
+   * Gets the modified attribute of the CustomField object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1211,10 +1199,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Enabled attribute of the CustomField object
+   * Gets the Enabled attribute of the CustomField object
    *
-   *@return    The Enabled value
-   *@since
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -1222,10 +1209,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Error attribute of the CustomField object
+   * Gets the Error attribute of the CustomField object
    *
-   *@return    The Error value
-   *@since
+   * @return The Error value
    */
   public String getError() {
     return error;
@@ -1233,10 +1219,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the SelectedItemId attribute of the CustomField object
+   * Gets the SelectedItemId attribute of the CustomField object
    *
-   *@return    The SelectedItemId value
-   *@since
+   * @return The SelectedItemId value
    */
   public int getSelectedItemId() {
     return selectedItemId;
@@ -1244,10 +1229,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the EnteredValue attribute of the CustomField object
+   * Gets the EnteredValue attribute of the CustomField object
    *
-   *@return    The EnteredValue value
-   *@since
+   * @return The EnteredValue value
    */
   public String getEnteredValue() {
     return enteredValue;
@@ -1255,10 +1239,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the ElementData attribute of the CustomField object
+   * Gets the ElementData attribute of the CustomField object
    *
-   *@return    The ElementData value
-   *@since
+   * @return The ElementData value
    */
   public Object getElementData() {
     return elementData;
@@ -1266,10 +1249,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                                 Description of the Return Value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public CustomField duplicate() throws CloneNotSupportedException {
     return (CustomField) this.clone();
@@ -1277,11 +1260,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the LengthRequired attribute of the CustomField object for HTML
-   *  forms.
+   * Gets the LengthRequired attribute of the CustomField object for HTML
+   * forms.
    *
-   *@return    The LengthRequired value
-   *@since
+   * @return The LengthRequired value
    */
   public boolean getLengthRequired() {
     switch (type) {
@@ -1300,10 +1282,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the LookupListRequired attribute of the CustomField object
+   * Gets the LookupListRequired attribute of the CustomField object
    *
-   *@return    The LookupListRequired value
-   *@since
+   * @return The LookupListRequired value
    */
   public boolean getLookupListRequired() {
     switch (type) {
@@ -1316,11 +1297,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Parameter attribute of the CustomField object
+   * Gets the Parameter attribute of the CustomField object
    *
-   *@param  tmp  Description of Parameter
-   *@return      The Parameter value
-   *@since
+   * @param tmp Description of Parameter
+   * @return The Parameter value
    */
   public String getParameter(String tmp) {
     if (parameters.containsKey(tmp.toLowerCase())) {
@@ -1332,9 +1312,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the valueHtml attribute of the CustomField object
+   * Gets the valueHtml attribute of the CustomField object
    *
-   *@return    The valueHtml value
+   * @return The valueHtml value
    */
   public String getValueHtml() {
     return getValueHtml(true);
@@ -1342,10 +1322,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the valueHtml attribute of the CustomField object
+   * Gets the valueHtml attribute of the CustomField object
    *
-   *@param  enableLinks  Description of the Parameter
-   *@return              The valueHtml value
+   * @param enableLinks Description of the Parameter
+   * @return The valueHtml value
    */
   public String getValueHtml(boolean enableLinks) {
     if (type != SELECT && (enteredValue == null || enteredValue.equals(""))) {
@@ -1366,7 +1346,8 @@ public class CustomField extends GenericBean implements Cloneable {
         }
       case SELECT:
         if (elementData != null) {
-          return StringUtils.toHtml(((LookupList) elementData).getSelectedValue(selectedItemId));
+          return StringUtils.toHtml(
+              ((LookupList) elementData).getSelectedValue(selectedItemId));
         } else {
           return StringUtils.toHtml(enteredValue);
         }
@@ -1375,7 +1356,8 @@ public class CustomField extends GenericBean implements Cloneable {
       case CURRENCY:
         try {
           double thisAmount = Double.parseDouble(enteredValue);
-          NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+          NumberFormat numberFormatter = NumberFormat.getNumberInstance(
+              Locale.US);
           return (numberFormatter.format(thisAmount));
           /*
           Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
@@ -1397,11 +1379,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the rowListElement attribute of the CustomField object
+   * Gets the rowListElement attribute of the CustomField object
    *
-   *@param  index     Description of the Parameter
-   *@param  editable  Description of the Parameter
-   *@return           The rowListElement value
+   * @param index    Description of the Parameter
+   * @param editable Description of the Parameter
+   * @return The rowListElement value
    */
   public String getRowListElement(int index, boolean editable) {
     String hiddenElementName = name + index + "id";
@@ -1431,22 +1413,24 @@ public class CustomField extends GenericBean implements Cloneable {
       //supposed to be an int
     }
     if (editable) {
-      return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + rowElementId + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
-          (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + StringUtils.toHtmlValue(ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
+      return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + rowElementId + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals(
+          "") ? "" : "maxlength=\"" + maxlength + "\" ") +
+          (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + StringUtils.toHtmlValue(
+              ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
     } else {
-      return (StringUtils.toHtmlValue(ObjectUtils.getParam(tmpResult, "description")));
+      return (StringUtils.toHtmlValue(
+          ObjectUtils.getParam(tmpResult, "description")));
     }
   }
 
 
   /**
-   *  Gets the HtmlElement attribute of the CustomField object when drawing
-   *  forms.
+   * Gets the HtmlElement attribute of the CustomField object when drawing
+   * forms.
    *
-   *@return    The HtmlElement value
-   *@since
+   * @return The HtmlElement value
    */
-  public String getHtmlElement() {
+  public String getHtmlElement(SystemStatus thisSystem) {
     String elementName = "";
     if (id > -1) {
       elementName = "cf" + id;
@@ -1460,29 +1444,40 @@ public class CustomField extends GenericBean implements Cloneable {
 
     switch (type) {
       case TEXTAREA:
-        return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(enteredValue) + "</textarea>");
+        return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(
+            enteredValue) + "</textarea>");
       case HTMLAREA:
-        return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.fromHtmlValue(enteredValue) + "</textarea>");
+        return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.fromHtmlValue(
+            enteredValue) + "</textarea>");
       case SELECT:
         if (!(((LookupList) elementData).containsKey(-1))) {
-          ((LookupList) elementData).addItem(-1, "-- None --");
+          if (thisSystem != null) {
+            ((LookupList) elementData).addItem(
+                -1, thisSystem.getLabel("calendar.none.4dashes"));
+          } else {
+            ((LookupList) elementData).addItem(-1, "-- None --");
+          }
         }
         LookupList tmpList = (LookupList) elementData;
-        tmpList.setJsEvent(this.getOnChange() != null ? " onchange=\"" + this.getOnChange() + "\"" : "");
+        tmpList.setJsEvent(
+            this.getOnChange() != null ? " onchange=\"" + this.getOnChange() + "\"" : "");
         return tmpList.getHtmlSelect(elementName, selectedItemId);
       case BUTTON:
         return ("<input type=\"button\" name=\"" + elementName + "\" value=\"" + display + "\" " + (jsEvent != null ? " onClick=\"" + jsEvent + "\"" : "") + (enabled ? "" : " disabled") + ">");
       case CHECKBOX:
         return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
       case DATE:
-        return ("<input type=\"text\" name=\"" + elementName + "\" size=\"10\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " +
+        return ("<input type=\"text\" name=\"" + elementName + "\" size=\"10\" value=\"" + StringUtils.toHtmlValue(
+            enteredValue) + "\"> " +
             "<a href=\"javascript:popCalendar('details', '" + elementName + "','" + language + "','" + country + "');\">" +
             "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
             "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a>");
       case PERCENT:
-        return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " + "%");
+        return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + StringUtils.toHtmlValue(
+            enteredValue) + "\"> " + "%");
       case HIDDEN:
-        return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
+        return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(
+            enteredValue) + "\">");
       case DISPLAYTEXT:
         return (StringUtils.toHtmlValue(enteredValue));
       case LABEL:
@@ -1490,8 +1485,9 @@ public class CustomField extends GenericBean implements Cloneable {
       case LINK:
         return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
       case STATE_SELECT:
-        StateSelect stateSelect = new StateSelect();
-        return (stateSelect.getHtml(elementName, StringUtils.toHtmlValue(enteredValue)));
+        StateSelect stateSelect = new StateSelect(thisSystem);
+        return (stateSelect.getHtml(
+            elementName, StringUtils.toHtmlValue(enteredValue)));
       default:
         String maxlength = this.getParameter("maxlength");
         String size = "";
@@ -1512,11 +1508,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the CustomField object
+   * Gets the HtmlSelect attribute of the CustomField object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since
+   * @param selectName Description of Parameter
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return this.getHtmlSelect(selectName, null);
@@ -1524,13 +1519,12 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the CustomField object to display a list
-   *  of available custom field data types.
+   * Gets the HtmlSelect attribute of the CustomField object to display a list
+   * of available custom field data types.
    *
-   *@param  selectName  Description of Parameter
-   *@param  jsEvent     Description of Parameter
-   *@return             The HtmlSelect value
-   *@since
+   * @param selectName Description of Parameter
+   * @param jsEvent    Description of Parameter
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName, String jsEvent) {
     HtmlSelect dataTypes = new HtmlSelect();
@@ -1556,17 +1550,17 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the TypeString attribute of the CustomField class
+   * Gets the TypeString attribute of the CustomField class
    *
-   *@param  dataType  Description of Parameter
-   *@param  dynamic   Description of Parameter
-   *@return           The TypeString value
-   *@since
+   * @param dataType Description of Parameter
+   * @param dynamic  Description of Parameter
+   * @return The TypeString value
    */
   public String getTypeString(int dataType, boolean dynamic) {
     switch (dataType) {
       case TEXT:
-        if ((getParameter("maxlength") == null || getParameter("maxlength").equals("")) || !dynamic) {
+        if ((getParameter("maxlength") == null || getParameter("maxlength").equals(
+            "")) || !dynamic) {
           return "Text (up to 255 characters)";
         } else {
           return "Text (" + getParameter("maxlength") + ")";
@@ -1602,9 +1596,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasDisplay() {
     return (display != null && !"".equals(display));
@@ -1612,11 +1606,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildResources(Connection db) throws SQLException {
     if (recordId > -1) {
@@ -1639,11 +1632,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildElementData(Connection db) throws SQLException {
     if (type == SELECT) {
@@ -1653,12 +1645,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int insert(Connection db) throws SQLException {
     int result = 1;
@@ -1687,11 +1678,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int updateLevel(Connection db) throws SQLException {
     if (id < 0) {
@@ -1700,7 +1691,7 @@ public class CustomField extends GenericBean implements Cloneable {
     int result = 1;
     String sql =
         "UPDATE custom_field_info " +
-        "SET level = ?, group_id = ? " +
+        "SET \"level\" = ?, group_id = ? " +
         "WHERE field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1714,23 +1705,26 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insertField(Connection db) throws SQLException {
     boolean result = false;
 
     try {
       db.setAutoCommit(false);
-      String sql =
-          "INSERT INTO custom_field_info " +
-          "(group_id, field_name, field_type, required, parameters, additional_text ) " +
-          "VALUES (?, ?, ?, ?, ?, ?) ";
+      id = DatabaseUtils.getNextSeq(db, "custom_field_info_field_id_seq");
+      String sql = "INSERT INTO custom_field_info " +
+          "(" + (id > -1 ? "field_id, " : "") + "group_id, field_name, field_type, required, parameters, additional_text ) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, groupId);
       pst.setString(++i, name);
       pst.setInt(++i, type);
@@ -1739,9 +1733,7 @@ public class CustomField extends GenericBean implements Cloneable {
       pst.setString(++i, additionalText);
       pst.execute();
       pst.close();
-
-      id = DatabaseUtils.getCurrVal(db, "custom_field_info_field_id_seq");
-
+      id = DatabaseUtils.getCurrVal(db, "custom_field_info_field_id_seq", id);
       if (type == SELECT && elementData != null && elementData instanceof LookupList) {
         insertLookupList(db);
       }
@@ -1758,11 +1750,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertLookupList(Connection db) throws SQLException {
     if (elementData == null || !(elementData instanceof LookupList)) {
@@ -1782,12 +1774,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean updateField(Connection db) throws SQLException {
     if (id == -1) {
@@ -1820,7 +1811,8 @@ public class CustomField extends GenericBean implements Cloneable {
       System.out.println("           -> Type: " + this.getTypeString());
     }
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("           -> Parameters: " + this.getParameterData());
+      System.out.println(
+          "           -> Parameters: " + this.getParameterData());
     }
     pst.close();
 
@@ -1829,16 +1821,16 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean deleteField(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomField-> deleteField: " + id + " group: " + groupId);
+      System.out.println(
+          "CustomField-> deleteField: " + id + " group: " + groupId);
     }
 
     boolean result = false;
@@ -1890,10 +1882,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the Valid attribute of the CustomField object
+   * Gets the Valid attribute of the CustomField object
    *
-   *@return    The Valid value
-   *@since
+   * @return The Valid value
    */
   private boolean isValid() {
     if (recordId == -1) {
@@ -1904,7 +1895,8 @@ public class CustomField extends GenericBean implements Cloneable {
     }
 
     //Required Fields
-    if (this.getRequired() && (this.getEnteredValue() == null || this.getEnteredValue().equals(""))) {
+    if (this.getRequired() && (this.getEnteredValue() == null || this.getEnteredValue().equals(
+        ""))) {
       error = this.getName() + ": Required field";
     }
     if (type == SELECT && this.getRequired() && this.getSelectedItemId() == -1) {
@@ -1944,7 +1936,8 @@ public class CustomField extends GenericBean implements Cloneable {
 
       if (type == CURRENCY) {
         try {
-          String testString = StringUtils.replace(this.getEnteredValue(), ",", "");
+          String testString = StringUtils.replace(
+              this.getEnteredValue(), ",", "");
           testString = StringUtils.replace(testString, "$", "");
           double testNumber = Double.parseDouble(testString);
           this.setEnteredValue(testString);
@@ -1962,7 +1955,7 @@ public class CustomField extends GenericBean implements Cloneable {
       }
 
       if (type == DATE) {
-          // a temporary and insufficient fix for dates in custom fields
+        // a temporary and insufficient fix for dates in custom fields
         try {
           /*
           Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
@@ -1971,18 +1964,18 @@ public class CustomField extends GenericBean implements Cloneable {
           localeFormatter.parse(this.getEnteredValue());
           */
           String[] sep = null;
-          if (this.getEnteredValue().indexOf("/") != -1){
+          if (this.getEnteredValue().indexOf("/") != -1) {
             sep = this.getEnteredValue().split("/");
-          }else if (this.getEnteredValue().indexOf("-") != -1){
+          } else if (this.getEnteredValue().indexOf("-") != -1) {
             sep = this.getEnteredValue().split("-");
-          }else if (this.getEnteredValue().indexOf(".") != -1){
+          } else if (this.getEnteredValue().indexOf(".") != -1) {
             sep = this.getEnteredValue().split(".");
           }
-          if (sep == null){
+          if (sep == null) {
             throw new java.text.ParseException("invalid date", 0);
-          }else if (sep.length != 3){
+          } else if (sep.length != 3) {
             throw new java.text.ParseException("invalid date", 0);
-          }else{
+          } else {
             int md1 = -1;
             int md2 = -1;
             int year = -1;
@@ -2028,10 +2021,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the ParameterData attribute of the CustomField object
+   * Gets the ParameterData attribute of the CustomField object
    *
-   *@return    The ParameterData value
-   *@since
+   * @return The ParameterData value
    */
   public String getParameterData() {
     StringBuffer parameterData = new StringBuffer();
@@ -2048,11 +2040,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //custom_field_info table
@@ -2076,11 +2068,11 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   private void buildPopulatedRecord(ResultSet rs) throws SQLException {
     selectedItemId = rs.getInt("selected_item_id");
@@ -2089,12 +2081,12 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  name              Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db   Description of the Parameter
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int locateIdByName(Connection db, String name) throws SQLException {
     int id = -1;
@@ -2110,6 +2102,25 @@ public class CustomField extends GenericBean implements Cloneable {
     rs.close();
     pst.close();
     return id;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   */
+  public void parseTemplateText(SystemStatus thisSystem) {
+    if (display != null) {
+      Template template = new Template(display);
+      template.populateSystemVariables(thisSystem);
+      display = template.getParsedText();
+    }
+
+    if (additionalText != null) {
+      Template template = new Template(additionalText);
+      template.populateSystemVariables(thisSystem);
+      additionalText = template.getParsedText();
+    }
   }
 }
 

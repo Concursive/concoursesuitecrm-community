@@ -117,7 +117,7 @@
       count++;
       rowid = (rowid != 1?1:2);
       ProductCatalog thisElt = (ProductCatalog)j.next();
-      if ( thisElt.getEnabled() || (!thisElt.getEnabled() && (selectedElements.get(new Integer(thisElt.getId()))!= null)) ) {
+      if ( thisElt.getActive() || (!thisElt.getActive() && (selectedElements.get(new Integer(thisElt.getId()))!= null)) ) {
 %>
   <tr class="row<%= rowid+((selectedElements.get(new Integer(thisElt.getId()))!= null)?"hl":"") %>">
     <td align="center">

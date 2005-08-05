@@ -31,21 +31,25 @@
 		String firstName = request.getParameter("firstName");
 		if ((lastName == null && firstName == null) || ("".equals(lastName.trim()) && "".equals(firstName.trim()))) {
 	%>
-			document.contactListView.lastName.value = "Last Name";
-			document.contactListView.firstName.value = "First Name";
+      document.contactListView.lastName.value = label("label.contact.lastName", "Last Name");
+			document.contactListView.firstName.value = label("label.contact.firstName", "First Name");
 	<%
 		}
 	%>	
 	}
-	
+	/**
+    The Search fields' default values displayed to the user are translated. "Last Name" and "First Name"
+    literals must be translated in both the xml and javascript dictionary files for the 'Search' feature to 
+    work correctly.
+  */
 	function clearSearchFields(clear, field) {
 		if (clear) {
 			// Clear the search fields since clear button was clicked
-			document.contactListView.lastName.value = "Last Name";
-			document.contactListView.firstName.value = "First Name";
+			document.contactListView.lastName.value = label("label.contact.lastName", "Last Name");
+			document.contactListView.firstName.value = label("label.contact.firstName", "First Name");
 		} else {
 			// One of the search fields recieved focus
-			if (field.value == "Last Name" || field.value == "First Name") {
+			if (field.value == label("label.contact.lastName", "Last Name") || field.value == label("label.contact.firstName", "First Name")) {
 				field.value = "" ;
 			}
 		}
@@ -64,7 +68,7 @@
   <table cellpadding="6" cellspacing="0" width="100%" border="0">
 		<tr>
 			<td align="center" valign="center" bgcolor="#d3d1d1">
-				<strong>Search</strong>
+				<strong><dhv:label name="button.search">Search</dhv:label></strong>
 				<input type="text" name="lastName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("lastName")) %>"> <b>, </b>
 				<input type="text" name="firstName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("firstName")) %>">
 				<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">

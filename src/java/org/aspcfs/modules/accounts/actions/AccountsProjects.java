@@ -1,8 +1,8 @@
 package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import com.zeroio.iteam.base.ProjectList;
 import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.ProjectList;
 import com.zeroio.iteam.base.TeamMemberList;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
@@ -36,8 +36,10 @@ public class AccountsProjects extends CFSModule {
       Organization thisOrganization = setOrganization(context, db);
       //PagedList Info
       ProjectList projects = new ProjectList();
-      PagedListInfo projectListInfo = this.getPagedListInfo(context, "AccountProjectInfo");
-      projectListInfo.setLink("AccountsProjects.do?command=List&orgId=" + thisOrganization.getId());
+      PagedListInfo projectListInfo = this.getPagedListInfo(
+          context, "AccountProjectInfo");
+      projectListInfo.setLink(
+          "AccountsProjects.do?command=List&orgId=" + thisOrganization.getId());
       projectListInfo.setItemsPerPage(0);
       projects.setPagedListInfo(projectListInfo);
       //Project Info
@@ -51,7 +53,9 @@ public class AccountsProjects extends CFSModule {
       Iterator i = projects.iterator();
       while (i.hasNext()) {
         Project thisProject = (Project) i.next();
-        thisProject.setHasAccess(TeamMemberList.isOnTeam(db, thisProject.getId(), getUserId(context)));
+        thisProject.setHasAccess(
+            TeamMemberList.isOnTeam(
+                db, thisProject.getId(), getUserId(context)));
       }
       context.getRequest().setAttribute("projectList", projects);
     } catch (Exception errorMessage) {

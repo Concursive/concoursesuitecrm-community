@@ -15,19 +15,22 @@
  */
 package org.aspcfs.modules.quotes.base;
 
-import java.sql.*;
-import java.util.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    October 28, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created October 28, 2004
  */
 public class QuoteConditionList extends ArrayList {
   //filters
@@ -38,9 +41,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the QuoteConditionList object
+   * Gets the pagedListInfo attribute of the QuoteConditionList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -48,9 +51,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the QuoteConditionList object
+   * Sets the pagedListInfo attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -58,9 +61,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the QuoteConditionList object
+   * Gets the id attribute of the QuoteConditionList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -68,9 +71,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the QuoteConditionList object
+   * Sets the id attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -78,9 +81,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the QuoteConditionList object
+   * Sets the id attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -88,9 +91,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteConditionList object
+   * Gets the quoteId attribute of the QuoteConditionList object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -98,9 +101,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteConditionList object
+   * Sets the quoteId attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -108,9 +111,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteConditionList object
+   * Sets the quoteId attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -118,9 +121,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Gets the conditionId attribute of the QuoteConditionList object
+   * Gets the conditionId attribute of the QuoteConditionList object
    *
-   *@return    The conditionId value
+   * @return The conditionId value
    */
   public int getConditionId() {
     return conditionId;
@@ -128,9 +131,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the conditionId attribute of the QuoteConditionList object
+   * Sets the conditionId attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new conditionId value
+   * @param tmp The new conditionId value
    */
   public void setConditionId(int tmp) {
     this.conditionId = tmp;
@@ -138,9 +141,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Sets the conditionId attribute of the QuoteConditionList object
+   * Sets the conditionId attribute of the QuoteConditionList object
    *
-   *@param  tmp  The new conditionId value
+   * @param tmp The new conditionId value
    */
   public void setConditionId(String tmp) {
     this.conditionId = Integer.parseInt(tmp);
@@ -148,16 +151,17 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Constructor for the QuoteConditionList object
+   * Constructor for the QuoteConditionList object
    */
-  public QuoteConditionList() { }
+  public QuoteConditionList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -173,8 +177,7 @@ public class QuoteConditionList extends ArrayList {
         " FROM quote_condition AS qc " +
         " LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
         " LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        " WHERE qc.map_id > -1 "
-        );
+        " WHERE qc.map_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -206,23 +209,16 @@ public class QuoteConditionList extends ArrayList {
         "FROM quote_condition AS qc " +
         "LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
         "LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        " WHERE qc.map_id > -1 "
-        );
+        " WHERE qc.map_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       QuoteCondition thisQuoteCondition = new QuoteCondition(rs);
       this.add(thisQuoteCondition);
     }
@@ -232,9 +228,9 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -253,11 +249,11 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -275,10 +271,10 @@ public class QuoteConditionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator iterator = this.iterator();
@@ -288,7 +284,7 @@ public class QuoteConditionList extends ArrayList {
       iterator.remove();
     }
   }
-  
+
   public boolean hasCondition(int id) {
     Iterator iterator = (Iterator) this.iterator();
     while (iterator.hasNext()) {
@@ -299,17 +295,17 @@ public class QuoteConditionList extends ArrayList {
     }
     return false;
   }
-  
+
   public HashMap retrieveMap() {
     HashMap map = new HashMap();
     Iterator iterator = (Iterator) this.iterator();
     while (iterator.hasNext()) {
       QuoteCondition condition = (QuoteCondition) iterator.next();
-      map.put(""+condition.getConditionId(), ""+condition.getId());
+      map.put("" + condition.getConditionId(), "" + condition.getId());
     }
     return map;
   }
-  
+
   public boolean fixDeletedConditions(Connection db, HashMap map) throws SQLException {
     if (map.isEmpty()) {
       return true;
@@ -319,7 +315,8 @@ public class QuoteConditionList extends ArrayList {
       String key = (String) deleteIterator.next();
       String mapId = (String) map.get(key);
       if (mapId != null || !"".equals(mapId)) {
-        QuoteCondition condition = new QuoteCondition(db, Integer.parseInt(mapId));
+        QuoteCondition condition = new QuoteCondition(
+            db, Integer.parseInt(mapId));
         if (!condition.delete(db)) {
           return false;
         }

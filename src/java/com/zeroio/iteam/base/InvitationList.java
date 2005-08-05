@@ -15,20 +15,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Represents a list of members of a project
+ * Represents a list of members of a project
  *
- *@author     matt rajkowski
- *@created    October 27, 2003
- *@version    $Id: InvitationList.java,v 1.1.2.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: InvitationList.java,v 1.1.2.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created October 27, 2003
  */
 public class InvitationList extends ArrayList {
 
@@ -36,15 +38,16 @@ public class InvitationList extends ArrayList {
 
 
   /**
-   *  Constructor for the InvitationList object
+   * Constructor for the InvitationList object
    */
-  public InvitationList() { }
+  public InvitationList() {
+  }
 
 
   /**
-   *  Constructor for the InvitationList object
+   * Constructor for the InvitationList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public InvitationList(HttpServletRequest request) {
     int count = 1;
@@ -60,9 +63,9 @@ public class InvitationList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the InvitationList object
+   * Sets the projectId attribute of the InvitationList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -70,9 +73,9 @@ public class InvitationList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the InvitationList object
+   * Sets the projectId attribute of the InvitationList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -80,9 +83,9 @@ public class InvitationList extends ArrayList {
 
 
   /**
-   *  Gets the projectId attribute of the InvitationList object
+   * Gets the projectId attribute of the InvitationList object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -90,12 +93,12 @@ public class InvitationList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int queryCount(Connection db, int userId) throws SQLException {
     int count = 0;

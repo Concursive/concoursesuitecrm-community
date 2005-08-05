@@ -16,9 +16,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteNote object
+   * Sets the id attribute of the QuoteNote object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -26,9 +26,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteNote object
+   * Sets the id attribute of the QuoteNote object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -36,9 +36,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteNote object
+   * Sets the quoteId attribute of the QuoteNote object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -46,9 +46,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteNote object
+   * Sets the quoteId attribute of the QuoteNote object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -56,9 +56,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the QuoteNote object
+   * Sets the notes attribute of the QuoteNote object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -66,9 +66,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the QuoteNote object
+   * Sets the enteredBy attribute of the QuoteNote object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -76,9 +76,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the QuoteNote object
+   * Sets the enteredBy attribute of the QuoteNote object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -86,9 +86,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the QuoteNote object
+   * Sets the entered attribute of the QuoteNote object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -96,9 +96,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the QuoteNote object
+   * Sets the entered attribute of the QuoteNote object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -106,9 +106,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the QuoteNote object
+   * Sets the modifiedBy attribute of the QuoteNote object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -116,9 +116,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the QuoteNote object
+   * Sets the modifiedBy attribute of the QuoteNote object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -126,9 +126,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the QuoteNote object
+   * Sets the modified attribute of the QuoteNote object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -136,9 +136,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the QuoteNote object
+   * Sets the modified attribute of the QuoteNote object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -146,9 +146,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteNote object
+   * Gets the id attribute of the QuoteNote object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -156,9 +156,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteNote object
+   * Gets the quoteId attribute of the QuoteNote object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -166,9 +166,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the QuoteNote object
+   * Gets the notes attribute of the QuoteNote object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -176,9 +176,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the QuoteNote object
+   * Gets the enteredBy attribute of the QuoteNote object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -186,9 +186,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the QuoteNote object
+   * Gets the entered attribute of the QuoteNote object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -196,9 +196,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the QuoteNote object
+   * Gets the modifiedBy attribute of the QuoteNote object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -206,9 +206,9 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the QuoteNote object
+   * Gets the modified attribute of the QuoteNote object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -216,18 +216,18 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteNote object
-   *
+   * Constructor for the QuoteNote object
    */
-  public QuoteNote() { }
+  public QuoteNote() {
+  }
 
 
   /**
-   *  Constructor for the QuoteNote object
+   * Constructor for the QuoteNote object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteNote(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -235,10 +235,10 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteNote object
+   * Constructor for the QuoteNote object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteNote(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -246,11 +246,11 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -259,8 +259,7 @@ public class QuoteNote extends GenericBean {
     StringBuffer buffer = new StringBuffer(
         " SELECT n.* " +
         " FROM quote_notes n " +
-        " WHERE n.quote_id = ? "
-        );
+        " WHERE n.quote_id = ? ");
     PreparedStatement pst = db.prepareStatement(buffer.toString());
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -276,10 +275,10 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     //quote_notes table
@@ -295,18 +294,23 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "quote_notes_notes_id_seq");
     sql.append(
         "INSERT INTO quote_notes( " +
         "quote_id, notes, ");
+    if (id > -1) {
+      sql.append("notes_id, ");
+    }
+
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -316,6 +320,9 @@ public class QuoteNote extends GenericBean {
     }
     sql.append("modifiedby ) ");
     sql.append("VALUES (?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append(" ?, ");
     }
@@ -328,6 +335,9 @@ public class QuoteNote extends GenericBean {
     PreparedStatement pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, ++i, this.getQuoteId());
     pst.setString(++i, this.getNotes());
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -338,7 +348,7 @@ public class QuoteNote extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "quote_notes_notes_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "quote_notes_notes_id_seq", id);
 
     result = true;
 
@@ -347,23 +357,23 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("UPDATE quote_notes " +
+    sql.append(
+        "UPDATE quote_notes " +
         " SET quote_id = ?, " +
         " notes = ?, " +
         " modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
         " modifiedby = ? " +
-        " WHERE notes_id = ? "
-        );
+        " WHERE notes_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, ++i, this.getQuoteId());
@@ -377,18 +387,17 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         "DELETE FROM quote_notes " +
         "WHERE quote_id = ? " +
-        "AND notes_id = ? "
-        );
+        "AND notes_id = ? ");
     pst.setInt(1, this.getQuoteId());
     pst.setInt(2, this.getId());
     pst.execute();
@@ -397,19 +406,18 @@ public class QuoteNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param quoteId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int quoteId, int notesId) throws SQLException {
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         "DELETE FROM quote_notes " +
         "WHERE quote_id = ? " +
-        "AND notes_id = ? "
-    );
+        "AND notes_id = ? ");
     pst.setInt(1, quoteId);
     pst.setInt(2, notesId);
     pst.execute();

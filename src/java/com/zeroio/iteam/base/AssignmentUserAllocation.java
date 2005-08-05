@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    October 29, 2004
- *@version    $Id: AssignmentUserAllocation.java,v 1.3 2004/10/29 05:14:39 matt
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AssignmentUserAllocation.java,v 1.3 2004/10/29 05:14:39 matt
+ *          Exp $
+ * @created October 29, 2004
  */
 public class AssignmentUserAllocation extends HashMap {
 
@@ -37,15 +37,16 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Constructor for the AssignmentUserAllocation object
+   * Constructor for the AssignmentUserAllocation object
    */
-  public AssignmentUserAllocation() { }
+  public AssignmentUserAllocation() {
+  }
 
 
   /**
-   *  Constructor for the AssignmentUserAllocation object
+   * Constructor for the AssignmentUserAllocation object
    *
-   *@param  tmp  Description of the Parameter
+   * @param tmp Description of the Parameter
    */
   public AssignmentUserAllocation(int tmp) {
     userId = tmp;
@@ -53,14 +54,15 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Gets the projectMap attribute of the AssignmentUserAllocation object
+   * Gets the projectMap attribute of the AssignmentUserAllocation object
    *
-   *@param  id  Description of the Parameter
-   *@return     The projectMap value
+   * @param id Description of the Parameter
+   * @return The projectMap value
    */
   public AssignmentProjectAllocation getProjectMap(int id) {
     Integer projectId = new Integer(id);
-    AssignmentProjectAllocation projectMap = (AssignmentProjectAllocation) this.get(projectId);
+    AssignmentProjectAllocation projectMap = (AssignmentProjectAllocation) this.get(
+        projectId);
     if (projectMap == null) {
       projectMap = new AssignmentProjectAllocation();
       this.put(projectId, projectMap);
@@ -71,10 +73,10 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Gets the projectAllocation attribute of the AssignmentUserAllocation
-   *  object
+   * Gets the projectAllocation attribute of the AssignmentUserAllocation
+   * object
    *
-   *@return    The projectAllocation value
+   * @return The projectAllocation value
    */
   public AssignmentProjectAllocation getProjectAllocation() {
     return projectAllocation;
@@ -82,10 +84,10 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Sets the projectAllocation attribute of the AssignmentUserAllocation
-   *  object
+   * Sets the projectAllocation attribute of the AssignmentUserAllocation
+   * object
    *
-   *@param  tmp  The new projectAllocation value
+   * @param tmp The new projectAllocation value
    */
   public void setProjectAllocation(AssignmentProjectAllocation tmp) {
     this.projectAllocation = tmp;
@@ -93,9 +95,9 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Gets the userId attribute of the AssignmentUserAllocation object
+   * Gets the userId attribute of the AssignmentUserAllocation object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -103,9 +105,9 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Sets the userId attribute of the AssignmentUserAllocation object
+   * Sets the userId attribute of the AssignmentUserAllocation object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -113,9 +115,9 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Sets the userId attribute of the AssignmentUserAllocation object
+   * Sets the userId attribute of the AssignmentUserAllocation object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -123,10 +125,10 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Gets the estimatedDailyHours attribute of the AssignmentUserAllocation
-   *  object
+   * Gets the estimatedDailyHours attribute of the AssignmentUserAllocation
+   * object
    *
-   *@return    The estimatedDailyHours value
+   * @return The estimatedDailyHours value
    */
   public HashMap getEstimatedDailyHours() {
     return estimatedDailyHours;
@@ -134,10 +136,10 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Sets the estimatedDailyHours attribute of the AssignmentUserAllocation
-   *  object
+   * Sets the estimatedDailyHours attribute of the AssignmentUserAllocation
+   * object
    *
-   *@param  tmp  The new estimatedDailyHours value
+   * @param tmp The new estimatedDailyHours value
    */
   public void setEstimatedDailyHours(HashMap tmp) {
     this.estimatedDailyHours = tmp;
@@ -145,9 +147,9 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Gets the actualDailyHours attribute of the AssignmentUserAllocation object
+   * Gets the actualDailyHours attribute of the AssignmentUserAllocation object
    *
-   *@return    The actualDailyHours value
+   * @return The actualDailyHours value
    */
   public HashMap getActualDailyHours() {
     return actualDailyHours;
@@ -155,9 +157,9 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Sets the actualDailyHours attribute of the AssignmentUserAllocation object
+   * Sets the actualDailyHours attribute of the AssignmentUserAllocation object
    *
-   *@param  tmp  The new actualDailyHours value
+   * @param tmp The new actualDailyHours value
    */
   public void setActualDailyHours(HashMap tmp) {
     this.actualDailyHours = tmp;
@@ -175,13 +177,14 @@ public class AssignmentUserAllocation extends HashMap {
   }
 
   /**
-   *  Adds a feature to the Entry attribute of the AssignmentUserAllocation
-   *  object
+   * Adds a feature to the Entry attribute of the AssignmentUserAllocation
+   * object
    *
-   *@param  assignment  The feature to be added to the Entry attribute
+   * @param assignment The feature to be added to the Entry attribute
    */
   public void addEntry(Assignment assignment) {
-    AssignmentAllocation alloc = new AssignmentAllocation(assignment, timesheet);
+    AssignmentAllocation alloc = new AssignmentAllocation(
+        assignment, timesheet);
     if (alloc.getValid()) {
       this.update(alloc);
       //projectAllocation.update(alloc);
@@ -190,9 +193,9 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  alloc  Description of the Parameter
+   * @param alloc Description of the Parameter
    */
   private void update(AssignmentAllocation alloc) {
     Iterator days = alloc.getEstimatedDailyHours().keySet().iterator();
@@ -205,10 +208,10 @@ public class AssignmentUserAllocation extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  date   Description of the Parameter
-   *@param  hours  Description of the Parameter
+   * @param date  Description of the Parameter
+   * @param hours Description of the Parameter
    */
   private void add(String date, Double hours) {
     Double value = (Double) estimatedDailyHours.get(date);

@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.ObjectUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  A year, make, and model determine a vehicle
+ * A year, make, and model determine a vehicle
  *
- *@author     matt
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class Vehicle {
-
   private int id = -1;
   private int year = -1;
   private int makeId = -1;
@@ -43,17 +44,18 @@ public class Vehicle {
 
 
   /**
-   *  Constructor for the Vehicle object
+   * Constructor for the Vehicle object
    */
-  public Vehicle() { }
+  public Vehicle() {
+  }
 
 
   /**
-   *  Constructor for the Vehicle object
+   * Constructor for the Vehicle object
    *
-   *@param  year   Description of Parameter
-   *@param  make   Description of Parameter
-   *@param  model  Description of Parameter
+   * @param year  Description of Parameter
+   * @param make  Description of Parameter
+   * @param model Description of Parameter
    */
   public Vehicle(int year, int make, int model) {
     this.setYear(year);
@@ -63,10 +65,10 @@ public class Vehicle {
 
 
   /**
-   *  Constructor for the Vehicle object
+   * Constructor for the Vehicle object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Vehicle(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -76,9 +78,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the id attribute of the Vehicle object
+   * Sets the id attribute of the Vehicle object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     id = tmp;
@@ -86,9 +88,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the id attribute of the Vehicle object
+   * Sets the id attribute of the Vehicle object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     id = Integer.parseInt(tmp);
@@ -96,9 +98,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the year attribute of the Vehicle object
+   * Sets the year attribute of the Vehicle object
    *
-   *@param  inYear  The new year value
+   * @param inYear The new year value
    */
   public void setYear(int inYear) {
     if (inYear < 100) {
@@ -113,9 +115,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the year attribute of the Vehicle object
+   * Sets the year attribute of the Vehicle object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(String tmp) {
     if (System.getProperty("DEBUG") != null) {
@@ -126,9 +128,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the makeId attribute of the Vehicle object
+   * Sets the makeId attribute of the Vehicle object
    *
-   *@param  tmp  The new makeId value
+   * @param tmp The new makeId value
    */
   public void setMakeId(int tmp) {
     this.makeId = tmp;
@@ -136,9 +138,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the makeId attribute of the Vehicle object
+   * Sets the makeId attribute of the Vehicle object
    *
-   *@param  tmp  The new makeId value
+   * @param tmp The new makeId value
    */
   public void setMakeId(String tmp) {
     this.makeId = Integer.parseInt(tmp);
@@ -146,9 +148,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the modelId attribute of the Vehicle object
+   * Sets the modelId attribute of the Vehicle object
    *
-   *@param  tmp  The new modelId value
+   * @param tmp The new modelId value
    */
   public void setModelId(int tmp) {
     this.modelId = tmp;
@@ -156,9 +158,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the modelId attribute of the Vehicle object
+   * Sets the modelId attribute of the Vehicle object
    *
-   *@param  tmp  The new modelId value
+   * @param tmp The new modelId value
    */
   public void setModelId(String tmp) {
     this.modelId = Integer.parseInt(tmp);
@@ -166,9 +168,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the entered attribute of the Vehicle object
+   * Sets the entered attribute of the Vehicle object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -176,9 +178,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the entered attribute of the Vehicle object
+   * Sets the entered attribute of the Vehicle object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = java.sql.Timestamp.valueOf(tmp);
@@ -186,9 +188,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the enteredBy attribute of the Vehicle object
+   * Sets the enteredBy attribute of the Vehicle object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -196,9 +198,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the enteredBy attribute of the Vehicle object
+   * Sets the enteredBy attribute of the Vehicle object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -206,9 +208,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the modified attribute of the Vehicle object
+   * Sets the modified attribute of the Vehicle object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -216,9 +218,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the modified attribute of the Vehicle object
+   * Sets the modified attribute of the Vehicle object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = java.sql.Timestamp.valueOf(tmp);
@@ -226,9 +228,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Vehicle object
+   * Sets the modifiedBy attribute of the Vehicle object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -236,9 +238,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Vehicle object
+   * Sets the modifiedBy attribute of the Vehicle object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -246,9 +248,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the make attribute of the Vehicle object
+   * Sets the make attribute of the Vehicle object
    *
-   *@param  tmp  The new make value
+   * @param tmp The new make value
    */
   public void setMake(Make tmp) {
     this.make = tmp;
@@ -256,9 +258,9 @@ public class Vehicle {
 
 
   /**
-   *  Sets the model attribute of the Vehicle object
+   * Sets the model attribute of the Vehicle object
    *
-   *@param  tmp  The new model value
+   * @param tmp The new model value
    */
   public void setModel(Model tmp) {
     this.model = tmp;
@@ -266,9 +268,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the id attribute of the Vehicle object
+   * Gets the id attribute of the Vehicle object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -276,9 +278,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the year attribute of the Vehicle object
+   * Gets the year attribute of the Vehicle object
    *
-   *@return    The year value
+   * @return The year value
    */
   public int getYear() {
     return year;
@@ -286,9 +288,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the makeId attribute of the Vehicle object
+   * Gets the makeId attribute of the Vehicle object
    *
-   *@return    The makeId value
+   * @return The makeId value
    */
   public int getMakeId() {
     return makeId;
@@ -296,9 +298,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the modelId attribute of the Vehicle object
+   * Gets the modelId attribute of the Vehicle object
    *
-   *@return    The modelId value
+   * @return The modelId value
    */
   public int getModelId() {
     return modelId;
@@ -306,9 +308,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the entered attribute of the Vehicle object
+   * Gets the entered attribute of the Vehicle object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -316,9 +318,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the enteredBy attribute of the Vehicle object
+   * Gets the enteredBy attribute of the Vehicle object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -326,9 +328,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the modified attribute of the Vehicle object
+   * Gets the modified attribute of the Vehicle object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -336,9 +338,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Vehicle object
+   * Gets the modifiedBy attribute of the Vehicle object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -346,9 +348,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the guid attribute of the Vehicle object
+   * Gets the guid attribute of the Vehicle object
    *
-   *@return    The guid value
+   * @return The guid value
    */
   public String getGuid() {
     //return ObjectUtils.generateGuid(entered, enteredBy, id);
@@ -357,9 +359,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the make attribute of the Vehicle object
+   * Gets the make attribute of the Vehicle object
    *
-   *@return    The make value
+   * @return The make value
    */
   public Make getMake() {
     if (make == null) {
@@ -370,9 +372,9 @@ public class Vehicle {
 
 
   /**
-   *  Gets the model attribute of the Vehicle object
+   * Gets the model attribute of the Vehicle object
    *
-   *@return    The model value
+   * @return The model value
    */
   public Model getModel() {
     if (model == null) {
@@ -383,20 +385,22 @@ public class Vehicle {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO autoguide_vehicle " +
-        "(year, make_id, model_id, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?) ");
+    id = DatabaseUtils.getNextSeq(db, "autoguide_vehicl_vehicle_id_seq");
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO autoguide_vehicle " +
+        "(" + (id > -1 ? "vehicle_id, " : "") + "year, make_id, model_id, enteredby, modifiedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, year);
     pst.setInt(++i, makeId);
     pst.setInt(++i, modelId);
@@ -404,18 +408,17 @@ public class Vehicle {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "autoguide_vehicl_vehicle_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "autoguide_vehicl_vehicle_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
@@ -444,12 +447,12 @@ public class Vehicle {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     if (id == -1) {
@@ -480,11 +483,11 @@ public class Vehicle {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int generateId(Connection db) throws SQLException {
     String sql =
@@ -504,17 +507,18 @@ public class Vehicle {
     rs.close();
     pst.close();
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("Vehicle-> Looking up id for: year(" + year + ") make(" + makeId + ") model(" + modelId + ") = " + id);
+      System.out.println(
+          "Vehicle-> Looking up id for: year(" + year + ") make(" + makeId + ") model(" + modelId + ") = " + id);
     }
     return id;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("vehicle_id");

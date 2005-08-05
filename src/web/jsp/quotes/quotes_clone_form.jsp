@@ -25,6 +25,7 @@
 <jsp:useBean id="version" class="java.lang.String" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popOpportunities.js"></script>
@@ -124,7 +125,7 @@
     </td>
     <td>
 <% if (quote == null || quote.getOrgId() == -1 || contactList.size() == 0) { %>
-      <%= contactList.getEmptyHtmlSelect("contactId") %>
+      <%= contactList.getEmptyHtmlSelect(systemStatus, "contactId") %>
 <%} else {%>
       <%= contactList.getHtmlSelect("contactId", quote.getContactId() ) %>
 <%}%>

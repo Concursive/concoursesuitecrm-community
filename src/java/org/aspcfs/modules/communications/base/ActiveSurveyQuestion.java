@@ -15,17 +15,24 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
-import java.util.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author
- *@created    November 1, 2002
- *@version    $Id: ActiveSurveyQuestion.java,v 1.4 2002/11/25 00:34:20 akhi_m
- *      Exp $
+ * @author
+ * @version $Id: ActiveSurveyQuestion.java,v 1.4 2002/11/25 00:34:20 akhi_m
+ *          Exp $
+ * @created November 1, 2002
  */
 public class ActiveSurveyQuestion {
   private int id = -1;
@@ -42,15 +49,16 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestion object
+   * Constructor for the ActiveSurveyQuestion object
    */
-  public ActiveSurveyQuestion() { }
+  public ActiveSurveyQuestion() {
+  }
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestion object
+   * Constructor for the ActiveSurveyQuestion object
    *
-   *@param  question  Description of the Parameter
+   * @param question Description of the Parameter
    */
   public ActiveSurveyQuestion(SurveyQuestion question) {
     this.description = question.getDescription();
@@ -62,10 +70,10 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestion object
+   * Constructor for the ActiveSurveyQuestion object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestion(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -73,9 +81,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the id attribute of the ActiveSurveyQuestion object
+   * Gets the id attribute of the ActiveSurveyQuestion object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -83,9 +91,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the description attribute of the ActiveSurveyQuestion object
+   * Gets the description attribute of the ActiveSurveyQuestion object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -93,9 +101,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the comments attribute of the ActiveSurveyQuestion object
+   * Sets the comments attribute of the ActiveSurveyQuestion object
    *
-   *@param  comments  The new comments value
+   * @param comments The new comments value
    */
   public void setComments(LinkedHashMap comments) {
     this.comments = comments;
@@ -103,9 +111,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the comments attribute of the ActiveSurveyQuestion object
+   * Gets the comments attribute of the ActiveSurveyQuestion object
    *
-   *@return    The comments value
+   * @return The comments value
    */
   public LinkedHashMap getComments() {
     return comments;
@@ -113,9 +121,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurveyQuestion object
+   * Sets the id attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -123,9 +131,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurveyQuestion object
+   * Sets the id attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -133,9 +141,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the description attribute of the ActiveSurveyQuestion object
+   * Sets the description attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -143,9 +151,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the activeSurveyId attribute of the ActiveSurveyQuestion object
+   * Sets the activeSurveyId attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new activeSurveyId value
+   * @param tmp The new activeSurveyId value
    */
   public void setActiveSurveyId(int tmp) {
     this.activeSurveyId = tmp;
@@ -153,9 +161,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the type attribute of the ActiveSurveyQuestion object
+   * Sets the type attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -163,9 +171,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the required attribute of the ActiveSurveyQuestion object
+   * Sets the required attribute of the ActiveSurveyQuestion object
    *
-   *@param  required  The new required value
+   * @param required The new required value
    */
   public void setRequired(boolean required) {
     this.required = required;
@@ -173,9 +181,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the itemList attribute of the ActiveSurveyQuestion object
+   * Sets the itemList attribute of the ActiveSurveyQuestion object
    *
-   *@param  itemList  The new itemList value
+   * @param itemList The new itemList value
    */
   public void setItemList(ActiveSurveyQuestionItemList itemList) {
     this.itemList = itemList;
@@ -183,9 +191,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the answerList attribute of the ActiveSurveyQuestion object
+   * Sets the answerList attribute of the ActiveSurveyQuestion object
    *
-   *@param  answerList  The new answerList value
+   * @param answerList The new answerList value
    */
   public void setAnswerList(SurveyAnswerList answerList) {
     this.answerList = answerList;
@@ -193,9 +201,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the answerList attribute of the ActiveSurveyQuestion object
+   * Gets the answerList attribute of the ActiveSurveyQuestion object
    *
-   *@return    The answerList value
+   * @return The answerList value
    */
   public SurveyAnswerList getAnswerList() {
     return answerList;
@@ -203,9 +211,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the itemList attribute of the ActiveSurveyQuestion object
+   * Gets the itemList attribute of the ActiveSurveyQuestion object
    *
-   *@return    The itemList value
+   * @return The itemList value
    */
   public ActiveSurveyQuestionItemList getItemList() {
     return itemList;
@@ -213,9 +221,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the required attribute of the ActiveSurveyQuestion object
+   * Gets the required attribute of the ActiveSurveyQuestion object
    *
-   *@return    The required value
+   * @return The required value
    */
   public boolean getRequired() {
     return required;
@@ -223,9 +231,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the activeSurveyId attribute of the ActiveSurveyQuestion object
+   * Gets the activeSurveyId attribute of the ActiveSurveyQuestion object
    *
-   *@return    The activeSurveyId value
+   * @return The activeSurveyId value
    */
   public int getActiveSurveyId() {
     return activeSurveyId;
@@ -233,9 +241,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the type attribute of the ActiveSurveyQuestion object
+   * Gets the type attribute of the ActiveSurveyQuestion object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -243,9 +251,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the typeString attribute of the ActiveSurveyQuestion object
+   * Gets the typeString attribute of the ActiveSurveyQuestion object
    *
-   *@return    The typeString value
+   * @return The typeString value
    */
   public String getTypeString() {
     if (type == SurveyQuestion.OPEN_ENDED) {
@@ -262,9 +270,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the activeSurveyId attribute of the ActiveSurveyQuestion object
+   * Sets the activeSurveyId attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new activeSurveyId value
+   * @param tmp The new activeSurveyId value
    */
   public void setActiveSurveyId(String tmp) {
     this.activeSurveyId = Integer.parseInt(tmp);
@@ -272,9 +280,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the type attribute of the ActiveSurveyQuestion object
+   * Sets the type attribute of the ActiveSurveyQuestion object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -282,9 +290,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the responseTotals attribute of the ActiveSurveyQuestion object
+   * Gets the responseTotals attribute of the ActiveSurveyQuestion object
    *
-   *@return    The responseTotals value
+   * @return The responseTotals value
    */
   public ArrayList getResponseTotals() {
     return responseTotals;
@@ -292,9 +300,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the responseTotals attribute of the ActiveSurveyQuestion object
+   * Sets the responseTotals attribute of the ActiveSurveyQuestion object
    *
-   *@param  responseTotals  The new responseTotals value
+   * @param responseTotals The new responseTotals value
    */
   public void setResponseTotals(ArrayList responseTotals) {
     this.responseTotals = responseTotals;
@@ -302,9 +310,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the average attribute of the ActiveSurveyQuestion object
+   * Gets the average attribute of the ActiveSurveyQuestion object
    *
-   *@return    The average value
+   * @return The average value
    */
   public double getAverage() {
     return average;
@@ -312,9 +320,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the average attribute of the ActiveSurveyQuestion object
+   * Sets the average attribute of the ActiveSurveyQuestion object
    *
-   *@param  average  The new average value
+   * @param average The new average value
    */
   public void setAverage(double average) {
     this.average = average;
@@ -322,9 +330,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Sets the position attribute of the ActiveSurveyQuestion object
+   * Sets the position attribute of the ActiveSurveyQuestion object
    *
-   *@param  position  The new position value
+   * @param position The new position value
    */
   public void setPosition(int position) {
     this.position = position;
@@ -332,9 +340,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the position attribute of the ActiveSurveyQuestion object
+   * Gets the position attribute of the ActiveSurveyQuestion object
    *
-   *@return    The position value
+   * @return The position value
    */
   public int getPosition() {
     return position;
@@ -342,9 +350,9 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Gets the averageValue attribute of the ActiveSurveyQuestion object
+   * Gets the averageValue attribute of the ActiveSurveyQuestion object
    *
-   *@return    The averageValue value
+   * @return The averageValue value
    */
   public String getAverageValue() {
     double value_2dp = (double) Math.round(average * 100.0) / 100.0;
@@ -358,10 +366,10 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Returns a HashMap of Item Objects with count of each selected as values.
+   * Returns a HashMap of Item Objects with count of each selected as values.
    *
-   *@param  answerList  Description of the Parameter
-   *@return             The itemListResponse value
+   * @param answerList Description of the Parameter
+   * @return The itemListResponse value
    */
   public HashMap getItemListResponse(SurveyAnswerList answerList) {
     HashMap itemListResponse = new HashMap();
@@ -387,29 +395,33 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  activeSurveyId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param activeSurveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int activeSurveyId) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO active_survey_questions " +
-        "(active_survey_id, type, description, required, position) " +
-        "VALUES " +
-        "(?, ?, ?, ?, ?) ");
+    id = DatabaseUtils.getNextSeq(db, "active_survey_q_question_id_seq");
+    PreparedStatement pst = null;
     int i = 0;
+    pst = db.prepareStatement(
+        "INSERT INTO active_survey_questions " +
+        "(" + (id > -1 ? "question_id, " : "") + "active_survey_id, type, description, required, position) " +
+        "VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, activeSurveyId);
     pst.setInt(++i, this.getType());
     pst.setString(++i, description);
     pst.setBoolean(++i, required);
     pst.setInt(++i, this.getPosition());
     pst.execute();
-
     pst.close();
-
-    this.setId(DatabaseUtils.getCurrVal(db, "active_survey_q_question_id_seq"));
+    this.setId(
+        DatabaseUtils.getCurrVal(db, "active_survey_q_question_id_seq", id));
     if (this.getType() == SurveyQuestion.ITEMLIST) {
       Iterator y = this.getItemList().iterator();
       while (y.hasNext()) {
@@ -421,12 +433,12 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  activeSurveyId    Description of the Parameter
-   *@param  surveyType        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param activeSurveyId Description of the Parameter
+   * @param surveyType     Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db, int activeSurveyId, int surveyType) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -455,10 +467,10 @@ public class ActiveSurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("question_id");

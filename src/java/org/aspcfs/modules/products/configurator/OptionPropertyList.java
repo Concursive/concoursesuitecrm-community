@@ -19,29 +19,30 @@ import org.aspcfs.controller.SystemStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 1, 2004
- *@version    $Id: OptionPropertyList.java,v 1.1.4.2 2005/02/24 13:54:44
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: OptionPropertyList.java,v 1.1.4.2 2005/02/24 13:54:44
+ *          mrajkowski Exp $
+ * @created September 1, 2004
  */
 public class OptionPropertyList extends ArrayList {
 
   /**
-   *  Constructor for the OptionPropertyList object
+   * Constructor for the OptionPropertyList object
    */
-  public OptionPropertyList() { }
+  public OptionPropertyList() {
+  }
 
 
   /**
-   *  Sets the optionProperties attribute of the OptionPropertyList object
+   * Sets the optionProperties attribute of the OptionPropertyList object
    *
-   *@param  request  The new optionFields value
+   * @param request The new optionFields value
    */
   public void setOptionProperties(HttpServletRequest request) {
     Iterator i = this.iterator();
@@ -50,17 +51,18 @@ public class OptionPropertyList extends ArrayList {
       //For each option property the user is prompted for, evaluate the answer
       if (property.getIsForPrompting()) {
         property.setValue(request.getParameter(property.getName()));
-        System.out.println("OptionPropertyList-> property " + property.getName() + "=" + property.getValue());
+        System.out.println(
+            "OptionPropertyList-> property " + property.getName() + "=" + property.getValue());
       }
     }
   }
 
 
   /**
-   *  Gets the optionProperty attribute of the OptionPropertyList object
+   * Gets the optionProperty attribute of the OptionPropertyList object
    *
-   *@param  property  Description of the Parameter
-   *@return           The optionField value
+   * @param property Description of the Parameter
+   * @return The optionField value
    */
   public OptionProperty getOptionProperty(String property) {
     Iterator i = this.iterator();
@@ -75,10 +77,10 @@ public class OptionPropertyList extends ArrayList {
 
 
   /**
-   *  Sets the optionProperty attribute of the OptionPropertyList object
+   * Sets the optionProperty attribute of the OptionPropertyList object
    *
-   *@param  property  The new optionProperty value
-   *@param  value     The new optionProperty value
+   * @param property The new optionProperty value
+   * @param value    The new optionProperty value
    */
   public void setOptionProperty(String property, String value) {
     Iterator i = this.iterator();
@@ -93,10 +95,10 @@ public class OptionPropertyList extends ArrayList {
 
 
   /**
-   *  Gets the valid attribute of the OptionPropertyList object
+   * Gets the valid attribute of the OptionPropertyList object
    *
-   *@param  systemStatus  Description of the Parameter
-   *@return               The valid value
+   * @param systemStatus Description of the Parameter
+   * @return The valid value
    */
   public boolean isValid(SystemStatus systemStatus) {
     Iterator i = this.iterator();
@@ -112,9 +114,9 @@ public class OptionPropertyList extends ArrayList {
 
 
   /**
-   *  Gets the errors attribute of the OptionPropertyList object
+   * Gets the errors attribute of the OptionPropertyList object
    *
-   *@return    The errors value
+   * @return The errors value
    */
   public HashMap getErrors() {
     HashMap errors = new HashMap();

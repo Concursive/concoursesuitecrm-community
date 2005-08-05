@@ -17,7 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.quotes.base.*,org.aspcfs.modules.products.base.*" %>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.quotes.base.*,org.aspcfs.modules.products.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="quoteList" class="org.aspcfs.modules.quotes.base.QuoteList" scope="request"/>
 <jsp:useBean id="quoteListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="quoteStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -155,7 +155,7 @@
   <tr class="containerBody">
     <td valign="center" nowrap class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>');"
+       <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= (thisQuote.isTrashed()) %>');"
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
        <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>

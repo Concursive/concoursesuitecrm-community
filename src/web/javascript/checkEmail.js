@@ -22,3 +22,9 @@ function checkEmail(emailin) {
   return true;
 }
 
+function checkMultipleEmailString(emailin) {
+//Needs a function to check each individual email that is separated by a comma.
+  var result = checkEmail(emailin);
+  return result;
+}
+

@@ -34,7 +34,6 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
-<form name="details" action="CompanyDirectory.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -131,4 +130,3 @@
   </table>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
 </dhv:container>
-</form>

@@ -15,20 +15,25 @@
  */
 package org.aspcfs.modules.contacts.base;
 
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.LookupList;
 
 /**
- *  Contains a list of contact types built from the database
+ * Contains a list of contact types built from the database
  *
- *@author     mrajkowski
- *@created    August 29, 2001
- *@version    $Id: ContactTypeList.java,v 1.1 2001/08/29 18:00:17 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: ContactTypeList.java,v 1.1 2001/08/29 18:00:17 mrajkowski Exp
+ *          $
+ * @created August 29, 2001
  */
 public class ContactTypeList extends ArrayList {
 
@@ -50,19 +55,20 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Constructor for the ContactTypeList object
+   * Constructor for the ContactTypeList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public ContactTypeList() { }
+  public ContactTypeList() {
+  }
 
 
   /**
-   *  Constructor for the ContactTypeList object
+   * Constructor for the ContactTypeList object
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public ContactTypeList(Connection db) throws SQLException {
     buildList(db);
@@ -70,12 +76,12 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Constructor for creating a List from code's & description's passed as
-   *  arrays.
+   * Constructor for creating a List from code's & description's passed as
+   * arrays.
    *
-   *@param  vals              Description of the Parameter
-   *@param  names             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param vals  Description of the Parameter
+   * @param names Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactTypeList(String[] vals, String[] names) throws SQLException {
 
@@ -96,10 +102,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the Size attribute of the ContactTypeList object
+   * Sets the Size attribute of the ContactTypeList object
    *
-   *@param  size  The new Size value
-   *@since
+   * @param size The new Size value
    */
   public void setSize(int size) {
     this.size = size;
@@ -107,9 +112,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the showPersonal attribute of the ContactTypeList object
+   * Sets the showPersonal attribute of the ContactTypeList object
    *
-   *@param  showPersonal  The new showPersonal value
+   * @param showPersonal The new showPersonal value
    */
   public void setShowPersonal(boolean showPersonal) {
     this.showPersonal = showPersonal;
@@ -117,10 +122,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the Multiple attribute of the ContactTypeList object
+   * Sets the Multiple attribute of the ContactTypeList object
    *
-   *@param  multiple  The new Multiple value
-   *@since
+   * @param multiple The new Multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
@@ -128,10 +132,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the ShowEmployees attribute of the ContactTypeList object
+   * Sets the ShowEmployees attribute of the ContactTypeList object
    *
-   *@param  tmp  The new ShowEmployees value
-   *@since       1.2
+   * @param tmp The new ShowEmployees value
+   * @since 1.2
    */
   public void setShowEmployees(boolean tmp) {
     this.showEmployees = tmp;
@@ -139,10 +143,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the JsEvent attribute of the ContactTypeList object
+   * Sets the JsEvent attribute of the ContactTypeList object
    *
-   *@param  tmp  The new JsEvent value
-   *@since       1.3
+   * @param tmp The new JsEvent value
+   * @since 1.3
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -150,10 +154,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the DefaultKey attribute of the ContactTypeList object
+   * Sets the DefaultKey attribute of the ContactTypeList object
    *
-   *@param  tmp  The new DefaultKey value
-   *@since       1.3
+   * @param tmp The new DefaultKey value
+   * @since 1.3
    */
   public void setDefaultKey(int tmp) {
     this.defaultKey = tmp;
@@ -161,10 +165,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the DefaultKey attribute of the ContactTypeList object
+   * Sets the DefaultKey attribute of the ContactTypeList object
    *
-   *@param  tmp  The new DefaultKey value
-   *@since       1.3
+   * @param tmp The new DefaultKey value
+   * @since 1.3
    */
   public void setDefaultKey(String tmp) {
     this.defaultKey = Integer.parseInt(tmp);
@@ -172,9 +176,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the category attribute of the ContactTypeList object
+   * Sets the category attribute of the ContactTypeList object
    *
-   *@param  category  The new category value
+   * @param category The new category value
    */
   public void setCategory(int category) {
     this.category = category;
@@ -182,9 +186,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the category attribute of the ContactTypeList object
+   * Sets the category attribute of the ContactTypeList object
    *
-   *@param  category  The new category value
+   * @param category The new category value
    */
   public void setCategory(String category) {
     this.category = Integer.parseInt(category);
@@ -192,9 +196,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ContactTypeList object
+   * Sets the pagedListInfo attribute of the ContactTypeList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -202,9 +206,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the includeDefinedByUser attribute of the ContactTypeList object
+   * Sets the includeDefinedByUser attribute of the ContactTypeList object
    *
-   *@param  includeDefinedByUser  The new includeDefinedByUser value
+   * @param includeDefinedByUser The new includeDefinedByUser value
    */
   public void setIncludeDefinedByUser(int includeDefinedByUser) {
     this.includeDefinedByUser = includeDefinedByUser;
@@ -212,9 +216,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the includeSelectedByUser attribute of the ContactTypeList object
+   * Sets the includeSelectedByUser attribute of the ContactTypeList object
    *
-   *@param  includeSelectedByUser  The new includeSelectedByUser value
+   * @param includeSelectedByUser The new includeSelectedByUser value
    */
   public void setIncludeSelectedByUser(int includeSelectedByUser) {
     this.includeSelectedByUser = includeSelectedByUser;
@@ -222,9 +226,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the showDisabled attribute of the ContactTypeList object
+   * Sets the showDisabled attribute of the ContactTypeList object
    *
-   *@param  showDisabled  The new showDisabled value
+   * @param showDisabled The new showDisabled value
    */
   public void setShowDisabled(boolean showDisabled) {
     this.showDisabled = showDisabled;
@@ -232,9 +236,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Sets the includeIds attribute of the ContactTypeList object
+   * Sets the includeIds attribute of the ContactTypeList object
    *
-   *@param  includeIds  The new includeIds value
+   * @param includeIds The new includeIds value
    */
   public void setIncludeIds(String includeIds) {
     this.includeIds = includeIds;
@@ -242,9 +246,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the showDisabled attribute of the ContactTypeList object
+   * Gets the showDisabled attribute of the ContactTypeList object
    *
-   *@return    The showDisabled value
+   * @return The showDisabled value
    */
   public boolean getShowDisabled() {
     return showDisabled;
@@ -252,9 +256,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the includeSelectedByUser attribute of the ContactTypeList object
+   * Gets the includeSelectedByUser attribute of the ContactTypeList object
    *
-   *@return    The includeSelectedByUser value
+   * @return The includeSelectedByUser value
    */
   public int getIncludeSelectedByUser() {
     return includeSelectedByUser;
@@ -262,9 +266,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the typesDefinedByUser attribute of the ContactTypeList object
+   * Gets the typesDefinedByUser attribute of the ContactTypeList object
    *
-   *@return    The typesDefinedByUser value
+   * @return The typesDefinedByUser value
    */
   public int getIncludeDefinedByUser() {
     return includeDefinedByUser;
@@ -272,9 +276,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ContactTypeList object
+   * Gets the pagedListInfo attribute of the ContactTypeList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -282,9 +286,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the category attribute of the ContactTypeList object
+   * Gets the category attribute of the ContactTypeList object
    *
-   *@return    The category value
+   * @return The category value
    */
   public int getCategory() {
     return category;
@@ -292,9 +296,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the showPersonal attribute of the ContactTypeList object
+   * Gets the showPersonal attribute of the ContactTypeList object
    *
-   *@return    The showPersonal value
+   * @return The showPersonal value
    */
   public boolean getShowPersonal() {
     return showPersonal;
@@ -302,10 +306,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the Size attribute of the ContactTypeList object
+   * Gets the Size attribute of the ContactTypeList object
    *
-   *@return    The Size value
-   *@since
+   * @return The Size value
    */
   public int getSize() {
     return size;
@@ -313,10 +316,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the Multiple attribute of the ContactTypeList object
+   * Gets the Multiple attribute of the ContactTypeList object
    *
-   *@return    The Multiple value
-   *@since
+   * @return The Multiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -324,10 +326,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the ShowEmployees attribute of the ContactTypeList object
+   * Gets the ShowEmployees attribute of the ContactTypeList object
    *
-   *@return    The ShowEmployees value
-   *@since     1.2
+   * @return The ShowEmployees value
+   * @since 1.2
    */
   public boolean getShowEmployees() {
     return showEmployees;
@@ -335,10 +337,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the JsEvent attribute of the ContactTypeList object
+   * Gets the JsEvent attribute of the ContactTypeList object
    *
-   *@return    The JsEvent value
-   *@since     1.3
+   * @return The JsEvent value
+   * @since 1.3
    */
   public String getJsEvent() {
     return jsEvent;
@@ -346,10 +348,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the DefaultKey attribute of the ContactTypeList object
+   * Gets the DefaultKey attribute of the ContactTypeList object
    *
-   *@return    The DefaultKey value
-   *@since     1.3
+   * @return The DefaultKey value
+   * @since 1.3
    */
   public int getDefaultKey() {
     return defaultKey;
@@ -357,39 +359,40 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the ContactTypeList object
+   * Gets the HtmlSelect attribute of the ContactTypeList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.2
+   * @param selectName Description of Parameter
+   * @return The HtmlSelect value
+   * @since 1.2
    */
-  public String getHtmlSelect(String selectName) {
-    return getHtmlSelect(selectName, defaultKey);
+  public String getHtmlSelect(SystemStatus thisSystem, String selectName) {
+    return getHtmlSelect(thisSystem, selectName, defaultKey);
   }
 
 
   /**
-   *  Gets the HtmlSelect attribute of the ContactTypeList object
+   * Gets the HtmlSelect attribute of the ContactTypeList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.1
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The HtmlSelect value
+   * @since 1.1
    */
-  public String getHtmlSelect(String selectName, int defaultKey) {
-    LookupList contactTypeSelect = getLookupList(selectName, defaultKey);
+  public String getHtmlSelect(SystemStatus thisSystem, String selectName, int defaultKey) {
+    LookupList contactTypeSelect = getLookupList(
+        thisSystem, selectName, defaultKey);
     return contactTypeSelect.getHtmlSelect(selectName, defaultKey);
   }
 
 
   /**
-   *  Gets the lookupList attribute of the ContactTypeList object
+   * Gets the lookupList attribute of the ContactTypeList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The lookupList value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The lookupList value
    */
-  public LookupList getLookupList(String selectName, int defaultKey) {
+  public LookupList getLookupList(SystemStatus thisSystem, String selectName, int defaultKey) {
     LookupList contactTypeSelect = new LookupList();
     contactTypeSelect.setTableName("lookup_contact_types");
     contactTypeSelect.setJsEvent(jsEvent);
@@ -403,20 +406,32 @@ public class ContactTypeList extends ArrayList {
       if (thisContactType.getCategory() != category) {
         category = thisContactType.getCategory();
         switch (category) {
-            case ContactType.GENERAL:
+          case ContactType.GENERAL:
+            if (thisSystem != null) {
+              contactTypeSelect.addGroup(
+                  thisSystem.getLabel("contacts.typeList.contactTypes"));
+            } else {
               contactTypeSelect.addGroup("Contact Types");
-              break;
-            case ContactType.ACCOUNT:
+            }
+            break;
+          case ContactType.ACCOUNT:
+            if (thisSystem != null) {
+              contactTypeSelect.addGroup(
+                  thisSystem.getLabel("contacts.typeList.accountContactTypes"));
+            } else {
               contactTypeSelect.addGroup("Account Contact Types");
-              break;
-            default:
-              break;
+            }
+            break;
+          default:
+            break;
         }
       }
       if (thisContactType.getEnabled() == true || thisContactType.getId() == EMPLOYEE_TYPE) {
-        contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription());
+        contactTypeSelect.appendItem(
+            thisContactType.getId(), thisContactType.getDescription());
       } else if (thisContactType.getId() == defaultKey) {
-        contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription() + " (X)");
+        contactTypeSelect.appendItem(
+            thisContactType.getId(), thisContactType.getDescription() + " (X)");
       }
     }
 
@@ -425,11 +440,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Item attribute of the ContactTypeList object
+   * Adds a feature to the Item attribute of the ContactTypeList object
    *
-   *@param  key   The feature to be added to the Item attribute
-   *@param  name  The feature to be added to the Item attribute
-   *@since
+   * @param key  The feature to be added to the Item attribute
+   * @param name The feature to be added to the Item attribute
    */
   public void addItem(int key, String name) {
     ContactType thisContactType = new ContactType();
@@ -440,9 +454,9 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the enabledElementCount attribute of the ContactTypeList object
+   * Gets the enabledElementCount attribute of the ContactTypeList object
    *
-   *@return    The enabledElementCount value
+   * @return The enabledElementCount value
    */
   public int getEnabledElementCount() {
     int count = 0;
@@ -459,10 +473,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Gets the element attribute of the ContactTypeList object
+   * Gets the element attribute of the ContactTypeList object
    *
-   *@param  code  Description of the Parameter
-   *@return       The element value
+   * @param code Description of the Parameter
+   * @return The element value
    */
   public ContactType getElement(int code) {
     ContactType thisType = null;
@@ -478,11 +492,11 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.2
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -507,7 +521,8 @@ public class ContactTypeList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() + sqlFilterTail.toString());
+      pst = db.prepareStatement(
+          sqlCount.toString() + sqlFilter.toString() + sqlFilterTail.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -519,9 +534,10 @@ public class ContactTypeList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(lct.description) < ? " + sqlFilterTail.toString());
+            "AND " + DatabaseUtils.toLowerCase(db) + "(lct.description) < ? " + sqlFilterTail.toString());
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -534,10 +550,12 @@ public class ContactTypeList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("lct.category, lct.user_id, lct.level, lct.description ", null);
+      pagedListInfo.setDefaultSort(
+          "lct.category, lct.user_id, lct.\"level\", lct.description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY lct.category, lct.user_id, lct.level, lct.description ");
+      sqlOrder.append(
+          "ORDER BY lct.category, lct.user_id, lct.\"level\", lct.description ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -546,23 +564,17 @@ public class ContactTypeList extends ArrayList {
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append("lct.* FROM lookup_contact_types lct " +
+    sqlSelect.append(
+        "lct.* FROM lookup_contact_types lct " +
         "WHERE lct.code > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlFilterTail.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlFilterTail.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ContactType thisContactType = new ContactType(rs);
       this.add(thisContactType);
     }
@@ -572,10 +584,10 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
-   *@param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -595,7 +607,7 @@ public class ContactTypeList extends ArrayList {
     }
 
     if (!showDisabled) {
-      sqlFilter.append("AND lct.enabled = '" + DatabaseUtils.getTrue(db) + "' ");
+      sqlFilter.append("AND lct.enabled = " + DatabaseUtils.getTrue(db) + " ");
     }
 
     if (includeDefinedByUser > 0) {
@@ -608,11 +620,11 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -630,11 +642,11 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the SqlFilterTail attribute of the ContactTypeList
-   *  object
+   * Adds a feature to the SqlFilterTail attribute of the ContactTypeList
+   * object
    *
-   *@param  sqlFilterTail  The feature to be added to the SqlFilterTail
-   *      attribute
+   * @param sqlFilterTail The feature to be added to the SqlFilterTail
+   *                      attribute
    */
   private void addSqlFilterTail(StringBuffer sqlFilterTail) {
     if (sqlFilterTail == null) {
@@ -642,7 +654,8 @@ public class ContactTypeList extends ArrayList {
     }
     int i = 0;
     if (includeSelectedByUser != -1) {
-      sqlFilterTail.append("OR (lct.code in (select type_id from contact_type_levels where contact_id = " + includeSelectedByUser + ") ) ");
+      sqlFilterTail.append(
+          "OR (lct.code in (select type_id from contact_type_levels where contact_id = " + includeSelectedByUser + ") ) ");
     }
     if (includeIds != null && !"".equals(includeIds)) {
       sqlFilterTail.append("OR (lct.code in (" + includeIds + ") ) ");

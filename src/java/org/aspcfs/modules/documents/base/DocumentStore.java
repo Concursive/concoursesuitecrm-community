@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import java.sql.*;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileFolderList;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.base.Constants;
-import com.zeroio.iteam.base.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    November 8, 2004
- *@version    $Id: DocumentStore.java,v 1.1.2.1 2004/11/09 22:25:30 kbhoopal Exp
- *      $
+ * @author kbhoopal
+ * @version $Id: DocumentStore.java,v 1.1.2.1 2004/11/09 22:25:30 kbhoopal Exp
+ *          $
+ * @created November 8, 2004
  */
 public class DocumentStore extends GenericBean {
 
@@ -50,6 +52,7 @@ public class DocumentStore extends GenericBean {
   private int enteredBy = -1;
   private Timestamp modified = null;
   private int modifiedBy = -1;
+  private Timestamp trashedDate = null;
 
   private DocumentStoreTeamMemberList userTeam = new DocumentStoreTeamMemberList();
   private DocumentStoreTeamMemberList roleTeam = new DocumentStoreTeamMemberList();
@@ -62,17 +65,18 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Constructor for the DocumentStore object
+   * Constructor for the DocumentStore object
    */
-  public DocumentStore() { }
+  public DocumentStore() {
+  }
 
 
   /**
-   *  Constructor for the DocumentStore object
+   * Constructor for the DocumentStore object
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpId             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param tmpId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStore(Connection db, int tmpId) throws SQLException {
     this.queryRecord(db, tmpId);
@@ -80,10 +84,10 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Constructor for the DocumentStore object
+   * Constructor for the DocumentStore object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStore(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -91,9 +95,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the DocumentStore object
+   * Sets the id attribute of the DocumentStore object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -101,9 +105,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the DocumentStore object
+   * Sets the id attribute of the DocumentStore object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -111,9 +115,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the DocumentStore object
+   * Sets the templateId attribute of the DocumentStore object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(int tmp) {
     this.templateId = tmp;
@@ -121,9 +125,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the DocumentStore object
+   * Sets the templateId attribute of the DocumentStore object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(String tmp) {
     this.templateId = Integer.parseInt(tmp);
@@ -131,9 +135,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the title attribute of the DocumentStore object
+   * Sets the title attribute of the DocumentStore object
    *
-   *@param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -141,9 +145,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the shortDescription attribute of the DocumentStore object
+   * Sets the shortDescription attribute of the DocumentStore object
    *
-   *@param  tmp  The new shortDescription value
+   * @param tmp The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -151,9 +155,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the requestedBy attribute of the DocumentStore object
+   * Sets the requestedBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new requestedBy value
+   * @param tmp The new requestedBy value
    */
   public void setRequestedBy(String tmp) {
     this.requestedBy = tmp;
@@ -161,9 +165,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the requestedDept attribute of the DocumentStore object
+   * Sets the requestedDept attribute of the DocumentStore object
    *
-   *@param  tmp  The new requestedDept value
+   * @param tmp The new requestedDept value
    */
   public void setRequestedDept(String tmp) {
     this.requestedDept = tmp;
@@ -171,9 +175,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the requestDate attribute of the DocumentStore object
+   * Sets the requestDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new requestDate value
+   * @param tmp The new requestDate value
    */
   public void setRequestDate(Timestamp tmp) {
     this.requestDate = tmp;
@@ -181,9 +185,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the requestDate attribute of the DocumentStore object
+   * Sets the requestDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new requestDate value
+   * @param tmp The new requestDate value
    */
   public void setRequestDate(String tmp) {
     this.requestDate = DatabaseUtils.parseTimestamp(tmp);
@@ -191,9 +195,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the requestDateTimeZone attribute of the DocumentStore object
+   * Sets the requestDateTimeZone attribute of the DocumentStore object
    *
-   *@param  tmp  The new requestDateTimeZone value
+   * @param tmp The new requestDateTimeZone value
    */
   public void setRequestDateTimeZone(String tmp) {
     this.requestDateTimeZone = tmp;
@@ -201,9 +205,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the approved attribute of the DocumentStore object
+   * Sets the approved attribute of the DocumentStore object
    *
-   *@param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(boolean tmp) {
     this.approved = tmp;
@@ -211,9 +215,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the approved attribute of the DocumentStore object
+   * Sets the approved attribute of the DocumentStore object
    *
-   *@param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(String tmp) {
     this.approved = DatabaseUtils.parseBoolean(tmp);
@@ -221,9 +225,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the approvalDate attribute of the DocumentStore object
+   * Sets the approvalDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new approvalDate value
+   * @param tmp The new approvalDate value
    */
   public void setApprovalDate(Timestamp tmp) {
     this.approvalDate = tmp;
@@ -231,9 +235,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the approvalDate attribute of the DocumentStore object
+   * Sets the approvalDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new approvalDate value
+   * @param tmp The new approvalDate value
    */
   public void setApprovalDate(String tmp) {
     this.approvalDate = DatabaseUtils.parseTimestamp(tmp);
@@ -241,9 +245,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the approvalBy attribute of the DocumentStore object
+   * Sets the approvalBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new approvalBy value
+   * @param tmp The new approvalBy value
    */
   public void setApprovalBy(int tmp) {
     this.approvalBy = tmp;
@@ -251,9 +255,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the approvalBy attribute of the DocumentStore object
+   * Sets the approvalBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new approvalBy value
+   * @param tmp The new approvalBy value
    */
   public void setApprovalBy(String tmp) {
     this.approvalBy = Integer.parseInt(tmp);
@@ -261,9 +265,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the DocumentStore object
+   * Sets the closed attribute of the DocumentStore object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(boolean tmp) {
     this.closed = tmp;
@@ -271,9 +275,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the DocumentStore object
+   * Sets the closed attribute of the DocumentStore object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     this.closed = DatabaseUtils.parseBoolean(tmp);
@@ -281,9 +285,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the DocumentStore object
+   * Sets the closeDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(Timestamp tmp) {
     this.closeDate = tmp;
@@ -291,9 +295,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the DocumentStore object
+   * Sets the closeDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(String tmp) {
     this.closeDate = DatabaseUtils.parseTimestamp(tmp);
@@ -301,9 +305,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the DocumentStore object
+   * Sets the entered attribute of the DocumentStore object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -311,9 +315,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the DocumentStore object
+   * Sets the entered attribute of the DocumentStore object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -321,9 +325,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the DocumentStore object
+   * Sets the enteredBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -331,9 +335,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the DocumentStore object
+   * Sets the enteredBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -341,9 +345,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the DocumentStore object
+   * Sets the modified attribute of the DocumentStore object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -351,9 +355,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the DocumentStore object
+   * Sets the modified attribute of the DocumentStore object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -361,9 +365,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the DocumentStore object
+   * Sets the modifiedBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -371,9 +375,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the DocumentStore object
+   * Sets the modifiedBy attribute of the DocumentStore object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -381,9 +385,33 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the userTeam attribute of the DocumentStore object
+   * Sets the trashedDate attribute of the DocumentStore object
    *
-   *@param  tmp  The new userTeam value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the DocumentStore object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+  public boolean isTrashed() {
+    return (trashedDate != null);
+  }
+
+
+  /**
+   * Sets the userTeam attribute of the DocumentStore object
+   *
+   * @param tmp The new userTeam value
    */
   public void setUserTeam(DocumentStoreTeamMemberList tmp) {
     this.userTeam = tmp;
@@ -391,9 +419,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the roleTeam attribute of the DocumentStore object
+   * Sets the roleTeam attribute of the DocumentStore object
    *
-   *@param  tmp  The new roleTeam value
+   * @param tmp The new roleTeam value
    */
   public void setRoleTeam(DocumentStoreTeamMemberList tmp) {
     this.roleTeam = tmp;
@@ -401,9 +429,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the departmentTeam attribute of the DocumentStore object
+   * Sets the departmentTeam attribute of the DocumentStore object
    *
-   *@param  tmp  The new departmentTeam value
+   * @param tmp The new departmentTeam value
    */
   public void setDepartmentTeam(DocumentStoreTeamMemberList tmp) {
     this.departmentTeam = tmp;
@@ -411,9 +439,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the employeeTeam attribute of the DocumentStore object
+   * Sets the employeeTeam attribute of the DocumentStore object
    *
-   *@param  tmp  The new employeeTeam value
+   * @param tmp The new employeeTeam value
    */
   public void setEmployeeTeam(DocumentStoreTeamMemberList tmp) {
     this.employeeTeam = tmp;
@@ -421,9 +449,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the accountContactTeam attribute of the DocumentStore object
+   * Sets the accountContactTeam attribute of the DocumentStore object
    *
-   *@param  tmp  The new accountContactTeam value
+   * @param tmp The new accountContactTeam value
    */
   public void setAccountContactTeam(DocumentStoreTeamMemberList tmp) {
     this.accountContactTeam = tmp;
@@ -431,9 +459,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Sets the files attribute of the DocumentStore object
+   * Sets the files attribute of the DocumentStore object
    *
-   *@param  tmp  The new files value
+   * @param tmp The new files value
    */
   public void setFiles(FileItemList tmp) {
     this.files = tmp;
@@ -441,9 +469,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the DocumentStore object
+   * Gets the id attribute of the DocumentStore object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -451,9 +479,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the templateId attribute of the DocumentStore object
+   * Gets the templateId attribute of the DocumentStore object
    *
-   *@return    The templateId value
+   * @return The templateId value
    */
   public int getTemplateId() {
     return templateId;
@@ -461,9 +489,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the title attribute of the DocumentStore object
+   * Gets the title attribute of the DocumentStore object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -471,9 +499,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the shortDescription attribute of the DocumentStore object
+   * Gets the shortDescription attribute of the DocumentStore object
    *
-   *@return    The shortDescription value
+   * @return The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -481,9 +509,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the requestedBy attribute of the DocumentStore object
+   * Gets the requestedBy attribute of the DocumentStore object
    *
-   *@return    The requestedBy value
+   * @return The requestedBy value
    */
   public String getRequestedBy() {
     return requestedBy;
@@ -491,9 +519,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the requestedDept attribute of the DocumentStore object
+   * Gets the requestedDept attribute of the DocumentStore object
    *
-   *@return    The requestedDept value
+   * @return The requestedDept value
    */
   public String getRequestedDept() {
     return requestedDept;
@@ -501,9 +529,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the requestDate attribute of the DocumentStore object
+   * Gets the requestDate attribute of the DocumentStore object
    *
-   *@return    The requestDate value
+   * @return The requestDate value
    */
   public Timestamp getRequestDate() {
     return requestDate;
@@ -511,9 +539,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the requestDateTimeZone attribute of the DocumentStore object
+   * Gets the requestDateTimeZone attribute of the DocumentStore object
    *
-   *@return    The requestDateTimeZone value
+   * @return The requestDateTimeZone value
    */
   public String getRequestDateTimeZone() {
     return requestDateTimeZone;
@@ -521,9 +549,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the approved attribute of the DocumentStore object
+   * Gets the approved attribute of the DocumentStore object
    *
-   *@return    The approved value
+   * @return The approved value
    */
   public boolean getApproved() {
     return approved;
@@ -531,9 +559,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the approvalDate attribute of the DocumentStore object
+   * Gets the approvalDate attribute of the DocumentStore object
    *
-   *@return    The approvalDate value
+   * @return The approvalDate value
    */
   public Timestamp getApprovalDate() {
     return approvalDate;
@@ -541,9 +569,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the approvalBy attribute of the DocumentStore object
+   * Gets the approvalBy attribute of the DocumentStore object
    *
-   *@return    The approvalBy value
+   * @return The approvalBy value
    */
   public int getApprovalBy() {
     return approvalBy;
@@ -551,9 +579,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the DocumentStore object
+   * Gets the closed attribute of the DocumentStore object
    *
-   *@return    The closed value
+   * @return The closed value
    */
   public boolean getClosed() {
     return closed;
@@ -561,9 +589,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the closeDate attribute of the DocumentStore object
+   * Gets the closeDate attribute of the DocumentStore object
    *
-   *@return    The closeDate value
+   * @return The closeDate value
    */
   public Timestamp getCloseDate() {
     return closeDate;
@@ -571,9 +599,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the DocumentStore object
+   * Gets the entered attribute of the DocumentStore object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -581,9 +609,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the DocumentStore object
+   * Gets the enteredBy attribute of the DocumentStore object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -591,9 +619,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the DocumentStore object
+   * Gets the modified attribute of the DocumentStore object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -601,9 +629,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the DocumentStore object
+   * Gets the modifiedBy attribute of the DocumentStore object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -611,9 +639,19 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the team attribute of the DocumentStore object
+   * Gets the trashedDate attribute of the DocumentStore object
    *
-   *@return    The team value
+   * @return The trashedDate value
+   */
+  public Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the team attribute of the DocumentStore object
+   *
+   * @return The team value
    */
   public DocumentStoreTeamMemberList getUserTeam() {
     return userTeam;
@@ -621,9 +659,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the roleTeam attribute of the DocumentStore object
+   * Gets the roleTeam attribute of the DocumentStore object
    *
-   *@return    The roleTeam value
+   * @return The roleTeam value
    */
   public DocumentStoreTeamMemberList getRoleTeam() {
     return roleTeam;
@@ -631,9 +669,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the departmentTeam attribute of the DocumentStore object
+   * Gets the departmentTeam attribute of the DocumentStore object
    *
-   *@return    The departmentTeam value
+   * @return The departmentTeam value
    */
   public DocumentStoreTeamMemberList getDepartmentTeam() {
     return departmentTeam;
@@ -641,9 +679,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the employeeTeam attribute of the DocumentStore object
+   * Gets the employeeTeam attribute of the DocumentStore object
    *
-   *@return    The employeeTeam value
+   * @return The employeeTeam value
    */
   public DocumentStoreTeamMemberList getEmployeeTeam() {
     return employeeTeam;
@@ -651,9 +689,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the accountContactTeam attribute of the DocumentStore object
+   * Gets the accountContactTeam attribute of the DocumentStore object
    *
-   *@return    The accountContactTeam value
+   * @return The accountContactTeam value
    */
   public DocumentStoreTeamMemberList getAccountContactTeam() {
     return accountContactTeam;
@@ -661,9 +699,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the files attribute of the DocumentStore object
+   * Gets the files attribute of the DocumentStore object
    *
-   *@return    The files value
+   * @return The files value
    */
   public FileItemList getFiles() {
     return files;
@@ -671,10 +709,10 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildTeamMemberList(Connection db) throws SQLException {
     userTeam.setDocumentStore(this);
@@ -707,11 +745,11 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int buildPermissionList(Connection db) throws SQLException {
     permissions.setDocumentStoreId(this.getId());
@@ -721,11 +759,11 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int buildFileItemList(Connection db) throws SQLException {
     files.setLinkModuleId(Constants.DOCUMENTS_DOCUMENTS);
@@ -736,13 +774,16 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int thisId) throws SQLException {
+    if ((thisId) == -1) {
+      throw new SQLException("Invalid Document Store");
+    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
@@ -758,15 +799,18 @@ public class DocumentStore extends GenericBean {
     }
     rs.close();
     pst.close();
+    if (this.id == -1) {
+      throw new SQLException(Constants.NOT_FOUND_ERROR);
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     Exception errorMessage = null;
@@ -776,9 +820,12 @@ public class DocumentStore extends GenericBean {
         db.setAutoCommit(false);
       }
       PreparedStatement pst = null;
+      id = DatabaseUtils.getNextSeq(
+          db, "document_store_document_store_id_seq");
+      int i = 0;
       pst = db.prepareStatement(
           "INSERT INTO document_store " +
-          "(template_id , " +
+          "(" + (id > -1 ? "document_store_id, " : "") + "template_id , " +
           " title , " +
           " shortDescription , " +
           " requestedBy , " +
@@ -790,9 +837,10 @@ public class DocumentStore extends GenericBean {
           " closeDate , " +
           " enteredBy , " +
           " modifiedBy) " +
-          "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-
-      int i = 0;
+          "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?)");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       DatabaseUtils.setInt(pst, ++i, this.templateId);
       pst.setString(++i, this.title);
       pst.setString(++i, this.shortDescription);
@@ -824,7 +872,8 @@ public class DocumentStore extends GenericBean {
       pst.execute();
       pst.close();
 
-      this.id = DatabaseUtils.getCurrVal(db, "document_store_document_store_id_seq");
+      this.id = DatabaseUtils.getCurrVal(
+          db, "document_store_document_store_id_seq", id);
 
       //Insert the default permissions
       DocumentStorePermissionList.insertDefaultPermissions(db, id);
@@ -850,12 +899,12 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  basePath          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param basePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String basePath) throws SQLException {
     if (this.getId() == -1) {
@@ -874,7 +923,7 @@ public class DocumentStore extends GenericBean {
 
       //Deleting uploaded documents
       buildFileItemList(db);
-      files.delete(db, basePath);
+      files.delete(db, getFileLibraryPath(basePath, "documents"));
 
       FileFolderList folders = new FileFolderList();
       folders.setLinkModuleId(Constants.DOCUMENTS_DOCUMENTS);
@@ -901,7 +950,8 @@ public class DocumentStore extends GenericBean {
       db.setAutoCommit(true);
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Document Store could not be deleted because it no longer exists.");
+      errors.put(
+          "actionError", "Document Store could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -910,11 +960,63 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      sql.append(
+          "UPDATE document_store " +
+          "SET trashed_date = ? , " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+          "modifiedby = ? " +
+          "WHERE document_store_id = ? ");
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      if (toTrash) {
+        DatabaseUtils.setTimestamp(
+            pst, ++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+      }
+      DatabaseUtils.setInt(pst, ++i, tmpUserId);
+      pst.setInt(++i, this.id);
+      pst.executeUpdate();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1010,10 +1112,10 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     this.id = rs.getInt("document_store_id");
@@ -1031,14 +1133,15 @@ public class DocumentStore extends GenericBean {
     this.enteredBy = rs.getInt("enteredBy");
     this.modified = rs.getTimestamp("modified");
     this.modifiedBy = rs.getInt("modifiedBy");
+    this.trashedDate = rs.getTimestamp("trashed_date");
   }
 
 
   /**
-   *  Gets the accessUserLevel attribute of the DocumentStore object
+   * Gets the accessUserLevel attribute of the DocumentStore object
    *
-   *@param  permission  Description of the Parameter
-   *@return             The accessUserLevel value
+   * @param permission Description of the Parameter
+   * @return The accessUserLevel value
    */
   public int getAccessUserLevel(String permission) {
     return permissions.getAccessLevel(permission);
@@ -1046,9 +1149,9 @@ public class DocumentStore extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive
+   * Gets the properties that are TimeZone sensitive
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();

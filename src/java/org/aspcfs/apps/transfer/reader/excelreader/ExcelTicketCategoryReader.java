@@ -15,27 +15,26 @@
  */
 package org.aspcfs.apps.transfer.reader.excelreader;
 
-import org.aspcfs.apps.transfer.*;
-import java.util.*;
-import java.io.*;
-import java.util.logging.*;
-import org.w3c.dom.*;
-
-import java.util.Random;
-
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.hssf.record.*;
-import org.apache.poi.hssf.model.*;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.*;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 17, 2002
- *@version    $Id: ExcelTicketCategoryReader.java,v 1.3 2003/01/13 14:41:54
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ExcelTicketCategoryReader.java,v 1.3 2003/01/13 14:41:54
+ *          mrajkowski Exp $
+ * @created September 17, 2002
  */
 public class ExcelTicketCategoryReader implements DataReader {
   public boolean ignoreRow1 = true;
@@ -44,9 +43,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Sets the excelFile attribute of the ExcelTicketCategoryReader object
+   * Sets the excelFile attribute of the ExcelTicketCategoryReader object
    *
-   *@param  tmp  The new excelFile value
+   * @param tmp The new excelFile value
    */
   public void setExcelFile(String tmp) {
     this.excelFile = tmp;
@@ -54,9 +53,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Sets the ignoreRow1 attribute of the ExcelTicketCategoryReader object
+   * Sets the ignoreRow1 attribute of the ExcelTicketCategoryReader object
    *
-   *@param  tmp  The new ignoreRow1 value
+   * @param tmp The new ignoreRow1 value
    */
   public void setIgnoreRow1(boolean tmp) {
     this.ignoreRow1 = tmp;
@@ -64,9 +63,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Gets the excelFile attribute of the ExcelTicketCategoryReader object
+   * Gets the excelFile attribute of the ExcelTicketCategoryReader object
    *
-   *@return    The excelFile value
+   * @return The excelFile value
    */
   public String getExcelFile() {
     return excelFile;
@@ -74,9 +73,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Gets the ignoreRow1 attribute of the ExcelTicketCategoryReader object
+   * Gets the ignoreRow1 attribute of the ExcelTicketCategoryReader object
    *
-   *@return    The ignoreRow1 value
+   * @return The ignoreRow1 value
    */
   public boolean getIgnoreRow1() {
     return ignoreRow1;
@@ -84,9 +83,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the CFSDatabaseReader object
+   * Gets the version attribute of the CFSDatabaseReader object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -94,9 +93,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the CFSDatabaseReader object
+   * Gets the name attribute of the CFSDatabaseReader object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Excel Ticket Category Reader";
@@ -104,9 +103,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Gets the description attribute of the CFSDatabaseReader object
+   * Gets the description attribute of the CFSDatabaseReader object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Reads data from an Excel file formatted with ticket category data";
@@ -114,9 +113,9 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Gets the configured attribute of the CFSDatabaseReader object
+   * Gets the configured attribute of the CFSDatabaseReader object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     if (excelFile == null || "".equals(excelFile)) {
@@ -131,10 +130,10 @@ public class ExcelTicketCategoryReader implements DataReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     logger.info("Processing excel file");
@@ -157,7 +156,8 @@ public class ExcelTicketCategoryReader implements DataReader {
             HSSFCell cell = row.getCell((short) c);
             if (cell != null) {
               DataRecord thisRecord = new DataRecord();
-              thisRecord.addField("catLevel", String.valueOf(cell.getCellNum()));
+              thisRecord.addField(
+                  "catLevel", String.valueOf(cell.getCellNum()));
               thisRecord.addField("description", cell.getStringCellValue());
               writer.save(thisRecord);
             }

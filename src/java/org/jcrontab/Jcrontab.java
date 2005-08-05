@@ -14,12 +14,12 @@
 package org.jcrontab;
 
 /**
- *  This class starts a jcrontab. Call the main method with two parameters and
- *  will start a Crontab
+ * This class starts a jcrontab. Call the main method with two parameters and
+ * will start a Crontab
  *
- *@author     iolalla
- *@created    November 27, 2002
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created November 27, 2002
  */
 
 public class Jcrontab {
@@ -28,9 +28,9 @@ public class Jcrontab {
 
 
   /**
-   *  main method
+   * main method
    *
-   *@param  args  String[] the params passed from the console
+   * @param args String[] the params passed from the console
    */
   public static void main(String[] args) {
 
@@ -74,22 +74,22 @@ public class Jcrontab {
 
 
   /**
-   *  This method seths a ShutdownHook to the system This traps the CTRL+C or
-   *  kill signal and shutdows Correctly the system.
+   * This method seths a ShutdownHook to the system This traps the CTRL+C or
+   * kill signal and shutdows Correctly the system.
    *
-   *@exception  Exception  Description of the Exception
+   * @throws Exception Description of the Exception
    */
   public static void ShutdownHook() throws Exception {
     try {
       Runtime.getRuntime().addShutdownHook(
-        new Thread() {
-          public void run() {
-            System.out.println("Shutting down...");
-            // stops the system in 200 miliseconds :-)
-            crontab.uninit(200);
-            System.out.println("Stopped");
-          }
-        });
+          new Thread() {
+            public void run() {
+              System.out.println("Shutting down...");
+              // stops the system in 200 miliseconds :-)
+              crontab.uninit(200);
+              System.out.println("Stopped");
+            }
+          });
     } catch (Exception e) {
       throw new Exception(e.toString());
     }

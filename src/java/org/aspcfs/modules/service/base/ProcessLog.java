@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.service.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+
 /**
- *  Represents the output of a process that can be inserted in a database
+ * Represents the output of a process that can be inserted in a database
  *
- *@author     matt rajkowski
- *@created    October 23, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created October 23, 2002
  */
 public class ProcessLog extends GenericBean {
 
@@ -44,16 +45,17 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Constructor for the ProcessLog object
+   * Constructor for the ProcessLog object
    */
-  public ProcessLog() { }
+  public ProcessLog() {
+  }
 
 
   /**
-   *  Constructor for the ProcessLog object
+   * Constructor for the ProcessLog object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProcessLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -61,11 +63,11 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Constructor for the ProcessLog object
+   * Constructor for the ProcessLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProcessLog(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -73,9 +75,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProcessLog object
+   * Sets the id attribute of the ProcessLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -83,9 +85,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the systemId attribute of the ProcessLog object
+   * Sets the systemId attribute of the ProcessLog object
    *
-   *@param  tmp  The new systemId value
+   * @param tmp The new systemId value
    */
   public void setSystemId(int tmp) {
     this.systemId = tmp;
@@ -93,9 +95,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the systemId attribute of the ProcessLog object
+   * Sets the systemId attribute of the ProcessLog object
    *
-   *@param  tmp  The new systemId value
+   * @param tmp The new systemId value
    */
   public void setSystemId(String tmp) {
     this.systemId = Integer.parseInt(tmp);
@@ -103,9 +105,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the clientId attribute of the ProcessLog object
+   * Sets the clientId attribute of the ProcessLog object
    *
-   *@param  tmp  The new clientId value
+   * @param tmp The new clientId value
    */
   public void setClientId(int tmp) {
     this.clientId = tmp;
@@ -113,9 +115,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the clientId attribute of the ProcessLog object
+   * Sets the clientId attribute of the ProcessLog object
    *
-   *@param  tmp  The new clientId value
+   * @param tmp The new clientId value
    */
   public void setClientId(String tmp) {
     this.clientId = Integer.parseInt(tmp);
@@ -123,9 +125,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the ProcessLog object
+   * Sets the name attribute of the ProcessLog object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -133,9 +135,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the version attribute of the ProcessLog object
+   * Sets the version attribute of the ProcessLog object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(String tmp) {
     this.version = tmp;
@@ -143,9 +145,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the ProcessLog object
+   * Sets the status attribute of the ProcessLog object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -153,9 +155,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the ProcessLog object
+   * Sets the status attribute of the ProcessLog object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -163,9 +165,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the message attribute of the ProcessLog object
+   * Sets the message attribute of the ProcessLog object
    *
-   *@param  tmp  The new message value
+   * @param tmp The new message value
    */
   public void setMessage(String tmp) {
     this.message = tmp;
@@ -173,9 +175,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ProcessLog object
+   * Sets the entered attribute of the ProcessLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -183,9 +185,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ProcessLog object
+   * Sets the entered attribute of the ProcessLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -193,9 +195,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ProcessLog object
+   * Gets the id attribute of the ProcessLog object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -203,9 +205,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the systemId attribute of the ProcessLog object
+   * Gets the systemId attribute of the ProcessLog object
    *
-   *@return    The systemId value
+   * @return The systemId value
    */
   public int getSystemId() {
     return systemId;
@@ -213,9 +215,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the clientId attribute of the ProcessLog object
+   * Gets the clientId attribute of the ProcessLog object
    *
-   *@return    The clientId value
+   * @return The clientId value
    */
   public int getClientId() {
     return clientId;
@@ -223,9 +225,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the ProcessLog object
+   * Gets the name attribute of the ProcessLog object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -233,9 +235,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the version attribute of the ProcessLog object
+   * Gets the version attribute of the ProcessLog object
    *
-   *@return    The version value
+   * @return The version value
    */
   public String getVersion() {
     return version;
@@ -243,9 +245,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the ProcessLog object
+   * Gets the status attribute of the ProcessLog object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -253,9 +255,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the message attribute of the ProcessLog object
+   * Gets the message attribute of the ProcessLog object
    *
-   *@return    The message value
+   * @return The message value
    */
   public String getMessage() {
     return message;
@@ -263,9 +265,9 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ProcessLog object
+   * Gets the entered attribute of the ProcessLog object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -273,14 +275,15 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the ProcessLog object
+   * Gets the enteredString attribute of the ProcessLog object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -288,11 +291,11 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -317,25 +320,33 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     if (systemId == -1 || clientId == -1) {
-      throw new SQLException("Log Entry must be associated with a System and Client");
+      throw new SQLException(
+          "Log Entry must be associated with a System and Client");
     }
 
     StringBuffer sql = new StringBuffer();
     try {
+      id = DatabaseUtils.getNextSeq(db, "process_log_process_id_seq");
       sql.append(
           "INSERT INTO process_log (system_id, client_id, process_name, process_version, status, ");
+      if (id > -1) {
+        sql.append("process_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
       sql.append("message ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -348,6 +359,9 @@ public class ProcessLog extends GenericBean {
       pst.setString(++i, name);
       pst.setString(++i, version);
       pst.setInt(++i, status);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -355,7 +369,7 @@ public class ProcessLog extends GenericBean {
       pst.execute();
       pst.close();
 
-      id = DatabaseUtils.getCurrVal(db, "process_log_process_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "process_log_process_id_seq", id);
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
@@ -363,11 +377,11 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -385,10 +399,10 @@ public class ProcessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("process_id");

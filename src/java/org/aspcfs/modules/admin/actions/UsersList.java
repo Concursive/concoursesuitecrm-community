@@ -25,19 +25,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    December 15, 2004
- * @version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created December 15, 2004
  */
 public final class UsersList extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListUsers(context);
@@ -45,10 +45,10 @@ public final class UsersList extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListUsers(ActionContext context) {
     if (!hasPermission(context, "myhomepage-view")) {
@@ -66,9 +66,11 @@ public final class UsersList extends CFSModule {
       db = getConnection(context);
       user = new User(db, this.getUserId(context), true);
       if (previous != null && !"".equals(previous)) {
-        buildImages(db, user.getShortChildList(), completeList, images, previous, openUsers);
+        buildImages(
+            db, user.getShortChildList(), completeList, images, previous, openUsers);
       } else {
-        buildImages(db, user.getShortChildList(), completeList, images, null, openUsers);
+        buildImages(
+            db, user.getShortChildList(), completeList, images, null, openUsers);
       }
       context.getRequest().setAttribute("user", user);
       context.getRequest().setAttribute("completeList", completeList);
@@ -90,15 +92,15 @@ public final class UsersList extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  children       Description of the Parameter
-   * @param  all            Description of the Parameter
-   * @param  images         Description of the Parameter
-   * @param  previous       Description of the Parameter
-   * @param  openUsers      Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param children  Description of the Parameter
+   * @param all       Description of the Parameter
+   * @param images    Description of the Parameter
+   * @param previous  Description of the Parameter
+   * @param openUsers Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   private void buildImages(Connection db, UserList children, UserList all, ArrayList images, String previous, ArrayList openUsers) throws Exception {
     Iterator childIterator = (Iterator) children.iterator();
@@ -125,17 +127,18 @@ public final class UsersList extends CFSModule {
       images.add(childString);
       if (child.getShortChildList().size() > 0 && flag) {
         childString = currentString + "<img alt='' src='images/tree/tree2.gif' border='0' align='absmiddle' height=\"18\" width=\"19\"/>&nbsp;";
-        buildImages(db, child.getShortChildList(), all, images, childString, openUsers);
+        buildImages(
+            db, child.getShortChildList(), all, images, childString, openUsers);
       }
     }
   }
 
 
   /**
-   *  Gets the openUsers attribute of the UsersList object
+   * Gets the openUsers attribute of the UsersList object
    *
-   * @param  context    Description of the Parameter
-   * @param  openUsers  Description of the Parameter
+   * @param context   Description of the Parameter
+   * @param openUsers Description of the Parameter
    */
   private void getOpenUsers(ActionContext context, ArrayList openUsers) {
     String hideUser = context.getRequest().getParameter("hideUser");
@@ -159,11 +162,11 @@ public final class UsersList extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  list  Description of the Parameter
-   * @param  str   Description of the Parameter
-   * @return       Description of the Return Value
+   * @param list Description of the Parameter
+   * @param str  Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean checkUser(ArrayList list, String str) {
     Iterator iterator = list.iterator();

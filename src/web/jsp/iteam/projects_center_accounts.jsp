@@ -60,10 +60,12 @@
   </tr>
 </table>
 <br>
-<zeroio:permission name="project-accounts-manage">
-  <img border="0" src="images/icons/stock_link_account-16.gif" align="absmiddle">
-  <a href="javascript:popAccountsListSingle('changeaccount1','changeaccount2', 'showMyCompany=false&filters=all|my');"><dhv:label name="project.linkAnAccount">Link an Account</dhv:label></a><br>
-</zeroio:permission>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-accounts-manage">
+    <img border="0" src="images/icons/stock_link_account-16.gif" align="absmiddle">
+    <a href="javascript:popAccountsListSingle('changeaccount1','changeaccount2', 'showMyCompany=false&filters=all|my');"><dhv:label name="project.linkAnAccount">Link an Account</dhv:label></a><br>
+  </zeroio:permission>
+</dhv:evaluate>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="pagedListView" method="post" action="ProjectManagementAccounts.do?command=List&pid=<%= Project.getId() %>">
@@ -99,7 +101,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisOrganization.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisOrganization.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>

@@ -136,7 +136,7 @@
           <td valign="center">
 	<% if (opportunityHeader.getAccountLink() == -1 || ContactList.size() == 0) {
   %>
-            <%= ContactList.getEmptyHtmlSelect("contactId") %>
+            <%= ContactList.getEmptyHtmlSelect(systemStatus, "contactId") %>
 	<%} else {%>
             <%= ContactList.getHtmlSelect("contactId", CallDetails.getContactId() ) %>
 	<%}%>

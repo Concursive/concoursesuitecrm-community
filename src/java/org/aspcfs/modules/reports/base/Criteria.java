@@ -15,18 +15,21 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Represents a set of report parameters. Each parameter has specific display
- *  capabilities and requirements according to a JasperReport.
+ * Represents a set of report parameters. Each parameter has specific display
+ * capabilities and requirements according to a JasperReport.
  *
- *@author     matt rajkowski
- *@created    September 15, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 15, 2003
  */
 public class Criteria extends GenericBean {
   //properties
@@ -46,16 +49,17 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Constructor for the Criteria object
+   * Constructor for the Criteria object
    */
-  public Criteria() { }
+  public Criteria() {
+  }
 
 
   /**
-   *  Constructor for the Criteria object
+   * Constructor for the Criteria object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Criteria(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -63,11 +67,11 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Constructor for the Criteria object
+   * Constructor for the Criteria object
    *
-   *@param  db                Description of the Parameter
-   *@param  criteriaId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param criteriaId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Criteria(Connection db, int criteriaId) throws SQLException {
     queryRecord(db, criteriaId);
@@ -75,11 +79,11 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Populates the report criteria information for the specified criteria id
+   * Populates the report criteria information for the specified criteria id
    *
-   *@param  db                Description of the Parameter
-   *@param  criteriaId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param criteriaId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int criteriaId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -100,10 +104,10 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Loads additional information for this criteria item when needed.
+   * Loads additional information for this criteria item when needed.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     parameters = new ParameterList();
@@ -113,10 +117,10 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Populates this object from a given result set
+   * Populates this object from a given result set
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //report_criteria table
@@ -133,9 +137,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Criteria object
+   * Sets the id attribute of the Criteria object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -143,9 +147,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Criteria object
+   * Sets the id attribute of the Criteria object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -153,9 +157,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the reportId attribute of the Criteria object
+   * Sets the reportId attribute of the Criteria object
    *
-   *@param  tmp  The new reportId value
+   * @param tmp The new reportId value
    */
   public void setReportId(int tmp) {
     this.reportId = tmp;
@@ -163,9 +167,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the reportId attribute of the Criteria object
+   * Sets the reportId attribute of the Criteria object
    *
-   *@param  tmp  The new reportId value
+   * @param tmp The new reportId value
    */
   public void setReportId(String tmp) {
     this.reportId = Integer.parseInt(tmp);
@@ -173,9 +177,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Criteria object
+   * Sets the owner attribute of the Criteria object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -183,9 +187,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Criteria object
+   * Sets the owner attribute of the Criteria object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -193,9 +197,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the subject attribute of the Criteria object
+   * Sets the subject attribute of the Criteria object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -203,9 +207,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the parameters attribute of the Criteria object
+   * Sets the parameters attribute of the Criteria object
    *
-   *@param  tmp  The new parameters value
+   * @param tmp The new parameters value
    */
   public void setParameters(ParameterList tmp) {
     this.parameters = tmp;
@@ -213,9 +217,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Criteria object
+   * Sets the entered attribute of the Criteria object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -223,9 +227,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Criteria object
+   * Sets the entered attribute of the Criteria object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -233,9 +237,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Criteria object
+   * Sets the enteredBy attribute of the Criteria object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -243,9 +247,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Criteria object
+   * Sets the enteredBy attribute of the Criteria object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -253,9 +257,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Criteria object
+   * Sets the modified attribute of the Criteria object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -263,9 +267,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Criteria object
+   * Sets the modified attribute of the Criteria object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -273,9 +277,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Criteria object
+   * Sets the modifiedBy attribute of the Criteria object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -283,9 +287,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Criteria object
+   * Sets the modifiedBy attribute of the Criteria object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -293,9 +297,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Criteria object
+   * Sets the enabled attribute of the Criteria object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -303,9 +307,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Criteria object
+   * Sets the enabled attribute of the Criteria object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -313,9 +317,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the save attribute of the Criteria object
+   * Sets the save attribute of the Criteria object
    *
-   *@param  tmp  The new save value
+   * @param tmp The new save value
    */
   public void setSave(boolean tmp) {
     this.save = tmp;
@@ -323,9 +327,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the save attribute of the Criteria object
+   * Sets the save attribute of the Criteria object
    *
-   *@param  tmp  The new save value
+   * @param tmp The new save value
    */
   public void setSave(String tmp) {
     this.save = DatabaseUtils.parseBoolean(tmp);
@@ -333,9 +337,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the overwrite attribute of the Criteria object
+   * Sets the overwrite attribute of the Criteria object
    *
-   *@param  tmp  The new overwrite value
+   * @param tmp The new overwrite value
    */
   public void setOverwrite(boolean tmp) {
     this.overwrite = tmp;
@@ -343,9 +347,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Sets the overwrite attribute of the Criteria object
+   * Sets the overwrite attribute of the Criteria object
    *
-   *@param  tmp  The new overwrite value
+   * @param tmp The new overwrite value
    */
   public void setOverwrite(String tmp) {
     this.overwrite = DatabaseUtils.parseBoolean(tmp);
@@ -353,9 +357,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Criteria object
+   * Gets the id attribute of the Criteria object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -363,9 +367,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the reportId attribute of the Criteria object
+   * Gets the reportId attribute of the Criteria object
    *
-   *@return    The reportId value
+   * @return The reportId value
    */
   public int getReportId() {
     return reportId;
@@ -373,9 +377,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the Criteria object
+   * Gets the owner attribute of the Criteria object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -383,9 +387,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the subject attribute of the Criteria object
+   * Gets the subject attribute of the Criteria object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -393,9 +397,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the parameters attribute of the Criteria object
+   * Gets the parameters attribute of the Criteria object
    *
-   *@return    The parameters value
+   * @return The parameters value
    */
   public ParameterList getParameters() {
     if (parameters == null) {
@@ -406,9 +410,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Criteria object
+   * Gets the entered attribute of the Criteria object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -416,9 +420,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Criteria object
+   * Gets the enteredBy attribute of the Criteria object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -426,9 +430,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Criteria object
+   * Gets the modified attribute of the Criteria object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -436,9 +440,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Criteria object
+   * Gets the modifiedBy attribute of the Criteria object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -446,9 +450,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Criteria object
+   * Gets the enabled attribute of the Criteria object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -456,9 +460,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the save attribute of the Criteria object
+   * Gets the save attribute of the Criteria object
    *
-   *@return    The save value
+   * @return The save value
    */
   public boolean getSave() {
     return save;
@@ -466,9 +470,9 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the overwrite attribute of the Criteria object
+   * Gets the overwrite attribute of the Criteria object
    *
-   *@return    The overwrite value
+   * @return The overwrite value
    */
   public boolean getOverwrite() {
     return overwrite;
@@ -476,13 +480,13 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Saves the criteria to the database, either updating previously saved
-   *  criteria or inserting new criteria depending on the overwrite and save
-   *  properties of this object.
+   * Saves the criteria to the database, either updating previously saved
+   * criteria or inserting new criteria depending on the overwrite and save
+   * properties of this object.
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean save(Connection db) throws SQLException {
     if (overwrite) {
@@ -495,19 +499,23 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Inserts this object into the database as a new record.
+   * Inserts this object into the database as a new record.
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "report_criteria_criteria_id_seq");
       sql.append(
           "INSERT INTO report_criteria " +
           "(report_id, owner, subject, enteredby, modifiedby, ");
+      if (id > -1) {
+        sql.append("criteria_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -516,6 +524,9 @@ public class Criteria extends GenericBean {
       }
       sql.append("enabled) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -530,6 +541,9 @@ public class Criteria extends GenericBean {
       pst.setString(++i, subject);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -539,7 +553,7 @@ public class Criteria extends GenericBean {
       pst.setBoolean(++i, enabled);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "report_criteria_criteria_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "report_criteria_criteria_id_seq", id);
       if (parameters != null) {
         parameters.setCriteriaId(id);
         parameters.insert(db);
@@ -556,11 +570,11 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Updates the database with this object for an existing set of criteria.
+   * Updates the database with this object for an existing set of criteria.
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean update(Connection db) throws SQLException {
     try {

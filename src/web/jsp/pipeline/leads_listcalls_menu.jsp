@@ -23,37 +23,46 @@
   var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, headerId, callId, view) {
+  function displayMenu(loc, id, headerId, callId, view, trashed) {
     thisHeaderId = headerId;
     thisCallId = callId;
     thisView = view;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Update menu for this Contact based on permissions
-  function updateMenu(){
-    if(thisView == 'pending'){
-      showSpan('menuComplete');
-      showSpan('menuCancel');
-      showSpan('menuReschedule');
+  function updateMenu(trashed){
+    if (trashed == 'true'){
       hideSpan('menuModify');
-    }else{
       hideSpan('menuComplete');
       hideSpan('menuCancel');
+      hideSpan('menuForward');
       hideSpan('menuReschedule');
-      if(thisView != 'cancel'){
-        showSpan('menuModify');
-      }else{
+    } else {
+      showSpan('menuForward');
+      if(thisView == 'pending'){
+        showSpan('menuComplete');
+        showSpan('menuCancel');
+        showSpan('menuReschedule');
         hideSpan('menuModify');
-       }
+      }else{
+        hideSpan('menuComplete');
+        hideSpan('menuCancel');
+        hideSpan('menuReschedule');
+        if(thisView != 'cancel'){
+          showSpan('menuModify');
+        }else{
+          hideSpan('menuModify');
+         }
+        }
       }
     }
-  
+
   //Menu link functions
   function details() {
     var url = 'LeadsCalls.do?command=Details&headerId=' + thisHeaderId + '&id=' + thisCallId + '<%= addLinkParams(request, "viewSource") %>';
@@ -150,7 +159,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="forward()">
+      <tr id="menuForward" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="forward()">
         <th>
           <img src="images/icons/stock_forward_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

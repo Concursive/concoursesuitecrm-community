@@ -113,7 +113,7 @@
 <table class="trails" cellspacing="0">
 <tr>
   <td>
-    <a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
+    <a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
     <% if("list".equals(request.getParameter("return"))){ %>
     <a href="ExternalContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
     <% }else{ %>

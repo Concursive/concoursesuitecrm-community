@@ -16,32 +16,37 @@
 package org.aspcfs.modules.base;
 
 import org.aspcfs.utils.StringUtils;
-import java.util.*;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Report is an object that defines the properties of a report. Reports are
- *  built in-memory then can be exported in a number of formats. <p>
+ * Report is an object that defines the properties of a report. Reports are
+ * built in-memory then can be exported in a number of formats. <p>
+ * <p/>
+ * Usage: Create a report object, add column names, then add rows. Rows are
+ * populated with cells. <p>
+ * <p/>
+ * Features: <br>
+ * - Can output data in HTML or delimited (default TABs) as a String <br>
+ * - Export data to a file <br>
+ * - Data can be sorted by a column after rows are added <p>
+ * <p/>
+ * To do: <br>
+ * - Add "Group By" <br>
+ * - Add "Subtotal" -- used with Group By <br>
+ * - Grand Total (requires a running total to be kept) <p>
+ * <p/>
+ * Thoughts: <br>
+ * - XML output
  *
- *  Usage: Create a report object, add column names, then add rows. Rows are
- *  populated with cells. <p>
- *
- *  Features: <br>
- *  - Can output data in HTML or delimited (default TABs) as a String <br>
- *  - Export data to a file <br>
- *  - Data can be sorted by a column after rows are added <p>
- *
- *  To do: <br>
- *  - Add "Group By" <br>
- *  - Add "Subtotal" -- used with Group By <br>
- *  - Grand Total (requires a running total to be kept) <p>
- *
- *  Thoughts: <br>
- *  - XML output
- *
- *@author     mrajkowski
- *@created    June 1, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created June 1, 2001
  */
 public class Report {
 
@@ -71,19 +76,20 @@ public class Report {
 
 
   /**
-   *  Constructor for the Report object
+   * Constructor for the Report object
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public Report() { }
+  public Report() {
+  }
 
 
   //Set
   /**
-   *  Sets the Id attribute of the Report object
+   * Sets the Id attribute of the Report object
    *
-   *@param  tmp  The new Id value
-   *@since       1.0
+   * @param tmp The new Id value
+   * @since 1.0
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -91,10 +97,10 @@ public class Report {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Report object
+   * Sets the EnteredBy attribute of the Report object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.0
+   * @param tmp The new EnteredBy value
+   * @since 1.0
    */
   public void setEnteredBy(int tmp) {
     this.enteredById = tmp;
@@ -102,10 +108,10 @@ public class Report {
 
 
   /**
-   *  Sets the Header attribute of the Report object
+   * Sets the Header attribute of the Report object
    *
-   *@param  tmp  The new Header value
-   *@since       1.0
+   * @param tmp The new Header value
+   * @since 1.0
    */
   public void setHeader(String tmp) {
     this.header = tmp;
@@ -113,10 +119,10 @@ public class Report {
 
 
   /**
-   *  Sets the Footer attribute of the Report object
+   * Sets the Footer attribute of the Report object
    *
-   *@param  tmp  The new Footer value
-   *@since       1.0
+   * @param tmp The new Footer value
+   * @since 1.0
    */
   public void setFooter(String tmp) {
     this.footer = tmp;
@@ -124,10 +130,10 @@ public class Report {
 
 
   /**
-   *  Sets the Subject attribute of the Report object
+   * Sets the Subject attribute of the Report object
    *
-   *@param  tmp  The new Subject value
-   *@since       1.0
+   * @param tmp The new Subject value
+   * @since 1.0
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -135,10 +141,10 @@ public class Report {
 
 
   /**
-   *  Sets the Category attribute of the Report object
+   * Sets the Category attribute of the Report object
    *
-   *@param  tmp  The new Category value
-   *@since       1.0
+   * @param tmp The new Category value
+   * @since 1.0
    */
   public void setCategory(String tmp) {
     this.category = tmp;
@@ -146,11 +152,11 @@ public class Report {
 
 
   /**
-   *  Defines a character or string used to delimit the fields on output,
-   *  Defaults to "TAB"
+   * Defines a character or string used to delimit the fields on output,
+   * Defaults to "TAB"
    *
-   *@param  tmp  The new DelimitedCharacter value
-   *@since       1.1
+   * @param tmp The new DelimitedCharacter value
+   * @since 1.1
    */
   public void setDelimitedCharacter(String tmp) {
     this.delimitedCharacter = tmp;
@@ -158,10 +164,10 @@ public class Report {
 
 
   /**
-   *  Defines the HTML table border size, or default is used
+   * Defines the HTML table border size, or default is used
    *
-   *@param  tmp  The new BorderSize value
-   *@since       1.1
+   * @param tmp The new BorderSize value
+   * @since 1.1
    */
   public void setBorderSize(int tmp) {
     borderSize = tmp;
@@ -169,11 +175,11 @@ public class Report {
 
 
   /**
-   *  If you want to see the column headers when there are no records, set to
-   *  True; default is False
+   * If you want to see the column headers when there are no records, set to
+   * True; default is False
    *
-   *@param  tmp  The new ShowColumnHeaderWhenNoRecords value
-   *@since       1.1
+   * @param tmp The new ShowColumnHeaderWhenNoRecords value
+   * @since 1.1
    */
   public void setShowColumnHeaderWhenNoRecords(boolean tmp) {
     this.showColumnHeaderWhenNoRecords = tmp;
@@ -181,10 +187,10 @@ public class Report {
 
 
   /**
-   *  To disable the column headers from showing, set to False
+   * To disable the column headers from showing, set to False
    *
-   *@param  tmp  The new ShowColumnHeaders value
-   *@since       1.1
+   * @param tmp The new ShowColumnHeaders value
+   * @since 1.1
    */
   public void setShowColumnHeaders(boolean tmp) {
     this.showColumnHeaders = tmp;
@@ -193,10 +199,10 @@ public class Report {
 
   //Get
   /**
-   *  Gets the Id attribute of the Report object
+   * Gets the Id attribute of the Report object
    *
-   *@return    The Id value
-   *@since     1.0
+   * @return The Id value
+   * @since 1.0
    */
   public int getId() {
     return id;
@@ -204,10 +210,10 @@ public class Report {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Report object
+   * Gets the EnteredBy attribute of the Report object
    *
-   *@return    The EnteredBy value
-   *@since     1.0
+   * @return The EnteredBy value
+   * @since 1.0
    */
   public int getEnteredBy() {
     return enteredById;
@@ -215,10 +221,10 @@ public class Report {
 
 
   /**
-   *  Gets the Header attribute of the Report object
+   * Gets the Header attribute of the Report object
    *
-   *@return    The Header value
-   *@since     1.0
+   * @return The Header value
+   * @since 1.0
    */
   public String getHeader() {
     return header;
@@ -226,10 +232,10 @@ public class Report {
 
 
   /**
-   *  Gets the Footer attribute of the Report object
+   * Gets the Footer attribute of the Report object
    *
-   *@return    The Footer value
-   *@since     1.0
+   * @return The Footer value
+   * @since 1.0
    */
   public String getFooter() {
     return footer;
@@ -237,10 +243,10 @@ public class Report {
 
 
   /**
-   *  Gets the Subject attribute of the Report object
+   * Gets the Subject attribute of the Report object
    *
-   *@return    The Subject value
-   *@since     1.0
+   * @return The Subject value
+   * @since 1.0
    */
   public String getSubject() {
     return subject;
@@ -248,10 +254,10 @@ public class Report {
 
 
   /**
-   *  Gets the Category attribute of the Report object
+   * Gets the Category attribute of the Report object
    *
-   *@return    The Category value
-   *@since     1.0
+   * @return The Category value
+   * @since 1.0
    */
   public String getCategory() {
     return category;
@@ -259,10 +265,10 @@ public class Report {
 
 
   /**
-   *  Gets the RowCount attribute of the Report object
+   * Gets the RowCount attribute of the Report object
    *
-   *@return    The RowCount value
-   *@since     1.0
+   * @return The RowCount value
+   * @since 1.0
    */
   public int getRowCount() {
     return rows.size();
@@ -270,10 +276,10 @@ public class Report {
 
 
   /**
-   *  Gets the ColumnCount attribute of the Report object
+   * Gets the ColumnCount attribute of the Report object
    *
-   *@return    The ColumnCount value
-   *@since     1.0
+   * @return The ColumnCount value
+   * @since 1.0
    */
   public int getColumnCount() {
     return columns.size();
@@ -281,10 +287,10 @@ public class Report {
 
 
   /**
-   *  Returns report in an HTML format as a string
+   * Returns report in an HTML format as a string
    *
-   *@return    The Html value
-   *@since     1.0
+   * @return The Html value
+   * @since 1.0
    */
   public String getHtml() {
     Iterator i = null;
@@ -293,7 +299,8 @@ public class Report {
 
     //Draw header
     if (header != null) {
-      html.append("<tr><td colspan='" + columns.size() + "'>" + header + "</td></tr>");
+      html.append(
+          "<tr><td colspan='" + columns.size() + "'>" + header + "</td></tr>");
     }
 
     //Draw the columns
@@ -340,7 +347,8 @@ public class Report {
 
     //Draw footer
     if (footer != null) {
-      html.append("<tr><td colspan='" + columns.size() + "'>" + footer + "</td></tr>");
+      html.append(
+          "<tr><td colspan='" + columns.size() + "'>" + footer + "</td></tr>");
     }
 
     html.append("</table>");
@@ -349,10 +357,10 @@ public class Report {
 
 
   /**
-   *  Returns report in a delimited format as a string
+   * Returns report in a delimited format as a string
    *
-   *@return    The Delimited value
-   *@since     1.0
+   * @return The Delimited value
+   * @since 1.0
    */
   public String getDelimited() {
     StringBuffer ascii = new StringBuffer();
@@ -415,10 +423,10 @@ public class Report {
 
 
   /**
-   *  Adds a Column to the report
+   * Adds a Column to the report
    *
-   *@param  tmp  The feature to be added to the Column attribute
-   *@since       1.0
+   * @param tmp The feature to be added to the Column attribute
+   * @since 1.0
    */
   public void addColumn(String tmp) {
     ReportColumn rc = new ReportColumn(tmp);
@@ -427,12 +435,12 @@ public class Report {
 
 
   /**
-   *  Adds a Column to the report, a second String can be used to specify the
-   *  HTML column header with tags
+   * Adds a Column to the report, a second String can be used to specify the
+   * HTML column header with tags
    *
-   *@param  tmp   The feature to be added to the Column attribute
-   *@param  tmp2  The feature to be added to the Column attribute
-   *@since        1.0
+   * @param tmp  The feature to be added to the Column attribute
+   * @param tmp2 The feature to be added to the Column attribute
+   * @since 1.0
    */
   public void addColumn(String tmp, String tmp2) {
     ReportColumn rc = new ReportColumn(tmp);
@@ -442,10 +450,10 @@ public class Report {
 
 
   /**
-   *  Adds a ReportRow to the report
+   * Adds a ReportRow to the report
    *
-   *@param  tmp  The feature to be added to the Row attribute
-   *@since       1.0
+   * @param tmp The feature to be added to the Row attribute
+   * @since 1.0
    */
   public void addRow(ReportRow tmp) {
     this.rows.addElement(tmp);
@@ -453,11 +461,11 @@ public class Report {
 
 
   /**
-   *  Sort the report in-memory by the specified column, by default the column
-   *  is sorted by the character string
+   * Sort the report in-memory by the specified column, by default the column
+   * is sorted by the character string
    *
-   *@param  tmp  Description of Parameter
-   *@since       1.0
+   * @param tmp Description of Parameter
+   * @since 1.0
    */
   public void sortByColumn(int tmp) {
     this.sortByColumn(tmp, "string");
@@ -465,12 +473,12 @@ public class Report {
 
 
   /**
-   *  Sort the report in-memory by the specified column and column type; column
-   *  type can be "date", "int" or by default "string"
+   * Sort the report in-memory by the specified column and column type; column
+   * type can be "date", "int" or by default "string"
    *
-   *@param  tmp   Description of Parameter
-   *@param  type  Description of Parameter
-   *@since        1.0
+   * @param tmp  Description of Parameter
+   * @param type Description of Parameter
+   * @since 1.0
    */
   public void sortByColumn(int tmp, String type) {
     this.compareColumn = tmp;
@@ -492,12 +500,12 @@ public class Report {
 
 
   /**
-   *  Exports report to a specified HTML file
+   * Exports report to a specified HTML file
    *
-   *@param  filename                 Description of Parameter
-   *@return                          Description of the Returned Value
-   *@exception  java.io.IOException  Description of Exception
-   *@since                           1.0
+   * @param filename Description of Parameter
+   * @return Description of the Returned Value
+   * @throws java.io.IOException Description of Exception
+   * @since 1.0
    */
   public int saveHtml(String filename) throws java.io.IOException {
     File outputFile = new File(filename);
@@ -509,12 +517,12 @@ public class Report {
 
 
   /**
-   *  Exports report to a specified text file
+   * Exports report to a specified text file
    *
-   *@param  filename                 Description of Parameter
-   *@return                          Description of the Returned Value
-   *@exception  java.io.IOException  Description of Exception
-   *@since                           1.0
+   * @param filename Description of Parameter
+   * @return Description of the Returned Value
+   * @throws java.io.IOException Description of Exception
+   * @since 1.0
    */
   public int saveDelimited(String filename) throws java.io.IOException {
     File outputFile = new File(filename);
@@ -526,11 +534,11 @@ public class Report {
 
 
   /**
-   *  If the string is blank, send an html space
+   * If the string is blank, send an html space
    *
-   *@param  tmp  Description of Parameter
-   *@return      Description of the Returned Value
-   *@since       1.0
+   * @param tmp Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   private String check(String tmp) {
     if (tmp == null || tmp.trim().equals("")) {
@@ -542,10 +550,10 @@ public class Report {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   private String checkNull(String tmp) {
     if (tmp == null) {
@@ -557,56 +565,56 @@ public class Report {
 
 
   /**
-   *  Defines how report objects are compared (String)
+   * Defines how report objects are compared (String)
    *
-   *@author     mrajkowski
-   *@created    June 1, 2001
-   *@version    $Id$
+   * @author mrajkowski
+   * @version $Id$
+   * @created June 1, 2001
    */
   class cellComparatorString implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of Parameter
-     *@param  right  Description of Parameter
-     *@return        Description of the Returned Value
-     *@since
+     * @param left  Description of Parameter
+     * @param right Description of Parameter
+     * @return Description of the Returned Value
      */
     public int compare(Object left, Object right) {
       return (
-          ((ReportRow) left).getCell(compareColumn).compareTo(((ReportRow) right).getCell(compareColumn)));
+          ((ReportRow) left).getCell(compareColumn).compareTo(
+              ((ReportRow) right).getCell(compareColumn)));
     }
   }
 
 
   /**
-   *  Defines how report objects are compared (int)
+   * Defines how report objects are compared (int)
    *
-   *@author     mrajkowski
-   *@created    June 1, 2001
-   *@version    $Id$
+   * @author mrajkowski
+   * @version $Id$
+   * @created June 1, 2001
    */
   class cellComparatorInt implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of Parameter
-     *@param  right  Description of Parameter
-     *@return        Description of the Returned Value
-     *@since
+     * @param left  Description of Parameter
+     * @param right Description of Parameter
+     * @return Description of the Returned Value
      */
     public int compare(Object left, Object right) {
       return (
-          ((ReportRow) left).getCell(compareColumn).compareIntTo(((ReportRow) right).getCell(compareColumn)));
+          ((ReportRow) left).getCell(compareColumn).compareIntTo(
+              ((ReportRow) right).getCell(compareColumn)));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  value  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param value Description of the Parameter
+   * @return Description of the Return Value
    */
   private static String prepareToWrite(String value) {
     StringBuffer ascii = new StringBuffer();
@@ -641,36 +649,37 @@ public class Report {
 
 
   /**
-   *  enclose the value in quotes and escape the quote and comma characters that
-   *  are inside.
+   * enclose the value in quotes and escape the quote and comma characters that
+   * are inside.
    *
-   *@param  value  needs to be escaped and quoted
-   *@return        the value, escaped and quoted.
+   * @param value needs to be escaped and quoted
+   * @return the value, escaped and quoted.
    */
   private static String escapeAndQuote(String value) {
     String s = StringUtils.replace(value, "\"", "\"\"");
-    return (new StringBuffer(2 + s.length())).append("\"").append(s).append("\"").toString();
+    return (new StringBuffer(2 + s.length())).append("\"").append(s).append(
+        "\"").toString();
   }
 
 
   /**
-   *  Defines how report objects are compared (Date)
+   * Defines how report objects are compared (Date)
    *
-   *@author     mrajkowski
-   *@created    June 1, 2001
-   *@version    $Id$
+   * @author mrajkowski
+   * @version $Id$
+   * @created June 1, 2001
    */
   class cellComparatorDate implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of Parameter
-     *@param  right  Description of Parameter
-     *@return        Description of the Returned Value
-     *@since
+     * @param left  Description of Parameter
+     * @param right Description of Parameter
+     * @return Description of the Returned Value
      */
     public int compare(Object left, Object right) {
-      return (((ReportRow) left).getCell(compareColumn).compareDateTo(((ReportRow) right).getCell(compareColumn)));
+      return (((ReportRow) left).getCell(compareColumn).compareDateTo(
+          ((ReportRow) right).getCell(compareColumn)));
     }
   }
 }

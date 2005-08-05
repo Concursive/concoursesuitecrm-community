@@ -1,20 +1,23 @@
 package org.aspcfs.ant.filters;
 
+import org.apache.tools.ant.filters.BaseFilterReader;
+import org.apache.tools.ant.filters.BaseParamFilterReader;
+import org.apache.tools.ant.filters.ChainableReader;
+import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.util.LineTokenizer;
+
 import java.io.IOException;
 import java.io.Reader;
-import org.apache.tools.ant.util.LineTokenizer;
-import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.filters.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 29, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 29, 2004
  */
 public final class StripSection extends BaseParamFilterReader
-     implements ChainableReader {
+    implements ChainableReader {
   private final static String BEGIN_KEY = "beginBlock";
   private final static String END_KEY = "endBlock";
   private String beginBlock = null;
@@ -26,9 +29,9 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Constructor for "dummy" instances.
+   * Constructor for "dummy" instances.
    *
-   *@see    BaseFilterReader#BaseFilterReader()
+   * @see BaseFilterReader#BaseFilterReader()
    */
   public StripSection() {
     super();
@@ -36,10 +39,10 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Creates a new filtered reader.
+   * Creates a new filtered reader.
    *
-   *@param  in  A Reader object providing the underlying stream. Must not be
-   *      <code>null</code>.
+   * @param in A Reader object providing the underlying stream. Must not be
+   *           <code>null</code>.
    */
   public StripSection(final Reader in) {
     super(in);
@@ -49,15 +52,15 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Returns the next character in the filtered stream. If the desired number
-   *  of lines have already been read, the resulting stream is effectively at an
-   *  end. Otherwise, the next character from the underlying stream is read and
-   *  returned.
+   * Returns the next character in the filtered stream. If the desired number
+   * of lines have already been read, the resulting stream is effectively at an
+   * end. Otherwise, the next character from the underlying stream is read and
+   * returned.
    *
-   *@return                  the next character in the resulting stream, or -1
-   *      if the end of the resulting stream has been reached
-   *@exception  IOException  if the underlying stream throws an IOException
-   *      during reading
+   * @return the next character in the resulting stream, or -1
+   *         if the end of the resulting stream has been reached
+   * @throws IOException if the underlying stream throws an IOException
+   *                     during reading
    */
   public final int read() throws IOException {
     if (!getInitialized()) {
@@ -84,9 +87,9 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Sets the number of lines to be returned in the filtered stream.
+   * Sets the number of lines to be returned in the filtered stream.
    *
-   *@param  tmp    The new beginBlock value
+   * @param tmp The new beginBlock value
    */
   public final void setBeginBlock(String tmp) {
     beginBlock = tmp;
@@ -94,9 +97,9 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Sets the endBlock attribute of the StripSection object
+   * Sets the endBlock attribute of the StripSection object
    *
-   *@param  tmp  The new endBlock value
+   * @param tmp The new endBlock value
    */
   public final void setEndBlock(String tmp) {
     endBlock = tmp;
@@ -104,10 +107,10 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rdr  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param rdr Description of the Parameter
+   * @return Description of the Return Value
    */
   public final Reader chain(final Reader rdr) {
     StripSection newFilter = new StripSection(rdr);
@@ -119,9 +122,9 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  Scans the parameters list for the "lines" parameter and uses it to set the
-   *  number of lines to be returned in the filtered stream. also scan for skip
-   *  parameter.
+   * Scans the parameters list for the "lines" parameter and uses it to set the
+   * number of lines to be returned in the filtered stream. also scan for skip
+   * parameter.
    */
   private final void initialize() {
     Parameter[] params = getParameters();
@@ -141,10 +144,10 @@ public final class StripSection extends BaseParamFilterReader
 
 
   /**
-   *  implements a head filter on the input stream
+   * implements a head filter on the input stream
    *
-   *@param  line  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param line Description of the Parameter
+   * @return Description of the Return Value
    */
   private String stripSection(String line) {
     if (line.indexOf(beginBlock) > -1) {

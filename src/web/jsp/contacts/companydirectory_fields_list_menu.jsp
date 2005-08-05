@@ -44,7 +44,7 @@
   }
   
   function deleteField() {
-    window.location.href = 'ExternalContacts.do?command=DeleteFields&contactId=' + thisContactId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    confirmDelete('ExternalContacts.do?command=DeleteFields&contactId=' + thisContactId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
   
 </script>

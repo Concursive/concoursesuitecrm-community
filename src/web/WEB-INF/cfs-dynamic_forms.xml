@@ -3,47 +3,47 @@
   <form name="survey" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
         scripts="survey.js^popURL.js"> 
-    <button text="Save" link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true"/>
+    <button text="${button.save}" link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true"/>
     <tab id="0" name="Page 1" defaultField="name"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;${campaign.communicationsManager}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; ${campaign.surveyDetails}">
       <buttonGroup> <!-- TODO: add header & footer attribs !-->
-        <button type="2" name="prev" display="&lt; Back" enabled="no"/>
-        <button type="2" name="Next" display="Next &gt;" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1';"/>
-        <button type="2" name="save" display="Save" onclick="javascript:this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true'"/>
-        <button type="2" name="cancel" display="Cancel" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=ViewReturn&amp;auto-populate=true'"/>
+        <button type="2" name="prev" display="${button.backL}" enabled="no"/>
+        <button type="2" name="Next" display="${button.nextR}" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1';"/>
+        <button type="2" name="save" display="${button.save}" onclick="javascript:this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true'"/>
+        <button type="2" name="cancel" display="${button.cancel}" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=ViewReturn&amp;auto-populate=true'"/>
       </buttonGroup>
-      <group name="Step 1: Survey Details">
+      <group name="${setup.stepOne.colon} ${campaign.surveyDetails}">
       <row class="containerBody">
         <column valign="top" class="formLabel">
-          <field display="Name" type="label" isStatic="yes"/>
+          <field display="${dynamicForm.name}" type="label" isStatic="yes"/>
         </column>
         <column valign="top">
-          <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="true"/>
+          <field name="name" display="${dynamicForm.name}" type="text" parameters="size=50^maxlength=80" required="true"/>
         </column>
       </row>
       <row class="containerBody">
        <column valign="top" class="formLabel">
-          <field display="Description" type="label" isStatic="yes"/>
+          <field display="${dynamicForm.description}" type="label" isStatic="yes"/>
        </column>
         <column valign="top">
-          <field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
+          <field name="description" display="${dynamicForm.description}" type="text" parameters="size=50^maxlength=80"/>
       </column>
       </row>
       <row class="containerBody">
         <column valign="top" class="formLabel">
-          <field display="Introduction text" type="label" isStatic="yes"/>
+          <field display="${dynamicForm.survey.introductionText}" type="label" isStatic="yes"/>
         </column>
         <column valign="top">
-          <field display="This is the text the user sees first when they click on the link to take a survey://lt;br//gt;" type="label" isStatic="yes"/>
-          <field name="intro" display="Introduction text" type="htmlarea" parameters="rows=6^columns=40"/>
+          <field display="${dynamicForm.survey.introductionTextDisplay}" type="label" isStatic="yes"/>
+          <field name="intro" display="${dynamicForm.survey.introductionText}" type="htmlarea" parameters="rows=6^columns=40"/>
         </column>
       </row>
       <row class="containerBody">
        <column valign="top" class="formLabel">
-          <field display="Thank You Text" type="label" width="80" isStatic="yes"/>
+          <field display="${dynamicForm.survey.thankYouText}" type="label" width="80" isStatic="yes"/>
        </column>
         <column valign="top">
-          <field display="This is the text the user sees after they have submitted a survey://lt;br//gt;" type="label" isStatic="yes"/>
+          <field display="${dynamicForm.survey.thankYouTextDisplay}" type="label" isStatic="yes"/>
           <field name="outro" type="htmlarea" parameters="rows=6^columns=40"/>
       </column>
       </row>
@@ -57,40 +57,40 @@
     </tab>
     
     <tab id="1" name="Page 2"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; Survey Questions">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;${campaign.communicationsManager}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;${campaign.surveyDetails}&lt;/a&gt; &gt; ${campaign.surveyQuestions}">
       <buttonGroup>
-        <button type="2" name="prev" display="&lt; Back" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true'"/>
-        <button type="2" display="Next &gt;" enabled="no"/>
-        <button type="2" display="Done" onclick="this.form.action='CampaignManagerSurvey.do?command=Details&amp;auto-populate=true'"/>
+        <button type="2" name="prev" display="${button.backL}" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true'"/>
+        <button type="2" display="${button.nextR}" enabled="no"/>
+        <button type="2" display="${button.done}" onclick="this.form.action='CampaignManagerSurvey.do?command=Details&amp;auto-populate=true'"/>
       </buttonGroup>
       <group name="">
         <row class="containerBody">
           <column valign="top" align="left" nowrap="true">
-            <field display="Add a Question" type="link" jsEvent="javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=2');"/>
+            <field display="${dynamicForm.survey.addAQuestion}" type="link" jsEvent="javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=2');"/>
           </column>
        </row>
       </group>
-      <group name="Step 2: Survey Questions">
+      <group name="${setup.step2.colon} ${campaign.surveyQuestions}">
         <row elementClass="title">
            <column valign="top"  align="center" width="50" nowrap="true">
-              <field display="Action" type="label" isStatic="yes"/>
+              <field display="${dynamicForm.survey.action}" type="label" isStatic="yes"/>
            </column>
            <column valign="top"  align="left" width="100%">
-              <field display="Description" type="label" isStatic="yes"/>
+              <field display="${dynamicForm.description}" type="label" isStatic="yes"/>
            </column>
            <column valign="top"  align="left" nowrap="true">
-              <field display="Type" type="label" isStatic="yes"/>
+              <field display="${dynamicForm.type}" type="label" isStatic="yes"/>
            </column>
         </row>
         <row multiple="true" listName="questions" listId="id">
           <column align="center" valign="top" nowrap="true">
-            <field display="Edit" type="link" jsEvent="javascript:editQuestion($id);"/>
+            <field display="${button.edit}" type="link" jsEvent="javascript:editQuestion($id);"/>
             <field display="|" type="label" isStatic="yes"/>
-            <field display="Del" type="link" jsEvent="javascript:delQuestion($id);"/>
+            <field display="${button.del}" type="link" jsEvent="javascript:delQuestion($id);"/>
             <field display="|" type="label" isStatic="yes"/>
-            <field display="Up" type="link" jsEvent="javascript:moveQuestion($id,'U');"/>
+            <field display="${global.button.Up}" type="link" jsEvent="javascript:moveQuestion($id,'U');"/>
             <field display="|" type="label" isStatic="yes"/>
-            <field display="Down" type="link" jsEvent="javascript:moveQuestion($id,'D');"/>
+            <field display="${global.button.Down}" type="link" jsEvent="javascript:moveQuestion($id,'D');"/>
           </column>
           <column>
             <field name="description" type="displaytext"/>
@@ -113,37 +113,37 @@
       </group>
     </tab>
     <tab id="2" name="Page 2" defaultField="questionText" onLoad="javascript:processButton('survey',document.forms['survey'].type.value);"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1');&quot;&gt;Survey Questions&lt;/a&gt; &gt; Survey Question">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;${campaign.communicationsManager}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;${campaign.surveyDetails}&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1');&quot;&gt; ${campaign.surveyQuestions&lt;/a&gt; &gt; ${campaign.surveyQuestion}">
       <buttonGroup>
-        <button type="2" name="saveadd" display="Save &amp; Add" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=2'"/>
-        <button type="2" name="save" display="Save" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1'"/>
-        <button type="2" name="cancel" display="Cancel" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1';"/>
+        <button type="2" name="saveadd" display="${button.saveAndAdd}" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=2'"/>
+        <button type="2" name="save" display="${button.save}" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1'"/>
+        <button type="2" name="cancel" display="${button.cancel}" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1';"/>
       </buttonGroup>
-      <group name="Survey Question">
+      <group name="${campaign.surveyQuestion}">
         <row class="containerBody">
           <column class="formLabel">
-            <field display="Question" type="label" isStatic="true"/>
+            <field display="${dynamicForm.question}" type="label" isStatic="true"/>
           </column>
           <column>
-            <field name="questionText" parameters="size=50^maxlength=250" display="Question" type="text" required="true" listName="questions" listItemName="surveyQuestion"/>
+            <field name="questionText" parameters="size=50^maxlength=250" display="${dynamicForm.question}" type="text" required="true" listName="questions" listItemName="surveyQuestion"/>
         </column>
       </row>
       <row class="containerBody">
           <column class="formLabel">
-            <field display="Question Type" type="label" isStatic="yes"/>
+            <field display="${dynamicForm.survey.questionType}" type="label" isStatic="yes"/>
           </column>
           <column>
-            <field name="type" display="Type" type="select" lookupList="lookup_survey_types" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.value);" listName="questions" listItemName="surveyQuestion"/>
+            <field name="type" display="${dynamicForm.type}" type="select" lookupList="lookup_survey_types" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.value);" listName="questions" listItemName="surveyQuestion"/>
             <field display=" " type="label" isStatic="yes"/>
-            <field name="itemsButton" display="Edit Items" type="button" jsEvent="javascript:popItems(document.forms['survey'].questionId.value,document.forms['survey'].items.value);" enabled="no" isStatic="yes"/>
+            <field name="itemsButton" display="${dynamicForm.survey.editItems}" type="button" jsEvent="javascript:popItems(document.forms['survey'].questionId.value,document.forms['survey'].items.value);" enabled="no" isStatic="yes"/>
        </column>
       </row>
       <row class="containerBody">
           <column class="formLabel">
-            <field display="Required" type="label" />
+            <field display="${dynamicForm.required}" type="label" />
           </column>
           <column>
-            <field name="required" display="Required" type="checkbox"  listName="questions" listItemName="surveyQuestion"/>
+            <field name="required" display="${dynamicForm.required}" type="checkbox"  listName="questions" listItemName="surveyQuestion"/>
         </column>
       </row>
       <row type="hidden">
@@ -165,41 +165,41 @@
   <!-- View Survey Details -->
   <form name="surveydetails" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
-        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details">
-    <button text="Modify" link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true"/>
-    <button text="Delete Survey" link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true"/>
-    <button text="Preview" link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true"/>
+        returnLinkText="${campaign.communicationsManager} &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; ${campaign.surveyDetails}">
+    <button text="${button.modify}" link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true"/>
+    <button text="${campaign.deleteSurvey}" link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true"/>
+    <button text="${button.preview}" link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true"/>
     <tab name="Page 1" id="0">
-      <group name="Survey Details">
-        <field name="name" display="Name" type="displaytext"/>
-        <field name="description" display="Description" type="displaytext"/>
-        <field name="typeName" display="Type" type="displaytext"/>
-        <field name="itemLength" display="Number of Items" type="displaytext"/>
-        <field name="enteredBy" display="Entered By" type="lookupUserId"/>
-        <field name="enteredDateTimeString" display="Date" type="displaytext"/>
-        <field name="modifiedBy" display="Last Modified By" type="lookupUserId"/>
-        <field name="modifiedDateTimeString" display="Date" type="displaytext"/>
+      <group name="${campaign.surveyDetails}">
+        <field name="name" display="${dynamicForm.name}" type="displaytext"/>
+        <field name="description" display="${dynamicForm.description}" type="displaytext"/>
+        <field name="typeName" display="${dynamicForm.type}" type="displaytext"/>
+        <field name="itemLength" display="${dynamicForm.numberOfItems}" type="displaytext"/>
+        <field name="enteredBy" display="${dynamicForm.enteredBy}" type="lookupUserId"/>
+        <field name="enteredDateTimeString" display="${dynamicForm.date}" type="displaytext"/>
+        <field name="modifiedBy" display="${dynamicForm.lastModifiedBy}" type="lookupUserId"/>
+        <field name="modifiedDateTimeString" display="${dynamicForm.date}" type="displaytext"/>
         <field name="id" display="id" type="hidden"/>
-        <field name="modified" display="modified" type="hidden"/>
+        <field name="modified" display="${dynamicForm.modified}" type="hidden"/>
       </group>
-      <group name="Survey Introduction Text">
+      <group name="${dynamicForm.surveydetails.surveyIntroductionText}">
         <field name="intro" display="" type="displaytext"/>
       </group>
-      <group name="Survey Questions">
-        <field name="questions" display="Question" type="displayRowlist"/>
+      <group name="${campaign.surveyQuestions}">
+        <field name="questions" display="${dynamicForm.question}" type="displayRowlist"/>
       </group>
     </tab>
   </form>
   <!-- See a stand-alone Preview of the survey -->
   <form name="surveypreview" 
-        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details &gt; Preview">
-    <button text="Back to Details" link="CampaignManagerSurvey.do?command=Details&amp;auto-populate=true"/>
+        returnLinkText="${campaign.communicationsManager} &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; ${campaign.surveyDetails} &gt; ${button.preview}">
+    <button text="${dynamicForm.surveypreview.backToDetails}" link="CampaignManagerSurvey.do?command=Details&amp;auto-populate=true"/>
     <tab name="Page 1" id="0">
-      <group name="Survey Preview">
+      <group name="${dynamicForm.surveypreview.surveyPreview}">
         <field name="intro" type="displaytext"/>
         <field name="questions" type="displayrowlist" lengthVar="itemLength"/>
         <field name="id" display="id" type="hidden"/>
-        <field name="modified" display="modified" type="hidden"/>
+        <field name="modified" display="${dynamicForm.modified}" type="hidden"/>
       </group>
     </tab>
   </form>
@@ -207,7 +207,7 @@
   <form name="surveyview" 
         action="ProcessSurvey.do?command=Insert&amp;auto-populate=true">
     <tab name="Page 1" id="0">
-      <group name="Survey Preview">
+      <group name="${dynamicForm.surveypreview.surveyPreview}">
         <field name="intro" type="displaytext"/>
         <field name="questions" type="displayrowlist" lengthVar="itemLength"/>
       </group>

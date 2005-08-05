@@ -15,19 +15,23 @@
  */
 package org.aspcfs.controller.objectHookManager;
 
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
-import java.sql.*;
 import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.DatabaseUtils;
+import org.w3c.dom.Element;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  When a hook is triggered, the ObjectHookManager must check to see if a
- *  correspending mapping to the action that triggered the event occurs.
+ * When a hook is triggered, the ObjectHookManager must check to see if a
+ * correspending mapping to the action that triggered the event occurs.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: ObjectHookAction.java,v 1.2 2002/11/14 13:32:16 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ObjectHookAction.java,v 1.2 2002/11/14 13:32:16 mrajkowski
+ *          Exp $
+ * @created November 11, 2002
  */
 public class ObjectHookAction {
   //Action types
@@ -44,6 +48,8 @@ public class ObjectHookAction {
   private int linkModuleId = -1;
   private int typeId = -1;
   private boolean enabled = true;
+  private int priority = -1;
+  private boolean application = false;
   //References
   private String className = null;
   private String processName = null;
@@ -52,15 +58,16 @@ public class ObjectHookAction {
 
 
   /**
-   *  Constructor for the ObjectHookAction object
+   * Constructor for the ObjectHookAction object
    */
-  public ObjectHookAction() { }
+  public ObjectHookAction() {
+  }
 
 
   /**
-   *  Constructor for the ObjectHookAction object
+   * Constructor for the ObjectHookAction object
    *
-   *@param  actionElement  Description of the Parameter
+   * @param actionElement Description of the Parameter
    */
   public ObjectHookAction(Element actionElement) {
     this.setType((String) actionElement.getAttribute("type"));
@@ -70,10 +77,10 @@ public class ObjectHookAction {
 
 
   /**
-   *  Constructor for the ObjectHookAction object
+   * Constructor for the ObjectHookAction object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ObjectHookAction(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -81,9 +88,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the id attribute of the ObjectHookAction object
+   * Sets the id attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -91,9 +98,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the id attribute of the ObjectHookAction object
+   * Sets the id attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -101,9 +108,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the hookId attribute of the ObjectHookAction object
+   * Sets the hookId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new hookId value
+   * @param tmp The new hookId value
    */
   public void setHookId(int tmp) {
     this.hookId = tmp;
@@ -111,9 +118,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the hookId attribute of the ObjectHookAction object
+   * Sets the hookId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new hookId value
+   * @param tmp The new hookId value
    */
   public void setHookId(String tmp) {
     this.hookId = Integer.parseInt(tmp);
@@ -121,9 +128,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the triggerId attribute of the ObjectHookAction object
+   * Sets the triggerId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new triggerId value
+   * @param tmp The new triggerId value
    */
   public void setTriggerId(int tmp) {
     this.triggerId = tmp;
@@ -131,9 +138,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the triggerId attribute of the ObjectHookAction object
+   * Sets the triggerId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new triggerId value
+   * @param tmp The new triggerId value
    */
   public void setTriggerId(String tmp) {
     this.triggerId = Integer.parseInt(tmp);
@@ -141,9 +148,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the processId attribute of the ObjectHookAction object
+   * Sets the processId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(int tmp) {
     this.processId = tmp;
@@ -151,9 +158,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the processId attribute of the ObjectHookAction object
+   * Sets the processId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(String tmp) {
     this.processId = Integer.parseInt(tmp);
@@ -161,9 +168,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ObjectHookAction object
+   * Sets the linkModuleId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -171,9 +178,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ObjectHookAction object
+   * Sets the linkModuleId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -181,9 +188,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the className attribute of the ObjectHookAction object
+   * Sets the className attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new className value
+   * @param tmp The new className value
    */
   public void setClassName(String tmp) {
     this.className = tmp;
@@ -191,9 +198,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the typeId attribute of the ObjectHookAction object
+   * Sets the typeId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -201,9 +208,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the typeId attribute of the ObjectHookAction object
+   * Sets the typeId attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = DatabaseUtils.parseInt(tmp, UNDEFINED);
@@ -211,9 +218,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the type attribute of the ObjectHookAction object
+   * Sets the type attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.typeId = parseAction(tmp);
@@ -221,9 +228,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the processName attribute of the ObjectHookAction object
+   * Sets the processName attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new processName value
+   * @param tmp The new processName value
    */
   public void setProcessName(String tmp) {
     this.processName = tmp;
@@ -231,9 +238,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the linkModule attribute of the ObjectHookAction object
+   * Sets the linkModule attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new linkModule value
+   * @param tmp The new linkModule value
    */
   public void setLinkModule(String tmp) {
     this.linkModule = tmp;
@@ -241,9 +248,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the enabled attribute of the ObjectHookAction object
+   * Sets the enabled attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -251,9 +258,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Sets the enabled attribute of the ObjectHookAction object
+   * Sets the enabled attribute of the ObjectHookAction object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     if (tmp == null || "".equals(tmp)) {
@@ -265,9 +272,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the id attribute of the ObjectHookAction object
+   * Gets the id attribute of the ObjectHookAction object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -275,9 +282,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the hookId attribute of the ObjectHookAction object
+   * Gets the hookId attribute of the ObjectHookAction object
    *
-   *@return    The hookId value
+   * @return The hookId value
    */
   public int getHookId() {
     return hookId;
@@ -285,9 +292,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the triggerId attribute of the ObjectHookAction object
+   * Gets the triggerId attribute of the ObjectHookAction object
    *
-   *@return    The triggerId value
+   * @return The triggerId value
    */
   public int getTriggerId() {
     return triggerId;
@@ -295,9 +302,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the processId attribute of the ObjectHookAction object
+   * Gets the processId attribute of the ObjectHookAction object
    *
-   *@return    The processId value
+   * @return The processId value
    */
   public int getProcessId() {
     return processId;
@@ -305,9 +312,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the linkModuleId attribute of the ObjectHookAction object
+   * Gets the linkModuleId attribute of the ObjectHookAction object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -315,9 +322,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the className attribute of the ObjectHookAction object
+   * Gets the className attribute of the ObjectHookAction object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;
@@ -325,10 +332,10 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the baseClassName attribute of the ObjectHookAction object, just the
-   *  class name without the package
+   * Gets the baseClassName attribute of the ObjectHookAction object, just the
+   * class name without the package
    *
-   *@return    The baseClassName value
+   * @return The baseClassName value
    */
   public String getBaseClassName() {
     return className.substring(className.lastIndexOf(".") + 1);
@@ -336,9 +343,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the typeId attribute of the ObjectHookAction object
+   * Gets the typeId attribute of the ObjectHookAction object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -346,9 +353,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the processName attribute of the ObjectHookAction object
+   * Gets the processName attribute of the ObjectHookAction object
    *
-   *@return    The processName value
+   * @return The processName value
    */
   public String getProcessName() {
     return processName;
@@ -356,9 +363,9 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the enabled attribute of the ObjectHookAction object
+   * Gets the enabled attribute of the ObjectHookAction object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -366,10 +373,70 @@ public class ObjectHookAction {
 
 
   /**
-   *  Description of the Method
+   * Gets the priority attribute of the ObjectHookAction object
    *
-   *@param  actionText  Description of the Parameter
-   *@return             Description of the Return Value
+   * @return The priority value
+   */
+  public int getPriority() {
+    return priority;
+  }
+
+
+  /**
+   * Sets the priority attribute of the ObjectHookAction object
+   *
+   * @param tmp The new priority value
+   */
+  public void setPriority(int tmp) {
+    this.priority = tmp;
+  }
+
+
+  /**
+   * Sets the priority attribute of the ObjectHookAction object
+   *
+   * @param tmp The new priority value
+   */
+  public void setPriority(String tmp) {
+    this.priority = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the application attribute of the ObjectHookAction object
+   *
+   * @return The application value
+   */
+  public boolean getApplication() {
+    return application;
+  }
+
+
+  /**
+   * Sets the application attribute of the ObjectHookAction object
+   *
+   * @param tmp The new application value
+   */
+  public void setApplication(boolean tmp) {
+    this.application = tmp;
+  }
+
+
+  /**
+   * Sets the application attribute of the ObjectHookAction object
+   *
+   * @param tmp The new application value
+   */
+  public void setApplication(String tmp) {
+    this.application = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param actionText Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int parseAction(String actionText) {
     if ("insert".equals(actionText)) {
@@ -385,29 +452,29 @@ public class ObjectHookAction {
 
 
   /**
-   *  Gets the typeText attribute of the ObjectHookAction object
+   * Gets the typeText attribute of the ObjectHookAction object
    *
-   *@return    The typeText value
+   * @return The typeText value
    */
   public String getTypeText() {
     switch (typeId) {
-        case (INSERT):
-          return "Insert";
-        case (UPDATE):
-          return "Update";
-        case (DELETE):
-          return "Delete";
-        default:
-          return "Undefined";
+      case (INSERT):
+        return "Insert";
+      case (UPDATE):
+        return "Update";
+      case (DELETE):
+        return "Delete";
+      default:
+        return "Undefined";
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //business_process_hook
@@ -415,6 +482,7 @@ public class ObjectHookAction {
     hookId = rs.getInt("hook_id");
     processId = rs.getInt("process_id");
     enabled = rs.getBoolean("enabled");
+    priority = rs.getInt("priority");
     //business_process_hook_library
     className = rs.getString("hook_class");
     //business_process_hook_trigger
@@ -425,10 +493,10 @@ public class ObjectHookAction {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     boolean autoCommit = db.getAutoCommit();
@@ -436,12 +504,14 @@ public class ObjectHookAction {
       if (autoCommit) {
         db.setAutoCommit(false);
       }
-      PreparedStatement pst;
-      ResultSet rs;
+      PreparedStatement pst = null;
+      ResultSet rs = null;
       //Get a linkModuleId
       if (linkModuleId == -1 && linkModule != null && !linkModule.equals("")) {
-        linkModuleId = PermissionCategory.lookupId(db, linkModule);
+        linkModuleId = PermissionCategory.lookupId(
+            db, Integer.parseInt(linkModule));
       }
+      int i = 0;
       //Get a hook_id
       if (hookId == -1) {
         pst = db.prepareStatement(
@@ -458,17 +528,23 @@ public class ObjectHookAction {
         rs.close();
         pst.close();
         if (hookId == -1) {
+          i = 0;
+          id = DatabaseUtils.getNextSeq(db, "business_process_hl_hook_id_seq");
           //Insert new hook library item
           pst = db.prepareStatement(
               "INSERT INTO business_process_hook_library " +
-              "(link_module_id, hook_class, enabled) VALUES " +
-              "(?, ?, ?)");
-          pst.setInt(1, linkModuleId);
-          pst.setString(2, className);
-          pst.setBoolean(3, true);
+              "(" + (id > -1 ? "hook_id, " : "") + "link_module_id, hook_class, enabled) VALUES " +
+              "(" + (id > -1 ? "?, " : "") + "?, ?,?)");
+          if (id > -1) {
+            pst.setInt(++i, id);
+          }
+          pst.setInt(++i, linkModuleId);
+          pst.setString(++i, className);
+          pst.setBoolean(++i, true);
           pst.execute();
           pst.close();
-          hookId = DatabaseUtils.getCurrVal(db, "business_process_hl_hook_id_seq");
+          hookId = DatabaseUtils.getCurrVal(
+              db, "business_process_hl_hook_id_seq", id);
         }
       }
       //Get the triggerId
@@ -487,20 +563,27 @@ public class ObjectHookAction {
         rs.close();
         pst.close();
         if (triggerId == -1) {
+          i = 0;
+          id = DatabaseUtils.getNextSeq(db, "business_process_ho_trig_id_seq");
           //Insert the action_type_id into the trigger list
           pst = db.prepareStatement(
               "INSERT INTO business_process_hook_triggers " +
-              "(action_type_id, hook_id, enabled) VALUES " +
-              "(?, ?, ?)");
-          pst.setInt(1, typeId);
-          pst.setInt(2, hookId);
-          pst.setBoolean(3, true);
+              "(" + (id > -1 ? "trigger_id, " : "") + "action_type_id, hook_id, enabled) VALUES " +
+              "(" + (id > -1 ? "?, " : "") + "?, ?, ?)");
+          if (id > -1) {
+            pst.setInt(++i, id);
+          }
+          pst.setInt(++i, typeId);
+          pst.setInt(++i, hookId);
+          pst.setBoolean(++i, true);
           pst.execute();
           pst.close();
-          triggerId = DatabaseUtils.getCurrVal(db, "business_process_ho_trig_id_seq");
+          triggerId = DatabaseUtils.getCurrVal(
+              db, "business_process_ho_trig_id_seq", id);
         }
       }
       if (processId == -1 && processName != null) {
+        i = 0;
         pst = db.prepareStatement(
             "SELECT process_id " +
             "FROM business_process " +
@@ -513,20 +596,59 @@ public class ObjectHookAction {
         rs.close();
         pst.close();
       }
-      //Insert the hook with the corresponding references
-      pst = db.prepareStatement(
-          "INSERT INTO business_process_hook " +
-          "(trigger_id, process_id, enabled) VALUES " +
-          "(?, ?, ?)");
-      pst.setInt(1, triggerId);
-      pst.setInt(2, processId);
-      pst.setBoolean(3, enabled);
-      pst.execute();
-      id = DatabaseUtils.getCurrVal(db, "business_process_ho_hook_id_seq");
+      int currentId = -1;
+      if (processId != -1) {
+        //Check if the process hook already exists in the database.
+        i = 0;
+        pst = db.prepareStatement(
+            "SELECT id FROM business_process_hook " +
+            "WHERE trigger_id = ? " +
+            "AND process_id = ? " +
+            "AND enabled = ? ");
+        pst.setInt(++i, triggerId);
+        pst.setInt(++i, processId);
+        pst.setBoolean(++i, enabled);
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          currentId = DatabaseUtils.getInt(rs, "id");
+        }
+        rs.close();
+        pst.close();
+      }
+      if (currentId != -1) {
+        //If process already exists in the database, update its priority
+        pst = db.prepareStatement(
+            "UPDATE business_process_hook " +
+            "SET priority = ? " +
+            "WHERE id = ? ");
+        pst.setInt(1, priority);
+        pst.setInt(2, id);
+        pst.execute();
+        pst.close();
+      } else {
+        //Insert the hook with the corresponding references
+        id = DatabaseUtils.getNextSeq(db, "business_process_ho_hook_id_seq");
+        i = 0;
+        pst = db.prepareStatement(
+            "INSERT INTO business_process_hook " +
+            "(" + (id > -1 ? "id, " : "") + "trigger_id, process_id, enabled, priority) VALUES " +
+            "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?)");
+        if (id > -1) {
+          pst.setInt(++i, id);
+        }
+        pst.setInt(++i, triggerId);
+        pst.setInt(++i, processId);
+        pst.setBoolean(++i, enabled);
+        pst.setInt(++i, priority);
+        pst.execute();
+        id = DatabaseUtils.getCurrVal(
+            db, "business_process_ho_hook_id_seq", id);
+      }
       if (autoCommit) {
         db.commit();
       }
     } catch (SQLException e) {
+      e.printStackTrace();
       if (autoCommit) {
         db.rollback();
       }

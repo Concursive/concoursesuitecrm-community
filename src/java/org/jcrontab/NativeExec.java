@@ -14,21 +14,20 @@
 
 package org.jcrontab;
 
-import java.io.InputStream;
 import org.jcrontab.log.Log;
 
 /**
- *  This class executes a native command
+ * This class executes a native command
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 public class NativeExec {
   /**
-   *  main method
+   * main method
    *
-   *@param  args  String[] the params passed from the console
+   * @param args String[] the params passed from the console
    */
   public static void main(String args[]) {
     if (args.length < 1) {

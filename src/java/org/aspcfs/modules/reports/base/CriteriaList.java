@@ -15,19 +15,22 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import java.util.*;
-import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
- *  A collection of Criteria objects, can be used for retrieving from the
- *  database.
+ * A collection of Criteria objects, can be used for retrieving from the
+ * database.
  *
- *@author     matt rajkowski
- *@created    September 15, 2003
- *@version    $Id: CriteriaList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: CriteriaList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
+ *          Exp $
+ * @created September 15, 2003
  */
 public class CriteriaList extends ArrayList {
 
@@ -37,15 +40,16 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Constructor for the CategoryList object
+   * Constructor for the CategoryList object
    */
-  public CriteriaList() { }
+  public CriteriaList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ReportList object
+   * Sets the pagedListInfo attribute of the ReportList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -53,9 +57,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ReportList object
+   * Gets the pagedListInfo attribute of the ReportList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -63,9 +67,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the reportId attribute of the CriteriaList object
+   * Sets the reportId attribute of the CriteriaList object
    *
-   *@param  tmp  The new reportId value
+   * @param tmp The new reportId value
    */
   public void setReportId(int tmp) {
     this.reportId = tmp;
@@ -73,9 +77,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the reportId attribute of the CriteriaList object
+   * Sets the reportId attribute of the CriteriaList object
    *
-   *@param  tmp  The new reportId value
+   * @param tmp The new reportId value
    */
   public void setReportId(String tmp) {
     this.reportId = Integer.parseInt(tmp);
@@ -83,9 +87,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the CriteriaList object
+   * Sets the owner attribute of the CriteriaList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -93,9 +97,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the CriteriaList object
+   * Sets the owner attribute of the CriteriaList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -103,9 +107,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the reportId attribute of the CriteriaList object
+   * Gets the reportId attribute of the CriteriaList object
    *
-   *@return    The reportId value
+   * @return The reportId value
    */
   public int getReportId() {
     return reportId;
@@ -113,9 +117,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the CriteriaList object
+   * Gets the owner attribute of the CriteriaList object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -123,11 +127,11 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Builds a list of criteria objects based on the properties that have been
-   *  set for this object.
+   * Builds a list of criteria objects based on the properties that have been
+   * set for this object.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -171,20 +175,14 @@ public class CriteriaList extends ArrayList {
         "c.* " +
         "FROM report_criteria c " +
         "WHERE criteria_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Criteria thisCriteria = new Criteria(rs);
       this.add(thisCriteria);
     }
@@ -194,9 +192,9 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Defines additional filters for the query
+   * Defines additional filters for the query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -212,12 +210,11 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Sets the parameters for the additional parameters specified for this query
+   * Sets the parameters for the additional parameters specified for this query
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -232,11 +229,11 @@ public class CriteriaList extends ArrayList {
 
 
   /**
-   *  Deletes all of the related data for a specific criteria id
+   * Deletes all of the related data for a specific criteria id
    *
-   *@param  db                Description of the Parameter
-   *@param  criteriaId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param criteriaId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int criteriaId) throws SQLException {
     try {

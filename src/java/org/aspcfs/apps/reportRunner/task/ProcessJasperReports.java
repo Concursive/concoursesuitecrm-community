@@ -24,22 +24,21 @@ import org.aspcfs.modules.reports.base.ReportQueueList;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.JasperReportUtils;
-import org.aspcfs.utils.Dictionary;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- *  Class to compile and generate to PDF a JasperReport
+ * Class to compile and generate to PDF a JasperReport
  *
- *@author     matt rajkowski
- *@created    October 3, 2003
- *@version    $Id: ProcessJasperReports.java,v 1.6 2004/06/29 14:08:22
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProcessJasperReports.java,v 1.6 2004/06/29 14:08:22
+ *          mrajkowski Exp $
+ * @created October 3, 2003
  */
 public class ProcessJasperReports {
 
@@ -48,15 +47,15 @@ public class ProcessJasperReports {
 
 
   /**
-   *  Constructor for the ProcessJasperReports object
+   * Constructor for the ProcessJasperReports object
    *
-   *@param  db             Description of the Parameter
-   *@param  thisSite       Description of the Parameter
-   *@param  config         Description of the Parameter
-   *@param  dictionary     Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param thisSite   Description of the Parameter
+   * @param config     Description of the Parameter
+   * @param dictionary Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public ProcessJasperReports(Connection db, Site thisSite, HashMap config, Dictionary dictionary) throws Exception {
+  public ProcessJasperReports(Connection db, Site thisSite, Map config, Map dictionary) throws Exception {
     //Load the report queue for this site, unprocessed only
     ReportQueueList queue = new ReportQueueList();
     queue.setSortAscending(true);
@@ -69,16 +68,18 @@ public class ProcessJasperReports {
       if (ReportQueueList.lockReport(thisQueue, db)) {
         try {
           String reportDir = "";
+          String fontPath = "";
           if (((String) config.get("FILELIBRARY")).indexOf("WEB-INF") > 0) {
             reportDir = (String) config.get("FILELIBRARY") + ".." + fs + "reports" + fs;
+            fontPath = (String) config.get("FILELIBRARY") + ".." + fs + "fonts" + fs;
           }
           if (config.containsKey("WEB-INF")) {
             reportDir = (String) config.get("WEB-INF") + "reports" + fs;
+            fontPath = (String) config.get("WEB-INF") + "fonts" + fs;
           }
 
-          Map localizationPrefs = new LinkedHashMap();
-          if (dictionary != null) {
-            localizationPrefs = dictionary.getLocalizationPrefs();
+          if (dictionary == null) {
+            dictionary = new LinkedHashMap();
           }
 
           //Load from the repository, save to the user's site
@@ -95,7 +96,8 @@ public class ProcessJasperReports {
               db,
               reportDir,
               destDir + filename,
-              localizationPrefs);
+              fontPath,
+              dictionary);
           thisQueue.setFilename(filename);
           thisQueue.setSize(size);
           thisQueue.setStatus(ReportQueue.STATUS_PROCESSED);
@@ -111,34 +113,47 @@ public class ProcessJasperReports {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisQueue          Description of the Parameter
-   *@param  db                 Description of the Parameter
-   *@param  path               Description of the Parameter
-   *@param  destFilename       Description of the Parameter
-   *@param  localizationPrefs  Description of the Parameter
-   *@return                    Description of the Return Value
-   *@exception  Exception      Description of the Exception
+   * @param thisQueue         Description of the Parameter
+   * @param db                Description of the Parameter
+   * @param path              Description of the Parameter
+   * @param destFilename      Description of the Parameter
+   * @param localizationPrefs Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
-  private static long processReport(ReportQueue thisQueue, Connection db, String path, String destFilename, Map localizationPrefs) throws Exception {
+  private static long processReport(ReportQueue thisQueue, Connection db, String path, String destFilename, String fontPath, Map localizationPrefs) throws Exception {
     Report thisReport = new Report(db, thisQueue.getReportId());
     //Determine the path and load JasperReport
-    JasperReport jasperReport = JasperReportUtils.getReport(path + thisReport.getFilename());
+    JasperReport jasperReport = JasperReportUtils.getReport(
+        path + thisReport.getFilename());
     //Populate the criteria
     QueueCriteriaList criteria = new QueueCriteriaList();
     criteria.setQueueId(thisQueue.getId());
     criteria.buildList(db);
     Map parameters = criteria.getParameters(jasperReport, path);
     parameters.put(CENTRIC_DICTIONARY, localizationPrefs);
+    //Modify pdf font and encoding properties of all text fields if not default language
+    String language = (String) parameters.get("language") + "_" + (String) parameters.get(
+        "country");
+    JasperReportUtils.modifyFontProperties(
+        jasperReport, path, fontPath, language);
     //Export the pdf to fileLibrary for this site
+    /*
     JasperRunManager.runReportToPdfFile(
         path +
         thisReport.getFilename().substring(0, thisReport.getFilename().lastIndexOf(".xml")) + ".jasper",
         destFilename,
-        parameters, db);
-    //Determine the size
+        parameters, db); */
+        
+    byte[] bytes = JasperRunManager.runReportToPdf(
+        jasperReport, parameters, db);
     File reportFile = new File(destFilename);
+    FileOutputStream destination = new FileOutputStream(reportFile);
+    destination.write(bytes, 0, bytes.length);
+    
+    //Determine the size
     if (reportFile.exists()) {
       return reportFile.length();
     } else {

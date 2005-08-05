@@ -15,15 +15,19 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class CampaignRun {
 
@@ -38,9 +42,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the id attribute of the CampaignRun object
+   * Sets the id attribute of the CampaignRun object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -48,9 +52,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the id attribute of the CampaignRun object
+   * Sets the id attribute of the CampaignRun object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -58,9 +62,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the campaignId attribute of the CampaignRun object
+   * Sets the campaignId attribute of the CampaignRun object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -68,9 +72,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the campaignId attribute of the CampaignRun object
+   * Sets the campaignId attribute of the CampaignRun object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
@@ -78,9 +82,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the status attribute of the CampaignRun object
+   * Sets the status attribute of the CampaignRun object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -88,9 +92,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the status attribute of the CampaignRun object
+   * Sets the status attribute of the CampaignRun object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -98,9 +102,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the runDate attribute of the CampaignRun object
+   * Sets the runDate attribute of the CampaignRun object
    *
-   *@param  tmp  The new runDate value
+   * @param tmp The new runDate value
    */
   public void setRunDate(java.sql.Timestamp tmp) {
     this.runDate = tmp;
@@ -108,9 +112,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the runDate attribute of the CampaignRun object
+   * Sets the runDate attribute of the CampaignRun object
    *
-   *@param  tmp  The new runDate value
+   * @param tmp The new runDate value
    */
   public void setRunDate(String tmp) {
     this.runDate = DatabaseUtils.parseTimestamp(tmp);
@@ -118,9 +122,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalContacts attribute of the CampaignRun object
+   * Sets the totalContacts attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalContacts value
+   * @param tmp The new totalContacts value
    */
   public void setTotalContacts(int tmp) {
     this.totalContacts = tmp;
@@ -128,9 +132,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalContacts attribute of the CampaignRun object
+   * Sets the totalContacts attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalContacts value
+   * @param tmp The new totalContacts value
    */
   public void setTotalContacts(String tmp) {
     this.totalContacts = Integer.parseInt(tmp);
@@ -138,9 +142,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalSent attribute of the CampaignRun object
+   * Sets the totalSent attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalSent value
+   * @param tmp The new totalSent value
    */
   public void setTotalSent(int tmp) {
     this.totalSent = tmp;
@@ -148,9 +152,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalSent attribute of the CampaignRun object
+   * Sets the totalSent attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalSent value
+   * @param tmp The new totalSent value
    */
   public void setTotalSent(String tmp) {
     this.totalSent = Integer.parseInt(tmp);
@@ -158,9 +162,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalReplied attribute of the CampaignRun object
+   * Sets the totalReplied attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalReplied value
+   * @param tmp The new totalReplied value
    */
   public void setTotalReplied(int tmp) {
     this.totalReplied = tmp;
@@ -168,9 +172,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalReplied attribute of the CampaignRun object
+   * Sets the totalReplied attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalReplied value
+   * @param tmp The new totalReplied value
    */
   public void setTotalReplied(String tmp) {
     this.totalReplied = Integer.parseInt(tmp);
@@ -178,9 +182,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalBounced attribute of the CampaignRun object
+   * Sets the totalBounced attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalBounced value
+   * @param tmp The new totalBounced value
    */
   public void setTotalBounced(int tmp) {
     this.totalBounced = tmp;
@@ -188,9 +192,9 @@ public class CampaignRun {
 
 
   /**
-   *  Sets the totalBounced attribute of the CampaignRun object
+   * Sets the totalBounced attribute of the CampaignRun object
    *
-   *@param  tmp  The new totalBounced value
+   * @param tmp The new totalBounced value
    */
   public void setTotalBounced(String tmp) {
     this.totalBounced = Integer.parseInt(tmp);
@@ -198,9 +202,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the id attribute of the CampaignRun object
+   * Gets the id attribute of the CampaignRun object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -208,9 +212,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the campaignId attribute of the CampaignRun object
+   * Gets the campaignId attribute of the CampaignRun object
    *
-   *@return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -218,9 +222,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the status attribute of the CampaignRun object
+   * Gets the status attribute of the CampaignRun object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -228,9 +232,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the runDate attribute of the CampaignRun object
+   * Gets the runDate attribute of the CampaignRun object
    *
-   *@return    The runDate value
+   * @return The runDate value
    */
   public java.sql.Timestamp getRunDate() {
     return runDate;
@@ -238,9 +242,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the totalContacts attribute of the CampaignRun object
+   * Gets the totalContacts attribute of the CampaignRun object
    *
-   *@return    The totalContacts value
+   * @return The totalContacts value
    */
   public int getTotalContacts() {
     return totalContacts;
@@ -248,9 +252,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the totalSent attribute of the CampaignRun object
+   * Gets the totalSent attribute of the CampaignRun object
    *
-   *@return    The totalSent value
+   * @return The totalSent value
    */
   public int getTotalSent() {
     return totalSent;
@@ -258,9 +262,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the totalReplied attribute of the CampaignRun object
+   * Gets the totalReplied attribute of the CampaignRun object
    *
-   *@return    The totalReplied value
+   * @return The totalReplied value
    */
   public int getTotalReplied() {
     return totalReplied;
@@ -268,9 +272,9 @@ public class CampaignRun {
 
 
   /**
-   *  Gets the totalBounced attribute of the CampaignRun object
+   * Gets the totalBounced attribute of the CampaignRun object
    *
-   *@return    The totalBounced value
+   * @return The totalBounced value
    */
   public int getTotalBounced() {
     return totalBounced;
@@ -278,17 +282,18 @@ public class CampaignRun {
 
 
   /**
-   *  Constructor for the CampaignRun object
+   * Constructor for the CampaignRun object
    */
-  public CampaignRun() { }
+  public CampaignRun() {
+  }
 
 
   /**
-   *  Constructor for the CampaignRun object
+   * Constructor for the CampaignRun object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CampaignRun(Connection db, int id) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -309,17 +314,18 @@ public class CampaignRun {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (campaignId == -1) {
       throw new SQLException("Campaign ID not specified");
     }
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "campaign_run_id_seq");
     sql.append(
         "INSERT INTO campaign_run " +
         "(campaign_id, status, " +
@@ -327,10 +333,16 @@ public class CampaignRun {
     if (runDate != null) {
       sql.append("run_date, ");
     }
+    if (id > -1) {
+      sql.append("id, ");
+    }
     sql.append("total_bounced) ");
     sql.append("VALUES ");
     sql.append("(?, ?, ?, ?, ?, ");
     if (runDate != null) {
+      sql.append("?, ");
+    }
+    if (id > -1) {
       sql.append("?, ");
     }
     sql.append("?) ");
@@ -344,19 +356,22 @@ public class CampaignRun {
     if (runDate != null) {
       pst.setTimestamp(++i, runDate);
     }
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, totalBounced);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");

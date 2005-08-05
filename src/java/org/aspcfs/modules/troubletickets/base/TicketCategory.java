@@ -15,20 +15,20 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Represents a category in which a Ticket is classified
+ * Represents a category in which a Ticket is classified
  *
- *@author     chris
- *@created    December 11, 2001
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created December 11, 2001
  */
 public class TicketCategory extends GenericBean {
 
@@ -42,19 +42,17 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketCategory object
-   *
-   *@since
+   * Constructor for the TicketCategory object
    */
-  public TicketCategory() { }
+  public TicketCategory() {
+  }
 
 
   /**
-   *  Constructor for the TicketCategory object
+   * Constructor for the TicketCategory object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public TicketCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -62,12 +60,11 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketCategory object
+   * Constructor for the TicketCategory object
    *
-   *@param  db                Description of Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public TicketCategory(Connection db, int id) throws SQLException {
     if (id < 0) {
@@ -93,10 +90,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the Code attribute of the TicketCategory object
+   * Sets the Code attribute of the TicketCategory object
    *
-   *@param  tmp  The new Code value
-   *@since
+   * @param tmp The new Code value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -104,9 +100,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketCategory object
+   * Sets the id attribute of the TicketCategory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -114,9 +110,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the categoryLevel attribute of the TicketCategory object
+   * Sets the categoryLevel attribute of the TicketCategory object
    *
-   *@param  tmp  The new categoryLevel value
+   * @param tmp The new categoryLevel value
    */
   public void setCategoryLevel(int tmp) {
     this.categoryLevel = tmp;
@@ -124,9 +120,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the categoryLevel attribute of the TicketCategory object
+   * Sets the categoryLevel attribute of the TicketCategory object
    *
-   *@param  tmp  The new categoryLevel value
+   * @param tmp The new categoryLevel value
    */
   public void setCategoryLevel(String tmp) {
     this.categoryLevel = Integer.parseInt(tmp);
@@ -134,10 +130,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the Level attribute of the TicketCategory object
+   * Sets the Level attribute of the TicketCategory object
    *
-   *@param  level  The new Level value
-   *@since
+   * @param level The new Level value
    */
   public void setLevel(int level) {
     this.level = level;
@@ -145,10 +140,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the Level attribute of the TicketCategory object
+   * Sets the Level attribute of the TicketCategory object
    *
-   *@param  level  The new Level value
-   *@since
+   * @param level The new Level value
    */
   public void setLevel(String level) {
     this.level = Integer.parseInt(level);
@@ -156,10 +150,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategory object
+   * Sets the ParentCode attribute of the TicketCategory object
    *
-   *@param  tmp  The new ParentCode value
-   *@since
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -167,10 +160,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategory object
+   * Sets the ParentCode attribute of the TicketCategory object
    *
-   *@param  tmp  The new ParentCode value
-   *@since
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -178,10 +170,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the Description attribute of the TicketCategory object
+   * Sets the Description attribute of the TicketCategory object
    *
-   *@param  tmp  The new Description value
-   *@since
+   * @param tmp The new Description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -189,10 +180,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the TicketCategory object
+   * Sets the Enabled attribute of the TicketCategory object
    *
-   *@param  tmp  The new Enabled value
-   *@since
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -200,9 +190,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TicketCategory object
+   * Sets the enabled attribute of the TicketCategory object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -210,9 +200,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Sets the shortChildList attribute of the TicketCategory object
+   * Sets the shortChildList attribute of the TicketCategory object
    *
-   *@param  shortChildList  The new shortChildList value
+   * @param shortChildList The new shortChildList value
    */
   public void setShortChildList(TicketCategoryDraftList shortChildList) {
     this.shortChildList = shortChildList;
@@ -220,9 +210,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the shortChildList attribute of the TicketCategory object
+   * Gets the shortChildList attribute of the TicketCategory object
    *
-   *@return    The shortChildList value
+   * @return The shortChildList value
    */
   public TicketCategoryDraftList getShortChildList() {
     return shortChildList;
@@ -230,10 +220,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the Level attribute of the TicketCategory object
+   * Gets the Level attribute of the TicketCategory object
    *
-   *@return    The Level value
-   *@since
+   * @return The Level value
    */
   public int getLevel() {
     return level;
@@ -241,10 +230,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the Code attribute of the TicketCategory object
+   * Gets the Code attribute of the TicketCategory object
    *
-   *@return    The Code value
-   *@since
+   * @return The Code value
    */
   public int getId() {
     return id;
@@ -252,9 +240,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the categoryLevel attribute of the TicketCategory object
+   * Gets the categoryLevel attribute of the TicketCategory object
    *
-   *@return    The categoryLevel value
+   * @return The categoryLevel value
    */
   public int getCategoryLevel() {
     return categoryLevel;
@@ -262,10 +250,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the ParentCode attribute of the TicketCategory object
+   * Gets the ParentCode attribute of the TicketCategory object
    *
-   *@return    The ParentCode value
-   *@since
+   * @return The ParentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -273,10 +260,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the Description attribute of the TicketCategory object
+   * Gets the Description attribute of the TicketCategory object
    *
-   *@return    The Description value
-   *@since
+   * @return The Description value
    */
   public String getDescription() {
     return description;
@@ -284,9 +270,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the TicketCategory object
+   * Gets the Enabled attribute of the TicketCategory object
    *
-   *@return    The Enabled value
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -294,22 +280,26 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
+      id = DatabaseUtils.getNextSeq(db, "ticket_category_id_seq");
       sql.append(
           "INSERT INTO ticket_category " +
-          "(cat_level, parent_cat_code, description, level, enabled) " +
-          "VALUES (?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getCategoryLevel());
       if (parentCode > 0) {
         pst.setInt(++i, this.getParentCode());
@@ -321,7 +311,7 @@ public class TicketCategory extends GenericBean {
       pst.setBoolean(++i, this.getEnabled());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "ticket_category_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "ticket_category_id_seq", id);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -334,11 +324,11 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (id == -1) {
@@ -350,7 +340,7 @@ public class TicketCategory extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE ticket_category " +
-          "SET description = ?, cat_level = ?, parent_cat_code = ?, level = ?, enabled = ? " +
+          "SET description = ?, cat_level = ?, parent_cat_code = ?, \"level\" = ?, enabled = ? " +
           "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());
@@ -372,11 +362,10 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");

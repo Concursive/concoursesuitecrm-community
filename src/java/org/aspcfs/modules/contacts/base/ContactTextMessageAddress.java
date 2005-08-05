@@ -15,16 +15,20 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.TextMessageAddress;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kailash
- *@created    January 11, 2005
- *@version    $Id$
+ * @author kailash
+ * @version $Id$
+ * @created January 11, 2005
  */
 public class ContactTextMessageAddress extends TextMessageAddress {
 
@@ -34,10 +38,10 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Constructor for the ContactTextMessageAddress object
+   * Constructor for the ContactTextMessageAddress object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactTextMessageAddress(ResultSet rs) throws SQLException {
     isContact = true;
@@ -46,11 +50,11 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Constructor for the ContactTextMessageAddress object
+   * Constructor for the ContactTextMessageAddress object
    *
-   *@param  db                Description of the Parameter
-   *@param  addressId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param addressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactTextMessageAddress(Connection db, int addressId) throws SQLException {
     queryRecord(db, addressId);
@@ -58,31 +62,31 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Constructor for the ContactTextMessageAddress object
+   * Constructor for the ContactTextMessageAddress object
    *
-   *@param  db                Description of the Parameter
-   *@param  addressId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param addressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactTextMessageAddress(Connection db, String addressId) throws SQLException {
     queryRecord(db, Integer.parseInt(addressId));
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  addressId    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param addressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int addressId) throws SQLException {
     isContact = true;
     if (addressId < 0) {
       throw new SQLException("Valid Text Message Address ID not specified.");
     }
-    PreparedStatement pst = db.prepareStatement("SELECT * " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
         "FROM contact_textmessageaddress c, lookup_textmessage_types l " +
         "WHERE c.textmessageaddress_type = l.code " +
         "AND c.address_id = " + addressId + " ");
@@ -99,15 +103,14 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Determines what to do if this record is marked for INSERT, UPDATE, or
-   *  DELETE
+   * Determines what to do if this record is marked for INSERT, UPDATE, or
+   * DELETE
    *
-   *@param  db                Description of Parameter
-   *@param  contactId         Description of Parameter
-   *@param  enteredBy         Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param contactId  Description of Parameter
+   * @param enteredBy  Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
@@ -127,10 +130,10 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     insert(db, this.getContactId(), this.getEnteredBy());
@@ -138,18 +141,26 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param enteredBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
+  public void insert(Connection db, int contactId, int enteredBy) throws
+      SQLException {
     StringBuffer sql = new StringBuffer();
-
-    sql.append("INSERT INTO contact_textmessageaddress " +
+    this.setId(
+        DatabaseUtils.getNextSeq(
+            db, "contact_textmessageaddress_address_id_seq"));
+    int id = getId();
+    sql.append(
+        "INSERT INTO contact_textmessageaddress " +
         "(contact_id, textmessageaddress_type, textmessageaddress, primary_textmessage_address, ");
+    if (id > -1) {
+      sql.append("address_id, ");
+    }
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -158,6 +169,9 @@ public class ContactTextMessageAddress extends TextMessageAddress {
     }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -181,7 +195,9 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
     pst.setString(++i, this.getTextMessageAddress());
     pst.setBoolean(++i, this.getPrimaryTextMessageAddress());
-
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -194,17 +210,19 @@ public class ContactTextMessageAddress extends TextMessageAddress {
     pst.execute();
     pst.close();
 
-    this.setId(DatabaseUtils.getCurrVal(db, "contact_textmessageaddress_address_id_seq"));
+    this.setId(
+        DatabaseUtils.getCurrVal(
+            db,
+            "contact_textmessageaddress_address_id_seq", id));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -228,11 +246,10 @@ public class ContactTextMessageAddress extends TextMessageAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

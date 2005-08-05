@@ -159,7 +159,9 @@ CREATE TABLE product_catalog (
   start_date TIMESTAMP(3) DEFAULT NULL,
   expiration_date TIMESTAMP(3) DEFAULT NULL,
   enabled boolean NOT NULL DEFAULT true,
-  manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code)
+  manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code),
+  trashed_date TIMESTAMP(3),
+  active BOOLEAN NOT NULL DEFAULT true
 );
 
 -- Each product can have a price, which can change over time

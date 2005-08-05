@@ -30,20 +30,20 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Project Management module for CFS
+ * Project Management module for CFS
  *
- *@author     matt rajkowski
- *@created    November 12, 2001
- *@version    $Id: ProjectManagementRequirements.java,v 1.6 2002/04/05 22:01:59
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProjectManagementRequirements.java,v 1.6 2002/04/05 22:01:59
+ *          mrajkowski Exp $
+ * @created November 12, 2001
  */
 public final class ProjectManagementRequirements extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
@@ -51,13 +51,16 @@ public final class ProjectManagementRequirements extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-add")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-add")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("requirements_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("requirements_add").toLowerCase());
 
       LookupList loeList = new LookupList(db, "lookup_project_loe");
       context.getRequest().setAttribute("LoeList", loeList);
@@ -76,10 +79,10 @@ public final class ProjectManagementRequirements extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Connection db = null;
@@ -88,13 +91,16 @@ public final class ProjectManagementRequirements extends CFSModule {
     boolean isValid = false;
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-add")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-add")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("requirements_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("requirements_add").toLowerCase());
 
       Requirement thisRequirement = (Requirement) context.getFormBean();
       thisRequirement.setProjectId(thisProject.getId());
@@ -122,10 +128,10 @@ public final class ProjectManagementRequirements extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     Exception errorMessage = null;
@@ -135,14 +141,16 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       //Load the requirement
-      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
+      Requirement thisRequirement = new Requirement(
+          db, Integer.parseInt(requirementId), thisProject.getId());
       context.getRequest().setAttribute("Requirement", thisRequirement);
     } catch (Exception e) {
       errorMessage = e;
@@ -159,10 +167,10 @@ public final class ProjectManagementRequirements extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     //Params
@@ -172,15 +180,19 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project and permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-edit")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("requirements_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("requirements_add").toLowerCase());
       //Requirement
-      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
+      Requirement thisRequirement = new Requirement(
+          db, Integer.parseInt(requirementId), thisProject.getId());
       context.getRequest().setAttribute("Requirement", thisRequirement);
       //Form data
       LookupList loeList = new LookupList(db, "lookup_project_loe");
@@ -196,10 +208,10 @@ public final class ProjectManagementRequirements extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     Requirement thisRequirement = (Requirement) context.getFormBean();
@@ -208,9 +220,11 @@ public final class ProjectManagementRequirements extends CFSModule {
     int resultCount = -1;
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, thisRequirement.getProjectId(), getUserRange(context));
+      Project thisProject = new Project(
+          db, thisRequirement.getProjectId(), getUserRange(context));
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-edit")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-edit")) {
         return "PermissionError";
       }
       thisRequirement.setProject(thisProject);
@@ -223,11 +237,14 @@ public final class ProjectManagementRequirements extends CFSModule {
       if (resultCount == -1) {
         context.getRequest().setAttribute("Project", thisProject);
         context.getRequest().setAttribute("Requirement", thisRequirement);
-        context.getRequest().setAttribute("IncludeSection", ("requirements_add").toLowerCase());
+        context.getRequest().setAttribute(
+            "IncludeSection", ("requirements_add").toLowerCase());
       } else {
         indexAddItem(context, thisRequirement);
-        context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
-        context.getRequest().setAttribute("IncludeSection", ("requirements").toLowerCase());
+        context.getRequest().setAttribute(
+            "pid", String.valueOf(thisProject.getId()));
+        context.getRequest().setAttribute(
+            "IncludeSection", ("requirements").toLowerCase());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -241,7 +258,8 @@ public final class ProjectManagementRequirements extends CFSModule {
       if (resultCount == -1 || !isValid) {
         return ("ProjectCenterOK");
       }
-      context.getRequest().setAttribute("Error",
+      context.getRequest().setAttribute(
+          "Error",
           "<b>This record could not be updated because someone else updated it first.</b><p>" +
           "You can hit the back button to review the changes that could not be committed, " +
           "but you must reload the record and make the changes again.");
@@ -251,10 +269,10 @@ public final class ProjectManagementRequirements extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     //Params
@@ -264,26 +282,33 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project and permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-delete")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       //Requirement
-      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
-      TeamMember currentMember = new TeamMember(db, thisProject.getId(), getUserId(context));
+      Requirement thisRequirement = new Requirement(
+          db, Integer.parseInt(requirementId), thisProject.getId());
+      TeamMember currentMember = new TeamMember(
+          db, thisProject.getId(), getUserId(context));
       if (currentMember.getRoleId() <= TeamMember.PROJECT_LEAD) {
         boolean recordDeleted = thisRequirement.delete(db);
         if (!recordDeleted) {
           SystemStatus systemStatus = this.getSystemStatus(context);
-          thisRequirement.getErrors().put("actionError", systemStatus.getLabel("object.validation.requirementDeletion"));
+          thisRequirement.getErrors().put(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.requirementDeletion"));
           processErrors(context, thisRequirement.getErrors());
         } else {
           indexDeleteItem(context, thisRequirement);
         }
       }
-      context.getRequest().setAttribute("IncludeSection", ("requirements").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("requirements").toLowerCase());
       return ("DeleteOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -292,13 +317,13 @@ public final class ProjectManagementRequirements extends CFSModule {
       this.freeConnection(context, db);
     }
   }
-  
-  
+
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepareImport(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -307,30 +332,34 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = this.getConnection(context);
       //Load the project and permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-delete")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       //Load the requirement
-      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
+      Requirement thisRequirement = new Requirement(
+          db, Integer.parseInt(requirementId), thisProject.getId());
       context.getRequest().setAttribute("Requirement", thisRequirement);
     } catch (Exception e) {
       if (db != null) {
         this.freeConnection(context, db);
       }
     }
-    context.getRequest().setAttribute("IncludeSection", ("requirements_import"));
+    context.getRequest().setAttribute(
+        "IncludeSection", ("requirements_import"));
     return ("ProjectCenterOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandImport(ActionContext context) {
     Connection db = null;
@@ -339,20 +368,33 @@ public final class ProjectManagementRequirements extends CFSModule {
       HashMap parts = multiPart.parseData(context.getRequest(), null);
       db = this.getConnection(context);
       //Load the project and permissions
-      Project thisProject = loadProject(db, Integer.parseInt((String) parts.get("pid")), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt((String) parts.get("pid")), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-delete")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       // Requirement to use for saving plan
-      Requirement thisRequirement = new Requirement(db, Integer.parseInt((String) parts.get("rid")), thisProject.getId());
+      Requirement thisRequirement = new Requirement(
+          db, Integer.parseInt((String) parts.get("rid")), thisProject.getId());
       context.getRequest().setAttribute("Requirement", thisRequirement);
       // Import
       FileInfo fileInfo = (FileInfo) parts.get("file");
       // Determine file type
-      AssignmentImporter.parse(fileInfo, thisRequirement, db);
-      context.getRequest().setAttribute("IncludeSection", ("requirements_import_ok"));
+      if (fileInfo == null || !AssignmentImporter.parse(
+          fileInfo, thisRequirement, db)) {
+        HashMap errors = new HashMap();
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileNameSpecified"));
+        processErrors(context, errors);
+        return executeCommandPrepareImport(context);
+      }
+      context.getRequest().setAttribute(
+          "IncludeSection", ("requirements_import_ok"));
       return ("ImportOK");
     } catch (Exception e) {
       e.printStackTrace(System.out);

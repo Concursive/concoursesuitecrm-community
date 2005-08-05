@@ -15,19 +15,21 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
+
 /**
- *  Contains a list of text message addresses... currently used to build the
- *  list from the database with any of the parameters to limit the results.
+ * Contains a list of text message addresses... currently used to build the
+ * list from the database with any of the parameters to limit the results.
  *
- *@author     kailash
- *@created    January 11, 2005
- *@version    $Id: TextMessageAddressList.java,v 1.1 2001/09/07 13:59:07
- *      mrajkowski Exp $
+ * @author kailash
+ * @version $Id: TextMessageAddressList.java,v 1.1 2001/09/07 13:59:07
+ *          mrajkowski Exp $
+ * @created January 11, 2005
  */
 public class TextMessageAddressList extends Vector {
 
@@ -38,10 +40,10 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the PagedListInfo attribute of the TextMessageAddressList object
+   * Sets the PagedListInfo attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since       1.1
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
    */
   protected void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -49,9 +51,9 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the orgId attribute of the TextMessageAddressList object
+   * Sets the orgId attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -59,9 +61,9 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the orgId attribute of the TextMessageAddressList object
+   * Sets the orgId attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -69,9 +71,9 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the type attribute of the TextMessageAddressList object
+   * Sets the type attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -79,9 +81,9 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the type attribute of the TextMessageAddressList object
+   * Sets the type attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -89,9 +91,9 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the contactId attribute of the TextMessageAddressList object
+   * Sets the contactId attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -99,9 +101,9 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the contactId attribute of the TextMessageAddressList object
+   * Sets the contactId attribute of the TextMessageAddressList object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -109,11 +111,11 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Gets the TextMessageAddress attribute of the TextMessageAddressList object
+   * Gets the TextMessageAddress attribute of the TextMessageAddressList object
    *
-   *@param  thisType  Description of Parameter
-   *@return           The EmailAddress value
-   *@since            1.1
+   * @param thisType Description of Parameter
+   * @return The EmailAddress value
+   * @since 1.1
    */
   public String getTextMessageAddress(String thisType) {
     Iterator i = this.iterator();
@@ -128,15 +130,16 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Gets the TextMessageAddress attribute of the TextMessageAddressList object
+   * Gets the TextMessageAddress attribute of the TextMessageAddressList object
    *
-   *@param  thisItem  Description of Parameter
-   *@return           The EmailAddress value
-   *@since            1.2
+   * @param thisItem Description of Parameter
+   * @return The EmailAddress value
+   * @since 1.2
    */
   public String getTextMessageAddress(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
-      TextMessageAddress thisAddress = (TextMessageAddress) this.get(thisItem - 1);
+      TextMessageAddress thisAddress = (TextMessageAddress) this.get(
+          thisItem - 1);
       return thisAddress.getTextMessageAddress();
     }
     return "";
@@ -144,16 +147,17 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Gets the TextMessageAddressTypeId attribute of the TextMessageAddressList
-   *  object
+   * Gets the TextMessageAddressTypeId attribute of the TextMessageAddressList
+   * object
    *
-   *@param  thisItem  Description of Parameter
-   *@return           The EmailAddressType value
-   *@since            1.2
+   * @param thisItem Description of Parameter
+   * @return The EmailAddressType value
+   * @since 1.2
    */
   public int getTextMessageAddressTypeId(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
-      TextMessageAddress thisAddress = (TextMessageAddress) this.get(thisItem - 1);
+      TextMessageAddress thisAddress = (TextMessageAddress) this.get(
+          thisItem - 1);
       return thisAddress.getType();
     }
     return -1;
@@ -161,10 +165,10 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Returns the text message address that is marked as primary or 
+   * Returns the text message address that is marked as primary or
    * returns the only (or last) text message  address in the list.
    *
-   *@return    The primaryTextMessageAddress value
+   * @return The primaryTextMessageAddress value
    */
   public String getPrimaryTextMessageAddress() {
     Iterator i = this.iterator();
@@ -175,16 +179,16 @@ public class TextMessageAddressList extends Vector {
         break;
       }
     }
-    return ((thisAddress == null)? "":thisAddress.getTextMessageAddress());
+    return ((thisAddress == null) ? "" : thisAddress.getTextMessageAddress());
   }
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.1
+   * @param sqlFilter Description of Parameter
+   * @since 1.1
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -206,13 +210,13 @@ public class TextMessageAddressList extends Vector {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

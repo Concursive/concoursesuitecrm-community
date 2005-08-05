@@ -15,20 +15,19 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelectDurationHours;
 import org.aspcfs.utils.web.HtmlSelectDurationMinutesFives;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    March 2, 2004
- *@version    $Id: HtmlSelectDuration.java,v 1.2 2004/04/01 16:14:05 mrajkowski
- *      Exp $
+ * @author kbhoopal
+ * @version $Id: HtmlSelectDuration.java,v 1.2 2004/04/01 16:14:05 mrajkowski
+ *          Exp $
+ * @created March 2, 2004
  */
 public class HtmlSelectDuration extends TagSupport {
 
@@ -39,9 +38,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the baseName attribute of the HtmlSelectDuration object
+   * Sets the baseName attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new baseName value
+   * @param tmp The new baseName value
    */
   public void setBaseName(String tmp) {
     this.baseName = tmp;
@@ -49,9 +48,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the hours attribute of the HtmlSelectDuration object
+   * Sets the hours attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new hours value
+   * @param tmp The new hours value
    */
   public void setHours(int tmp) {
     this.hours = String.valueOf(tmp);
@@ -59,9 +58,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the hours attribute of the HtmlSelectDuration object
+   * Sets the hours attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new hours value
+   * @param tmp The new hours value
    */
   public void setHours(String tmp) {
     this.hours = tmp;
@@ -69,9 +68,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the minutes attribute of the HtmlSelectDuration object
+   * Sets the minutes attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new minutes value
+   * @param tmp The new minutes value
    */
   public void setMinutes(int tmp) {
     this.minutes = String.valueOf(tmp);
@@ -79,9 +78,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the minute attribute of the HtmlSelectDuration object
+   * Sets the minute attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new minute value
+   * @param tmp The new minute value
    */
   public void setMinutes(String tmp) {
     this.minutes = tmp;
@@ -89,9 +88,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the count attribute of the HtmlSelectDuration object
+   * Sets the count attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new count value
+   * @param tmp The new count value
    */
   public void setCount(String tmp) {
     this.count = tmp;
@@ -99,9 +98,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Sets the count attribute of the HtmlSelectDuration object
+   * Sets the count attribute of the HtmlSelectDuration object
    *
-   *@param  tmp  The new count value
+   * @param tmp The new count value
    */
   public void setCount(int tmp) {
     this.count = String.valueOf(tmp);
@@ -109,10 +108,10 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -124,7 +123,8 @@ public class HtmlSelectDuration extends TagSupport {
           HtmlSelectDurationHours.getSelect(baseName + "Hours" + count, hours).toString());
       this.pageContext.getOut().write("hrs ");
       this.pageContext.getOut().write(
-          HtmlSelectDurationMinutesFives.getSelect(baseName + "Minutes" + count, minutes).toString());
+          HtmlSelectDurationMinutesFives.getSelect(
+              baseName + "Minutes" + count, minutes).toString());
       this.pageContext.getOut().write("min");
     } catch (Exception e) {
       throw new JspException("HtmlSelectTime Error: " + e.getMessage());
@@ -134,9 +134,9 @@ public class HtmlSelectDuration extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

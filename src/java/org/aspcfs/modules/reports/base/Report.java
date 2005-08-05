@@ -15,21 +15,20 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.text.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.actionlist.base.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a report that has been added to the system
+ * Represents a report that has been added to the system
  *
- *@author     matt rajkowski
- *@created    October 1, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created October 1, 2003
  */
 public class Report extends GenericBean {
   //Report properties
@@ -51,16 +50,17 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Constructor for the Report object
+   * Constructor for the Report object
    */
-  public Report() { }
+  public Report() {
+  }
 
 
   /**
-   *  Constructor for the Report object
+   * Constructor for the Report object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Report(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -68,11 +68,11 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Constructor for the Report object
+   * Constructor for the Report object
    *
-   *@param  db                Description of the Parameter
-   *@param  reportId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param reportId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Report(Connection db, int reportId) throws SQLException {
     queryRecord(db, reportId);
@@ -80,11 +80,11 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Reads the specified reportId and populates this object
+   * Reads the specified reportId and populates this object
    *
-   *@param  db                Description of the Parameter
-   *@param  reportId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param reportId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int reportId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -106,10 +106,10 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Populates this object from a resultset
+   * Populates this object from a resultset
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //report table
@@ -132,9 +132,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Report object
+   * Sets the id attribute of the Report object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -142,9 +142,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Report object
+   * Sets the id attribute of the Report object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -152,9 +152,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Report object
+   * Sets the categoryId attribute of the Report object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -162,9 +162,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Report object
+   * Sets the categoryId attribute of the Report object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -172,9 +172,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the permissionId attribute of the Report object
+   * Sets the permissionId attribute of the Report object
    *
-   *@param  tmp  The new permissionId value
+   * @param tmp The new permissionId value
    */
   public void setPermissionId(int tmp) {
     this.permissionId = tmp;
@@ -182,9 +182,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the permissionId attribute of the Report object
+   * Sets the permissionId attribute of the Report object
    *
-   *@param  tmp  The new permissionId value
+   * @param tmp The new permissionId value
    */
   public void setPermissionId(String tmp) {
     this.permissionId = Integer.parseInt(tmp);
@@ -192,9 +192,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the filename attribute of the Report object
+   * Sets the filename attribute of the Report object
    *
-   *@param  tmp  The new filename value
+   * @param tmp The new filename value
    */
   public void setFilename(String tmp) {
     this.filename = tmp;
@@ -202,9 +202,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Report object
+   * Sets the type attribute of the Report object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -212,9 +212,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Report object
+   * Sets the type attribute of the Report object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -222,9 +222,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the title attribute of the Report object
+   * Sets the title attribute of the Report object
    *
-   *@param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -232,9 +232,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Report object
+   * Sets the description attribute of the Report object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -242,9 +242,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Report object
+   * Sets the entered attribute of the Report object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -252,9 +252,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Report object
+   * Sets the entered attribute of the Report object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -262,9 +262,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Report object
+   * Sets the enteredBy attribute of the Report object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -272,9 +272,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Report object
+   * Sets the enteredBy attribute of the Report object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -282,9 +282,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Report object
+   * Sets the modified attribute of the Report object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -292,9 +292,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Report object
+   * Sets the modified attribute of the Report object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -302,9 +302,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Report object
+   * Sets the modifiedBy attribute of the Report object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -312,9 +312,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Report object
+   * Sets the modifiedBy attribute of the Report object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -322,9 +322,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Report object
+   * Sets the enabled attribute of the Report object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -332,9 +332,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Report object
+   * Sets the enabled attribute of the Report object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -342,9 +342,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the custom attribute of the Report object
+   * Sets the custom attribute of the Report object
    *
-   *@param  tmp  The new custom value
+   * @param tmp The new custom value
    */
   public void setCustom(boolean tmp) {
     this.custom = tmp;
@@ -352,9 +352,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the custom attribute of the Report object
+   * Sets the custom attribute of the Report object
    *
-   *@param  tmp  The new custom value
+   * @param tmp The new custom value
    */
   public void setCustom(String tmp) {
     this.custom = DatabaseUtils.parseBoolean(tmp);
@@ -362,9 +362,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Sets the permissionName attribute of the Report object
+   * Sets the permissionName attribute of the Report object
    *
-   *@param  tmp  The new permissionName value
+   * @param tmp The new permissionName value
    */
   public void setPermissionName(String tmp) {
     this.permissionName = tmp;
@@ -372,9 +372,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Report object
+   * Gets the id attribute of the Report object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -382,9 +382,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the Report object
+   * Gets the categoryId attribute of the Report object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -392,9 +392,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the permissionId attribute of the Report object
+   * Gets the permissionId attribute of the Report object
    *
-   *@return    The permissionId value
+   * @return The permissionId value
    */
   public int getPermissionId() {
     return permissionId;
@@ -402,9 +402,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the filename attribute of the Report object
+   * Gets the filename attribute of the Report object
    *
-   *@return    The filename value
+   * @return The filename value
    */
   public String getFilename() {
     return filename;
@@ -412,9 +412,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the Report object
+   * Gets the type attribute of the Report object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -422,9 +422,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the title attribute of the Report object
+   * Gets the title attribute of the Report object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -432,9 +432,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Report object
+   * Gets the description attribute of the Report object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -442,9 +442,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Report object
+   * Gets the entered attribute of the Report object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -452,9 +452,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Report object
+   * Gets the enteredBy attribute of the Report object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -462,9 +462,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Report object
+   * Gets the modified attribute of the Report object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -472,9 +472,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Report object
+   * Gets the modifiedBy attribute of the Report object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -482,9 +482,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Report object
+   * Gets the enabled attribute of the Report object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -492,9 +492,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the custom attribute of the Report object
+   * Gets the custom attribute of the Report object
    *
-   *@return    The custom value
+   * @return The custom value
    */
   public boolean getCustom() {
     return custom;
@@ -502,9 +502,9 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the permissionName attribute of the Report object
+   * Gets the permissionName attribute of the Report object
    *
-   *@return    The permissionName value
+   * @return The permissionName value
    */
   public String getPermissionName() {
     return permissionName;
@@ -512,12 +512,12 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Gets the id of the specified filename
+   * Gets the id of the specified filename
    *
-   *@param  db                Description of the Parameter
-   *@param  filename          Description of the Parameter
-   *@return                   The idByFilename value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param filename Description of the Parameter
+   * @return The idByFilename value
+   * @throws SQLException Description of the Exception
    */
   public static int lookupId(Connection db, String filename) throws SQLException {
     int reportId = -1;
@@ -537,18 +537,22 @@ public class Report extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "report_report_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO report " +
-        "(category_id, permission_id, filename, type, title, description, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+        "(" + (id > -1 ? "report_id, " : "") + "category_id, permission_id, filename, type, title, description, enteredby, modifiedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, categoryId);
     DatabaseUtils.setInt(pst, ++i, permissionId);
     pst.setString(++i, filename);
@@ -559,7 +563,7 @@ public class Report extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "report_report_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "report_report_id_seq", id);
     return true;
   }
 }

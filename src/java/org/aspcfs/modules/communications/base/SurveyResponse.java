@@ -26,12 +26,12 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 14, 2003
- *@version    $Id: SurveyResponse.java,v 1.4 2004/09/16 19:24:01 mrajkowski Exp
- *      $
+ * @author Mathur
+ * @version $Id: SurveyResponse.java,v 1.4 2004/09/16 19:24:01 mrajkowski Exp
+ *          $
+ * @created January 14, 2003
  */
 public class SurveyResponse {
 
@@ -51,16 +51,17 @@ public class SurveyResponse {
 
 
   /**
-   *  Constructor for the SurveyResponse object
+   * Constructor for the SurveyResponse object
    */
-  public SurveyResponse() { }
+  public SurveyResponse() {
+  }
 
 
   /**
-   *  Constructor for the SurveyResponse object
+   * Constructor for the SurveyResponse object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SurveyResponse(ResultSet rs) throws SQLException {
     id = rs.getInt("response_id");
@@ -73,9 +74,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Constructor for the SurveyResponse object
+   * Constructor for the SurveyResponse object
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public SurveyResponse(ActionContext context) {
     this.setIpAddress(context.getIpAddress());
@@ -84,9 +85,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the id attribute of the SurveyResponse object
+   * Sets the id attribute of the SurveyResponse object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -94,9 +95,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the activeSurveyId attribute of the SurveyResponse object
+   * Sets the activeSurveyId attribute of the SurveyResponse object
    *
-   *@param  tmp  The new activeSurveyId value
+   * @param tmp The new activeSurveyId value
    */
   public void setActiveSurveyId(int tmp) {
     this.activeSurveyId = tmp;
@@ -104,9 +105,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the contactId attribute of the SurveyResponse object
+   * Sets the contactId attribute of the SurveyResponse object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -114,9 +115,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the uniqueCode attribute of the SurveyResponse object
+   * Sets the uniqueCode attribute of the SurveyResponse object
    *
-   *@param  tmp  The new uniqueCode value
+   * @param tmp The new uniqueCode value
    */
   public void setUniqueCode(String tmp) {
     this.uniqueCode = tmp;
@@ -124,9 +125,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the ipAddress attribute of the SurveyResponse object
+   * Sets the ipAddress attribute of the SurveyResponse object
    *
-   *@param  tmp  The new ipAddress value
+   * @param tmp The new ipAddress value
    */
   public void setIpAddress(String tmp) {
     this.ipAddress = tmp;
@@ -134,9 +135,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the entered attribute of the SurveyResponse object
+   * Sets the entered attribute of the SurveyResponse object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -144,9 +145,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the answers attribute of the SurveyResponse object
+   * Sets the answers attribute of the SurveyResponse object
    *
-   *@param  tmp  The new answers value
+   * @param tmp The new answers value
    */
   public void setAnswers(SurveyAnswerList tmp) {
     this.answers = tmp;
@@ -154,9 +155,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the contact attribute of the SurveyResponse object
+   * Sets the contact attribute of the SurveyResponse object
    *
-   *@param  contact  The new contact value
+   * @param contact The new contact value
    */
   public void setContact(Contact contact) {
     this.contact = contact;
@@ -164,9 +165,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the addressUpdated attribute of the SurveyResponse object
+   * Sets the addressUpdated attribute of the SurveyResponse object
    *
-   *@param  tmp  The new addressUpdated value
+   * @param tmp The new addressUpdated value
    */
   public void setAddressUpdated(int tmp) {
     this.addressUpdated = tmp;
@@ -174,9 +175,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Sets the addressUpdated attribute of the SurveyResponse object
+   * Sets the addressUpdated attribute of the SurveyResponse object
    *
-   *@param  tmp  The new addressUpdated value
+   * @param tmp The new addressUpdated value
    */
   public void setAddressUpdated(String tmp) {
     this.addressUpdated = Integer.parseInt(tmp);
@@ -184,9 +185,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the contact attribute of the SurveyResponse object
+   * Gets the contact attribute of the SurveyResponse object
    *
-   *@return    The contact value
+   * @return The contact value
    */
   public Contact getContact() {
     return contact;
@@ -194,9 +195,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the id attribute of the SurveyResponse object
+   * Gets the id attribute of the SurveyResponse object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -204,9 +205,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the activeSurveyId attribute of the SurveyResponse object
+   * Gets the activeSurveyId attribute of the SurveyResponse object
    *
-   *@return    The activeSurveyId value
+   * @return The activeSurveyId value
    */
   public int getActiveSurveyId() {
     return activeSurveyId;
@@ -214,9 +215,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the contactId attribute of the SurveyResponse object
+   * Gets the contactId attribute of the SurveyResponse object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -224,9 +225,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the uniqueCode attribute of the SurveyResponse object
+   * Gets the uniqueCode attribute of the SurveyResponse object
    *
-   *@return    The uniqueCode value
+   * @return The uniqueCode value
    */
   public String getUniqueCode() {
     return uniqueCode;
@@ -234,9 +235,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the ipAddress attribute of the SurveyResponse object
+   * Gets the ipAddress attribute of the SurveyResponse object
    *
-   *@return    The ipAddress value
+   * @return The ipAddress value
    */
   public String getIpAddress() {
     return ipAddress;
@@ -244,9 +245,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the entered attribute of the SurveyResponse object
+   * Gets the entered attribute of the SurveyResponse object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -254,9 +255,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the enteredString attribute of the SurveyResponse object
+   * Gets the enteredString attribute of the SurveyResponse object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -268,13 +269,14 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the SurveyResponse object
+   * Gets the enteredDateTimeString attribute of the SurveyResponse object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -282,9 +284,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the answers attribute of the SurveyResponse object
+   * Gets the answers attribute of the SurveyResponse object
    *
-   *@return    The answers value
+   * @return The answers value
    */
   public SurveyAnswerList getAnswers() {
     return answers;
@@ -292,9 +294,9 @@ public class SurveyResponse {
 
 
   /**
-   *  Gets the addressUpdated attribute of the SurveyResponse object
+   * Gets the addressUpdated attribute of the SurveyResponse object
    *
-   *@return    The addressUpdated value
+   * @return The addressUpdated value
    */
   public int getAddressUpdated() {
     return addressUpdated;
@@ -302,46 +304,77 @@ public class SurveyResponse {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
-      String sql =
-          "INSERT INTO active_survey_responses " +
-          "(active_survey_id, contact_id, unique_code, ip_address, address_updated) VALUES (?, ?, ?, ?, ?) ";
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      id = DatabaseUtils.getNextSeq(db, "active_survey_r_response_id_seq");
+      String sql = "INSERT INTO active_survey_responses " +
+          "(" + (id > -1 ? "response_id, " : "") + "active_survey_id, contact_id, unique_code, ip_address, address_updated) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?,?, ?, ?, ?) ";
+      int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(1, activeSurveyId);
-      pst.setInt(2, contactId);
-      pst.setString(3, uniqueCode);
-      pst.setString(4, ipAddress);
-      pst.setInt(5, addressUpdated);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
+      pst.setInt(++i, activeSurveyId);
+      pst.setInt(++i, contactId);
+      pst.setString(++i, uniqueCode);
+      pst.setString(++i, ipAddress);
+      pst.setInt(++i, addressUpdated);
       pst.execute();
       pst.close();
-
-      id = DatabaseUtils.getCurrVal(db, "active_survey_r_response_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "active_survey_r_response_id_seq", id);
       answers.insert(db, id);
-
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM active_survey_responses " +
+        "WHERE response_id = ?");
+    pst.setInt(1, id);
+    pst.executeUpdate();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildContact(Connection db) throws SQLException {
     if (contactId == -1) {

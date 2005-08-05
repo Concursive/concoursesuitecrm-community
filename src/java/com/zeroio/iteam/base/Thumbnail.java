@@ -15,18 +15,19 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.actions.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 7, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 7, 2003
  */
 public class Thumbnail extends GenericBean {
 
@@ -43,15 +44,16 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Constructor for the Thumbnail object
+   * Constructor for the Thumbnail object
    */
-  public Thumbnail() { }
+  public Thumbnail() {
+  }
 
 
   /**
-   *  Sets the id attribute of the Thumbnail object
+   * Sets the id attribute of the Thumbnail object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -59,9 +61,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Thumbnail object
+   * Sets the id attribute of the Thumbnail object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -69,9 +71,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the filename attribute of the Thumbnail object
+   * Sets the filename attribute of the Thumbnail object
    *
-   *@param  tmp  The new filename value
+   * @param tmp The new filename value
    */
   public void setFilename(String tmp) {
     this.filename = tmp;
@@ -79,9 +81,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the size attribute of the Thumbnail object
+   * Sets the size attribute of the Thumbnail object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(int tmp) {
     this.size = tmp;
@@ -89,9 +91,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the size attribute of the Thumbnail object
+   * Sets the size attribute of the Thumbnail object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(String tmp) {
     this.size = Integer.parseInt(tmp);
@@ -99,9 +101,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the version attribute of the Thumbnail object
+   * Sets the version attribute of the Thumbnail object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(double tmp) {
     this.version = tmp;
@@ -109,9 +111,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Thumbnail object
+   * Sets the entered attribute of the Thumbnail object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -119,9 +121,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Thumbnail object
+   * Sets the entered attribute of the Thumbnail object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -129,9 +131,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Thumbnail object
+   * Sets the enteredBy attribute of the Thumbnail object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -139,9 +141,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Thumbnail object
+   * Sets the enteredBy attribute of the Thumbnail object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -149,9 +151,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Thumbnail object
+   * Sets the modified attribute of the Thumbnail object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -159,9 +161,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Thumbnail object
+   * Sets the modified attribute of the Thumbnail object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -169,9 +171,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Thumbnail object
+   * Sets the modifiedBy attribute of the Thumbnail object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -179,9 +181,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Thumbnail object
+   * Sets the modifiedBy attribute of the Thumbnail object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -189,9 +191,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Thumbnail object
+   * Gets the id attribute of the Thumbnail object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -199,9 +201,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the filename attribute of the Thumbnail object
+   * Gets the filename attribute of the Thumbnail object
    *
-   *@return    The filename value
+   * @return The filename value
    */
   public String getFilename() {
     return filename;
@@ -209,9 +211,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the size attribute of the Thumbnail object
+   * Gets the size attribute of the Thumbnail object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -219,9 +221,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the version attribute of the Thumbnail object
+   * Gets the version attribute of the Thumbnail object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return version;
@@ -229,9 +231,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Thumbnail object
+   * Gets the entered attribute of the Thumbnail object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -239,9 +241,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Thumbnail object
+   * Gets the enteredBy attribute of the Thumbnail object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -249,9 +251,9 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Thumbnail object
+   * Gets the modified attribute of the Thumbnail object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -259,20 +261,19 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Thumbnail object
+   * Gets the modifiedBy attribute of the Thumbnail object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
   }
 
 
-
   /**
-   *  Gets the relativeSize attribute of the Thumbnail object
+   * Gets the relativeSize attribute of the Thumbnail object
    *
-   *@return    The relativeSize value
+   * @return The relativeSize value
    */
   public int getRelativeSize() {
     int newSize = (size / 1000);
@@ -285,16 +286,16 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO project_files_thumbnail " +
-        "(item_id, filename, version, size, " +
+        "(item_id, filename, version, \"size\", " +
         (entered != null ? "entered, " : "") +
         (modified != null ? "modified, " : "") +
         "enteredBy, modifiedBy) " +
@@ -322,12 +323,12 @@ public class Thumbnail extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     //Need to delete the actual file

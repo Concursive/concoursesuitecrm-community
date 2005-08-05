@@ -15,33 +15,39 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.admin.base.AccessLogList;
+import org.aspcfs.modules.admin.base.RoleList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.controller.*;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.HashMap;
 
 /**
- *  Methods for managing users
+ * Methods for managing users
  *
- *@author     mrajkowski
- *@created    September 17, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created September 17, 2001
  */
 public final class Users extends CFSModule {
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListUsers(context);
@@ -49,11 +55,11 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Lists the users in the system that have a corresponding contact record
+   * Lists the users in the system that have a corresponding contact record
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.6
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.6
    */
   public String executeCommandListUsers(ActionContext context) {
     if (!hasPermission(context, "admin-users-view")) {
@@ -100,10 +106,10 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewLog(ActionContext context) {
 
@@ -114,7 +120,9 @@ public final class Users extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo listInfo = getPagedListInfo(context, "AccessLogInfo");
-    listInfo.setLink("Users.do?command=ViewLog&id=" + context.getRequest().getParameter("id"));
+    listInfo.setLink(
+        "Users.do?command=ViewLog&id=" + context.getRequest().getParameter(
+            "id"));
 
     Connection db = null;
     AccessLogList list = new AccessLogList();
@@ -153,11 +161,11 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action that loads a user for display
+   * Action that loads a user for display
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.6
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.6
    */
   public String executeCommandUserDetails(ActionContext context) {
 
@@ -207,11 +215,11 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action that generates the form data for inserting a new user
+   * Action that generates the form data for inserting a new user
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.6
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.6
    */
   public String executeCommandInsertUserForm(ActionContext context) {
     if (!hasPermission(context, "admin-users-add")) {
@@ -223,13 +231,18 @@ public final class Users extends CFSModule {
       db = this.getConnection(context);
       // BEGIN DHV CODE ONLY
       //Load the license and see how many users can be added
-      java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-      org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-      String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+      java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
+          getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+      org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
+          org.aspcfs.utils.PrivateString.decrypt(
+              key, org.aspcfs.utils.StringUtils.loadText(
+                  getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
+      String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
+          xml.getFirstChild("text2"));
       //Check the license
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) AS user_count " +
-          "FROM access a, role r " +
+          "FROM access a, \"role\" r " +
           "WHERE a.user_id > 0 " +
           "AND a.role_id > 0 " +
           "AND a.role_id = r.role_id " +
@@ -242,7 +255,8 @@ public final class Users extends CFSModule {
       if (rs.next()) {
         current = rs.getInt("user_count");
       }
-      if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(lpd.substring(7))) {
+      if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(
+          lpd.substring(7))) {
         return ("LicenseError");
       }
       rs.close();
@@ -251,15 +265,19 @@ public final class Users extends CFSModule {
       //Prepare the role drop-down
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
-      roleList.setEmptyHtmlSelectRecord("-- Please Select --");
+      roleList.setEmptyHtmlSelectRecord(
+          this.getSystemStatus(context).getLabel("admin.users.pleaseSelect"));
       roleList.setRoleType(Constants.ROLETYPE_REGULAR);
       roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
       //Prepare the user drop-down
       UserList userList = new UserList();
-      userList.setEmptyHtmlSelectRecord("-- None --");
+      userList.setEmptyHtmlSelectRecord(
+          this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       userList.setBuildContact(false);
+      userList.setExcludeDisabledIfUnselected(true);
+      userList.setExcludeExpiredIfUnselected(true);
       userList.setBuildContactDetails(false);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
       userList.buildList(db);
@@ -275,32 +293,38 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action that adds a user to the database based on submitted html form
+   * Action that adds a user to the database based on submitted html form
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.7
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.7
    */
   public String executeCommandAddUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-add")) {
       return ("PermissionError");
     }
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     Connection db = null;
     boolean recordInserted = false;
     User insertedUser = null;
     try {
-      synchronized(this) {
+      synchronized (this) {
         db = this.getConnection(context);
         // BEGIN DHV CODE ONLY
         //Load the license and see how many users can be added
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
+            getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
+            org.aspcfs.utils.PrivateString.decrypt(
+                key, org.aspcfs.utils.StringUtils.loadText(
+                    getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
+        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
+            xml.getFirstChild("text2"));
         //Check the license
         PreparedStatement pst = db.prepareStatement(
             "SELECT count(*) AS user_count " +
-            "FROM access a, role r " +
+            "FROM access a, \"role\" r " +
             "WHERE a.user_id > 0 " +
             "AND a.role_id > 0 " +
             "AND a.role_id = r.role_id " +
@@ -313,7 +337,8 @@ public final class Users extends CFSModule {
         if (rs.next()) {
           current = rs.getInt("user_count");
         }
-        if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(lpd.substring(7))) {
+        if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(
+            lpd.substring(7))) {
           return ("LicenseError");
         }
         rs.close();
@@ -322,14 +347,35 @@ public final class Users extends CFSModule {
         //Process the user request form
         User thisUser = (User) context.getFormBean();
         if (context.getRequest().getParameter("typeId") != null) {
-          ((Contact) thisUser.getContact()).addType(context.getRequest().getParameter("typeId"));
+          ((Contact) thisUser.getContact()).addType(
+              context.getRequest().getParameter("typeId"));
+        }
+        if (thisUser.getManagerId() != -1) {
+          User manager = this.getUser(context, thisUser.getManagerId());
+          if (!manager.getEnabled()) {
+            HashMap errors = new HashMap();
+            SystemStatus systemStatus = this.getSystemStatus(context);
+            errors.put(
+                "actionError", systemStatus.getLabel(
+                    "object.validation.genericActionError"));
+            errors.put(
+                "managerIdError", systemStatus.getLabel(
+                    "admin.disabledManager.text"));
+            errors.putAll(thisUser.getErrors());
+            if (thisUser.getContactId() != -1) {
+              thisUser.setContact(new Contact(db, thisUser.getContactId()));
+            }
+            context.getRequest().setAttribute("UserRecord", thisUser);
+            processErrors(context, errors);
+            return (executeCommandInsertUserForm(context));
+          }
         }
         thisUser.setEnteredBy(getUserId(context));
         thisUser.setModifiedBy(getUserId(context));
         thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
         thisUser.setCurrency(prefs.get("SYSTEM.CURRENCY"));
         thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
-        
+
         recordInserted = thisUser.insert(db, context);
         if (recordInserted) {
           insertedUser = new User();
@@ -361,13 +407,13 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action that deletes a user from the database. No longer used because
-   *  referential integrity is kept.
+   * Action that deletes a user from the database. No longer used because
+   * referential integrity is kept.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.12
-   *@deprecated
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.12
+   * @deprecated
    */
   public String executeCommandDeleteUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-delete")) {
@@ -380,7 +426,7 @@ public final class Users extends CFSModule {
     try {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
-      recordDeleted = thisUser.delete(db);
+      recordDeleted = thisUser.disable(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -391,7 +437,9 @@ public final class Users extends CFSModule {
     if (recordDeleted) {
       return ("UserDeleteOK");
     } else {
-      thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userDeletion"));
+      thisUser.getErrors().put(
+          "actionError", systemStatus.getLabel(
+              "object.validation.actionError.userDeletion"));
       processErrors(context, thisUser.getErrors());
       return (executeCommandListUsers(context));
     }
@@ -399,10 +447,10 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action to disable a user that is currently enabled.
+   * Action to disable a user that is currently enabled.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDisableUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-delete")) {
@@ -422,13 +470,14 @@ public final class Users extends CFSModule {
         Contact thisContact = new Contact(db, thisUser.getContactId());
         thisContact.disable(db);
       }
-      recordDisabled = thisUser.delete(db);
+      recordDisabled = thisUser.disable(db);
       if (recordDisabled) {
         thisTicket = new Ticket();
         HashMap map = new HashMap();
         map.put("${thisUser.username}", thisUser.getUsername());
         map.put("${thisRec.username}", thisRec.getUsername());
-        Template template = new Template(systemStatus.getLabel("ticket.problem.userDisabled"));
+        Template template = new Template(
+            systemStatus.getLabel("ticket.problem.userDisabled"));
         template.setParseElements(map);
         thisTicket.setProblem(template.getParsedText());
         thisTicket.setEnteredBy(thisRec.getId());
@@ -443,13 +492,16 @@ public final class Users extends CFSModule {
           managerUser.buildRecord(db, thisUser.getManagerId());
           updateSystemHierarchyCheck(db, context);
           thisTicket.setAssignedTo(thisUser.getManagerId());
-          thisTicket.setDepartmentCode(managerUser.getContact().getDepartment());
+          thisTicket.setDepartmentCode(
+              managerUser.getContact().getDepartment());
         } else {
           thisTicket.setDepartmentCode(thisUser.getContact().getDepartment());
         }
         thisTicket.insert(db);
       } else {
-        thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotDisabled"));
+        thisUser.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.userNotDisabled"));
         processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
@@ -470,10 +522,10 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action to enable a user that is currently disabled.
+   * Action to enable a user that is currently disabled.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEnableUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
@@ -484,17 +536,22 @@ public final class Users extends CFSModule {
     User thisUser = null;
     Connection db = null;
     try {
-      synchronized(this) {
+      synchronized (this) {
         db = this.getConnection(context);
         // BEGIN DHV CODE ONLY
         //Load the license and see how many users can be added
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
+            getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
+            org.aspcfs.utils.PrivateString.decrypt(
+                key, org.aspcfs.utils.StringUtils.loadText(
+                    getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
+        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
+            xml.getFirstChild("text2"));
         //Check the license
         PreparedStatement pst = db.prepareStatement(
             "SELECT count(*) AS user_count " +
-            "FROM access a, role r " +
+            "FROM access a, \"role\" r " +
             "WHERE a.user_id > 0 " +
             "AND a.role_id > 0 " +
             "AND a.role_id = r.role_id " +
@@ -507,7 +564,8 @@ public final class Users extends CFSModule {
         if (rs.next()) {
           current = rs.getInt("user_count");
         }
-        if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(lpd.substring(7))) {
+        if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(
+            lpd.substring(7))) {
           return ("LicenseError");
         }
         rs.close();
@@ -517,14 +575,17 @@ public final class Users extends CFSModule {
         thisUser = new User(db, context.getRequest().getParameter("id"));
         //Reactivate the contact if it was previously de-activated
         Contact thisContact = new Contact(db, thisUser.getContactId());
-        if (!thisContact.getEnabled()) {
-          thisContact.enable(db);
+        if (!thisContact.getEnabled() || thisContact.isTrashed()) {
+          return "PermissionError";
+        } else {
+          recordEnabled = thisUser.enable(db);
         }
-        recordEnabled = thisUser.enable(db);
         if (recordEnabled) {
           updateSystemHierarchyCheck(db, context);
         } else {
-          thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotEnabled"));
+          thisUser.getErrors().put(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.userNotEnabled"));
           processErrors(context, thisUser.getErrors());
         }
       }
@@ -543,10 +604,10 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDisableUserConfirm(ActionContext context) {
     if (!hasPermission(context, "admin-users-delete")) {
@@ -559,7 +620,8 @@ public final class Users extends CFSModule {
       db = this.getConnection(context);
       thisUser = new User();
       thisUser.setBuildContact(true);
-      thisUser.buildRecord(db, Integer.parseInt(context.getRequest().getParameter("id")));
+      thisUser.buildRecord(
+          db, Integer.parseInt(context.getRequest().getParameter("id")));
       if (thisUser.getManagerId() > -1) {
         managerUser = new User();
         managerUser.setBuildContact(true);
@@ -580,11 +642,11 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action to generate the form for modifying a user
+   * Action to generate the form for modifying a user
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.12
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.12
    */
   public String executeCommandModifyUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
@@ -604,7 +666,8 @@ public final class Users extends CFSModule {
       newUser.buildRecord(db, Integer.parseInt(userId));
       //Prepare the user list
       UserList userList = new UserList();
-      userList.setEmptyHtmlSelectRecord("-- None --");
+      userList.setEmptyHtmlSelectRecord(
+          this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       userList.setBuildContact(false);
       userList.setBuildContactDetails(false);
       userList.setExcludeDisabledIfUnselected(true);
@@ -615,7 +678,8 @@ public final class Users extends CFSModule {
       //Prepare the role list
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
-      roleList.setEmptyHtmlSelectRecord("-- None --");
+      roleList.setEmptyHtmlSelectRecord(
+          this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       roleList.setEnabledState(Constants.TRUE);
       roleList.setRoleType(Constants.ROLETYPE_REGULAR);
       roleList.buildList(db);
@@ -632,11 +696,11 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action that updates the user record based on the submitted form
+   * Action that updates the user record based on the submitted form
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.12
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.12
    */
   public String executeCommandUpdateUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
@@ -645,10 +709,35 @@ public final class Users extends CFSModule {
     User newUser = (User) context.getFormBean();
     Connection db = null;
     int resultCount = 0;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       newUser.setModifiedBy(getUserId(context));
-      resultCount = newUser.update(db, context);
+
+      if (newUser.getManagerId() != -1) {
+        User manager = this.getUser(context, newUser.getManagerId());
+        if (!manager.getEnabled()) {
+          HashMap errors = new HashMap();
+          SystemStatus systemStatus = this.getSystemStatus(context);
+          errors.put(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.genericActionError"));
+          errors.put(
+              "managerIdError", systemStatus.getLabel(
+                  "admin.disabledManager.text"));
+          errors.putAll(newUser.getErrors());
+          context.getRequest().setAttribute("UserRecord", newUser);
+          processErrors(context, errors);
+          isValid = false;
+        } else {
+          isValid = true;
+        }
+      } else {
+        isValid = true;
+      }
+      if (isValid) {
+        resultCount = newUser.update(db, context);
+      }
       if (resultCount == -1) {
         //Prepare the form again
         newUser.setBuildContact(true);
@@ -656,16 +745,20 @@ public final class Users extends CFSModule {
         context.getRequest().setAttribute("UserRecord", newUser);
         //Prepare the user list
         UserList userList = new UserList();
-        userList.setEmptyHtmlSelectRecord("-- None --");
+        userList.setEmptyHtmlSelectRecord(
+            this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
         userList.setBuildContact(false);
         userList.setBuildContactDetails(false);
+        userList.setExcludeDisabledIfUnselected(true);
+        userList.setExcludeExpiredIfUnselected(true);
         userList.setRoleType(Constants.ROLETYPE_REGULAR);
         userList.buildList(db);
         context.getRequest().setAttribute("UserList", userList);
         //Prepare the role list
         RoleList roleList = new RoleList();
         roleList.setBuildUsers(false);
-        roleList.setEmptyHtmlSelectRecord("-- None --");
+        roleList.setEmptyHtmlSelectRecord(
+            this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
         roleList.setEnabledState(Constants.TRUE);
         roleList.setRoleType(Constants.ROLETYPE_REGULAR);
         roleList.buildList(db);
@@ -686,11 +779,15 @@ public final class Users extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == -1) {
-      processErrors(context, newUser.getErrors());
+      if (isValid) {
+        processErrors(context, newUser.getErrors());
+      }
       return ("UserModifyOK");
     } else if (resultCount == 1) {
-      context.getRequest().setAttribute("id", context.getRequest().getParameter("id"));
-      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+      context.getRequest().setAttribute(
+          "id", context.getRequest().getParameter("id"));
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
+          "return").equals("list")) {
         return (executeCommandListUsers(context));
       } else {
         return ("UserUpdateOK");

@@ -15,25 +15,24 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
+
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 7, 2003
- *@version    $Id: HtmlSelectMinutesQuarterly.java,v 1.1 2003/07/02 05:25:00
- *      matt Exp $
+ * @author matt rajkowski
+ * @version $Id: HtmlSelectMinutesQuarterly.java,v 1.1 2003/07/02 05:25:00
+ *          matt Exp $
+ * @created July 7, 2003
  */
 public class HtmlSelectMinutesFives {
 
   /**
-   *  Gets the select attribute of the HtmlSelectMinutesFives class
+   * Gets the select attribute of the HtmlSelectMinutesFives class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, String defaultValue) {
     HtmlSelect select = new HtmlSelect();

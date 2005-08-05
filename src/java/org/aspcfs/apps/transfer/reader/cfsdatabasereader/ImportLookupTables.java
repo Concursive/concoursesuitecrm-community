@@ -15,22 +15,25 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.apps.transfer.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
+import org.aspcfs.utils.web.CustomLookupElement;
+import org.aspcfs.utils.web.CustomLookupList;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Reads most of the lookup tables found in CFS -- scans for any PropertyMap
- *  that is defined as com.darkhorseventures.webutils.LookupList
+ * Reads most of the lookup tables found in CFS -- scans for any PropertyMap
+ * that is defined as com.darkhorseventures.webutils.LookupList
  *
- *@author     matt rajkowski
- *@created    September 4, 2002
- *@version    $Id: ImportLookupTables.java,v 1.13 2002/09/17 19:15:09 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ImportLookupTables.java,v 1.13 2002/09/17 19:15:09 mrajkowski
+ *          Exp $
+ * @created September 4, 2002
  */
 public class ImportLookupTables implements CFSDatabaseReaderImportModule {
   Connection db = null;
@@ -38,13 +41,13 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -68,12 +71,12 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  uniqueId          Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param uniqueId  Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean saveLookupList(String uniqueId, String tableName) throws SQLException {
     LookupList thisList = new LookupList(db, tableName);
@@ -86,7 +89,8 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
       thisRecord.addField("tableName", tableName);
       thisRecord.addField("guid", String.valueOf(thisElement.getCode()));
       thisRecord.addField("description", thisElement.getDescription());
-      thisRecord.addField("defaultItem", String.valueOf(thisElement.getDefaultItem()));
+      thisRecord.addField(
+          "defaultItem", String.valueOf(thisElement.getDefaultItem()));
       thisRecord.addField("level", String.valueOf(thisElement.getLevel()));
       if (!writer.save(thisRecord)) {
         return false;
@@ -97,14 +101,14 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@param  mapId             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @param mapId    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean saveCustomLookupList(DataWriter writer, Connection db, PropertyMapList mappings, String mapId) throws SQLException {
     boolean processOK = true;
@@ -142,13 +146,16 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
           String fieldName = thisProperty.getField();
           String value = thisElement.getValue(fieldName);
 
-          if (thisProperty.hasAlias() && "guid".equals(thisProperty.getAlias())) {
+          if (thisProperty.hasAlias() && "guid".equals(
+              thisProperty.getAlias())) {
             thisRecord.addField("guid", value);
           } else if (thisProperty.hasName()) {
-            thisRecord.addField(thisProperty.getName(), value, thisProperty.getLookupValue(), thisProperty.getAlias());
+            thisRecord.addField(
+                thisProperty.getName(), value, thisProperty.getLookupValue(), thisProperty.getAlias());
           } else {
             thisRecord.addField("field", fieldName);
-            thisRecord.addField("data", value, thisProperty.getLookupValue(), thisProperty.getAlias());
+            thisRecord.addField(
+                "data", value, thisProperty.getLookupValue(), thisProperty.getAlias());
           }
         }
         processOK = writer.save(thisRecord);

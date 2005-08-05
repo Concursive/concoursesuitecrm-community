@@ -15,18 +15,21 @@
  */
 package org.aspcfs.modules.system.base;
 
-import java.util.ArrayList;
-import java.sql.*;
-import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Builds a list of gatekeeper Site objects
+ * Builds a list of gatekeeper Site objects
  *
- *@author     matt rajkowski
- *@created    May 13, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 13, 2003
  */
 public class SiteList extends ArrayList {
 
@@ -37,15 +40,16 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Constructor for the SiteList object
+   * Constructor for the SiteList object
    */
-  public SiteList() { }
+  public SiteList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the SiteList object
+   * Sets the pagedListInfo attribute of the SiteList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -53,9 +57,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the SiteList object
+   * Gets the pagedListInfo attribute of the SiteList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -63,9 +67,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the SiteList object
+   * Sets the enabled attribute of the SiteList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -73,9 +77,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the SiteList object
+   * Sets the enabled attribute of the SiteList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -83,9 +87,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the SiteList object
+   * Gets the enabled attribute of the SiteList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -93,9 +97,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the siteCode attribute of the SiteList object
+   * Sets the siteCode attribute of the SiteList object
    *
-   *@param  tmp  The new siteCode value
+   * @param tmp The new siteCode value
    */
   public void setSiteCode(String tmp) {
     this.siteCode = tmp;
@@ -103,9 +107,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the siteCode attribute of the SiteList object
+   * Gets the siteCode attribute of the SiteList object
    *
-   *@return    The siteCode value
+   * @return The siteCode value
    */
   public String getSiteCode() {
     return siteCode;
@@ -113,9 +117,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the virtualHost attribute of the SiteList object
+   * Sets the virtualHost attribute of the SiteList object
    *
-   *@param  tmp  The new virtualHost value
+   * @param tmp The new virtualHost value
    */
   public void setVirtualHost(String tmp) {
     this.virtualHost = tmp;
@@ -123,9 +127,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the virtualHost attribute of the SiteList object
+   * Gets the virtualHost attribute of the SiteList object
    *
-   *@return    The virtualHost value
+   * @return The virtualHost value
    */
   public String getVirtualHost() {
     return virtualHost;
@@ -133,11 +137,11 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Builds a list of sites based on the specified parameters, requires a
-   *  Gatekeeper Connection
+   * Builds a list of sites based on the specified parameters, requires a
+   * Gatekeeper Connection
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -155,7 +159,8 @@ public class SiteList extends ArrayList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -176,20 +181,14 @@ public class SiteList extends ArrayList {
         "SELECT * " +
         "FROM sites s " +
         "WHERE s.site_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Site thisSite = new Site(rs);
       this.add(thisSite);
     }
@@ -199,9 +198,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -220,11 +219,11 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -15,26 +15,27 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Address;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Build an address for an Order using a custom query that extends the fields
- *  and methods of a typical Address
+ * Build an address for an Order using a custom query that extends the fields
+ * and methods of a typical Address
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id: OrderAddress.java,v 1.3.12.1 2004/11/12 19:55:25 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: OrderAddress.java,v 1.3.12.1 2004/11/12 19:55:25 mrajkowski
+ *          Exp $
+ * @created March 18, 2004
  */
 public class OrderAddress extends Address {
 
   /**
-   *  Constructor for the OrderAddress object
+   * Constructor for the OrderAddress object
    */
   public OrderAddress() {
     isOrder = true;
@@ -42,11 +43,11 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Constructor for the OrderAddress object
+   * Constructor for the OrderAddress object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrderAddress(Connection db, int id) throws SQLException {
     isOrder = true;
@@ -55,10 +56,10 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Constructor for the OrderAddress object
+   * Constructor for the OrderAddress object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrderAddress(ResultSet rs) throws SQLException {
     isOrder = true;
@@ -67,11 +68,11 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  addressId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param addressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int addressId) throws SQLException {
     if (addressId == -1) {
@@ -100,13 +101,13 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  orderId           Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@param  modifiedBy        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param orderId    Description of the Parameter
+   * @param enteredBy  Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void process(Connection db, int orderId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
@@ -126,10 +127,10 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     insert(db, this.getOrderId(), this.getEnteredBy());
@@ -137,12 +138,12 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  orderId           Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param orderId   Description of the Parameter
+   * @param enteredBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int orderId, int enteredBy) throws SQLException {
     if (orderId > -1) {
@@ -152,9 +153,14 @@ public class OrderAddress extends Address {
       this.setEnteredBy(enteredBy);
     }
     StringBuffer sql = new StringBuffer();
+    this.setId(DatabaseUtils.getNextSeq(db, "order_address_address_id_seq"));
+    int id = getId();
     sql.append(
         " INSERT INTO order_address(order_id, address_type, addrline1, addrline2, addrline3, " +
         " 	city, state, postalcode, country, ");
+    if (id > -1) {
+      sql.append("address_id, ");
+    }
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -164,6 +170,9 @@ public class OrderAddress extends Address {
     }
     sql.append("modifiedby ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -188,7 +197,8 @@ public class OrderAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(this.getCountry())) {
+    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
+        this.getCountry())) {
       pst.setString(++i, this.getState());
     } else {
       pst.setString(++i, this.getOtherState());
@@ -198,7 +208,9 @@ public class OrderAddress extends Address {
     }
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
-
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
     if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
@@ -206,16 +218,17 @@ public class OrderAddress extends Address {
     DatabaseUtils.setInt(pst, ++i, this.getModifiedBy());
     pst.execute();
     pst.close();
-    this.setId(DatabaseUtils.getCurrVal(db, "order_address_address_id_seq"));
+    this.setId(
+        DatabaseUtils.getCurrVal(db, "order_address_address_id_seq", id));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -228,8 +241,7 @@ public class OrderAddress extends Address {
         db.setAutoCommit(false);
       }
       PreparedStatement pst = db.prepareStatement(
-          " DELETE FROM order_address WHERE address_id = ?"
-          );
+          " DELETE FROM order_address WHERE address_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -251,12 +263,12 @@ public class OrderAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  modifiedBy        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, int modifiedBy) throws SQLException {
     int resultCount = 0;
@@ -265,7 +277,8 @@ public class OrderAddress extends Address {
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append(" UPDATE order_address " +
+    sql.append(
+        " UPDATE order_address " +
         " SET address_type = ?, " +
         "		 addrline1 = ?, " +
         "     addrline2 = ?, " +
@@ -289,7 +302,8 @@ public class OrderAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(this.getCountry())) {
+    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
+        this.getCountry())) {
       pst.setString(++i, this.getState());
     } else {
       pst.setString(++i, this.getOtherState());

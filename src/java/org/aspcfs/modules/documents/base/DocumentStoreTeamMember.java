@@ -15,17 +15,21 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import java.sql.*;
-import java.text.DateFormat;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+
 /**
- *  Represents a member of a document store
+ * Represents a member of a document store
  *
- *@author
- *@created
- *@version    $Id: DocumentStoreTeamMember.java,v 1.1.4.1.2.2 2004/12/08
- *      15:42:43 kbhoopal Exp $
+ * @author
+ * @version $Id: DocumentStoreTeamMember.java,v 1.1.4.1.2.2 2004/12/08
+ *          15:42:43 kbhoopal Exp $
+ * @created
  */
 public class DocumentStoreTeamMember {
 //Constants that control permissions within a document store
@@ -54,16 +58,17 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Constructor for the DoucmentStoreTeamMember object
+   * Constructor for the DoucmentStoreTeamMember object
    */
-  public DocumentStoreTeamMember() { }
+  public DocumentStoreTeamMember() {
+  }
 
 
   /**
-   *  Constructor for the DocumentStoreTeamMember object
+   * Constructor for the DocumentStoreTeamMember object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStoreTeamMember(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -71,14 +76,14 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Constructor for the DocumentTeamMember object
+   * Constructor for the DocumentTeamMember object
    *
-   *@param  db                  Description of the Parameter
-   *@param  tmpDocumentStoreId  Description of the Parameter
-   *@param  tmpTeamId           Description of the Parameter
-   *@param  tmpRoleId           Description of the Parameter
-   *@param  tmpDepartmentId     Description of the Parameter
-   *@exception  SQLException    Description of the Exception
+   * @param db                 Description of the Parameter
+   * @param tmpDocumentStoreId Description of the Parameter
+   * @param tmpTeamId          Description of the Parameter
+   * @param tmpRoleId          Description of the Parameter
+   * @param tmpDepartmentId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStoreTeamMember(Connection db, int tmpDocumentStoreId, int tmpTeamId, int tmpRoleId, int tmpDepartmentId) throws SQLException {
     queryRecord(db, tmpDocumentStoreId, tmpTeamId, tmpRoleId, tmpDepartmentId);
@@ -86,9 +91,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the documentStore attribute of the TeamMember object
+   * Sets the documentStore attribute of the TeamMember object
    *
-   *@param  tmp  The new documentStore value
+   * @param tmp The new documentStore value
    */
   public void setDocumentStore(DocumentStore tmp) {
     this.documentStore = tmp;
@@ -96,9 +101,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the contact attribute of the TeamMember object
+   * Sets the contact attribute of the TeamMember object
    *
-   *@param  tmp  The new contact value
+   * @param tmp The new contact value
    */
   public void setContact(Object tmp) {
     this.contact = tmp;
@@ -106,9 +111,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the user attribute of the TeamMember object
+   * Sets the user attribute of the TeamMember object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(Object tmp) {
     this.user = tmp;
@@ -116,9 +121,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the documentStoreId attribute of the TeamMember object
+   * Sets the documentStoreId attribute of the TeamMember object
    *
-   *@param  tmp  The new documentStoreId value
+   * @param tmp The new documentStoreId value
    */
   public void setDocumentStoreId(int tmp) {
     this.documentStoreId = tmp;
@@ -126,9 +131,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the documentStoreId attribute of the TeamMember object
+   * Sets the documentStoreId attribute of the TeamMember object
    *
-   *@param  tmp  The new documentStoreId value
+   * @param tmp The new documentStoreId value
    */
   public void setDocumentStoreId(String tmp) {
     this.documentStoreId = Integer.parseInt(tmp);
@@ -136,9 +141,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the itemId attribute of the TeamMember object
+   * Sets the itemId attribute of the TeamMember object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -146,9 +151,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the itemId attribute of the TeamMember object
+   * Sets the itemId attribute of the TeamMember object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -156,9 +161,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the userLevel attribute of the TeamMember object
+   * Sets the userLevel attribute of the TeamMember object
    *
-   *@param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(int tmp) {
     this.userLevel = tmp;
@@ -166,9 +171,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the userLevel attribute of the TeamMember object
+   * Sets the userLevel attribute of the TeamMember object
    *
-   *@param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(String tmp) {
     this.userLevel = Integer.parseInt(tmp);
@@ -176,9 +181,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the entered attribute of the TeamMember object
+   * Sets the entered attribute of the TeamMember object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -186,9 +191,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the entered attribute of the TeamMember object
+   * Sets the entered attribute of the TeamMember object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -196,9 +201,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the enteredBy attribute of the TeamMember object
+   * Sets the enteredBy attribute of the TeamMember object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -206,9 +211,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the enteredBy attribute of the TeamMember object
+   * Sets the enteredBy attribute of the TeamMember object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -216,9 +221,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the modified attribute of the TeamMember object
+   * Sets the modified attribute of the TeamMember object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -226,9 +231,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the modified attribute of the TeamMember object
+   * Sets the modified attribute of the TeamMember object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -236,9 +241,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TeamMember object
+   * Sets the modifiedBy attribute of the TeamMember object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -246,9 +251,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TeamMember object
+   * Sets the modifiedBy attribute of the TeamMember object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -256,9 +261,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the roleId attribute of the TeamMember object
+   * Sets the roleId attribute of the TeamMember object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(int tmp) {
     this.roleId = tmp;
@@ -266,9 +271,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the roleId attribute of the TeamMember object
+   * Sets the roleId attribute of the TeamMember object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(String tmp) {
     this.roleId = Integer.parseInt(tmp);
@@ -276,9 +281,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the status attribute of the TeamMember object
+   * Sets the status attribute of the TeamMember object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -286,9 +291,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the status attribute of the TeamMember object
+   * Sets the status attribute of the TeamMember object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -296,9 +301,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the lastAccessed attribute of the TeamMember object
+   * Sets the lastAccessed attribute of the TeamMember object
    *
-   *@param  tmp  The new lastAccessed value
+   * @param tmp The new lastAccessed value
    */
   public void setLastAccessed(java.sql.Timestamp tmp) {
     this.lastAccessed = tmp;
@@ -306,9 +311,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Sets the lastAccessed attribute of the TeamMember object
+   * Sets the lastAccessed attribute of the TeamMember object
    *
-   *@param  tmp  The new lastAccessed value
+   * @param tmp The new lastAccessed value
    */
   public void setLastAccessed(String tmp) {
     this.lastAccessed = DatabaseUtils.parseTimestamp(tmp);
@@ -316,9 +321,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the documentStore attribute of the TeamMember object
+   * Gets the documentStore attribute of the TeamMember object
    *
-   *@return    The documentStore value
+   * @return The documentStore value
    */
   public DocumentStore getDocumentStore() {
     return documentStore;
@@ -326,9 +331,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the contact attribute of the TeamMember object
+   * Gets the contact attribute of the TeamMember object
    *
-   *@return    The contact value
+   * @return The contact value
    */
   public Object getContact() {
     return contact;
@@ -336,9 +341,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the user attribute of the TeamMember object
+   * Gets the user attribute of the TeamMember object
    *
-   *@return    The user value
+   * @return The user value
    */
   public Object getUser() {
     return user;
@@ -346,9 +351,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the documentStoreId attribute of the TeamMember object
+   * Gets the documentStoreId attribute of the TeamMember object
    *
-   *@return    The documentStoreId value
+   * @return The documentStoreId value
    */
   public int getDocumentStoreId() {
     return documentStoreId;
@@ -356,9 +361,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the itemId attribute of the TeamMember object
+   * Gets the itemId attribute of the TeamMember object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -366,9 +371,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the userLevel attribute of the TeamMember object
+   * Gets the userLevel attribute of the TeamMember object
    *
-   *@return    The userLevel value
+   * @return The userLevel value
    */
   public int getUserLevel() {
     return userLevel;
@@ -376,9 +381,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the entered attribute of the TeamMember object
+   * Gets the entered attribute of the TeamMember object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -386,9 +391,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the enteredBy attribute of the TeamMember object
+   * Gets the enteredBy attribute of the TeamMember object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -396,9 +401,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the modified attribute of the TeamMember object
+   * Gets the modified attribute of the TeamMember object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -406,9 +411,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the modifiedBy attribute of the TeamMember object
+   * Gets the modifiedBy attribute of the TeamMember object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -416,9 +421,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the roleId attribute of the TeamMember object
+   * Gets the roleId attribute of the TeamMember object
    *
-   *@return    The roleId value
+   * @return The roleId value
    */
   public int getRoleId() {
     return roleId;
@@ -426,9 +431,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the status attribute of the TeamMember object
+   * Gets the status attribute of the TeamMember object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -436,25 +441,24 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the lastAccessed attribute of the TeamMember object
+   * Gets the lastAccessed attribute of the TeamMember object
    *
-   *@return    The lastAccessed value
+   * @return The lastAccessed value
    */
   public java.sql.Timestamp getLastAccessed() {
     return lastAccessed;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                  Description of the Parameter
-   *@param  tmpDocumentStoreId  Description of the Parameter
-   *@param  tmpTeamId           Description of the Parameter
-   *@param  tmpUserRoleId       Description of the Parameter
-   *@param  tmpDepartmentId     Description of the Parameter
-   *@exception  SQLException    Description of the Exception
+   * @param db                 Description of the Parameter
+   * @param tmpDocumentStoreId Description of the Parameter
+   * @param tmpTeamId          Description of the Parameter
+   * @param tmpUserRoleId      Description of the Parameter
+   * @param tmpDepartmentId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int tmpDocumentStoreId, int tmpTeamId, int tmpUserRoleId, int tmpDepartmentId) throws SQLException {
 
@@ -463,7 +467,7 @@ public class DocumentStoreTeamMember {
     int tmpDocumentStoreRoleId = -1;
     int tmpDocumentStoreUserLevel = -1;
     pst = db.prepareStatement(
-        "SELECT m.*, r.level " +
+        "SELECT m.*, r.\"level\" " +
         "FROM document_store_user_member m, lookup_document_store_role r " +
         "WHERE m.document_store_id = ? " +
         "AND m.item_id = ? " +
@@ -482,7 +486,7 @@ public class DocumentStoreTeamMember {
       //get  User Role - Document store role mapping if user is not explicitly assigned
       //to the document store
       pst = db.prepareStatement(
-          "SELECT m.*, r.level " +
+          "SELECT m.*, r.\"level\" " +
           "FROM document_store_role_member m, lookup_document_store_role r " +
           "WHERE m.document_store_id = ? " +
           "AND m.item_id = ? " +
@@ -502,7 +506,7 @@ public class DocumentStoreTeamMember {
       //to the document store
       if (tmpDepartmentId != -1) {
         pst = db.prepareStatement(
-            "SELECT m.*, r.level " +
+            "SELECT m.*, r.\"level\" " +
             "FROM document_store_department_member m, lookup_document_store_role r " +
             "WHERE m.document_store_id = ? " +
             "AND m.item_id = ? " +
@@ -531,10 +535,10 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     this.documentStoreId = rs.getInt("document_store_id");
@@ -553,9 +557,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the lastAccessedString attribute of the TeamMember object
+   * Gets the lastAccessedString attribute of the TeamMember object
    *
-   *@return    The lastAccessedString value
+   * @return The lastAccessedString value
    */
   public String getLastAccessedString() {
     try {
@@ -567,11 +571,11 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, String tmpMemberType) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -623,11 +627,11 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpMemberType     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param tmpMemberType Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db, String tmpMemberType) throws SQLException {
 
@@ -650,15 +654,15 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                  Description of the Parameter
-   *@param  tmpDocumentStoreId  Description of the Parameter
-   *@param  tmpItemId           Description of the Parameter
-   *@param  tmpUserLevel        Description of the Parameter
-   *@param  tmpMemberType       Description of the Parameter
-   *@return                     Description of the Return Value
-   *@exception  SQLException    Description of the Exception
+   * @param db                 Description of the Parameter
+   * @param tmpDocumentStoreId Description of the Parameter
+   * @param tmpItemId          Description of the Parameter
+   * @param tmpUserLevel       Description of the Parameter
+   * @param tmpMemberType      Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean changeRole(Connection db, int tmpDocumentStoreId, int tmpItemId, int tmpUserLevel, String tmpMemberType) throws SQLException {
 
@@ -666,7 +670,7 @@ public class DocumentStoreTeamMember {
 
     //Check current level, if user is not a leader than it doesn't matter what the change is
     PreparedStatement pst = db.prepareStatement(
-        " SELECT level " +
+        " SELECT \"level\" " +
         " FROM lookup_document_store_role " +
         " WHERE code IN (SELECT userlevel FROM " + tableName + " WHERE document_store_id = ? AND item_id = ?) ");
     pst.setInt(1, tmpDocumentStoreId);
@@ -687,7 +691,7 @@ public class DocumentStoreTeamMember {
           " SELECT count(item_id) AS other " +
           " FROM " + tableName +
           " WHERE document_store_id = ? " +
-          " AND userlevel IN (SELECT code FROM lookup_document_store_role WHERE level <= ?) " +
+          " AND userlevel IN (SELECT code FROM lookup_document_store_role WHERE \"level\" <= ?) " +
           " AND item_id <> ? ");
       pst.setInt(1, tmpDocumentStoreId);
       pst.setInt(2, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
@@ -719,10 +723,10 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateStatus(Connection db, String tmpMemberType) throws SQLException {
     String tableName = DocumentStoreTeamMember.getTableName(tmpMemberType);
@@ -740,12 +744,12 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                  Description of the Parameter
-   *@param  tmpDocumentStoreId  Description of the Parameter
-   *@param  tmpItemId           Description of the Parameter
-   *@exception  SQLException    Description of the Exception
+   * @param db                 Description of the Parameter
+   * @param tmpDocumentStoreId Description of the Parameter
+   * @param tmpItemId          Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void updateLastAccessed(Connection db, int tmpDocumentStoreId, int tmpItemId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -761,9 +765,9 @@ public class DocumentStoreTeamMember {
 
 
   /**
-   *  Gets the tableName attribute of the DocumentStoreTeamMember object
+   * Gets the tableName attribute of the DocumentStoreTeamMember object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public static String getTableName(String tmpMemberType) {
     String tableName = "document_store_user_member";

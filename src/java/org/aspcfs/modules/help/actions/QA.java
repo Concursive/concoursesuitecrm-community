@@ -20,7 +20,6 @@ import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.PermissionCategoryList;
 import org.aspcfs.modules.help.base.*;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.RequestUtils;
@@ -29,19 +28,19 @@ import java.sql.Connection;
 import java.util.StringTokenizer;
 
 /**
- *  QA Tool Manager
+ * QA Tool Manager
  *
- *@author     Mathur
- *@created    July 9, 2003
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created July 9, 2003
  */
 public final class QA extends CFSModule {
 
   /**
-   *  Shows details of a page
+   * Shows details of a page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "qa-view"))) {
@@ -75,10 +74,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Modify the introduction of the page
+   * Modify the introduction of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyIntro(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -107,10 +106,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Save the Introduction text for the page
+   * Save the Introduction text for the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveIntro(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -129,16 +128,18 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(context.getRequest(), "popup"));
+    context.getRequest().setAttribute(
+        "refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(
+            context.getRequest(), "popup"));
     return getReturn(context, "SaveIntro");
   }
 
 
   /**
-   *  Prepares the Add form
+   * Prepares the Add form
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepareFeature(ActionContext context) {
     if (!(hasPermission(context, "qa-add"))) {
@@ -160,10 +161,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Modifies a feature of the page
+   * Modifies a feature of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyFeature(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -173,7 +174,8 @@ public final class QA extends CFSModule {
     String featureId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
-      HelpFeature thisFeature = new HelpFeature(db, Integer.parseInt(featureId));
+      HelpFeature thisFeature = new HelpFeature(
+          db, Integer.parseInt(featureId));
       context.getRequest().setAttribute("Feature", thisFeature);
       LookupList generalFeatures = new LookupList(db, "lookup_help_features");
       context.getRequest().setAttribute("GeneralFeatures", generalFeatures);
@@ -189,10 +191,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Saves a feature of the page
+   * Saves a feature of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveFeature(ActionContext context) {
     Connection db = null;
@@ -212,7 +214,8 @@ public final class QA extends CFSModule {
       db = this.getConnection(context);
       thisFeature.setModifiedBy(this.getUserId(context));
       if (thisFeature.getLinkFeatureId() > 0) {
-        LookupElement thisElement = new LookupElement(db, thisFeature.getLinkFeatureId(), "lookup_help_features");
+        LookupElement thisElement = new LookupElement(
+            db, thisFeature.getLinkFeatureId(), "lookup_help_features");
         thisFeature.setDescription(thisElement.getDescription());
       }
       if (thisFeature.getComplete()) {
@@ -228,7 +231,9 @@ public final class QA extends CFSModule {
 
       //set the refresh link
       HelpItem thisItem = new HelpItem(db, thisFeature.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(context.getRequest(), "popup"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(
+              context.getRequest(), "popup"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -240,13 +245,15 @@ public final class QA extends CFSModule {
     String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "FeatureReInsert");
       }
       return getReturn(context, "FeatureUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "FeatureReInsert");
       }
       return getReturn(context, "FeatureInsert");
@@ -261,10 +268,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Deletes a feature of the page
+   * Deletes a feature of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteFeature(ActionContext context) {
     if (!(hasPermission(context, "qa-delete"))) {
@@ -274,7 +281,8 @@ public final class QA extends CFSModule {
     String featureId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
-      HelpFeature thisFeature = new HelpFeature(db, Integer.parseInt(featureId));
+      HelpFeature thisFeature = new HelpFeature(
+          db, Integer.parseInt(featureId));
       thisFeature.delete(db);
       HelpItem thisItem = new HelpItem(db, thisFeature.getLinkHelpId());
       context.getRequest().setAttribute("Help", thisItem);
@@ -290,10 +298,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Changes the status of a feature as complete/incomplete
+   * Changes the status of a feature as complete/incomplete
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProcessFeature(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -331,14 +339,16 @@ public final class QA extends CFSModule {
         if (fileDownload.fileExists()) {
           fileDownload.sendFile(context, "image/" + imageType);
         } else {
-          System.err.println("Image-> Trying to send a file that does not exist");
+          System.err.println(
+              "Image-> Trying to send a file that does not exist");
         }
       } else {
         processErrors(context, thisFeature.getErrors());
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
-      System.out.println("HelpFeature -> ProcessImage : Download canceled or connection lost");
+      System.out.println(
+          "HelpFeature -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       this.freeConnection(context, db);
       System.out.println(e.toString());
@@ -350,10 +360,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Prepares data for adding a Rule
+   * Prepares data for adding a Rule
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepareRule(ActionContext context) {
     if (!(hasPermission(context, "qa-add"))) {
@@ -364,10 +374,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Modifies a rule of the page
+   * Modifies a rule of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyRule(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -377,7 +387,8 @@ public final class QA extends CFSModule {
     String ruleId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
-      HelpBusinessRule thisRule = new HelpBusinessRule(db, Integer.parseInt(ruleId));
+      HelpBusinessRule thisRule = new HelpBusinessRule(
+          db, Integer.parseInt(ruleId));
       context.getRequest().setAttribute("BusinessRule", thisRule);
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -391,10 +402,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Saves a rule of the page
+   * Saves a rule of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveRule(ActionContext context) {
     Connection db = null;
@@ -421,7 +432,9 @@ public final class QA extends CFSModule {
       }
       //set the refresh link
       HelpItem thisItem = new HelpItem(db, thisRule.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(context.getRequest(), "popup"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(
+              context.getRequest(), "popup"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -432,13 +445,15 @@ public final class QA extends CFSModule {
     String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "RuleReInsert");
       }
       return getReturn(context, "RuleUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "RuleReInsert");
       }
       return getReturn(context, "RuleInsert");
@@ -453,10 +468,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Deletes a rule of the page
+   * Deletes a rule of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteRule(ActionContext context) {
     if (!(hasPermission(context, "qa-delete"))) {
@@ -466,7 +481,8 @@ public final class QA extends CFSModule {
     String ruleId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
-      HelpBusinessRule thisRule = new HelpBusinessRule(db, Integer.parseInt(ruleId));
+      HelpBusinessRule thisRule = new HelpBusinessRule(
+          db, Integer.parseInt(ruleId));
       thisRule.delete(db);
       HelpItem thisItem = new HelpItem(db, thisRule.getLinkHelpId());
       context.getRequest().setAttribute("Help", thisItem);
@@ -482,10 +498,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Toggles the status of the rule
+   * Toggles the status of the rule
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProcessRule(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -522,14 +538,16 @@ public final class QA extends CFSModule {
         if (fileDownload.fileExists()) {
           fileDownload.sendFile(context, "image/" + imageType);
         } else {
-          System.err.println("Image-> Trying to send a file that does not exist");
+          System.err.println(
+              "Image-> Trying to send a file that does not exist");
         }
       } else {
         processErrors(context, thisRule.getErrors());
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
-      System.out.println("HelpBusinessRule -> ProcessImage : Download canceled or connection lost");
+      System.out.println(
+          "HelpBusinessRule -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       this.freeConnection(context, db);
       System.out.println(e.toString());
@@ -540,12 +558,11 @@ public final class QA extends CFSModule {
   }
 
 
-
   /**
-   *  Prepares data for adding a tip
+   * Prepares data for adding a tip
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepareTip(ActionContext context) {
     if (!(hasPermission(context, "qa-add"))) {
@@ -556,10 +573,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Modifies a tip of the page
+   * Modifies a tip of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyTip(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -583,10 +600,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Saves a Tip of the page
+   * Saves a Tip of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveTip(ActionContext context) {
     Connection db = null;
@@ -613,7 +630,9 @@ public final class QA extends CFSModule {
 
       //set the refresh link
       HelpItem thisItem = new HelpItem(db, thisTip.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(context.getRequest(), "popup"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(
+              context.getRequest(), "popup"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -625,13 +644,15 @@ public final class QA extends CFSModule {
     String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "TipReInsert");
       }
       return getReturn(context, "TipUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "TipReInsert");
       }
       return getReturn(context, "TipInsert");
@@ -646,10 +667,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Deletes a Tip of the page
+   * Deletes a Tip of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteTip(ActionContext context) {
     if (!(hasPermission(context, "qa-delete"))) {
@@ -675,10 +696,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Prepares data for adding a Note
+   * Prepares data for adding a Note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepareNote(ActionContext context) {
     if (!(hasPermission(context, "qa-add"))) {
@@ -689,10 +710,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Modifies a Note on the page
+   * Modifies a Note on the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyNote(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -716,10 +737,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Saves a Note of the page
+   * Saves a Note of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveNote(ActionContext context) {
     Connection db = null;
@@ -749,7 +770,9 @@ public final class QA extends CFSModule {
       }
       //set the refresh link
       HelpItem thisItem = new HelpItem(db, thisNote.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(context.getRequest(), "popup"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + RequestUtils.addLinkParams(
+              context.getRequest(), "popup"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -761,13 +784,15 @@ public final class QA extends CFSModule {
     String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "NoteReInsert");
       }
       return getReturn(context, "NoteUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
-        context.getRequest().setAttribute("redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute(
+            "redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
         return getReturn(context, "NoteReInsert");
       }
       return getReturn(context, "NoteInsert");
@@ -782,10 +807,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Deletes a Note of the page
+   * Deletes a Note of the page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteNote(ActionContext context) {
     if (!(hasPermission(context, "qa-delete"))) {
@@ -811,10 +836,10 @@ public final class QA extends CFSModule {
 
 
   /**
-   *  Toggles the status of a Note
+   * Toggles the status of a Note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProcessNote(ActionContext context) {
     if (!(hasPermission(context, "qa-edit"))) {
@@ -851,14 +876,16 @@ public final class QA extends CFSModule {
         if (fileDownload.fileExists()) {
           fileDownload.sendFile(context, "image/" + imageType);
         } else {
-          System.err.println("Image-> Trying to send a file that does not exist");
+          System.err.println(
+              "Image-> Trying to send a file that does not exist");
         }
       } else {
         processErrors(context, thisNote.getErrors());
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
-      System.out.println("HelpNote -> ProcessImage : Download canceled or connection lost");
+      System.out.println(
+          "HelpNote -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       this.freeConnection(context, db);
       System.out.println(e.toString());

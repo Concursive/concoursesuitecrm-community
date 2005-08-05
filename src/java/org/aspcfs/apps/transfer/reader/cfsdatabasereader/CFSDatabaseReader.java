@@ -15,34 +15,33 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import java.util.logging.*;
-import com.darkhorseventures.database.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
-import org.w3c.dom.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Reads data by constructing CFS objects from a database connection. This
- *  reader will process objects in a specific order so that data integrity will
- *  be maintained during a copy process.<p>
+ * Reads data by constructing CFS objects from a database connection. This
+ * reader will process objects in a specific order so that data integrity will
+ * be maintained during a copy process.<p>
+ * <p/>
+ * CFS Objects must have the following:<br>
+ * - A method called: insert(Connection db)<br>
+ * - A constructor like: new Object(Connection db, int id)<br>
+ * - A modified field with a getModified() method<p>
+ * <p/>
+ * CFS List Objects must have the following fields:<br>
+ * - tableName, uniqueField, lastAnchor, nextAnchor, syncType, pagedListInfo
  *
- *  CFS Objects must have the following:<br>
- *  - A method called: insert(Connection db)<br>
- *  - A constructor like: new Object(Connection db, int id)<br>
- *  - A modified field with a getModified() method<p>
- *
- *  CFS List Objects must have the following fields:<br>
- *  - tableName, uniqueField, lastAnchor, nextAnchor, syncType, pagedListInfo
- *
- *@author     matt rajkowski
- *@created    September 3, 2002
- *@version    $Id: CFSDatabaseReader.java,v 1.3 2002/09/05 14:49:36 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: CFSDatabaseReader.java,v 1.3 2002/09/05 14:49:36 mrajkowski
+ *          Exp $
+ * @created September 3, 2002
  */
 public class CFSDatabaseReader implements DataReader {
 
@@ -58,9 +57,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Sets the driver attribute of the CFSDatabaseReader object
+   * Sets the driver attribute of the CFSDatabaseReader object
    *
-   *@param  tmp  The new driver value
+   * @param tmp The new driver value
    */
   public void setDriver(String tmp) {
     this.driver = tmp;
@@ -68,9 +67,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Sets the url attribute of the CFSDatabaseReader object
+   * Sets the url attribute of the CFSDatabaseReader object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -78,9 +77,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Sets the user attribute of the CFSDatabaseReader object
+   * Sets the user attribute of the CFSDatabaseReader object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(String tmp) {
     this.user = tmp;
@@ -88,9 +87,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Sets the password attribute of the CFSDatabaseReader object
+   * Sets the password attribute of the CFSDatabaseReader object
    *
-   *@param  tmp  The new password value
+   * @param tmp The new password value
    */
   public void setPassword(String tmp) {
     this.password = tmp;
@@ -98,9 +97,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Sets the processConfigFile attribute of the CFSDatabaseReader object
+   * Sets the processConfigFile attribute of the CFSDatabaseReader object
    *
-   *@param  tmp  The new processConfigFile value
+   * @param tmp The new processConfigFile value
    */
   public void setProcessConfigFile(String tmp) {
     this.processConfigFile = tmp;
@@ -108,9 +107,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the driver attribute of the CFSDatabaseReader object
+   * Gets the driver attribute of the CFSDatabaseReader object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     return driver;
@@ -118,9 +117,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the url attribute of the CFSDatabaseReader object
+   * Gets the url attribute of the CFSDatabaseReader object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -128,9 +127,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the user attribute of the CFSDatabaseReader object
+   * Gets the user attribute of the CFSDatabaseReader object
    *
-   *@return    The user value
+   * @return The user value
    */
   public String getUser() {
     return user;
@@ -138,9 +137,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the password attribute of the CFSDatabaseReader object
+   * Gets the password attribute of the CFSDatabaseReader object
    *
-   *@return    The password value
+   * @return The password value
    */
   public String getPassword() {
     return password;
@@ -148,9 +147,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the processConfigFile attribute of the CFSDatabaseReader object
+   * Gets the processConfigFile attribute of the CFSDatabaseReader object
    *
-   *@return    The processConfigFile value
+   * @return The processConfigFile value
    */
   public String getProcessConfigFile() {
     return processConfigFile;
@@ -158,9 +157,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the CFSDatabaseReader object
+   * Gets the version attribute of the CFSDatabaseReader object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -168,9 +167,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the CFSDatabaseReader object
+   * Gets the name attribute of the CFSDatabaseReader object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Centric CRM 2.x Database Reader";
@@ -178,9 +177,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the description attribute of the CFSDatabaseReader object
+   * Gets the description attribute of the CFSDatabaseReader object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Reads data from a Centric CRM version 2.x database";
@@ -188,9 +187,9 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Gets the configured attribute of the CFSDatabaseReader object
+   * Gets the configured attribute of the CFSDatabaseReader object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     //Check initial settings
@@ -209,10 +208,10 @@ public class CFSDatabaseReader implements DataReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     //Connect to database
@@ -240,7 +239,8 @@ public class CFSDatabaseReader implements DataReader {
         String moduleClass = (String) moduleList.next();
         logger.info("Processing: " + moduleClass);
         Object module = Class.forName(moduleClass).newInstance();
-        processOK = ((CFSDatabaseReaderImportModule) module).process(writer, db, mappings);
+        processOK = ((CFSDatabaseReaderImportModule) module).process(
+            writer, db, mappings);
         if (!processOK) {
           logger.info("Module failed: " + moduleClass);
         }

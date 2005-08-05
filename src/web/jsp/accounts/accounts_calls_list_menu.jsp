@@ -84,7 +84,7 @@
   
   function forward() {
     var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + 
-   '&trailSource=accounts&return=list';
+   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }

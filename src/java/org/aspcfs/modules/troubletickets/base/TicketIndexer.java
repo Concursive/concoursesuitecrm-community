@@ -31,22 +31,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 27, 2004
  */
 public class TicketIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -78,12 +78,12 @@ public class TicketIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  ticket           Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param ticket   Description of the Parameter
+   * @param modified Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, Ticket ticket, boolean modified) throws IOException {
     // populate the document
@@ -91,19 +91,33 @@ public class TicketIndexer implements Indexer {
     document.add(Field.Keyword("type", "ticket"));
     document.add(Field.Keyword("ticketId", String.valueOf(ticket.getId())));
     if (ticket.getProjectTicketCount() > 0) {
-      document.add(Field.Keyword("projectTicketId", String.valueOf(ticket.getProjectTicketCount())));
+      document.add(
+          Field.Keyword(
+              "projectTicketId", String.valueOf(
+                  ticket.getProjectTicketCount())));
     }
-    document.add(Field.Keyword("projectId", String.valueOf(ticket.getProjectId())));
-    document.add(Field.Text("title", "#" + ticket.getProjectTicketCount() + " " + (ticket.getProblem().length() > 150 ? ContentUtils.toText(ticket.getProblem().substring(0, 150)) : ContentUtils.toText(ticket.getProblem()))));
-    document.add(Field.Text("contents",
-        ContentUtils.toText(ticket.getProblem()) + " " +
+    document.add(
+        Field.Keyword("projectId", String.valueOf(ticket.getProjectId())));
+    document.add(
+        Field.Text(
+            "title", "#" + ticket.getProjectTicketCount() + " " + (ticket.getProblem().length() > 150 ? ContentUtils.toText(
+                ticket.getProblem().substring(0, 150)) : ContentUtils.toText(
+                    ticket.getProblem()))));
+    document.add(
+        Field.Text(
+            "contents",
+            ContentUtils.toText(ticket.getProblem()) + " " +
         ContentUtils.toText(ticket.getSolution()) + " " +
         ContentUtils.toText(ticket.getLocation()) + " " +
         ContentUtils.toText(ticket.getCause())));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(ticket.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(ticket.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
@@ -113,10 +127,10 @@ public class TicketIndexer implements Indexer {
 
 
   /**
-   *  Gets the searchTerm attribute of the TicketIndexer class
+   * Gets the searchTerm attribute of the TicketIndexer class
    *
-   *@param  ticket  Description of the Parameter
-   *@return         The searchTerm value
+   * @param ticket Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(Ticket ticket) {
     Term searchTerm = new Term("ticketId", String.valueOf(ticket.getId()));
@@ -125,10 +139,10 @@ public class TicketIndexer implements Indexer {
 
 
   /**
-   *  Gets the deleteTerm attribute of the TicketIndexer class
+   * Gets the deleteTerm attribute of the TicketIndexer class
    *
-   *@param  ticket  Description of the Parameter
-   *@return         The deleteTerm value
+   * @param ticket Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(Ticket ticket) {
     Term searchTerm = new Term("ticketId", String.valueOf(ticket.getId()));

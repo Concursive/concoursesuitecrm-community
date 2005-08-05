@@ -15,20 +15,20 @@
  */
 package org.aspcfs.modules.help.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class HelpItemList extends ArrayList {
 
@@ -36,9 +36,9 @@ public class HelpItemList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the HelpNoteList object
+   * Sets the pagedListInfo attribute of the HelpNoteList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -46,9 +46,9 @@ public class HelpItemList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the HelpNoteList object
+   * Gets the pagedListInfo attribute of the HelpNoteList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -56,10 +56,10 @@ public class HelpItemList extends ArrayList {
 
 
   /**
-   *  Builds the list
+   * Builds the list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -95,7 +95,8 @@ public class HelpItemList extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
           "AND c.description < ? ");
       items = prepareFilter(pst);
@@ -120,22 +121,15 @@ public class HelpItemList extends ArrayList {
         "FROM help_contents c " +
         "WHERE c.help_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       HelpItem thisItem = new HelpItem(rs);
       this.add(thisItem);
     }
@@ -145,9 +139,9 @@ public class HelpItemList extends ArrayList {
 
 
   /**
-   *  Create the filters
+   * Create the filters
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -157,11 +151,11 @@ public class HelpItemList extends ArrayList {
 
 
   /**
-   *  Sets the filters
+   * Sets the filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

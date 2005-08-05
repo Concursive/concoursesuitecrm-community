@@ -195,9 +195,10 @@
       <dhv:label name="product.enabled">Enabled</dhv:label>
     </td>
     <td>
-      <input type="checkbox" name="chk1" onclick="javascript:setField('enabled', document.addCatalog.chk1.checked, 'addCatalog');" <%= (productCatalog.getEnabled() ? "checked" : "")%>>
-      <input type="hidden" name="enabled" value="<%= productCatalog.getEnabled() %>">
-      <%= showWarningAttribute(request, "enabledWarning") %>
+      <input type="checkbox" name="chk1" onclick="javascript:setField('active', document.addCatalog.chk1.checked, 'addCatalog');" <%= (productCatalog.getActive() ? "checked" : "")%>>
+      <input type="hidden" name="active" value="<%= productCatalog.getActive() %>">
+      <input type="hidden" name="enabled" value="true">
+      <%= showWarningAttribute(request, "activeWarning") %>
     </td>
   </tr>
   <tr class="containerBody">

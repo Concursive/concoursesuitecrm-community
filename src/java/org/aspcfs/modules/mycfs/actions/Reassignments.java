@@ -17,6 +17,7 @@ package org.aspcfs.modules.mycfs.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.AssignmentList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.accounts.base.RevenueList;
 import org.aspcfs.modules.actionlist.base.ActionLists;
@@ -32,25 +33,25 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.pipeline.base.OpportunityComponentList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.controller.SystemStatus;
 
 import java.sql.Connection;
+import java.util.HashMap;
 
 /**
- *  Handles reassigning user data
+ * Handles reassigning user data
  *
- *@author     chris
- *@created    December 4, 2002
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created December 4, 2002
  */
 public final class Reassignments extends CFSModule {
 
   /**
-   *  Shows the reassignments page<br>
-   *  TODO: Reduce the object/database overhead for generating the counts
+   * Shows the reassignments page<br>
+   * TODO: Reduce the object/database overhead for generating the counts
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandReassign(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-reassign-view"))) {
@@ -75,11 +76,13 @@ public final class Reassignments extends CFSModule {
     ActionLists sourceActionLists = null;
     //Get the multiple-level heirarchy
     UserList shortChildList = thisRec.getShortChildList();
-    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    UserList userList = thisRec.getFullChildList(
+        shortChildList, new UserList());
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisRec.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
-    userList.setEmptyHtmlSelectRecord(thisSystem.getLabel("accounts.accounts_add.NoneSelected"));
+    userList.setEmptyHtmlSelectRecord(
+        thisSystem.getLabel("accounts.accounts_add.NoneSelected"));
     //Check to see if a user is selected AND if they are in the hierarchy
     if (context.getRequest().getParameter("userId") != null) {
       userId = Integer.parseInt(context.getRequest().getParameter("userId"));
@@ -119,7 +122,8 @@ public final class Reassignments extends CFSModule {
         sourceOpenTickets.setAssignedTo(userId);
         sourceOpenTickets.setOnlyOpen(true);
         sourceOpenTickets.buildList(db);
-        context.getRequest().setAttribute("SourceOpenTickets", sourceOpenTickets);
+        context.getRequest().setAttribute(
+            "SourceOpenTickets", sourceOpenTickets);
 
         sourceRevenue = new RevenueList();
         sourceRevenue.setOwner(userId);
@@ -130,37 +134,45 @@ public final class Reassignments extends CFSModule {
         sourceAssignments.setAssignmentsForUser(userId);
         sourceAssignments.setIncompleteOnly(true);
         sourceAssignments.buildList(db);
-        context.getRequest().setAttribute("SourceAssignments", sourceAssignments);
+        context.getRequest().setAttribute(
+            "SourceAssignments", sourceAssignments);
 
         sourceOpportunities = new OpportunityList();
         sourceOpportunities.setOwner(userId);
         sourceOpportunities.buildList(db);
-        context.getRequest().setAttribute("SourceOpportunities", sourceOpportunities);
+        context.getRequest().setAttribute(
+            "SourceOpportunities", sourceOpportunities);
 
         sourceOpenOpportunities = new OpportunityList();
         sourceOpenOpportunities.setOwner(userId);
         sourceOpenOpportunities.setQueryOpenOnly(true);
         sourceOpenOpportunities.buildList(db);
-        context.getRequest().setAttribute("SourceOpenOpportunities", sourceOpenOpportunities);
+        context.getRequest().setAttribute(
+            "SourceOpenOpportunities", sourceOpenOpportunities);
 
         sourceDocumentStoreTeamMemberList = new DocumentStoreTeamMemberList();
         sourceDocumentStoreTeamMemberList.setForDocumentStoreUser(userId);
-        sourceDocumentStoreTeamMemberList.setMemberType(DocumentStoreTeamMemberList.USER);
-        sourceDocumentStoreTeamMemberList.setUserLevel(DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
+        sourceDocumentStoreTeamMemberList.setMemberType(
+            DocumentStoreTeamMemberList.USER);
+        sourceDocumentStoreTeamMemberList.setUserLevel(
+            DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
         sourceDocumentStoreTeamMemberList.buildList(db);
-        context.getRequest().setAttribute("SourceDocumentStores", sourceDocumentStoreTeamMemberList);
-        
+        context.getRequest().setAttribute(
+            "SourceDocumentStores", sourceDocumentStoreTeamMemberList);
+
         sourcePendingActivities = new CallList();
         sourcePendingActivities.setOwner(userId);
         sourcePendingActivities.setOnlyPending(true);
         sourcePendingActivities.buildList(db);
-        context.getRequest().setAttribute("SourcePendingActivities", sourcePendingActivities);
-        
+        context.getRequest().setAttribute(
+            "SourcePendingActivities", sourcePendingActivities);
+
         sourceActionLists = new ActionLists();
         sourceActionLists.setOwner(userId);
         sourceActionLists.setInProgressOnly(true);
         sourceActionLists.buildList(db);
-        context.getRequest().setAttribute("SourceInProgressActionLists", sourceActionLists);
+        context.getRequest().setAttribute(
+            "SourceInProgressActionLists", sourceActionLists);
       } catch (Exception e) {
         context.getRequest().setAttribute("Error", e);
         return ("SystemError");
@@ -177,16 +189,16 @@ public final class Reassignments extends CFSModule {
 
 
   /**
-   *  Performs the actual reassignments
+   * Performs the actual reassignments
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDoReassign(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-reassign-edit"))) {
       return ("PermissionError");
     }
+    HashMap errors = new HashMap();
     Connection db = null;
     User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     User sourceUser = null;
@@ -214,76 +226,104 @@ public final class Reassignments extends CFSModule {
     OrganizationList sourceAccounts = null;
     int targetIdAccounts = -1;
     if (context.getRequest().getParameter("ownerToAccounts") != null) {
-      targetIdAccounts = Integer.parseInt(context.getRequest().getParameter("ownerToAccounts"));
+      targetIdAccounts = Integer.parseInt(
+          context.getRequest().getParameter("ownerToAccounts"));
     }
     //Contacts
     ContactList sourceContacts = null;
     int targetIdContacts = -1;
     if (context.getRequest().getParameter("ownerToContacts") != null) {
-      targetIdContacts = Integer.parseInt(context.getRequest().getParameter("ownerToContacts"));
+      targetIdContacts = Integer.parseInt(
+          context.getRequest().getParameter("ownerToContacts"));
     }
     //Opportunities: Open
     OpportunityComponentList sourceOpenOpps = null;
     int targetIdOpenOpps = -1;
     if (context.getRequest().getParameter("ownerToOpenOpps") != null) {
-      targetIdOpenOpps = Integer.parseInt(context.getRequest().getParameter("ownerToOpenOpps"));
+      targetIdOpenOpps = Integer.parseInt(
+          context.getRequest().getParameter("ownerToOpenOpps"));
     }
     //Opportunities: Closed
     OpportunityComponentList sourceOpps = null;
     int targetIdOpps = -1;
     if (context.getRequest().getParameter("ownerToOpenClosedOpps") != null) {
-      targetIdOpps = Integer.parseInt(context.getRequest().getParameter("ownerToOpenClosedOpps"));
+      targetIdOpps = Integer.parseInt(
+          context.getRequest().getParameter("ownerToOpenClosedOpps"));
     }
     //Revenue
     RevenueList sourceRevenue = null;
     int targetIdRevenue = -1;
     if (context.getRequest().getParameter("ownerToRevenue") != null) {
-      targetIdRevenue = Integer.parseInt(context.getRequest().getParameter("ownerToRevenue"));
+      targetIdRevenue = Integer.parseInt(
+          context.getRequest().getParameter("ownerToRevenue"));
     }
     //Tickets: Open
     TicketList sourceOpenTickets = null;
     int targetIdOpenTickets = -1;
     if (context.getRequest().getParameter("ownerToOpenTickets") != null) {
-      targetIdOpenTickets = Integer.parseInt(context.getRequest().getParameter("ownerToOpenTickets"));
+      targetIdOpenTickets = Integer.parseInt(
+          context.getRequest().getParameter("ownerToOpenTickets"));
     }
     //Users
     UserList sourceUsers = null;
     int targetIdUsers = -1;
     if (context.getRequest().getParameter("ownerToUsers") != null) {
-      targetIdUsers = Integer.parseInt(context.getRequest().getParameter("ownerToUsers"));
+      targetIdUsers = Integer.parseInt(
+          context.getRequest().getParameter("ownerToUsers"));
     }
     //Project Assignments
     AssignmentList sourceAssignments = null;
     int targetIdAssignments = -1;
     if (context.getRequest().getParameter("ownerToActivities") != null) {
-      targetIdAssignments = Integer.parseInt(context.getRequest().getParameter("ownerToActivities"));
+      targetIdAssignments = Integer.parseInt(
+          context.getRequest().getParameter("ownerToActivities"));
     }
     //Document Store Assignments
     DocumentStoreTeamMemberList sourceDocumentStoreTeamMemberList = null;
     int targetIdDocumentStores = -1;
     if (context.getRequest().getParameter("ownerToOpenDocumentStores") != null) {
-      targetIdDocumentStores = Integer.parseInt(context.getRequest().getParameter("ownerToOpenDocumentStores"));
+      targetIdDocumentStores = Integer.parseInt(
+          context.getRequest().getParameter("ownerToOpenDocumentStores"));
     }
     // Pending Activities
     CallList sourcePendingActivities = null;
     int targetIdActivities = -1;
     if (context.getRequest().getParameter("ownerToPendingActivities") != null) {
-      targetIdActivities = Integer.parseInt(context.getRequest().getParameter("ownerToPendingActivities"));
+      targetIdActivities = Integer.parseInt(
+          context.getRequest().getParameter("ownerToPendingActivities"));
     }
     // In Progress Action Lists
     ActionLists sourceActionLists = null;
     int targetIdActionLists = -1;
     if (context.getRequest().getParameter("ownerToActionLists") != null) {
-      targetIdActionLists = Integer.parseInt(context.getRequest().getParameter("ownerToActionLists"));
+      targetIdActionLists = Integer.parseInt(
+          context.getRequest().getParameter("ownerToActionLists"));
     }
     try {
       db = getConnection(context);
+      //Reassign users
+      if (targetIdUsers > -1) {
+        sourceUsers = new UserList();
+        sourceUsers.setManagerId(userId);
+        sourceUsers.buildList(db);
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors = sourceUsers.reassignElements(
+            context, db, systemStatus, targetIdUsers, this.getUserId(context));
+        if (errors.size() == 0) {
+          thisRec.setBuildHierarchy(true);
+          thisRec.buildResources(db);
+        } else {
+          processErrors(context, errors);
+          return executeCommandReassign(context);
+        }
+      }
       //Reassign accounts
       if (targetIdAccounts > -1) {
         sourceAccounts = new OrganizationList();
         sourceAccounts.setOwnerId(userId);
         sourceAccounts.buildList(db);
-        sourceAccounts.reassignElements(db, targetIdAccounts, this.getUserId(context));
+        sourceAccounts.reassignElements(
+            db, targetIdAccounts, this.getUserId(context));
       }
       //Reassign contacts
       if (targetIdContacts > -1) {
@@ -294,7 +334,8 @@ public final class Reassignments extends CFSModule {
         sourceContacts.setBuildDetails(false);
         sourceContacts.setBuildTypes(false);
         sourceContacts.buildList(db);
-        sourceContacts.reassignElements(db, targetIdContacts, this.getUserId(context));
+        sourceContacts.reassignElements(
+            db, targetIdContacts, this.getUserId(context));
       }
       //Reassign opportunities
       if (targetIdOpenOpps > -1) {
@@ -302,7 +343,8 @@ public final class Reassignments extends CFSModule {
         sourceOpenOpps.setOwner(userId);
         sourceOpenOpps.setQueryOpenOnly(true);
         sourceOpenOpps.buildList(db);
-        sourceOpenOpps.reassignElements(db, targetIdOpenOpps, this.getUserId(context));
+        sourceOpenOpps.reassignElements(
+            db, targetIdOpenOpps, this.getUserId(context));
         invalidateUserInMemory(userId, context);
         invalidateUserInMemory(targetIdOpenOpps, context);
       }
@@ -320,7 +362,8 @@ public final class Reassignments extends CFSModule {
         sourceRevenue = new RevenueList();
         sourceRevenue.setOwner(userId);
         sourceRevenue.buildList(db);
-        sourceRevenue.reassignElements(db, targetIdRevenue, this.getUserId(context));
+        sourceRevenue.reassignElements(
+            db, targetIdRevenue, this.getUserId(context));
         invalidateUserInMemory(userId, context);
         invalidateUserInMemory(targetIdRevenue, context);
       }
@@ -330,16 +373,8 @@ public final class Reassignments extends CFSModule {
         sourceOpenTickets.setAssignedTo(userId);
         sourceOpenTickets.setOnlyOpen(true);
         sourceOpenTickets.buildList(db);
-        sourceOpenTickets.reassignElements(db, targetIdOpenTickets, this.getUserId(context));
-      }
-      //Reassign users
-      if (targetIdUsers > -1) {
-        sourceUsers = new UserList();
-        sourceUsers.setManagerId(userId);
-        sourceUsers.buildList(db);
-        sourceUsers.reassignElements(db, targetIdUsers, this.getUserId(context));
-        thisRec.setBuildHierarchy(true);
-        thisRec.buildResources(db);
+        sourceOpenTickets.reassignElements(
+            db, targetIdOpenTickets, this.getUserId(context));
       }
       //Reassign Assignments
       if (targetIdAssignments > -1) {
@@ -347,11 +382,13 @@ public final class Reassignments extends CFSModule {
         sourceAssignments.setAssignmentsForUser(userId);
         sourceAssignments.setIncompleteOnly(true);
         sourceAssignments.buildList(db);
-        sourceAssignments.reassignElements(db, targetIdAssignments, this.getUserId(context));
+        sourceAssignments.reassignElements(
+            db, targetIdAssignments, this.getUserId(context));
       }
       //Reassign document stores
-      if (targetIdDocumentStores > -1){
-        DocumentStoreTeamMemberList.reassignElements(db,userId,targetIdDocumentStores, this.getUserId(context));
+      if (targetIdDocumentStores > -1) {
+        DocumentStoreTeamMemberList.reassignElements(
+            db, userId, targetIdDocumentStores, this.getUserId(context));
       }
       // Pending Activities
       if (targetIdActivities > -1) {
@@ -359,7 +396,8 @@ public final class Reassignments extends CFSModule {
         sourcePendingActivities.setOwner(userId);
         sourcePendingActivities.setOnlyPending(true);
         sourcePendingActivities.buildList(db);
-        int numberOfReassignedActivities = sourcePendingActivities.reassignElements(db, context, targetIdActivities, this.getUserId(context));
+        int numberOfReassignedActivities = sourcePendingActivities.reassignElements(
+            db, context, targetIdActivities, this.getUserId(context));
       }
       // In Progress Action Lists
       if (targetIdActionLists > -1) {
@@ -367,7 +405,8 @@ public final class Reassignments extends CFSModule {
         sourceActionLists.setOwner(userId);
         sourceActionLists.setInProgressOnly(true);
         sourceActionLists.buildList(db);
-        int numberOfReassignedActionLists = sourceActionLists.reassignElements(db, targetIdActionLists, this.getUserId(context));
+        int numberOfReassignedActionLists = sourceActionLists.reassignElements(
+            db, targetIdActionLists, this.getUserId(context));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

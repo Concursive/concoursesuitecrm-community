@@ -14,6 +14,7 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.apps.lookuplists;
+
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -25,11 +26,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    February 18, 2005
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created February 18, 2005
  */
 public class LookupLists {
 
@@ -37,15 +38,16 @@ public class LookupLists {
 
 
   /**
-   *  Constructor for the LookupLists object
+   * Constructor for the LookupLists object
    */
-  public LookupLists() { }
+  public LookupLists() {
+  }
 
 
   /**
-   *  Sets the lgloballyUniqueIds attribute of the LookupLists object
+   * Sets the lgloballyUniqueIds attribute of the LookupLists object
    *
-   *@param  tmp  The new globallyUniqueIds value
+   * @param tmp The new globallyUniqueIds value
    */
   public void setGloballyUniqueIds(HashMap tmp) {
     this.globallyUniqueIds = tmp;
@@ -53,9 +55,9 @@ public class LookupLists {
 
 
   /**
-   *  Gets the globallyUniqueIds attribute of the LookupLists object
+   * Gets the globallyUniqueIds attribute of the LookupLists object
    *
-   *@return    The globallyUniqueIds value
+   * @return The globallyUniqueIds value
    */
   public HashMap getGloballyUniqueIds() {
     return globallyUniqueIds;
@@ -63,13 +65,13 @@ public class LookupLists {
 
 
   /**
-   *  Constructs a datastructure that data that needs to be inserted into the
-   *  lookup tables
+   * Constructs a datastructure that data that needs to be inserted into the
+   * lookup tables
    *
-   *@param  filePath                     Description of the Parameter
-   *@param  customLookupListHandlers  Description of the Parameter
-   *@return                              Description of the Return Value
-   *@exception  Exception                Description of the Exception
+   * @param filePath                 Description of the Parameter
+   * @param customLookupListHandlers Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public ArrayList buildLookupLists(String filePath, HashMap customLookupListHandlers) throws Exception {
     System.out.println("Reading from file:" + filePath);
@@ -128,7 +130,8 @@ public class LookupLists {
             useLevelAsIs = true;
           }
           if ("LUID".equals(attribute.getNodeName())) {
-            globallyUniqueIds.put(tableName + "." + attribute.getNodeValue(), " ");
+            globallyUniqueIds.put(
+                tableName + "." + attribute.getNodeValue(), " ");
           }
           columnValues.put(attribute.getNodeName(), attribute.getNodeValue());
         }
@@ -150,7 +153,7 @@ public class LookupLists {
       lookupListObjects.put("tableName", tableName);
       lookupListObjects.put("key", key);
       lookupListObjects.put("useLevelAsIs", new Boolean(useLevelAsIs));
-      
+
       lookupListList.add(lookupListObjects);
     }
     return lookupListList;
@@ -158,10 +161,10 @@ public class LookupLists {
 
 
   /**
-   *  Custom handler for table lookup_l4
+   * Custom handler for table lookup_l4
    *
-   *@param  columnValues   Description of the Parameter
-   *@param  lookupElement  Description of the Parameter
+   * @param columnValues  Description of the Parameter
+   * @param lookupElement Description of the Parameter
    */
   public void buildMultipleDescriptions(HashMap columnValues, Element lookupElement) {
     ArrayList items = new ArrayList();

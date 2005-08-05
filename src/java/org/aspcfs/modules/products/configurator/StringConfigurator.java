@@ -23,12 +23,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 16, 2004
- *@version    $Id: StringConfigurator.java,v 1.1.4.1 2004/10/18 19:56:27
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: StringConfigurator.java,v 1.1.4.1 2004/10/18 19:56:27
+ *          mrajkowski Exp $
+ * @created September 16, 2004
  */
 public class StringConfigurator extends Configurator implements OptionConfigurator {
   //properties
@@ -48,9 +48,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Gets the priceAdjust attribute of the StringConfigurator object
+   * Gets the priceAdjust attribute of the StringConfigurator object
    *
-   *@return    The priceAdjust value
+   * @return The priceAdjust value
    */
   public double getPriceAdjust() {
     return priceAdjust;
@@ -58,9 +58,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the priceAdjust attribute of the StringConfigurator object
+   * Sets the priceAdjust attribute of the StringConfigurator object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(double tmp) {
     this.priceAdjust = tmp;
@@ -68,20 +68,19 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the priceAdjust attribute of the StringConfigurator object
+   * Sets the priceAdjust attribute of the StringConfigurator object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(String tmp) {
     this.priceAdjust = Double.parseDouble(tmp);
   }
 
 
-
   /**
-   *  Gets the label attribute of the StringConfigurator object
+   * Gets the label attribute of the StringConfigurator object
    *
-   *@return    The label value
+   * @return The label value
    */
   public String getLabel() {
     return label;
@@ -89,9 +88,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the label attribute of the StringConfigurator object
+   * Sets the label attribute of the StringConfigurator object
    *
-   *@param  tmp  The new label value
+   * @param tmp The new label value
    */
   public void setLabel(String tmp) {
     this.label = tmp;
@@ -99,9 +98,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Gets the minChars attribute of the StringConfigurator object
+   * Gets the minChars attribute of the StringConfigurator object
    *
-   *@return    The minChars value
+   * @return The minChars value
    */
   public int getMinChars() {
     return minChars;
@@ -109,9 +108,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the minChars attribute of the StringConfigurator object
+   * Sets the minChars attribute of the StringConfigurator object
    *
-   *@param  tmp  The new minChars value
+   * @param tmp The new minChars value
    */
   public void setMinChars(int tmp) {
     this.minChars = tmp;
@@ -119,9 +118,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the minChars attribute of the StringConfigurator object
+   * Sets the minChars attribute of the StringConfigurator object
    *
-   *@param  tmp  The new minChars value
+   * @param tmp The new minChars value
    */
   public void setMinChars(String tmp) {
     this.minChars = Integer.parseInt(tmp);
@@ -129,9 +128,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Gets the maxChars attribute of the StringConfigurator object
+   * Gets the maxChars attribute of the StringConfigurator object
    *
-   *@return    The maxChars value
+   * @return The maxChars value
    */
   public int getMaxChars() {
     return maxChars;
@@ -139,9 +138,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the maxChars attribute of the StringConfigurator object
+   * Sets the maxChars attribute of the StringConfigurator object
    *
-   *@param  tmp  The new maxChars value
+   * @param tmp The new maxChars value
    */
   public void setMaxChars(int tmp) {
     this.maxChars = tmp;
@@ -149,9 +148,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the maxChars attribute of the StringConfigurator object
+   * Sets the maxChars attribute of the StringConfigurator object
    *
-   *@param  tmp  The new maxChars value
+   * @param tmp The new maxChars value
    */
   public void setMaxChars(String tmp) {
     this.maxChars = Integer.parseInt(tmp);
@@ -159,9 +158,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Gets the defaultText attribute of the StringConfigurator object
+   * Gets the defaultText attribute of the StringConfigurator object
    *
-   *@return    The defaultText value
+   * @return The defaultText value
    */
   public String getDefaultText() {
     return defaultText;
@@ -169,9 +168,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the defaultText attribute of the StringConfigurator object
+   * Sets the defaultText attribute of the StringConfigurator object
    *
-   *@param  tmp  The new defaultText value
+   * @param tmp The new defaultText value
    */
   public void setDefaultText(String tmp) {
     this.defaultText = tmp;
@@ -179,7 +178,7 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Constructor for the StringConfigurator object
+   * Constructor for the StringConfigurator object
    */
   public StringConfigurator() {
     // set the name
@@ -238,9 +237,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean arePropertiesConfigured() {
     return true;
@@ -248,28 +247,31 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Sets the properties attribute of the StringConfigurator object
+   * Sets the properties attribute of the StringConfigurator object
    *
-   *@param  request  The new properties value
+   * @param request The new properties value
    */
   public void setProperties(HttpServletRequest request) {
     propertyList.setOptionProperties(request);
     //set the label
     label = propertyList.getOptionProperty("text_label").getValue();
-    minChars = Integer.parseInt(propertyList.getOptionProperty("number_minchars").getValue());
-    maxChars = Integer.parseInt(propertyList.getOptionProperty("number_maxchars").getValue());
+    minChars = Integer.parseInt(
+        propertyList.getOptionProperty("number_minchars").getValue());
+    maxChars = Integer.parseInt(
+        propertyList.getOptionProperty("number_maxchars").getValue());
     defaultText = propertyList.getOptionProperty("text_default").getValue();
-    priceAdjust = Double.parseDouble(propertyList.getOptionProperty("double_priceadjust").getValue());
+    priceAdjust = Double.parseDouble(
+        propertyList.getOptionProperty("double_priceadjust").getValue());
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean saveProperties(Connection db, ProductOption option) throws SQLException {
     boolean result = false;
@@ -312,12 +314,12 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateProperties(Connection db, ProductOption option) throws SQLException {
     boolean result = false;
@@ -351,12 +353,12 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  doClean           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param doClean  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryProperties(Connection db, int optionId, boolean doClean) throws SQLException {
     if (optionId == -1) {
@@ -372,15 +374,18 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
     // populate the min chars value
     minChars = getInteger(db, optionId, MIN_CHARS);
-    propertyList.setOptionProperty("number_minchars", String.valueOf(minChars));
+    propertyList.setOptionProperty(
+        "number_minchars", String.valueOf(minChars));
 
     // populate the max chars value
     maxChars = getInteger(db, optionId, MAX_CHARS);
-    propertyList.setOptionProperty("number_maxchars", String.valueOf(maxChars));
+    propertyList.setOptionProperty(
+        "number_maxchars", String.valueOf(maxChars));
 
     // populate the priceAdjust value
     priceAdjust = getDouble(db, optionId, PRICE_ADJUST);
-    propertyList.setOptionProperty("double_priceadjust", String.valueOf(priceAdjust));
+    propertyList.setOptionProperty(
+        "double_priceadjust", String.valueOf(priceAdjust));
     built = true;
     // set the optionId attribute
     this.optionId = optionId;
@@ -388,12 +393,12 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean enableOption(Connection db, int optionId) throws SQLException {
     return true;
@@ -401,29 +406,34 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param request Description of the Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void prepareContext(HttpServletRequest request, Connection db) throws SQLException { }
+  public void prepareContext(HttpServletRequest request, Connection db) throws SQLException {
+  }
 
 
   /**
-   *  Gets the html attribute of the StringConfigurator object
+   * Gets the html attribute of the StringConfigurator object
    *
-   *@return    The html value
+   * @return The html value
    */
   public String getHtml() {
     StringBuffer sb = new StringBuffer();
-    sb.append("<table class=\"empty\" cellspacing=\"4\" cellpadding=\"2\" width=\"100%\">");
+    sb.append(
+        "<table class=\"empty\" cellspacing=\"4\" cellpadding=\"2\" width=\"100%\">");
     sb.append("	<tr>");
     sb.append("		<td width=\"100\" nowrap>");
     sb.append("    " + label);
     sb.append("   </td>");
-    sb.append("		<td>" + "<input type=\"text\" size=\"" + (maxChars > 20 ? 20 : maxChars) + "\" maxlength=\"" + maxChars + "\" ");
-    sb.append("            name=\"text" + optionId + "\" value=\"" + HTTPUtils.toHtmlValue(defaultText) + "\"/>");
+    sb.append(
+        "		<td>" + "<input type=\"text\" size=\"" + (maxChars > 20 ? 20 : maxChars) + "\" maxlength=\"" + maxChars + "\" ");
+    sb.append(
+        "            name=\"text" + optionId + "\" value=\"" + HTTPUtils.toHtmlValue(
+            defaultText) + "\"/>");
     sb.append("   </td>");
     sb.append(" </tr>");
     sb.append("</table>");
@@ -432,9 +442,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Gets the quoteHtml attribute of the StringConfigurator object
+   * Gets the quoteHtml attribute of the StringConfigurator object
    *
-   *@return    The quoteHtml value
+   * @return The quoteHtml value
    */
   public String getQuoteHtml() {
     StringBuffer sb = new StringBuffer();
@@ -443,11 +453,15 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
     sb.append("		<td width=\"100\" nowrap>");
     sb.append("    " + label);
     sb.append("   </td>");
-    sb.append("		<td>" + "<input type=\"text\" size=\"" + (maxChars > 20 ? 20 : maxChars) + "\" maxlength=\"" + maxChars + "\" ");
-    sb.append("            name=\"text" + optionId + "\" value=\"" + HTTPUtils.toHtmlValue(quoteUserInput) + "\"/>");
+    sb.append(
+        "		<td>" + "<input type=\"text\" size=\"" + (maxChars > 20 ? 20 : maxChars) + "\" maxlength=\"" + maxChars + "\" ");
+    sb.append(
+        "            name=\"text" + optionId + "\" value=\"" + HTTPUtils.toHtmlValue(
+            quoteUserInput) + "\"/>");
     sb.append("   </td>");
     sb.append("		<td width=\"25%\">" + "<input type=\"text\" size=\"8\"");
-    sb.append("            name=\"price" + optionId + "\" value=\"" + quotePriceAdjust + "\"/>");
+    sb.append(
+        "            name=\"price" + optionId + "\" value=\"" + quotePriceAdjust + "\"/>");
     sb.append("   </td>");
     sb.append(" </tr>");
     sb.append("</table>");
@@ -456,10 +470,10 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean validateUserInput(HttpServletRequest request) {
     //TODO: This method needs to be modified if an option can
@@ -468,12 +482,13 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
     if (request.getParameter("text" + optionId) != null) {
       String input = request.getParameter("text" + optionId);
       if ((input.length() < minChars) || (input.length() > maxChars)) {
-         isValid = false;
+        isValid = false;
       }
     }
     try {
       if (request.getParameter("price" + optionId) != null) {
-          double price = Double.parseDouble(request.getParameter("price" + optionId));
+        double price = Double.parseDouble(
+            request.getParameter("price" + optionId));
       }
     } catch (Exception e) {
       isValid = false;
@@ -483,10 +498,10 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasUserInput(HttpServletRequest request) {
     boolean hasInput = false;
@@ -507,16 +522,17 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public double computePriceAdjust(HttpServletRequest request) {
     if (request.getParameter("text" + optionId) != null) {
       String input = request.getParameter("text" + optionId);
       if (request.getParameter("price" + optionId) != null) {
-        double price = Double.parseDouble(request.getParameter("price" + optionId));
+        double price = Double.parseDouble(
+            request.getParameter("price" + optionId));
         return (input.length() * price);
       }
       return (input.length() * priceAdjust);
@@ -526,31 +542,32 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  request               Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param request              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveQuoteOption(Connection db, int quoteProductOptionId, HttpServletRequest request) throws SQLException {
     if (request.getParameter("text" + optionId) != null) {
       String input = request.getParameter("text" + optionId);
       if (input != null) {
         saveQuoteText(db, quoteProductOptionId, QUOTE_USER_INPUT, input);
-        saveQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST, priceAdjust);
+        saveQuoteDouble(
+            db, quoteProductOptionId, QUOTE_PRICE_ADJUST, priceAdjust);
       }
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  request               Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param request              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateQuoteOption(Connection db, int quoteProductOptionId, HttpServletRequest request) throws SQLException {
     if (request.getParameter("text" + optionId) != null) {
@@ -559,7 +576,9 @@ public class StringConfigurator extends Configurator implements OptionConfigurat
     }
     if (request.getParameter("price" + optionId) != null) {
       String input = request.getParameter("price" + optionId);
-      updateQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST, Double.parseDouble(input));
+      updateQuoteDouble(
+          db, quoteProductOptionId, QUOTE_PRICE_ADJUST, Double.parseDouble(
+              input));
     }
   }
 }

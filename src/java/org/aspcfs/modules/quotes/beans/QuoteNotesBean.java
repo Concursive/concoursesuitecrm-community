@@ -1,19 +1,13 @@
 package org.aspcfs.modules.quotes.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.troubletickets.base.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
 /**
- *  This represents a Quote in the Quote Entry System
+ * This represents a Quote in the Quote Entry System
  *
- *@author     ananth
- *@created    March 24, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created March 24, 2004
  */
 public class QuoteNotesBean extends GenericBean {
   private int id = -1;
@@ -21,9 +15,9 @@ public class QuoteNotesBean extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteNotesBean object
+   * Gets the id attribute of the QuoteNotesBean object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -31,9 +25,9 @@ public class QuoteNotesBean extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the QuoteNotesBean object
+   * Gets the notes attribute of the QuoteNotesBean object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -41,9 +35,9 @@ public class QuoteNotesBean extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteNotesBean object
+   * Sets the id attribute of the QuoteNotesBean object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -51,9 +45,9 @@ public class QuoteNotesBean extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteNotesBean object
+   * Sets the id attribute of the QuoteNotesBean object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -61,9 +55,9 @@ public class QuoteNotesBean extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the QuoteNotesBean object
+   * Sets the notes attribute of the QuoteNotesBean object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;

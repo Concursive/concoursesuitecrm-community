@@ -30,19 +30,19 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.Connection;
 
 /**
- *  Represents an Accounts Ticket Tasks
+ * Represents an Accounts Ticket Tasks
  *
- *@author     Mathur
- *@created    June 9, 2003
- *@version    $id: exp$
+ * @author Mathur
+ * @version $id: exp$
+ * @created June 9, 2003
  */
 public final class AccountTicketTasks extends CFSModule {
 
   /**
-   *  Lists the tasks for the specified ticket
+   * Lists the tasks for the specified ticket
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-tasks-view")) {
@@ -53,7 +53,8 @@ public final class AccountTicketTasks extends CFSModule {
     TaskList taskList = new TaskList();
     Connection db = null;
     // Paged List
-    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "AccountTicketTaskListInfo");
+    PagedListInfo ticTaskListInfo = this.getPagedListInfo(
+        context, "AccountTicketTaskListInfo");
     ticTaskListInfo.setItemsPerPage(0);
     try {
       db = this.getConnection(context);
@@ -66,7 +67,8 @@ public final class AccountTicketTasks extends CFSModule {
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("TicketDetails", thisTicket);
       //Load the organization
-      Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
+      Organization thisOrganization = new Organization(
+          db, thisTicket.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       addModuleBean(context, "View Accounts", "List Tasks");
       return getReturn(context, "ListTasks");
@@ -80,10 +82,10 @@ public final class AccountTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-tasks-view"))) {
@@ -92,11 +94,11 @@ public final class AccountTicketTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
-    try{
+    try {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
       context.getRequest().setAttribute("Task", thisTask);
-    }catch (Exception e){
+    } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
@@ -108,10 +110,10 @@ public final class AccountTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-tasks-edit"))) {
@@ -134,6 +136,9 @@ public final class AccountTicketTasks extends CFSModule {
         if (isValid) {
           recordInserted = thisTask.insert(db);
         }
+        if (recordInserted) {
+          this.processInsertHook(context, thisTask);
+        }
       } else {
         Task oldTask = new Task(db, thisTask.getId());
         if (!hasAuthority(context, oldTask.getOwner())) {
@@ -142,6 +147,9 @@ public final class AccountTicketTasks extends CFSModule {
         isValid = this.validateObject(context, db, thisTask);
         if (isValid) {
           resultCount = thisTask.update(db);
+        }
+        if (resultCount == 1) {
+          this.processUpdateHook(context, oldTask, thisTask);
         }
       }
 
@@ -155,19 +163,19 @@ public final class AccountTicketTasks extends CFSModule {
       addModuleBean(context, "View Accounts", "Ticket Save OK");
       return ("SaveOK");
     }
-    if ("insert".equals(action)){
+    if ("insert".equals(action)) {
       return executeCommandAdd(context);
-    }else{
+    } else {
       return executeCommandModify(context);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-tasks-add"))) {
@@ -175,21 +183,21 @@ public final class AccountTicketTasks extends CFSModule {
     }
 
     TicketTask thisTicketTask = (TicketTask) context.getFormBean();
-    if (thisTicketTask.getEnteredBy() != -1){
-      Task  thisTask = thisTicketTask;
+    if (thisTicketTask.getEnteredBy() != -1) {
+      Task thisTask = thisTicketTask;
       context.getRequest().setAttribute("Task", thisTask);
     }
-        
+
     addModuleBean(context, "View Accounts", "Add Ticket");
     return ("AddTaskOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Connection db = null;
@@ -199,7 +207,7 @@ public final class AccountTicketTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = (TicketTask) context.getFormBean();
-      if (thisTask.getId() == -1){
+      if (thisTask.getId() == -1) {
         thisTask = new Task(db, Integer.parseInt(id));
       }
       thisTask.checkEnabledOwnerAccount(db);
@@ -213,7 +221,8 @@ public final class AccountTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Task", thisTask);
-    if (!hasAuthority(context, thisTask.getOwner()) || !(hasPermission(context, "accounts-accounts-tickets-tasks-edit"))) {
+    if (!hasAuthority(context, thisTask.getOwner()) || !(hasPermission(
+        context, "accounts-accounts-tickets-tasks-edit"))) {
       if (hasPermission(context, "accounts-accounts-tickets-tasks-view")) {
         return "TaskDetailsOK";
       }
@@ -224,10 +233,10 @@ public final class AccountTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -252,7 +261,8 @@ public final class AccountTicketTasks extends CFSModule {
     }
     if (errorMessage == null) {
       context.getRequest().setAttribute("Task", thisTask);
-      context.getRequest().setAttribute("refreshUrl", "AccountTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
       return ("DeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -262,10 +272,10 @@ public final class AccountTicketTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-tasks-delete"))) {
@@ -285,15 +295,19 @@ public final class AccountTicketTasks extends CFSModule {
       }
       DependencyList dependencies = thisTask.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTicketTasks.do?command=Delete&id=" + id + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='AccountTicketTasks.do?command=Delete&id=" + id + "'");
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketTasks.do?command=Delete&id=" + id + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketTasks.do?command=Delete&id=" + id + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

@@ -32,10 +32,10 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 
 /**
- *  Represents an action performed on a action item
+ * Represents an action performed on a action item
  *
- * @author     akhi_m
- * @created    April 24, 2003
+ * @author akhi_m
+ * @created April 24, 2003
  */
 public class ActionItemLog extends GenericBean {
   private int id = -1;
@@ -50,16 +50,17 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *Constructor for the ActionItemLog object
+   * Constructor for the ActionItemLog object
    */
-  public ActionItemLog() { }
+  public ActionItemLog() {
+  }
 
 
   /**
-   *Constructor for the ActionItemLog object
+   * Constructor for the ActionItemLog object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActionItemLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -67,9 +68,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ActionItemLog object
+   * Sets the id attribute of the ActionItemLog object
    *
-   * @param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -77,9 +78,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the itemId attribute of the ActionItemLog object
+   * Sets the itemId attribute of the ActionItemLog object
    *
-   * @param  itemId  The new itemId value
+   * @param itemId The new itemId value
    */
   public void setItemId(int itemId) {
     this.itemId = itemId;
@@ -87,9 +88,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the linkItemId attribute of the ActionItemLog object
+   * Sets the linkItemId attribute of the ActionItemLog object
    *
-   * @param  linkItemId  The new linkItemId value
+   * @param linkItemId The new linkItemId value
    */
   public void setLinkItemId(int linkItemId) {
     this.linkItemId = linkItemId;
@@ -97,9 +98,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the ActionItemLog object
+   * Sets the type attribute of the ActionItemLog object
    *
-   * @param  type  The new type value
+   * @param type The new type value
    */
   public void setType(int type) {
     this.type = type;
@@ -107,9 +108,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionItemLog object
+   * Sets the enteredBy attribute of the ActionItemLog object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -117,9 +118,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionItemLog object
+   * Sets the modifiedBy attribute of the ActionItemLog object
    *
-   * @param  modifiedBy  The new modifiedBy value
+   * @param modifiedBy The new modifiedBy value
    */
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
@@ -127,9 +128,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ActionItemLog object
+   * Sets the modified attribute of the ActionItemLog object
    *
-   * @param  modified  The new modified value
+   * @param modified The new modified value
    */
   public void setModified(java.sql.Timestamp modified) {
     this.modified = modified;
@@ -137,9 +138,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ActionItemLog object
+   * Sets the entered attribute of the ActionItemLog object
    *
-   * @param  entered  The new entered value
+   * @param entered The new entered value
    */
   public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
@@ -147,9 +148,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the ActionItemLog object
+   * Sets the description attribute of the ActionItemLog object
    *
-   * @param  description  The new description value
+   * @param description The new description value
    */
   public void setDescription(String description) {
     this.description = description;
@@ -157,9 +158,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the ActionItemLog object
+   * Gets the description attribute of the ActionItemLog object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -167,9 +168,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ActionItemLog object
+   * Gets the id attribute of the ActionItemLog object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -177,9 +178,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the itemId attribute of the ActionItemLog object
+   * Gets the itemId attribute of the ActionItemLog object
    *
-   * @return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -187,9 +188,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the linkItemId attribute of the ActionItemLog object
+   * Gets the linkItemId attribute of the ActionItemLog object
    *
-   * @return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -197,9 +198,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the ActionItemLog object
+   * Gets the type attribute of the ActionItemLog object
    *
-   * @return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -207,76 +208,76 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the typeString attribute of the ActionItemLog object
+   * Gets the typeString attribute of the ActionItemLog object
    *
-   * @return    The typeString value
+   * @return The typeString value
    */
   public String getTypeString() {
     String tmp = null;
     switch (type) {
-        case Constants.CALL_OBJECT:
-          tmp = "Call";
-          break;
-        case Constants.TICKET_OBJECT:
-          tmp = "Ticket";
-          break;
-        case Constants.TASK_OBJECT:
-          tmp = "Task";
-          break;
-        case Constants.OPPORTUNITY_OBJECT:
-          tmp = "Opp";
-          break;
-        case Constants.MESSAGE_OBJECT:
-          tmp = "Message";
-          break;
-        case Constants.CAMPAIGN_OBJECT:
-          tmp = "Message";
-          break;
-        default:
-          break;
+      case Constants.CALL_OBJECT:
+        tmp = "Call";
+        break;
+      case Constants.TICKET_OBJECT:
+        tmp = "Ticket";
+        break;
+      case Constants.TASK_OBJECT:
+        tmp = "Task";
+        break;
+      case Constants.OPPORTUNITY_OBJECT:
+        tmp = "Opp";
+        break;
+      case Constants.MESSAGE_OBJECT:
+        tmp = "Message";
+        break;
+      case Constants.CAMPAIGN_OBJECT:
+        tmp = "Message";
+        break;
+      default:
+        break;
     }
     return tmp;
   }
 
 
   /**
-   *  Gets the itemLink attribute of the ActionItemLog object
+   * Gets the itemLink attribute of the ActionItemLog object
    *
-   * @param  contactId  Description of the Parameter
-   * @return            The itemLink value
+   * @param contactId Description of the Parameter
+   * @return The itemLink value
    */
   public String getItemLink(int contactId) {
     String tmp = null;
     switch (type) {
-        case Constants.CALL_OBJECT:
-          tmp = "ExternalContactsCalls.do?command=Details&id=" + this.getLinkItemId() + "&contactId=" + contactId;
-          break;
-        case Constants.TICKET_OBJECT:
-          tmp = "TroubleTickets.do?command=Details&id=" + this.getLinkItemId();
-          break;
-        case Constants.TASK_OBJECT:
-          tmp = "MyTasks.do?command=Modify&id=" + this.getLinkItemId();
-          break;
-        case Constants.OPPORTUNITY_OBJECT:
-          tmp = "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + this.getLinkItemId() + "&contactId=" + contactId;
-          break;
-        case Constants.MESSAGE_OBJECT:
-          tmp = "MyCFSInbox.do?command=CFSNoteDetails&id=" + this.getLinkItemId();
-          break;
-        case Constants.CAMPAIGN_OBJECT:
-          tmp = "CampaignManager.do?command=Details&id=" + this.getLinkItemId();
-          break;
-        default:
-          break;
+      case Constants.CALL_OBJECT:
+        tmp = "ExternalContactsCalls.do?command=Details&id=" + this.getLinkItemId() + "&contactId=" + contactId;
+        break;
+      case Constants.TICKET_OBJECT:
+        tmp = "TroubleTickets.do?command=Details&id=" + this.getLinkItemId();
+        break;
+      case Constants.TASK_OBJECT:
+        tmp = "MyTasks.do?command=Modify&id=" + this.getLinkItemId();
+        break;
+      case Constants.OPPORTUNITY_OBJECT:
+        tmp = "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + this.getLinkItemId() + "&contactId=" + contactId;
+        break;
+      case Constants.MESSAGE_OBJECT:
+        tmp = "MyCFSInbox.do?command=CFSNoteDetails&id=" + this.getLinkItemId();
+        break;
+      case Constants.CAMPAIGN_OBJECT:
+        tmp = "CampaignManager.do?command=Details&id=" + this.getLinkItemId();
+        break;
+      default:
+        break;
     }
     return tmp;
   }
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionItemLog object
+   * Gets the enteredBy attribute of the ActionItemLog object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -284,9 +285,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActionItemLog object
+   * Gets the modifiedBy attribute of the ActionItemLog object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -294,9 +295,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the ActionItemLog object
+   * Gets the modified attribute of the ActionItemLog object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -304,9 +305,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ActionItemLog object
+   * Gets the entered attribute of the ActionItemLog object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -314,9 +315,9 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the ActionItemLog object
+   * Gets the enteredString attribute of the ActionItemLog object
    *
-   * @return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -329,52 +330,54 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Builds description based on the type of the action
+   * Builds description based on the type of the action
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildDescription(Connection db) throws SQLException {
     if (this.getType() == -1) {
       throw new SQLException("Type not specified");
     }
     switch (type) {
-        case Constants.CALL_OBJECT:
-          Call thisCall = new Call(db, this.getLinkItemId());
-          this.description = thisCall.getSubject();
-          break;
-        case Constants.TICKET_OBJECT:
-          Ticket thisTicket = new Ticket(db, this.getLinkItemId());
-          this.description = thisTicket.getProblem();
-          break;
-        case Constants.TASK_OBJECT:
-          Task thisTask = new Task(db, this.getLinkItemId());
-          this.description = thisTask.getDescription();
-          break;
-        case Constants.OPPORTUNITY_OBJECT:
-          OpportunityHeader thisOpp = new OpportunityHeader(db, this.getLinkItemId());
-          this.description = thisOpp.getDescription();
-          break;
-        case Constants.MESSAGE_OBJECT:
-          CFSNote thisNote = new CFSNote(db, this.getLinkItemId(), this.getEnteredBy(), "sent");
-          this.description = thisNote.getSubject();
-          break;
-        case Constants.CAMPAIGN_OBJECT:
-          Campaign thisCampaign = new Campaign(db, this.getLinkItemId());
-          this.description = thisCampaign.getSubject();
-          break;
-        default:
-          break;
+      case Constants.CALL_OBJECT:
+        Call thisCall = new Call(db, this.getLinkItemId());
+        this.description = thisCall.getSubject();
+        break;
+      case Constants.TICKET_OBJECT:
+        Ticket thisTicket = new Ticket(db, this.getLinkItemId());
+        this.description = thisTicket.getProblem();
+        break;
+      case Constants.TASK_OBJECT:
+        Task thisTask = new Task(db, this.getLinkItemId());
+        this.description = thisTask.getDescription();
+        break;
+      case Constants.OPPORTUNITY_OBJECT:
+        OpportunityHeader thisOpp = new OpportunityHeader(
+            db, this.getLinkItemId());
+        this.description = thisOpp.getDescription();
+        break;
+      case Constants.MESSAGE_OBJECT:
+        CFSNote thisNote = new CFSNote(
+            db, this.getLinkItemId(), this.getEnteredBy(), "sent");
+        this.description = thisNote.getSubject();
+        break;
+      case Constants.CAMPAIGN_OBJECT:
+        Campaign thisCampaign = new Campaign(db, this.getLinkItemId());
+        this.description = thisCampaign.getSubject();
+        break;
+      default:
+        break;
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -400,11 +403,11 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean doCommit = false;
@@ -413,26 +416,28 @@ public class ActionItemLog extends GenericBean {
         db.setAutoCommit(false);
       }
       int i = 0;
+      id = DatabaseUtils.getNextSeq(db, "action_item_log_code_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO action_item_log " +
-          "(item_id, link_item_id, type, enteredby, modifiedby) " +
-          "VALUES (?, ?, ?, ?, ? ) "
-          );
+          "(" + (id > -1 ? "log_id, " : "") + "item_id, link_item_id, type, enteredby, modifiedby) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getItemId());
       pst.setInt(++i, this.getLinkItemId());
       pst.setInt(++i, this.getType());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "action_item_log_code_seq");
+      this.id = DatabaseUtils.getCurrVal(db, "action_item_log_code_seq", id);
       pst.close();
       //update the action item table to reflect the change
       i = 0;
       pst = db.prepareStatement(
           "UPDATE action_item " +
           "SET modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-          "WHERE item_id = ? "
-          );
+          "WHERE item_id = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getItemId());
       pst.execute();
@@ -455,11 +460,11 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -482,13 +487,13 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Deletes the link from the log on deletion of the actual entity
+   * Deletes the link from the log on deletion of the actual entity
    *
-   * @param  db                Description of the Parameter
-   * @param  linkId            Description of the Parameter
-   * @param  thisType          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param linkId   Description of the Parameter
+   * @param thisType Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean deleteLink(Connection db, int linkId, int thisType) throws SQLException {
     if (linkId == -1) {
@@ -507,10 +512,10 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("log_id");

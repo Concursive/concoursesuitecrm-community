@@ -35,19 +35,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 2, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created September 2, 2004
  */
 public final class ProductOptions extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
     Connection db = null;
@@ -56,15 +56,18 @@ public final class ProductOptions extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       configList.buildList(db);
       HtmlSelect configSelect = configList.getHtmlSelect();
       configSelect.addItem(-1, "All Types", 0);
       context.getRequest().setAttribute("ConfigSelect", configSelect);
       //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
-      PagedListInfo optionListInfo = this.getPagedListInfo(context, "SearchProductOptionListInfo");
+      PagedListInfo optionListInfo = this.getPagedListInfo(
+          context, "SearchProductOptionListInfo");
       optionListInfo.setCurrentLetter("");
       optionListInfo.setCurrentOffset(0);
     } catch (Exception e) {
@@ -78,25 +81,29 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearch(ActionContext context) {
     Connection db = null;
     ProductOptionList optionList = new ProductOptionList();
 
     // Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchProductOptionListInfo");
+    PagedListInfo searchListInfo = this.getPagedListInfo(
+        context, "SearchProductOptionListInfo");
     this.resetPagedListInfo(context);
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      searchListInfo.setLink("ProductOptions.do?command=Search&moduleId=" + moduleId);
+      searchListInfo.setLink(
+          "ProductOptions.do?command=Search&moduleId=" + moduleId);
       optionList.setPagedListInfo(searchListInfo);
       optionList.setConfiguratorId(searchListInfo.getFilterKey("listFilter1"));
       searchListInfo.setSearchCriteria(optionList, context);
@@ -123,10 +130,10 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Connection db = null;
@@ -134,8 +141,10 @@ public final class ProductOptions extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       configList.buildList(db);
       context.getRequest().setAttribute("ConfiguratorList", configList);
@@ -150,10 +159,10 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Connection db = null;
@@ -166,8 +175,10 @@ public final class ProductOptions extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       recordInserted = newOption.insert(db);
       if (recordInserted) {
@@ -199,10 +210,10 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmEnable(ActionContext context) {
     Connection db = null;
@@ -210,23 +221,29 @@ public final class ProductOptions extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String optionId = context.getRequest().getParameter("optionId");
       ProductOption option = new ProductOption(db, Integer.parseInt(optionId));
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, option.getConfiguratorId());
       HtmlDialog htmlDialog = new HtmlDialog();
       htmlDialog.setTitle("Centric CRM: Product Catalog Editor");
       if (configurator.enableOption(db, option.getId())) {
-        htmlDialog.addMessage("The option can be successfully enabled...<br><br>");
-        htmlDialog.addButton("Enable", "javascript:window.location.href='ProductOptions.do?command=Enable&optionId=" + optionId + "&return=" + returnUrl + "';");
+        htmlDialog.addMessage(
+            "The option can be successfully enabled...<br><br>");
+        htmlDialog.addButton(
+            "Enable", "javascript:window.location.href='ProductOptions.do?command=Enable&optionId=" + optionId + "&return=" + returnUrl + "';");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
         context.getRequest().setAttribute("refreshUrl", returnUrl);
       } else {
         HashMap errors = configurator.getErrors();
-        htmlDialog.addMessage("The option could not be enabled because of the following errors:<br><br>");
+        htmlDialog.addMessage(
+            "The option could not be enabled because of the following errors:<br><br>");
         Iterator i = errors.values().iterator();
         while (i.hasNext()) {
           String error = (String) i.next();
@@ -246,10 +263,10 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEnable(ActionContext context) {
     Connection db = null;
@@ -273,18 +290,20 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String optionId = context.getRequest().getParameter("optionId");
       ProductOption option = new ProductOption(db, Integer.parseInt(optionId));
@@ -292,13 +311,15 @@ public final class ProductOptions extends CFSModule {
 
       // load the configurator
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, option.getConfiguratorId());
 
       // query the properties for this option
       configurator.queryProperties(db, Integer.parseInt(optionId), false);
       OptionPropertyList propertyList = null;
       if (context.getRequest().getAttribute("PropertyList") != null) {
-        propertyList = (OptionPropertyList) context.getRequest().getAttribute("PropertyList");
+        propertyList = (OptionPropertyList) context.getRequest().getAttribute(
+            "PropertyList");
       } else {
         propertyList = configurator.getPropertyList();
       }
@@ -321,27 +342,31 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandLoadConfigurator(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String configId = context.getRequest().getParameter("configId");
       context.getRequest().setAttribute("configId", configId);
 
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, Integer.parseInt(configId));
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, Integer.parseInt(configId));
       OptionPropertyList propertyList = null;
       if (context.getRequest().getAttribute("PropertyList") != null) {
-        propertyList = (OptionPropertyList) context.getRequest().getAttribute("PropertyList");
+        propertyList = (OptionPropertyList) context.getRequest().getAttribute(
+            "PropertyList");
       } else {
         propertyList = configurator.getPropertyList();
       }
@@ -364,10 +389,10 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertOption(ActionContext context) {
     Connection db = null;
@@ -377,8 +402,10 @@ public final class ProductOptions extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String configId = context.getRequest().getParameter("configId");
       option.setConfiguratorId(configId);
@@ -386,11 +413,13 @@ public final class ProductOptions extends CFSModule {
 
       // load the configurator
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, Integer.parseInt(configId));
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, Integer.parseInt(configId));
       // set the properties with values available in the request
       configurator.setProperties(context.getRequest());
       if (!configurator.getPropertyList().isValid(systemStatus)) {
-        context.getRequest().setAttribute("PropertyList", configurator.getPropertyList());
+        context.getRequest().setAttribute(
+            "PropertyList", configurator.getPropertyList());
         return (executeCommandLoadConfigurator(context));
       }
       // save the properties
@@ -402,7 +431,8 @@ public final class ProductOptions extends CFSModule {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("ProductOptions-> Unable to save properties");
         }
-        context.getRequest().setAttribute("PropertyList", configurator.getPropertyList());
+        context.getRequest().setAttribute(
+            "PropertyList", configurator.getPropertyList());
         return (executeCommandLoadConfigurator(context));
       }
       String html = configurator.getHtml();
@@ -429,10 +459,10 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     Connection db = null;
@@ -442,8 +472,10 @@ public final class ProductOptions extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String configId = context.getRequest().getParameter("configId");
       context.getRequest().setAttribute("configId", configId);
@@ -453,20 +485,23 @@ public final class ProductOptions extends CFSModule {
 
       // load the configurator
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, Integer.parseInt(configId));
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, Integer.parseInt(configId));
       // set the properties with values available in the request
       configurator.setProperties(context.getRequest());
       if (!configurator.getPropertyList().isValid(systemStatus)) {
-        context.getRequest().setAttribute("PropertyList", configurator.getPropertyList());
+        context.getRequest().setAttribute(
+            "PropertyList", configurator.getPropertyList());
         return (executeCommandModify(context));
       }
       // save the properties
-      isValid = this.validateObject(context,db,option);
+      isValid = this.validateObject(context, db, option);
       isValid = this.validateObject(context, db, configurator) && isValid;
       if (isValid) {
         configurator.updateProperties(db, option);
       } else {
-        context.getRequest().setAttribute("PropertyList", configurator.getPropertyList());
+        context.getRequest().setAttribute(
+            "PropertyList", configurator.getPropertyList());
 //      processErrors(context, option.getErrors());
         return (executeCommandModify(context));
       }
@@ -483,18 +518,20 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String optionId = context.getRequest().getParameter("optionId");
       ProductOption option = new ProductOption(db, Integer.parseInt(optionId));
@@ -502,7 +539,8 @@ public final class ProductOptions extends CFSModule {
 
       // load the configurator
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, option.getConfiguratorId());
 
       // query the properties for this option
       configurator.queryProperties(db, Integer.parseInt(optionId), true);
@@ -521,9 +559,9 @@ public final class ProductOptions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     //this.deletePagedListInfo(context, "");

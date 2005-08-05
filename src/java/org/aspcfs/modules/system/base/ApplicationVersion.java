@@ -18,24 +18,24 @@ package org.aspcfs.modules.system.base;
 import org.aspcfs.controller.ApplicationPrefs;
 
 /**
- *  Class for reading the application version information
+ * Class for reading the application version information
  *
- *@author     matt rajkowski
- *@created    July 31, 2003
- *@version    $Id: ApplicationVersion.java,v 1.15 2004/06/15 14:30:04 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ApplicationVersion.java,v 1.15 2004/06/15 14:30:04 mrajkowski
+ *          Exp $
+ * @created July 31, 2003
  */
 public class ApplicationVersion {
-  public final static String VERSION = "3.0 (2005-04-15)";
-  public final static String APP_VERSION = "2005-04-15";
-  public final static String DB_VERSION = "2005-04-15";
+  public final static String VERSION = "3.1 (2005-08-04)";
+  public final static String APP_VERSION = "2005-08-04";
+  public final static String DB_VERSION = "2005-08-04";
 
 
   /**
-   *  Gets the outOfDate attribute of the ApplicationVersion class
+   * Gets the outOfDate attribute of the ApplicationVersion class
    *
-   *@param  prefs  Description of the Parameter
-   *@return        The outOfDate value
+   * @param prefs Description of the Parameter
+   * @return The outOfDate value
    */
   public static boolean isOutOfDate(ApplicationPrefs prefs) {
     // BEGIN DHV CODE ONLY
@@ -49,10 +49,10 @@ public class ApplicationVersion {
 
 
   /**
-   *  Gets the installedVersion attribute of the ApplicationVersion class
+   * Gets the installedVersion attribute of the ApplicationVersion class
    *
-   *@param  prefs  Description of the Parameter
-   *@return        The installedVersion value
+   * @param prefs Description of the Parameter
+   * @return The installedVersion value
    */
   public static String getInstalledVersion(ApplicationPrefs prefs) {
     String installedVersion = prefs.get("VERSION");

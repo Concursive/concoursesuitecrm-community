@@ -22,20 +22,53 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function showProgress() {
-    hideSpan("buttons");
-    showSpan("progress");
-    return true;
-  }
-  function setPort() {
-    if (document.configure.type.value == "PostgreSQL" && document.configure.port.value == "1433") {
-      document.configure.port.value = "5432";
+    if (document.configure.type.value == "none") {
+      alert("Please choose a database configuration");
+      return false;
+    } else {
+      hideSpan("buttons");
+      showSpan("progress");
+      return true;
     }
-    if (document.configure.type.value == "MSSQL" && document.configure.port.value == "5432") {
-      document.configure.port.value = "1433";
+  }
+  function configureDB() {
+    if (document.configure.type.value == "DaffodilDB") {
+      hideSpan("span-ip");
+      showSpan("span-ip-no");
+      hideSpan("span-port");
+      showSpan("span-port-no");
+<%-- BEGIN DHV CODE ONLY --%>
+      hideSpan("span-name");
+      showSpan("span-name-no");
+      hideSpan("span-user");
+      showSpan("span-user-no");
+      hideSpan("span-password");
+      showSpan("span-password-no");
+<%-- END DHV CODE ONLY --%>
+      document.configure.port.value = "";
+    } else {
+      hideSpan("span-ip-no");
+      showSpan("span-ip");
+      hideSpan("span-port-no");
+      showSpan("span-port");
+<%-- BEGIN DHV CODE ONLY --%>
+      hideSpan("span-name-no");
+      showSpan("span-name");
+      hideSpan("span-user-no");
+      showSpan("span-user");
+      hideSpan("span-password-no");
+      showSpan("span-password");
+<%-- END DHV CODE ONLY --%>
+      if (document.configure.type.value == "PostgreSQL") {
+        document.configure.port.value = "5432";
+      }
+      if (document.configure.type.value == "MSSQL") {
+        document.configure.port.value = "1433";
+      }
     }
   }
 </script>
-<body onLoad="javascript:document.configure.ip.focus();">
+<body onLoad="configureDB();">
 <dhv:formMessage showSpace="false" />
 <form name="configure" action="SetupDatabase.do?command=ConfigureDatabase&auto-populate=true" method="post" onSubmit="return showProgress()">
 <input type="hidden" name="configured" value="1"/>
@@ -64,10 +97,13 @@
             <dhv:label name="setup.databaseType.colon">Database Type:</dhv:label>
           </td>
           <td>
-            <select name="type" onChange="javascript:setPort();">
+            <select name="type" onChange="javascript:configureDB();">
+              <option value="none">-- None -- </option>
               <option value="PostgreSQL"<%= "PostgreSQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.postgreSQL">PostgreSQL</dhv:label></option>
               <option value="MSSQL"<%= "MSSQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.sqlServer">Microsoft SQL Server</dhv:label></option>
+              <option value="DaffodilDB"<%= "DaffodilDB".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.DaffodilDB">DaffodilDB/One$DB (Embedded)</dhv:label></option>
             </select>
+            <font color="red">*</font>
           </td>
         </tr>
         <tr>
@@ -75,8 +111,14 @@
             <dhv:label name="campaign.ipAddress.colon">IP Address:</dhv:label>
           </td>
           <td>
-            <input type="text" size="20" name="ip" value="<%= toHtmlValue(database.getIp()) %>"/><font color="red">*</font>
-            <%= showAttribute(request, "ipError") %>
+            <span id="span-ip" name="span-ip">
+              <input type="text" size="20" name="ip" value="<%= toHtmlValue(database.getIp()) %>"/>
+              <font color="red">*</font>
+              <%= showAttribute(request, "ipError") %>
+            </span>
+            <span id="span-ip-no" name="span-ip-no" style="display:none">
+              not used
+            </span>
           </td>
         </tr>
         <tr>
@@ -84,8 +126,14 @@
             <dhv:label name="setup.databasePort.colon">Database Port:</dhv:label>
           </td>
           <td>
-            <input type="text" size="20" name="port" value="<%= toHtmlValue(database.getPort()) %>"/><font color="red">*</font>
-            <%= showAttribute(request, "portError") %>
+            <span id="span-port" name="span-port">
+              <input type="text" size="20" name="port" value="<%= toHtmlValue(database.getPort()) %>"/>
+              <font color="red">*</font>
+              <%= showAttribute(request, "portError") %>
+            </span>
+            <span id="span-port-no" name="span-port-no" style="display:none">
+              not used
+            </span>
           </td>
         </tr>
         <tr>
@@ -93,8 +141,14 @@
             <dhv:label name="setup.databaseName.colon">Database Name:</dhv:label>
           </td>
           <td>
-            <input type="text" size="20" name="name" value="<%= toHtmlValue(database.getName()) %>"/><font color="red">*</font>
-            <%= showAttribute(request, "nameError") %>
+            <span id="span-name" name="span-name">
+              <input type="text" size="20" name="name" value="<%= toHtmlValue(database.getName()) %>"/>
+              <font color="red">*</font>
+              <%= showAttribute(request, "nameError") %>
+            </span>
+            <span id="span-name-no" name="span-name-no" style="display:none">
+              not used
+            </span>
           </td>
         </tr>
         <tr>
@@ -102,8 +156,14 @@
             <dhv:label name="setup.databaseUserName.colon">Database User Name:</dhv:label>
           </td>
           <td>
-            <input type="text" size="20" maxlength="255" name="user" value="<%= toHtmlValue(database.getUser()) %>"/><font color="red">*</font>
-            <%= showAttribute(request, "userError") %>
+            <span id="span-user" name="span-user">
+              <input type="text" size="20" maxlength="255" name="user" value="<%= toHtmlValue(database.getUser()) %>"/>
+              <font color="red">*</font>
+              <%= showAttribute(request, "userError") %>
+            </span>
+            <span id="span-user-no" name="span-user-no" style="display:none">
+              not used
+            </span>
           </td>
         </tr>
         <tr>
@@ -111,8 +171,13 @@
             <dhv:label name="setup.userPassword.colon">Database User Password:</dhv:label>
           </td>
           <td>
-            <input type="password" size="20" maxlength="255" name="password" value="<%= toHtmlValue(database.getPassword()) %>"/>
-            <%= showAttribute(request, "passwordError") %>
+            <span id="span-password" name="span-password">
+              <input type="password" size="20" maxlength="255" name="password" value="<%= toHtmlValue(database.getPassword()) %>"/>
+              <%= showAttribute(request, "passwordError") %>
+            </span>
+            <span id="span-password-no" name="span-password-no" style="display:none">
+              not used
+            </span>
           </td>
         </tr>
       </table>

@@ -14,27 +14,18 @@
 
 package org.jcrontab.data;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.util.Vector;
 import org.jcrontab.Crontab;
 
+import java.io.*;
+import java.util.Vector;
+
 /**
- *  This class Is the implementation of DataSource to access Info in a
- *  FileSystem
+ * This class Is the implementation of DataSource to access Info in a
+ * FileSystem
  *
- *@author     Israel Olalla
- *@created    November, 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November, 2002
  */
 public class FileSource implements DataSource {
 
@@ -50,12 +41,11 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  Creates new FileSource
+   * Creates new FileSource
    */
 
   protected FileSource() {
-    if (Crontab.getInstance().getProperty(
-        "org.jcrontab.data.file") == null) {
+    if (Crontab.getInstance().getProperty("org.jcrontab.data.file") == null) {
       Crontab.getInstance().setProperty(
           "org.jcrontab.data.file", crontab_file);
     }
@@ -63,10 +53,10 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method returns the singleton is very important to grant That only a
-   *  Thread accesses at a time
+   * This method returns the singleton is very important to grant That only a
+   * Thread accesses at a time
    *
-   *@return    The instance value
+   * @return The instance value
    */
   public synchronized DataSource getInstance() {
     if (instance == null) {
@@ -77,17 +67,17 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method searches the given Bean from the File
+   * This method searches the given Bean from the File
    *
-   *@param  ceb                     Description of the Parameter
-   *@return                         CrontabEntryBean beans Array the result of
-   *      the search
-   *@throws  CrontabEntryException  when it can't parse the line correctly
-   *@throws  IOException            If it can't access correctly to the File
-   *@throws  DataNotFoundException  whe it can't find nothing in the file
+   * @param ceb Description of the Parameter
+   * @return CrontabEntryBean beans Array the result of
+   *         the search
+   * @throws CrontabEntryException when it can't parse the line correctly
+   * @throws IOException           If it can't access correctly to the File
+   * @throws DataNotFoundException whe it can't find nothing in the file
    */
   public synchronized CrontabEntryBean find(CrontabEntryBean ceb)
-       throws CrontabEntryException, IOException, DataNotFoundException {
+      throws CrontabEntryException, IOException, DataNotFoundException {
     CrontabEntryBean[] cebra = findAll();
     for (int i = 0; i < cebra.length; i++) {
       if (cebra[i].equals(ceb)) {
@@ -100,23 +90,23 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name             Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected InputStream createCrontabStream(String name)
-       throws IOException {
+      throws IOException {
     return new FileInputStream(name);
   }
 
 
   /**
-   *  Gets the changed attribute of the FileSource object
+   * Gets the changed attribute of the FileSource object
    *
-   *@param  name  Description of the Parameter
-   *@return       The changed value
+   * @param name Description of the Parameter
+   * @return The changed value
    */
   protected boolean isChanged(String name) {
     // Don't like those three lines. But are the only way i have to grant
@@ -133,13 +123,13 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  cp                         Description of the Parameter
-   *@return                            Description of the Return Value
-   *@exception  CrontabEntryException  Description of the Exception
-   *@exception  IOException            Description of the Exception
-   *@exception  DataNotFoundException  Description of the Exception
+   * @param cp Description of the Parameter
+   * @return Description of the Return Value
+   * @throws CrontabEntryException Description of the Exception
+   * @throws IOException           Description of the Exception
+   * @throws DataNotFoundException Description of the Exception
    */
   public synchronized CrontabEntryBean[] findAll(Object cp) throws CrontabEntryException,
       IOException, DataNotFoundException {
@@ -148,13 +138,13 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method searches all the CrontabEntryBean from the File
+   * This method searches all the CrontabEntryBean from the File
    *
-   *@return                         CrontabEntryBean beans Array the result of
-   *      the search
-   *@throws  CrontabEntryException  when it can't parse the line correctly
-   *@throws  IOException            If it can't access correctly to the File
-   *@throws  DataNotFoundException  whe it can't find nothing in the file
+   * @return CrontabEntryBean beans Array the result of
+   *         the search
+   * @throws CrontabEntryException when it can't parse the line correctly
+   * @throws IOException           If it can't access correctly to the File
+   * @throws DataNotFoundException whe it can't find nothing in the file
    */
   public synchronized CrontabEntryBean[] findAll() throws CrontabEntryException,
       IOException, DataNotFoundException {
@@ -168,13 +158,13 @@ public class FileSource implements DataSource {
     // BufferedReader input = new BufferedReader(new FileReader(strFileName));
     // This Line allows the crontab to be included in a jar file
     // and accessed from anywhere
-    String filename = Crontab.getInstance().getProperty("org.jcrontab.data.file");
+    String filename = Crontab.getInstance().getProperty(
+        "org.jcrontab.data.file");
 
     if (isChanged(filename)) {
       // open the file
       final InputStream fis = createCrontabStream(filename);
-      BufferedReader input = new BufferedReader(
-          new InputStreamReader(fis));
+      BufferedReader input = new BufferedReader(new InputStreamReader(fis));
 
       String strLine;
 
@@ -232,10 +222,10 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method removes the CrontabEntryBean array from the File
+   * This method removes the CrontabEntryBean array from the File
    *
-   *@param  ceb         Description of the Parameter
-   *@throws  Exception
+   * @param ceb Description of the Parameter
+   * @throws Exception
    */
 
   public synchronized void remove(CrontabEntryBean[] ceb) throws Exception {
@@ -263,21 +253,22 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method saves the CrontabEntryBean array the actual problem with this
-   *  method is that doesn?t store comments and blank lines from the original
-   *  file any ideas?
+   * This method saves the CrontabEntryBean array the actual problem with this
+   * method is that doesn?t store comments and blank lines from the original
+   * file any ideas?
    *
-   *@param  list                       Description of the Parameter
-   *@exception  FileNotFoundException  Description of the Exception
-   *@throws  CrontabEntryException     when it can't parse the line correctly
-   *@throws  IOException               If it can't access correctly to the File
-   *@throws  DataNotFoundException     whe it can't find nothing in the file
-   *      usually Exception should'nt this
+   * @param list Description of the Parameter
+   * @throws FileNotFoundException Description of the Exception
+   * @throws CrontabEntryException when it can't parse the line correctly
+   * @throws IOException           If it can't access correctly to the File
+   * @throws DataNotFoundException whe it can't find nothing in the file
+   *                               usually Exception should'nt this
    */
   public synchronized void storeAll(CrontabEntryBean[] list) throws
       CrontabEntryException, FileNotFoundException, IOException {
 
-    File fl = new File(Crontab.getInstance()
+    File fl = new File(
+        Crontab.getInstance()
         .getProperty("org.jcrontab.data.file"));
     PrintStream out = new PrintStream(new FileOutputStream(fl));
     CrontabEntryBean nullCeb = new CrontabEntryBean();
@@ -293,15 +284,15 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method saves the CrontabEntryBean array the actual problem with this
-   *  method is that doesn?t store comments and blank lines from the original
-   *  file any ideas?
+   * This method saves the CrontabEntryBean array the actual problem with this
+   * method is that doesn?t store comments and blank lines from the original
+   * file any ideas?
    *
-   *@param  beans                   Description of the Parameter
-   *@throws  CrontabEntryException  when it can't parse the line correctly
-   *@throws  IOException            If it can't access correctly to the File
-   *@throws  DataNotFoundException  whe it can't find nothing in the file
-   *      usually Exception should'nt this
+   * @param beans Description of the Parameter
+   * @throws CrontabEntryException when it can't parse the line correctly
+   * @throws IOException           If it can't access correctly to the File
+   * @throws DataNotFoundException whe it can't find nothing in the file
+   *                               usually Exception should'nt this
    */
   public synchronized void store(CrontabEntryBean[] beans) throws CrontabEntryException,
       IOException, DataNotFoundException {
@@ -338,15 +329,15 @@ public class FileSource implements DataSource {
 
 
   /**
-   *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that doesn?t store comments and blank lines from the original file any
-   *  ideas?
+   * This method saves the CrontabEntryBean the actual problem with this method
+   * is that doesn?t store comments and blank lines from the original file any
+   * ideas?
    *
-   *@param  bean                    Description of the Parameter
-   *@throws  CrontabEntryException  when it can't parse the line correctly
-   *@throws  IOException            If it can't access correctly to the File
-   *@throws  DataNotFoundException  whe it can't find nothing in the file
-   *      usually Exception should'nt this
+   * @param bean Description of the Parameter
+   * @throws CrontabEntryException when it can't parse the line correctly
+   * @throws IOException           If it can't access correctly to the File
+   * @throws DataNotFoundException whe it can't find nothing in the file
+   *                               usually Exception should'nt this
    */
   public synchronized void store(CrontabEntryBean bean) throws CrontabEntryException,
       IOException, DataNotFoundException {

@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.AddressList;
-import javax.servlet.*;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    March 23, 2004
- *@version    $Id: OrderAddressList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: OrderAddressList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *          Exp $
+ * @created March 23, 2004
  */
 public class OrderAddressList extends AddressList {
   public final static String tableName = "order_address";
@@ -37,9 +38,9 @@ public class OrderAddressList extends AddressList {
 
 
   /**
-   *  Gets the tableName attribute of the OrderAddressList object
+   * Gets the tableName attribute of the OrderAddressList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -47,9 +48,9 @@ public class OrderAddressList extends AddressList {
 
 
   /**
-   *  Gets the uniqueField attribute of the OrderAddressList object
+   * Gets the uniqueField attribute of the OrderAddressList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -57,15 +58,16 @@ public class OrderAddressList extends AddressList {
 
 
   /**
-   *  Constructor for the OrderAddressList object
+   * Constructor for the OrderAddressList object
    */
-  public OrderAddressList() { }
+  public OrderAddressList() {
+  }
 
 
   /**
-   *  Constructor for the OrderAddressList object
+   * Constructor for the OrderAddressList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public OrderAddressList(HttpServletRequest request) {
     int i = 0;
@@ -80,10 +82,10 @@ public class OrderAddressList extends AddressList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -110,7 +112,8 @@ public class OrderAddressList extends AddressList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -123,7 +126,8 @@ public class OrderAddressList extends AddressList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND city < ? ");
         items = prepareFilter(pst);
@@ -138,9 +142,12 @@ public class OrderAddressList extends AddressList {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", city ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals(
+          "")) {
+        sqlOrder.append(
+            "ORDER BY " + pagedListInfo.getColumnToSortBy() + ", city ");
+        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals(
+            "")) {
           sqlOrder.append(pagedListInfo.getSortOrder() + " ");
         }
       } else {
@@ -155,7 +162,8 @@ public class OrderAddressList extends AddressList {
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -168,10 +176,10 @@ public class OrderAddressList extends AddressList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator addressIterator = this.iterator();

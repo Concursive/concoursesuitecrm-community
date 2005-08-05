@@ -15,18 +15,17 @@
  */
 package org.aspcfs.utils.web;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.io.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 
 /**
- *  Utility to determine the client's browser type.<br>
- *  <br>
- *  Can be used for CSS or browser specific features.
+ * Utility to determine the client's browser type.<br>
+ * <br>
+ * Can be used for CSS or browser specific features.
  *
- *@author     Matt Rajkowski
- *@created    March 5, 2002
- *@version    $Id$
+ * @author Matt Rajkowski
+ * @version $Id$
+ * @created March 5, 2002
  */
 public class ClientType implements Serializable {
   public final static String allowed = "0123456789.";
@@ -55,15 +54,16 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Constructor for the ClientType object
+   * Constructor for the ClientType object
    */
-  public ClientType() { }
+  public ClientType() {
+  }
 
 
   /**
-   *  Constructor for the ClientType object
+   * Constructor for the ClientType object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public ClientType(HttpServletRequest request) {
     this.setParameters(request);
@@ -71,9 +71,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Sets the parameters attribute of the ClientType object
+   * Sets the parameters attribute of the ClientType object
    *
-   *@param  request  The new parameters value
+   * @param request The new parameters value
    */
   public void setParameters(HttpServletRequest request) {
     this.type = HTML_BROWSER;
@@ -111,22 +111,26 @@ public class ClientType implements Serializable {
         //User-Agent: mozilla/4.0 (compatible; msie 5.01; windows nt 5.0)
         this.id = IE;
         //Search for "msie x"
-        version = parseVersion(header.substring(header.indexOf("msie ") + 5,
-            header.indexOf(";", header.indexOf("msie "))));
+        version = parseVersion(
+            header.substring(
+                header.indexOf("msie ") + 5,
+                header.indexOf(";", header.indexOf("msie "))));
       } else if (header.indexOf("applewebkit") > -1) {
         //User-Agent: mozilla/5.0 (macintosh; u; ppc mac os x; en) applewebkit/125.2 (khtml, like gecko) safari/125.7
         //mozilla/5.0 (macintosh; u; ppc mac os x; en) applewebkit/125.2 (khtml, like gecko) safari/125.8
         this.id = APPLEWEBKIT;
-        version = parseVersion(header.substring(header.indexOf("applewebkit") + 12, header.indexOf("(khtml")));
+        version = parseVersion(
+            header.substring(
+                header.indexOf("applewebkit") + 12, header.indexOf("(khtml")));
       } else if (header.indexOf("opera") > -1) {
         //Opera likes to impersonate other browsers
         //User-Agent: mozilla/4.0 (compatible; msie 6.0; msie 5.5; windows 98) opera 7.02  [en]
         //User-Agent: mozilla/3.0 (windows 98; u) opera 7.02  [en]
         this.id = OPERA;
-        version = parseVersion(header.substring(
-            header.indexOf("opera") + 5,
-            header.indexOf("[", header.indexOf("opera"))
-            ).trim());
+        version = parseVersion(
+            header.substring(
+                header.indexOf("opera") + 5,
+                header.indexOf("[", header.indexOf("opera"))).trim());
       } else if (header.indexOf("mozilla") > -1) {
         //User-Agent: mozilla/5.0 (x11; u; linux i686; en-us; rv:1.3b) gecko/20030211
         //User-Agent: mozilla/5.0 (macintosh; u; ppc mac os x; en-us; rv:1.0.1) gecko/20021104 chimera/0.6
@@ -134,7 +138,9 @@ public class ClientType implements Serializable {
         //User-Agent: mozilla/5.0 (windows; u; win98; en-us; rv:1.0.2) gecko/20030208 netscape/7.02
         if (header.indexOf("gecko/") > -1 && header.indexOf("rv:") > -1) {
           this.id = MOZILLA;
-          version = parseVersion(header.substring(header.indexOf("rv:") + 3, header.indexOf(") gecko")));
+          version = parseVersion(
+              header.substring(
+                  header.indexOf("rv:") + 3, header.indexOf(") gecko")));
         } else if (header.indexOf("gecko") > -1) {
           this.id = NETSCAPE;
           version = 6;
@@ -150,7 +156,8 @@ public class ClientType implements Serializable {
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ClientType-> Browser Id: " + getBrowserId());
-        System.out.println("ClientType-> Browser Version: " + getBrowserVersion());
+        System.out.println(
+            "ClientType-> Browser Version: " + getBrowserVersion());
         System.out.println("ClientType-> Browser O/S: " + getOsString());
       }
     }
@@ -158,9 +165,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Sets the type attribute of the ClientType object
+   * Sets the type attribute of the ClientType object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -168,9 +175,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Sets the id attribute of the ClientType object
+   * Sets the id attribute of the ClientType object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -178,9 +185,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Sets the version attribute of the ClientType object
+   * Sets the version attribute of the ClientType object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(double tmp) {
     this.version = tmp;
@@ -188,9 +195,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Sets the os attribute of the ClientType object
+   * Sets the os attribute of the ClientType object
    *
-   *@param  tmp  The new os value
+   * @param tmp The new os value
    */
   public void setOs(int tmp) {
     this.os = tmp;
@@ -198,9 +205,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the type attribute of the ClientType object
+   * Gets the type attribute of the ClientType object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -208,9 +215,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the id attribute of the ClientType object
+   * Gets the id attribute of the ClientType object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -218,9 +225,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the version attribute of the ClientType object
+   * Gets the version attribute of the ClientType object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return version;
@@ -228,9 +235,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the os attribute of the ClientType object
+   * Gets the os attribute of the ClientType object
    *
-   *@return    The os value
+   * @return The os value
    */
   public int getOs() {
     return os;
@@ -238,43 +245,43 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the browserId attribute of the ClientType object
+   * Gets the browserId attribute of the ClientType object
    *
-   *@return    The browserId value
+   * @return The browserId value
    */
   public String getBrowserId() {
     String thisId = null;
     switch (id) {
-        case IE:
-          thisId = "ie";
-          break;
-        case MOZILLA:
-          thisId = "moz";
-          break;
-        case NETSCAPE:
-          thisId = "ns";
-          break;
-        case POCKETIE:
-          thisId = "pie";
-          break;
-        case OPERA:
-          thisId = "opera";
-          break;
-        case APPLEWEBKIT:
-          thisId = "applewebkit";
-          break;
-        default:
-          thisId = "moz";
-          break;
+      case IE:
+        thisId = "ie";
+        break;
+      case MOZILLA:
+        thisId = "moz";
+        break;
+      case NETSCAPE:
+        thisId = "ns";
+        break;
+      case POCKETIE:
+        thisId = "pie";
+        break;
+      case OPERA:
+        thisId = "opera";
+        break;
+      case APPLEWEBKIT:
+        thisId = "applewebkit";
+        break;
+      default:
+        thisId = "moz";
+        break;
     }
     return thisId;
   }
 
 
   /**
-   *  Gets the browserVersion attribute of the ClientType object
+   * Gets the browserVersion attribute of the ClientType object
    *
-   *@return    The browserVersion value
+   * @return The browserVersion value
    */
   public double getBrowserVersion() {
     return version;
@@ -282,29 +289,29 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the osString attribute of the ClientType object
+   * Gets the osString attribute of the ClientType object
    *
-   *@return    The osString value
+   * @return The osString value
    */
   public String getOsString() {
     switch (os) {
-        case LINUX:
-          return "linux";
-        case MAC:
-          return "mac";
-        case WINDOWS:
-          return "win";
-        default:
-          return "win";
+      case LINUX:
+        return "linux";
+      case MAC:
+        return "mac";
+      case WINDOWS:
+        return "win";
+      default:
+        return "win";
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  versionText  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param versionText Description of the Parameter
+   * @return Description of the Return Value
    */
   public double parseVersion(String versionText) {
     try {
@@ -331,9 +338,9 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean showApplet() {
     if (id == APPLEWEBKIT ||

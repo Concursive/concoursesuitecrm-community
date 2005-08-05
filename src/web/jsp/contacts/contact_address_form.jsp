@@ -7,6 +7,7 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="contact" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -89,7 +90,7 @@
       <span name="state21" ID="state21" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
         <input type="text" size="25" name="address1otherState"  value="<%= toHtmlValue(thisAddress.getOtherState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr>
@@ -105,7 +106,7 @@
       <script type="text/javascript">
         update('address1country','1');
       </script>
-      <% } CountrySelect = new CountrySelect(); %>
+      <% } CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
 </table>

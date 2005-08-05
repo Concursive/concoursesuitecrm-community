@@ -15,24 +15,26 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.servicecontracts.base.ServiceContract;
+import org.aspcfs.modules.servicecontracts.base.ServiceContractHours;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.servicecontracts.base.*;
-import org.aspcfs.modules.base.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    February 2, 2004
- *@version    $Id: TicketCSSTMMaintenance.java,v 1.1.2.3 2004/02/03 17:50:54
- *      kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: TicketCSSTMMaintenance.java,v 1.1.2.3 2004/02/03 17:50:54
+ *          kbhoopal Exp $
+ * @created February 2, 2004
  */
 public class TicketActivityLog extends GenericBean {
 
@@ -69,16 +71,17 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketCSSTMMaintenanc object
+   * Constructor for the TicketCSSTMMaintenanc object
    */
-  public TicketActivityLog() { }
+  public TicketActivityLog() {
+  }
 
 
   /**
-   *  Constructor for the TicketCSSTMMaintenanc object
+   * Constructor for the TicketCSSTMMaintenanc object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TicketActivityLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -86,9 +89,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketCSSTMMaintenanc object
+   * Sets the id attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -96,9 +99,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketCSSTMMaintenanc object
+   * Sets the id attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -106,9 +109,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the linkTicketId attribute of the TicketCSSTMMaintenanc object
+   * Sets the linkTicketId attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new linkTicketId value
+   * @param tmp The new linkTicketId value
    */
   public void setLinkTicketId(int tmp) {
     this.linkTicketId = tmp;
@@ -116,9 +119,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the linkTicketId attribute of the TicketCSSTMMaintenanc object
+   * Sets the linkTicketId attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new linkTicketId value
+   * @param tmp The new linkTicketId value
    */
   public void setLinkTicketId(String tmp) {
     this.linkTicketId = Integer.parseInt(tmp);
@@ -126,9 +129,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the phoneResponseTime attribute of the TicketCSSTMMaintenanc object
+   * Sets the phoneResponseTime attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new phoneResponseTime value
+   * @param tmp The new phoneResponseTime value
    */
   public void setPhoneResponseTime(String tmp) {
     this.phoneResponseTime = tmp;
@@ -136,10 +139,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the engineerResponseTime attribute of the TicketCSSTMMaintenanc
-   *  object
+   * Sets the engineerResponseTime attribute of the TicketCSSTMMaintenanc
+   * object
    *
-   *@param  tmp  The new engineerResponseTime value
+   * @param tmp The new engineerResponseTime value
    */
   public void setEngineerResponseTime(String tmp) {
     this.engineerResponseTime = tmp;
@@ -147,9 +150,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the TicketCSSTMMaintenanc object
+   * Sets the alertDate attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
@@ -157,9 +160,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the TicketCSSTMMaintenanc object
+   * Sets the alertDate attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(String tmp) {
     alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -167,9 +170,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the alertDateTimeZone attribute of the TicketActivityLog object
+   * Sets the alertDateTimeZone attribute of the TicketActivityLog object
    *
-   *@param  tmp  The new alertDateTimeZone value
+   * @param tmp The new alertDateTimeZone value
    */
   public void setAlertDateTimeZone(String tmp) {
     this.alertDateTimeZone = tmp;
@@ -177,19 +180,20 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the followUpRequired attribute of the TicketCSSTMMaintenance object
+   * Sets the followUpRequired attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new followUpRequired value
+   * @param tmp The new followUpRequired value
    */
   public void setFollowUpRequired(String tmp) {
-    this.followUpRequired = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.followUpRequired = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the followUpRequired attribute of the TicketCSSTMMaintenanc object
+   * Sets the followUpRequired attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new followUpRequired value
+   * @param tmp The new followUpRequired value
    */
   public void setFollowUpRequired(boolean tmp) {
     this.followUpRequired = tmp;
@@ -197,9 +201,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the followUpDescription attribute of the TicketCSSTMMaintenanc object
+   * Sets the followUpDescription attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new followUpDescription value
+   * @param tmp The new followUpDescription value
    */
   public void setFollowUpDescription(String tmp) {
     this.followUpDescription = tmp;
@@ -207,10 +211,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the perDayDescriptionList attribute of the TicketCSSTMMaintenanc
-   *  object
+   * Sets the perDayDescriptionList attribute of the TicketCSSTMMaintenanc
+   * object
    *
-   *@param  tmp  The new perDayDescriptionList value
+   * @param tmp The new perDayDescriptionList value
    */
   public void setTicketPerDayDescriptionList(TicketPerDayDescriptionList tmp) {
     this.ticketPerDayDescriptionList = tmp;
@@ -218,9 +222,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the TicketCSSTMMaintenanc object
+   * Sets the entered attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -228,9 +232,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the TicketCSSTMMaintenanc object
+   * Sets the entered attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -238,9 +242,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the TicketCSSTMMaintenanc object
+   * Sets the enteredBy attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -248,9 +252,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the TicketCSSTMMaintenanc object
+   * Sets the enteredBy attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -258,9 +262,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the TicketCSSTMMaintenanc object
+   * Sets the modified attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -268,9 +272,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the TicketCSSTMMaintenanc object
+   * Sets the modified attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -278,9 +282,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TicketCSSTMMaintenanc object
+   * Sets the modifiedBy attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -288,9 +292,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TicketCSSTMMaintenanc object
+   * Sets the modifiedBy attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -298,9 +302,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TicketCSSTMMaintenanc object
+   * Sets the enabled attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -308,9 +312,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TicketCSSTMMaintenanc object
+   * Sets the enabled attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -318,9 +322,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalTravelHours attribute of the TicketCSSTMMaintenance object
+   * Sets the totalTravelHours attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalTravelHours value
+   * @param tmp The new totalTravelHours value
    */
   public void setTotalTravelHours(int tmp) {
     this.totalTravelHours = tmp;
@@ -328,9 +332,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalTravelHours attribute of the TicketCSSTMMaintenance object
+   * Sets the totalTravelHours attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalTravelHours value
+   * @param tmp The new totalTravelHours value
    */
   public void setTotalTravelHours(String tmp) {
     this.totalTravelHours = Integer.parseInt(tmp);
@@ -338,9 +342,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalTravelMinutes attribute of the TicketCSSTMMaintenance object
+   * Sets the totalTravelMinutes attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalTravelMinutes value
+   * @param tmp The new totalTravelMinutes value
    */
   public void setTotalTravelMinutes(int tmp) {
     this.totalTravelMinutes = tmp;
@@ -348,9 +352,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalTravelMinutes attribute of the TicketCSSTMMaintenance object
+   * Sets the totalTravelMinutes attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalTravelMinutes value
+   * @param tmp The new totalTravelMinutes value
    */
   public void setTotalTravelMinutes(String tmp) {
     this.totalTravelMinutes = Integer.parseInt(tmp);
@@ -358,9 +362,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalLaborHours attribute of the TicketCSSTMMaintenance object
+   * Sets the totalLaborHours attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalLaborHours value
+   * @param tmp The new totalLaborHours value
    */
   public void setTotalLaborHours(int tmp) {
     this.totalLaborHours = tmp;
@@ -368,9 +372,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalLaborHours attribute of the TicketCSSTMMaintenance object
+   * Sets the totalLaborHours attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalLaborHours value
+   * @param tmp The new totalLaborHours value
    */
   public void setTotalLaborHours(String tmp) {
     this.totalLaborHours = Integer.parseInt(tmp);
@@ -378,9 +382,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalLaborMinutes attribute of the TicketCSSTMMaintenance object
+   * Sets the totalLaborMinutes attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalLaborMinutes value
+   * @param tmp The new totalLaborMinutes value
    */
   public void setTotalLaborMinutes(int tmp) {
     this.totalLaborMinutes = tmp;
@@ -388,9 +392,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the totalLaborMinutes attribute of the TicketCSSTMMaintenance object
+   * Sets the totalLaborMinutes attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new totalLaborMinutes value
+   * @param tmp The new totalLaborMinutes value
    */
   public void setTotalLaborMinutes(String tmp) {
     this.totalLaborMinutes = Integer.parseInt(tmp);
@@ -398,10 +402,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the travelTowardsServiceContract attribute of the
-   *  TicketCSSTMMaintenance object
+   * Sets the travelTowardsServiceContract attribute of the
+   * TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new travelTowardsServiceContract value
+   * @param tmp The new travelTowardsServiceContract value
    */
   public void setTravelTowardsServiceContract(boolean tmp) {
     this.travelTowardsServiceContract = tmp;
@@ -409,21 +413,22 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the travelTowardsServiceContract attribute of the
-   *  TicketCSSTMMaintenance object
+   * Sets the travelTowardsServiceContract attribute of the
+   * TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new travelTowardsServiceContract value
+   * @param tmp The new travelTowardsServiceContract value
    */
   public void setTravelTowardsServiceContract(String tmp) {
-    this.travelTowardsServiceContract = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.travelTowardsServiceContract = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the laborTowardsServiceContract attribute of the
-   *  TicketCSSTMMaintenance object
+   * Sets the laborTowardsServiceContract attribute of the
+   * TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new laborTowardsServiceContract value
+   * @param tmp The new laborTowardsServiceContract value
    */
   public void setLaborTowardsServiceContract(boolean tmp) {
     this.laborTowardsServiceContract = tmp;
@@ -431,20 +436,21 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the laborTowardsServiceContract attribute of the
-   *  TicketCSSTMMaintenance object
+   * Sets the laborTowardsServiceContract attribute of the
+   * TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new laborTowardsServiceContract value
+   * @param tmp The new laborTowardsServiceContract value
    */
   public void setLaborTowardsServiceContract(String tmp) {
-    this.laborTowardsServiceContract = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.laborTowardsServiceContract = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the override attribute of the TicketCSSTMMaintenance object
+   * Sets the override attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(boolean tmp) {
     this.override = tmp;
@@ -452,9 +458,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the TicketCSSTMMaintenance object
+   * Sets the override attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(String tmp) {
     this.override = DatabaseUtils.parseBoolean(tmp);
@@ -462,12 +468,13 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the requestItems attribute of the TicketCSSTMMaintenanc object
+   * Sets the requestItems attribute of the TicketCSSTMMaintenanc object
    *
-   *@param  request  The new requestItems value
+   * @param request The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
-    ticketPerDayDescriptionList = new TicketPerDayDescriptionList(request, errors);
+    ticketPerDayDescriptionList = new TicketPerDayDescriptionList(
+        request, errors);
     this.totalTravelHours = ticketPerDayDescriptionList.getTotalTravelHours();
     this.totalTravelMinutes = ticketPerDayDescriptionList.getTotalTravelMinutes();
     this.totalLaborHours = ticketPerDayDescriptionList.getTotalLaborHours();
@@ -476,9 +483,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the request attribute of the TicketCSSTMMaintenance object
+   * Sets the request attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new request value
+   * @param tmp The new request value
    */
   public void setRequest(HttpServletRequest tmp) {
     this.request = tmp;
@@ -486,9 +493,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the relatedContractId attribute of the TicketCSSTMMaintenance object
+   * Sets the relatedContractId attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new relatedContractId value
+   * @param tmp The new relatedContractId value
    */
   public void setRelatedContractId(int tmp) {
     this.relatedContractId = tmp;
@@ -496,9 +503,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Sets the relatedContractId attribute of the TicketCSSTMMaintenance object
+   * Sets the relatedContractId attribute of the TicketCSSTMMaintenance object
    *
-   *@param  tmp  The new relatedContractId value
+   * @param tmp The new relatedContractId value
    */
   public void setRelatedContractId(String tmp) {
     this.relatedContractId = Integer.parseInt(tmp);
@@ -506,9 +513,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the TicketCSSTMMaintenanc object
+   * Gets the id attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -516,9 +523,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the linkTicketId attribute of the TicketCSSTMMaintenanc object
+   * Gets the linkTicketId attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The linkTicketId value
+   * @return The linkTicketId value
    */
   public int getLinkTicketId() {
     return linkTicketId;
@@ -526,9 +533,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the phoneResponseTime attribute of the TicketCSSTMMaintenanc object
+   * Gets the phoneResponseTime attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The phoneResponseTime value
+   * @return The phoneResponseTime value
    */
   public String getPhoneResponseTime() {
     return phoneResponseTime;
@@ -536,10 +543,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the engineerResponseTime attribute of the TicketCSSTMMaintenanc
-   *  object
+   * Gets the engineerResponseTime attribute of the TicketCSSTMMaintenanc
+   * object
    *
-   *@return    The engineerResponseTime value
+   * @return The engineerResponseTime value
    */
   public String getEngineerResponseTime() {
     return engineerResponseTime;
@@ -547,9 +554,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the alertDate attribute of the TicketCSSTMMaintenanc object
+   * Gets the alertDate attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The alertDate value
+   * @return The alertDate value
    */
   public java.sql.Timestamp getAlertDate() {
     return alertDate;
@@ -557,9 +564,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the alertDateTimeZone attribute of the TicketActivityLog object
+   * Gets the alertDateTimeZone attribute of the TicketActivityLog object
    *
-   *@return    The alertDateTimeZone value
+   * @return The alertDateTimeZone value
    */
   public String getAlertDateTimeZone() {
     return alertDateTimeZone;
@@ -567,9 +574,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the followUpRequired attribute of the TicketCSSTMMaintenanc object
+   * Gets the followUpRequired attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The followUpRequired value
+   * @return The followUpRequired value
    */
   public boolean getFollowUpRequired() {
     return followUpRequired;
@@ -577,9 +584,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the followUpDescription attribute of the TicketCSSTMMaintenanc object
+   * Gets the followUpDescription attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The followUpDescription value
+   * @return The followUpDescription value
    */
   public String getFollowUpDescription() {
     return followUpDescription;
@@ -587,10 +594,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the perDayDescriptionList attribute of the TicketCSSTMMaintenanc
-   *  object
+   * Gets the perDayDescriptionList attribute of the TicketCSSTMMaintenanc
+   * object
    *
-   *@return    The perDayDescriptionList value
+   * @return The perDayDescriptionList value
    */
   public TicketPerDayDescriptionList getTicketPerDayDescriptionList() {
     return ticketPerDayDescriptionList;
@@ -598,9 +605,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the TicketCSSTMMaintenanc object
+   * Gets the entered attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -608,9 +615,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the TicketCSSTMMaintenanc object
+   * Gets the enteredBy attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -618,9 +625,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the TicketCSSTMMaintenanc object
+   * Gets the modified attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -628,9 +635,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the TicketCSSTMMaintenanc object
+   * Gets the modifiedBy attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -638,9 +645,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the TicketCSSTMMaintenanc object
+   * Gets the enabled attribute of the TicketCSSTMMaintenanc object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -648,9 +655,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the totalTravelHours attribute of the TicketCSSTMMaintenance object
+   * Gets the totalTravelHours attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The totalTravelHours value
+   * @return The totalTravelHours value
    */
   public int getTotalTravelHours() {
     return totalTravelHours;
@@ -658,9 +665,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the totalTravelMinutes attribute of the TicketCSSTMMaintenance object
+   * Gets the totalTravelMinutes attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The totalTravelMinutes value
+   * @return The totalTravelMinutes value
    */
   public int getTotalTravelMinutes() {
     return totalTravelMinutes;
@@ -668,9 +675,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the totalLaborHours attribute of the TicketCSSTMMaintenance object
+   * Gets the totalLaborHours attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The totalLaborHours value
+   * @return The totalLaborHours value
    */
   public int getTotalLaborHours() {
     return totalLaborHours;
@@ -678,9 +685,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the totalLaborMinutes attribute of the TicketCSSTMMaintenance object
+   * Gets the totalLaborMinutes attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The totalLaborMinutes value
+   * @return The totalLaborMinutes value
    */
   public int getTotalLaborMinutes() {
     return totalLaborMinutes;
@@ -688,10 +695,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the travelTowardsServiceContract attribute of the
-   *  TicketCSSTMMaintenance object
+   * Gets the travelTowardsServiceContract attribute of the
+   * TicketCSSTMMaintenance object
    *
-   *@return    The travelTowardsServiceContract value
+   * @return The travelTowardsServiceContract value
    */
   public boolean getTravelTowardsServiceContract() {
     return travelTowardsServiceContract;
@@ -699,10 +706,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the laborTowardsServiceContract attribute of the
-   *  TicketCSSTMMaintenance object
+   * Gets the laborTowardsServiceContract attribute of the
+   * TicketCSSTMMaintenance object
    *
-   *@return    The laborTowardsServiceContract value
+   * @return The laborTowardsServiceContract value
    */
   public boolean getLaborTowardsServiceContract() {
     return laborTowardsServiceContract;
@@ -710,9 +717,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the firstActivityDate attribute of the TicketCSSTMMaintenance object
+   * Gets the firstActivityDate attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The firstActivityDate value
+   * @return The firstActivityDate value
    */
   public java.sql.Timestamp getFirstActivityDate() {
     return firstActivityDate;
@@ -720,9 +727,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the lastActivityDate attribute of the TicketCSSTMMaintenance object
+   * Gets the lastActivityDate attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The lastActivityDate value
+   * @return The lastActivityDate value
    */
   public java.sql.Timestamp getLastActivityDate() {
     return lastActivityDate;
@@ -730,9 +737,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the override attribute of the TicketCSSTMMaintenance object
+   * Gets the override attribute of the TicketCSSTMMaintenance object
    *
-   *@return    The override value
+   * @return The override value
    */
   public boolean getOverride() {
     return override;
@@ -740,11 +747,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpId             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param tmpId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int tmpId) throws SQLException {
     PreparedStatement pst = null;
@@ -790,7 +797,7 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   void calculateTotalTravelTime() {
     Iterator itr = ticketPerDayDescriptionList.iterator();
@@ -807,7 +814,7 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   void calculateTotalLaborTime() {
     Iterator itr = ticketPerDayDescriptionList.iterator();
@@ -824,10 +831,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Queries the activities performed during each day for this ticket form
+   * Queries the activities performed during each day for this ticket form
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPerDayDescriptionList(Connection db) throws SQLException {
     ticketPerDayDescriptionList = new TicketPerDayDescriptionList();
@@ -837,11 +844,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Deletes the activities performed during each day for this ticket form
+   * Deletes the activities performed during each day for this ticket form
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deletePerDayDescriptionList(Connection db) throws SQLException {
     ticketPerDayDescriptionList = new TicketPerDayDescriptionList();
@@ -852,9 +859,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive
+   * Gets the properties that are TimeZone sensitive
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -864,11 +871,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -892,7 +899,8 @@ public class TicketActivityLog extends GenericBean {
           "labor_towards_sc = ? ");
 
       if (!override) {
-        sql.append(" , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
+        sql.append(
+            " , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
       }
       sql.append("WHERE form_id = ? ");
       if (!override) {
@@ -952,9 +960,9 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public DependencyList processDependencies() {
     DependencyList dependencyList = new DependencyList();
@@ -974,11 +982,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
 
@@ -1025,11 +1033,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
 
@@ -1039,9 +1047,10 @@ public class TicketActivityLog extends GenericBean {
         db.setAutoCommit(false);
       }
       PreparedStatement pst = null;
+      id = DatabaseUtils.getNextSeq(db, "ticket_csstm_form_form_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO  ticket_csstm_form " +
-          "(link_ticket_id, " +
+          "(" + (id > -1 ? "form_id, " : "") + "link_ticket_id, " +
           "phone_response_time, " +
           "engineer_response_time, " +
           "follow_up_required, " +
@@ -1052,9 +1061,11 @@ public class TicketActivityLog extends GenericBean {
           "modifiedby, " +
           "travel_towards_sc, " +
           "labor_towards_sc) " +
-          "VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-
+          "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?)");
       int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, linkTicketId);
       pst.setString(++i, phoneResponseTime);
       pst.setString(++i, engineerResponseTime);
@@ -1066,9 +1077,8 @@ public class TicketActivityLog extends GenericBean {
       pst.setInt(++i, modifiedBy);
       pst.setBoolean(++i, travelTowardsServiceContract);
       pst.setBoolean(++i, laborTowardsServiceContract);
-
       pst.execute();
-      id = DatabaseUtils.getCurrVal(db, "ticket_csstm_form_form_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "ticket_csstm_form_form_id_seq", id);
       pst.close();
 
       // Save the description list
@@ -1097,11 +1107,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Inserts the per day activity item for the form
+   * Inserts the per day activity item for the form
    *
-   *@param  db                        Description of the Parameter
-   *@param  tmpPerDayDescriptionList  Description of the Parameter
-   *@exception  SQLException          Description of the Exception
+   * @param db                       Description of the Parameter
+   * @param tmpPerDayDescriptionList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertPerDayDescriptionList(Connection db, TicketPerDayDescriptionList tmpPerDayDescriptionList) throws SQLException {
     Iterator itr = tmpPerDayDescriptionList.iterator();
@@ -1114,10 +1124,10 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
 
@@ -1143,11 +1153,11 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Updates the service contract hours in the service contract object and adds
-   *  a record in th hours history if the activity is modified
+   * Updates the service contract hours in the service contract object and adds
+   * a record in th hours history if the activity is modified
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateServiceContractHours(Connection db) throws SQLException {
 
@@ -1155,26 +1165,40 @@ public class TicketActivityLog extends GenericBean {
       return;
     }
 
-    String prevTravelTowardsServiceContract = (String) request.getParameter("prevTravelTowardsServiceContract");
-    String prevLaborTowardsServiceContract = (String) request.getParameter("prevLaborTowardsServiceContract");
-    String prevTravelMinutes = (String) request.getParameter("prevTotalTravelMinutes");
-    String prevTravelHours = (String) request.getParameter("prevTotalTravelHours");
-    String prevLaborMinutes = (String) request.getParameter("prevTotalLaborMinutes");
-    String prevLaborHours = (String) request.getParameter("prevTotalLaborHours");
+    String prevTravelTowardsServiceContract = (String) request.getParameter(
+        "prevTravelTowardsServiceContract");
+    String prevLaborTowardsServiceContract = (String) request.getParameter(
+        "prevLaborTowardsServiceContract");
+    String prevTravelMinutes = (String) request.getParameter(
+        "prevTotalTravelMinutes");
+    String prevTravelHours = (String) request.getParameter(
+        "prevTotalTravelHours");
+    String prevLaborMinutes = (String) request.getParameter(
+        "prevTotalLaborMinutes");
+    String prevLaborHours = (String) request.getParameter(
+        "prevTotalLaborHours");
     int prevTotalHours = 0;
     int prevTotalMinutes = 0;
     double prevHoursUsed = 0;
-    if (("on".equals(prevLaborTowardsServiceContract)) || ("true".equals(prevLaborTowardsServiceContract))) {
-      prevTotalHours = prevTotalHours + ((prevLaborHours == null) ? 0 : Integer.parseInt(prevLaborHours));
-      prevTotalMinutes = prevTotalMinutes + ((prevLaborMinutes == null) ? 0 : Integer.parseInt(prevLaborMinutes));
+    if (("on".equals(prevLaborTowardsServiceContract)) || ("true".equals(
+        prevLaborTowardsServiceContract))) {
+      prevTotalHours = prevTotalHours + ((prevLaborHours == null) ? 0 : Integer.parseInt(
+          prevLaborHours));
+      prevTotalMinutes = prevTotalMinutes + ((prevLaborMinutes == null) ? 0 : Integer.parseInt(
+          prevLaborMinutes));
     }
-    if (("on".equals(prevTravelTowardsServiceContract)) || ("true".equals(prevTravelTowardsServiceContract))) {
-      prevTotalHours = prevTotalHours + ((prevTravelHours == null) ? 0 : Integer.parseInt(prevTravelHours));
-      prevTotalMinutes = prevTotalMinutes + ((prevTravelMinutes == null) ? 0 : Integer.parseInt(prevTravelMinutes));
+    if (("on".equals(prevTravelTowardsServiceContract)) || ("true".equals(
+        prevTravelTowardsServiceContract))) {
+      prevTotalHours = prevTotalHours + ((prevTravelHours == null) ? 0 : Integer.parseInt(
+          prevTravelHours));
+      prevTotalMinutes = prevTotalMinutes + ((prevTravelMinutes == null) ? 0 : Integer.parseInt(
+          prevTravelMinutes));
     }
     prevHoursUsed = prevTotalHours + ((prevTotalMinutes == 0) ? 0 : (prevTotalMinutes * 1.0) / 60);
-    String travelTowardsServiceContract = (String) request.getParameter("travelTowardsServiceContract");
-    String laborTowardsServiceContract = (String) request.getParameter("laborTowardsServiceContract");
+    String travelTowardsServiceContract = (String) request.getParameter(
+        "travelTowardsServiceContract");
+    String laborTowardsServiceContract = (String) request.getParameter(
+        "laborTowardsServiceContract");
     int travelMinutes = getTotalTravelMinutes();
     int travelHours = getTotalTravelHours();
     int laborMinutes = getTotalLaborMinutes();
@@ -1182,35 +1206,39 @@ public class TicketActivityLog extends GenericBean {
     int totalHours = 0;
     int totalMinutes = 0;
     double hoursUsed = 0;
-    if (("on".equals(laborTowardsServiceContract)) || ("true".equals(laborTowardsServiceContract))) {
+    if (("on".equals(laborTowardsServiceContract)) || ("true".equals(
+        laborTowardsServiceContract))) {
       totalHours = totalHours + laborHours;
       totalMinutes = totalMinutes + laborMinutes;
     }
-    if (("on".equals(travelTowardsServiceContract)) || ("true".equals(travelTowardsServiceContract))) {
+    if (("on".equals(travelTowardsServiceContract)) || ("true".equals(
+        travelTowardsServiceContract))) {
       totalHours = totalHours + travelHours;
       totalMinutes = totalMinutes + travelMinutes;
     }
     hoursUsed = totalHours + ((totalMinutes == 0) ? 0 : (totalMinutes * 1.0) / 60);
 
     double netAdjustedHours = prevHoursUsed - hoursUsed;
-    ServiceContract.updateHoursRemaining(db, this.relatedContractId, netAdjustedHours);
+    ServiceContract.updateHoursRemaining(
+        db, this.relatedContractId, netAdjustedHours);
 
     ServiceContractHours sch = new ServiceContractHours();
     sch.setServiceContractId(this.relatedContractId);
     sch.setAdjustmentHours(netAdjustedHours);
     sch.setEnteredBy(getModifiedBy());
     sch.setModifiedBy(getModifiedBy());
-    sch.setAdjustmentNotes("Adjusted due to an activity in ticket  #" + this.linkTicketId);
+    sch.setAdjustmentNotes(
+        "Adjusted due to an activity in ticket  #" + this.linkTicketId);
     sch.insert(db);
   }
 
 
   /**
-   *  Reimburses the service contract hours when an activity is deleted and adds
-   *  an entry in the hours change history
+   * Reimburses the service contract hours when an activity is deleted and adds
+   * an entry in the hours change history
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void reimburseHoursAfterDelete(Connection db) throws SQLException {
 
@@ -1231,14 +1259,16 @@ public class TicketActivityLog extends GenericBean {
     }
     hoursUsed = totalHours + ((totalMinutes == 0) ? 0 : (totalMinutes * 1.0) / 60);
 
-    ServiceContract.updateHoursRemaining(db, this.relatedContractId, hoursUsed);
+    ServiceContract.updateHoursRemaining(
+        db, this.relatedContractId, hoursUsed);
 
     ServiceContractHours sch = new ServiceContractHours();
     sch.setServiceContractId(this.relatedContractId);
     sch.setAdjustmentHours(hoursUsed);
     sch.setEnteredBy(getModifiedBy());
     sch.setModifiedBy(getModifiedBy());
-    sch.setAdjustmentNotes("Reimbursement due to deletion of an activity in ticket  #" + this.linkTicketId);
+    sch.setAdjustmentNotes(
+        "Reimbursement due to deletion of an activity in ticket  #" + this.linkTicketId);
     sch.insert(db);
   }
 }

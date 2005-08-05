@@ -18,12 +18,11 @@ package org.aspcfs.modules.contacts.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.mycfs.base.CFSNote;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
@@ -36,21 +35,20 @@ import java.text.DateFormat;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    September 9, 2002
- *@version    $Id: ExternalContactsCalls.java,v 1.12 2002/12/23 18:27:00 chris
- *      Exp $
+ * @author akhi_m
+ * @version $Id: ExternalContactsCalls.java,v 1.12 2002/12/23 18:27:00 chris
+ *          Exp $
+ * @created September 9, 2002
  */
 public final class ExternalContactsCalls extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandView(ActionContext context) {
     int MINIMIZED_ITEMS_PER_PAGE = 5;
@@ -90,9 +88,12 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (sectionId == null || pendingPagedListId.equals(sectionId)) {
-      PagedListInfo callListInfo = this.getPagedListInfo(context, pendingPagedListId, "c.alertdate", null);
-      callListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId +
-          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+      PagedListInfo callListInfo = this.getPagedListInfo(
+          context, pendingPagedListId, "c.alertdate", null);
+      callListInfo.setLink(
+          "ExternalContactsCalls.do?command=View&contactId=" + contactId +
+          RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!callListInfo.getExpandedSelection()) {
           if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -122,15 +123,21 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (sectionId == null || completedPagedListId.equals(sectionId)) {
-      PagedListInfo completedCallListInfo = this.getPagedListInfo(context, completedPagedListId, "c.entered", "desc");
+      PagedListInfo completedCallListInfo = this.getPagedListInfo(
+          context, completedPagedListId, "c.entered", "desc");
       if ("calendar".equals(source)) {
-        completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
-        completedCallListInfo.setLink("CalendarCalls.do?command=View&contactId=" + contactId +
-            RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|source"));
+        completedCallListInfo.setItemsPerPage(
+            PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        completedCallListInfo.setLink(
+            "CalendarCalls.do?command=View&contactId=" + contactId +
+            RequestUtils.addLinkParams(
+                context.getRequest(), "popup|popupType|actionId|source"));
         completedCallListInfo.setExpandedSelection(true);
       } else {
-        completedCallListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId +
-            RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        completedCallListInfo.setLink(
+            "ExternalContactsCalls.do?command=View&contactId=" + contactId +
+            RequestUtils.addLinkParams(
+                context.getRequest(), "popup|popupType|actionId"));
         if (sectionId == null) {
           if (!completedCallListInfo.getExpandedSelection()) {
             if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -138,7 +145,8 @@ public final class ExternalContactsCalls extends CFSModule {
             }
           } else {
             if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
-              completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+              completedCallListInfo.setItemsPerPage(
+                  PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
             }
           }
         } else if (sectionId.equals(completedCallListInfo.getId())) {
@@ -157,7 +165,8 @@ public final class ExternalContactsCalls extends CFSModule {
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       //check role permissions
-      if (!hasPermission(context, "contacts-external_contacts-calls-view") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-view")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-view") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-view")))) {
         return ("PermissionError");
       }
 
@@ -166,8 +175,14 @@ public final class ExternalContactsCalls extends CFSModule {
         return ("PermissionError");
       }
 
+      if (thisContact.getTrashedDate() != null) {
+        callList.setIncludeOnlyTrashed(true);
+      }
       if (sectionId == null || pendingPagedListId.equals(sectionId)) {
         callList.buildList(db);
+      }
+      if (thisContact.getTrashedDate() != null) {
+        completedCallList.setIncludeOnlyTrashed(true);
       }
       if (sectionId == null || completedPagedListId.equals(sectionId)) {
         completedCallList.buildList(db);
@@ -175,7 +190,8 @@ public final class ExternalContactsCalls extends CFSModule {
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Need the call types for display purposes
-      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
 
       //Need the result types for display purposes
@@ -195,10 +211,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     String permission = "contacts-external_contacts-calls-add";
@@ -216,6 +232,7 @@ public final class ExternalContactsCalls extends CFSModule {
     String action = context.getRequest().getParameter("action");
     //Save the current call
     Call thisCall = (Call) context.getFormBean();
+    Call previousParentCall = null;
     thisCall.setModifiedBy(getUserId(context));
 
     if (thisCall.getId() > 0) {
@@ -232,13 +249,14 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       //Store current status id to reset the object upon server error or warning
       tmpStatusId = thisCall.getStatusId();
-      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))) {
+      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(
+          context.getRequest().getParameter("view")))) {
         thisCall.setCheckAlertDate(false);
       }
       //update or insert the call
       if (thisCall.getId() > 0) {
+        previousCall = new Call(db, thisCall.getId());
         if (thisCall.getStatusId() == Call.COMPLETE) {
-          previousCall = new Call(db, thisCall.getId());
           if (previousCall.getAlertDate() == null && thisCall.getAlertDate() != null) {
             thisCall.setStatusId(Call.COMPLETE_FOLLOWUP_PENDING);
           }
@@ -261,36 +279,59 @@ public final class ExternalContactsCalls extends CFSModule {
           }
         }
         thisCall.setEnteredBy(getUserId(context));
+        if (parentCall != null && parentCall.getOppHeaderId() != -1) {
+          thisCall.setOppHeaderId(parentCall.getOppHeaderId());
+        }
         isValid = this.validateObject(context, db, thisCall);
         if (isValid) {
           recordInserted = thisCall.insert(db, context);
         }
       }
+      addModifyFormElements(db, context, thisCall);
 
       thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-add") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-add")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-add") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-add")))) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       if (!recordInserted && resultCount == -1) {
         thisCall.setStatusId(tmpStatusId);
+        if (thisCall.getAlertText() != null && !"".equals(
+            thisCall.getAlertText())) {
+          thisCall.setHasFollowup(true);
+        }
         if (thisCall.getId() > 0) {
           Call tempCall = new Call(db, thisCall.getId());
+          if (thisCall.getAlertText() != null && !"".equals(
+              thisCall.getAlertText())) {
+            thisCall.setHasFollowup(true);
+          }
           thisCall.setCallType(tempCall.getCallType());
           addModifyFormElements(db, context, thisCall);
           if (resultCount == 0) {
             HashMap errors = new HashMap();
             SystemStatus systemStatus = this.getSystemStatus(context);
-            errors.put("actionError", systemStatus.getLabel("object.validation.recordUpdatedByAnotherUser"));
+            errors.put(
+                "actionError", systemStatus.getLabel(
+                    "object.validation.recordUpdatedByAnotherUser"));
             processErrors(context, errors);
             context.getRequest().setAttribute("CallDetails", tempCall);
           }
         }
       } else {
         if (parentCall != null) {
+          previousParentCall = new Call(db, parentCall.getId());
           parentCall.setStatusId(Call.COMPLETE);
           parentCall.update(db, context);
+          this.processUpdateHook(context, previousParentCall, parentCall);
+        }
+        thisCall = new Call(db, thisCall.getId());
+        if (recordInserted) {
+          this.processInsertHook(context, thisCall);
+        } else if (resultCount == 1) {
+          this.processUpdateHook(context, previousCall, thisCall);
         }
       }
     } catch (Exception e) {
@@ -301,7 +342,8 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     boolean popup = "true".equals(context.getRequest().getParameter("popup"));
-    boolean inlinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
+    boolean inlinePopup = "inline".equals(
+        context.getRequest().getParameter("popupType"));
     if (recordInserted) {
       if (context.getRequest().getParameter("actionSource") != null) {
         return getReturn(context, "InsertCall");
@@ -331,11 +373,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
     addModuleBean(context, "External Contacts", "Calls");
@@ -350,7 +391,8 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-view") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-view")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-view") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-view")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -362,7 +404,8 @@ public final class ExternalContactsCalls extends CFSModule {
       if (thisCall.getAlertDate() != null) {
         SystemStatus systemStatus = this.getSystemStatus(context);
         //Need the call types for display purposes
-        LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+        LookupList reminderList = systemStatus.getLookupList(
+            db, "lookup_call_reminder");
         context.getRequest().setAttribute("ReminderTypeList", reminderList);
       }
 
@@ -383,10 +426,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     HtmlDialog htmlDialog = new HtmlDialog();
@@ -398,7 +441,8 @@ public final class ExternalContactsCalls extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-delete")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-delete")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -409,13 +453,19 @@ public final class ExternalContactsCalls extends CFSModule {
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(
+                context.getRequest(), "popup|popupType|actionId") + "'");
       } else {
         dependencies.setSystemStatus(systemStatus);
-        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+        htmlDialog.addMessage(
+            systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(
+                context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -429,11 +479,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
     boolean recordDeleted = false;
@@ -444,20 +493,22 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-delete")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-delete")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisCall = new Call(db, context.getRequest().getParameter("id"));
-
+      this.processDeleteHook(context, thisCall);
       recordDeleted = thisCall.delete(db);
       if (!recordDeleted) {
-        thisCall.getErrors().put("actionError", systemStatus.getLabel("obejct.validation.actionError.callDeletion"));
+        thisCall.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "obejct.validation.actionError.callDeletion"));
         processErrors(context, thisCall.getErrors());
       }
-
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -465,10 +516,13 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
+    boolean inLinePopup = "inline".equals(
+        context.getRequest().getParameter("popupType"));
     if (recordDeleted) {
       context.getRequest().setAttribute("contactId", contactId);
-      context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+      context.getRequest().setAttribute(
+          "refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + RequestUtils.addLinkParams(
+              context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
       return getReturn(context, "Delete");
     } else {
       processErrors(context, thisCall.getErrors());
@@ -478,10 +532,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
@@ -493,7 +547,8 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-add") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-add")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-add") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-add")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -503,7 +558,8 @@ public final class ExternalContactsCalls extends CFSModule {
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
-      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
       callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
 
@@ -513,11 +569,13 @@ public final class ExternalContactsCalls extends CFSModule {
       context.getRequest().setAttribute("callResultList", resultList);
 
       //Priority Lookup
-      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      LookupList priorityList = systemStatus.getLookupList(
+          db, "lookup_call_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
 
       //Reminder Type Lookup
-      LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+      LookupList reminderList = systemStatus.getLookupList(
+          db, "lookup_call_reminder");
       reminderList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ReminderTypeList", reminderList);
     } catch (Exception e) {
@@ -535,10 +593,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     addModuleBean(context, "External Contacts", "Activities");
@@ -555,7 +613,8 @@ public final class ExternalContactsCalls extends CFSModule {
       db = this.getConnection(context);
       thisCall = new Call(db, callId);
       thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-edit")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-edit")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -576,10 +635,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandComplete(ActionContext context) {
     /*
@@ -591,7 +650,8 @@ public final class ExternalContactsCalls extends CFSModule {
     //Process parameters
     String contactId = context.getRequest().getParameter("contactId");
     int callId = -1;
-    if (context.getRequest().getParameter("parentId") != null && !"".equals((String) context.getRequest().getParameter("parentId"))) {
+    if (context.getRequest().getParameter("parentId") != null && !"".equals(
+        (String) context.getRequest().getParameter("parentId"))) {
       callId = Integer.parseInt(context.getRequest().getParameter("parentId"));
     } else {
       callId = Integer.parseInt(context.getRequest().getParameter("id"));
@@ -609,7 +669,8 @@ public final class ExternalContactsCalls extends CFSModule {
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
-      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
       callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
 
@@ -619,11 +680,13 @@ public final class ExternalContactsCalls extends CFSModule {
       context.getRequest().setAttribute("callResultList", resultList);
 
       //Priority Lookup
-      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      LookupList priorityList = systemStatus.getLookupList(
+          db, "lookup_call_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
 
       //Reminder Type Lookup
-      LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+      LookupList reminderList = systemStatus.getLookupList(
+          db, "lookup_call_reminder");
       context.getRequest().setAttribute("ReminderTypeList", reminderList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -636,10 +699,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Forward a Call
+   * Forward a Call
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandForwardCall(ActionContext context) {
     if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
@@ -651,15 +714,17 @@ public final class ExternalContactsCalls extends CFSModule {
     CFSNote newNote = null;
     Contact thisContact = null;
     addModuleBean(context, "External Contacts", "Forward Message");
-    int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
-    context.getRequest().setAttribute("forwardType", ""+Constants.TASKS);
+    int noteType = Integer.parseInt(
+        context.getRequest().getParameter("forwardType"));
+    context.getRequest().setAttribute("forwardType", "" + Constants.TASKS);
 
     Connection db = null;
     try {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-edit")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-edit")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -674,7 +739,7 @@ public final class ExternalContactsCalls extends CFSModule {
       String notes = "Notes: ";
       String entered = "Entered: ";
       String modified = "Modified: ";
-      
+
       contactName = systemStatus.getLabel("mail.label.contactName");
       type = systemStatus.getLabel("mail.label.type");
       length = systemStatus.getLabel("mail.label.length");
@@ -682,15 +747,17 @@ public final class ExternalContactsCalls extends CFSModule {
       notes = systemStatus.getLabel("mail.label.notes");
       entered = systemStatus.getLabel("mail.label.entered");
       modified = systemStatus.getLabel("mail.label.modified");
- 
+
       newNote.setBody(
           contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
           type + StringUtils.toString(thisCall.getCallType()) + "\n" +
           length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
           subject + StringUtils.toString(thisCall.getSubject()) + "\n" +
           notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
-          entered + getUser(context, thisCall.getEnteredBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
-          modified + getUser(context, thisCall.getModifiedBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
+          entered + getUser(context, thisCall.getEnteredBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(
+              this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
+          modified + getUser(context, thisCall.getModifiedBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(
+              this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -704,10 +771,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCancel(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-calls-delete")) {
@@ -717,7 +784,8 @@ public final class ExternalContactsCalls extends CFSModule {
     //Process parameters
     String contactId = context.getRequest().getParameter("contactId");
     int callId = -1;
-    if (context.getRequest().getParameter("parentId") != null && !"".equals((String) context.getRequest().getParameter("parentId"))) {
+    if (context.getRequest().getParameter("parentId") != null && !"".equals(
+        (String) context.getRequest().getParameter("parentId"))) {
       callId = Integer.parseInt(context.getRequest().getParameter("parentId"));
     } else {
       callId = Integer.parseInt(context.getRequest().getParameter("id"));
@@ -734,6 +802,9 @@ public final class ExternalContactsCalls extends CFSModule {
       nextCall.setCallTypeId(thisCall.getAlertCallTypeId());
       nextCall.setSubject(thisCall.getAlertText());
       nextCall.setNotes(thisCall.getFollowupNotes());
+      if (thisCall.getOppHeaderId() != -1) {
+        nextCall.setOppHeaderId(thisCall.getOppHeaderId());
+      }
       context.getRequest().setAttribute("CallDetails", nextCall);
 
       //load contact details
@@ -742,7 +813,8 @@ public final class ExternalContactsCalls extends CFSModule {
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
-      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
       callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
       //Result Lookup
@@ -750,7 +822,8 @@ public final class ExternalContactsCalls extends CFSModule {
       resultList.buildList(db);
       context.getRequest().setAttribute("callResultList", resultList);
       //Priority Lookup
-      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      LookupList priorityList = systemStatus.getLookupList(
+          db, "lookup_call_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -763,10 +836,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Send the Call(Uses the MyCFS SendMessage method to complete the Action)
+   * Send the Call(Uses the MyCFS SendMessage method to complete the Action)
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSendCall(ActionContext context) {
     if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
@@ -781,7 +854,8 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-edit")))) {
+      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-calls-edit")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -804,10 +878,10 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Suggest activity based on result of a previous activity
+   * Suggest activity based on result of a previous activity
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSuggestCall(ActionContext context) {
     String resultId = context.getRequest().getParameter("resultId");
@@ -827,32 +901,36 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Adds a feature to the ModifyFormElements attribute of the
-   *  ExternalContactsCalls object
+   * Adds a feature to the ModifyFormElements attribute of the
+   * ExternalContactsCalls object
    *
-   *@param  db                The feature to be added to the ModifyFormElements
-   *      attribute
-   *@param  context           The feature to be added to the ModifyFormElements
-   *      attribute
-   *@param  thisCall          The feature to be added to the ModifyFormElements
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the ModifyFormElements
+   *                 attribute
+   * @param context  The feature to be added to the ModifyFormElements
+   *                 attribute
+   * @param thisCall The feature to be added to the ModifyFormElements
+   *                 attribute
+   * @throws SQLException Description of the Exception
    */
   private void addModifyFormElements(Connection db, ActionContext context, Call thisCall) throws SQLException {
     SystemStatus systemStatus = this.getSystemStatus(context);
     //Type Lookup
-    LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+    LookupList callTypeList = systemStatus.getLookupList(
+        db, "lookup_call_types");
     callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("CallTypeList", callTypeList);
-    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute("alertDateWarning") != null))) {
-      //Reminder Type Lookup
-      LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
-      context.getRequest().setAttribute("ReminderTypeList", reminderList);
+    //Reminder Type Lookup
+    LookupList reminderList = systemStatus.getLookupList(
+        db, "lookup_call_reminder");
+    context.getRequest().setAttribute("ReminderTypeList", reminderList);
 
-      //Priority Lookup
-      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
-      context.getRequest().setAttribute("PriorityList", priorityList);
+    //Priority Lookup
+    LookupList priorityList = systemStatus.getLookupList(
+        db, "lookup_call_priority");
+    context.getRequest().setAttribute("PriorityList", priorityList);
 
+    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute(
+        "alertDateWarning") != null))) {
       //Result
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
       context.getRequest().setAttribute("CallResult", thisResult);

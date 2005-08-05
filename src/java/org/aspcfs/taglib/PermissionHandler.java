@@ -15,23 +15,24 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.login.beans.UserBean;
 import com.darkhorseventures.database.ConnectionElement;
-import java.util.StringTokenizer;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.login.beans.UserBean;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 /**
- *  This Class evaluates whether the current User's session has the given
- *  permissions. The user may need any single permission, one of several given
- *  permissions, or all of the given permissions to check.
+ * This Class evaluates whether the current User's session has the given
+ * permissions. The user may need any single permission, one of several given
+ * permissions, or all of the given permissions to check.
  *
- *@author     Matt Rajkowski
- *@created    October 12, 2001
- *@version    $Id: PermissionHandler.java,v 1.7 2003/11/14 14:17:05 mrajkowski
- *      Exp $
+ * @author Matt Rajkowski
+ * @version $Id: PermissionHandler.java,v 1.7 2003/11/14 14:17:05 mrajkowski
+ *          Exp $
+ * @created October 12, 2001
  */
 public class PermissionHandler extends TagSupport {
   private String permissionName = null;
@@ -40,10 +41,10 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Sets the Name attribute of the PermissionHandler object
+   * Sets the Name attribute of the PermissionHandler object
    *
-   *@param  tmp  The new Name value
-   *@since       1.1
+   * @param tmp The new Name value
+   * @since 1.1
    */
   public final void setName(String tmp) {
     permissionName = tmp;
@@ -51,11 +52,11 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Sets the All attribute of the PermissionHandler object. If set to true
-   *  then the user must have all permissions passed in.
+   * Sets the All attribute of the PermissionHandler object. If set to true
+   * then the user must have all permissions passed in.
    *
-   *@param  tmp  The new All value
-   *@since       1.1
+   * @param tmp The new All value
+   * @since 1.1
    */
   public void setAll(String tmp) {
     Boolean checkAll = new Boolean(tmp);
@@ -64,10 +65,10 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Sets the None attribute of the PermissionHandler object
+   * Sets the None attribute of the PermissionHandler object
    *
-   *@param  tmp  The new None value
-   *@since       1.1
+   * @param tmp The new None value
+   * @since 1.1
    */
   public void setNone(String tmp) {
     Boolean checkNone = new Boolean(tmp);
@@ -76,13 +77,13 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Checks to see if the user has permission to access the body of the tag. A
-   *  comma-separated list of permissions can be used to match any of the
-   *  permissions.
+   * Checks to see if the user has permission to access the body of the tag. A
+   * comma-separated list of permissions can be used to match any of the
+   * permissions.
    *
-   *@return                   Description of the Returned Value
-   *@exception  JspException  Description of Exception
-   *@since                    1.1
+   * @return Description of the Returned Value
+   * @throws JspException Description of Exception
+   * @since 1.1
    */
   public final int doStartTag() throws JspException {
     if (permissionName == null || "".equals(permissionName)) {
@@ -91,10 +92,12 @@ public class PermissionHandler extends TagSupport {
     boolean result = false;
     int matches = 0;
     int checks = 0;
-    UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+    UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
+        "User");
     if (thisUser != null) {
       ConnectionElement ce = thisUser.getConnectionElement();
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       StringTokenizer st = new StringTokenizer(permissionName, ",");
       while (st.hasMoreTokens()) {
         String thisPermission = st.nextToken();

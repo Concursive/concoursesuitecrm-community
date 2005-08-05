@@ -24,7 +24,7 @@ function popPreview() {
     alert('Please add contacts or criteria then try again.\r\n'+
       'A group without any criteria will return all contacts');
   } else {
-    var newwin=window.open('CampaignManagerGroup.do?command=PopPreview&criteria='+document.searchForm.searchCriteriaText.value+'&popup=true&reset=true', title, params);
+    var newwin=window.open('CampaignManagerGroup.do?command=PopPreview&criteria='+escape(document.searchForm.searchCriteriaText.value)+'&popup=true&reset=true', title, params);
     if (newwin != null) {
       if (newwin.opener == null)
         newwin.opener = self;

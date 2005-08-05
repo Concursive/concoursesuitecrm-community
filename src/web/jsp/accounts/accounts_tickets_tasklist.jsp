@@ -65,10 +65,12 @@
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountstickets" selected="tasks" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
       <%@ include file="accounts_ticket_header_include.jsp" %>
-      <dhv:permission name="accounts-accounts-tickets-tasks-add">
-        <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');"><dhv:label name="quickactions.addTask">Add a Task</dhv:label></a><br>
-        <br />
-      </dhv:permission>
+      <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>">
+        <dhv:permission name="accounts-accounts-tickets-tasks-add">
+          <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');"><dhv:label name="quickactions.addTask">Add a Task</dhv:label></a><br>
+          <br />
+        </dhv:permission>
+      </dhv:evaluate>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
         <th align="center" nowrap>
@@ -107,7 +109,7 @@
         <td align="center" valign="top">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
           <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-          <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,'<%= thisTask.getId() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,'<%= thisTask.getId() %>','<%= TicketDetails.isTrashed() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td nowrap align="center" valign="top">
           <% if(thisTask.getPriority() != -1) {%>
@@ -179,30 +181,33 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>
-                      <li>&nbsp;<dhv:label name="account.emails.colon">Email(s):</dhv:label>
-                     <%
+                    <td><table cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+                      <li>&nbsp;<dhv:label name="account.emails.colon">Email(s):</dhv:label></li>
+                     </td><td><table cellpadding="0" cellspacing="0" class="empty">
+                    <%
                       Iterator i = thisTask.getContact().getEmailAddressList().iterator();
                       while (i.hasNext()) {
                         EmailAddress thisAddress = (EmailAddress)i.next(); %>
+                      <tr><td>
                         &nbsp;<%=thisAddress.getEmail()%>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
+                      </td></tr>
                      <%}%>
-                      </li>
+                     </table></td></tr></table>
                     </td>
                   </tr>
                   <tr>
-                    <td>
-                      <li>&nbsp;<dhv:label name="account.phones.colon">Phone(s):</dhv:label>
-                        &nbsp;<% if(!thisTask.getContact().getPhoneNumber("Business").equals("")) {%>
-                        <dhv:label name="task.business.abbreviation" param="<%= "number="+thisTask.getContact().getPhoneNumber("Business") %>"><%= thisTask.getContact().getPhoneNumber("Business") %> (W)</dhv:label><br />
-                        <%}%>
-                        <% if(!thisTask.getContact().getPhoneNumber("Home").equals("")) {%>
-                        <dhv:label name="task.home.abbreviation" param="<%= "number="+thisTask.getContact().getPhoneNumber("Home") %>"><%= thisTask.getContact().getPhoneNumber("Home") %> (H)</dhv:label><br />
-                        <%}%>
-                        <% if(!thisTask.getContact().getPhoneNumber("Mobile").equals("")) {%>
-                        <dhv:label name="task.home.abbreviation" param="<%= "number="+thisTask.getContact().getPhoneNumber("Mobile") %>"><%= thisTask.getContact().getPhoneNumber("Mobile") %> (M)</dhv:label><br />
-                        <%}%>
-                      </li>
+                  <td><table cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+                      <li>&nbsp;<dhv:label name="account.phones.colon">Phone(s):</dhv:label></li>
+                    </td><td><table cellpadding="0" cellspacing="0" class="empty">
+                    <%
+                      i = thisTask.getContact().getPhoneNumberList().iterator();
+                      while (i.hasNext()) {
+                        PhoneNumber phoneNumber = (PhoneNumber)i.next(); %>
+                        <tr><td>
+                        &nbsp;<%= phoneNumber.getPhoneNumber()%>(<%=phoneNumber.getTypeName()%>)<br />
+                        </td></tr>
+                      <%}%>
+                     </table></td></tr></table>
                     </td>
                   </tr>
                   </ul>

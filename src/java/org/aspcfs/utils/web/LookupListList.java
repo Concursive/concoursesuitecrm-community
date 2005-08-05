@@ -15,18 +15,21 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.Vector;
+import org.aspcfs.controller.SystemStatus;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  LookupListList is a list of lookuplists for a particular module.
+ * LookupListList is a list of lookuplists for a particular module.
  *
- *@author     Mathur
- *@created    December 18, 2002
- *@version    $Id: LookupListList.java,v 1.2 2003/01/10 16:17:48 mrajkowski Exp
- *      $
+ * @author Mathur
+ * @version $Id: LookupListList.java,v 1.2 2003/01/10 16:17:48 mrajkowski Exp
+ *          $
+ * @created December 18, 2002
  */
 public class LookupListList extends HtmlSelect {
   protected int moduleId = -1;
@@ -34,28 +37,29 @@ public class LookupListList extends HtmlSelect {
 
 
   /**
-   *  Constructor for the LookupListList object
+   * Constructor for the LookupListList object
    */
-  public LookupListList() { }
-
-
-  /**
-   *  Constructor for the LookupListList object
-   *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public LookupListList(Connection db, int moduleId) throws SQLException {
-    this.moduleId = moduleId;
-    buildList(db);
+  public LookupListList() {
   }
 
 
   /**
-   *  Sets the moduleId attribute of the LookupListList object
+   * Constructor for the LookupListList object
    *
-   *@param  moduleId  The new moduleId value
+   * @param db       Description of the Parameter
+   * @param moduleId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public LookupListList(SystemStatus thisSystem, Connection db, int moduleId) throws SQLException {
+    this.moduleId = moduleId;
+    buildList(thisSystem, db);
+  }
+
+
+  /**
+   * Sets the moduleId attribute of the LookupListList object
+   *
+   * @param moduleId The new moduleId value
    */
   public void setModuleId(int moduleId) {
     this.moduleId = moduleId;
@@ -63,9 +67,9 @@ public class LookupListList extends HtmlSelect {
 
 
   /**
-   *  Sets the userId attribute of the LookupListList object
+   * Sets the userId attribute of the LookupListList object
    *
-   *@param  userId  The new userId value
+   * @param userId The new userId value
    */
   public void setUserId(int userId) {
     this.userId = userId;
@@ -73,9 +77,9 @@ public class LookupListList extends HtmlSelect {
 
 
   /**
-   *  Gets the userId attribute of the LookupListList object
+   * Gets the userId attribute of the LookupListList object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -83,9 +87,9 @@ public class LookupListList extends HtmlSelect {
 
 
   /**
-   *  Gets the moduleId attribute of the LookupListList object
+   * Gets the moduleId attribute of the LookupListList object
    *
-   *@return    The moduleId value
+   * @return The moduleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -93,19 +97,19 @@ public class LookupListList extends HtmlSelect {
 
 
   /**
-   *  Builds a list of lookuplistElements for a module.
+   * Builds a list of lookuplistElements for a module.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
+  public void buildList(SystemStatus thisSystem, Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     pst = db.prepareStatement(
         "SELECT * " +
         "FROM lookup_lists_lookup " +
         "WHERE module_id = ? " +
-        "ORDER BY level ");
+        "ORDER BY \"level\" ");
     pst.setInt(1, moduleId);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -117,16 +121,16 @@ public class LookupListList extends HtmlSelect {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       LookupListElement thisLookup = (LookupListElement) i.next();
-      thisLookup.buildLookupList(db, userId);
+      thisLookup.buildLookupList(thisSystem, db, userId);
     }
   }
 
 
   /**
-   *  Removes a specific LookupListElement item from the list
+   * Removes a specific LookupListElement item from the list
    *
-   *@param  categoryId  Description of the Parameter
-   *@param  lookupId    Description of the Parameter
+   * @param categoryId Description of the Parameter
+   * @param lookupId   Description of the Parameter
    */
   public void removeList(int categoryId, int lookupId) {
     Iterator i = this.iterator();

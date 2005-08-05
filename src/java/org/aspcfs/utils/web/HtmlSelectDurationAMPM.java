@@ -15,24 +15,23 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
+import java.util.Calendar;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Akhilesh Mathur
- *@created    July 5, 2004 Exp $
- *@version    $id:exp$
+ * @author Akhilesh Mathur
+ * @version $id:exp$
+ * @created July 5, 2004 Exp $
  */
 public class HtmlSelectDurationAMPM {
 
   /**
-   *  Gets the select attribute of the HtmlSelectAMPM class
+   * Gets the select attribute of the HtmlSelectAMPM class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, String defaultValue) {
     HtmlSelect select = new HtmlSelect();

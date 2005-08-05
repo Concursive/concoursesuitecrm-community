@@ -18,7 +18,6 @@ package org.aspcfs.modules.troubletickets.base;
 import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -32,12 +31,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  A generated list of changes to a ticket based on the saved history
+ * A generated list of changes to a ticket based on the saved history
  *
- *@author     chris price
- *@created    December 5, 2001
- *@version    $Id: TicketLogList.java,v 1.11 2003/03/07 14:47:27 mrajkowski Exp
- *      $
+ * @author chris price
+ * @version $Id: TicketLogList.java,v 1.11 2003/03/07 14:47:27 mrajkowski Exp
+ *          $
+ * @created December 5, 2001
  */
 public class TicketLogList extends ArrayList {
 
@@ -56,17 +55,18 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Constructor for the TicketLogList object
+   * Constructor for the TicketLogList object
    */
-  public TicketLogList() { }
+  public TicketLogList() {
+  }
 
 
   /**
-   *  Constructor for the TicketLogList object
+   * Constructor for the TicketLogList object
    *
-   *@param  request        Description of Parameter
-   *@param  userId         Description of Parameter
-   *@exception  Exception  Description of the Exception
+   * @param request Description of Parameter
+   * @param userId  Description of Parameter
+   * @throws Exception Description of the Exception
    */
   public TicketLogList(HttpServletRequest request, int userId) throws Exception {
     if (request.getParameter("newticketlogentry") != null) {
@@ -81,9 +81,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TicketLogList object
+   * Sets the pagedListInfo attribute of the TicketLogList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -91,9 +91,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the ticketId attribute of the TicketLogList object
+   * Sets the ticketId attribute of the TicketLogList object
    *
-   *@param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
@@ -101,9 +101,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the productId attribute of the TicketLogList object
+   * Sets the productId attribute of the TicketLogList object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -111,9 +111,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the productId attribute of the TicketLogList object
+   * Sets the productId attribute of the TicketLogList object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -121,9 +121,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the customerProductId attribute of the TicketLogList object
+   * Sets the customerProductId attribute of the TicketLogList object
    *
-   *@param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(int tmp) {
     this.customerProductId = tmp;
@@ -131,9 +131,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the customerProductId attribute of the TicketLogList object
+   * Sets the customerProductId attribute of the TicketLogList object
    *
-   *@param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
@@ -141,9 +141,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the systemStatus attribute of the TicketLogList object
+   * Sets the systemStatus attribute of the TicketLogList object
    *
-   *@param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -151,9 +151,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the systemStatus attribute of the TicketLogList object
+   * Gets the systemStatus attribute of the TicketLogList object
    *
-   *@return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -161,9 +161,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the customerProductId attribute of the TicketLogList object
+   * Gets the customerProductId attribute of the TicketLogList object
    *
-   *@return    The customerProductId value
+   * @return The customerProductId value
    */
   public int getCustomerProductId() {
     return customerProductId;
@@ -171,9 +171,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the productId attribute of the TicketLogList object
+   * Gets the productId attribute of the TicketLogList object
    *
-   *@return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -181,9 +181,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the doSystemMessages attribute of the TicketLogList object
+   * Gets the doSystemMessages attribute of the TicketLogList object
    *
-   *@return    The doSystemMessages value
+   * @return The doSystemMessages value
    */
   public boolean getDoSystemMessages() {
     return doSystemMessages;
@@ -191,9 +191,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the doSystemMessages attribute of the TicketLogList object
+   * Sets the doSystemMessages attribute of the TicketLogList object
    *
-   *@param  doSystemMessages  The new doSystemMessages value
+   * @param doSystemMessages The new doSystemMessages value
    */
   public void setDoSystemMessages(boolean doSystemMessages) {
     this.doSystemMessages = doSystemMessages;
@@ -201,12 +201,12 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the label attribute of the TicketLogList object
+   * Gets the label attribute of the TicketLogList object
    *
-   *@param  systemStatus  Description of the Parameter
-   *@param  map           Description of the Parameter
-   *@param  input         Description of the Parameter
-   *@return               The label value
+   * @param systemStatus Description of the Parameter
+   * @param map          Description of the Parameter
+   * @param input        Description of the Parameter
+   * @return The label value
    */
   public String getLabel(SystemStatus systemStatus, HashMap map, String input) {
     Template template = new Template(input);
@@ -216,11 +216,11 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the systemMessages attribute of the TicketLogList object
+   * Sets the systemMessages attribute of the TicketLogList object
    *
-   *@param  current  The new systemMessages value
-   *@param  prev     The new systemMessages value
-   *@return          Description of the Returned Value
+   * @param current The new systemMessages value
+   * @param prev    The new systemMessages value
+   * @return Description of the Returned Value
    */
   public boolean setSystemMessages(TicketLog current, TicketLog prev) {
     TicketLog tempLog = null;
@@ -230,7 +230,8 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketOpened") + " ]");
+          tempLog.setEntryText(
+              "[ " + systemStatus.getLabel("ticketloglist.ticketOpened") + " ]");
         } else {
           tempLog.setEntryText("[ Ticket Opened ]");
         }
@@ -241,20 +242,26 @@ public class TicketLogList extends ArrayList {
         tempLog.createSysMsg(current);
         if (tempLog.getAssignedToName() != null) {
           if (systemStatus != null) {
-            String logEntry = systemStatus.getLabel("ticketloglist.assignedTo");
+            String logEntry = systemStatus.getLabel(
+                "ticketloglist.assignedTo");
             if (logEntry != null) {
               HashMap map = new HashMap();
-              map.put("${ticketLogList.assignedToName}", current.getAssignedToName());
-              tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+              map.put(
+                  "${ticketLogList.assignedToName}", current.getAssignedToName());
+              tempLog.setEntryText(
+                  "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
             } else {
-              tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
+              tempLog.setEntryText(
+                  "[ Assigned to " + current.getAssignedToName() + " ]");
             }
           } else {
-            tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
+            tempLog.setEntryText(
+                "[ Assigned to " + current.getAssignedToName() + " ]");
           }
         } else {
           if (systemStatus != null) {
-            tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketUnassigned") + " ]");
+            tempLog.setEntryText(
+                "[ " + systemStatus.getLabel("ticketloglist.ticketUnassigned") + " ]");
           } else {
             tempLog.setEntryText("[ Ticket is unassigned ]");
           }
@@ -265,16 +272,21 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          String logEntry = systemStatus.getLabel("ticketloglist.assignedDepartment");
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.assignedDepartment");
           if (logEntry != null) {
             HashMap map = new HashMap();
-            map.put("${ticketLogList.departmentName}", current.getDepartmentName());
-            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            map.put(
+                "${ticketLogList.departmentName}", current.getDepartmentName());
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
           } else {
-            tempLog.setEntryText("[ Department assigned to " + current.getDepartmentName() + " ]");
+            tempLog.setEntryText(
+                "[ Department assigned to " + current.getDepartmentName() + " ]");
           }
         } else {
-          tempLog.setEntryText("[ Department assigned to " + current.getDepartmentName() + " ]");
+          tempLog.setEntryText(
+              "[ Department assigned to " + current.getDepartmentName() + " ]");
         }
         this.add(tempLog);
       }
@@ -282,16 +294,21 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          String logEntry = systemStatus.getLabel("ticketloglist.priorityName");
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.priorityName");
           if (logEntry != null) {
             HashMap map = new HashMap();
-            map.put("${ticketLogList.priorityName}", current.getPriorityName());
-            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            map.put(
+                "${ticketLogList.priorityName}", current.getPriorityName());
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
           } else {
-            tempLog.setEntryText("[ Priority set to " + current.getPriorityName() + " ]");
+            tempLog.setEntryText(
+                "[ Priority set to " + current.getPriorityName() + " ]");
           }
         } else {
-          tempLog.setEntryText("[ Priority set to " + current.getPriorityName() + " ]");
+          tempLog.setEntryText(
+              "[ Priority set to " + current.getPriorityName() + " ]");
         }
         this.add(tempLog);
       }
@@ -299,16 +316,21 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          String logEntry = systemStatus.getLabel("ticketloglist.severityName");
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.severityName");
           if (logEntry != null) {
             HashMap map = new HashMap();
-            map.put("${ticketLogList.severityName}", current.getSeverityName());
-            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            map.put(
+                "${ticketLogList.severityName}", current.getSeverityName());
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
           } else {
-            tempLog.setEntryText("[ Severity set to " + current.getSeverityName() + " ]");
+            tempLog.setEntryText(
+                "[ Severity set to " + current.getSeverityName() + " ]");
           }
         } else {
-          tempLog.setEntryText("[ Severity set to " + current.getSeverityName() + " ]");
+          tempLog.setEntryText(
+              "[ Severity set to " + current.getSeverityName() + " ]");
         }
         this.add(tempLog);
       }
@@ -316,7 +338,9 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketImmediatelyClosed") + " ]");
+          tempLog.setEntryText(
+              "[ " + systemStatus.getLabel(
+                  "ticketloglist.ticketImmediatelyClosed") + " ]");
         } else {
           tempLog.setEntryText("[ Ticket was immediately closed ]");
         }
@@ -330,21 +354,32 @@ public class TicketLogList extends ArrayList {
         tempLog.createSysMsg(current);
         if (tempLog.getAssignedToName() != null) {
           if (systemStatus != null) {
-            String logEntry = systemStatus.getLabel("ticketloglist.reassignedFrom");
+            String logEntry = systemStatus.getLabel(
+                "ticketloglist.reassignedFrom");
             if (logEntry != null) {
               HashMap map = new HashMap();
-              map.put("${ticketLogList.previousAssignedToName}", isAssigned(prev.getAssignedToName()));
-              map.put("${ticketLogList.currentAssignedToName}", isAssigned(current.getAssignedToName()));
-              tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+              map.put(
+                  "${ticketLogList.previousAssignedToName}", isAssigned(
+                      prev.getAssignedToName()));
+              map.put(
+                  "${ticketLogList.currentAssignedToName}", isAssigned(
+                      current.getAssignedToName()));
+              tempLog.setEntryText(
+                  "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
             } else {
-              tempLog.setEntryText("[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(current.getAssignedToName()) + " ]");
+              tempLog.setEntryText(
+                  "[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(
+                      current.getAssignedToName()) + " ]");
             }
           } else {
-            tempLog.setEntryText("[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(current.getAssignedToName()) + " ]");
+            tempLog.setEntryText(
+                "[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(
+                    current.getAssignedToName()) + " ]");
           }
         } else {
           if (systemStatus != null) {
-            tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketUnassigned") + " ]");
+            tempLog.setEntryText(
+                "[ " + systemStatus.getLabel("ticketloglist.ticketUnassigned") + " ]");
           } else {
             tempLog.setEntryText("[ Ticket is unassigned ]");
           }
@@ -355,17 +390,29 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          String logEntry = systemStatus.getLabel("ticketloglist.departmentChanged");
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.departmentChanged");
           if (logEntry != null) {
             HashMap map = new HashMap();
-            map.put("${ticketLogList.previousDepartmentName}", isAssigned(prev.getDepartmentName()));
-            map.put("${ticketLogList.currentDepartmentName}", isAssigned(current.getDepartmentName()));
-            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            map.put(
+                "${ticketLogList.previousDepartmentName}", isAssigned(
+                    prev.getDepartmentName()));
+            map.put(
+                "${ticketLogList.currentDepartmentName}", isAssigned(
+                    current.getDepartmentName()));
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
           } else {
-            tempLog.setEntryText("[ Department changed from " + isAssigned(prev.getDepartmentName()) + " to " + isAssigned(current.getDepartmentName()) + " ]");
+            tempLog.setEntryText(
+                "[ Department changed from " + isAssigned(
+                    prev.getDepartmentName()) + " to " + isAssigned(
+                        current.getDepartmentName()) + " ]");
           }
         } else {
-          tempLog.setEntryText("[ Department changed from " + isAssigned(prev.getDepartmentName()) + " to " + isAssigned(current.getDepartmentName()) + " ]");
+          tempLog.setEntryText(
+              "[ Department changed from " + isAssigned(
+                  prev.getDepartmentName()) + " to " + isAssigned(
+                      current.getDepartmentName()) + " ]");
         }
         this.add(tempLog);
       }
@@ -373,17 +420,28 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          String logEntry = systemStatus.getLabel("ticketloglist.priorityChanged");
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.priorityChanged");
           if (logEntry != null) {
             HashMap map = new HashMap();
-            map.put("${ticketLogList.previousPriorityName}", isAssigned(prev.getPriorityName()));
-            map.put("${ticketLogList.currentPriorityName}", isAssigned(current.getPriorityName()));
-            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            map.put(
+                "${ticketLogList.previousPriorityName}", isAssigned(
+                    prev.getPriorityName()));
+            map.put(
+                "${ticketLogList.currentPriorityName}", isAssigned(
+                    current.getPriorityName()));
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
           } else {
-            tempLog.setEntryText("[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(current.getPriorityName()) + " ]");
+            tempLog.setEntryText(
+                "[ Priority changed from " + isAssigned(
+                    prev.getPriorityName()) + " to " + isAssigned(
+                        current.getPriorityName()) + " ]");
           }
         } else {
-          tempLog.setEntryText("[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(current.getPriorityName()) + " ]");
+          tempLog.setEntryText(
+              "[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(
+                  current.getPriorityName()) + " ]");
         }
         this.add(tempLog);
       }
@@ -391,17 +449,28 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          String logEntry = systemStatus.getLabel("ticketloglist.severityChanged");
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.severityChanged");
           if (logEntry != null) {
             HashMap map = new HashMap();
-            map.put("${ticketLogList.previousSeverityName}", isAssigned(prev.getSeverityName()));
-            map.put("${ticketLogList.currentSeverityName}", isAssigned(current.getSeverityName()));
-            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            map.put(
+                "${ticketLogList.previousSeverityName}", isAssigned(
+                    prev.getSeverityName()));
+            map.put(
+                "${ticketLogList.currentSeverityName}", isAssigned(
+                    current.getSeverityName()));
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
           } else {
-            tempLog.setEntryText("[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(current.getSeverityName()) + " ]");
+            tempLog.setEntryText(
+                "[ Severity changed from " + isAssigned(
+                    prev.getSeverityName()) + " to " + isAssigned(
+                        current.getSeverityName()) + " ]");
           }
         } else {
-          tempLog.setEntryText("[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(current.getSeverityName()) + " ]");
+          tempLog.setEntryText(
+              "[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(
+                  current.getSeverityName()) + " ]");
         }
         this.add(tempLog);
       }
@@ -409,7 +478,8 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketReopened") + " ]");
+          tempLog.setEntryText(
+              "[ " + systemStatus.getLabel("ticketloglist.ticketReopened") + " ]");
         } else {
           tempLog.setEntryText("[ Ticket Reopened ]");
         }
@@ -419,7 +489,8 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (systemStatus != null) {
-          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketClosed") + " ]");
+          tempLog.setEntryText(
+              "[ " + systemStatus.getLabel("ticketloglist.ticketClosed") + " ]");
         } else {
           tempLog.setEntryText("[ Ticket Closed ]");
         }
@@ -431,9 +502,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the tableName attribute of the TicketLogList object
+   * Gets the tableName attribute of the TicketLogList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -441,9 +512,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the uniqueField attribute of the TicketLogList object
+   * Gets the uniqueField attribute of the TicketLogList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -451,9 +522,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the TicketLogList object
+   * Gets the lastAnchor attribute of the TicketLogList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -461,9 +532,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the TicketLogList object
+   * Gets the nextAnchor attribute of the TicketLogList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -471,9 +542,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the syncType attribute of the TicketLogList object
+   * Gets the syncType attribute of the TicketLogList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -481,9 +552,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the TicketLogList object
+   * Sets the lastAnchor attribute of the TicketLogList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -491,9 +562,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the TicketLogList object
+   * Sets the nextAnchor attribute of the TicketLogList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -501,9 +572,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the syncType attribute of the TicketLogList object
+   * Sets the syncType attribute of the TicketLogList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -511,10 +582,10 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -534,7 +605,8 @@ public class TicketLogList extends ArrayList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -546,7 +618,8 @@ public class TicketLogList extends ArrayList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND t.comment < ? ");
         items = prepareFilter(pst);
@@ -588,26 +661,21 @@ public class TicketLogList extends ArrayList {
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN lookup_department d ON (t.department_code = d.code) " +
         "WHERE t.id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
     TicketLog prevTicketLog = null;
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       TicketLog thisTicketLog = new TicketLog(rs);
       if (doSystemMessages) {
         //Add the system generated messages
         this.setSystemMessages(thisTicketLog, prevTicketLog);
-        if (thisTicketLog.getEntryText() != null && !thisTicketLog.getEntryText().equals("")) {
+        if (thisTicketLog.getEntryText() != null && !thisTicketLog.getEntryText().equals(
+            "")) {
           //Add the comments
           this.add(thisTicketLog);
         }
@@ -623,11 +691,11 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.2
+   * @param sqlFilter Description of Parameter
+   * @since 1.2
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (ticketId > -1) {
@@ -637,13 +705,13 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.2
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -655,10 +723,10 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Returns the string or if null returns unassigned
+   * Returns the string or if null returns unassigned
    *
-   *@param  value  Description of the Parameter
-   *@return        The assigned value
+   * @param value Description of the Parameter
+   * @return The assigned value
    */
   private String isAssigned(String value) {
     if (value == null) {
@@ -670,9 +738,9 @@ public class TicketLogList extends ArrayList {
 
 
   /**
-   *  Gets the comments attribute of the TicketLogList object
+   * Gets the comments attribute of the TicketLogList object
    *
-   *@return                   The comments value
+   * @return The comments value
    */
   public String getComments() {
     StringBuffer comments = new StringBuffer("");

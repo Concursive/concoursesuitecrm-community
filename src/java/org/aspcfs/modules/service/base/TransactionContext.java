@@ -18,13 +18,13 @@ package org.aspcfs.modules.service.base;
 import java.util.HashMap;
 
 /**
- *  Context for sharing data between Transaction Items within a single
- *  Transaction
+ * Context for sharing data between Transaction Items within a single
+ * Transaction
  *
- *@author     matt rajkowski
- *@created    November 6, 2003
- *@version    $Id: TransactionContext.java,v 1.2 2003/11/17 15:26:34 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: TransactionContext.java,v 1.2 2003/11/17 15:26:34 mrajkowski
+ *          Exp $
+ * @created November 6, 2003
  */
 public class TransactionContext {
 
@@ -32,15 +32,16 @@ public class TransactionContext {
 
 
   /**
-   *  Constructor for the TransactionContext object
+   * Constructor for the TransactionContext object
    */
-  public TransactionContext() { }
+  public TransactionContext() {
+  }
 
 
   /**
-   *  Sets the propertyMap attribute of the TransactionContext object
+   * Sets the propertyMap attribute of the TransactionContext object
    *
-   *@param  tmp  The new propertyMap value
+   * @param tmp The new propertyMap value
    */
   public void setPropertyMap(HashMap tmp) {
     this.propertyMap = tmp;
@@ -48,9 +49,9 @@ public class TransactionContext {
 
 
   /**
-   *  Gets the propertyMap attribute of the TransactionContext object
+   * Gets the propertyMap attribute of the TransactionContext object
    *
-   *@return    The propertyMap value
+   * @return The propertyMap value
    */
   public HashMap getPropertyMap() {
     if (propertyMap == null) {

@@ -15,23 +15,24 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.AddressList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Builds an address list for a contact using a custom query that extends the
- *  fields and methods of a typical AddressList.
+ * Builds an address list for a contact using a custom query that extends the
+ * fields and methods of a typical AddressList.
  *
- *@author     mrajkowski
- *@created    September 1, 2001
- *@version    $Id: ContactAddressList.java,v 1.4 2003/01/15 15:51:07 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: ContactAddressList.java,v 1.4 2003/01/15 15:51:07 mrajkowski
+ *          Exp $
+ * @created September 1, 2001
  */
 public class ContactAddressList extends AddressList {
 
@@ -43,17 +44,18 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Constructor for the ContactAddressList object
+   * Constructor for the ContactAddressList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public ContactAddressList() { }
+  public ContactAddressList() {
+  }
 
 
   /**
-   *  Gets the tableName attribute of the ContactAddressList object
+   * Gets the tableName attribute of the ContactAddressList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -61,9 +63,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Gets the uniqueField attribute of the ContactAddressList object
+   * Gets the uniqueField attribute of the ContactAddressList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -71,9 +73,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the ContactAddressList object
+   * Gets the lastAnchor attribute of the ContactAddressList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -81,9 +83,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the ContactAddressList object
+   * Gets the nextAnchor attribute of the ContactAddressList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -91,9 +93,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Gets the syncType attribute of the ContactAddressList object
+   * Gets the syncType attribute of the ContactAddressList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -101,9 +103,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the ContactAddressList object
+   * Sets the lastAnchor attribute of the ContactAddressList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -111,9 +113,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the ContactAddressList object
+   * Sets the nextAnchor attribute of the ContactAddressList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -121,9 +123,9 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Sets the syncType attribute of the ContactAddressList object
+   * Sets the syncType attribute of the ContactAddressList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -131,15 +133,16 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Constructor for the ContactAddressList object
+   * Constructor for the ContactAddressList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public ContactAddressList(HttpServletRequest request) {
     int i = 0;
     int primaryAddress = -1;
     if (request.getParameter("primaryAddress") != null) {
-      primaryAddress = Integer.parseInt((String) request.getParameter("primaryAddress"));
+      primaryAddress = Integer.parseInt(
+          (String) request.getParameter("primaryAddress"));
     }
     while (request.getParameter("address" + (++i) + "type") != null) {
       ContactAddress thisAddress = new ContactAddress();
@@ -155,13 +158,13 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   *  Builds a list of addresses based on several parameters. The parameters are
-   *  set after this object is constructed, then the buildList method is called
-   *  to generate the list.
+   * Builds a list of addresses based on several parameters. The parameters are
+   * set after this object is constructed, then the buildList method is called
+   * to generate the list.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -184,7 +187,8 @@ public class ContactAddressList extends AddressList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -196,9 +200,10 @@ public class ContactAddressList extends AddressList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(city) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(city) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -210,9 +215,12 @@ public class ContactAddressList extends AddressList {
         pst.close();
       }
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", city ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals(
+          "")) {
+        sqlOrder.append(
+            "ORDER BY " + pagedListInfo.getColumnToSortBy() + ", city ");
+        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals(
+            "")) {
           sqlOrder.append(pagedListInfo.getSortOrder() + " ");
         }
       } else {
@@ -224,7 +232,8 @@ public class ContactAddressList extends AddressList {
       }
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {

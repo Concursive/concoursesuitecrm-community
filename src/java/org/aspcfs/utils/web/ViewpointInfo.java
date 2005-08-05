@@ -15,21 +15,20 @@
  */
 package org.aspcfs.utils.web;
 
-import java.io.Serializable;
-import javax.servlet.http.HttpServletRequest;
-import com.darkhorseventures.framework.actions.*;
-import java.util.Iterator;
-import org.aspcfs.utils.ObjectUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.util.Iterator;
+
 /**
- *  Stores information about the Viewpoint selected in a module<br>
+ * Stores information about the Viewpoint selected in a module<br>
  *
- *
- *@author     Mathur
- *@created    February 24, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created February 24, 2003
  */
 public class ViewpointInfo implements Serializable {
   private String id = null;
@@ -38,9 +37,9 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  User Id of the viewpoint selected
+   * User Id of the viewpoint selected
    *
-   *@param  vpUserId  The new vpUserId value
+   * @param vpUserId The new vpUserId value
    */
   public void setVpUserId(int vpUserId) {
     this.vpUserId = vpUserId;
@@ -48,22 +47,23 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Sets the parameters attribute of the ViewpointInfo object
+   * Sets the parameters attribute of the ViewpointInfo object
    *
-   *@param  context  The new parameters value
+   * @param context The new parameters value
    */
   public void setParameters(ActionContext context) {
     HttpServletRequest request = context.getRequest();
     if (request.getParameter("viewpointId") != null) {
-      vpUserId = Integer.parseInt((String) request.getParameter("viewpointId"));
+      vpUserId = Integer.parseInt(
+          (String) request.getParameter("viewpointId"));
     }
   }
 
 
   /**
-   *  Sets the id attribute of the ViewpointInfo object
+   * Sets the id attribute of the ViewpointInfo object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = id;
@@ -71,9 +71,9 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Sets the vpUserName attribute of the ViewpointInfo object
+   * Sets the vpUserName attribute of the ViewpointInfo object
    *
-   *@param  vpUserName  The new vpUserName value
+   * @param vpUserName The new vpUserName value
    */
   public void setVpUserName(String vpUserName) {
     this.vpUserName = vpUserName;
@@ -81,9 +81,9 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Sets the vpUserName attribute of the ViewpointInfo object
+   * Sets the vpUserName attribute of the ViewpointInfo object
    *
-   *@param  vpUserList  The new vpUserName value
+   * @param vpUserList The new vpUserName value
    */
   public void setVpUserName(UserList vpUserList) {
     if (vpUserId != -1) {
@@ -99,9 +99,9 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Gets the vpUserName attribute of the ViewpointInfo object
+   * Gets the vpUserName attribute of the ViewpointInfo object
    *
-   *@return    The vpUserName value
+   * @return The vpUserName value
    */
   public String getVpUserName() {
     return vpUserName;
@@ -109,9 +109,9 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Gets the id attribute of the ViewpointInfo object
+   * Gets the id attribute of the ViewpointInfo object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -119,9 +119,9 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Gets the vpUserId attribute of the ViewpointInfo object
+   * Gets the vpUserId attribute of the ViewpointInfo object
    *
-   *@return    The vpUserId value
+   * @return The vpUserId value
    */
   public int getVpUserId() {
     return vpUserId;
@@ -129,10 +129,10 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Gets the vpUserId attribute of the ViewpointInfo object
+   * Gets the vpUserId attribute of the ViewpointInfo object
    *
-   *@param  tmpId  Description of the Parameter
-   *@return        The vpUserId value
+   * @param tmpId Description of the Parameter
+   * @return The vpUserId value
    */
   public int getVpUserId(int tmpId) {
     if (vpUserId == -1) {
@@ -143,10 +143,10 @@ public class ViewpointInfo implements Serializable {
 
 
   /**
-   *  Gets the vpSelected attribute of the ViewpointInfo object
+   * Gets the vpSelected attribute of the ViewpointInfo object
    *
-   *@param  actualUserId  Description of the Parameter
-   *@return               The vpSelected value
+   * @param actualUserId Description of the Parameter
+   * @return The vpSelected value
    */
   public boolean isVpSelected(int actualUserId) {
     if (vpUserId == -1 || actualUserId == vpUserId) {

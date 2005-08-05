@@ -20,6 +20,7 @@ import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.apps.workFlowManager.ComponentContext;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.SMTPMessage;
 import org.aspcfs.utils.SSLMessage;
 
@@ -30,12 +31,12 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 /**
- *  A logged message sent to a person using 1 of several transports: SMTP, Fax,
- *  Letter, IM
+ * A logged message sent to a person using 1 of several transports: SMTP, Fax,
+ * Letter, IM
  *
- *@author     mrajkowski
- *@created    October 15, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created October 15, 2001
  */
 public class Notification extends Thread {
 
@@ -94,19 +95,21 @@ public class Notification extends Thread {
 
   private long size = 0;
 
+  private String bcc = null;
+  private String cc = null;
+
 
   /**
-   *  Constructor for the Notification object
-   *
-   *@since
+   * Constructor for the Notification object
    */
-  public Notification() { }
+  public Notification() {
+  }
 
 
   /**
-   *  Constructor for the Notification object
+   * Constructor for the Notification object
    *
-   *@param  thisType  Description of the Parameter
+   * @param thisType Description of the Parameter
    */
   public Notification(int thisType) {
     this.setType(thisType);
@@ -114,10 +117,10 @@ public class Notification extends Thread {
 
 
   /**
-   *  Constructor for the Notification object
+   * Constructor for the Notification object
    *
-   *@param  thisType  Description of the Parameter
-   *@param  context   Description of the Parameter
+   * @param thisType Description of the Parameter
+   * @param context  Description of the Parameter
    */
   public Notification(int thisType, ActionContext context) {
     this.setType(thisType);
@@ -126,10 +129,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the UserToNotify attribute of the Notification object
+   * Sets the UserToNotify attribute of the Notification object
    *
-   *@param  tmp  The new UserToNotify value
-   *@since
+   * @param tmp The new UserToNotify value
    */
   public void setUserToNotify(int tmp) {
     this.userToNotify = tmp;
@@ -137,9 +139,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the contactToNotify attribute of the Notification object
+   * Sets the contactToNotify attribute of the Notification object
    *
-   *@param  tmp  The new contactToNotify value
+   * @param tmp The new contactToNotify value
    */
   public void setContactToNotify(int tmp) {
     this.contactToNotify = tmp;
@@ -147,9 +149,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the emailToNotify attribute of the Notification object
+   * Sets the emailToNotify attribute of the Notification object
    *
-   *@param  tmp  The new emailToNotify value
+   * @param tmp The new emailToNotify value
    */
   public void setEmailToNotify(String tmp) {
     this.emailToNotify = tmp;
@@ -157,9 +159,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the databaseName attribute of the Notification object
+   * Sets the databaseName attribute of the Notification object
    *
-   *@param  tmp  The new databaseName value
+   * @param tmp The new databaseName value
    */
   public void setDatabaseName(String tmp) {
     this.databaseName = tmp;
@@ -167,10 +169,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the Module attribute of the Notification object
+   * Sets the Module attribute of the Notification object
    *
-   *@param  tmp  The new Module value
-   *@since
+   * @param tmp The new Module value
    */
   public void setModule(String tmp) {
     this.module = tmp;
@@ -178,10 +179,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the ItemId attribute of the Notification object
+   * Sets the ItemId attribute of the Notification object
    *
-   *@param  tmp  The new ItemId value
-   *@since
+   * @param tmp The new ItemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -189,10 +189,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the ItemModified attribute of the Notification object
+   * Sets the ItemModified attribute of the Notification object
    *
-   *@param  tmp  The new ItemModified value
-   *@since
+   * @param tmp The new ItemModified value
    */
   public void setItemModified(java.sql.Timestamp tmp) {
     this.itemModified = tmp;
@@ -200,9 +199,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the messageIdToSend attribute of the Notification object
+   * Sets the messageIdToSend attribute of the Notification object
    *
-   *@param  tmp  The new messageIdToSend value
+   * @param tmp The new messageIdToSend value
    */
   public void setMessageIdToSend(int tmp) {
     this.messageIdToSend = tmp;
@@ -210,10 +209,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the MessageToSend attribute of the Notification object
+   * Sets the MessageToSend attribute of the Notification object
    *
-   *@param  tmp  The new MessageToSend value
-   *@since
+   * @param tmp The new MessageToSend value
    */
   public void setMessageToSend(String tmp) {
     this.messageToSend = tmp;
@@ -221,48 +219,47 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the type attribute of the Notification object
+   * Sets the type attribute of the Notification object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
     switch (this.type) {
-        case EMAIL:
-          this.setTypeText(EMAIL_TEXT);
-          break;
-        case FAX:
-          this.setTypeText(FAX_TEXT);
-          break;
-        case LETTER:
-          this.setTypeText(LETTER_TEXT);
-          break;
-        case EMAILFAX:
-          this.setTypeText(EMAILFAX_TEXT);
-          break;
-        case EMAILLETTER:
-          this.setTypeText(EMAILLETTER_TEXT);
-          break;
-        case EMAILFAXLETTER:
-          this.setTypeText(EMAILFAXLETTER_TEXT);
-          break;
-        case IM:
-          this.setTypeText(IM_TEXT);
-          break;
-        case SSL:
-          this.setTypeText(SSL_TEXT);
-          break;
-        default:
-          break;
+      case EMAIL:
+        this.setTypeText(EMAIL_TEXT);
+        break;
+      case FAX:
+        this.setTypeText(FAX_TEXT);
+        break;
+      case LETTER:
+        this.setTypeText(LETTER_TEXT);
+        break;
+      case EMAILFAX:
+        this.setTypeText(EMAILFAX_TEXT);
+        break;
+      case EMAILLETTER:
+        this.setTypeText(EMAILLETTER_TEXT);
+        break;
+      case EMAILFAXLETTER:
+        this.setTypeText(EMAILFAXLETTER_TEXT);
+        break;
+      case IM:
+        this.setTypeText(IM_TEXT);
+        break;
+      case SSL:
+        this.setTypeText(SSL_TEXT);
+        break;
+      default:
+        break;
     }
   }
 
 
   /**
-   *  Sets the Type attribute of the Notification object
+   * Sets the Type attribute of the Notification object
    *
-   *@param  tmp  The new Type value
-   *@since
+   * @param tmp The new Type value
    */
   public void setTypeText(String tmp) {
     this.typeText = tmp;
@@ -270,10 +267,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the Subject attribute of the Notification object
+   * Sets the Subject attribute of the Notification object
    *
-   *@param  tmp  The new Subject value
-   *@since
+   * @param tmp The new Subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -281,9 +277,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the from attribute of the Notification object
+   * Sets the from attribute of the Notification object
    *
-   *@param  tmp  The new from value
+   * @param tmp The new from value
    */
   public void setFrom(String tmp) {
     this.from = tmp;
@@ -291,10 +287,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the SiteCode attribute of the Notification object
+   * Sets the SiteCode attribute of the Notification object
    *
-   *@param  tmp  The new SiteCode value
-   *@since
+   * @param tmp The new SiteCode value
    */
   public void setSiteCode(String tmp) {
     this.siteCode = tmp;
@@ -302,9 +297,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the port attribute of the Notification object
+   * Sets the port attribute of the Notification object
    *
-   *@param  tmp  The new port value
+   * @param tmp The new port value
    */
   public void setPort(int tmp) {
     this.port = tmp;
@@ -312,9 +307,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the host attribute of the Notification object
+   * Sets the host attribute of the Notification object
    *
-   *@param  tmp  The new host value
+   * @param tmp The new host value
    */
   public void setHost(String tmp) {
     this.host = tmp;
@@ -322,9 +317,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the fileAttachments attribute of the Notification object
+   * Sets the fileAttachments attribute of the Notification object
    *
-   *@param  tmp  The new fileAttachments value
+   * @param tmp The new fileAttachments value
    */
   public void setFileAttachments(FileItemList tmp) {
     this.fileAttachments = tmp;
@@ -332,9 +327,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the context attribute of the Notification object
+   * Sets the context attribute of the Notification object
    *
-   *@param  context  The new context value
+   * @param context The new context value
    */
   public void setContext(Object context) {
     this.context = context;
@@ -342,10 +337,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the Attempt attribute of the Notification object
+   * Gets the Attempt attribute of the Notification object
    *
-   *@return    The Attempt value
-   *@since
+   * @return The Attempt value
    */
   public java.sql.Timestamp getAttempt() {
     return attempt;
@@ -353,10 +347,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the Result attribute of the Notification object
+   * Gets the Result attribute of the Notification object
    *
-   *@return    The Result value
-   *@since
+   * @return The Result value
    */
   public int getResult() {
     return result;
@@ -364,9 +357,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the status attribute of the Notification object
+   * Gets the status attribute of the Notification object
    *
-   *@return    The status value
+   * @return The status value
    */
   public String getStatus() {
     return status;
@@ -374,9 +367,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the type attribute of the Notification object
+   * Gets the type attribute of the Notification object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -384,10 +377,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the errorMessage attribute of the Notification object
+   * Gets the errorMessage attribute of the Notification object
    *
-   *@return    The errorMessage value
-   *@since
+   * @return The errorMessage value
    */
   public String getErrorMessage() {
     return errorMessage;
@@ -395,9 +387,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the faxLogEntry attribute of the Notification object
+   * Gets the faxLogEntry attribute of the Notification object
    *
-   *@return    The faxLogEntry value
+   * @return The faxLogEntry value
    */
   public String getFaxLogEntry() {
     return faxLogEntry;
@@ -405,9 +397,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the contact attribute of the Notification object
+   * Gets the contact attribute of the Notification object
    *
-   *@return    The contact value
+   * @return The contact value
    */
   public Contact getContact() {
     return contact;
@@ -415,9 +407,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the fileAttachments attribute of the Notification object
+   * Gets the fileAttachments attribute of the Notification object
    *
-   *@return    The fileAttachments value
+   * @return The fileAttachments value
    */
   public FileItemList getFileAttachments() {
     return fileAttachments;
@@ -425,21 +417,36 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the size attribute of the Notification object
+   * Gets the size attribute of the Notification object
    *
-   *@return    The size value
+   * @return The size value
    */
   public long getSize() {
     return size;
   }
 
+  public String getBcc() {
+    return bcc;
+  }
+
+  public void setBcc(String tmp) {
+    this.bcc = tmp;
+  }
+
+  public String getCc() {
+    return cc;
+  }
+
+  public void setCc(String tmp) {
+    this.cc = tmp;
+  }
+
 
   /**
-   *  Gets the New attribute of the Notification object
+   * Gets the New attribute of the Notification object
    *
-   *@param  db  Description of Parameter
-   *@return     The New value
-   *@since
+   * @param db Description of Parameter
+   * @return The New value
    */
   public boolean isNew(Connection db) {
     int resultCheck = -1;
@@ -449,7 +456,7 @@ public class Notification extends Thread {
           "SELECT * " +
           "FROM notification " +
           "WHERE notify_user = " + ((userToNotify > -1) ? userToNotify : contactToNotify) + " " +
-          "AND module = ? " +
+          "AND \"module\" = ? " +
           "AND item_id = " + itemId + " " +
           "AND item_modified = ? ";
 
@@ -481,10 +488,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
-   *@since
+   * @return Description of the Returned Value
    */
   public boolean hasErrors() {
     return (result > 0);
@@ -492,20 +498,23 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db  Description of Parameter
-   *@since
+   * @param db Description of Parameter
    */
   public void insertNotification(Connection db) {
     try {
+      id = DatabaseUtils.getNextSeq(db, "notification_notification_i_seq");
       String sql =
           "INSERT INTO notification " +
-          "(notify_user, module, item_id, item_modified, notify_type, subject, message, result, errorMessage) " +
+          "(" + (id > -1 ? "notification_id, " : "") + "notify_user, \"module\", item_id, item_modified, notify_type, subject, message, result, errorMessage) " +
           "VALUES " +
-          "(?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+          "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (userToNotify > -1) {
         pst.setInt(++i, userToNotify);
       } else {
@@ -525,6 +534,7 @@ public class Notification extends Thread {
       pst.setString(++i, errorMessage);
       pst.executeUpdate();
       pst.close();
+      id = DatabaseUtils.getCurrVal(db, "notification_notification_i_seq", id);
     } catch (SQLException e) {
       errorMessage = e.toString();
       result += 1;
@@ -533,7 +543,7 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void notifyAddress() {
     if (type > -1) {
@@ -552,8 +562,10 @@ public class Notification extends Thread {
           mail.setBody(messageToSend);
           mail.setAttachments(fileAttachments);
           if (mail.send() == 2) {
-            System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
-            System.err.println("ReportBuilder Error: Report could not be sent");
+            System.out.println(
+                "Send error: " + mail.getErrorMsg() + "<br><br>");
+            System.err.println(
+                "ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
             //insertNotification(db);
@@ -576,10 +588,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db  Description of Parameter
-   *@since
+   * @param db Description of Parameter
    */
   public void notifyUser(Connection db) {
     if (type > -1) {
@@ -589,7 +600,8 @@ public class Notification extends Thread {
         thisUser.setBuildContactDetails(true);
         thisUser.buildRecord(db, userToNotify);
         if (type == EMAIL) {
-          System.out.println("Notification-> To: " + thisUser.getContact().getPrimaryEmailAddress());
+          System.out.println(
+              "Notification-> To: " + thisUser.getContact().getPrimaryEmailAddress());
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from);
@@ -602,8 +614,10 @@ public class Notification extends Thread {
           mail.setBody(messageToSend);
           mail.setAttachments(fileAttachments);
           if (mail.send() == 2) {
-            System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
-            System.err.println("ReportBuilder Error: Report could not be sent");
+            System.out.println(
+                "Send error: " + mail.getErrorMsg() + "<br><br>");
+            System.err.println(
+                "ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
             insertNotification(db);
@@ -626,9 +640,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db  Description of Parameter
+   * @param db Description of Parameter
    */
   public void notifyContact(Connection db) {
     if (type > -1) {
@@ -662,12 +676,19 @@ public class Notification extends Thread {
         }
         //Send it...
         if (type == EMAIL) {
-          System.out.println("Notification-> To: " + thisContact.getPrimaryEmailAddress());
+          System.out.println(
+              "Notification-> To: " + thisContact.getPrimaryEmailAddress());
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from);
           if (from != null && !from.equals("")) {
             mail.addReplyTo(from);
+          }
+          if (bcc != null && !"".equals(bcc)) {
+            mail.setBcc(bcc);
+          }
+          if (cc != null && !"".equals(cc)) {
+            mail.setCc(cc);
           }
           mail.setType("text/html");
           mail.addTo(thisContact.getPrimaryEmailAddress());
@@ -677,8 +698,10 @@ public class Notification extends Thread {
           int errorCode = mail.send();
           if (errorCode > 0) {
             status = "Email Error";
-            System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
-            System.err.println("ReportBuilder Error: Report could not be sent");
+            System.out.println(
+                "Send error: " + mail.getErrorMsg() + "<br><br>");
+            System.err.println(
+                "ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
             status = "Email Sent";
@@ -720,8 +743,10 @@ public class Notification extends Thread {
           int errorCode = mail.send();
           if (errorCode > 0) {
             status = "Email Error";
-            System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
-            System.err.println("ReportBuilder Error: Report could not be sent");
+            System.out.println(
+                "Send error: " + mail.getErrorMsg() + "<br><br>");
+            System.err.println(
+                "ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
             status = "Email Sent";
@@ -743,7 +768,8 @@ public class Notification extends Thread {
             } else {
               phoneNumber = "1" + phoneNumber;
             }
-            System.out.println("Notification-> Will send fax to: " + phoneNumber);
+            System.out.println(
+                "Notification-> Will send fax to: " + phoneNumber);
             faxLogEntry = databaseName + "|" + messageIdToSend + "|" + phoneNumber + "|" + thisContact.getId();
             status = "Fax Queued";
           }
@@ -765,9 +791,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  Exception  Description of the Exception
+   * @throws Exception Description of the Exception
    */
   public void notifySystem() throws Exception {
     if (type == SSL) {
@@ -780,11 +806,19 @@ public class Notification extends Thread {
       thisMessage.setMessage(messageToSend);
       if (context != null) {
         if (context instanceof ActionContext) {
-          thisMessage.setKeystoreLocation((String) ((ActionContext) context).getServletContext().getAttribute("ClientSSLKeystore"));
-          thisMessage.setKeystorePassword((String) ((ActionContext) context).getServletContext().getAttribute("ClientSSLKeystorePassword"));
+          thisMessage.setKeystoreLocation(
+              (String) ((ActionContext) context).getServletContext().getAttribute(
+                  "ClientSSLKeystore"));
+          thisMessage.setKeystorePassword(
+              (String) ((ActionContext) context).getServletContext().getAttribute(
+                  "ClientSSLKeystorePassword"));
         } else if (context instanceof ComponentContext) {
-          thisMessage.setKeystoreLocation((String) ((ComponentContext) context).getAttribute("ClientSSLKeystore"));
-          thisMessage.setKeystorePassword((String) ((ComponentContext) context).getAttribute("ClientSSLKeystorePassword"));
+          thisMessage.setKeystoreLocation(
+              (String) ((ComponentContext) context).getAttribute(
+                  "ClientSSLKeystore"));
+          thisMessage.setKeystorePassword(
+              (String) ((ComponentContext) context).getAttribute(
+                  "ClientSSLKeystorePassword"));
         }
       }
       result = thisMessage.send();
@@ -796,7 +830,7 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void send() {
     this.start();
@@ -804,9 +838,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db  Description of the Parameter
+   * @param db Description of the Parameter
    */
   public void send(Connection db) {
     this.connection = db;
@@ -815,9 +849,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void send(ActionContext context) {
     this.context = context;
@@ -826,7 +860,7 @@ public class Notification extends Thread {
 
 
   /**
-   *  Main processing method for the Notification object
+   * Main processing method for the Notification object
    */
   public void run() {
     try {
@@ -845,9 +879,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
 

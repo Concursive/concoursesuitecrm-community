@@ -18,19 +18,19 @@ package com.zeroio.iteam.base;
 import org.apache.lucene.index.Term;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author
- *@created
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public class FileFolderIndexer implements Indexer {
 
   /**
-   *  Gets the searchTerm attribute of the FileFolderIndexer class
+   * Gets the searchTerm attribute of the FileFolderIndexer class
    *
-   *@param  fileFolder  Description of the Parameter
-   *@return             The searchTerm value
+   * @param fileFolder Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(FileFolder fileFolder) {
     Term searchTerm = new Term("folderId", String.valueOf(fileFolder.getId()));
@@ -39,10 +39,10 @@ public class FileFolderIndexer implements Indexer {
 
 
   /**
-   *  Gets the deleteTerm attribute of the FileFolderIndexer class
+   * Gets the deleteTerm attribute of the FileFolderIndexer class
    *
-   *@param  fileFolder  Description of the Parameter
-   *@return             The deleteTerm value
+   * @param fileFolder Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(FileFolder fileFolder) {
     Term searchTerm = new Term("folderId", String.valueOf(fileFolder.getId()));

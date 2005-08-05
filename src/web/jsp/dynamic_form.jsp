@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="CustomFormInfo" class="org.aspcfs.utils.web.CustomForm" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ page import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.utils.web.CustomFormTab,org.aspcfs.utils.web.CustomFormGroup" %>
 <%@ include file="../initPage.jsp" %>
 <%= CustomFormInfo.getJScripts() %>
@@ -34,7 +35,11 @@
 <%
   Iterator tabs = CustomFormInfo.iterator();
   while (tabs.hasNext()) {
-    CustomFormTab thisTab = (CustomFormTab)tabs.next();
+    CustomFormTab thisTab = (CustomFormTab) tabs.next();
+    
+    //Translate this field display text based on the language available
+    thisTab.parseTemplateText(systemStatus);
+    
     if (pg == thisTab.getId()) {
       CustomFormInfo.setSelectedTabName(thisTab.getName());
       if (thisTab.getReturnLinkText() != null && !(thisTab.getReturnLinkText().equals(""))) {

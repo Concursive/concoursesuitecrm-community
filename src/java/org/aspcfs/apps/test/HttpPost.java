@@ -15,29 +15,34 @@
  */
 package org.aspcfs.apps.test;
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
- *  Application to test HTTP posting parameters and files
+ * Application to test HTTP posting parameters and files
  *
- *@author     --
- *@created    January 21, 2002
- *@version    $Id$
+ * @author --
+ * @version $Id$
+ * @created January 21, 2002
  */
 public class HttpPost {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name      Description of the Parameter
-   *@param  value     Description of the Parameter
-   *@param  out       Description of the Parameter
-   *@param  boundary  Description of the Parameter
+   * @param name     Description of the Parameter
+   * @param value    Description of the Parameter
+   * @param out      Description of the Parameter
+   * @param boundary Description of the Parameter
    */
   private static void writeParam(String name, String value, DataOutputStream out, String boundary) {
     try {
-      out.writeBytes("content-disposition: form-data; name=\"" + name + "\"\r\n\r\n");
+      out.writeBytes(
+          "content-disposition: form-data; name=\"" + name + "\"\r\n\r\n");
       out.writeBytes(value);
       out.writeBytes("\r\n" + "--" + boundary + "\r\n");
     } catch (Exception e) {
@@ -47,17 +52,18 @@ public class HttpPost {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name      Description of the Parameter
-   *@param  filePath  Description of the Parameter
-   *@param  out       Description of the Parameter
-   *@param  boundary  Description of the Parameter
+   * @param name     Description of the Parameter
+   * @param filePath Description of the Parameter
+   * @param out      Description of the Parameter
+   * @param boundary Description of the Parameter
    */
   private static void writeFile(String name, String filePath, DataOutputStream out, String boundary) {
     try {
-      out.writeBytes("content-disposition: form-data; name=\"" + name + "\"; filename=\""
-           + filePath + "\"\r\n");
+      out.writeBytes(
+          "content-disposition: form-data; name=\"" + name + "\"; filename=\""
+          + filePath + "\"\r\n");
       out.writeBytes("content-type: application/octet-stream" + "\r\n\r\n");
       FileInputStream fis = new FileInputStream(filePath);
       while (true) {
@@ -82,13 +88,14 @@ public class HttpPost {
 
 
   /**
-   *  Creates a new instance
+   * Creates a new instance
    */
-  public HttpPost() { }
+  public HttpPost() {
+  }
 
 
   /**
-   *@param  args  the command line arguments
+   * @param args the command line arguments
    */
   public static void main(String args[]) {
     try {
@@ -98,7 +105,8 @@ public class HttpPost {
       conn.setDoInput(true);
       conn.setUseCaches(false);
       String boundary = "---------------------------7d226f700d0";
-      conn.setRequestProperty("Content-type", "multipart/form-data; boundary=" + boundary);
+      conn.setRequestProperty(
+          "Content-type", "multipart/form-data; boundary=" + boundary);
       //conn.setRequestProperty("Referer", "http://127.0.0.1/index.jsp");
       //conn.setRequestProperty("Cache-Control", "no-cache");
 

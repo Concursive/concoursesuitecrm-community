@@ -23,34 +23,44 @@
   var thisAddParams = '';
   var modifiable = 'true';
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, quoteId, addParams, modi) {
+  function displayMenu(loc, id, quoteId, addParams, modi, trashed) {
     thisQuoteId = quoteId;
     modifiable = modi;
     thisAddParams = addParams;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuQuote", "down", 0, 0, 170, getHeight("menuQuoteTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
-  function updateMenu() {
-    if(modifiable == 'true'){
-      showSpan('menuModify');
-    }else{
+
+  function updateMenu(trashed) {
+    if (trashed == 'true'){
       hideSpan('menuModify');
+      hideSpan('menuClone');
+      hideSpan('menuVersion');
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuClone');
+      showSpan('menuVersion');
+      showSpan('menuDelete');
+      if(modifiable == 'true'){
+        showSpan('menuModify');
+      }else{
+        hideSpan('menuModify');
+      }
     }
   }
   //Menu link functions
   function details() {
     window.location.href='LeadsQuotes.do?command=Details&quoteId=' + thisQuoteId + thisAddParams;
   }
-  
+
   function modify() {
     window.location.href='LeadsQuotes.do?command=ModifyForm&quoteId='+ thisQuoteId+ thisAddParams;
   }
-  
+
   function clone() {
     popURL('Quotes.do?command=CloneForm&quoteId='+ thisQuoteId,'Close','500','400','yes','yes');
   }
@@ -60,7 +70,7 @@
       window.location.href='LeadsQuotes.do?command=AddVersion&quoteId='+ thisQuoteId+ thisAddParams;
     }
   }
-  
+
   function deleteQuote() {
     popURLReturn('LeadsQuotes.do?command=ConfirmDelete&quoteId=' + thisQuoteId+ '&popup=true'+ thisAddParams,'LeadsQuotes.do?command=QuoteList'+ thisAddParams, 'Delete_Quote','330','200','yes','no');
   }

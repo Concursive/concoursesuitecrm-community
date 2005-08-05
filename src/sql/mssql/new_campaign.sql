@@ -42,7 +42,10 @@ CREATE TABLE campaign (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
   type INT DEFAULT 1,
-  active_date_timezone VARCHAR(255)
+  active_date_timezone VARCHAR(255),
+  cc VARCHAR(1024),
+  bcc VARCHAR(1024),
+  trashed_date DATETIME
 );
 
 CREATE TABLE campaign_run (
@@ -213,7 +216,7 @@ CREATE TABLE field_types (
 	data_type VARCHAR(20),
   operator VARCHAR(50),
   display_text varchar(50),
-  enabled BIT DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE search_fields (

@@ -15,27 +15,39 @@
  */
 package com.darkhorseventures.framework.servlets;
 
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
+import com.darkhorseventures.framework.actions.Action;
+import com.darkhorseventures.framework.actions.Beans;
+import com.darkhorseventures.framework.actions.Resource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import com.darkhorseventures.framework.actions.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
- *  This class is used to load the Hashtable of ActionActions from an XML file.
- *  <p>
+ * This class is used to load the Hashtable of ActionActions from an XML file.
+ * <p/>
+ * <p/>
+ * The {@link #load()} method should be called whenever the latest version of
+ * the Actions is needed. If the XML file has not been modified since last call
+ * to load(), the file will not be reparsed.</p>
  *
- *  The {@link #load()} method should be called whenever the latest version of
- *  the Actions is needed. If the XML file has not been modified since last call
- *  to load(), the file will not be reparsed.</p>
- *
- *@author     Joe Walnes
- *@created    june 1, 2001
- *@version    $Id: XMLConfigLoader.java,v 1.2 2003/01/13 14:42:24 mrajkowski Exp
- *      $
+ * @author Joe Walnes
+ * @version $Id: XMLConfigLoader.java,v 1.2 2003/01/13 14:42:24 mrajkowski Exp
+ *          $
+ * @created june 1, 2001
  */
 public class XMLConfigLoader
-     implements java.io.Serializable {
+    implements java.io.Serializable {
   final static long serialVersionUID = 536435325324169646L;
   private Map actions;
   private File file;
@@ -43,16 +55,17 @@ public class XMLConfigLoader
 
 
   /**
-   *  Creates a new empty config loader. The values for Actions and file must be
-   *  set before a call can be made.
+   * Creates a new empty config loader. The values for Actions and file must be
+   * set before a call can be made.
    */
-  public XMLConfigLoader() { }
+  public XMLConfigLoader() {
+  }
 
 
   /**
-   *  Sets the actions attribute of the XMLConfigLoader object
+   * Sets the actions attribute of the XMLConfigLoader object
    *
-   *@param  actions  The new actions value
+   * @param actions The new actions value
    */
   public void setActions(Map actions) {
     this.actions = actions;
@@ -60,9 +73,9 @@ public class XMLConfigLoader
 
 
   /**
-   *  Sets the file attribute of the XMLConfigLoader object
+   * Sets the file attribute of the XMLConfigLoader object
    *
-   *@param  fileName  The new file value
+   * @param fileName The new file value
    */
   public void setFile(String fileName) {
     this.file = new File(fileName);
@@ -70,9 +83,9 @@ public class XMLConfigLoader
 
 
   /**
-   *  Load the ActionActions from the XML. If the file has not been modified
-   *  since last load(), file will not be reparsed. All exception stacktraces
-   *  will be written to System.err.
+   * Load the ActionActions from the XML. If the file has not been modified
+   * since last load(), file will not be reparsed. All exception stacktraces
+   * will be written to System.err.
    */
   public void load() {
     try {
@@ -89,16 +102,16 @@ public class XMLConfigLoader
 
 
   /**
-   *  Parse XML in <code>file</code> and return Document.
+   * Parse XML in <code>file</code> and return Document.
    *
-   *@return                                   Description of the Return Value
-   *@exception  FactoryConfigurationError     Description of the Exception
-   *@exception  ParserConfigurationException  Description of the Exception
-   *@exception  SAXException                  Description of the Exception
-   *@exception  IOException                   Description of the Exception
+   * @return Description of the Return Value
+   * @throws FactoryConfigurationError    Description of the Exception
+   * @throws ParserConfigurationException Description of the Exception
+   * @throws SAXException                 Description of the Exception
+   * @throws IOException                  Description of the Exception
    */
   private Document parseDocument()
-       throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
+      throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     Document document = builder.parse(file);
@@ -107,10 +120,10 @@ public class XMLConfigLoader
 
 
   /**
-   *  Load all ActionActions into Hashtable from Document
+   * Load all ActionActions into Hashtable from Document
    *
-   *@param  Actions   Description of the Parameter
-   *@param  document  Description of the Parameter
+   * @param Actions  Description of the Parameter
+   * @param document Description of the Parameter
    */
   private void loadAllActions(Map Actions, Document document) {
     NodeList actionTags = document.getElementsByTagName("action");
@@ -123,10 +136,10 @@ public class XMLConfigLoader
 
 
   /**
-   *  Return an ActionAction based on an 'action' tag.
+   * Return an ActionAction based on an 'action' tag.
    *
-   *@param  e  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param e Description of the Parameter
+   * @return Description of the Return Value
    */
   private Action loadAction(Element e) {
     String aName = e.getAttribute("name");
@@ -168,10 +181,11 @@ public class XMLConfigLoader
         }
 
         beansTable.put(bName, beans);
-      } else
-          if (childName.equals("forward")) {
+      } else if (childName.equals("forward")) {
         //Resource r = new Resource( child.getAttribute("resource"), child.getAttribute("xsl") );
-        Resource r = new Resource(child.getAttribute("resource"), child.getAttribute("xsl"), child.getAttribute("layout"));
+        Resource r = new Resource(
+            child.getAttribute("resource"), child.getAttribute("xsl"), child.getAttribute(
+                "layout"));
         forwardTable.put(child.getAttribute("name"), r);
       }
     }

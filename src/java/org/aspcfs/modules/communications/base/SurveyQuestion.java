@@ -15,17 +15,21 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
-import java.util.*;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  A Survey Question
+ * A Survey Question
  *
- *@author     matt rajkowski
- *@created    August 13, 2002
- *@version    $Id: SurveyQuestion.java,v 1.1 2002/08/27 19:28:31 mrajkowski Exp
+ * @author matt rajkowski
+ * @version $Id: SurveyQuestion.java,v 1.1 2002/08/27 19:28:31 mrajkowski Exp
+ * @created August 13, 2002
  */
 public class SurveyQuestion {
 
@@ -45,15 +49,16 @@ public class SurveyQuestion {
 
 
   /**
-   *  Constructor for the SurveyQuestion object
+   * Constructor for the SurveyQuestion object
    */
-  public SurveyQuestion() { }
+  public SurveyQuestion() {
+  }
 
 
   /**
-   *  Constructor for the SurveyQuestion object
+   * Constructor for the SurveyQuestion object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public SurveyQuestion(HttpServletRequest request) {
     this.setDescription(request.getParameter("questionText"));
@@ -67,10 +72,10 @@ public class SurveyQuestion {
 
 
   /**
-   *  Constructor for the SurveyQuestion object
+   * Constructor for the SurveyQuestion object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SurveyQuestion(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -78,9 +83,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the id attribute of the SurveyQuestion object
+   * Gets the id attribute of the SurveyQuestion object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -88,9 +93,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the description attribute of the SurveyQuestion object
+   * Gets the description attribute of the SurveyQuestion object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -98,9 +103,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the id attribute of the SurveyQuestion object
+   * Sets the id attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -108,9 +113,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the id attribute of the SurveyQuestion object
+   * Sets the id attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -118,9 +123,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the description attribute of the SurveyQuestion object
+   * Sets the description attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -128,9 +133,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the surveyId attribute of the SurveyQuestion object
+   * Sets the surveyId attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new surveyId value
+   * @param tmp The new surveyId value
    */
   public void setSurveyId(int tmp) {
     this.surveyId = tmp;
@@ -138,9 +143,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the type attribute of the SurveyQuestion object
+   * Sets the type attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -148,9 +153,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public void buildItems(HttpServletRequest request) {
     this.itemList = new ItemList(request);
@@ -158,9 +163,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the itemList attribute of the SurveyQuestion object
+   * Sets the itemList attribute of the SurveyQuestion object
    *
-   *@param  itemList  The new itemList value
+   * @param itemList The new itemList value
    */
   public void setItemList(ItemList itemList) {
     this.itemList = itemList;
@@ -168,9 +173,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the required attribute of the SurveyQuestion object
+   * Sets the required attribute of the SurveyQuestion object
    *
-   *@param  required  The new required value
+   * @param required The new required value
    */
   public void setRequired(boolean required) {
     this.required = required;
@@ -178,9 +183,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the required attribute of the SurveyQuestion object
+   * Sets the required attribute of the SurveyQuestion object
    *
-   *@param  required  The new required value
+   * @param required The new required value
    */
   public void setRequired(String required) {
     this.required = "yes".equalsIgnoreCase(required);
@@ -188,9 +193,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the position attribute of the SurveyQuestion object
+   * Sets the position attribute of the SurveyQuestion object
    *
-   *@param  position  The new position value
+   * @param position The new position value
    */
   public void setPosition(int position) {
     this.position = position;
@@ -198,9 +203,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the position attribute of the SurveyQuestion object
+   * Gets the position attribute of the SurveyQuestion object
    *
-   *@return    The position value
+   * @return The position value
    */
   public int getPosition() {
     return position;
@@ -208,9 +213,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the questionId attribute of the SurveyQuestion object
+   * Gets the questionId attribute of the SurveyQuestion object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return id;
@@ -218,9 +223,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the required attribute of the SurveyQuestion object
+   * Gets the required attribute of the SurveyQuestion object
    *
-   *@return    The required value
+   * @return The required value
    */
   public boolean getRequired() {
     return required;
@@ -228,9 +233,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the itemList attribute of the SurveyQuestion object
+   * Gets the itemList attribute of the SurveyQuestion object
    *
-   *@return    The itemList value
+   * @return The itemList value
    */
   public ItemList getItemList() {
     return itemList;
@@ -238,10 +243,10 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the items attribute of the SurveyQuestion object "^|^" is used as a
-   *  tokenizer.
+   * Gets the items attribute of the SurveyQuestion object "^|^" is used as a
+   * tokenizer.
    *
-   *@return    The items value
+   * @return The items value
    */
   public String getItems() {
     String token = "^|^";
@@ -261,9 +266,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the questionText attribute of the SurveyQuestion object
+   * Gets the questionText attribute of the SurveyQuestion object
    *
-   *@return    The questionText value
+   * @return The questionText value
    */
   public String getQuestionText() {
     return description;
@@ -271,9 +276,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the surveyId attribute of the SurveyQuestion object
+   * Gets the surveyId attribute of the SurveyQuestion object
    *
-   *@return    The surveyId value
+   * @return The surveyId value
    */
   public int getSurveyId() {
     return surveyId;
@@ -281,9 +286,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the type attribute of the SurveyQuestion object
+   * Gets the type attribute of the SurveyQuestion object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -291,9 +296,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Gets the typeString attribute of the SurveyQuestion object
+   * Gets the typeString attribute of the SurveyQuestion object
    *
-   *@return    The typeString value
+   * @return The typeString value
    */
   public String getTypeString() {
     if (type == SurveyQuestion.OPEN_ENDED) {
@@ -310,9 +315,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the surveyId attribute of the SurveyQuestion object
+   * Sets the surveyId attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new surveyId value
+   * @param tmp The new surveyId value
    */
   public void setSurveyId(String tmp) {
     this.surveyId = Integer.parseInt(tmp);
@@ -320,9 +325,9 @@ public class SurveyQuestion {
 
 
   /**
-   *  Sets the type attribute of the SurveyQuestion object
+   * Sets the type attribute of the SurveyQuestion object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -330,11 +335,11 @@ public class SurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, int surveyId) throws SQLException {
     boolean doCommit = false;
@@ -357,12 +362,16 @@ public class SurveyQuestion {
       rs.close();
       pst.close();
       //insert question
+      id = DatabaseUtils.getNextSeq(db, "survey_question_question_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO survey_questions " +
-          "(survey_id, type, description, required, position ) " +
+          "(" + (id > -1 ? "question_id, " : "") + "survey_id, type, description, required, position ) " +
           "VALUES " +
-          "(?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, surveyId);
       pst.setInt(++i, type);
       pst.setString(++i, description);
@@ -370,7 +379,8 @@ public class SurveyQuestion {
       pst.setInt(++i, position);
       pst.execute();
       pst.close();
-      this.setId(DatabaseUtils.getCurrVal(db, "survey_question_question_id_seq"));
+      this.setId(
+          DatabaseUtils.getCurrVal(db, "survey_question_question_id_seq", id));
       if (this.getType() == ITEMLIST) {
         Iterator y = this.getItemList().iterator();
         while (y.hasNext()) {
@@ -396,11 +406,11 @@ public class SurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void process(Connection db, int surveyId) throws SQLException {
     if (this.getId() == -1) {
@@ -412,11 +422,11 @@ public class SurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisSurveyId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param thisSurveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db, int thisSurveyId) throws SQLException {
     boolean doCommit = false;
@@ -463,12 +473,12 @@ public class SurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisSurveyId      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param thisSurveyId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, int thisSurveyId) throws SQLException {
     boolean commit = true;
@@ -507,10 +517,10 @@ public class SurveyQuestion {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("question_id");

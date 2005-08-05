@@ -16,35 +16,38 @@
 package org.aspcfs.utils.formatter;
 
 import org.aspcfs.modules.contacts.base.Contact;
-import java.util.*;
+
+import java.util.StringTokenizer;
 
 /**
- *  Used for converting a person's name into separate fields
+ * Used for converting a person's name into separate fields
  *
- *@author     matt rajkowski
- *@created    June 16, 2004
- *@version    $Id: ContactNameFormatter.java,v 1.1 2004/06/16 17:24:53
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ContactNameFormatter.java,v 1.1 2004/06/16 17:24:53
+ *          mrajkowski Exp $
+ * @created June 16, 2004
  */
 public class ContactNameFormatter {
 
   /**
-   *  Constructor for the ContactFormatter object
+   * Constructor for the ContactFormatter object
    */
-  public ContactNameFormatter() { }
+  public ContactNameFormatter() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
-  public void config() { }
+  public void config() {
+  }
 
 
   /**
-   *  Formats a name, like Rhonda J. Smith, into separate fields
+   * Formats a name, like Rhonda J. Smith, into separate fields
    *
-   *@param  thisContact  Description of the Parameter
-   *@param  name         Description of the Parameter
+   * @param thisContact Description of the Parameter
+   * @param name        Description of the Parameter
    */
   public void format(Contact thisContact, String name) {
     if (name != null && !name.equals("")) {

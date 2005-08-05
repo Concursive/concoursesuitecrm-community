@@ -16,11 +16,11 @@
 package com.zeroio.iteam.base;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 6, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 6, 2004
  */
 public class MoveCounter {
 
@@ -29,9 +29,9 @@ public class MoveCounter {
 
 
   /**
-   *  Sets the amount attribute of the MoveCounter object
+   * Sets the amount attribute of the MoveCounter object
    *
-   *@param  tmp  The new amount value
+   * @param tmp The new amount value
    */
   public void setAmount(int tmp) {
     this.amount = tmp;
@@ -39,9 +39,9 @@ public class MoveCounter {
 
 
   /**
-   *  Gets the amount attribute of the MoveCounter object
+   * Gets the amount attribute of the MoveCounter object
    *
-   *@return    The amount value
+   * @return The amount value
    */
   public int getAmount() {
     return amount;
@@ -49,9 +49,9 @@ public class MoveCounter {
 
 
   /**
-   *  Sets the total attribute of the MoveCounter object
+   * Sets the total attribute of the MoveCounter object
    *
-   *@param  tmp  The new total value
+   * @param tmp The new total value
    */
   public void setTotal(int tmp) {
     this.total = tmp;
@@ -59,9 +59,9 @@ public class MoveCounter {
 
 
   /**
-   *  Gets the total attribute of the MoveCounter object
+   * Gets the total attribute of the MoveCounter object
    *
-   *@return    The total value
+   * @return The total value
    */
   public int getTotal() {
     return total;
@@ -69,15 +69,16 @@ public class MoveCounter {
 
 
   /**
-   *  Constructor for the MoveCounter object
+   * Constructor for the MoveCounter object
    */
-  public MoveCounter() { }
+  public MoveCounter() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
+   * @param tmp Description of the Parameter
    */
   public void add(int tmp) {
     total += tmp;

@@ -15,21 +15,28 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
-import java.io.*;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Contains a list of BusinessProcess objects and can be used for initially
- *  building the list.
+ * Contains a list of BusinessProcess objects and can be used for initially
+ * building the list.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: BusinessProcessList.java,v 1.4 2003/01/13 21:41:16 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: BusinessProcessList.java,v 1.4 2003/01/13 21:41:16
+ *          mrajkowski Exp $
+ * @created November 11, 2002
  */
 public class BusinessProcessList extends HashMap {
   //Filters
@@ -37,29 +44,43 @@ public class BusinessProcessList extends HashMap {
   private int typeId = -1;
   private int linkModuleId = -1;
   //Object resources
+  private boolean isApplication = false;
   private boolean buildScheduledEvents = false;
 
 
   /**
-   *  Constructor for the BusinessProcessList object
+   * Constructor for the BusinessProcessList object
    */
-  public BusinessProcessList() { }
-
-
-  /**
-   *  Constructor for the BusinessProcessList object
-   *
-   *@param  processes  Description of the Parameter
-   */
-  public BusinessProcessList(Element processes) {
-    this.process(processes);
+  public BusinessProcessList() {
   }
 
 
   /**
-   *  Sets the enabled attribute of the BusinessProcessList object
+   * Constructor for the BusinessProcessList object
    *
-   *@param  tmp  The new enabled value
+   * @param processes Description of the Parameter
+   */
+  public BusinessProcessList(Element processes) {
+    this.process(processes, false);
+  }
+
+
+  /**
+   * Constructor for the BusinessProcessList object
+   *
+   * @param processes Description of the Parameter
+   * @param isApp     Description of the Parameter
+   */
+  public BusinessProcessList(Element processes, boolean isApp) {
+    this.setIsApplication(isApp);
+    this.process(processes, isApp);
+  }
+
+
+  /**
+   * Sets the enabled attribute of the BusinessProcessList object
+   *
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -67,9 +88,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the enabled attribute of the BusinessProcessList object
+   * Sets the enabled attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -77,9 +98,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the typeId attribute of the BusinessProcessList object
+   * Sets the typeId attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -87,9 +108,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the typeId attribute of the BusinessProcessList object
+   * Sets the typeId attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -97,9 +118,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the linkModuleId attribute of the BusinessProcessList object
+   * Sets the linkModuleId attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -107,9 +128,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the linkModuleId attribute of the BusinessProcessList object
+   * Sets the linkModuleId attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -117,9 +138,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the buildScheduledEvents attribute of the BusinessProcessList object
+   * Sets the buildScheduledEvents attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new buildScheduledEvents value
+   * @param tmp The new buildScheduledEvents value
    */
   public void setBuildScheduledEvents(boolean tmp) {
     this.buildScheduledEvents = tmp;
@@ -127,9 +148,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets the buildScheduledEvents attribute of the BusinessProcessList object
+   * Sets the buildScheduledEvents attribute of the BusinessProcessList object
    *
-   *@param  tmp  The new buildScheduledEvents value
+   * @param tmp The new buildScheduledEvents value
    */
   public void setBuildScheduledEvents(String tmp) {
     this.buildScheduledEvents = DatabaseUtils.parseBoolean(tmp);
@@ -137,9 +158,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Gets the enabled attribute of the BusinessProcessList object
+   * Gets the enabled attribute of the BusinessProcessList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -147,9 +168,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Gets the typeId attribute of the BusinessProcessList object
+   * Gets the typeId attribute of the BusinessProcessList object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -157,9 +178,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Gets the linkModuleId attribute of the BusinessProcessList object
+   * Gets the linkModuleId attribute of the BusinessProcessList object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -167,9 +188,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Gets the buildScheduledEvents attribute of the BusinessProcessList object
+   * Gets the buildScheduledEvents attribute of the BusinessProcessList object
    *
-   *@return    The buildScheduledEvents value
+   * @return The buildScheduledEvents value
    */
   public boolean getBuildScheduledEvents() {
     return buildScheduledEvents;
@@ -177,15 +198,45 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Populate business processes from an XML file
+   * Gets the isApplication attribute of the BusinessProcessList object
    *
-   *@param  xmlFile  Description of the Parameter
-   *@return          Description of the Return Value
+   * @return The isApplication value
+   */
+  public boolean getIsApplication() {
+    return isApplication;
+  }
+
+
+  /**
+   * Sets the isApplication attribute of the BusinessProcessList object
+   *
+   * @param tmp The new isApplication value
+   */
+  public void setIsApplication(boolean tmp) {
+    this.isApplication = tmp;
+  }
+
+
+  /**
+   * Sets the isApplication attribute of the BusinessProcessList object
+   *
+   * @param tmp The new isApplication value
+   */
+  public void setIsApplication(String tmp) {
+    this.isApplication = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Populate business processes from an XML file
+   *
+   * @param xmlFile Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean buildList(File xmlFile) {
     try {
       XMLUtils xml = new XMLUtils(xmlFile);
-      return parse(xml.getDocumentElement());
+      return parse(xml.getDocumentElement(), false);
     } catch (Exception e) {
       e.printStackTrace(System.out);
       return false;
@@ -194,19 +245,38 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Builds the business processes, from an XML element.
+   * Description of the Method
    *
-   *@param  element  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param xmlFile Description of the Parameter
+   * @param isApp   Description of the Parameter
+   * @return Description of the Return Value
    */
-  public boolean parse(Element element) {
+  public boolean buildList(File xmlFile, boolean isApp) {
+    try {
+      XMLUtils xml = new XMLUtils(xmlFile);
+      return parse(xml.getDocumentElement(), isApp);
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+  }
+
+
+  /**
+   * Builds the business processes, from an XML element.
+   *
+   * @param element Description of the Parameter
+   * @param isApp   Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public boolean parse(Element element, boolean isApp) {
     if (element == null) {
       return false;
     }
     try {
       Element processes = XMLUtils.getFirstElement(element, "processes");
       if (processes != null) {
-        this.process(processes);
+        this.process(processes, isApp);
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -216,32 +286,33 @@ public class BusinessProcessList extends HashMap {
   }
 
 
-
   /**
-   *  Builds the business processes, from an XML element
+   * Builds the business processes, from an XML element
    *
-   *@param  processes  Description of the Parameter
+   * @param processes Description of the Parameter
+   * @param isApp     Description of the Parameter
    */
-  private void process(Element processes) {
+  private void process(Element processes, boolean isApp) {
     ArrayList processNodes = XMLUtils.getElements(processes, "process");
     Iterator processElements = processNodes.iterator();
     while (processElements.hasNext()) {
       Element processElement = (Element) processElements.next();
-      BusinessProcess thisProcess = new BusinessProcess(processElement);
+      BusinessProcess thisProcess = new BusinessProcess(processElement, isApp);
       this.put(thisProcess.getName(), thisProcess);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("BusinessProcessList-> Added: " + thisProcess.getName());
+        System.out.println(
+            "BusinessProcessList-> Added: " + thisProcess.getName());
       }
     }
   }
 
 
   /**
-   *  Builds the business processes, from a database, with the specified filter
-   *  parameters.
+   * Builds the business processes, from a database, with the specified filter
+   * parameters.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     //Get a list of business processes and store the name and the object
@@ -255,7 +326,8 @@ public class BusinessProcessList extends HashMap {
         "WHERE process_id > 0 ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY process_id ");
-    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -275,9 +347,9 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Adds WHERE clauses to database query for selected filters
+   * Adds WHERE clauses to database query for selected filters
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -296,11 +368,11 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Sets database parameters for selected filters
+   * Sets database parameters for selected filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -318,10 +390,10 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Inserts all processes in this collection and related data.
+   * Inserts all processes in this collection and related data.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     try {
@@ -329,7 +401,9 @@ public class BusinessProcessList extends HashMap {
       Iterator processes = this.values().iterator();
       while (processes.hasNext()) {
         BusinessProcess thisProcess = (BusinessProcess) processes.next();
-        thisProcess.insert(db);
+        if (!thisProcess.getIsApplication()) {
+          thisProcess.insert(db);
+        }
       }
       db.commit();
     } catch (SQLException e) {
@@ -342,10 +416,10 @@ public class BusinessProcessList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     try {
@@ -363,5 +437,41 @@ public class BusinessProcessList extends HashMap {
       db.setAutoCommit(true);
     }
   }
-}
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void deleteUserProcesses(Connection db) throws SQLException {
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      Iterator processes = this.values().iterator();
+      while (processes.hasNext()) {
+        BusinessProcess thisProcess = (BusinessProcess) processes.next();
+        if (!thisProcess.getIsApplication()) {
+          thisProcess.delete(db);
+          processes.remove();
+        }
+      }
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+  }
+}

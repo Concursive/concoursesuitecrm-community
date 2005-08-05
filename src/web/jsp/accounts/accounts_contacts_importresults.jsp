@@ -63,8 +63,8 @@
       <%= AccountContactsImportResultsInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
-      <strong><a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>&column=c.company"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
-      <%= AccountContactsImportResultsInfo.getSortIcon("c.company") %>
+      <strong><a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>&column=c.org_name"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
+      <%= AccountContactsImportResultsInfo.getSortIcon("c.org_name") %>
     </th>
     <th>
       <strong><dhv:label name="account.phones.colon">Phone(s):</dhv:label></strong>

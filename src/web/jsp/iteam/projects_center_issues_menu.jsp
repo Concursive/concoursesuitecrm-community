@@ -23,14 +23,25 @@
   var thisCategoryId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, itemId, categoryId) {
+  function displayMenu(loc, id, itemId, categoryId, trashed) {
     thisItemId = itemId;
     thisCategoryId = categoryId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuItem", "down", 0, 0, 170, getHeight("menuItemTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuModify');
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuModify');
+      showSpan('menuDelete');
+    }
   }
   //Menu link functions
   function viewItem() {
@@ -48,7 +59,7 @@
   <div id="menuItemContent">
     <table id="menuItemTable" class="pulldown" width="170" cellspacing="0">
     <zeroio:permission name="project-discussion-topics-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuView" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="viewItem()">
         <th valign="top">
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -59,7 +70,7 @@
       </tr>
     </zeroio:permission>
     <zeroio:permission name="project-discussion-topics-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="editItem()">
         <th valign="top">
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -70,7 +81,7 @@
       </tr>
     </zeroio:permission>
     <zeroio:permission name="project-discussion-topics-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteItem()">
         <th valign="top">
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>

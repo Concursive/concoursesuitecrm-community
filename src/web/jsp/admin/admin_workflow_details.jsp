@@ -141,7 +141,7 @@
             <strong><dhv:label name="admin.step">Step</dhv:label> <%= count %>:</strong><dhv:evaluate if="<%= !component.getEnabled() %>"><br><font color="red"><dhv:label name="account.disabled.brackets">(disabled)</dhv:label></font></dhv:evaluate>
           </td>
           <td>
-            <strong><%= component.getDescription() %></strong>
+            <strong><%= toHtml(component.getDescription()) %></strong>
           </td>
         </tr>
       </table>

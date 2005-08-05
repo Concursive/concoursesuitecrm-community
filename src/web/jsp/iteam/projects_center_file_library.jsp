@@ -43,6 +43,7 @@
   </tr>
 </table>
 <br>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
 <zeroio:permission name="project-documents-folders-add">
 <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle">
 <a href="ProjectManagementFileFolders.do?command=Add&pid=<%= Project.getId() %>&parentId=<%= Project.getFiles().getFolderId() %>&folderId=<%= Project.getFiles().getFolderId() %>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
@@ -74,6 +75,7 @@
 <br />
 <br />
 </zeroio:permission>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="8" align="center" nowrap>&nbsp;</th>
@@ -97,7 +99,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td align="center" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %>fo<%= thisFolder.getId() %>', 'menuFolder', <%= thisFolder.getId() %>, -1, <%= thisFolder.getDisplay() %>)"
+      <a href="javascript:displayMenu('select_<%= SKIN %>fo<%= thisFolder.getId() %>', 'menuFolder', <%= thisFolder.getId() %>, -1, <%= thisFolder.getDisplay() %>,'<%= Project.isTrashed() %>')"
          onMouseOver="over(0, 'fo<%= thisFolder.getId() %>')"
          onmouseout="out(0, 'fo<%= thisFolder.getId() %>'); hideMenu('menuFolder');"><img 
         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %>fo<%= thisFolder.getId() %>" id="select_<%= SKIN %>fo<%= thisFolder.getId() %>" align="absmiddle" border="0"></a>
@@ -148,7 +150,7 @@
 %>    
   <tr class="row<%= rowid %>">
     <td align="center" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %>fi<%= thisFile.getId() %>', 'menuFile', -1, <%= thisFile.getId() %>, -1)"
+      <a href="javascript:displayMenu('select_<%= SKIN %>fi<%= thisFile.getId() %>', 'menuFile', -1, <%= thisFile.getId() %>, -1,'<%= Project.isTrashed() %>')"
          onMouseOver="over(0, 'fi<%= thisFile.getId() %>')"
          onmouseout="out(0, 'fi<%= thisFile.getId() %>'); hideMenu('menuFile');"><img 
         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %>fi<%= thisFile.getId() %>" id="select_<%= SKIN %>fi<%= thisFile.getId() %>" align="absmiddle" border="0"></a>
@@ -160,7 +162,7 @@
             <%= thisFile.getImageTag("-23") %>&nbsp;
           </td>
           <td valign="top">
-            <a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>&folderId=<%= request.getParameter("folderId") %>"><%= toHtml(thisFile.getSubject()) %></a>
+            <a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>"><%= toHtml(thisFile.getSubject()) %></a>
           </td>
         </tr>
       </table>

@@ -16,18 +16,20 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+  response.setHeader("Expires", "-1");
 %>
 <!-- (C) 2000-2005 Dark Horse Ventures, LLC -->
 <html>
 <head>
 <title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label><%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <body bgcolor="#EEEEEE" LEFTMARGIN="0" MARGINWIDTH="0" TOPMARGIN="0" MARGINHEIGHT="0">

@@ -15,43 +15,38 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.sql.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.HtmlDialog;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.orders.base.*;
-import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.modules.admin.base.AccessTypeList;
-import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.modules.admin.base.Role;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.orders.beans.*;
-import org.aspcfs.controller.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.orders.base.Order;
+import org.aspcfs.modules.orders.base.OrderList;
+import org.aspcfs.modules.orders.base.OrderPaymentList;
+import org.aspcfs.modules.orders.beans.StatusBean;
+import org.aspcfs.modules.products.base.ProductOptionList;
+import org.aspcfs.modules.products.base.ProductOptionValuesList;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    April 23, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created April 23, 2004
  */
 public final class AccountOrders extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     /*
@@ -71,7 +66,8 @@ public final class AccountOrders extends CFSModule {
      *  return ("PermissionError");
      *  }
      */
-    PagedListInfo orderListInfo = this.getPagedListInfo(context, "OrderListInfo");
+    PagedListInfo orderListInfo = this.getPagedListInfo(
+        context, "OrderListInfo");
     orderListInfo.setLink("AccountOrders.do?command=View&orgId=" + orgid);
     Connection db = null;
     OrderList orderList = new OrderList();
@@ -86,11 +82,13 @@ public final class AccountOrders extends CFSModule {
       //orderList.setBuildTypes(false);
       orderList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_order_type");
       context.getRequest().setAttribute("typeSelect", typeSelect);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
 
     } catch (Exception errorMessage) {
@@ -106,10 +104,10 @@ public final class AccountOrders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     /*
@@ -136,23 +134,27 @@ public final class AccountOrders extends CFSModule {
 
       optionValuesList = new ProductOptionValuesList();
       optionValuesList.buildList(db);
-      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
-      
+      context.getRequest().setAttribute(
+          "productOptionValuesList", optionValuesList);
+
       thisOrganization = new Organization(db, newOrder.getOrgId());
 
       OrderPaymentList paymentList = new OrderPaymentList();
       paymentList.setOrderId(newOrder.getId());
       paymentList.buildList(db);
       context.getRequest().setAttribute("paymentList", paymentList);
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_order_type");
       context.getRequest().setAttribute("typeSelect", typeSelect);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
-      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+      LookupList paymentSelect = systemStatus.getLookupList(
+          db, "lookup_payment_status");
       context.getRequest().setAttribute("paymentSelect", paymentSelect);
-      
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -185,24 +187,27 @@ public final class AccountOrders extends CFSModule {
       newOrder = new Order();
       newOrder.setBuildProducts(true);
       newOrder.queryRecord(db, tempid);
- 
+
       optionList = new ProductOptionList();
       optionList.buildList(db);
       context.getRequest().setAttribute("productOptionList", optionList);
-      
+
       optionValuesList = new ProductOptionValuesList();
       optionValuesList.buildList(db);
-      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
-      
+      context.getRequest().setAttribute(
+          "productOptionValuesList", optionValuesList);
+
       OrderPaymentList paymentList = new OrderPaymentList();
       paymentList.setOrderId(newOrder.getId());
       paymentList.buildList(db);
       context.getRequest().setAttribute("paymentList", paymentList);
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_order_type");
       context.getRequest().setAttribute("typeSelect", typeSelect);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
 
       StatusBean statusBean = new StatusBean();
@@ -221,7 +226,7 @@ public final class AccountOrders extends CFSModule {
     context.getRequest().setAttribute("OrderDetails", newOrder);
     return ("ModifyStatusOK");
   }
-  
+
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
     try {
@@ -234,7 +239,7 @@ public final class AccountOrders extends CFSModule {
       newOrder.setBuildProducts(true);
       newOrder.queryRecord(db, tempid);
       newOrder.delete(db);
-      
+
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -281,22 +286,22 @@ public final class AccountOrders extends CFSModule {
 
       thisOrganization = new Organization(db, newOrder.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-      context.getRequest().setAttribute("OrderDetails", newOrder);
-      return ("SaveStatusOK");
+    context.getRequest().setAttribute("OrderDetails", newOrder);
+    return ("SaveStatusOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "ContactListInfo");

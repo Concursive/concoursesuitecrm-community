@@ -17,9 +17,7 @@ package com.zeroio.webdav;
 
 import com.zeroio.webdav.base.WebdavModule;
 import com.zeroio.webdav.base.WebdavModuleList;
-import com.zeroio.webdav.context.BaseWebdavContext;
-import com.zeroio.webdav.context.CalendarContext;
-import com.zeroio.webdav.context.ModuleContext;
+import com.zeroio.webdav.context.*;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.PasswordHash;
@@ -32,11 +30,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    November 2, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created November 2, 2004
  */
 public class WebdavManager {
 
@@ -49,9 +47,9 @@ public class WebdavManager {
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the WebdavManager object
+   * Sets the fileLibraryPath attribute of the WebdavManager object
    *
-   * @param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -59,9 +57,9 @@ public class WebdavManager {
 
 
   /**
-   *  Sets the modulesBuilt attribute of the WebdavManager object
+   * Sets the modulesBuilt attribute of the WebdavManager object
    *
-   * @param  tmp  The new modulesBuilt value
+   * @param tmp The new modulesBuilt value
    */
   public void setModulesBuilt(boolean tmp) {
     this.modulesBuilt = tmp;
@@ -69,9 +67,9 @@ public class WebdavManager {
 
 
   /**
-   *  Sets the modulesBuilt attribute of the WebdavManager object
+   * Sets the modulesBuilt attribute of the WebdavManager object
    *
-   * @param  tmp  The new modulesBuilt value
+   * @param tmp The new modulesBuilt value
    */
   public void setModulesBuilt(String tmp) {
     this.modulesBuilt = DatabaseUtils.parseBoolean(tmp);
@@ -79,9 +77,9 @@ public class WebdavManager {
 
 
   /**
-   *  Sets the users attribute of the WebdavManager object
+   * Sets the users attribute of the WebdavManager object
    *
-   * @param  tmp  The new users value
+   * @param tmp The new users value
    */
   public void setUsers(HashMap tmp) {
     this.users = tmp;
@@ -89,9 +87,9 @@ public class WebdavManager {
 
 
   /**
-   *  Sets the moduleList attribute of the WebdavManager object
+   * Sets the moduleList attribute of the WebdavManager object
    *
-   * @param  tmp  The new moduleList value
+   * @param tmp The new moduleList value
    */
   public void setModuleList(WebdavModuleList tmp) {
     this.moduleList = tmp;
@@ -99,9 +97,9 @@ public class WebdavManager {
 
 
   /**
-   *  Gets the fileLibraryPath attribute of the WebdavManager object
+   * Gets the fileLibraryPath attribute of the WebdavManager object
    *
-   * @return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -109,9 +107,9 @@ public class WebdavManager {
 
 
   /**
-   *  Gets the modulesBuilt attribute of the WebdavManager object
+   * Gets the modulesBuilt attribute of the WebdavManager object
    *
-   * @return    The modulesBuilt value
+   * @return The modulesBuilt value
    */
   public boolean getModulesBuilt() {
     return modulesBuilt;
@@ -119,9 +117,9 @@ public class WebdavManager {
 
 
   /**
-   *  Gets the users attribute of the WebdavManager object
+   * Gets the users attribute of the WebdavManager object
    *
-   * @return    The users value
+   * @return The users value
    */
   public HashMap getUsers() {
     return users;
@@ -129,9 +127,9 @@ public class WebdavManager {
 
 
   /**
-   *  Gets the moduleList attribute of the WebdavManager object
+   * Gets the moduleList attribute of the WebdavManager object
    *
-   * @return    The moduleList value
+   * @return The moduleList value
    */
   public WebdavModuleList getModuleList() {
     return moduleList;
@@ -139,15 +137,16 @@ public class WebdavManager {
 
 
   /**
-   *  Constructor for the WebdavManager object
+   * Constructor for the WebdavManager object
    */
-  public WebdavManager() { }
+  public WebdavManager() {
+  }
 
 
   /**
-   *  Constructor for the WebdavManager object
+   * Constructor for the WebdavManager object
    *
-   * @param  fileLibraryPath  Description of the Parameter
+   * @param fileLibraryPath Description of the Parameter
    */
   public WebdavManager(String fileLibraryPath) {
     this.fileLibraryPath = fileLibraryPath;
@@ -155,11 +154,11 @@ public class WebdavManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  fileLibraryPath   Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param fileLibraryPath Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildModules(Connection db, String fileLibraryPath) throws SQLException {
     this.fileLibraryPath = fileLibraryPath;
@@ -172,23 +171,22 @@ public class WebdavManager {
   }
 
 
-
   /**
-   *  used by basic authentication scheme
+   * used by basic authentication scheme
    *
-   * @param  db                Description of the Parameter
-   * @param  username          Description of the Parameter
-   * @param  password          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param username Description of the Parameter
+   * @param password Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean allowUser(Connection db, String username, String password) throws SQLException {
     boolean status = false;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.role " +
-        "FROM access a, role r " +
+        "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.\"role\" " +
+        "FROM access a, \"role\" r " +
         "WHERE a.role_id = r.role_id " +
-        "AND lower(a.username) = ? " +
+        "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
         "AND a.enabled = ? ");
     pst.setString(1, username.toLowerCase());
     pst.setBoolean(2, true);
@@ -213,21 +211,21 @@ public class WebdavManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  username          Description of the Parameter
-   * @param  nonce             The feature to be added to the User attribute
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param username Description of the Parameter
+   * @param nonce    The feature to be added to the User attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean addUser(Connection db, String username, String nonce) throws SQLException {
     boolean status = false;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT a.expires, a.alias, a.user_id, a.role_id, a.webdav_password, r.role " +
-        "FROM access a, role r " +
+        "SELECT a.expires, a.alias, a.user_id, a.role_id, a.webdav_password, r.\"role\" " +
+        "FROM access a, \"role\" r " +
         "WHERE a.role_id = r.role_id " +
-        "AND lower(a.username) = ? " +
+        "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
         "AND a.enabled = ? ");
     pst.setString(1, username.toLowerCase());
     pst.setBoolean(2, true);
@@ -252,19 +250,19 @@ public class WebdavManager {
 
 
   /**
-   *  Gets the webdavPassword attribute of the WebdavManager object
+   * Gets the webdavPassword attribute of the WebdavManager object
    *
-   * @param  db                Description of the Parameter
-   * @param  username          Description of the Parameter
-   * @return                   The webdavPassword value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param username Description of the Parameter
+   * @return The webdavPassword value
+   * @throws SQLException Description of the Exception
    */
   public String getWebdavPassword(Connection db, String username) throws SQLException {
     String password = "";
     PreparedStatement pst = db.prepareStatement(
         "SELECT webdav_password " +
         "FROM access " +
-        "WHERE lower(username) = ? " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
         "AND enabled = ? ");
     pst.setString(1, username.toLowerCase());
     pst.setBoolean(2, true);
@@ -279,10 +277,10 @@ public class WebdavManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  username  Description of the Parameter
-   * @return           Description of the Return Value
+   * @param username Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasUser(String username) {
     return (users.containsKey(username.toLowerCase()));
@@ -290,10 +288,10 @@ public class WebdavManager {
 
 
   /**
-   *  Gets the user attribute of the WebdavManager object
+   * Gets the user attribute of the WebdavManager object
    *
-   * @param  username  Description of the Parameter
-   * @return           The user value
+   * @param username Description of the Parameter
+   * @return The user value
    */
   public WebdavUser getUser(String username) {
     return ((WebdavUser) users.get(username.toLowerCase()));
@@ -301,9 +299,9 @@ public class WebdavManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  username  Description of the Parameter
+   * @param username Description of the Parameter
    */
   public void removeUser(String username) {
     if (hasUser(username)) {
@@ -313,19 +311,20 @@ public class WebdavManager {
 
 
   /**
-   *  Iterates through the cached top level webdav modules for this system and
-   *  determines if the user has permission to view this module. If so the
-   *  modules list of bindings are populated
+   * Iterates through the cached top level webdav modules for this system and
+   * determines if the user has permission to view this module. If so the
+   * modules list of bindings are populated
    *
-   * @param  db                Description of the Parameter
-   * @param  thisSystem        Description of the Parameter
-   * @param  username          Description of the Parameter
-   * @return                   The resources value
-   * @exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @param username   Description of the Parameter
+   * @return The resources value
+   * @throws SQLException Description of the Exception
    */
   public ModuleContext getResources(Connection db, SystemStatus thisSystem, String username) throws SQLException {
     WebdavUser user = this.getUser(username);
-    BaseWebdavContext context = new BaseWebdavContext(user.getUserId(), fileLibraryPath);
+    BaseWebdavContext context = new BaseWebdavContext(
+        user.getUserId(), fileLibraryPath);
     Iterator i = moduleList.keySet().iterator();
     while (i.hasNext()) {
       String moduleName = (String) i.next();
@@ -333,30 +332,69 @@ public class WebdavManager {
       String permission = module.getContext().getPermission();
       if (hasPermission(thisSystem, user.getUserId(), permission)) {
         context.getBindings().put(moduleName, module.getContext());
-        context.buildProperties(moduleName, module.getEntered(), module.getModified(), new Integer(0));
+        context.buildProperties(
+            moduleName, module.getEntered(), module.getModified(), new Integer(
+                0));
       }
     }
-    //TODO: Remove this hardcoding
-    BaseWebdavContext synchronization = new BaseWebdavContext();
-    CalendarContext calendar = new CalendarContext();
+    BaseWebdavContext synchronization = new BaseWebdavContext(
+        "Synchronization");
+    CalendarContext calendar = new CalendarContext("Calendars");
+    ContactContext contacts = new ContactContext("Contacts");
+
     synchronization.getBindings().put("Calendars", calendar);
-    synchronization.buildProperties("Calendars", new java.sql.Timestamp(new java.util.Date().getTime()), new java.sql.Timestamp(new java.util.Date().getTime()), new Integer(0));
+    synchronization.getBindings().put("Contacts", contacts);
+
+    synchronization.buildProperties(
+        "Calendars", new java.sql.Timestamp(new java.util.Date().getTime()), new java.sql.Timestamp(
+            new java.util.Date().getTime()), new Integer(0));
+    synchronization.buildProperties(
+        "Contacts", new java.sql.Timestamp(new java.util.Date().getTime()), new java.sql.Timestamp(
+            new java.util.Date().getTime()), new Integer(0));
+
     context.getBindings().put("Synchronization", synchronization);
-    context.buildProperties("Synchronization", new java.sql.Timestamp(new java.util.Date().getTime()), new java.sql.Timestamp(new java.util.Date().getTime()), new Integer(0));
+    context.buildProperties(
+        "Synchronization", new java.sql.Timestamp(
+            new java.util.Date().getTime()), new java.sql.Timestamp(
+                new java.util.Date().getTime()), new Integer(0));
     return context;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  permission  Description of the Parameter
-   * @param  thisSystem  Description of the Parameter
-   * @param  userId      Description of the Parameter
-   * @return             Description of the Return Value
+   * @param permission Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @param userId     Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasPermission(SystemStatus thisSystem, int userId, String permission) {
     return thisSystem.hasPermission(userId, permission);
+  }
+
+
+  /**
+   * Gets the topLevelModule attribute of the WebdavManager object
+   *
+   * @param object Description of the Parameter
+   * @return The topLevelModule value
+   */
+  public boolean isTopLevelModule(Object object) {
+    if (object instanceof ItemContext) {
+      return true;
+    }
+
+    Iterator i = moduleList.keySet().iterator();
+    while (i.hasNext()) {
+      String moduleName = (String) i.next();
+      WebdavModule module = (WebdavModule) moduleList.get(moduleName);
+      String className = module.getClassName();
+      if (className.equals(object.getClass().getName())) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

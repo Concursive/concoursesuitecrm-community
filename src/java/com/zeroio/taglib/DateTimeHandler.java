@@ -27,13 +27,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- *  This Class formats the specified date/time with the timezone for the current
- *  UserBean session.
+ * This Class formats the specified date/time with the timezone for the current
+ * UserBean session.
  *
- *@author     matt rajkowski
- *@created    September 3, 2003
- *@version    $Id: DateTimeHandler.java,v 1.2 2003/09/26 18:49:25 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: DateTimeHandler.java,v 1.2 2003/09/26 18:49:25 mrajkowski Exp
+ *          $
+ * @created September 3, 2003
  */
 public class DateTimeHandler extends TagSupport {
 
@@ -50,9 +50,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  The date to be formatted
+   * The date to be formatted
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(Timestamp tmp) {
     this.timestamp = tmp;
@@ -60,9 +60,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  The date to be formatted
+   * The date to be formatted
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(java.util.Date tmp) {
     this.timestamp = new java.sql.Timestamp(tmp.getTime());
@@ -70,9 +70,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the timestamp attribute of the DateTimeHandler object
+   * Sets the timestamp attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(java.sql.Date tmp) {
     this.timestamp = new java.sql.Timestamp(tmp.getTime());
@@ -80,9 +80,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the timestamp attribute of the DateTimeHandler object
+   * Sets the timestamp attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(java.util.Calendar tmp) {
     this.timestamp = new java.sql.Timestamp(tmp.getTimeInMillis());
@@ -90,9 +90,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the timeZone attribute of the DateTimeHandler object
+   * Sets the timeZone attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new timeZone value
+   * @param tmp The new timeZone value
    */
   public void setTimeZone(String tmp) {
     timeZone = tmp;
@@ -100,9 +100,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  The date to be formatted
+   * The date to be formatted
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(String tmp) {
     this.timestamp = DatabaseUtils.parseTimestamp(tmp);
@@ -110,9 +110,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Default in case the date is empty/null
+   * Default in case the date is empty/null
    *
-   *@param  tmp  The new default value
+   * @param tmp The new default value
    */
   public void setDefault(String tmp) {
     this.defaultValue = tmp;
@@ -120,9 +120,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Gets the date only without the time
+   * Gets the date only without the time
    *
-   *@param  dateOnly  The new dateOnly value
+   * @param dateOnly The new dateOnly value
    */
   public void setDateOnly(boolean dateOnly) {
     this.dateOnly = dateOnly;
@@ -130,9 +130,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Gets the date without the time
+   * Gets the date without the time
    *
-   *@param  dateOnly  The new dateOnly value
+   * @param dateOnly The new dateOnly value
    */
   public void setDateOnly(String dateOnly) {
     this.dateOnly = "true".equals(dateOnly);
@@ -140,9 +140,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the timeOnly attribute of the DateTimeHandler object
+   * Sets the timeOnly attribute of the DateTimeHandler object
    *
-   *@param  timeOnly  The new timeOnly value
+   * @param timeOnly The new timeOnly value
    */
   public void setTimeOnly(boolean timeOnly) {
     this.timeOnly = timeOnly;
@@ -150,9 +150,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the timeOnly attribute of the DateTimeHandler object
+   * Sets the timeOnly attribute of the DateTimeHandler object
    *
-   *@param  timeOnly  The new timeOnly value
+   * @param timeOnly The new timeOnly value
    */
   public void setTimeOnly(String timeOnly) {
     this.timeOnly = "true".equals(timeOnly);
@@ -160,9 +160,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets a pattern
+   * Sets a pattern
    *
-   *@param  pattern  The new pattern value
+   * @param pattern The new pattern value
    */
   public void setPattern(String pattern) {
     this.pattern = pattern;
@@ -170,9 +170,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets a time format
+   * Sets a time format
    *
-   *@param  timeFormat  The new timeFormat value
+   * @param timeFormat The new timeFormat value
    */
   public void setTimeFormat(int timeFormat) {
     this.timeFormat = timeFormat;
@@ -180,9 +180,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets a time format
+   * Sets a time format
    *
-   *@param  timeFormat  The new timeFormat value
+   * @param timeFormat The new timeFormat value
    */
   public void setTimeFormat(String timeFormat) {
     this.timeFormat = Integer.parseInt(timeFormat);
@@ -190,9 +190,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the date format
+   * Sets the date format
    *
-   *@param  dateFormat  The new dateFormat value
+   * @param dateFormat The new dateFormat value
    */
   public void setDateFormat(int dateFormat) {
     this.dateFormat = dateFormat;
@@ -200,9 +200,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the date format
+   * Sets the date format
    *
-   *@param  dateFormat  The new dateFormat value
+   * @param dateFormat The new dateFormat value
    */
   public void setDateFormat(String dateFormat) {
     this.dateFormat = Integer.parseInt(dateFormat);
@@ -210,9 +210,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the showTimeZone attribute of the DateTimeHandler object
+   * Sets the showTimeZone attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new showTimeZone value
+   * @param tmp The new showTimeZone value
    */
   public void setShowTimeZone(boolean tmp) {
     this.showTimeZone = tmp;
@@ -220,9 +220,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the showTimeZone attribute of the DateTimeHandler object
+   * Sets the showTimeZone attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new showTimeZone value
+   * @param tmp The new showTimeZone value
    */
   public void setShowTimeZone(String tmp) {
     this.showTimeZone = DatabaseUtils.parseBoolean(tmp);
@@ -230,9 +230,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the userTimeZone attribute of the DateTimeHandler object
+   * Sets the userTimeZone attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new userTimeZone value
+   * @param tmp The new userTimeZone value
    */
   public void setUserTimeZone(boolean tmp) {
     this.userTimeZone = tmp;
@@ -240,9 +240,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Sets the userTimeZone attribute of the DateTimeHandler object
+   * Sets the userTimeZone attribute of the DateTimeHandler object
    *
-   *@param  tmp  The new userTimeZone value
+   * @param tmp The new userTimeZone value
    */
   public void setUserTimeZone(String tmp) {
     this.userTimeZone = DatabaseUtils.parseBoolean(tmp);
@@ -250,17 +250,18 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
       if (timestamp != null && !"".equals(timestamp)) {
         Locale locale = null;
         // Retrieve the user's timezone from their session
-        UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+        UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
+            "User");
         if (thisUser != null) {
           if (userTimeZone) {
             if (timeZone == null) {
@@ -293,28 +294,35 @@ public class DateTimeHandler extends TagSupport {
         } else {
           if (dateOnly) {
             if ((showTimeZone) && (timeZone != null)) {
-              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
+              formatter.applyPattern(
+                  DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
             } else {
-              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
+              formatter.applyPattern(
+                  DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
             }
           } else if (timeOnly) {
             if ((showTimeZone) && (timeZone != null)) {
-              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
+              formatter.applyPattern(
+                  DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
             } else {
-              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
+              formatter.applyPattern(
+                  DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
             }
           } else {
             SimpleDateFormat dateFormatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
                 dateFormat, locale);
-            dateFormatter.applyPattern(DateUtils.get4DigitYearDateFormat(dateFormatter.toPattern()));
+            dateFormatter.applyPattern(
+                DateUtils.get4DigitYearDateFormat(dateFormatter.toPattern()));
 
             SimpleDateFormat timeFormatter = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
                 timeFormat, locale);
 
             if ((showTimeZone) && (timeZone != null)) {
-              formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern() + " z");
+              formatter.applyPattern(
+                  dateFormatter.toPattern() + " " + timeFormatter.toPattern() + " z");
             } else {
-              formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern());
+              formatter.applyPattern(
+                  dateFormatter.toPattern() + " " + timeFormatter.toPattern());
             }
           }
         }
@@ -335,9 +343,9 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

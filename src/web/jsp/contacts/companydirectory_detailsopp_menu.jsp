@@ -23,33 +23,37 @@
   var thisCompId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, headerId, compId, editPermission, deletePermission) {
+  function displayMenu(loc, id, contactId, headerId, compId, editPermission, deletePermission, trashed) {
     thisContactId = contactId;
     thisHeaderId = headerId;
     thisCompId = compId;
-     updateMenu(editPermission, deletePermission);
+    updateMenu(editPermission, deletePermission, trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Update menu for this Contact based on permissions
-  function updateMenu(hasEditPermission, hasDeletePermission){
-    if(hasEditPermission == 0){
+  function updateMenu(hasEditPermission, hasDeletePermission, trashed ){
+    if (trashed == 'true'){
       hideSpan('menuEdit');
-    }else{
-      showSpan('menuEdit');
-    }
-    
-    if(hasDeletePermission == 0){
       hideSpan('menuDelete');
-    }else{
-      showSpan('menuDelete');
+    } else {
+      if(hasEditPermission == 0){
+        hideSpan('menuEdit');
+      }else{
+        showSpan('menuEdit');
+      }
+      if(hasDeletePermission == 0){
+        hideSpan('menuDelete');
+      }else{
+        showSpan('menuDelete');
+      }
     }
   }
-  
+
   //Menu link functions
   function details() {
     window.location.href='ExternalContactsOppComponents.do?command=DetailsComponent&contactId=' + thisContactId +  '&id=' + thisCompId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';

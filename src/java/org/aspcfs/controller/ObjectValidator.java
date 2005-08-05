@@ -12,9 +12,9 @@ import org.aspcfs.modules.base.CustomField;
 import org.aspcfs.modules.base.CustomFieldCategory;
 import org.aspcfs.modules.base.CustomFieldGroup;
 import org.aspcfs.modules.base.Import;
+import org.aspcfs.modules.communications.base.InstantCampaign;
 import org.aspcfs.modules.communications.base.Message;
 import org.aspcfs.modules.communications.base.Recipient;
-import org.aspcfs.modules.communications.base.InstantCampaign;
 import org.aspcfs.modules.communications.base.SurveyQuestion;
 import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -43,6 +43,8 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.StringUtils;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -50,18 +52,15 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 3, 2004
- *@version    $Id: ObjectValidator.java,v 1.1.2.3 2004/09/08 16:37:11 partha Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ObjectValidator.java,v 1.1.2.3 2004/09/08 16:37:11 partha Exp
+ *          $
+ * @created September 3, 2004
  */
 public class ObjectValidator {
 
@@ -72,20 +71,22 @@ public class ObjectValidator {
   private static int INVALID_NUMBER = 2004091001;
   private static int INVALID_EMAIL = 2004091002;
   private static int INVALID_NOT_REQUIRED_DATE = 2004091003;
+  private static int INVALID_EMAIL_NOT_REQUIRED = 2005060801;
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  systemStatus      Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  object            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param systemStatus Description of the Parameter
+   * @param db           Description of the Parameter
+   * @param object       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean validate(SystemStatus systemStatus, Connection db, Object object) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("ObjectValidator-> Checking object: " + object.getClass().getName());
+      System.out.println(
+          "ObjectValidator-> Checking object: " + object.getClass().getName());
     }
     // TODO: use required fields and warnings from systemStatus; this might
     //       be a list of ValidationTasks that perform complex tasks
@@ -93,14 +94,17 @@ public class ObjectValidator {
     // NOTE: For now, just code the validation tasks in
 
     // Organization
-    if (object.getClass().getName().equals("org.aspcfs.modules.accounts.base.Organization")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.accounts.base.Organization")) {
       Organization organization = (Organization) object;
       if (organization.getPrimaryContact() != null) {
-        if (organization.getNameLast() == null || "".equals(organization.getNameLast().trim())) {
+        if (organization.getNameLast() == null || "".equals(
+            organization.getNameLast().trim())) {
           addError(systemStatus, object, "nameLast", REQUIRED_FIELD);
         }
       } else {
-        if (organization.getName() == null || "".equals(organization.getName().trim())) {
+        if (organization.getName() == null || "".equals(
+            organization.getName().trim())) {
           addError(systemStatus, object, "name", REQUIRED_FIELD);
         }
       }
@@ -108,14 +112,18 @@ public class ObjectValidator {
     }
 
     // Contact
-    if (object.getClass().getName().equals("org.aspcfs.modules.contacts.base.Contact")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.contacts.base.Contact")) {
       Contact thisContact = (Contact) object;
       // Check for either last name or company
-      if (thisContact.getNameLast() == null || thisContact.getNameLast().trim().equals("")) {
+      if (thisContact.getNameLast() == null || thisContact.getNameLast().trim().equals(
+          "")) {
         if (thisContact.getOrgId() == -1) {
-          if (thisContact.getCompany() == null || thisContact.getCompanyOnly().trim().equals("")) {
+          if (thisContact.getCompany() == null || thisContact.getCompanyOnly().trim().equals(
+              "")) {
             addError(systemStatus, object, "nameLast", REQUIRED_FIELD);
-            addError(systemStatus, object, "lastCompany", "object.validation.contact.lastCompanyRequired");
+            addError(
+                systemStatus, object, "lastCompany", "object.validation.contact.lastCompanyRequired");
           }
         } else {
           addError(systemStatus, object, "nameLast", REQUIRED_FIELD);
@@ -126,11 +134,13 @@ public class ObjectValidator {
         AccessType thisType = new AccessType(db, thisContact.getAccessType());
         //all account contacts are public
         if (thisContact.getOrgId() > 0 && thisType.getRuleId() != AccessType.PUBLIC) {
-          addError(systemStatus, object, "accountAccess", PUBLIC_ACCESS_REQUIRED);
+          addError(
+              systemStatus, object, "accountAccess", PUBLIC_ACCESS_REQUIRED);
         }
         //personal contacts should be owned by the user who enters it i.e they cannot be reassigned
         if (thisType.getRuleId() == AccessType.PERSONAL && thisContact.getOwner() != thisContact.getEnteredBy()) {
-          addError(systemStatus, object, "accessReassign", "object.validation.OwnerMustBeEnteredBy");
+          addError(
+              systemStatus, object, "accessReassign", "object.validation.OwnerMustBeEnteredBy");
         }
       } else {
         addError(systemStatus, object, "access", REQUIRED_FIELD);
@@ -138,97 +148,126 @@ public class ObjectValidator {
     }
 
     //  Ticket
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.Ticket")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.Ticket")) {
       Ticket thisTicket = (Ticket) object;
-      if (thisTicket.getProblem() == null || thisTicket.getProblem().trim().equals("")) {
+      if (thisTicket.getProblem() == null || thisTicket.getProblem().trim().equals(
+          "")) {
         addError(systemStatus, object, "problem", REQUIRED_FIELD);
       }
-      if (thisTicket.getCloseIt() == true && (thisTicket.getSolution() == null || thisTicket.getSolution().trim().equals(""))) {
-        addError(systemStatus, object, "solution", "object.validation.ticket.solutionRequired");
+      if (thisTicket.getCloseIt() == true && (thisTicket.getSolution() == null || thisTicket.getSolution().trim().equals(
+          ""))) {
+        addError(
+            systemStatus, object, "solution", "object.validation.ticket.solutionRequired");
       }
       if (thisTicket.getContactId() == -1) {
-        addError(systemStatus, object, "contactId", "object.validation.ticket.contactRequired");
+        addError(
+            systemStatus, object, "contactId", "object.validation.ticket.contactRequired");
       }
       if (thisTicket.getOrgId() == -1) {
-        addError(systemStatus, object, "orgId", "object.validation.ticket.organizationRequired");
+        addError(
+            systemStatus, object, "orgId", "object.validation.ticket.organizationRequired");
       }
       // If ticket is being closed, check if resolution date is before assignmented date
       if (thisTicket.getEstimatedResolutionDate() != null && thisTicket.getAssignedDate() != null) {
-        if (thisTicket.getEstimatedResolutionDate().before(thisTicket.getAssignedDate())) {
-          addError(systemStatus, object, "estimatedResolutionDate", "object.validation.ticket.estResolutionBeforeAssignment");
+        if (thisTicket.getEstimatedResolutionDate().before(
+            thisTicket.getAssignedDate())) {
+          addError(
+              systemStatus, object, "estimatedResolutionDate", "object.validation.ticket.estResolutionBeforeAssignment");
         }
       }
     }
 
     //  TicketLog
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketLog")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketLog")) {
       TicketLog thisTicketLog = (TicketLog) object;
-      if (thisTicketLog.getTicketId() == -1 || (thisTicketLog.getEntryText() == null || thisTicketLog.getEntryText().trim().equals("")) || thisTicketLog.getEnteredBy() == -1 || thisTicketLog.getModifiedBy() == -1) {
+      if (thisTicketLog.getTicketId() == -1 || (thisTicketLog.getEntryText() == null || thisTicketLog.getEntryText().trim().equals(
+          "")) || thisTicketLog.getEnteredBy() == -1 || thisTicketLog.getModifiedBy() == -1) {
         return false;
       }
     }
 
     //  TicketActivityLog
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketActivityLog")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketActivityLog")) {
       TicketActivityLog thisLog = (TicketActivityLog) object;
-      if (thisLog.getFollowUpRequired() || (thisLog.getAlertDate() != null && !"".equals(thisLog.getAlertDate())) ||
-          (thisLog.getFollowUpDescription() != null && !"".equals(thisLog.getFollowUpDescription()))) {
+      if (thisLog.getFollowUpRequired() || (thisLog.getAlertDate() != null && !"".equals(
+          thisLog.getAlertDate())) ||
+          (thisLog.getFollowUpDescription() != null && !"".equals(
+              thisLog.getFollowUpDescription()))) {
         if (!thisLog.getFollowUpRequired()) {
           addError(systemStatus, object, "followUpRequired", REQUIRED_FIELD);
         }
         checkError(systemStatus, object, "alertDate", INVALID_DATE);
-        checkError(systemStatus, object, "followUpDescription", REQUIRED_FIELD);
-      } else if (!thisLog.getFollowUpRequired() && (thisLog.getAlertDate() == null || "".equals(thisLog.getAlertDate())) &&
-          (thisLog.getFollowUpDescription() == null || "".equals(thisLog.getFollowUpDescription()))) {
+        checkError(
+            systemStatus, object, "followUpDescription", REQUIRED_FIELD);
+      } else if (!thisLog.getFollowUpRequired() && (thisLog.getAlertDate() == null || "".equals(
+          thisLog.getAlertDate())) &&
+          (thisLog.getFollowUpDescription() == null || "".equals(
+              thisLog.getFollowUpDescription()))) {
         if (thisLog.getTicketPerDayDescriptionList() == null || thisLog.getTicketPerDayDescriptionList().size() == 0) {
-          addError(systemStatus, object, "action", "object.validation.actionError.blankFormCanNotBeSaved");
+          addError(
+              systemStatus, object, "action", "object.validation.actionError.blankFormCanNotBeSaved");
         }
       }
       checkWarning(systemStatus, object, "alertDate", IS_BEFORE_TODAY);
     }
 
     //  OpportunityHeader
-    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.base.OpportunityHeader")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.pipeline.base.OpportunityHeader")) {
       OpportunityHeader oppHeader = (OpportunityHeader) object;
 
-      if (oppHeader.getDescription() == null || "".equals(oppHeader.getDescription().trim())) {
+      if (oppHeader.getDescription() == null || "".equals(
+          oppHeader.getDescription().trim())) {
         addError(systemStatus, object, "description", REQUIRED_FIELD);
       }
       if (oppHeader.getContactLink() == -1 && oppHeader.getAccountLink() == -1) {
-        addError(systemStatus, object, "acctContact", "object.validation.opportunity.accountContactRequired");
+        addError(
+            systemStatus, object, "acctContact", "object.validation.opportunity.accountContactRequired");
       }
     }
 
     //  OpportunityComponent
-    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.base.OpportunityComponent")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.pipeline.base.OpportunityComponent")) {
       OpportunityComponent oppComponent = (OpportunityComponent) object;
 
       User owner = null;
       if (oppComponent.getOwner() != -1 && systemStatus != null) {
         owner = systemStatus.getUser(oppComponent.getOwner());
       }
-      if (owner != null && owner.getExpires() != null && owner.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
-        addWarning(systemStatus, object, "owner", "object.validation.expiredUser");
+      if (owner != null && owner.getExpires() != null && owner.getExpires().before(
+          new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
+        addWarning(
+            systemStatus, object, "owner", "object.validation.expiredUser");
       }
-      if ( owner != null && !owner.getEnabled()) {
-        addWarning(systemStatus, object, "owner", "object.validation.disabledUser");
+      if (owner != null && !owner.getEnabled()) {
+        addWarning(
+            systemStatus, object, "owner", "object.validation.disabledUser");
       }
-      if (oppComponent.getDescription() == null || "".equals(oppComponent.getDescription().trim())) {
+      if (oppComponent.getDescription() == null || "".equals(
+          oppComponent.getDescription().trim())) {
         addError(systemStatus, object, "componentDescription", REQUIRED_FIELD);
       }
       if (oppComponent.getCloseProb() == 0) {
         addError(systemStatus, object, "closeProb", REQUIRED_FIELD);
       } else {
         if (oppComponent.getCloseProb() > 1.0) {
-          addError(systemStatus, object, "closeProb", "object.validation.opportunityComponent.closeProbNotGTOneHundred");
+          addError(
+              systemStatus, object, "closeProb", "object.validation.opportunityComponent.closeProbNotGTOneHundred");
         } else if (oppComponent.getCloseProb() < 0) {
-          addError(systemStatus, object, "closeProb", "object.validation.opportunityComponent.closeProbNotLTZero");
+          addError(
+              systemStatus, object, "closeProb", "object.validation.opportunityComponent.closeProbNotLTZero");
         }
       }
       if (oppComponent.getLow() > oppComponent.getHigh()) {
-        addError(systemStatus, object, "low", "object.validation.opportunityComponent.lowNotGTHigh");
+        addError(
+            systemStatus, object, "low", "object.validation.opportunityComponent.lowNotGTHigh");
       }
-      if (oppComponent.getCloseDate() == null || oppComponent.getCloseDateString().trim().equals("")) {
+      if (oppComponent.getCloseDate() == null || oppComponent.getCloseDateString().trim().equals(
+          "")) {
         addError(systemStatus, object, "closeDate", REQUIRED_FIELD);
       }
       if (oppComponent.getGuess() == 0) {
@@ -238,11 +277,13 @@ public class ObjectValidator {
         addError(systemStatus, object, "terms", REQUIRED_FIELD);
       } else {
         if (oppComponent.getTerms() < 0) {
-          addError(systemStatus, object, "terms", "object.validation.opportunityComponent.termsNotLTZero");
+          addError(
+              systemStatus, object, "terms", "object.validation.opportunityComponent.termsNotLTZero");
         }
       }
       if (oppComponent.getUnits() == null) {
-        addError(systemStatus, object, "terms", "object.validation.opportunityComponent.unitsNotNull");
+        addError(
+            systemStatus, object, "terms", "object.validation.opportunityComponent.unitsNotNull");
       }
       if (oppComponent.getType() == null) {
         addError(systemStatus, object, "terms", REQUIRED_FIELD);
@@ -252,30 +293,37 @@ public class ObjectValidator {
     }
 
     //  OpportunityReport
-    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.base.OpportunityReport")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.pipeline.base.OpportunityReport")) {
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
     }
 
     //  Calls
-    if (object.getClass().getName().equals("org.aspcfs.modules.contacts.base.Call")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.contacts.base.Call")) {
       Call call = (Call) object;
       User callOwner = null;
       if (call.getOwner() != -1 && systemStatus != null) {
         callOwner = systemStatus.getUser(call.getOwner());
       }
       if (callOwner != null && !callOwner.getEnabled()) {
-        addWarning(systemStatus, object, "owner", "object.validation.disabledUser");
+        addWarning(
+            systemStatus, object, "owner", "object.validation.disabledUser");
       }
-      if (callOwner != null && callOwner.getExpires() != null && callOwner.getExpires().after(new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
-        addWarning(systemStatus, object, "owner", "object.validation.expiredUser");
+      if (callOwner != null && callOwner.getExpires() != null && callOwner.getExpires().after(
+          new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
+        addWarning(
+            systemStatus, object, "owner", "object.validation.expiredUser");
       }
 
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       if (call.getContactId() == -1 && call.getOrgId() == -1 && call.getOppHeaderId() == -1) {
-        addError(systemStatus, object, "link", "object.validation.call.notAssociated");
+        addError(
+            systemStatus, object, "link", "object.validation.call.notAssociated");
       }
       if (call.getLength() < 0) {
-        addError(systemStatus, object, "length", "object.validation.call.lengthNotLTZero");
+        addError(
+            systemStatus, object, "length", "object.validation.call.lengthNotLTZero");
       }
       if (call.getResultId() == -1) {
         addError(systemStatus, object, "result", REQUIRED_FIELD);
@@ -323,9 +371,11 @@ public class ObjectValidator {
     }
 
     //  ServiceContract
-    if (object.getClass().getName().equals("org.aspcfs.modules.servicecontracts.base.ServiceContract")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.servicecontracts.base.ServiceContract")) {
       ServiceContract thisContract = (ServiceContract) object;
-      checkError(systemStatus, object, "serviceContractNumber", REQUIRED_FIELD);
+      checkError(
+          systemStatus, object, "serviceContractNumber", REQUIRED_FIELD);
       boolean initialStartDateExists = true;
       boolean currentStartDateExists = true;
       boolean currentEndDateExists = true;
@@ -341,26 +391,32 @@ public class ObjectValidator {
       }
       if (currentEndDateExists) {
         if ((currentStartDateExists) &&
-            (thisContract.getCurrentEndDate().before(thisContract.getCurrentStartDate()))) {
-          addError(systemStatus, object, "currentEndDate", "object.validation.serviceContract.currentEndDateNotGTCurrentContractDate");
+            (thisContract.getCurrentEndDate().before(
+                thisContract.getCurrentStartDate()))) {
+          addError(
+              systemStatus, object, "currentEndDate", "object.validation.serviceContract.currentEndDateNotGTCurrentContractDate");
         }
         if ((initialStartDateExists) &&
             (!currentStartDateExists) &&
-            (thisContract.getCurrentEndDate().before(thisContract.getInitialStartDate()))) {
-          addError(systemStatus, object, "currentEndDate", "object.validation.serviceContract.currentEndDateNotLTInitialContractDate");
+            (thisContract.getCurrentEndDate().before(
+                thisContract.getInitialStartDate()))) {
+          addError(
+              systemStatus, object, "currentEndDate", "object.validation.serviceContract.currentEndDateNotLTInitialContractDate");
         }
       }
     }
 
     //  ServiceContractHours
-    if (object.getClass().getName().equals("org.aspcfs.modules.servicecontracts.base.ServiceContractHours")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.servicecontracts.base.ServiceContractHours")) {
       ServiceContractHours thisContractHours = (ServiceContractHours) object;
       if (thisContractHours.getAdjustmentReason() == -1) {
         addError(systemStatus, object, "adjustmentReason", REQUIRED_FIELD);
       }
     }
     // Asset
-    if (object.getClass().getName().equals("org.aspcfs.modules.assets.base.Asset")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.assets.base.Asset")) {
       Asset asset = (Asset) object;
       checkError(systemStatus, object, "serialNumber", REQUIRED_FIELD);
       if (asset.getDateListed() == null) {
@@ -369,79 +425,86 @@ public class ObjectValidator {
     }
 
     //  TicketMaintenanceNotes
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketMaintenanceNote")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketMaintenanceNote")) {
       //TicketMaintenanceNote maintenanceNote = (TicketMaintenanceNote) object;
       checkError(systemStatus, object, "descriptionOfService", REQUIRED_FIELD);
     }
 
     //  TicketReplacementPart
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketReplacementPart")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketReplacementPart")) {
       TicketReplacementPart replacement = (TicketReplacementPart) object;
-      if ((replacement.getPartNumber() != null && !"".equals(replacement.getPartNumber()))) {
+      if ((replacement.getPartNumber() != null && !"".equals(
+          replacement.getPartNumber()))) {
         checkError(systemStatus, object, "partDescription", REQUIRED_FIELD);
       }
-      if (replacement.getPartDescription() != null && !"".equals(replacement.getPartDescription())) {
-        checkError(systemStatus, object, "partNumber", "partNumber", REQUIRED_FIELD);
+      if (replacement.getPartDescription() != null && !"".equals(
+          replacement.getPartDescription())) {
+        checkError(
+            systemStatus, object, "partNumber", "partNumber", REQUIRED_FIELD);
       }
     }
 
     //  Campaign
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.Campaign")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.Campaign")) {
       //Campaign campaign = (Campaign) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
     //  InstantCampaign
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.InstantCampaign")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.InstantCampaign")) {
 //      checkError(systemStatus, object, "name", REQUIRED_FIELD);
       InstantCampaign campaign = (InstantCampaign) object;
       if (campaign.getInstantMessage() != null) {
-        if (campaign.getInstantMessage().getMessageSubject() == null || campaign.getInstantMessage().getMessageSubject().trim().equals("")) {
-         addError(systemStatus, object, "messageSubject", REQUIRED_FIELD);
-        }
-  
-        if (campaign.getInstantMessage().getReplyTo() == null || campaign.getInstantMessage().getReplyTo().trim().equals("") ||
-            campaign.getInstantMessage().getReplyTo().indexOf("@") == -1 || campaign.getInstantMessage().getReplyTo().indexOf("@") == campaign.getInstantMessage().getReplyTo().length() - 1) {
-            addError(systemStatus, object, "replyTo", REQUIRED_FIELD);
-        }
+        checkError(
+            systemStatus, campaign.getInstantMessage(), "messageSubject", REQUIRED_FIELD);
+        checkError(
+            systemStatus, campaign.getInstantMessage(), "replyTo", INVALID_EMAIL);
       }
+      checkError(systemStatus, object, "cc", INVALID_EMAIL_NOT_REQUIRED);
+      checkError(systemStatus, object, "bcc", INVALID_EMAIL_NOT_REQUIRED);
     }
 
     //  SearchCriteriaList
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.SearchCriteriaList")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.SearchCriteriaList")) {
       //checkError(systemStatus, object, "groupName", REQUIRED_FIELD);
     }
 
-    
     //  SearchFormBean
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.beans.SearchFormBean")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.beans.SearchFormBean")) {
       checkError(systemStatus, object, "groupName", REQUIRED_FIELD);
       checkError(systemStatus, object, "searchCriteriaText", REQUIRED_FIELD);
     }
     
     //  Message
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.Message")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.Message")) {
       Message message = (Message) object;
       if ((message.getName() == null || message.getName().trim().equals("")) && !message.getDisableNameValidation()) {
         addError(systemStatus, object, "name", REQUIRED_FIELD);
       }
       checkError(systemStatus, object, "messageSubject", REQUIRED_FIELD);
-      if (message.getReplyTo() == null || message.getReplyTo().trim().equals("") ||
-          message.getReplyTo().indexOf("@") == -1 || message.getReplyTo().indexOf("@") == message.getReplyTo().length() - 1) {
-        addError(systemStatus, object, "replyTo", "object.validation.communications.fullEmailAddress");
-      }
+      checkError(systemStatus, object, "replyTo", INVALID_EMAIL);
     }
 
     //  Survey
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.Survey")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.Survey")) {
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
     //  SurveyQuestion
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.SurveyQuestion")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.SurveyQuestion")) {
       SurveyQuestion question = (SurveyQuestion) object;
       if (question.getType() == -1) {
-        addError(systemStatus, object, "action", "object.validation.formIncomplete");
+        addError(
+            systemStatus, object, "action", "object.validation.formIncomplete");
         addError(systemStatus, object, "type", REQUIRED_FIELD);
       }
       checkError(systemStatus, object, "questionText", REQUIRED_FIELD);
@@ -457,47 +520,56 @@ public class ObjectValidator {
       }
       if ((project.getEstimatedCloseDate() != null) && (project.getRequestDate() != null)) {
         if (project.getEstimatedCloseDate().before(project.getRequestDate())) {
-          addWarning(systemStatus, object, "estimatedCloseDate", "object.validation.project.estimatedCloseDateNotLTRequestDate");
+          addWarning(
+              systemStatus, object, "estimatedCloseDate", "object.validation.project.estimatedCloseDateNotLTRequestDate");
         }
       }
     }
 
     //  NewsArticle
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.NewsArticle")) {
+    if (object.getClass().getName().equals(
+        "com.zeroio.iteam.base.NewsArticle")) {
       com.zeroio.iteam.base.NewsArticle newsArticle = (com.zeroio.iteam.base.NewsArticle) object;
       if (newsArticle.getProjectId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.project.projectIdRequired");
+        addError(
+            systemStatus, object, "action", "object.validation.project.projectIdRequired");
       }
 
       if (newsArticle.getIntro() != null) {
         checkError(systemStatus, object, "subject", REQUIRED_FIELD);
-        if (newsArticle.getIntro() == null || newsArticle.getIntro().equals("") || newsArticle.getIntro().equals(" \r\n<br />\r\n ")) {
+        if (newsArticle.getIntro() == null || newsArticle.getIntro().equals(
+            "") || newsArticle.getIntro().equals(" \r\n<br />\r\n ")) {
           addError(systemStatus, object, "intro", REQUIRED_FIELD);
         }
         if ((newsArticle.getEndDate() != null) && (newsArticle.getStartDate() != null)) {
           if (newsArticle.getEndDate().before(newsArticle.getStartDate())) {
             // TODO: Should be archive date is earlier than start date
-            addWarning(systemStatus, object, "endDate", "object.validation.project.endDateNotLTStartDate");
+            addWarning(
+                systemStatus, object, "endDate", "object.validation.project.endDateNotLTStartDate");
           }
         }
       } else {
-        if (newsArticle.getMessage() == null || newsArticle.getMessage().equals("") || newsArticle.getMessage().equals(" \r\n<br />\r\n ")) {
+        if (newsArticle.getMessage() == null || newsArticle.getMessage().equals(
+            "") || newsArticle.getMessage().equals(" \r\n<br />\r\n ")) {
           addError(systemStatus, object, "message", REQUIRED_FIELD);
         }
       }
     }
 
     //  IssueCategory
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.IssueCategory")) {
+    if (object.getClass().getName().equals(
+        "com.zeroio.iteam.base.IssueCategory")) {
       IssueCategory category = (IssueCategory) object;
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       if (category.getProjectId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.project.projectIdRequired");
+        addError(
+            systemStatus, object, "action", "object.validation.project.projectIdRequired");
       }
     }
 
     //  Task
-    if (object.getClass().getName().equals("org.aspcfs.modules.tasks.base.Task")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.tasks.base.Task")) {
       Task thisTask = (Task) object;
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
       if (thisTask.getCategoryId() == -1 && thisTask.getOwner() == -1) {
@@ -505,13 +577,15 @@ public class ObjectValidator {
       }
       //If task is marked personal and the owner is different from the user entering the task, throw an error
       if (thisTask.getSharing() == 1 && thisTask.getOwner() != thisTask.getModifiedBy()) {
-        addError(systemStatus,  object, "sharing", "object.validation.task.ownerPersonal");
+        addError(
+            systemStatus, object, "sharing", "object.validation.task.ownerPersonal");
       }
       checkWarning(systemStatus, object, "dueDate", IS_BEFORE_TODAY);
     }
 
     //  TicketTask
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketTask")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketTask")) {
       TicketTask thisTask = (TicketTask) object;
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
       if (thisTask.getCategoryId() == -1 && thisTask.getOwner() == -1) {
@@ -521,7 +595,8 @@ public class ObjectValidator {
     }
 
     //  TaskCategory
-    if (object.getClass().getName().equals("org.aspcfs.modules.tasks.base.TaskCategory")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.tasks.base.TaskCategory")) {
       TaskCategory thisCategory = (TaskCategory) object;
       if ((thisCategory.getLinkModuleId() == -1) || (thisCategory.getLinkItemId() == -1)) {
         addError(systemStatus, object, "linkModuleId", REQUIRED_FIELD);
@@ -530,16 +605,19 @@ public class ObjectValidator {
     }
 
     //  Requirement
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.Requirement")) {
+    if (object.getClass().getName().equals(
+        "com.zeroio.iteam.base.Requirement")) {
       Requirement requirement = (Requirement) object;
       if (requirement.getProjectId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.project.projectIdRequired");
+        addError(
+            systemStatus, object, "action", "object.validation.project.projectIdRequired");
       }
       checkError(systemStatus, object, "shortDescription", REQUIRED_FIELD);
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
       if (requirement.getDeadline() != null && requirement.getStartDate() != null) {
         if (requirement.getDeadline().before(requirement.getStartDate())) {
-          addWarning(systemStatus, object, "deadline", "object.validation.project.requirements.deadlineNotLTStartDate");
+          addWarning(
+              systemStatus, object, "deadline", "object.validation.project.requirements.deadlineNotLTStartDate");
         }
       }
     }
@@ -548,7 +626,8 @@ public class ObjectValidator {
     if (object.getClass().getName().equals("com.zeroio.iteam.base.Assignment")) {
       Assignment assignment = (Assignment) object;
       if (assignment.getProjectId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.project.projectIdRequired");
+        addError(
+            systemStatus, object, "action", "object.validation.project.projectIdRequired");
       }
       checkError(systemStatus, object, "role", REQUIRED_FIELD);
       if (assignment.getStatusId() < 1) {
@@ -560,18 +639,22 @@ public class ObjectValidator {
     }
 
     //  AssignmentFolder
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.AssignmentFolder")) {
+    if (object.getClass().getName().equals(
+        "com.zeroio.iteam.base.AssignmentFolder")) {
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
     //  CFSNote
-    if (object.getClass().getName().equals("org.aspcfs.modules.mycfs.base.CFSNote")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.mycfs.base.CFSNote")) {
       checkError(systemStatus, object, "body", REQUIRED_FIELD);
-      checkError(systemStatus, object, "subject", "messageSubject", REQUIRED_FIELD);
+      checkError(
+          systemStatus, object, "subject", "messageSubject", REQUIRED_FIELD);
     }
 
     //  Revenue
-    if (object.getClass().getName().equals("org.aspcfs.modules.accounts.base.Revenue")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.accounts.base.Revenue")) {
       Revenue revenue = (Revenue) object;
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
       if (revenue.getAmount() == 0) {
@@ -580,51 +663,62 @@ public class ObjectValidator {
     }
 
     //  CustomFieldCategory
-    if (object.getClass().getName().equals("org.aspcfs.modules.base.CustomFieldCategory")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.base.CustomFieldCategory")) {
       CustomFieldCategory thisCategory = (CustomFieldCategory) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       if (thisCategory.getModuleId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.formDataMissing");
+        addError(
+            systemStatus, object, "action", "object.validation.formDataMissing");
       }
       //If this folder is being updated such that it can have only one record per link_item, then
       //make sure it previously does not have multiple records for any of the link_items
       if (thisCategory.getId() != -1 && !thisCategory.getAllowMultipleRecords()) {
         if (thisCategory.hasMultipleRecords(db)) {
-          addError(systemStatus, object, "allowMultipleRecords", "object.validation.customFieldCategory.hasMultipleRecords");
+          addError(
+              systemStatus, object, "allowMultipleRecords", "object.validation.customFieldCategory.hasMultipleRecords");
         }
       }
     }
 
     //  CustomFieldGroup
-    if (object.getClass().getName().equals("org.aspcfs.modules.base.CustomFieldGroup")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.base.CustomFieldGroup")) {
       CustomFieldGroup group = (CustomFieldGroup) object;
       if (group.getCategoryId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.formDataMissing");
+        addError(
+            systemStatus, object, "action", "object.validation.formDataMissing");
       }
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
     //  CustomField
-    if (object.getClass().getName().equals("org.aspcfs.modules.base.CustomField")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.base.CustomField")) {
       CustomField thisField = (CustomField) object;
 
       if (thisField.getGroupId() == -1) {
-        addError(systemStatus, object, "recordId", "object.validation.customField.groupIdNotPresent");
+        addError(
+            systemStatus, object, "recordId", "object.validation.customField.groupIdNotPresent");
       }
       if (thisField.getType() == -1) {
-        addError(systemStatus, object, "type", "object.validation.customField.typeNotPresent");
+        addError(
+            systemStatus, object, "type", "object.validation.customField.typeNotPresent");
       }
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       if (thisField.getLengthRequired()) {
         if (thisField.getParameter("maxlength").equals("")) {
-          addError(systemStatus, object, "maxLength", "object.validation.customField.maxLength");
+          addError(
+              systemStatus, object, "maxLength", "object.validation.customField.maxLength");
         } else {
           try {
             if (Integer.parseInt(thisField.getParameter("maxlength")) > 255) {
-              addError(systemStatus, object, "maxLength", "object.validation.customField.maxLengthTooHigh");
+              addError(
+                  systemStatus, object, "maxLength", "object.validation.customField.maxLengthTooHigh");
             }
           } catch (Exception e) {
-            addError(systemStatus, object, "maxLength", "object.validation.customField.maxLengthNumber");
+            addError(
+                systemStatus, object, "maxLength", "object.validation.customField.maxLengthNumber");
           }
         }
       }
@@ -638,95 +732,135 @@ public class ObjectValidator {
        */
       if (thisField.getValidateData()) {
         if (thisField.getRecordId() == -1) {
-          addError(systemStatus, object, "recordId", "object.validation.customField.recordIdNotPresent");
-          thisField.setError(systemStatus.getLabel("object.validation.customField.recordIdNotPresent"));
+          addError(
+              systemStatus, object, "recordId", "object.validation.customField.recordIdNotPresent");
+          thisField.setError(
+              systemStatus.getLabel(
+                  "object.validation.customField.recordIdNotPresent"));
         }
         if (thisField.getType() == -1) {
-          addError(systemStatus, object, "type", "object.validation.customField.typeNotPresent");
-          thisField.setError(systemStatus.getLabel("object.validation.customField.typeNotPresent"));
+          addError(
+              systemStatus, object, "type", "object.validation.customField.typeNotPresent");
+          thisField.setError(
+              systemStatus.getLabel(
+                  "object.validation.customField.typeNotPresent"));
         }
 
         //Required Fields
-        if (thisField.getRequired() && (thisField.getEnteredValue() == null || thisField.getEnteredValue().equals(""))) {
+        if (thisField.getRequired() && (thisField.getEnteredValue() == null || thisField.getEnteredValue().equals(
+            ""))) {
           addError(systemStatus, object, "enteredValue", REQUIRED_FIELD);
-          thisField.setError(systemStatus.getLabel("object.validation.required"));
+          thisField.setError(
+              systemStatus.getLabel("object.validation.required"));
         }
         if (thisField.getType() == CustomField.SELECT && thisField.getRequired() && thisField.getSelectedItemId() == -1) {
           addError(systemStatus, object, "selectedItemId", REQUIRED_FIELD);
-          thisField.setError(systemStatus.getLabel("object.validation.required"));
+          thisField.setError(
+              systemStatus.getLabel("object.validation.required"));
         }
 
         //Type mis-match
-        if (thisField.getEnteredValue() != null && !thisField.getEnteredValue().equals("")) {
+        if (thisField.getEnteredValue() != null && !thisField.getEnteredValue().equals(
+            "")) {
           if (thisField.getType() == CustomField.INTEGER) {
             try {
               int testNumber = Integer.parseInt(thisField.getEnteredValue());
               thisField.setEnteredNumber(testNumber);
               thisField.setEnteredDouble(Double.parseDouble("" + testNumber));
             } catch (Exception e) {
-              addError(systemStatus, object, "enteredValue", "object.validation.incorrectWholeNumberFormat");
-              thisField.setError(systemStatus.getLabel("object.validation.incorrectWholeNumberFormat"));
+              addError(
+                  systemStatus, object, "enteredValue", "object.validation.incorrectWholeNumberFormat");
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.incorrectWholeNumberFormat"));
             }
           }
 
           if (thisField.getType() == CustomField.FLOAT) {
             try {
-              double testNumber = Double.parseDouble(thisField.getEnteredValue());
+              double testNumber = Double.parseDouble(
+                  thisField.getEnteredValue());
               thisField.setEnteredDouble(testNumber);
             } catch (Exception e) {
               addError(systemStatus, object, "enteredValue", INVALID_NUMBER);
-              thisField.setError(systemStatus.getLabel("object.validation.incorrectNumberFormat"));
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.incorrectNumberFormat"));
             }
           }
 
           if (thisField.getType() == CustomField.PERCENT) {
             try {
-              double testNumber = Double.parseDouble(thisField.getEnteredValue());
+              double testNumber = Double.parseDouble(
+                  thisField.getEnteredValue());
               thisField.setEnteredDouble(testNumber);
             } catch (Exception e) {
               addError(systemStatus, object, "enteredValue", INVALID_NUMBER);
-              thisField.setError(systemStatus.getLabel("object.validation.incorrectNumberFormat"));
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.incorrectNumberFormat"));
             }
           }
 
           if (thisField.getType() == CustomField.CURRENCY) {
             try {
-              Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+              Locale locale = new Locale(
+                  System.getProperty("LANGUAGE"), System.getProperty(
+                      "COUNTRY"));
               NumberFormat nf = NumberFormat.getInstance(locale);
-              thisField.setEnteredDouble(nf.parse(thisField.getEnteredValue()).doubleValue());
+              thisField.setEnteredDouble(
+                  nf.parse(thisField.getEnteredValue()).doubleValue());
               Double tmpDouble = new Double(thisField.getEnteredDouble());
               thisField.setEnteredValue(tmpDouble.toString());
             } catch (Exception e) {
               addError(systemStatus, object, "enteredValue", INVALID_NUMBER);
-              thisField.setError(systemStatus.getLabel("object.validation.incorrectNumberFormat"));
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.incorrectNumberFormat"));
             }
           }
 
           if (thisField.getType() == CustomField.DATE) {
             try {
-              Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
-              DateFormat localeFormatter = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+              Locale locale = new Locale(
+                  System.getProperty("LANGUAGE"), System.getProperty(
+                      "COUNTRY"));
+              DateFormat localeFormatter = DateFormat.getDateInstance(
+                  DateFormat.SHORT, locale);
               localeFormatter.setLenient(false);
               localeFormatter.parse(thisField.getEnteredValue());
             } catch (java.text.ParseException e) {
               addError(systemStatus, object, "enteredValue", INVALID_DATE);
-              thisField.setError(systemStatus.getLabel("object.validation.incorrectDateFormat"));
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.incorrectDateFormat"));
             }
           }
 
           if (thisField.getType() == CustomField.EMAIL) {
+            /*
             if ((thisField.getEnteredValue().indexOf("@") < 1) ||
                 (thisField.getEnteredValue().indexOf(" ") > -1) ||
                 (thisField.getEnteredValue().indexOf(".") < 0)) {
               addError(systemStatus, object, "enteredValue", "object.validation.communications.fullEmailAddress");
               thisField.setError(systemStatus.getLabel("object.validation.communications.fullEmailAddress"));
             }
+            */
+            if (!checkError(
+                systemStatus, object, "enteredValue", INVALID_EMAIL_NOT_REQUIRED)) {
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.communications.fullEmailAddress"));
+            }
           }
 
           if (thisField.getType() == CustomField.URL) {
             if (thisField.getEnteredValue().indexOf(".") < 0) {
-              addError(systemStatus, object, "enteredValue", "object.validation.customField.incorrectUrlFormat");
-              thisField.setError(systemStatus.getLabel("object.validation.customField.incorrectUrlFormat"));
+              addError(
+                  systemStatus, object, "enteredValue", "object.validation.customField.incorrectUrlFormat");
+              thisField.setError(
+                  systemStatus.getLabel(
+                      "object.validation.customField.incorrectUrlFormat"));
             }
           }
         }
@@ -734,28 +868,33 @@ public class ObjectValidator {
     }
 
     //  Role
-    if (object.getClass().getName().equals("org.aspcfs.modules.admin.base.Role")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.admin.base.Role")) {
       Role role = (Role) object;
       checkError(systemStatus, object, "role", REQUIRED_FIELD);
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
       if (role.isDuplicate(db)) {
-        addError(systemStatus, object, "role", "object.validation.roleNameAlreadyInUse");
+        addError(
+            systemStatus, object, "role", "object.validation.roleNameAlreadyInUse");
       }
     }
 
     //  Viewpoint
-    if (object.getClass().getName().equals("org.aspcfs.modules.admin.base.Viewpoint")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.admin.base.Viewpoint")) {
       Viewpoint view = (Viewpoint) object;
       if (view.getVpUserId() == -1) {
         addError(systemStatus, object, "Contact", REQUIRED_FIELD);
       }
       if (view.getVpUserId() == view.getUserId()) {
-        addError(systemStatus, object, "Contact", "object.validation.ownViewpointNotAllowed");
+        addError(
+            systemStatus, object, "Contact", "object.validation.ownViewpointNotAllowed");
       }
     }
 
     //  RegistrationBean
-    if (object.getClass().getName().equals("org.aspcfs.modules.setup.base.RegistrationBean")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.setup.base.RegistrationBean")) {
       //RegistrationBean thisBean = (RegistrationBean) object;
       checkError(systemStatus, object, "profile", REQUIRED_FIELD);
       checkError(systemStatus, object, "nameFirst", REQUIRED_FIELD);
@@ -773,7 +912,8 @@ public class ObjectValidator {
     }
 
     //  FileItemVersion
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.FileItemVersion")) {
+    if (object.getClass().getName().equals(
+        "com.zeroio.iteam.base.FileItemVersion")) {
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       checkError(systemStatus, object, "filename", REQUIRED_FIELD);
     }
@@ -784,7 +924,8 @@ public class ObjectValidator {
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       checkError(systemStatus, object, "body", REQUIRED_FIELD);
       if (issue.getProjectId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.project.projectIdRequired");
+        addError(
+            systemStatus, object, "action", "object.validation.project.projectIdRequired");
       }
       if (issue.getCategoryId() == -1) {
         addError(systemStatus, object, "categoryId", REQUIRED_FIELD);
@@ -797,12 +938,14 @@ public class ObjectValidator {
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       checkError(systemStatus, object, "body", REQUIRED_FIELD);
       if (issueReply.getIssueId() == -1) {
-        addError(systemStatus, object, "action", "object.validation.issueIdNotSpecified");
+        addError(
+            systemStatus, object, "action", "object.validation.issueIdNotSpecified");
       }
     }
 
     //  ActionList
-    if (object.getClass().getName().equals("org.aspcfs.modules.actionlist.base.ActionList")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.actionlist.base.ActionList")) {
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
     }
 
@@ -816,7 +959,8 @@ public class ObjectValidator {
     }
 
     //  ContactImport
-    if (object.getClass().getName().equals("org.aspcfs.modules.contacts.base.ContactImport")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.contacts.base.ContactImport")) {
       ContactImport thisImport = (ContactImport) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       if (thisImport.getType() < 0) {
@@ -825,7 +969,8 @@ public class ObjectValidator {
     }
 
     //  Recipient
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.Recipient")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.communications.base.Recipient")) {
       Recipient recipient = (Recipient) object;
       if (recipient.getCampaignId() == -1) {
         addError(systemStatus, object, "campaign", REQUIRED_FIELD);
@@ -836,7 +981,8 @@ public class ObjectValidator {
     }
 
     //  Criteria
-    if (object.getClass().getName().equals("org.aspcfs.modules.reports.base.Criteria")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.reports.base.Criteria")) {
       Criteria criteria = (Criteria) object;
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       if (criteria.getReportId() == -1) {
@@ -854,7 +1000,8 @@ public class ObjectValidator {
     }
 
     //  Parameter
-    if (object.getClass().getName().equals("org.aspcfs.modules.reports.base.Parameter")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.reports.base.Parameter")) {
       Parameter parameter = (Parameter) object;
       if (parameter.getCriteriaId() == -1) {
         addError(systemStatus, object, "criteriaId", REQUIRED_FIELD);
@@ -862,29 +1009,35 @@ public class ObjectValidator {
     }
 
     //  DatabaseBean
-    if (object.getClass().getName().equals("org.aspcfs.modules.setup.beans.DatabaseBean")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.setup.beans.DatabaseBean")) {
       DatabaseBean bean = (DatabaseBean) object;
-      checkError(systemStatus, object, "ip", REQUIRED_FIELD);
-      if (bean.getPort() <= 0) {
-        addError(systemStatus, object, "port", REQUIRED_FIELD);
+      if (!bean.isEmbedded()) {
+        checkError(systemStatus, object, "ip", REQUIRED_FIELD);
+        if (bean.getPort() <= 0) {
+          addError(systemStatus, object, "port", REQUIRED_FIELD);
+        }
       }
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       checkError(systemStatus, object, "user", REQUIRED_FIELD);
     }
 
     //  ServerBean
-    if (object.getClass().getName().equals("org.aspcfs.modules.setup.beans.ServerBean")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.setup.beans.ServerBean")) {
       ServerBean bean = (ServerBean) object;
       checkError(systemStatus, object, "url", REQUIRED_FIELD);
       checkError(systemStatus, object, "email", REQUIRED_FIELD);
       checkError(systemStatus, object, "emailAddress", REQUIRED_FIELD);
-      if (bean.getTimeZone() == null || "".equals(bean.getTimeZone().trim()) || "-1".equals(bean.getTimeZone())) {
+      if (bean.getTimeZone() == null || "".equals(bean.getTimeZone().trim()) || "-1".equals(
+          bean.getTimeZone())) {
         addError(systemStatus, object, "timeZone", REQUIRED_FIELD);
       }
     }
 
     //  UserSetupBean
-    if (object.getClass().getName().equals("org.aspcfs.modules.setup.beans.UserSetupBean")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.setup.beans.UserSetupBean")) {
       //UserSetupBean bean = (UserSetupBean) object;
       checkError(systemStatus, object, "nameFirst", REQUIRED_FIELD);
       checkError(systemStatus, object, "nameLast", REQUIRED_FIELD);
@@ -895,56 +1048,69 @@ public class ObjectValidator {
     }
 
     // ProductCatalog
-    if (object.getClass().getName().equals("org.aspcfs.modules.products.base.ProductCatalog")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.base.ProductCatalog")) {
       ProductCatalog productCatalog = (ProductCatalog) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       if (productCatalog.getStartDate() != null && productCatalog.getExpirationDate() != null) {
-        if (productCatalog.getStartDate().after(productCatalog.getExpirationDate())) {
-          addError(systemStatus, object, "startDate", "object.validation.startAfterExpiration");
+        if (productCatalog.getStartDate().after(
+            productCatalog.getExpirationDate())) {
+          addError(
+              systemStatus, object, "startDate", "object.validation.startAfterExpiration");
         }
       }
       if (productCatalog.getStartDate() == null && productCatalog.getExpirationDate() != null) {
-        addError(systemStatus, object, "startDate", "object.validation.startAfterExpiration");
+        addError(
+            systemStatus, object, "startDate", "object.validation.startAfterExpiration");
       }
-      if (productCatalog.getEnabled()) {
+      if (productCatalog.getActive()) {
         if (productCatalog.getActivePrice() == null) {
-          addWarning(systemStatus, object, "enabled", "object.validation.product.activePriceNotFound");
+          addWarning(
+              systemStatus, object, "active", "object.validation.product.activePriceNotFound");
         }
-      } 
+      }
     }
     
     // ProductOption
-    if (object.getClass().getName().equals("org.aspcfs.modules.products.base.ProductOption")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.base.ProductOption")) {
       ProductOption option = (ProductOption) object;
       if (option.getStartDate() != null && option.getEndDate() != null) {
         if (option.getStartDate().after(option.getEndDate())) {
-          addError(systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
+          addError(
+              systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
         }
       }
       if (option.getStartDate() == null && option.getEndDate() != null) {
-        addError(systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
+        addError(
+            systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
       }
     }
 
     // ProductCategory
-    if (object.getClass().getName().equals("org.aspcfs.modules.products.base.ProductCategory")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.base.ProductCategory")) {
       ProductCategory productCategory = (ProductCategory) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       if (productCategory.getStartDate() != null && productCategory.getExpirationDate() != null) {
-        if (productCategory.getStartDate().after(productCategory.getExpirationDate())) {
-          addError(systemStatus, object, "startDate", "object.validation.startAfterExpiration");
+        if (productCategory.getStartDate().after(
+            productCategory.getExpirationDate())) {
+          addError(
+              systemStatus, object, "startDate", "object.validation.startAfterExpiration");
         }
       }
     }
 
     //Document Store
-    if (object.getClass().getName().equals("org.aspcfs.modules.documents.base.DocumentStore")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.documents.base.DocumentStore")) {
       checkError(systemStatus, object, "title", REQUIRED_FIELD);
       checkError(systemStatus, object, "shortDescription", REQUIRED_FIELD);
       checkError(systemStatus, object, "requestDate", REQUIRED_FIELD);
     }
     // Quote
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.Quote")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.Quote")) {
       Quote quote = (Quote) object;
       if (quote.getOrgId() == -1) {
         addError(systemStatus, object, "orgId", REQUIRED_FIELD);
@@ -953,22 +1119,27 @@ public class ObjectValidator {
         addError(systemStatus, object, "contactId", REQUIRED_FIELD);
       }
       if (quote.getCloseIt() && quote.getStatusId() == -1) {
-        addError(systemStatus, object, "statusId", "object.validation.quoteClosedWithoutExplanation");
+        addError(
+            systemStatus, object, "statusId", "object.validation.quoteClosedWithoutExplanation");
       }
       checkError(systemStatus, object, "shortDescription", REQUIRED_FIELD);
     }
 
     // Quote Product
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.QuoteProduct")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.QuoteProduct")) {
       QuoteProduct product = (QuoteProduct) object;
       if (product.getProductId() == -1) {
-        addError(systemStatus, object, "productId", "object.validation.emptyQuoteProduct");
+        addError(
+            systemStatus, object, "productId", "object.validation.emptyQuoteProduct");
       }
       if (product.getQuoteId() == -1) {
-        addError(systemStatus, object, "quoteId", "object.validation.quoteProductWithoutQuote");
+        addError(
+            systemStatus, object, "quoteId", "object.validation.quoteProductWithoutQuote");
       }
       if (product.getQuantity() < 0) {
-        addError(systemStatus, object, "quantity", "object.validation.negativeQuoteProductQuantity");
+        addError(
+            systemStatus, object, "quantity", "object.validation.negativeQuoteProductQuantity");
       }
       /*
        *  if (Double.compare(product.getPriceAmount(),0.0) != 0 && product.getPriceCurrency() == -1) {
@@ -979,39 +1150,48 @@ public class ObjectValidator {
        *  }
        */
     }
-    
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.QuoteProductBean")) {
+
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.QuoteProductBean")) {
       //QuoteProductBean product = (QuoteProductBean) object;
     }
 
     // Quote Product Option
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.QuoteProductOption")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.QuoteProductOption")) {
     }
     
     // Quote Condition
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.QuoteCondition")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.QuoteCondition")) {
       QuoteCondition condition = (QuoteCondition) object;
-      if (condition.getConditionName() == null || "".equals(condition.getConditionName().trim())) {
+      if (condition.getConditionName() == null || "".equals(
+          condition.getConditionName().trim())) {
         addError(systemStatus, object, "description", REQUIRED_FIELD);
       }
       if (condition.getConditionName().length() > 300) {
-        addError(systemStatus, object, "description", "object.validation.descriptionNotGT300Characters");
+        addError(
+            systemStatus, object, "description", "object.validation.descriptionNotGT300Characters");
       }
     }
 
     // Quote Remark
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.QuoteRemark")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.QuoteRemark")) {
       QuoteRemark remark = (QuoteRemark) object;
-      if (remark.getRemarkName() == null || "".equals(remark.getRemarkName().trim())) {
+      if (remark.getRemarkName() == null || "".equals(
+          remark.getRemarkName().trim())) {
         addError(systemStatus, object, "description", REQUIRED_FIELD);
       }
       if (remark.getRemarkName().length() > 300) {
-        addError(systemStatus, object, "description", "object.validation.descriptionNotGT300Characters");
+        addError(
+            systemStatus, object, "description", "object.validation.descriptionNotGT300Characters");
       }
     }
     
     // Quote Note
-    if (object.getClass().getName().equals("org.aspcfs.modules.quotes.base.QuoteNote")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.quotes.base.QuoteNote")) {
       QuoteNote note = (QuoteNote) object;
       if (note.getQuoteId() == -1) {
         addError(systemStatus, object, "quoteId", REQUIRED_FIELD);
@@ -1020,35 +1200,40 @@ public class ObjectValidator {
     }
     
     // Product Catalog Pricing
-    if (object.getClass().getName().equals("org.aspcfs.modules.products.base.ProductCatalogPricing")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.base.ProductCatalogPricing")) {
       ProductCatalogPricing pricing = (ProductCatalogPricing) object;
       if (pricing.getStartDate() != null && pricing.getExpirationDate() != null) {
         if (pricing.getStartDate().after(pricing.getExpirationDate())) {
-          addError(systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
+          addError(
+              systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
         }
       }
     }
 
     //Numerical Configurator
-    if (object.getClass().getName().equals("org.aspcfs.modules.products.configurator.NumericalConfigurator")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.configurator.NumericalConfigurator")) {
       NumericalConfigurator configurator = (NumericalConfigurator) object;
       boolean valid = true;
-      if (configurator.getMinNum() == -1 || configurator.getMaxNum() == -1) {
-        return true;
-      }
-      if (configurator.getMinNum() > configurator.getMaxNum()) {
-        configurator.getPropertyList().getOptionProperty("number_max").setErrorMsg(systemStatus.getLabel("object.validation.maxNumberNotLTMinNumber"));//"max number cannot be lesser than min number");
+      if (configurator.getMinNum() != -1 && configurator.getMaxNum() != -1 && configurator.getMinNum() > configurator.getMaxNum()) {
+        configurator.getPropertyList().getOptionProperty("number_max").setErrorMsg(
+            systemStatus.getLabel("object.validation.maxNumberNotLTMinNumber"));//"max number cannot be lesser than min number");
         valid = false;
       }
-      if (configurator.getDefaultNum() < configurator.getMinNum()) {
+      if (configurator.getMinNum() != -1 && configurator.getDefaultNum() < configurator.getMinNum()) {
         if (configurator.getPropertyList().getOptionProperty("number_default") != null) {
-          configurator.getPropertyList().getOptionProperty("number_default").setErrorMsg(systemStatus.getLabel("object.validation.defaultNumberNotLTMinNumber"));//"default number value cannot be lesser than min number");
+          configurator.getPropertyList().getOptionProperty("number_default").setErrorMsg(
+              systemStatus.getLabel(
+                  "object.validation.defaultNumberNotLTMinNumber"));//"default number value cannot be lesser than min number");
           valid = false;
         }
       }
-      if (configurator.getDefaultNum() > configurator.getMaxNum()) {
+      if (configurator.getMaxNum() != -1 && configurator.getDefaultNum() > configurator.getMaxNum()) {
         if (configurator.getPropertyList().getOptionProperty("number_default") != null) {
-          configurator.getPropertyList().getOptionProperty("number_default").setErrorMsg(systemStatus.getLabel("object.validation.defaultNumberNotGTMaxNumber"));//"default number value cannot be greater than max number");
+          configurator.getPropertyList().getOptionProperty("number_default").setErrorMsg(
+              systemStatus.getLabel(
+                  "object.validation.defaultNumberNotGTMaxNumber"));//"default number value cannot be greater than max number");
           valid = false;
         }
       }
@@ -1056,20 +1241,25 @@ public class ObjectValidator {
     }
 
     //String Configurator
-    if (object.getClass().getName().equals("org.aspcfs.modules.products.configurator.StringConfigurator")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.configurator.StringConfigurator")) {
       StringConfigurator configurator = (StringConfigurator) object;
       boolean valid = true;
       if (configurator.getDefaultText().length() < configurator.getMinChars()) {
         if (configurator.getPropertyList().getOptionProperty("text_default") != null) {
           //"default text length cannot be lesser than min chars");
-          configurator.getPropertyList().getOptionProperty("text_default").setErrorMsg(systemStatus.getLabel("object.validation.defaultTextLengthNotLTMinChars"));
+          configurator.getPropertyList().getOptionProperty("text_default").setErrorMsg(
+              systemStatus.getLabel(
+                  "object.validation.defaultTextLengthNotLTMinChars"));
           valid = false;
         }
       }
       if (configurator.getDefaultText().length() > configurator.getMaxChars()) {
         if (configurator.getPropertyList().getOptionProperty("text_default") != null) {
           //"default text length cannot be greater than max chars");
-          configurator.getPropertyList().getOptionProperty("text_default").setErrorMsg(systemStatus.getLabel("object.validation.defaultTextLengthNotGTMaxChars"));
+          configurator.getPropertyList().getOptionProperty("text_default").setErrorMsg(
+              systemStatus.getLabel(
+                  "object.validation.defaultTextLengthNotGTMaxChars"));
           valid = false;
         }
       }
@@ -1082,73 +1272,92 @@ public class ObjectValidator {
     }
     
     //Relationship
-    if (object.getClass().getName().equals("org.aspcfs.modules.relationships.base.Relationship")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.relationships.base.Relationship")) {
       Relationship relationship = (Relationship) object;
       if (relationship.getObjectIdMapsFrom() == -1 || relationship.getObjectIdMapsTo() == -1) {
-        addError(systemStatus, object, "objectIdMapsTo", "relationships.bothObjectsAreRequired");
+        addError(
+            systemStatus, object, "objectIdMapsTo", "relationships.bothObjectsAreRequired");
       } else if (relationship.getObjectIdMapsFrom() == relationship.getObjectIdMapsTo()) {
-        addError(systemStatus, object, "objectIdMapsTo", "relationships.orgCanNotBeRelatedToItself");
+        addError(
+            systemStatus, object, "objectIdMapsTo", "relationships.orgCanNotBeRelatedToItself");
       }
     }
     
+    //ContactHistory
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.contacts.base.ContactHistory")) {
+      checkError(systemStatus, object, "description", REQUIRED_FIELD);
+    }
+
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  systemStatus      Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  object            Description of the Parameter
-   *@param  map               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param systemStatus Description of the Parameter
+   * @param db           Description of the Parameter
+   * @param object       Description of the Parameter
+   * @param map          Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean validate(SystemStatus systemStatus, Connection db, Object object, HashMap map) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("ObjectValidator-> Checking object: " + object.getClass().getName());
+      System.out.println(
+          "ObjectValidator-> Checking object: " + object.getClass().getName());
     }
     //  TicketReplacementPart
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketReplacementPart")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketReplacementPart")) {
       //TicketReplacementPart replacement = (TicketReplacementPart) object;
       String parseItem = (String) map.get("parseItem");
       String partNumber = (String) map.get("partNumber");
       String partDescription = (String) map.get("partDescription");
       if ((partNumber != null && !"".equals(partNumber)) &&
           (partDescription == null || "".equals(partDescription))) {
-        addError(systemStatus, object, "partDescription" + parseItem, REQUIRED_FIELD);
+        addError(
+            systemStatus, object, "partDescription" + parseItem, REQUIRED_FIELD);
         System.out.println("Adding Errror -->-0> partDescription is required");
       }
       if ((partDescription != null && !"".equals(partDescription)) &&
           (partNumber == null || "".equals(partNumber))) {
-        addError(systemStatus, object, "partNumber" + parseItem, REQUIRED_FIELD);
+        addError(
+            systemStatus, object, "partNumber" + parseItem, REQUIRED_FIELD);
         System.out.println("Adding Errror -->-0> partNumber is required");
       }
     }
 
     //TicketPerDayDescription
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketPerDayDescription")) {
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.troubletickets.base.TicketPerDayDescription")) {
       //TicketPerDayDescription thisDescription = (TicketPerDayDescription) object;
       String parseItem = (String) map.get("parseItem");
       String descriptionOfService = (String) map.get("descriptionOfService");
-      if (descriptionOfService == null || "".equals(descriptionOfService.trim())) {
-        addError(systemStatus, object, "descriptionOfService" + parseItem, REQUIRED_FIELD);
-        addError(systemStatus, object, "action", "object.validation.genericActionError");
+      if (descriptionOfService == null || "".equals(
+          descriptionOfService.trim())) {
+        addError(
+            systemStatus, object, "descriptionOfService" + parseItem, REQUIRED_FIELD);
+        addError(
+            systemStatus, object, "action", "object.validation.genericActionError");
       }
       String activityDateTimeZone = (String) map.get("activityDateTimeZone");
       String activityDate = (String) map.get("activityDate");
-      System.out.println("Object Validator :: activityDate is " + activityDate);
       HttpServletRequest request = (HttpServletRequest) map.get("request");
 
       UserBean userBean = (UserBean) request.getSession().getAttribute("User");
       User user = userBean.getUserRecord();
       //String timeZone = user.getTimeZone();
       try {
-        Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(activityDateTimeZone), DateFormat.SHORT, DateFormat.LONG, activityDate, user.getLocale());
+        Timestamp tmp = DateUtils.getUserToServerDateTime(
+            TimeZone.getTimeZone(activityDateTimeZone), DateFormat.SHORT, DateFormat.LONG, activityDate, user.getLocale());
         if (tmp == null) {
-          addError(systemStatus, object, "activityDate" + parseItem, INVALID_DATE);
-          addError(systemStatus, object, "action", "object.validation.genericActionError");
+          addError(
+              systemStatus, object, "activityDate" + parseItem, INVALID_DATE);
+          addError(
+              systemStatus, object, "action", "object.validation.genericActionError");
         }
       } catch (Exception e) {
       }
@@ -1159,33 +1368,39 @@ public class ObjectValidator {
 
 
   /**
-   *  Adds a feature to the Error attribute of the ObjectValidator class
+   * Adds a feature to the Error attribute of the ObjectValidator class
    *
-   *@param  systemStatus  The feature to be added to the Error attribute
-   *@param  object        The feature to be added to the Error attribute
-   *@param  field         The feature to be added to the Error attribute
-   *@param  errorType     The feature to be added to the Error attribute
+   * @param systemStatus The feature to be added to the Error attribute
+   * @param object       The feature to be added to the Error attribute
+   * @param field        The feature to be added to the Error attribute
+   * @param errorType    The feature to be added to the Error attribute
    */
-  public static void checkError(SystemStatus systemStatus, Object object, String field, int errorType) {
+  public static boolean checkError(SystemStatus systemStatus, Object object, String field, int errorType) {
+    boolean returnValue = true;
     if (errorType == REQUIRED_FIELD) {
       String result = ObjectUtils.getParam(object, field);
       if (result == null || "".equals(result.trim())) {
+        returnValue = false;
         addError(systemStatus, object, field, REQUIRED_FIELD);
       }
     } else if (errorType == INVALID_DATE) {
       try {
         String date = ObjectUtils.getParam(object, field);
         if (date == null || "".equals(date.trim())) {
+          returnValue = false;
           addError(systemStatus, object, field, REQUIRED_FIELD);
         } else {
           try {
             date = new java.sql.Date(Timestamp.valueOf(date).getTime()).toString();
-            Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
-            SimpleDateFormat localeFormatter = new SimpleDateFormat("yyyy-MM-dd", locale);
+            Locale locale = new Locale(
+                System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+            SimpleDateFormat localeFormatter = new SimpleDateFormat(
+                "yyyy-MM-dd", locale);
             localeFormatter.applyPattern("yyyy-MM-dd");
             localeFormatter.setLenient(false);
             localeFormatter.parse(date);
           } catch (java.text.ParseException e1) {
+            returnValue = false;
             addError(systemStatus, object, field, INVALID_DATE);
           }
         }
@@ -1198,30 +1413,82 @@ public class ObjectValidator {
         if (date != null && !"".equals(date.trim())) {
           try {
             date = new java.sql.Date(Timestamp.valueOf(date).getTime()).toString();
-            Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
-            SimpleDateFormat localeFormatter = new SimpleDateFormat("yyyy-MM-dd", locale);
+            Locale locale = new Locale(
+                System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+            SimpleDateFormat localeFormatter = new SimpleDateFormat(
+                "yyyy-MM-dd", locale);
             localeFormatter.applyPattern("yyyy-MM-dd");
             localeFormatter.setLenient(false);
             localeFormatter.parse(date);
           } catch (java.text.ParseException e1) {
+            returnValue = false;
             addError(systemStatus, object, field, INVALID_DATE);
           }
         }
       } catch (Exception e) {
         e.printStackTrace();
       }
+    } else if (errorType == INVALID_EMAIL) {
+      try {
+        String email = ObjectUtils.getParam(object, field);
+        if (email != null && !"".equals(email.trim())) {
+          try {
+            StringTokenizer str = new StringTokenizer(email, ",");
+            if (str.hasMoreTokens()) {
+              String temp = str.nextToken();
+              InternetAddress inetAddress = new InternetAddress(
+                  temp.trim(), true);
+            } else {
+              InternetAddress inetAddress = new InternetAddress(
+                  email.trim(), true);
+            }
+          } catch (AddressException e1) {
+            returnValue = false;
+            addError(systemStatus, object, field, INVALID_EMAIL);
+          }
+        } else {
+          returnValue = false;
+          addError(systemStatus, object, field, INVALID_EMAIL);
+        }
+      } catch (Exception e) {
+        returnValue = false;
+        e.printStackTrace();
+      }
+    } else if (errorType == INVALID_EMAIL_NOT_REQUIRED) {
+      try {
+        String email = ObjectUtils.getParam(object, field);
+        if (email != null && !"".equals(email.trim())) {
+          try {
+            StringTokenizer str = new StringTokenizer(email, ",");
+            if (str.hasMoreTokens()) {
+              String temp = str.nextToken();
+              InternetAddress inetAddress = new InternetAddress(
+                  temp.trim(), true);
+            } else {
+              InternetAddress inetAddress = new InternetAddress(
+                  email.trim(), true);
+            }
+          } catch (AddressException e1) {
+            returnValue = false;
+            addError(systemStatus, object, field, INVALID_EMAIL);
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
+    return returnValue;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  systemStatus  Description of the Parameter
-   *@param  object        Description of the Parameter
-   *@param  field         Description of the Parameter
-   *@param  errorName     Description of the Parameter
-   *@param  errorType     Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @param object       Description of the Parameter
+   * @param field        Description of the Parameter
+   * @param errorName    Description of the Parameter
+   * @param errorType    Description of the Parameter
    */
   public static void checkError(SystemStatus systemStatus, Object object, String field, String errorName, int errorType) {
     if (errorType == REQUIRED_FIELD) {
@@ -1237,8 +1504,10 @@ public class ObjectValidator {
         } else {
           try {
             date = new java.sql.Date(Timestamp.valueOf(date).getTime()).toString();
-            Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
-            SimpleDateFormat localeFormatter = new SimpleDateFormat("yyyy-MM-dd", locale);
+            Locale locale = new Locale(
+                System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+            SimpleDateFormat localeFormatter = new SimpleDateFormat(
+                "yyyy-MM-dd", locale);
             localeFormatter.applyPattern("yyyy-MM-dd");
             localeFormatter.setLenient(false);
             localeFormatter.parse(date);
@@ -1255,12 +1524,58 @@ public class ObjectValidator {
         if (date != null && !"".equals(date.trim())) {
           try {
             date = new java.sql.Date(Timestamp.valueOf(date).getTime()).toString();
-            Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
-            SimpleDateFormat localeFormatter = new SimpleDateFormat("yyyy-MM-dd", locale);
+            Locale locale = new Locale(
+                System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+            SimpleDateFormat localeFormatter = new SimpleDateFormat(
+                "yyyy-MM-dd", locale);
             localeFormatter.setLenient(false);
             localeFormatter.parse(date);
           } catch (java.text.ParseException e1) {
             addError(systemStatus, object, errorName, INVALID_DATE);
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if (errorType == INVALID_EMAIL) {
+      try {
+        String email = ObjectUtils.getParam(object, field);
+        if (email != null && !"".equals(email.trim())) {
+          try {
+            StringTokenizer str = new StringTokenizer(email, ",");
+            if (str.hasMoreTokens()) {
+              String temp = str.nextToken();
+              InternetAddress inetAddress = new InternetAddress(
+                  temp.trim(), true);
+            } else {
+              InternetAddress inetAddress = new InternetAddress(
+                  email.trim(), true);
+            }
+          } catch (AddressException e1) {
+            addError(systemStatus, object, field, INVALID_EMAIL);
+          }
+        } else {
+          addError(systemStatus, object, field, INVALID_EMAIL);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if (errorType == INVALID_EMAIL_NOT_REQUIRED) {
+      try {
+        String email = ObjectUtils.getParam(object, field);
+        if (email != null && !"".equals(email.trim())) {
+          try {
+            StringTokenizer str = new StringTokenizer(email, ",");
+            if (str.hasMoreTokens()) {
+              String temp = str.nextToken();
+              InternetAddress inetAddress = new InternetAddress(
+                  temp.trim(), true);
+            } else {
+              InternetAddress inetAddress = new InternetAddress(
+                  email.trim(), true);
+            }
+          } catch (AddressException e1) {
+            addError(systemStatus, object, field, INVALID_EMAIL);
           }
         }
       } catch (Exception e) {
@@ -1271,33 +1586,39 @@ public class ObjectValidator {
 
 
   /**
-   *  Adds a feature to the Error attribute of the ObjectValidator class
+   * Adds a feature to the Error attribute of the ObjectValidator class
    *
-   *@param  systemStatus  The feature to be added to the Error attribute
-   *@param  field         The feature to be added to the Error attribute
-   *@param  errorType     The feature to be added to the Error attribute
-   *@param  object        The feature to be added to the Error attribute
+   * @param systemStatus The feature to be added to the Error attribute
+   * @param field        The feature to be added to the Error attribute
+   * @param errorType    The feature to be added to the Error attribute
+   * @param object       The feature to be added to the Error attribute
    */
   public static void addError(SystemStatus systemStatus, Object object, String field, int errorType) {
     if (errorType == REQUIRED_FIELD) {
       addError(systemStatus, object, field, "object.validation.required");
     }
     if (errorType == INVALID_DATE || errorType == INVALID_NOT_REQUIRED_DATE) {
-      addError(systemStatus, object, field, "object.validation.incorrectDateFormat");
+      addError(
+          systemStatus, object, field, "object.validation.incorrectDateFormat");
     }
     if (errorType == INVALID_NUMBER) {
-      addError(systemStatus, object, field, "object.validation.incorrectNumberFormat");
+      addError(
+          systemStatus, object, field, "object.validation.incorrectNumberFormat");
+    }
+    if (errorType == INVALID_EMAIL || errorType == INVALID_EMAIL_NOT_REQUIRED) {
+      addError(
+          systemStatus, object, field, "object.validation.invalidEmailAddress");
     }
   }
 
 
   /**
-   *  Adds a feature to the Error attribute of the ObjectValidator class
+   * Adds a feature to the Error attribute of the ObjectValidator class
    *
-   *@param  systemStatus  The feature to be added to the Error attribute
-   *@param  field         The feature to be added to the Error attribute
-   *@param  errorKey      The feature to be added to the Error attribute
-   *@param  object        The feature to be added to the Error attribute
+   * @param systemStatus The feature to be added to the Error attribute
+   * @param field        The feature to be added to the Error attribute
+   * @param errorKey     The feature to be added to the Error attribute
+   * @param object       The feature to be added to the Error attribute
    */
   private static void addError(SystemStatus systemStatus, Object object, String field, String errorKey) {
     HashMap errors = (HashMap) ObjectUtils.getObject(object, "errors");
@@ -1310,30 +1631,31 @@ public class ObjectValidator {
 
 
   /**
-   *  Adds a feature to the Warning attribute of the ObjectValidator class
+   * Adds a feature to the Warning attribute of the ObjectValidator class
    *
-   *@param  systemStatus  The feature to be added to the Warning attribute
-   *@param  object        The feature to be added to the Warning attribute
-   *@param  field         The feature to be added to the Warning attribute
-   *@param  warningType   The feature to be added to the Warning attribute
+   * @param systemStatus The feature to be added to the Warning attribute
+   * @param object       The feature to be added to the Warning attribute
+   * @param field        The feature to be added to the Warning attribute
+   * @param warningType  The feature to be added to the Warning attribute
    */
   public static void checkWarning(SystemStatus systemStatus, Object object, String field, int warningType) {
     if (warningType == IS_BEFORE_TODAY) {
       Timestamp result = (Timestamp) ObjectUtils.getObject(object, field);
       if (result != null && result.before(new java.util.Date())) {
-        addWarning(systemStatus, object, field, "object.validation.beforeToday");
+        addWarning(
+            systemStatus, object, field, "object.validation.beforeToday");
       }
-    } 
+    }
   }
 
 
   /**
-   *  Adds a feature to the Warning attribute of the ObjectValidator class
+   * Adds a feature to the Warning attribute of the ObjectValidator class
    *
-   *@param  systemStatus  The feature to be added to the Warning attribute
-   *@param  object        The feature to be added to the Warning attribute
-   *@param  field         The feature to be added to the Warning attribute
-   *@param  warningKey    The feature to be added to the Warning attribute
+   * @param systemStatus The feature to be added to the Warning attribute
+   * @param object       The feature to be added to the Warning attribute
+   * @param field        The feature to be added to the Warning attribute
+   * @param warningKey   The feature to be added to the Warning attribute
    */
   public static void addWarning(SystemStatus systemStatus, Object object, String field, String warningKey) {
     HashMap warnings = (HashMap) ObjectUtils.getObject(object, "warnings");

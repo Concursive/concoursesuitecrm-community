@@ -15,14 +15,14 @@
  */
 package org.aspcfs.modules.setup.beans;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 
 /**
- *  Bean to encapsulate the Configure User HTML form
+ * Bean to encapsulate the Configure User HTML form
  *
- *@author     mrajkowski
- *@created    August 26, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created August 26, 2003
  */
 public class UserSetupBean extends GenericBean {
 
@@ -37,9 +37,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the UserSetupBean object
+   * Sets the configured attribute of the UserSetupBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(int tmp) {
     this.configured = tmp;
@@ -47,9 +47,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the UserSetupBean object
+   * Sets the configured attribute of the UserSetupBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(String tmp) {
     this.configured = Integer.parseInt(tmp);
@@ -57,9 +57,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the UserSetupBean object
+   * Sets the nameFirst attribute of the UserSetupBean object
    *
-   *@param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -67,9 +67,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the UserSetupBean object
+   * Sets the nameLast attribute of the UserSetupBean object
    *
-   *@param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -77,9 +77,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the company attribute of the UserSetupBean object
+   * Sets the company attribute of the UserSetupBean object
    *
-   *@param  tmp  The new company value
+   * @param tmp The new company value
    */
   public void setCompany(String tmp) {
     this.company = tmp;
@@ -87,9 +87,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the email attribute of the UserSetupBean object
+   * Sets the email attribute of the UserSetupBean object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -97,9 +97,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the username attribute of the UserSetupBean object
+   * Sets the username attribute of the UserSetupBean object
    *
-   *@param  tmp  The new username value
+   * @param tmp The new username value
    */
   public void setUsername(String tmp) {
     this.username = tmp;
@@ -107,9 +107,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the password1 attribute of the UserSetupBean object
+   * Sets the password1 attribute of the UserSetupBean object
    *
-   *@param  tmp  The new password1 value
+   * @param tmp The new password1 value
    */
   public void setPassword1(String tmp) {
     this.password1 = tmp;
@@ -117,9 +117,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Sets the password2 attribute of the UserSetupBean object
+   * Sets the password2 attribute of the UserSetupBean object
    *
-   *@param  tmp  The new password2 value
+   * @param tmp The new password2 value
    */
   public void setPassword2(String tmp) {
     this.password2 = tmp;
@@ -127,9 +127,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the configured attribute of the UserSetupBean object
+   * Gets the configured attribute of the UserSetupBean object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public int getConfigured() {
     return configured;
@@ -137,9 +137,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the UserSetupBean object
+   * Gets the nameFirst attribute of the UserSetupBean object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -147,9 +147,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the UserSetupBean object
+   * Gets the nameLast attribute of the UserSetupBean object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -157,9 +157,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the company attribute of the UserSetupBean object
+   * Gets the company attribute of the UserSetupBean object
    *
-   *@return    The company value
+   * @return The company value
    */
   public String getCompany() {
     return company;
@@ -167,9 +167,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the email attribute of the UserSetupBean object
+   * Gets the email attribute of the UserSetupBean object
    *
-   *@return    The email value
+   * @return The email value
    */
   public String getEmail() {
     return email;
@@ -177,9 +177,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the username attribute of the UserSetupBean object
+   * Gets the username attribute of the UserSetupBean object
    *
-   *@return    The username value
+   * @return The username value
    */
   public String getUsername() {
     return username;
@@ -187,9 +187,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the password1 attribute of the UserSetupBean object
+   * Gets the password1 attribute of the UserSetupBean object
    *
-   *@return    The password1 value
+   * @return The password1 value
    */
   public String getPassword1() {
     return password1;
@@ -197,9 +197,9 @@ public class UserSetupBean extends GenericBean {
 
 
   /**
-   *  Gets the password2 attribute of the UserSetupBean object
+   * Gets the password2 attribute of the UserSetupBean object
    *
-   *@return    The password2 value
+   * @return The password2 value
    */
   public String getPassword2() {
     return password2;

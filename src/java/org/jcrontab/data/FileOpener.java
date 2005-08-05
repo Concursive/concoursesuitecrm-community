@@ -13,19 +13,19 @@
  */
 package org.jcrontab.data;
 
-import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.io.InputStream;
+
 /**
- *  This class get an InputStream using the right method, File or
- *  getResourceAsStream, The idea of this way of openning files is from Sergey
- *  Udalstov
+ * This class get an InputStream using the right method, File or
+ * getResourceAsStream, The idea of this way of openning files is from Sergey
+ * Udalstov
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public class FileOpener {
@@ -33,22 +33,23 @@ public class FileOpener {
   private static String type;
 
   static {
-    type = org.jcrontab.Crontab.getInstance().getProperty("org.jcrontab.data.FileOpener");
+    type = org.jcrontab.Crontab.getInstance().getProperty(
+        "org.jcrontab.data.FileOpener");
   }
 
 
   /**
-   *  This method is the reason of this class and basically loads the File with
-   *  the given method.
+   * This method is the reason of this class and basically loads the File with
+   * the given method.
    *
-   *@param  name        String the name of the file to load
-   *@param  cl          Description of the Parameter
-   *@return             InputStream The inputStream to work with
-   *@throws  Exception  the thrown exceptions
+   * @param name String the name of the file to load
+   * @param cl   Description of the Parameter
+   * @return InputStream The inputStream to work with
+   * @throws Exception the thrown exceptions
    */
 
   public InputStream getInputStream(Class cl,
-      String name) throws Exception {
+                                    String name) throws Exception {
     InputStream is = null;
     if ("class".compareToIgnoreCase(type) == 0) {
       is = cl.getClassLoader().getResourceAsStream(name);
@@ -59,8 +60,9 @@ public class FileOpener {
       File file = new File(name);
       is = new FileInputStream(file);
     } else {
-      throw new UnsupportedOperationException("should call with class or file"
-           + " no with : " + type);
+      throw new UnsupportedOperationException(
+          "should call with class or file"
+          + " no with : " + type);
     }
     return is;
   }

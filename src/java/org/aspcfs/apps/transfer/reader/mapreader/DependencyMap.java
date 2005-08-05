@@ -15,20 +15,22 @@
  */
 package org.aspcfs.apps.transfer.reader.mapreader;
 
-import java.util.*;
-import java.io.*;
-import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
-import org.w3c.dom.*;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    May 7, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created May 7, 2004
  */
 public class DependencyMap extends PropertyMap {
   private String dependencyId = null;
@@ -41,9 +43,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Constructor for the DependencyMap object
+   * Constructor for the DependencyMap object
    *
-   *@param  n  Description of the Parameter
+   * @param n Description of the Parameter
    */
   public DependencyMap(Node n) {
     //name
@@ -85,9 +87,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Sets the properties attribute of the DependencyMap object
+   * Sets the properties attribute of the DependencyMap object
    *
-   *@param  tmp  The new properties value
+   * @param tmp The new properties value
    */
   public void setRequiredProperties(ArrayList tmp) {
     this.requiredProperties = tmp;
@@ -95,9 +97,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Sets the groupList attribute of the DependencyMap object
+   * Sets the groupList attribute of the DependencyMap object
    *
-   *@param  tmp  The new groupList value
+   * @param tmp The new groupList value
    */
   public void setGroupList(ArrayList tmp) {
     this.groupList = tmp;
@@ -105,9 +107,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Gets the properties attribute of the DependencyMap object
+   * Gets the properties attribute of the DependencyMap object
    *
-   *@return    The properties value
+   * @return The properties value
    */
   public ArrayList getRequiredProperties() {
     return requiredProperties;
@@ -115,9 +117,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Gets the groupList attribute of the DependencyMap object
+   * Gets the groupList attribute of the DependencyMap object
    *
-   *@return    The groupList value
+   * @return The groupList value
    */
   public ArrayList getGroupList() {
     return groupList;
@@ -125,9 +127,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Sets the thisId attribute of the DependencyMap object
+   * Sets the thisId attribute of the DependencyMap object
    *
-   *@param  tmp  The new dName value
+   * @param tmp The new dName value
    */
   public void setDependencyId(String tmp) {
     this.dependencyId = tmp;
@@ -135,9 +137,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Sets the hasGroups attribute of the DependencyMap object
+   * Sets the hasGroups attribute of the DependencyMap object
    *
-   *@param  tmp  The new hasGroups value
+   * @param tmp The new hasGroups value
    */
   public void setHasGroups(boolean tmp) {
     this.hasGroups = tmp;
@@ -145,9 +147,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Sets the hasGroups attribute of the DependencyMap object
+   * Sets the hasGroups attribute of the DependencyMap object
    *
-   *@param  tmp  The new hasGroups value
+   * @param tmp The new hasGroups value
    */
   public void setHasGroups(String tmp) {
     this.hasGroups = DatabaseUtils.parseBoolean(tmp);
@@ -155,9 +157,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Gets the hasGroups attribute of the DependencyMap object
+   * Gets the hasGroups attribute of the DependencyMap object
    *
-   *@return    The hasGroups value
+   * @return The hasGroups value
    */
   public boolean getHasGroups() {
     return hasGroups;
@@ -165,9 +167,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Gets the dName attribute of the DependencyMap object
+   * Gets the dName attribute of the DependencyMap object
    *
-   *@return    The dName value
+   * @return The dName value
    */
   public String getDependencyId() {
     return dependencyId;
@@ -175,10 +177,10 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Gets the group attribute of the DependencyMap object
+   * Gets the group attribute of the DependencyMap object
    *
-   *@param  groupId  Description of the Parameter
-   *@return          The group value
+   * @param groupId Description of the Parameter
+   * @return The group value
    */
   public PropertyMap getGroup(int groupId) {
     return (PropertyMap) groupList.get(groupId);
@@ -186,9 +188,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  map  Description of the Parameter
+   * @param map Description of the Parameter
    */
   public void add(PropertyMap map) {
     groupList.add(map);
@@ -196,9 +198,9 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Constructor for the loadMap object
+   * Constructor for the loadMap object
    *
-   *@param  map  Description of the Parameter
+   * @param map Description of the Parameter
    */
   public void loadMap(Element map) {
     PropertyMap dependencyMap = new PropertyMap();
@@ -206,7 +208,8 @@ public class DependencyMap extends PropertyMap {
     String mapId = map.getAttribute("id");
     dependencyMap.setId(mapId + "_1");
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("DependencyMap -> Loading Dependency Map " + map.getAttribute("id"));
+      System.out.println(
+          "DependencyMap -> Loading Dependency Map " + map.getAttribute("id"));
     }
     //Process this map
     NodeList nl = map.getChildNodes();
@@ -214,24 +217,29 @@ public class DependencyMap extends PropertyMap {
       Node n = nl.item(i);
 
       //load properties
-      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("properties")) {
+      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+          "properties")) {
         NodeList nl1 = n.getChildNodes();
         for (int j = 0; j < nl1.getLength(); j++) {
           Node p = nl1.item(j);
           //get property node
-          if (p.getNodeType() == Node.ELEMENT_NODE && ((Element) p).getTagName().equals("property")) {
+          if (p.getNodeType() == Node.ELEMENT_NODE && ((Element) p).getTagName().equals(
+              "property")) {
             String nodeText = XMLUtils.getNodeText((Element) p);
-            if (nodeText != null && requiredProperties.contains(nodeText.trim())) {
+            if (nodeText != null && requiredProperties.contains(
+                nodeText.trim())) {
               Property thisProperty = new Property(p);
               thisProperty.setUniqueName(mapId + "." + thisProperty.getName());
               if (thisProperty.isValid()) {
                 dependencyMap.addProperty(thisProperty);
                 if (System.getProperty("DEBUG") != null) {
-                  System.out.println("DependencyMap -> Adding Property " + thisProperty.getName());
+                  System.out.println(
+                      "DependencyMap -> Adding Property " + thisProperty.getName());
                 }
               } else {
                 if (System.getProperty("DEBUG") != null) {
-                  System.out.println("Invalid Property : " + thisProperty.getName());
+                  System.out.println(
+                      "Invalid Property : " + thisProperty.getName());
                 }
               }
             }
@@ -245,11 +253,11 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Gets the map attribute of the DependencyMap object
+   * Gets the map attribute of the DependencyMap object
    *
-   *@param  instanceId                      Description of the Parameter
-   *@return                                 The map value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @param instanceId Description of the Parameter
+   * @return The map value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public PropertyMap getMap(String instanceId) throws CloneNotSupportedException {
 
@@ -272,11 +280,11 @@ public class DependencyMap extends PropertyMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  field                           Description of the Parameter
-   *@return                                 Description of the Return Value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @param field Description of the Parameter
+   * @return Description of the Return Value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public Property mapProperty(String field) throws CloneNotSupportedException {
     Property mappedProperty = null;
@@ -285,7 +293,8 @@ public class DependencyMap extends PropertyMap {
     Iterator props = dMap.getProperties().keySet().iterator();
     while (props.hasNext() && !found) {
       String propertyName = (String) props.next();
-      Property thisProperty = (Property) dMap.getProperties().get(propertyName);
+      Property thisProperty = (Property) dMap.getProperties().get(
+          propertyName);
       if (thisProperty.hasAlias(field)) {
         int groupId = 1;
         if (thisProperty.getMappedColumn() < 0) {
@@ -294,7 +303,8 @@ public class DependencyMap extends PropertyMap {
         } else {
           groupId = groupList.size() + 1;
           PropertyMap thisMap = getMap(dependencyId + "_" + groupId);
-          mappedProperty = (Property) thisMap.getProperties().get(thisProperty.getName());
+          mappedProperty = (Property) thisMap.getProperties().get(
+              thisProperty.getName());
         }
         mappedProperty.setGroupId(groupId);
         found = true;

@@ -15,22 +15,21 @@
  */
 package com.zeroio.webdav.base;
 
+import com.zeroio.webdav.context.ModuleContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.controller.SystemStatus;
-
-import com.zeroio.webdav.context.ModuleContext;
-
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    November 3, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created November 3, 2004
  */
 public class WebdavModule {
   private int id = -1;
@@ -48,9 +47,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the buildContext attribute of the WebdavModule object
+   * Sets the buildContext attribute of the WebdavModule object
    *
-   *@param  tmp  The new buildContext value
+   * @param tmp The new buildContext value
    */
   public void setBuildContext(boolean tmp) {
     this.buildContext = tmp;
@@ -58,9 +57,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the buildContext attribute of the WebdavModule object
+   * Sets the buildContext attribute of the WebdavModule object
    *
-   *@param  tmp  The new buildContext value
+   * @param tmp The new buildContext value
    */
   public void setBuildContext(String tmp) {
     this.buildContext = DatabaseUtils.parseBoolean(tmp);
@@ -68,9 +67,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the buildContext attribute of the WebdavModule object
+   * Gets the buildContext attribute of the WebdavModule object
    *
-   *@return    The buildContext value
+   * @return The buildContext value
    */
   public boolean getBuildContext() {
     return buildContext;
@@ -78,9 +77,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the WebdavModule object
+   * Sets the fileLibraryPath attribute of the WebdavModule object
    *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -88,9 +87,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the fileLibraryPath attribute of the WebdavModule object
+   * Gets the fileLibraryPath attribute of the WebdavModule object
    *
-   *@return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -98,9 +97,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the id attribute of the WebdavModule object
+   * Sets the id attribute of the WebdavModule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -108,9 +107,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the id attribute of the WebdavModule object
+   * Sets the id attribute of the WebdavModule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -118,9 +117,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the categoryId attribute of the WebdavModule object
+   * Sets the categoryId attribute of the WebdavModule object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -128,9 +127,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the categoryId attribute of the WebdavModule object
+   * Sets the categoryId attribute of the WebdavModule object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -138,9 +137,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the className attribute of the WebdavModule object
+   * Sets the className attribute of the WebdavModule object
    *
-   *@param  tmp  The new className value
+   * @param tmp The new className value
    */
   public void setClassName(String tmp) {
     this.className = tmp;
@@ -148,9 +147,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the displayName attribute of the WebdavModule object
+   * Sets the displayName attribute of the WebdavModule object
    *
-   *@param  tmp  The new displayName value
+   * @param tmp The new displayName value
    */
   public void setDisplayName(String tmp) {
     this.displayName = tmp;
@@ -158,9 +157,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the context attribute of the WebdavModule object
+   * Sets the context attribute of the WebdavModule object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ModuleContext tmp) {
     this.context = tmp;
@@ -168,9 +167,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the entered attribute of the WebdavModule object
+   * Sets the entered attribute of the WebdavModule object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -178,9 +177,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the entered attribute of the WebdavModule object
+   * Sets the entered attribute of the WebdavModule object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -188,9 +187,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the enteredBy attribute of the WebdavModule object
+   * Sets the enteredBy attribute of the WebdavModule object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -198,9 +197,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the enteredBy attribute of the WebdavModule object
+   * Sets the enteredBy attribute of the WebdavModule object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -208,9 +207,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the modified attribute of the WebdavModule object
+   * Sets the modified attribute of the WebdavModule object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -218,9 +217,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the modified attribute of the WebdavModule object
+   * Sets the modified attribute of the WebdavModule object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -228,9 +227,9 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the modifiedBy attribute of the WebdavModule object
+   * Sets the modifiedBy attribute of the WebdavModule object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -238,20 +237,19 @@ public class WebdavModule {
 
 
   /**
-   *  Sets the modifiedBy attribute of the WebdavModule object
+   * Sets the modifiedBy attribute of the WebdavModule object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
-
   /**
-   *  Gets the id attribute of the WebdavModule object
+   * Gets the id attribute of the WebdavModule object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -259,9 +257,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the categoryId attribute of the WebdavModule object
+   * Gets the categoryId attribute of the WebdavModule object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -269,9 +267,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the className attribute of the WebdavModule object
+   * Gets the className attribute of the WebdavModule object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;
@@ -279,9 +277,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the displayName attribute of the WebdavModule object
+   * Gets the displayName attribute of the WebdavModule object
    *
-   *@return    The displayName value
+   * @return The displayName value
    */
   public String getDisplayName() {
     return displayName;
@@ -289,9 +287,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the context attribute of the WebdavModule object
+   * Gets the context attribute of the WebdavModule object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ModuleContext getContext() {
     return context;
@@ -299,9 +297,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the entered attribute of the WebdavModule object
+   * Gets the entered attribute of the WebdavModule object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -309,9 +307,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the enteredBy attribute of the WebdavModule object
+   * Gets the enteredBy attribute of the WebdavModule object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -319,9 +317,9 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the modified attribute of the WebdavModule object
+   * Gets the modified attribute of the WebdavModule object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -329,27 +327,27 @@ public class WebdavModule {
 
 
   /**
-   *  Gets the modifiedBy attribute of the WebdavModule object
+   * Gets the modifiedBy attribute of the WebdavModule object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
   }
 
 
-
   /**
-   *  Constructor for the WebdavModule object
+   * Constructor for the WebdavModule object
    */
-  public WebdavModule() { }
+  public WebdavModule() {
+  }
 
 
   /**
-   *  Constructor for the WebdavModule object
+   * Constructor for the WebdavModule object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public WebdavModule(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -357,11 +355,11 @@ public class WebdavModule {
 
 
   /**
-   *  Constructor for the WebdavModule object
+   * Constructor for the WebdavModule object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public WebdavModule(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -369,11 +367,11 @@ public class WebdavModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -401,12 +399,13 @@ public class WebdavModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   protected void buildContext() {
     if (className != null) {
       try {
         context = (ModuleContext) Class.forName(className).newInstance();
+        context.setContextName(displayName);
       } catch (ClassNotFoundException e) {
         e.printStackTrace(System.out);
       } catch (InstantiationException e) {
@@ -419,11 +418,11 @@ public class WebdavModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(SystemStatus thisSystem, Connection db, int userId) throws SQLException {
     if (context != null) {
@@ -433,10 +432,10 @@ public class WebdavModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //webdav table
@@ -453,33 +452,37 @@ public class WebdavModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "webdav_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO webdav " +
-        "(category_id, className, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?) ");
+        "(" + (id > -1 ? "id, " : "") + "category_id, class_name, enteredby, modifiedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, categoryId);
     pst.setString(++i, className);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "webdav_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "webdav_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Gets the permission attribute of the WebdavModule object
+   * Gets the permission attribute of the WebdavModule object
    *
-   *@return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     if (context != null) {

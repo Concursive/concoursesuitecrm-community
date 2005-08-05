@@ -15,19 +15,21 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import javax.servlet.http.*;
 
 /**
- *  An array of SurveyQuestion objects
+ * An array of SurveyQuestion objects
  *
- *@author     matt rajkowski
- *@created    August 13, 2002
- *@version    $Id: SurveyQuestionList.java,v 1.1 2002/08/27 19:28:31 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: SurveyQuestionList.java,v 1.1 2002/08/27 19:28:31 mrajkowski
+ *          Exp $
+ * @created August 13, 2002
  */
 public class SurveyQuestionList extends ArrayList {
 
@@ -37,15 +39,16 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Constructor for the SurveyQuestionList object
+   * Constructor for the SurveyQuestionList object
    */
-  public SurveyQuestionList() { }
+  public SurveyQuestionList() {
+  }
 
 
   /**
-   *  Constructor for the SurveyQuestionList object
+   * Constructor for the SurveyQuestionList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public SurveyQuestionList(HttpServletRequest request) {
     String question = null;
@@ -55,13 +58,15 @@ public class SurveyQuestionList extends ArrayList {
     }
     if ((question = request.getParameter("questionText")) != null) {
       type = request.getParameter("type");
-      if ((!question.equals("")) && (type != null)){
-        if (Integer.parseInt(type) > 0 ){
+      if ((!question.equals("")) && (type != null)) {
+        if (Integer.parseInt(type) > 0) {
           SurveyQuestion thisItem = new SurveyQuestion(request);
           thisItem.setId(questionId);
           this.add(thisItem);
           if (System.getProperty("DEBUG") != null) {
-            System.out.println(" SurveyQuestionList -- > Added Question " + questionId + ":" + request.getParameter("questionText"));
+            System.out.println(
+                " SurveyQuestionList -- > Added Question " + questionId + ":" + request.getParameter(
+                    "questionText"));
           }
         }
       }
@@ -70,11 +75,11 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the SurveyQuestionList object
+   * Gets the object attribute of the SurveyQuestionList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public SurveyQuestion getObject(ResultSet rs) throws SQLException {
     SurveyQuestion thisItem = new SurveyQuestion(rs);
@@ -83,9 +88,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the SurveyQuestionList object
+   * Gets the id attribute of the SurveyQuestionList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -93,9 +98,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the SurveyQuestionList object
+   * Sets the id attribute of the SurveyQuestionList object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -103,9 +108,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the SurveyQuestionList object
+   * Sets the id attribute of the SurveyQuestionList object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -113,9 +118,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the questionId attribute of the SurveyQuestionList object
+   * Sets the questionId attribute of the SurveyQuestionList object
    *
-   *@param  questionId  The new questionId value
+   * @param questionId The new questionId value
    */
   public void setQuestionId(int questionId) {
     this.questionId = questionId;
@@ -123,9 +128,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the questionId attribute of the SurveyQuestionList object
+   * Gets the questionId attribute of the SurveyQuestionList object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return questionId;
@@ -133,9 +138,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the surveyId attribute of the SurveyQuestionList object
+   * Gets the surveyId attribute of the SurveyQuestionList object
    *
-   *@return    The surveyId value
+   * @return The surveyId value
    */
   public int getSurveyId() {
     return surveyId;
@@ -143,9 +148,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the surveyId attribute of the SurveyQuestionList object
+   * Sets the surveyId attribute of the SurveyQuestionList object
    *
-   *@param  surveyId  The new surveyId value
+   * @param surveyId The new surveyId value
    */
   public void setSurveyId(int surveyId) {
     this.surveyId = surveyId;
@@ -153,9 +158,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Sets the surveyId attribute of the SurveyQuestionList object
+   * Sets the surveyId attribute of the SurveyQuestionList object
    *
-   *@param  surveyId  The new surveyId value
+   * @param surveyId The new surveyId value
    */
   public void setSurveyId(String surveyId) {
     this.surveyId = Integer.parseInt(surveyId);
@@ -163,9 +168,9 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the question attribute of the SurveyQuestionList object
+   * Gets the question attribute of the SurveyQuestionList object
    *
-   *@return    The question value
+   * @return The question value
    */
   public SurveyQuestion getSurveyQuestion() {
     Iterator thisList = this.iterator();
@@ -183,11 +188,11 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int surveyId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -199,11 +204,11 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void process(Connection db, int surveyId) throws SQLException {
     SurveyQuestion question = getQuestion(questionId);
@@ -218,10 +223,10 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Gets the question attribute of the SurveyQuestionList object
+   * Gets the question attribute of the SurveyQuestionList object
    *
-   *@param  questionId  Description of the Parameter
-   *@return             The question value
+   * @param questionId Description of the Parameter
+   * @return The question value
    */
   public SurveyQuestion getQuestion(int questionId) {
     Iterator thisList = this.iterator();
@@ -237,24 +242,26 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@param  direction         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param thisId    Description of the Parameter
+   * @param direction Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateOrder(Connection db, int thisId, String direction) throws SQLException {
     SurveyQuestion thisQuestion = getQuestion(thisId);
     SurveyQuestion swapQuestion = null;
     if (direction.equalsIgnoreCase("U")) {
-      if ((this.indexOf(thisQuestion) ) > 0) {
-        swapQuestion = (SurveyQuestion) this.get(this.indexOf(thisQuestion) - 1);
+      if ((this.indexOf(thisQuestion)) > 0) {
+        swapQuestion = (SurveyQuestion) this.get(
+            this.indexOf(thisQuestion) - 1);
       }
     } else {
-      if (this.indexOf(thisQuestion) + 1  < this.size()) {
-        swapQuestion = (SurveyQuestion) this.get(this.indexOf(thisQuestion) + 1);
+      if (this.indexOf(thisQuestion) + 1 < this.size()) {
+        swapQuestion = (SurveyQuestion) this.get(
+            this.indexOf(thisQuestion) + 1);
       }
     }
     if (swapQuestion != null) {
@@ -273,10 +280,10 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -304,12 +311,12 @@ public class SurveyQuestionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     String sql =

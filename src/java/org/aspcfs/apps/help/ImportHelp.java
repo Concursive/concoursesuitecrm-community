@@ -32,11 +32,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    November 26, 2003
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created November 26, 2003
  */
 public class ImportHelp {
 
@@ -50,15 +50,16 @@ public class ImportHelp {
 
 
   /**
-   *  Constructor for the ImportHelp object
+   * Constructor for the ImportHelp object
    */
-  public ImportHelp() { }
+  public ImportHelp() {
+  }
 
 
   /**
-   *  Constructor for the ImportHelp object
+   * Constructor for the ImportHelp object
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public ImportHelp(String[] args) {
     ConnectionPool sqlDriver = null;
@@ -83,7 +84,8 @@ public class ImportHelp {
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(5);
       //Test a single connection
-      ConnectionElement thisElement = new ConnectionElement(uri, username, passwd);
+      ConnectionElement thisElement = new ConnectionElement(
+          uri, username, passwd);
       thisElement.setDriver(driver);
 
       db = sqlDriver.getConnection(thisElement);
@@ -94,7 +96,8 @@ public class ImportHelp {
       buildExistingPermissionCategories(db);
 
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Inserting data into help_module, help_contents, features, tips, etc...");
+        System.out.println(
+            "Inserting data into help_module, help_contents, features, tips, etc...");
       }
       insertHelpRecords(db);
       buildTableOfContents();
@@ -114,13 +117,14 @@ public class ImportHelp {
 
 
   /**
-   *  The main program for the ImportHelp class
+   * The main program for the ImportHelp class
    *
-   *@param  args  The command line arguments
+   * @param args The command line arguments
    */
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
-      System.out.println("Usage: java ImportHelp [filepath][driver][uri][user] <passwd>");
+      System.out.println(
+          "Usage: java ImportHelp [filepath][driver][uri][user] <passwd>");
     } else {
       System.setProperty("DEBUG", "1");
       new ImportHelp(args);
@@ -130,11 +134,11 @@ public class ImportHelp {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertHelpRecords(Connection db) throws SQLException {
     // Inserting a records correspoding to a permission category
@@ -146,14 +150,16 @@ public class ImportHelp {
       }
       // Verifying if the permission category exists in the new database
       int categoryId = -1;
-      if ((categoryId = existPermissionCategory(tempHelpModule.getCategory())) != -1) {
+      if ((categoryId = existPermissionCategory(
+          Integer.parseInt(tempHelpModule.getCategory()))) != -1) {
         tempHelpModule.setId(categoryId);
         tempHelpModule.setCategoryId(categoryId);
 
         tempHelpModule.insertModule(db);
       } else {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println(" * " + tempHelpModule.getCategory() + " Does not exist in the new database");
+          System.out.println(
+              " * " + tempHelpModule.getCategory() + " Does not exist in the new database");
         }
       }
     }
@@ -163,11 +169,11 @@ public class ImportHelp {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertTableOfContents(Connection db) throws SQLException {
 
@@ -179,9 +185,11 @@ public class ImportHelp {
       TableOfContentItem tmpItem = (TableOfContentItem) itr.next();
 
       if (tmpItem.getLevel() > 1) {
-        tmpItem.setParent(((Integer) map.get(new Integer(tmpItem.getLevel() - 1))).intValue());
+        tmpItem.setParent(
+            ((Integer) map.get(new Integer(tmpItem.getLevel() - 1))).intValue());
       }
-      map.put(new Integer(tmpItem.getLevel()), new Integer(tmpItem.insert(db)));
+      map.put(
+          new Integer(tmpItem.getLevel()), new Integer(tmpItem.insert(db)));
     }
 
     return true;
@@ -189,31 +197,30 @@ public class ImportHelp {
 
 
   /**
-   *  Finds whether a permission category in the exported xml data exists in the
-   *  new database
+   * Finds whether a permission category in the exported xml data exists in the
+   * new database
    *
-   *@param  category  Category name as it exists in the exported xml data
-   *@return           the id of the permission category in the new database
+   * @param category Category name as it exists in the exported xml data
+   * @return the id of the permission category in the new database
    */
-  public int existPermissionCategory(String category) {
+  public int existPermissionCategory(int category) {
     Iterator itr = permissionCategories.iterator();
     while (itr.hasNext()) {
       PermissionCategory pc = (PermissionCategory) itr.next();
-      if (category.trim().equals(pc.getCategory().trim())) {
+      if (category == pc.getConstant()) {
         return pc.getId();
       }
     }
-
     return -1;
   }
 
 
   /**
-   *  Fetch all the existing permission categories from the new database
+   * Fetch all the existing permission categories from the new database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean buildExistingPermissionCategories(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -234,9 +241,9 @@ public class ImportHelp {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  filePath  Description of the Parameter
+   * @param filePath Description of the Parameter
    */
   public void buildHelpInformation(String filePath) {
 
@@ -255,9 +262,9 @@ public class ImportHelp {
 
 
   /**
-   *  Builds the data structure from the XMl document
+   * Builds the data structure from the XMl document
    *
-   *@param  node  Description of the Parameter
+   * @param node Description of the Parameter
    */
   public void processNode(Node node) {
     NodeList moduleList = ((Element) node).getElementsByTagName("module");
@@ -267,61 +274,91 @@ public class ImportHelp {
       NamedNodeMap moduleNMP = module.getAttributes();
 
       HelpModule helpModule = new HelpModule();
-      helpModule.setCategory(moduleNMP.getNamedItem("name").getNodeValue());
-      helpModule.setContentLevel(moduleNMP.getNamedItem("contentLevel").getNodeValue());
+      helpModule.setCategory(
+          moduleNMP.getNamedItem("constant").getNodeValue());
+      helpModule.setContentLevel(
+          moduleNMP.getNamedItem("contentLevel").getNodeValue());
 
-      NodeList briefDescription = ((Element) module).getElementsByTagName("briefDescription");
-      helpModule.setBriefDescription(XMLUtils.toString(briefDescription.item(0).getFirstChild().getNodeValue()));
+      NodeList briefDescription = ((Element) module).getElementsByTagName(
+          "briefDescription");
+      helpModule.setBriefDescription(
+          XMLUtils.toString(
+              briefDescription.item(0).getFirstChild().getNodeValue()));
 
-      NodeList detailDescription = ((Element) module).getElementsByTagName("detailDescription");
-      helpModule.setDetailDescription(XMLUtils.toString(detailDescription.item(0).getFirstChild().getNodeValue()));
+      NodeList detailDescription = ((Element) module).getElementsByTagName(
+          "detailDescription");
+      helpModule.setDetailDescription(
+          XMLUtils.toString(
+              detailDescription.item(0).getFirstChild().getNodeValue()));
 
-      NodeList pageList = ((Element) module).getElementsByTagName("pageDescription");
+      NodeList pageList = ((Element) module).getElementsByTagName(
+          "pageDescription");
 
       if (System.getProperty("DEBUG") != null) {
-        System.out.println(" " + helpModule.getCategory() + ": " + pageList.getLength());
+        System.out.println(
+            " " + helpModule.getCategory() + ": " + pageList.getLength());
       }
       for (int j = 0; j < pageList.getLength(); j++) {
         Node page = pageList.item(j);
         NamedNodeMap pageNMP = page.getAttributes();
 
         HelpContent helpContent = new HelpContent();
-        helpContent.setContentLevel(pageNMP.getNamedItem("contentLevel").getNodeValue());
+        helpContent.setContentLevel(
+            pageNMP.getNamedItem("contentLevel").getNodeValue());
 
         NodeList action = ((Element) page).getElementsByTagName("action");
         helpContent.setAction(action.item(0).getFirstChild().getNodeValue());
 
         NodeList section = ((Element) page).getElementsByTagName("section");
-        helpContent.setSection(((section.item(0).getFirstChild() != null) ? section.item(0).getFirstChild().getNodeValue() : null));
+        helpContent.setSection(
+            ((section.item(0).getFirstChild() != null) ? section.item(0).getFirstChild().getNodeValue() : null));
 
-        NodeList subSection = ((Element) page).getElementsByTagName("subSection");
-        helpContent.setSub(((subSection.item(0).getFirstChild() != null) ? subSection.item(0).getFirstChild().getNodeValue() : null));
+        NodeList subSection = ((Element) page).getElementsByTagName(
+            "subSection");
+        helpContent.setSub(
+            ((subSection.item(0).getFirstChild() != null) ? subSection.item(0).getFirstChild().getNodeValue() : null));
 
         NodeList title = ((Element) page).getElementsByTagName("title");
-        helpContent.setTitle(((title.item(0).getFirstChild() != null) ? title.item(0).getFirstChild().getNodeValue() : null));
+        helpContent.setTitle(
+            ((title.item(0).getFirstChild() != null) ? title.item(0).getFirstChild().getNodeValue() : null));
 
-        NodeList description = ((Element) page).getElementsByTagName("description");
-        helpContent.setDescription(((description.item(0).getFirstChild() != null) ? XMLUtils.toString(description.item(0).getFirstChild().getNodeValue()) : null));
+        NodeList description = ((Element) page).getElementsByTagName(
+            "description");
+        helpContent.setDescription(
+            ((description.item(0).getFirstChild() != null) ? XMLUtils.toString(
+                description.item(0).getFirstChild().getNodeValue()) : null));
 
         int k = 0;
-        NodeList featureList = ((Element) page).getElementsByTagName("featureDescription");
+        NodeList featureList = ((Element) page).getElementsByTagName(
+            "featureDescription");
         for (k = 0; k < featureList.getLength(); k++) {
-          helpContent.getFeatures().add(XMLUtils.toString(featureList.item(k).getFirstChild().getNodeValue()));
+          helpContent.getFeatures().add(
+              XMLUtils.toString(
+                  featureList.item(k).getFirstChild().getNodeValue()));
         }
 
-        NodeList ruleList = ((Element) page).getElementsByTagName("ruleDescription");
+        NodeList ruleList = ((Element) page).getElementsByTagName(
+            "ruleDescription");
         for (k = 0; k < ruleList.getLength(); k++) {
-          helpContent.getRules().add(XMLUtils.toString(ruleList.item(k).getFirstChild().getNodeValue()));
+          helpContent.getRules().add(
+              XMLUtils.toString(
+                  ruleList.item(k).getFirstChild().getNodeValue()));
         }
 
-        NodeList noteList = ((Element) page).getElementsByTagName("noteDescription");
+        NodeList noteList = ((Element) page).getElementsByTagName(
+            "noteDescription");
         for (k = 0; k < noteList.getLength(); k++) {
-          helpContent.getNotes().add(XMLUtils.toString(noteList.item(k).getFirstChild().getNodeValue()));
+          helpContent.getNotes().add(
+              XMLUtils.toString(
+                  noteList.item(k).getFirstChild().getNodeValue()));
         }
 
-        NodeList tipList = ((Element) page).getElementsByTagName("tipDescription");
+        NodeList tipList = ((Element) page).getElementsByTagName(
+            "tipDescription");
         for (k = 0; k < tipList.getLength(); k++) {
-          helpContent.getTips().add(XMLUtils.toString(tipList.item(k).getFirstChild().getNodeValue()));
+          helpContent.getTips().add(
+              XMLUtils.toString(
+                  tipList.item(k).getFirstChild().getNodeValue()));
         }
 
         helpModule.getHelpContents().add(helpContent);
@@ -333,7 +370,7 @@ public class ImportHelp {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildTableOfContents() {
     Iterator moduleItr = helpModules.iterator();
@@ -352,7 +389,8 @@ public class ImportHelp {
       Iterator contentItr = tempHelpModule.getHelpContents().iterator();
 
       TableOfContentItem tempModuleTOCItem = new TableOfContentItem();
-      tempModuleTOCItem.buildRecord(tempHelpModule.getCategory(),
+      tempModuleTOCItem.buildRecord(
+          tempHelpModule.getCategory(),
           tempHelpModule.getCategoryId(),
           moduleOrder);
 
@@ -367,7 +405,8 @@ public class ImportHelp {
         }
 
         TableOfContentItem tempContentTOCItem = new TableOfContentItem();
-        tempContentTOCItem.buildRecord(tempHelpModule.getCategoryId(),
+        tempContentTOCItem.buildRecord(
+            tempHelpModule.getCategoryId(),
             tempHelpContent.fetchTitle(),
             contentOrder,
             tempHelpContent.getContentLevel(),

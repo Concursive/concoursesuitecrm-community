@@ -30,7 +30,7 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
+      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" type="project.news" object="Project"/></a> >
       <dhv:label name="project.articleDetails">Article Details</dhv:label>
     </td>
   </tr>

@@ -23,19 +23,19 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 29, 2004
- *@version    $Id: NumericalConfigurator.java,v 1.1.4.1 2004/10/18 19:56:27
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: NumericalConfigurator.java,v 1.1.4.1 2004/10/18 19:56:27
+ *          mrajkowski Exp $
+ * @created September 29, 2004
  */
 public class NumericalConfigurator extends Configurator implements OptionConfigurator {
   //properties
   private String label = null;
   private int minNum = -1;
   private int maxNum = -1;
-  private int defaultNum = -1;
+  private int defaultNum = 0;
   private boolean allowFractions = false;
   private double priceAdjust = 0;
   //string property ids
@@ -51,9 +51,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the priceAdjust attribute of the NumericalConfigurator object
+   * Gets the priceAdjust attribute of the NumericalConfigurator object
    *
-   *@return    The priceAdjust value
+   * @return The priceAdjust value
    */
   public double getPriceAdjust() {
     return priceAdjust;
@@ -61,9 +61,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the priceAdjust attribute of the NumericalConfigurator object
+   * Sets the priceAdjust attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(double tmp) {
     this.priceAdjust = tmp;
@@ -71,9 +71,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the priceAdjust attribute of the NumericalConfigurator object
+   * Sets the priceAdjust attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(String tmp) {
     this.priceAdjust = Double.parseDouble(tmp);
@@ -81,9 +81,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the label attribute of the NumericalConfigurator object
+   * Gets the label attribute of the NumericalConfigurator object
    *
-   *@return    The label value
+   * @return The label value
    */
   public String getLabel() {
     return label;
@@ -91,9 +91,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the label attribute of the NumericalConfigurator object
+   * Sets the label attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new label value
+   * @param tmp The new label value
    */
   public void setLabel(String tmp) {
     this.label = tmp;
@@ -101,9 +101,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the minNum attribute of the NumericalConfigurator object
+   * Gets the minNum attribute of the NumericalConfigurator object
    *
-   *@return    The minNum value
+   * @return The minNum value
    */
   public int getMinNum() {
     return minNum;
@@ -111,9 +111,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the minNum attribute of the NumericalConfigurator object
+   * Sets the minNum attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new minNum value
+   * @param tmp The new minNum value
    */
   public void setMinNum(int tmp) {
     this.minNum = tmp;
@@ -121,9 +121,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the minNum attribute of the NumericalConfigurator object
+   * Sets the minNum attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new minNum value
+   * @param tmp The new minNum value
    */
   public void setMinNum(String tmp) {
     this.minNum = Integer.parseInt(tmp);
@@ -131,9 +131,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the maxNum attribute of the NumericalConfigurator object
+   * Gets the maxNum attribute of the NumericalConfigurator object
    *
-   *@return    The maxNum value
+   * @return The maxNum value
    */
   public int getMaxNum() {
     return maxNum;
@@ -141,9 +141,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the maxNum attribute of the NumericalConfigurator object
+   * Sets the maxNum attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new maxNum value
+   * @param tmp The new maxNum value
    */
   public void setMaxNum(int tmp) {
     this.maxNum = tmp;
@@ -151,9 +151,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the maxNum attribute of the NumericalConfigurator object
+   * Sets the maxNum attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new maxNum value
+   * @param tmp The new maxNum value
    */
   public void setMaxNum(String tmp) {
     this.maxNum = Integer.parseInt(tmp);
@@ -161,9 +161,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the defaultNum attribute of the NumericalConfigurator object
+   * Gets the defaultNum attribute of the NumericalConfigurator object
    *
-   *@return    The defaultNum value
+   * @return The defaultNum value
    */
   public int getDefaultNum() {
     return defaultNum;
@@ -171,9 +171,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the defaultNum attribute of the NumericalConfigurator object
+   * Sets the defaultNum attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new defaultNum value
+   * @param tmp The new defaultNum value
    */
   public void setDefaultNum(int tmp) {
     this.defaultNum = tmp;
@@ -181,9 +181,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the defaultNum attribute of the NumericalConfigurator object
+   * Sets the defaultNum attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new defaultNum value
+   * @param tmp The new defaultNum value
    */
   public void setDefaultNum(String tmp) {
     this.defaultNum = Integer.parseInt(tmp);
@@ -191,9 +191,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the allowFractions attribute of the NumericalConfigurator object
+   * Gets the allowFractions attribute of the NumericalConfigurator object
    *
-   *@return    The allowFractions value
+   * @return The allowFractions value
    */
   public boolean getAllowFractions() {
     return allowFractions;
@@ -201,9 +201,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the allowFractions attribute of the NumericalConfigurator object
+   * Sets the allowFractions attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new allowFractions value
+   * @param tmp The new allowFractions value
    */
   public void setAllowFractions(boolean tmp) {
     this.allowFractions = tmp;
@@ -211,18 +211,17 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the allowFractions attribute of the NumericalConfigurator object
+   * Sets the allowFractions attribute of the NumericalConfigurator object
    *
-   *@param  tmp  The new allowFractions value
+   * @param tmp The new allowFractions value
    */
   public void setAllowFractions(String tmp) {
     this.allowFractions = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Constructor for the NumericalConfigurator object
+   * Constructor for the NumericalConfigurator object
    */
   public NumericalConfigurator() {
     //set the name
@@ -288,9 +287,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean arePropertiesConfigured() {
     return true;
@@ -298,9 +297,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Sets the properties attribute of the NumericalConfigurator object
+   * Sets the properties attribute of the NumericalConfigurator object
    *
-   *@param  request  The new properties value
+   * @param request The new properties value
    */
   public void setProperties(HttpServletRequest request) {
     propertyList.setOptionProperties(request);
@@ -308,29 +307,33 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
     label = propertyList.getOptionProperty("text_label").getValue();
     String tmp = propertyList.getOptionProperty("number_min").getValue();
     if (tmp != null && !"".equals(tmp.trim())) {
-      minNum = Integer.parseInt(propertyList.getOptionProperty("number_min").getValue());
+      minNum = Integer.parseInt(
+          propertyList.getOptionProperty("number_min").getValue());
     }
     tmp = propertyList.getOptionProperty("number_max").getValue();
     if (tmp != null && !"".equals(tmp.trim())) {
-      maxNum = Integer.parseInt(propertyList.getOptionProperty("number_max").getValue());
+      maxNum = Integer.parseInt(
+          propertyList.getOptionProperty("number_max").getValue());
     }
     tmp = propertyList.getOptionProperty("number_default").getValue();
     if (tmp != null && !"".equals(tmp.trim())) {
-      defaultNum = Integer.parseInt(propertyList.getOptionProperty("number_default").getValue());
+      defaultNum = Integer.parseInt(
+          propertyList.getOptionProperty("number_default").getValue());
     }
     tmp = propertyList.getOptionProperty("boolean_allowfractions").getValue();
     allowFractions = ("true".equals(tmp) ? true : false);
-    priceAdjust = Double.parseDouble(propertyList.getOptionProperty("double_priceadjust").getValue());
+    priceAdjust = Double.parseDouble(
+        propertyList.getOptionProperty("double_priceadjust").getValue());
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean saveProperties(Connection db, ProductOption option) throws SQLException {
     boolean result = false;
@@ -368,12 +371,12 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateProperties(Connection db, ProductOption option) throws SQLException {
     boolean result = false;
@@ -410,12 +413,12 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  doClean           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param doClean  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryProperties(Connection db, int optionId, boolean doClean) throws SQLException {
     if (optionId == -1) {
@@ -432,13 +435,16 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
     propertyList.setOptionProperty("number_max", String.valueOf(maxNum));
     // populate the default num
     defaultNum = getInteger(db, optionId, DEFAULT_NUM);
-    propertyList.setOptionProperty("number_default", String.valueOf(defaultNum));
+    propertyList.setOptionProperty(
+        "number_default", String.valueOf(defaultNum));
     // populate the allow fractions boolean
     allowFractions = getBoolean(db, optionId, ALLOW_FRACTIONS);
-    propertyList.setOptionProperty("boolean_allowfractions", Boolean.toString(allowFractions));
+    propertyList.setOptionProperty(
+        "boolean_allowfractions", Boolean.toString(allowFractions));
     // populate the priceAdjust value
     priceAdjust = getDouble(db, optionId, PRICE_ADJUST);
-    propertyList.setOptionProperty("double_priceadjust", String.valueOf(priceAdjust));
+    propertyList.setOptionProperty(
+        "double_priceadjust", String.valueOf(priceAdjust));
     //set the built property to true
     built = true;
     //set the option id
@@ -447,12 +453,12 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean enableOption(Connection db, int optionId) throws SQLException {
     return true;
@@ -460,29 +466,32 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param request Description of the Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void prepareContext(HttpServletRequest request, Connection db) throws SQLException { }
+  public void prepareContext(HttpServletRequest request, Connection db) throws SQLException {
+  }
 
 
   /**
-   *  Gets the html attribute of the NumericalConfigurator object
+   * Gets the html attribute of the NumericalConfigurator object
    *
-   *@return    The html value
+   * @return The html value
    */
   public String getHtml() {
     StringBuffer sb = new StringBuffer();
-    sb.append("<table class=\"empty\" cellspacing=\"4\" cellpadding=\"2\" width=\"100%\">");
+    sb.append(
+        "<table class=\"empty\" cellspacing=\"4\" cellpadding=\"2\" width=\"100%\">");
     sb.append("	<tr>");
     sb.append("		<td width=\"100\" nowrap>");
     sb.append("    " + label);
     sb.append("   </td>");
     sb.append("		<td>" + "<input type=\"text\" size=\"" + "6" + "\"");
-    sb.append("            name=\"number" + optionId + "\" value=\"" + defaultNum + "\"/>");
+    sb.append(
+        "            name=\"number" + optionId + "\" value=\"" + defaultNum + "\"/>");
     sb.append("   </td>");
     sb.append(" </tr>");
     sb.append("</table>");
@@ -491,9 +500,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Gets the quoteHtml attribute of the NumericalConfigurator object
+   * Gets the quoteHtml attribute of the NumericalConfigurator object
    *
-   *@return    The quoteHtml value
+   * @return The quoteHtml value
    */
   public String getQuoteHtml() {
     StringBuffer sb = new StringBuffer();
@@ -503,10 +512,12 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
     sb.append("    " + label);
     sb.append("   </td>");
     sb.append("		<td>" + "<input type=\"text\" size=\"" + "6" + "\"");
-    sb.append("            name=\"number" + optionId + "\" value=\"" + quoteUserInput + "\"/>");
+    sb.append(
+        "            name=\"number" + optionId + "\" value=\"" + quoteUserInput + "\"/>");
     sb.append("   </td>");
     sb.append("		<td width=\"25%\">" + "<input type=\"text\" size=\"8\"");
-    sb.append("            name=\"price" + optionId + "\" value=\"" + quotePriceAdjust + "\"/>");
+    sb.append(
+        "            name=\"price" + optionId + "\" value=\"" + quotePriceAdjust + "\"/>");
     sb.append("   </td>");
     sb.append(" </tr>");
     sb.append("</table>");
@@ -515,10 +526,10 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean validateUserInput(HttpServletRequest request) {
     boolean isValid = true;
@@ -526,21 +537,40 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
       String input = request.getParameter("number" + optionId);
       try {
         if (allowFractions) {
-          if ((Double.parseDouble(input) < minNum) || (Double.parseDouble(input) > maxNum)) {
-            isValid = false;
+          if (minNum != -1) {
+            if ((Double.parseDouble(input) < minNum)) {
+              isValid = false;
+            }
           }
+          if (maxNum != -1) {
+            if ((Double.parseDouble(input) > maxNum)) {
+              isValid = false;
+            }
+          }
+          //minNum and maxNum are -1. User did not specify these values. So check to see if the input is valid
+          double tmp = Double.parseDouble(input);
         } else {
-          if ((Integer.parseInt(input) < minNum) || (Integer.parseInt(input) > maxNum)) {
-            isValid = false;
+          if (minNum != -1) {
+            if ((Integer.parseInt(input) < minNum)) {
+              isValid = false;
+            }
           }
+          if (maxNum != -1) {
+            if ((Integer.parseInt(input) > maxNum)) {
+              isValid = false;
+            }
+          }
+          //minNum and maxNum are -1. User did not specify these values. So check to see if the input is valid
+          int tmp = Integer.parseInt(input);
         }
       } catch (Exception e) {
         isValid = false;
-      } 
+      }
     }
     try {
       if (request.getParameter("price" + optionId) != null) {
-          double price = Double.parseDouble(request.getParameter("price" + optionId));
+        double price = Double.parseDouble(
+            request.getParameter("price" + optionId));
       }
     } catch (Exception e) {
       isValid = false;
@@ -550,10 +580,10 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasUserInput(HttpServletRequest request) {
     boolean hasInput = false;
@@ -574,10 +604,10 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public double computePriceAdjust(HttpServletRequest request) {
     if (request.getParameter("number" + optionId) != null) {
@@ -585,7 +615,8 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
       try {
         if (validateUserInput(request)) {
           if (request.getParameter("price" + optionId) != null) {
-            double price = Double.parseDouble(request.getParameter("price" + optionId));
+            double price = Double.parseDouble(
+                request.getParameter("price" + optionId));
             if (allowFractions) {
               return (Double.parseDouble(input) * price);
             } else {
@@ -607,31 +638,32 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  request               Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param request              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveQuoteOption(Connection db, int quoteProductOptionId, HttpServletRequest request) throws SQLException {
     if (request.getParameter("number" + optionId) != null) {
       String input = request.getParameter("number" + optionId);
       if (input != null) {
         saveQuoteText(db, quoteProductOptionId, QUOTE_USER_INPUT, input);
-        saveQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST, priceAdjust);
+        saveQuoteDouble(
+            db, quoteProductOptionId, QUOTE_PRICE_ADJUST, priceAdjust);
       }
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  request               Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param request              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateQuoteOption(Connection db, int quoteProductOptionId, HttpServletRequest request) throws SQLException {
     if (request.getParameter("number" + optionId) != null) {
@@ -640,7 +672,9 @@ public class NumericalConfigurator extends Configurator implements OptionConfigu
     }
     if (request.getParameter("price" + optionId) != null) {
       String input = request.getParameter("price" + optionId);
-      updateQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST, Double.parseDouble(input));
+      updateQuoteDouble(
+          db, quoteProductOptionId, QUOTE_PRICE_ADJUST, Double.parseDouble(
+              input));
     }
   }
 }

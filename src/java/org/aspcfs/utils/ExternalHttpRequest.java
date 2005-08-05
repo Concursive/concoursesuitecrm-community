@@ -15,21 +15,23 @@
  */
 package org.aspcfs.utils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Enumeration;
 
 /**
- *  A utility to retrieve HTML from a website and store it in a string. Can
- *  retrieve from the specified link with or without specifying request
- *  parameters.
+ * A utility to retrieve HTML from a website and store it in a string. Can
+ * retrieve from the specified link with or without specifying request
+ * parameters.
  *
- *@author     mrajkowski
- *@created    August 3, 2001
- *@version    $Id: ExternalHttpRequest.java,v 1.1 2001/08/03 17:12:39 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: ExternalHttpRequest.java,v 1.1 2001/08/03 17:12:39 mrajkowski
+ *          Exp $
+ * @created August 3, 2001
  */
 public class ExternalHttpRequest {
 
@@ -39,19 +41,20 @@ public class ExternalHttpRequest {
 
 
   /**
-   *  Constructor for the ExternalHttpRequest object... does nothing.
+   * Constructor for the ExternalHttpRequest object... does nothing.
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public ExternalHttpRequest() { }
+  public ExternalHttpRequest() {
+  }
 
 
   /**
-   *  Constructor for the ExternalHttpRequest object. Retrieves the specified
-   *  url and stores in a string.
+   * Constructor for the ExternalHttpRequest object. Retrieves the specified
+   * url and stores in a string.
    *
-   *@param  link  Description of Parameter
-   *@since        1.0
+   * @param link Description of Parameter
+   * @since 1.0
    */
   public ExternalHttpRequest(String link) {
     try {
@@ -69,17 +72,17 @@ public class ExternalHttpRequest {
 
 
   /**
-   *  Constructor for the ExternalHttpRequest object. Retrieves the specified
-   *  url and stores in a string, but also passes any parameters in the current
-   *  HttpServletRequest to the url before getting the results. <p>
+   * Constructor for the ExternalHttpRequest object. Retrieves the specified
+   * url and stores in a string, but also passes any parameters in the current
+   * HttpServletRequest to the url before getting the results. <p>
+   * <p/>
+   * The 'command' parameter is ignored because that is used by the servlet
+   * controller.
    *
-   *  The 'command' parameter is ignored because that is used by the servlet
-   *  controller.
-   *
-   *@param  request   Description of Parameter
-   *@param  link      Description of Parameter
-   *@param  username  Description of the Parameter
-   *@since            1.0
+   * @param request  Description of Parameter
+   * @param link     Description of Parameter
+   * @param username Description of the Parameter
+   * @since 1.0
    */
   public ExternalHttpRequest(HttpServletRequest request, String link, String username) {
 
@@ -96,7 +99,9 @@ public class ExternalHttpRequest {
       if (param.equals("command")) {
         //Throw it away because the servlet controller uses this only
       } else {
-        parameterList.append(((parameterList.length() == 0) ? "" : "&") + param + "=" + request.getParameter(param));
+        parameterList.append(
+            ((parameterList.length() == 0) ? "" : "&") + param + "=" + request.getParameter(
+                param));
       }
     }
 
@@ -139,10 +144,10 @@ public class ExternalHttpRequest {
 
 
   /**
-   *  Gets the HtmlOutput attribute of the ExternalHttpRequest object
+   * Gets the HtmlOutput attribute of the ExternalHttpRequest object
    *
-   *@return    The HtmlOutput value
-   *@since     1.0
+   * @return The HtmlOutput value
+   * @since 1.0
    */
   public String getHtmlOutput() {
     return htmlOutput.toString();
@@ -150,11 +155,11 @@ public class ExternalHttpRequest {
 
 
   /**
-   *  Gets the ErrorCode attribute of the ExternalHttpRequest object. A result
-   *  equal to 0 means no error.
+   * Gets the ErrorCode attribute of the ExternalHttpRequest object. A result
+   * equal to 0 means no error.
    *
-   *@return    The ErrorCode value
-   *@since     1.0
+   * @return The ErrorCode value
+   * @since 1.0
    */
   public int getErrorCode() {
     return errorCode;
@@ -162,10 +167,10 @@ public class ExternalHttpRequest {
 
 
   /**
-   *  Gets the ErrorMessage attribute of the ExternalHttpRequest object
+   * Gets the ErrorMessage attribute of the ExternalHttpRequest object
    *
-   *@return    The ErrorMessage value
-   *@since     1.0
+   * @return The ErrorMessage value
+   * @since 1.0
    */
   public String getErrorMessage() {
     return errorMessage;
@@ -173,11 +178,11 @@ public class ExternalHttpRequest {
 
 
   /**
-   *  Method to retrieve the HTML.
+   * Method to retrieve the HTML.
    *
-   *@param  http                     Description of Parameter
-   *@exception  java.io.IOException  Description of Exception
-   *@since                           1.0
+   * @param http Description of Parameter
+   * @throws java.io.IOException Description of Exception
+   * @since 1.0
    */
   private void retrieveHtml(HttpURLConnection http) throws java.io.IOException {
     //Get the requested page

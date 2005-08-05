@@ -30,21 +30,20 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    December 4, 2001
- *@version    $Id: ProjectManagementFiles.java,v 1.14.82.1 2004/07/07 15:12:07
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: ProjectManagementFiles.java,v 1.14.82.1 2004/07/07 15:12:07
+ *          mrajkowski Exp $
+ * @created December 4, 2001
  */
 public final class ProjectManagementFiles extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandAdd(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -55,13 +54,16 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-upload")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-upload")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_upload").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_upload").toLowerCase());
       // Check user's account size
       /*
        *  User thisUser = getUser(context);
@@ -86,11 +88,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandUpload(ActionContext context) {
     Connection db = null;
@@ -122,14 +123,17 @@ public final class ProjectManagementFiles extends CFSModule {
         context.getRequest().setAttribute("subject", subject);
       }
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-upload")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-upload")) {
         //TODO: Should delete the uploads, then exit
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_library").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_library").toLowerCase());
       //Update the database with the resulting file
       if ((Object) parts.get("id" + projectId) instanceof FileInfo) {
         FileInfo newFileInfo = (FileInfo) parts.get("id" + projectId);
@@ -167,8 +171,10 @@ public final class ProjectManagementFiles extends CFSModule {
         if (recordInserted) {
           if (thisItem.isImageFormat()) {
             //Create a thumbnail if this is an image
-            File thumbnailFile = new File(newFileInfo.getLocalFile().getPath() + "TH");
-            ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnailFile, 133d, 133d);
+            File thumbnailFile = new File(
+                newFileInfo.getLocalFile().getPath() + "TH");
+            ImageUtils.saveThumbnail(
+                newFileInfo.getLocalFile(), thumbnailFile, 133d, 133d);
             //Store thumbnail in database
             Thumbnail thumbnail = new Thumbnail();
             thumbnail.setId(thisItem.getId());
@@ -183,9 +189,13 @@ public final class ProjectManagementFiles extends CFSModule {
       } else {
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
-          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+          errors.put(
+              "subjectError", systemStatus.getLabel(
+                  "object.validation.required"));
         }
         processErrors(context, errors);
       }
@@ -203,7 +213,9 @@ public final class ProjectManagementFiles extends CFSModule {
     } else {
       HashMap errors = new HashMap();
       SystemStatus systemStatus = this.getSystemStatus(context);
-      errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+      errors.put(
+          "actionError", systemStatus.getLabel(
+              "object.validation.incorrectFileName"));
       processErrors(context, errors);
       if ((itemId == null) || "-1".equals(itemId)) {
         return executeCommandAdd(context);
@@ -214,10 +226,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -232,15 +244,19 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-upload")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-upload")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_upload").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_upload").toLowerCase());
       // Load the file item
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(projectId), Constants.PROJECTS_FILES);
+      FileItem thisFile = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(projectId), Constants.PROJECTS_FILES);
       context.getRequest().setAttribute("FileItem", thisFile);
       // NOTE: This feature is not supported
       /*
@@ -267,10 +283,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
     Connection db = null;
@@ -292,13 +308,16 @@ public final class ProjectManagementFiles extends CFSModule {
       //Update the database with the resulting file
       FileInfo newFileInfo = (FileInfo) parts.get("id" + projectId);
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-upload")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-upload")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_library").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_library").toLowerCase());
 
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.PROJECTS_FILES);
@@ -338,11 +357,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
     Exception errorMessage = null;
@@ -355,16 +373,20 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project info
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-view")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-view")) {
         return "PermissionError";
       }
       thisProject.buildFileItemList(db);
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_details").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_details").toLowerCase());
       //Load the details for the selected file item
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
       //Load the current folder state information
@@ -384,10 +406,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     Exception errorMessage = null;
@@ -399,17 +421,21 @@ public final class ProjectManagementFiles extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-download")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-download")) {
         return "PermissionError";
       }
-      thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_library").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_library").toLowerCase());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -420,7 +446,8 @@ public final class ProjectManagementFiles extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "projects") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "projects") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -434,12 +461,15 @@ public final class ProjectManagementFiles extends CFSModule {
           db = getConnection(context);
           itemToDownload.updateCounter(db);
         } else {
-          System.err.println("PMF-> Trying to send a file that does not exist");
+          System.err.println(
+              "PMF-> Trying to send a file that does not exist");
         }
       } else {
-        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        FileItemVersion itemToDownload = thisItem.getVersion(
+            Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "projects") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "projects") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -453,7 +483,8 @@ public final class ProjectManagementFiles extends CFSModule {
           db = getConnection(context);
           itemToDownload.updateCounter(db);
         } else {
-          System.err.println("PMF-> Trying to send a file that does not exist");
+          System.err.println(
+              "PMF-> Trying to send a file that does not exist");
         }
       }
     } catch (java.net.SocketException se) {
@@ -474,11 +505,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -488,15 +518,19 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-rename")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-rename")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("file_modify").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("file_modify").toLowerCase());
       //Load the file item to be modified
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
       //Build array of folder trails
@@ -516,10 +550,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     boolean recordInserted = false;
@@ -527,21 +561,25 @@ public final class ProjectManagementFiles extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     String itemId = (String) context.getRequest().getParameter("fid");
     String subject = (String) context.getRequest().getParameter("subject");
-    String filename = (String) context.getRequest().getParameter("clientFilename");
+    String filename = (String) context.getRequest().getParameter(
+        "clientFilename");
 
     Connection db = null;
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-rename")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-rename")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       String filePath = this.getPath(context, "projects");
       //Load the file item
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       isValid = this.validateObject(context, db, thisItem);
@@ -567,10 +605,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     boolean recordDeleted = false;
@@ -582,32 +620,40 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-delete")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("pid", projectId);
       // Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       // Determine if just 1 version or the whole file is to be deleted
       if (version != null) {
         thisItem.buildVersionList(db);
         if (thisItem.getVersionList().size() > 1) {
           isVersion = true;
-          if (Double.parseDouble(version) == ((FileItemVersion) thisItem.getVersionList().get(0)).getVersion()) {
+          if (Double.parseDouble(version) == ((FileItemVersion) thisItem.getVersionList().get(
+              0)).getVersion()) {
             // The first entry in the list is being deleted
             // Delete the version, the next item will update the FileItem
-            recordDeleted = ((FileItemVersion) thisItem.getVersionList().get(0)).delete(db, this.getPath(context, "projects"));
-            thisItem.updateVersion(db, (FileItemVersion) thisItem.getVersionList().get(1));
+            recordDeleted = ((FileItemVersion) thisItem.getVersionList().get(
+                0)).delete(db, this.getPath(context, "projects"));
+            thisItem.updateVersion(
+                db, (FileItemVersion) thisItem.getVersionList().get(1));
           } else {
             // Just delete the version
-            recordDeleted = thisItem.getVersion(Double.parseDouble(version)).delete(db, this.getPath(context, "projects"));
+            recordDeleted = thisItem.getVersion(Double.parseDouble(version)).delete(
+                db, this.getPath(context, "projects"));
           }
         } else {
           // Delete the only version in the list
-          recordDeleted = thisItem.delete(db, this.getPath(context, "projects"));
+          recordDeleted = thisItem.delete(
+              db, this.getPath(context, "projects"));
           indexDeleteItem(context, thisItem);
         }
       } else {
@@ -634,10 +680,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     Connection db = null;
@@ -647,17 +693,20 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-rename")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-rename")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       //Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       context.getRequest().setAttribute("FileItem", thisItem);
       //Load the folders
       FileFolderHierarchy hierarchy = new FileFolderHierarchy();
@@ -676,31 +725,35 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     Connection db = null;
     //Parameters
     String projectId = (String) context.getRequest().getParameter("pid");
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("fid");
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-rename")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-rename")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       //Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
       thisItem.updateFolderId(db, Integer.parseInt(newFolderId));
       indexAddItem(context, thisItem);
       return "PopupCloseOK";
@@ -714,10 +767,10 @@ public final class ProjectManagementFiles extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShowThumbnail(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("p");
@@ -727,13 +780,16 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project and check permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-documents-files-download")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-documents-files-download")) {
         return "PermissionError";
       }
       //Load the file
-      thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), thisProject.getId(), Constants.PROJECTS_FILES);
     } catch (Exception e) {
     } finally {
       this.freeConnection(context, db);
@@ -742,9 +798,11 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       String filePath = null;
       if (context.getRequest().getParameter("s") != null) {
-        filePath = this.getPath(context, "projects") + getDatePath(thisItem.getModified()) + thisItem.getFilename();
+        filePath = this.getPath(context, "projects") + getDatePath(
+            thisItem.getModified()) + thisItem.getFilename();
       } else {
-        filePath = this.getPath(context, "projects") + getDatePath(thisItem.getModified()) + thisItem.getThumbnailFilename();
+        filePath = this.getPath(context, "projects") + getDatePath(
+            thisItem.getModified()) + thisItem.getThumbnailFilename();
       }
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);

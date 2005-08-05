@@ -15,23 +15,26 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.webdav.utils.ICalendar;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 /**
- *  Represents an Assignment in iTeam
+ * Represents an Assignment in iTeam
  *
- *@author     mrajkowski
- *@created    July 23, 2001
- *@version    $Id: Assignment.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: Assignment.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
+ *          $
+ * @created July 23, 2001
  */
 public class Assignment extends GenericBean {
 
@@ -57,6 +60,7 @@ public class Assignment extends GenericBean {
   private int actualLoeTypeId = -1;
   private String actualLoeType = null;
   private int priorityId = -1;
+  private String priority = null;
   private java.sql.Timestamp assignDate = null;
   private java.sql.Timestamp estStartDate = null;
   private java.sql.Timestamp startDate = null;
@@ -84,17 +88,19 @@ public class Assignment extends GenericBean {
   private int noteCount = 0;
   private AssignmentNote assignmentNote = null;
 
+
   /**
-   *  Constructor for the Assignment object
+   * Constructor for the Assignment object
    */
-  public Assignment() { }
+  public Assignment() {
+  }
 
 
   /**
-   *  Constructor for the Assignment object
+   * Constructor for the Assignment object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Assignment(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -102,12 +108,12 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Constructor for the Assignment object
+   * Constructor for the Assignment object
    *
-   *@param  db                Description of the Parameter
-   *@param  assignmentId      Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param assignmentId Description of the Parameter
+   * @param projectId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Assignment(Connection db, int assignmentId, int projectId) throws SQLException {
     this.setProjectId(projectId);
@@ -116,11 +122,11 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Constructor for the Assignment object
+   * Constructor for the Assignment object
    *
-   *@param  db                Description of the Parameter
-   *@param  assignmentId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param assignmentId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Assignment(Connection db, int assignmentId) throws SQLException {
     queryRecord(db, assignmentId);
@@ -128,21 +134,22 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  assignmentId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param assignmentId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int assignmentId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.*, s.description as status, s.type as status_type, s.graphic as status_graphic, " +
-        "loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type " +
+        "SELECT a.*, s.description AS status, s.type AS status_type, s.graphic AS status_graphic, " +
+        "loe_e.description AS loe_estimated_type, loe_a.description AS loe_actual_type, pr.description AS priority " +
         "FROM projects p, project_assignments a " +
         " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
         " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
         " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
+        " LEFT JOIN lookup_project_priority pr ON (a.priority_id = pr.code) " +
         "WHERE assignment_id = ? " +
         "AND p.project_id = a.project_id ");
     if (projectId > -1) {
@@ -169,10 +176,10 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //project_assignments table
@@ -211,13 +218,36 @@ public class Assignment extends GenericBean {
     //lookup_project_loe
     estimatedLoeType = rs.getString("loe_estimated_type");
     actualLoeType = rs.getString("loe_actual_type");
+    
+    //lookup_project_priority
+    priority = rs.getString("priority");
   }
 
 
   /**
-   *  Sets the project attribute of the Assignment object
+   * Gets the priority attribute of the Assignment object
    *
-   *@param  tmp  The new project value
+   * @return The priority value
+   */
+  public String getPriority() {
+    return priority;
+  }
+
+
+  /**
+   * Sets the priority attribute of the Assignment object
+   *
+   * @param tmp The new priority value
+   */
+  public void setPriority(String tmp) {
+    this.priority = tmp;
+  }
+
+
+  /**
+   * Sets the project attribute of the Assignment object
+   *
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -225,9 +255,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Assignment object
+   * Sets the id attribute of the Assignment object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -235,9 +265,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Assignment object
+   * Sets the id attribute of the Assignment object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -245,9 +275,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Assignment object
+   * Sets the projectId attribute of the Assignment object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -255,9 +285,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Assignment object
+   * Sets the projectId attribute of the Assignment object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -265,9 +295,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the requirementId attribute of the Assignment object
+   * Sets the requirementId attribute of the Assignment object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(int tmp) {
     this.requirementId = tmp;
@@ -275,9 +305,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the requirementId attribute of the Assignment object
+   * Sets the requirementId attribute of the Assignment object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(String tmp) {
     this.requirementId = Integer.parseInt(tmp);
@@ -285,9 +315,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the folderId attribute of the Assignment object
+   * Sets the folderId attribute of the Assignment object
    *
-   *@param  tmp  The new folderId value
+   * @param tmp The new folderId value
    */
   public void setFolderId(int tmp) {
     this.folderId = tmp;
@@ -295,9 +325,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the folderId attribute of the Assignment object
+   * Sets the folderId attribute of the Assignment object
    *
-   *@param  tmp  The new folderId value
+   * @param tmp The new folderId value
    */
   public void setFolderId(String tmp) {
     this.folderId = Integer.parseInt(tmp);
@@ -305,9 +335,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the assignedBy attribute of the Assignment object
+   * Sets the assignedBy attribute of the Assignment object
    *
-   *@param  tmp  The new assignedBy value
+   * @param tmp The new assignedBy value
    */
   public void setAssignedBy(int tmp) {
     this.assignedBy = tmp;
@@ -315,9 +345,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the assignedBy attribute of the Assignment object
+   * Sets the assignedBy attribute of the Assignment object
    *
-   *@param  tmp  The new assignedBy value
+   * @param tmp The new assignedBy value
    */
   public void setAssignedBy(String tmp) {
     this.assignedBy = Integer.parseInt(tmp);
@@ -325,9 +355,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the userAssignedId attribute of the Assignment object
+   * Sets the userAssignedId attribute of the Assignment object
    *
-   *@param  tmp  The new userAssignedId value
+   * @param tmp The new userAssignedId value
    */
   public void setUserAssignedId(int tmp) {
     this.userAssignedId = tmp;
@@ -335,19 +365,30 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the userAssignedId attribute of the Assignment object
+   * Sets the userAssignedId attribute of the Assignment object
    *
-   *@param  tmp  The new userAssignedId value
+   * @param tmp The new userAssignedId value
    */
   public void setUserAssignedId(String tmp) {
-    this.userAssignedId = Integer.parseInt(tmp);
+    if (tmp != null) {
+      try {
+        if (tmp.indexOf(".") > -1) {
+          this.userAssignedId = Integer.parseInt(
+              tmp.substring(0, tmp.indexOf(".")));
+        } else {
+          this.userAssignedId = Integer.parseInt(tmp);
+        }
+      } catch (Exception e) {
+        System.out.println("Assignment-> Error: " + e.getMessage());
+      }
+    }
   }
 
 
   /**
-   *  Sets the technology attribute of the Assignment object
+   * Sets the technology attribute of the Assignment object
    *
-   *@param  tmp  The new technology value
+   * @param tmp The new technology value
    */
   public void setTechnology(String tmp) {
     this.technology = tmp;
@@ -355,9 +396,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the role attribute of the Assignment object
+   * Sets the role attribute of the Assignment object
    *
-   *@param  tmp  The new role value
+   * @param tmp The new role value
    */
   public void setRole(String tmp) {
     this.role = tmp;
@@ -365,9 +406,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoe attribute of the Assignment object
+   * Sets the estimatedLoe attribute of the Assignment object
    *
-   *@param  tmp  The new estimatedLoe value
+   * @param tmp The new estimatedLoe value
    */
   public void setEstimatedLoe(int tmp) {
     this.estimatedLoe = tmp;
@@ -375,9 +416,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoe attribute of the Assignment object
+   * Sets the estimatedLoe attribute of the Assignment object
    *
-   *@param  tmp  The new estimatedLoe value
+   * @param tmp The new estimatedLoe value
    */
   public void setEstimatedLoe(String tmp) {
     try {
@@ -402,9 +443,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoeTypeId attribute of the Assignment object
+   * Sets the estimatedLoeTypeId attribute of the Assignment object
    *
-   *@param  tmp  The new estimatedLoeTypeId value
+   * @param tmp The new estimatedLoeTypeId value
    */
   public void setEstimatedLoeTypeId(int tmp) {
     this.estimatedLoeTypeId = tmp;
@@ -412,9 +453,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoeTypeId attribute of the Assignment object
+   * Sets the estimatedLoeTypeId attribute of the Assignment object
    *
-   *@param  tmp  The new estimatedLoeTypeId value
+   * @param tmp The new estimatedLoeTypeId value
    */
   public void setEstimatedLoeTypeId(String tmp) {
     this.estimatedLoeTypeId = Integer.parseInt(tmp);
@@ -422,9 +463,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoeType attribute of the Assignment object
+   * Sets the estimatedLoeType attribute of the Assignment object
    *
-   *@param  tmp  The new estimatedLoeType value
+   * @param tmp The new estimatedLoeType value
    */
   public void setEstimatedLoeType(String tmp) {
     this.estimatedLoeType = tmp;
@@ -432,9 +473,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the actualLoe attribute of the Assignment object
+   * Sets the actualLoe attribute of the Assignment object
    *
-   *@param  tmp  The new actualLoe value
+   * @param tmp The new actualLoe value
    */
   public void setActualLoe(int tmp) {
     this.actualLoe = tmp;
@@ -442,9 +483,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the actualLoe attribute of the Assignment object
+   * Sets the actualLoe attribute of the Assignment object
    *
-   *@param  tmp  The new actualLoe value
+   * @param tmp The new actualLoe value
    */
   public void setActualLoe(String tmp) {
     this.actualLoe = Integer.parseInt(tmp);
@@ -452,9 +493,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the actualLoeTypeId attribute of the Assignment object
+   * Sets the actualLoeTypeId attribute of the Assignment object
    *
-   *@param  tmp  The new actualLoeTypeId value
+   * @param tmp The new actualLoeTypeId value
    */
   public void setActualLoeTypeId(int tmp) {
     this.actualLoeTypeId = tmp;
@@ -462,9 +503,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the actualLoeTypeId attribute of the Assignment object
+   * Sets the actualLoeTypeId attribute of the Assignment object
    *
-   *@param  tmp  The new actualLoeTypeId value
+   * @param tmp The new actualLoeTypeId value
    */
   public void setActualLoeTypeId(String tmp) {
     this.actualLoeTypeId = Integer.parseInt(tmp);
@@ -472,9 +513,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the actualLoeType attribute of the Assignment object
+   * Sets the actualLoeType attribute of the Assignment object
    *
-   *@param  tmp  The new actualLoeType value
+   * @param tmp The new actualLoeType value
    */
   public void setActualLoeType(String tmp) {
     this.actualLoeType = tmp;
@@ -482,9 +523,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the priorityId attribute of the Assignment object
+   * Sets the priorityId attribute of the Assignment object
    *
-   *@param  tmp  The new priorityId value
+   * @param tmp The new priorityId value
    */
   public void setPriorityId(int tmp) {
     this.priorityId = tmp;
@@ -492,9 +533,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the priorityId attribute of the Assignment object
+   * Sets the priorityId attribute of the Assignment object
    *
-   *@param  tmp  The new priorityId value
+   * @param tmp The new priorityId value
    */
   public void setPriorityId(String tmp) {
     try {
@@ -512,9 +553,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the assignDate attribute of the Assignment object
+   * Sets the assignDate attribute of the Assignment object
    *
-   *@param  tmp  The new assignDate value
+   * @param tmp The new assignDate value
    */
   public void setAssignDate(java.sql.Timestamp tmp) {
     this.assignDate = tmp;
@@ -522,9 +563,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the assignDate attribute of the Assignment object
+   * Sets the assignDate attribute of the Assignment object
    *
-   *@param  tmp  The new assignDate value
+   * @param tmp The new assignDate value
    */
   public void setAssignDate(String tmp) {
     this.assignDate = DatabaseUtils.parseTimestamp(tmp);
@@ -532,30 +573,32 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the estStartDate attribute of the Assignment object
+   * Sets the estStartDate attribute of the Assignment object
    *
-   *@param  tmp  The new estStartDate value
+   * @param tmp The new estStartDate value
    */
   public void setEstStartDate(java.sql.Timestamp tmp) {
     this.estStartDate = tmp;
   }
 
+  public void setEstStartDate(java.util.Date tmp) {
+    this.estStartDate = new java.sql.Timestamp(tmp.getTime());
+  }
 
   /**
-   *  Sets the estStartDate attribute of the Assignment object
+   * Sets the estStartDate attribute of the Assignment object
    *
-   *@param  tmp  The new estStartDate value
+   * @param tmp The new estStartDate value
    */
   public void setEstStartDate(String tmp) {
     this.estStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
-
   /**
-   *  Sets the startDate attribute of the Assignment object
+   * Sets the startDate attribute of the Assignment object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
@@ -563,9 +606,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the Assignment object
+   * Sets the startDate attribute of the Assignment object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -573,19 +616,22 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the dueDate attribute of the Assignment object
+   * Sets the dueDate attribute of the Assignment object
    *
-   *@param  tmp  The new dueDate value
+   * @param tmp The new dueDate value
    */
   public void setDueDate(java.sql.Timestamp tmp) {
     this.dueDate = tmp;
   }
 
+  public void setDueDate(java.util.Date tmp) {
+    this.dueDate = new java.sql.Timestamp(tmp.getTime());
+  }
 
   /**
-   *  Sets the dueDate attribute of the Assignment object
+   * Sets the dueDate attribute of the Assignment object
    *
-   *@param  tmp  The new dueDate value
+   * @param tmp The new dueDate value
    */
   public void setDueDate(String tmp) {
     this.dueDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -593,9 +639,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Assignment object
+   * Sets the statusId attribute of the Assignment object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -603,9 +649,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Assignment object
+   * Sets the statusId attribute of the Assignment object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -613,9 +659,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the Assignment object
+   * Sets the status attribute of the Assignment object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -623,9 +669,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the Assignment object
+   * Sets the statusDate attribute of the Assignment object
    *
-   *@param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(java.sql.Timestamp tmp) {
     this.statusDate = tmp;
@@ -633,9 +679,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the Assignment object
+   * Sets the statusDate attribute of the Assignment object
    *
-   *@param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(String tmp) {
     this.statusDate = DatabaseUtils.parseTimestamp(tmp);
@@ -643,9 +689,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the statusGraphic attribute of the Assignment object
+   * Sets the statusGraphic attribute of the Assignment object
    *
-   *@param  tmp  The new statusGraphic value
+   * @param tmp The new statusGraphic value
    */
   public void setStatusGraphic(String tmp) {
     this.statusGraphic = tmp;
@@ -653,9 +699,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the percentComplete attribute of the Assignment object
+   * Sets the percentComplete attribute of the Assignment object
    *
-   *@param  tmp  The new percentComplete value
+   * @param tmp The new percentComplete value
    */
   public void setPercentComplete(int tmp) {
     this.percentComplete = tmp;
@@ -663,9 +709,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the percentComplete attribute of the Assignment object
+   * Sets the percentComplete attribute of the Assignment object
    *
-   *@param  tmp  The new percentComplete value
+   * @param tmp The new percentComplete value
    */
   public void setPercentComplete(String tmp) {
     this.percentComplete = Integer.parseInt(tmp);
@@ -673,9 +719,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the Assignment object
+   * Sets the completeDate attribute of the Assignment object
    *
-   *@param  tmp  The new completeDate value
+   * @param tmp The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp tmp) {
     this.completeDate = tmp;
@@ -683,9 +729,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the Assignment object
+   * Sets the completeDate attribute of the Assignment object
    *
-   *@param  tmp  The new completeDate value
+   * @param tmp The new completeDate value
    */
   public void setCompleteDate(String tmp) {
     this.completeDate = DatabaseUtils.parseTimestamp(tmp);
@@ -693,9 +739,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Assignment object
+   * Sets the entered attribute of the Assignment object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -703,9 +749,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Assignment object
+   * Sets the entered attribute of the Assignment object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -713,9 +759,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Assignment object
+   * Sets the enteredBy attribute of the Assignment object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -723,9 +769,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Assignment object
+   * Sets the enteredBy attribute of the Assignment object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -733,9 +779,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Assignment object
+   * Sets the modified attribute of the Assignment object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -743,9 +789,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Assignment object
+   * Sets the modified attribute of the Assignment object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     modified = DatabaseUtils.parseTimestamp(tmp);
@@ -753,9 +799,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Assignment object
+   * Sets the modifiedBy attribute of the Assignment object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -763,9 +809,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Assignment object
+   * Sets the modifiedBy attribute of the Assignment object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.setModifiedBy(Integer.parseInt(tmp));
@@ -773,9 +819,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the displayLevel attribute of the Assignment object
+   * Sets the displayLevel attribute of the Assignment object
    *
-   *@param  tmp  The new displayLevel value
+   * @param tmp The new displayLevel value
    */
   public void setDisplayLevel(int tmp) {
     this.displayLevel = tmp;
@@ -783,9 +829,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the levelOpen attribute of the Assignment object
+   * Sets the levelOpen attribute of the Assignment object
    *
-   *@param  tmp  The new levelOpen value
+   * @param tmp The new levelOpen value
    */
   public void setLevelOpen(boolean tmp) {
     this.levelOpen = tmp;
@@ -793,9 +839,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the indent attribute of the Assignment object
+   * Sets the indent attribute of the Assignment object
    *
-   *@param  tmp  The new indent value
+   * @param tmp The new indent value
    */
   public void setIndent(int tmp) {
     this.indent = tmp;
@@ -803,9 +849,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the indent attribute of the Assignment object
+   * Sets the indent attribute of the Assignment object
    *
-   *@param  tmp  The new indent value
+   * @param tmp The new indent value
    */
   public void setIndent(String tmp) {
     this.indent = Integer.parseInt(tmp);
@@ -813,9 +859,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the prevIndent attribute of the Assignment object
+   * Sets the prevIndent attribute of the Assignment object
    *
-   *@param  tmp  The new prevIndent value
+   * @param tmp The new prevIndent value
    */
   public void setPrevIndent(int tmp) {
     this.prevIndent = tmp;
@@ -823,9 +869,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the prevIndent attribute of the Assignment object
+   * Sets the prevIndent attribute of the Assignment object
    *
-   *@param  tmp  The new prevIndent value
+   * @param tmp The new prevIndent value
    */
   public void setPrevIndent(String tmp) {
     this.prevIndent = Integer.parseInt(tmp);
@@ -833,9 +879,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the prevMapId attribute of the Assignment object
+   * Sets the prevMapId attribute of the Assignment object
    *
-   *@param  tmp  The new prevMapId value
+   * @param tmp The new prevMapId value
    */
   public void setPrevMapId(int tmp) {
     this.prevMapId = tmp;
@@ -843,9 +889,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the prevMapId attribute of the Assignment object
+   * Sets the prevMapId attribute of the Assignment object
    *
-   *@param  tmp  The new prevMapId value
+   * @param tmp The new prevMapId value
    */
   public void setPrevMapId(String tmp) {
     this.prevMapId = Integer.parseInt(tmp);
@@ -853,9 +899,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the dueDateTimeZone attribute of the Assignment object
+   * Sets the dueDateTimeZone attribute of the Assignment object
    *
-   *@param  tmp  The new dueDateTimeZone value
+   * @param tmp The new dueDateTimeZone value
    */
   public void setDueDateTimeZone(String tmp) {
     this.dueDateTimeZone = tmp;
@@ -863,26 +909,39 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the dueDateTimeZone attribute of the Assignment object
+   * Gets the dueDateTimeZone attribute of the Assignment object
    *
-   *@return    The dueDateTimeZone value
+   * @return The dueDateTimeZone value
    */
   public String getDueDateTimeZone() {
     return dueDateTimeZone;
   }
 
+
+  /**
+   * Gets the additionalNote attribute of the Assignment object
+   *
+   * @return The additionalNote value
+   */
   public String getAdditionalNote() {
     return additionalNote;
   }
 
+
+  /**
+   * Sets the additionalNote attribute of the Assignment object
+   *
+   * @param additionalNote The new additionalNote value
+   */
   public void setAdditionalNote(String additionalNote) {
     this.additionalNote = additionalNote;
   }
 
+
   /**
-   *  Gets the project attribute of the Assignment object
+   * Gets the project attribute of the Assignment object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -890,9 +949,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Assignment object
+   * Gets the id attribute of the Assignment object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -900,9 +959,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the Assignment object
+   * Gets the projectId attribute of the Assignment object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -910,9 +969,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the requirementId attribute of the Assignment object
+   * Gets the requirementId attribute of the Assignment object
    *
-   *@return    The requirementId value
+   * @return The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
@@ -920,9 +979,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the folderId attribute of the Assignment object
+   * Gets the folderId attribute of the Assignment object
    *
-   *@return    The folderId value
+   * @return The folderId value
    */
   public int getFolderId() {
     return folderId;
@@ -930,9 +989,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the assignedBy attribute of the Assignment object
+   * Gets the assignedBy attribute of the Assignment object
    *
-   *@return    The assignedBy value
+   * @return The assignedBy value
    */
   public int getAssignedBy() {
     return assignedBy;
@@ -940,9 +999,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the userAssignedId attribute of the Assignment object
+   * Gets the userAssignedId attribute of the Assignment object
    *
-   *@return    The userAssignedId value
+   * @return The userAssignedId value
    */
   public int getUserAssignedId() {
     return userAssignedId;
@@ -950,9 +1009,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the technology attribute of the Assignment object
+   * Gets the technology attribute of the Assignment object
    *
-   *@return    The technology value
+   * @return The technology value
    */
   public String getTechnology() {
     return technology;
@@ -960,9 +1019,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the role attribute of the Assignment object
+   * Gets the role attribute of the Assignment object
    *
-   *@return    The role value
+   * @return The role value
    */
   public String getRole() {
     return role;
@@ -970,9 +1029,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoe attribute of the Assignment object
+   * Gets the estimatedLoe attribute of the Assignment object
    *
-   *@return    The estimatedLoe value
+   * @return The estimatedLoe value
    */
   public int getEstimatedLoe() {
     return estimatedLoe;
@@ -980,9 +1039,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeValue attribute of the Assignment object
+   * Gets the estimatedLoeValue attribute of the Assignment object
    *
-   *@return    The estimatedLoeValue value
+   * @return The estimatedLoeValue value
    */
   public String getEstimatedLoeValue() {
     return (estimatedLoe == -1 ? "" : "" + estimatedLoe);
@@ -990,9 +1049,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeTypeId attribute of the Assignment object
+   * Gets the estimatedLoeTypeId attribute of the Assignment object
    *
-   *@return    The estimatedLoeTypeId value
+   * @return The estimatedLoeTypeId value
    */
   public int getEstimatedLoeTypeId() {
     return estimatedLoeTypeId;
@@ -1000,9 +1059,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeType attribute of the Assignment object
+   * Gets the estimatedLoeType attribute of the Assignment object
    *
-   *@return    The estimatedLoeType value
+   * @return The estimatedLoeType value
    */
   public String getEstimatedLoeType() {
     return estimatedLoeType;
@@ -1010,9 +1069,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the actualLoe attribute of the Assignment object
+   * Gets the actualLoe attribute of the Assignment object
    *
-   *@return    The actualLoe value
+   * @return The actualLoe value
    */
   public int getActualLoe() {
     return actualLoe;
@@ -1020,9 +1079,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeValue attribute of the Assignment object
+   * Gets the actualLoeValue attribute of the Assignment object
    *
-   *@return    The actualLoeValue value
+   * @return The actualLoeValue value
    */
   public String getActualLoeValue() {
     return (actualLoe == -1 ? "" : "" + actualLoe);
@@ -1030,9 +1089,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeTypeId attribute of the Assignment object
+   * Gets the actualLoeTypeId attribute of the Assignment object
    *
-   *@return    The actualLoeTypeId value
+   * @return The actualLoeTypeId value
    */
   public int getActualLoeTypeId() {
     return actualLoeTypeId;
@@ -1040,9 +1099,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeType attribute of the Assignment object
+   * Gets the actualLoeType attribute of the Assignment object
    *
-   *@return    The actualLoeType value
+   * @return The actualLoeType value
    */
   public String getActualLoeType() {
     return actualLoeType;
@@ -1050,9 +1109,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the priorityId attribute of the Assignment object
+   * Gets the priorityId attribute of the Assignment object
    *
-   *@return    The priorityId value
+   * @return The priorityId value
    */
   public int getPriorityId() {
     return priorityId;
@@ -1060,9 +1119,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the assignDate attribute of the Assignment object
+   * Gets the assignDate attribute of the Assignment object
    *
-   *@return    The assignDate value
+   * @return The assignDate value
    */
   public java.sql.Timestamp getAssignDate() {
     return assignDate;
@@ -1070,9 +1129,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estStartDate attribute of the Assignment object
+   * Gets the estStartDate attribute of the Assignment object
    *
-   *@return    The estStartDate value
+   * @return The estStartDate value
    */
   public java.sql.Timestamp getEstStartDate() {
     return estStartDate;
@@ -1080,9 +1139,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estStartDateString attribute of the Assignment object
+   * Gets the estStartDateString attribute of the Assignment object
    *
-   *@return    The estStartDateString value
+   * @return The estStartDateString value
    */
   public String getEstStartDateString() {
     String estStartDateString = "--";
@@ -1095,9 +1154,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the startDate attribute of the Assignment object
+   * Gets the startDate attribute of the Assignment object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public java.sql.Timestamp getStartDate() {
     return startDate;
@@ -1105,9 +1164,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the dueDate attribute of the Assignment object
+   * Gets the dueDate attribute of the Assignment object
    *
-   *@return    The dueDate value
+   * @return The dueDate value
    */
   public java.sql.Timestamp getDueDate() {
     return dueDate;
@@ -1115,9 +1174,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Assignment object
+   * Gets the statusId attribute of the Assignment object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -1125,9 +1184,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the Assignment object
+   * Gets the status attribute of the Assignment object
    *
-   *@return    The status value
+   * @return The status value
    */
   public String getStatus() {
     return status;
@@ -1135,9 +1194,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusDate attribute of the Assignment object
+   * Gets the statusDate attribute of the Assignment object
    *
-   *@return    The statusDate value
+   * @return The statusDate value
    */
   public java.sql.Timestamp getStatusDate() {
     return statusDate;
@@ -1145,9 +1204,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusType attribute of the Assignment object
+   * Gets the statusType attribute of the Assignment object
    *
-   *@return    The statusType value
+   * @return The statusType value
    */
   public int getStatusType() {
     return statusType;
@@ -1155,9 +1214,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusTypeId attribute of the Assignment object
+   * Gets the statusTypeId attribute of the Assignment object
    *
-   *@return    The statusTypeId value
+   * @return The statusTypeId value
    */
   public int getStatusTypeId() {
     return statusTypeId;
@@ -1165,9 +1224,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the Assignment object
+   * Gets the completeDate attribute of the Assignment object
    *
-   *@return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -1175,9 +1234,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Assignment object
+   * Gets the entered attribute of the Assignment object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1185,9 +1244,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Assignment object
+   * Gets the enteredString attribute of the Assignment object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -1199,13 +1258,14 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the Assignment object
+   * Gets the enteredDateTimeString attribute of the Assignment object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -1213,9 +1273,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Assignment object
+   * Gets the enteredBy attribute of the Assignment object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1223,9 +1283,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Assignment object
+   * Gets the modified attribute of the Assignment object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -1233,9 +1293,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Assignment object
+   * Gets the modifiedString attribute of the Assignment object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     if (modified != null) {
@@ -1247,9 +1307,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Assignment object
+   * Gets the modifiedBy attribute of the Assignment object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1257,9 +1317,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeString attribute of the Assignment object
+   * Gets the estimatedLoeString attribute of the Assignment object
    *
-   *@return    The estimatedLoeString value
+   * @return The estimatedLoeString value
    */
   public String getEstimatedLoeString() {
     if (estimatedLoe == -1) {
@@ -1267,13 +1327,20 @@ public class Assignment extends GenericBean {
     } else {
       String loeTmp = estimatedLoeType;
       if (loeTmp.endsWith("(s)")) {
-        return estimatedLoe + " " + estimatedLoeType.substring(0, estimatedLoeType.indexOf("(s)")) + (estimatedLoe == 1 ? "" : "s");
+        return estimatedLoe + " " + estimatedLoeType.substring(
+            0, estimatedLoeType.indexOf("(s)")) + (estimatedLoe == 1 ? "" : "s");
       } else {
         return loeTmp;
       }
     }
   }
 
+
+  /**
+   * Gets the estimatedLoeHours attribute of the Assignment object
+   *
+   * @return The estimatedLoeHours value
+   */
   public double getEstimatedLoeHours() {
     if (estimatedLoe == -1) {
       return 0;
@@ -1282,18 +1349,24 @@ public class Assignment extends GenericBean {
       return 0;
     }
     switch (estimatedLoeTypeId) {
-      case 1: 
+      case 1:
         return (estimatedLoe / 60);
-      case 2: 
+      case 2:
         return (estimatedLoe);
-      case 3: 
+      case 3:
         return (estimatedLoe * 24);
-      case 4: 
+      case 4:
         return (estimatedLoe * 24 * 7);
     }
     return 0;
   }
 
+
+  /**
+   * Gets the actualLoeHours attribute of the Assignment object
+   *
+   * @return The actualLoeHours value
+   */
   public double getActualLoeHours() {
     if (actualLoe == -1) {
       return 0;
@@ -1313,12 +1386,12 @@ public class Assignment extends GenericBean {
     }
     return 0;
   }
-  
-  
+
+
   /**
-   *  Gets the actualLoeString attribute of the Assignment object
+   * Gets the actualLoeString attribute of the Assignment object
    *
-   *@return    The actualLoeString value
+   * @return The actualLoeString value
    */
   public String getActualLoeString() {
     if (actualLoe == -1) {
@@ -1326,7 +1399,8 @@ public class Assignment extends GenericBean {
     } else {
       String loeTmp = actualLoeType;
       if (loeTmp.endsWith("(s)")) {
-        return actualLoe + " " + actualLoeType.substring(0, actualLoeType.indexOf("(s)")) + (actualLoe == 1 ? "" : "s");
+        return actualLoe + " " + actualLoeType.substring(
+            0, actualLoeType.indexOf("(s)")) + (actualLoe == 1 ? "" : "s");
       } else {
         return loeTmp;
       }
@@ -1335,9 +1409,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the assignDateString attribute of the Assignment object
+   * Gets the assignDateString attribute of the Assignment object
    *
-   *@return    The assignDateString value
+   * @return The assignDateString value
    */
   public String getAssignDateString() {
     String assignString = "--";
@@ -1350,9 +1424,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the assignDateValue attribute of the Assignment object
+   * Gets the assignDateValue attribute of the Assignment object
    *
-   *@return    The assignDateValue value
+   * @return The assignDateValue value
    */
   public String getAssignDateValue() {
     String assignString = "";
@@ -1365,16 +1439,16 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the DueDateString attribute of the Assignment object
+   * Gets the DueDateString attribute of the Assignment object
    *
-   *@param  timeZone  Description of the Parameter
-   *@return           The DueDateString value
-   *@since
+   * @param timeZone Description of the Parameter
+   * @return The DueDateString value
    */
   public String getDueDateString(String timeZone) {
     String dueDateString = "--";
     try {
-      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(3);
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          3);
       TimeZone tz = TimeZone.getTimeZone(timeZone);
       formatter.setTimeZone(tz);
       return formatter.format(dueDate);
@@ -1385,9 +1459,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the dueDateString attribute of the Assignment object
+   * Gets the dueDateString attribute of the Assignment object
    *
-   *@return    The dueDateString value
+   * @return The dueDateString value
    */
   public String getDueDateString() {
     return getDueDateString(null);
@@ -1395,9 +1469,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the dueDateValue attribute of the Assignment object
+   * Gets the dueDateValue attribute of the Assignment object
    *
-   *@return    The dueDateValue value
+   * @return The dueDateValue value
    */
   public String getDueDateValue() {
     String dueDateString = "";
@@ -1410,12 +1484,11 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the RelativeDueDateString attribute of the Assignment object
+   * Gets the RelativeDueDateString attribute of the Assignment object
    *
-   *@param  timeZone  Description of the Parameter
-   *@param  locale    Description of the Parameter
-   *@return           The RelativeDueDateString value
-   *@since
+   * @param timeZone Description of the Parameter
+   * @param locale   Description of the Parameter
+   * @return The RelativeDueDateString value
    */
   public String getRelativeDueDateString(String timeZone, Locale locale) {
     String dueDateString = getDueDateString(timeZone);
@@ -1427,7 +1500,8 @@ public class Assignment extends GenericBean {
       assignDueDateTest.setTime(dueDate);
       assignDueDateTest.set(Calendar.HOUR_OF_DAY, 0);
       assignDueDateTest.set(Calendar.MINUTE, 0);
-      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          DateFormat.SHORT, locale);
       formatter.applyPattern(formatter.toPattern() + " z");
       formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
       if (!this.getComplete() && rightNow.after(assignDueDateTest)) {
@@ -1447,9 +1521,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusDateValue attribute of the Assignment object
+   * Gets the statusDateValue attribute of the Assignment object
    *
-   *@return    The statusDateValue value
+   * @return The statusDateValue value
    */
   public String getStatusDateValue() {
     String statusString = "";
@@ -1462,9 +1536,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusDateString attribute of the Assignment object
+   * Gets the statusDateString attribute of the Assignment object
    *
-   *@return    The statusDateString value
+   * @return The statusDateString value
    */
   public String getStatusDateString() {
     String statusString = "--";
@@ -1477,9 +1551,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusGraphic attribute of the Assignment object
+   * Gets the statusGraphic attribute of the Assignment object
    *
-   *@return    The statusGraphic value
+   * @return The statusGraphic value
    */
   public String getStatusGraphic() {
     return statusGraphic;
@@ -1487,9 +1561,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the statusGraphicTag attribute of the Assignment object
+   * Gets the statusGraphicTag attribute of the Assignment object
    *
-   *@return    The statusGraphicTag value
+   * @return The statusGraphicTag value
    */
   public String getStatusGraphicTag() {
     return "<img border=\"0\" src=\"images/" + statusGraphic + "\" align=\"absmiddle\" alt=\"" + status + "\">";
@@ -1497,9 +1571,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the percentComplete attribute of the Assignment object
+   * Gets the percentComplete attribute of the Assignment object
    *
-   *@return    The percentComplete value
+   * @return The percentComplete value
    */
   public int getPercentComplete() {
     return percentComplete;
@@ -1507,9 +1581,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the complete attribute of the Assignment object
+   * Gets the complete attribute of the Assignment object
    *
-   *@return    The complete value
+   * @return The complete value
    */
   public boolean getComplete() {
     return (completeDate != null);
@@ -1517,9 +1591,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the displayLevel attribute of the Assignment object
+   * Gets the displayLevel attribute of the Assignment object
    *
-   *@return    The displayLevel value
+   * @return The displayLevel value
    */
   public int getDisplayLevel() {
     return displayLevel;
@@ -1527,9 +1601,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the levelOpen attribute of the Assignment object
+   * Gets the levelOpen attribute of the Assignment object
    *
-   *@return    The levelOpen value
+   * @return The levelOpen value
    */
   public boolean getLevelOpen() {
     return levelOpen;
@@ -1537,9 +1611,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the indent attribute of the Assignment object
+   * Gets the indent attribute of the Assignment object
    *
-   *@return    The indent value
+   * @return The indent value
    */
   public int getIndent() {
     return indent;
@@ -1547,9 +1621,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the prevIndent attribute of the Assignment object
+   * Gets the prevIndent attribute of the Assignment object
    *
-   *@return    The prevIndent value
+   * @return The prevIndent value
    */
   public int getPrevIndent() {
     return prevIndent;
@@ -1557,9 +1631,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the prevMapId attribute of the Assignment object
+   * Gets the prevMapId attribute of the Assignment object
    *
-   *@return    The prevMapId value
+   * @return The prevMapId value
    */
   public int getPrevMapId() {
     return prevMapId;
@@ -1567,9 +1641,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Gets the paddedId attribute of the Assignment object
+   * Gets the paddedId attribute of the Assignment object
    *
-   *@return    The paddedId value
+   * @return The paddedId value
    */
   public String getPaddedId() {
     String padded = (String.valueOf(id));
@@ -1579,38 +1653,68 @@ public class Assignment extends GenericBean {
     return padded;
   }
 
+
+  /**
+   * Gets the noteCount attribute of the Assignment object
+   *
+   * @return The noteCount value
+   */
   public int getNoteCount() {
     return noteCount;
   }
 
+
+  /**
+   * Sets the noteCount attribute of the Assignment object
+   *
+   * @param noteCount The new noteCount value
+   */
   public void setNoteCount(int noteCount) {
     this.noteCount = noteCount;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
   public boolean hasNotes() {
     return noteCount > 0;
   }
 
+
+  /**
+   * Gets the assignmentNote attribute of the Assignment object
+   *
+   * @return The assignmentNote value
+   */
   public AssignmentNote getAssignmentNote() {
     return assignmentNote;
   }
 
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     statusTypeId = lookupStatusIdType(db, statusId);
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_assig_assignment_id_seq");
     sql.append(
         "INSERT INTO project_assignments " +
         "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
-        "role, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
+        "\"role\", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
         "priority_id, assign_date, est_start_date, start_date, " +
         "due_date, due_date_timezone, status_id, status_date, percent_complete, complete_date, ");
+    if (id > -1) {
+      sql.append("assignment_id, ");
+    }
+
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1618,7 +1722,11 @@ public class Assignment extends GenericBean {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy, folder_id ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append(
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1676,6 +1784,9 @@ public class Assignment extends GenericBean {
       completeDate.setNanos(0);
     }
     DatabaseUtils.setTimestamp(pst, ++i, completeDate);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -1687,7 +1798,7 @@ public class Assignment extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, folderId);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_assig_assignment_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "project_assig_assignment_id_seq", id);
     //Record the position of this entry
     RequirementMapItem mapItem = new RequirementMapItem();
     mapItem.setProjectId(projectId);
@@ -1710,11 +1821,11 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
@@ -1734,8 +1845,15 @@ public class Assignment extends GenericBean {
       mapItem.setRequirementId(requirementId);
       mapItem.setAssignmentId(id);
       mapItem.remove(db);
-      //Delete the actual assignment
+      //Delete related status items
       PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM project_assignments_status " +
+          "WHERE assignment_id = ? ");
+      pst.setInt(1, id);
+      pst.executeUpdate();
+      pst.close();
+      //Delete the actual assignment
+      pst = db.prepareStatement(
           "DELETE FROM project_assignments " +
           "WHERE assignment_id = ? ");
       pst.setInt(1, id);
@@ -1763,12 +1881,12 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     return update(db);
@@ -1776,11 +1894,11 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
@@ -1793,7 +1911,7 @@ public class Assignment extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
         "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
-        "role = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
+        "\"role\" = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
         "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
         "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
@@ -1865,10 +1983,12 @@ public class Assignment extends GenericBean {
     //Handle assignment complete date
     //A date is saved when the assignment is saved, otherwise it is erased
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("Assignment-> Assignment previous status type id = " + previousState.getStatusTypeId());
+      System.out.println(
+          "Assignment-> Assignment previous status type id = " + previousState.getStatusTypeId());
     }
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("Assignment-> Assignment status type id = " + statusTypeId);
+      System.out.println(
+          "Assignment-> Assignment status type id = " + statusTypeId);
     }
     if (statusTypeId == COMPLETE || statusTypeId == CLOSED) {
       if (previousState.getStatusTypeId() != COMPLETE && previousState.getStatusTypeId() != CLOSED) {
@@ -1907,12 +2027,12 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateDueDate(Connection db, ActionContext context) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1 || this.getModifiedBy() == -1) {
@@ -1940,11 +2060,11 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newFolderId       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param newFolderId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateFolderId(Connection db, int newFolderId) throws SQLException {
     if (this.getId() == -1 || newFolderId == -1) {
@@ -1966,12 +2086,12 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  statusId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param statusId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int lookupStatusIdType(Connection db, int statusId) throws SQLException {
     int tmpStatusTypeId = -1;
@@ -1991,12 +2111,12 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  assignId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param assignId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int assignId) throws SQLException {
     int result = -1;
@@ -2010,9 +2130,9 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  The following fields depend on a timezone preference
+   * The following fields depend on a timezone preference
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -2020,13 +2140,79 @@ public class Assignment extends GenericBean {
     thisList.add("estStartDate");
     return thisList;
   }
-  
+
+
+  /**
+   * Gets the overdue attribute of the Assignment object
+   *
+   * @return The overdue value
+   */
   public boolean isOverdue() {
     if (dueDate == null || this.getComplete()) {
       return false;
     }
     Timestamp rightNow = new Timestamp(System.currentTimeMillis());
     return (rightNow.after(dueDate));
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param tz      Description of the Parameter
+   * @param created Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String generateWebcalEvent(TimeZone tz, Timestamp created) {
+    StringBuffer webcal = new StringBuffer();
+    String CRLF = System.getProperty("line.separator");
+
+    String description = "";
+    if (project != null && project.getTitle() != null) {
+      description += "Project: " + project.getTitle();
+    }
+    if (status != null) {
+      description += "\\nStatus: " + status;
+      description += "(" + (percentComplete > 0 ? percentComplete : 0) + "%)";
+    }
+
+    //write the event
+    webcal.append("BEGIN:VEVENT" + CRLF);
+    webcal.append(
+        "UID:www.centriccrm.com-projects-assignment-events" + this.getId() + CRLF);
+
+    if (created != null) {
+      webcal.append("DTSTAMP:" + ICalendar.getDateTimeUTC(created) + CRLF);
+    }
+    if (entered != null) {
+      webcal.append("CREATED:" + ICalendar.getDateTimeUTC(entered) + CRLF);
+    }
+    if (dueDate != null) {
+      webcal.append(
+          "DTSTART;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
+              tz, dueDate) + CRLF);
+    }
+    if (role != null) {
+      webcal.append(ICalendar.foldLine("SUMMARY:" + role) + CRLF);
+    }
+    if (description != null) {
+      webcal.append(
+          ICalendar.foldLine(
+              "DESCRIPTION:" + ICalendar.parseNewLine(description)) + CRLF);
+    }
+    if (priority != null) {
+      webcal.append(
+          "PRIORITY;VALUE=INTEGER:" + ICalendar.getPriority(priority) + CRLF);
+    }
+    if (dueDate != null) {
+      webcal.append(
+          "DTEND;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
+              tz, dueDate) + CRLF);
+    }
+
+    webcal.append("END:VEVENT" + CRLF);
+
+    return webcal.toString();
   }
 }
 

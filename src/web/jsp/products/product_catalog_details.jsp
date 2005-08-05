@@ -51,17 +51,24 @@
     <tr>
       <td>
         <input type="hidden" name="catalogId" value="<%= productCatalog.getId() %>">
-        <dhv:permission name="admin-sysconfig-products-edit">
-          <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Modify&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
-        </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-add">
-          <input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Clone&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&actionReq=clone'"/>
-        </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-delete">
-          <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogs.do?command=ConfirmDelete&productId=<%=productCatalog.getId()%>&popup=true','ProductCatalogEditor.do?command=List&moduleId=<%=permissionCategory.getId()%>&categoryId=<%= productCategory.getId() %>', 'Delete_category','320','200','yes','no');">
-        </dhv:permission>
+        <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
+          <dhv:permission name="admin-sysconfig-products-edit">
+            <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Modify&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
+          </dhv:permission>
+          <dhv:permission name="admin-sysconfig-products-add">
+            <input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Clone&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&actionReq=clone'"/>
+          </dhv:permission>
+          <dhv:permission name="admin-sysconfig-products-delete">
+            <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogs.do?command=ConfirmDelete&productId=<%=productCatalog.getId()%>&popup=true','ProductCatalogEditor.do?command=List&moduleId=<%=permissionCategory.getId()%>&categoryId=<%= productCategory.getId() %>', 'Delete_category','320','200','yes','no');">
+          </dhv:permission>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= productCatalog.isTrashed() %>">
+          <dhv:permission name="admin-sysconfig-products-delete">
+            <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Restore&productId=<%=productCatalog.getId()%>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
+          </dhv:permission>
+        </dhv:evaluate>
         <dhv:permission name="admin-sysconfig-products-edit,admin-sysconfig-products-add,admin-sysconfig-products-delete">
-          &nbsp;<br /><br />
+        &nbsp;<br /><br />
         </dhv:permission>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
@@ -146,7 +153,7 @@
             <dhv:label name="product.enabled">Enabled</dhv:label>
           </td>
           <td>
-            <% if(productCatalog.getEnabled()) {%>
+            <% if(productCatalog.getActive()) {%>
               <dhv:label name="account.yes">Yes</dhv:label>
             <%} else {%>
               <dhv:label name="account.no">No</dhv:label>
@@ -219,15 +226,22 @@
           </tr>
         </table>
         <br />
-        <dhv:permission name="admin-sysconfig-products-edit">
-          <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Modify&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
-        </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-add">
-          <input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Clone&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&actionReq=clone'"/>
-        </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-delete">
-          <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogs.do?command=ConfirmDelete&productId=<%=productCatalog.getId()%>&popup=true','ProductCatalogEditor.do?command=List&moduleId=<%=permissionCategory.getId()%>&categoryId=<%= productCategory.getId() %>', 'Delete_category','320','200','yes','no');">
-        </dhv:permission>
+        <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
+          <dhv:permission name="admin-sysconfig-products-edit">
+            <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Modify&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
+          </dhv:permission>
+          <dhv:permission name="admin-sysconfig-products-add">
+            <input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Clone&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&actionReq=clone'"/>
+          </dhv:permission>
+          <dhv:permission name="admin-sysconfig-products-delete">
+            <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogs.do?command=ConfirmDelete&productId=<%=productCatalog.getId()%>&popup=true','ProductCatalogEditor.do?command=List&moduleId=<%=permissionCategory.getId()%>&categoryId=<%= productCategory.getId() %>', 'Delete_category','320','200','yes','no');">
+          </dhv:permission>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%=productCatalog.getTrashedDate() != null%>">
+          <dhv:permission name="admin-sysconfig-products-delete">
+            <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Restore&productId=<%=productCatalog.getId()%>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
+          </dhv:permission>
+        </dhv:evaluate>
       </td>
       </tr>
     </table>

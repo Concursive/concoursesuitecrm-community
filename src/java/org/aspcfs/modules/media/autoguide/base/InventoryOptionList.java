@@ -15,21 +15,21 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Hashtable;
-import java.sql.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.Constants;
 
 /**
- *  A collection of options a specific Inventory object has
+ * A collection of options a specific Inventory object has
  *
- *@author     matt rajkowski
- *@created    June 16, 2002
- *@version    $Id: InventoryOptionList.java,v 1.3 2002/06/17 18:29:12 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: InventoryOptionList.java,v 1.3 2002/06/17 18:29:12 mrajkowski
+ *          Exp $
+ * @created June 16, 2002
  */
 public class InventoryOptionList extends ArrayList {
 
@@ -44,16 +44,17 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Constructor for the OptionList object
+   * Constructor for the OptionList object
    */
-  public InventoryOptionList() { }
+  public InventoryOptionList() {
+  }
 
 
   /**
-   *  Constructor for the OptionList object
+   * Constructor for the OptionList object
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public InventoryOptionList(Connection db) throws SQLException {
     buildList(db);
@@ -61,9 +62,9 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Constructor for the OptionList object
+   * Constructor for the OptionList object
    *
-   *@param  request  Description of Parameter
+   * @param request Description of Parameter
    */
   public InventoryOptionList(HttpServletRequest request) {
     int i = 0;
@@ -101,9 +102,9 @@ public class InventoryOptionList extends ArrayList {
    *  }
    */
   /**
-   *  Sets the inventoryId attribute of the OptionList object
+   * Sets the inventoryId attribute of the OptionList object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
@@ -111,9 +112,9 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Sets the inventoryId attribute of the InventoryOptionList object
+   * Sets the inventoryId attribute of the InventoryOptionList object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
@@ -121,9 +122,9 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the InventoryOptionList object
+   * Sets the accountInventoryId attribute of the InventoryOptionList object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(int tmp) {
     this.setInventoryId(tmp);
@@ -131,9 +132,9 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the InventoryOptionList object
+   * Sets the accountInventoryId attribute of the InventoryOptionList object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(String tmp) {
     this.setInventoryId(tmp);
@@ -149,9 +150,9 @@ public class InventoryOptionList extends ArrayList {
    *  }
    */
   /**
-   *  Gets the inventoryId attribute of the InventoryOptionList object
+   * Gets the inventoryId attribute of the InventoryOptionList object
    *
-   *@return    The inventoryId value
+   * @return The inventoryId value
    */
   public int getInventoryId() {
     return inventoryId;
@@ -159,11 +160,11 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the OptionList object
+   * Gets the object attribute of the OptionList object
    *
-   *@param  rs                Description of Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @return The object value
+   * @throws SQLException Description of Exception
    */
   public InventoryOption getObject(ResultSet rs) throws SQLException {
     InventoryOption thisOption = new InventoryOption(rs);
@@ -172,10 +173,10 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  optionId  Description of Parameter
-   *@return           Description of the Returned Value
+   * @param optionId Description of Parameter
+   * @return Description of the Returned Value
    */
   public boolean hasOption(int optionId) {
     Iterator i = this.iterator();
@@ -190,10 +191,10 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -201,10 +202,10 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -221,13 +222,13 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  This method is required for synchronization, it allows for the resultset
-   *  to be streamed with lower overhead
+   * This method is required for synchronization, it allows for the resultset
+   * to be streamed with lower overhead
    *
-   *@param  db                Description of Parameter
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db  Description of Parameter
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     int items = -1;
@@ -239,7 +240,7 @@ public class InventoryOptionList extends ArrayList {
         " LEFT JOIN autoguide_options o ON (io.option_id = o.option_id) " +
         "WHERE io.option_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY o.level, o.option_name ");
+    sql.append("ORDER BY o.\"level\", o.option_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
@@ -248,10 +249,10 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator optionList = this.iterator();
@@ -264,10 +265,10 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void update(Connection db) throws SQLException {
     this.delete(db);
@@ -276,10 +277,10 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     String sql =
@@ -293,9 +294,9 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -321,11 +322,11 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

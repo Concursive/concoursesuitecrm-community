@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a hierarchical category that can be used by any class with
- *  multiple category support
+ * Represents a hierarchical category that can be used by any class with
+ * multiple category support
  *
- *@author     matt rajkowski
- *@created    February 3, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created February 3, 2004
  */
 public class Category extends GenericBean {
 
@@ -45,15 +45,16 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Constructor for the Category object
+   * Constructor for the Category object
    */
-  public Category() { }
+  public Category() {
+  }
 
 
   /**
-   *  Constructor for the Category object
+   * Constructor for the Category object
    *
-   *@param  tableName  Description of the Parameter
+   * @param tableName Description of the Parameter
    */
   public Category(String tableName) {
     this.tableName = tableName;
@@ -61,10 +62,10 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Constructor for the Category object
+   * Constructor for the Category object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Category(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -72,12 +73,12 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Constructor for the Category object
+   * Constructor for the Category object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param id        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Category(Connection db, int id, String tableName) throws SQLException {
     if (id < 0) {
@@ -103,9 +104,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Category object
+   * Sets the id attribute of the Category object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -113,9 +114,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Category object
+   * Sets the id attribute of the Category object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -123,9 +124,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the categoryLevel attribute of the Category object
+   * Sets the categoryLevel attribute of the Category object
    *
-   *@param  tmp  The new categoryLevel value
+   * @param tmp The new categoryLevel value
    */
   public void setCategoryLevel(int tmp) {
     this.categoryLevel = tmp;
@@ -133,9 +134,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the categoryLevel attribute of the Category object
+   * Sets the categoryLevel attribute of the Category object
    *
-   *@param  tmp  The new categoryLevel value
+   * @param tmp The new categoryLevel value
    */
   public void setCategoryLevel(String tmp) {
     this.categoryLevel = Integer.parseInt(tmp);
@@ -143,9 +144,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the Category object
+   * Sets the level attribute of the Category object
    *
-   *@param  level  The new level value
+   * @param level The new level value
    */
   public void setLevel(int level) {
     this.level = level;
@@ -153,9 +154,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the Category object
+   * Sets the level attribute of the Category object
    *
-   *@param  level  The new level value
+   * @param level The new level value
    */
   public void setLevel(String level) {
     this.level = Integer.parseInt(level);
@@ -163,9 +164,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the parentCode attribute of the Category object
+   * Sets the parentCode attribute of the Category object
    *
-   *@param  tmp  The new parentCode value
+   * @param tmp The new parentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -173,9 +174,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the parentCode attribute of the Category object
+   * Sets the parentCode attribute of the Category object
    *
-   *@param  tmp  The new parentCode value
+   * @param tmp The new parentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -183,9 +184,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Category object
+   * Sets the description attribute of the Category object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -193,9 +194,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Category object
+   * Sets the enabled attribute of the Category object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -203,9 +204,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Category object
+   * Sets the enabled attribute of the Category object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -213,9 +214,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the shortChildList attribute of the Category object
+   * Sets the shortChildList attribute of the Category object
    *
-   *@param  shortChildList  The new shortChildList value
+   * @param shortChildList The new shortChildList value
    */
   public void setShortChildList(TicketCategoryDraftList shortChildList) {
     this.shortChildList = shortChildList;
@@ -223,9 +224,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the shortChildList attribute of the Category object
+   * Gets the shortChildList attribute of the Category object
    *
-   *@return    The shortChildList value
+   * @return The shortChildList value
    */
   public TicketCategoryDraftList getShortChildList() {
     return shortChildList;
@@ -233,9 +234,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the level attribute of the Category object
+   * Gets the level attribute of the Category object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -243,9 +244,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Category object
+   * Gets the id attribute of the Category object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -253,9 +254,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the categoryLevel attribute of the Category object
+   * Gets the categoryLevel attribute of the Category object
    *
-   *@return    The categoryLevel value
+   * @return The categoryLevel value
    */
   public int getCategoryLevel() {
     return categoryLevel;
@@ -263,9 +264,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the parentCode attribute of the Category object
+   * Gets the parentCode attribute of the Category object
    *
-   *@return    The parentCode value
+   * @return The parentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -273,9 +274,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Category object
+   * Gets the description attribute of the Category object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -283,9 +284,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Category object
+   * Gets the enabled attribute of the Category object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -293,9 +294,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Sets the tableName attribute of the Category object
+   * Sets the tableName attribute of the Category object
    *
-   *@param  tmp  The new tableName value
+   * @param tmp The new tableName value
    */
   public void setTableName(String tmp) {
     this.tableName = tmp;
@@ -303,9 +304,9 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Gets the tableName attribute of the Category object
+   * Gets the tableName attribute of the Category object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -313,11 +314,11 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (tableName == null) {
@@ -325,13 +326,17 @@ public class Category extends GenericBean {
     }
     StringBuffer sql = new StringBuffer();
     try {
+      id = DatabaseUtils.getNextSeq(db, tableName + "_id_seq");
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO " + tableName + " " +
-          "(cat_level, parent_cat_code, description, level, enabled) " +
-          "VALUES (?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getCategoryLevel());
       if (parentCode > 0) {
         pst.setInt(++i, this.getParentCode());
@@ -343,7 +348,7 @@ public class Category extends GenericBean {
       pst.setBoolean(++i, this.getEnabled());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, tableName + "_id_seq");
+      id = DatabaseUtils.getCurrVal(db, tableName + "_id_seq", id);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -356,11 +361,11 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (tableName == null) {
@@ -375,7 +380,7 @@ public class Category extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE " + tableName + " " +
-          "SET description = ?, cat_level = ?, parent_cat_code = ?, level = ?, enabled = ? " +
+          "SET description = ?, cat_level = ?, parent_cat_code = ?, \"level\" = ?, enabled = ? " +
           "WHERE id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());
@@ -397,10 +402,10 @@ public class Category extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");

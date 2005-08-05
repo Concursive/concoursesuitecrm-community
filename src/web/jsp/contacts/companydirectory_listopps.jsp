@@ -70,7 +70,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <dhv:label name="accounts.accounts_contacts_oppcomponent_add.Opportunities">Opportunities</dhv:label>
@@ -80,10 +80,17 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:evaluate if="<%= (ContactDetails.getEnabled() && ContactDetails.getOrgId() > 0) %>" >
-    <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add" all="true"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
-    </dhv:evaluate><dhv:evaluate if="<%= (ContactDetails.getEnabled() && ContactDetails.getOrgId() <= 0) %>" >
-    <dhv:permission name="contacts-external_contacts-opportunities-add"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+  <dhv:evaluate if="<%= !ContactDetails.isTrashed() %>" >
+    <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed() && ContactDetails.getOrgId() > 0) %>" >
+      <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add" all="true">
+        <a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
+      </dhv:permission>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed() && ContactDetails.getOrgId() <= 0) %>" >
+      <dhv:permission name="contacts-external_contacts-opportunities-add">
+        <a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
+      </dhv:permission>
+    </dhv:evaluate>
   </dhv:evaluate>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="ExternalOppsPagedListInfo"/></center></dhv:include>
@@ -152,7 +159,10 @@
         <% } %>
 
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+        <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>" >
+          <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>','<%= ContactDetails.isTrashed() || oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= (!ContactDetails.getEnabled() || ContactDetails.isTrashed()) %>" >&nbsp;</dhv:evaluate>
       </td>
       <td width="100%" valign="top" class="row<%= rowid %>">
         <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">

@@ -23,21 +23,36 @@
   var menu_init = false;
   var isPrimaryContact = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, contactId, isPrimary) {
+  function displayMenu(loc, id, orgId, contactId, isPrimary, trashed) {
     thisOrgId = orgId;
     thisContactId = contactId;
     isPrimaryContact = isPrimary;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
+
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuModify');
+      hideSpan('menuClone');
+      hideSpan('menuDelete');
+      hideSpan('menuAddressRequest');
+    } else {
+      showSpan('menuModify');
+      showSpan('menuClone');
+      showSpan('menuDelete');
+      showSpan('menuAddressRequest');
+    }
+  }
   //Menu link functions
   function details() {
     window.location.href='Contacts.do?command=Details&id=' + thisContactId;
   }
-  
+
   function modify() {
     window.location.href='Contacts.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list';
   }
@@ -45,11 +60,11 @@
   function move() {
     check('moveContact', thisOrgId, thisContactId, '&filters=all|my|disabled', isPrimaryContact);
   }
-  
+
   function clone() {
     window.location.href='Contacts.do?command=Clone&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list';
   }
-  
+
   function deleteContact() {
     popURLReturn('Contacts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContactId + '&popup=true','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');
   }
@@ -58,13 +73,16 @@
   }
   function sendMessage() {
     popURL('MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&messageType=addressRequest' + '&popup=true','Message','700','550','yes','yes');
-  }  
+  }
+  function exportVCard() {
+    window.location.href = 'ExternalContacts.do?command=DownloadVCard&id=' + thisContactId;
+  }
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
     <table id="menuContactTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-contacts-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuView" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
            onclick="details()">
         <th valign="top">
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -75,7 +93,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
            onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -86,7 +104,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-move-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuMove" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
            onclick="moveTheContact()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -97,37 +115,13 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-add">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuClone" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
            onclick="clone()">
         <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
           <dhv:label name="global.button.Clone">Clone</dhv:label>
-        </td>
-      </tr>
-      </dhv:permission>
-      <%--
-      <dhv:permission name="accounts-accounts-contacts-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
-           onclick="move()">
-        <th>
-          <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </th>
-        <td width="100%">
-          <dhv:label name="global.button.move">Move</dhv:label>
-        </td>
-      </tr>
-      </dhv:permission>
-      --%>
-      <dhv:permission name="accounts-accounts-contacts-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
-           onclick="deleteContact()">
-        <th>
-          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </th>
-        <td width="100%">
-          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -138,6 +132,28 @@
         </th>
         <td width="100%">
           <dhv:label name="global.button.sendAddressRequest">Send Address Request</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="exportVCard()">
+        <th>
+          <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.downloadVcard">Download VCard</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+
+      <dhv:permission name="accounts-accounts-contacts-delete">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="deleteContact()">
+        <th>
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>

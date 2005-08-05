@@ -15,23 +15,23 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.troubletickets.base.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    January 29, 2004
- *@version    $Id: TicketSunMaintenance.java,v 1.1.2.6 2004/02/11 19:26:19
- *      kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: TicketSunMaintenance.java,v 1.1.2.6 2004/02/11 19:26:19
+ *          kbhoopal Exp $
+ * @created January 29, 2004
  */
 public class TicketMaintenanceNote extends GenericBean {
 
@@ -49,16 +49,17 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketSunMaintenance object
+   * Constructor for the TicketSunMaintenance object
    */
-  public TicketMaintenanceNote() { }
+  public TicketMaintenanceNote() {
+  }
 
 
   /**
-   *  Constructor for the TicketSunMaintenance object
+   * Constructor for the TicketSunMaintenance object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TicketMaintenanceNote(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -66,9 +67,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketSunMaintenance object
+   * Sets the id attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -76,9 +77,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketSunMaintenance object
+   * Sets the id attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -86,9 +87,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the linkTicketId attribute of the TicketSunMaintenance object
+   * Sets the linkTicketId attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new linkTicketId value
+   * @param tmp The new linkTicketId value
    */
   public void setLinkTicketId(int tmp) {
     this.linkTicketId = tmp;
@@ -96,9 +97,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the linkTicketId attribute of the TicketSunMaintenance object
+   * Sets the linkTicketId attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new linkTicketId value
+   * @param tmp The new linkTicketId value
    */
   public void setLinkTicketId(String tmp) {
     this.linkTicketId = Integer.parseInt(tmp);
@@ -106,9 +107,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the formTypeName attribute of the TicketSunMaintenance object
+   * Sets the formTypeName attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new formTypeName value
+   * @param tmp The new formTypeName value
    */
   public void setFormTypeName(String tmp) {
     this.formTypeName = tmp;
@@ -116,9 +117,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the descriptionOfService attribute of the TicketSunMaintenance object
+   * Sets the descriptionOfService attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new descriptionOfService value
+   * @param tmp The new descriptionOfService value
    */
   public void setDescriptionOfService(String tmp) {
     this.descriptionOfService = tmp;
@@ -126,9 +127,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the replacementParts attribute of the TicketSunMaintenance object
+   * Sets the replacementParts attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new replacementParts value
+   * @param tmp The new replacementParts value
    */
   public void setTicketReplacementPartList(TicketReplacementPartList tmp) {
     this.ticketReplacementPartList = tmp;
@@ -136,9 +137,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the TicketSunMaintenance object
+   * Sets the entered attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -146,9 +147,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the TicketSunMaintenance object
+   * Sets the entered attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -156,9 +157,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the TicketSunMaintenance object
+   * Sets the enteredBy attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -166,9 +167,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the TicketSunMaintenance object
+   * Sets the enteredBy attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -176,9 +177,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the TicketSunMaintenance object
+   * Sets the modified attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -186,9 +187,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the TicketSunMaintenance object
+   * Sets the modified attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -196,9 +197,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TicketSunMaintenance object
+   * Sets the modifiedBy attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -206,9 +207,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TicketSunMaintenance object
+   * Sets the modifiedBy attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -216,9 +217,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TicketSunMaintenance object
+   * Sets the enabled attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -226,9 +227,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TicketSunMaintenance object
+   * Sets the enabled attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -236,9 +237,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the TicketSunMaintenance object
+   * Sets the override attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(boolean tmp) {
     this.override = tmp;
@@ -246,9 +247,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the TicketSunMaintenance object
+   * Sets the override attribute of the TicketSunMaintenance object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(String tmp) {
     this.override = DatabaseUtils.parseBoolean(tmp);
@@ -256,9 +257,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Sets the requestItems attribute of the TicketSunMaintenance object
+   * Sets the requestItems attribute of the TicketSunMaintenance object
    *
-   *@param  request  The new requestItems value
+   * @param request The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
 
@@ -267,9 +268,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the TicketSunMaintenance object
+   * Gets the id attribute of the TicketSunMaintenance object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -277,9 +278,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the linkTicketId attribute of the TicketSunMaintenance object
+   * Gets the linkTicketId attribute of the TicketSunMaintenance object
    *
-   *@return    The linkTicketId value
+   * @return The linkTicketId value
    */
   public int getLinkTicketId() {
     return linkTicketId;
@@ -287,9 +288,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the formTypeName attribute of the TicketSunMaintenance object
+   * Gets the formTypeName attribute of the TicketSunMaintenance object
    *
-   *@return    The formTypeName value
+   * @return The formTypeName value
    */
   public String getFormTypeName() {
     return formTypeName;
@@ -297,9 +298,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the descriptionOfService attribute of the TicketSunMaintenance object
+   * Gets the descriptionOfService attribute of the TicketSunMaintenance object
    *
-   *@return    The descriptionOfService value
+   * @return The descriptionOfService value
    */
   public String getDescriptionOfService() {
     return descriptionOfService;
@@ -307,9 +308,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the replacementParts attribute of the TicketSunMaintenance object
+   * Gets the replacementParts attribute of the TicketSunMaintenance object
    *
-   *@return    The replacementParts value
+   * @return The replacementParts value
    */
   public TicketReplacementPartList getTicketReplacementPartList() {
     return ticketReplacementPartList;
@@ -317,9 +318,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the TicketSunMaintenance object
+   * Gets the entered attribute of the TicketSunMaintenance object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -327,9 +328,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the TicketSunMaintenance object
+   * Gets the enteredBy attribute of the TicketSunMaintenance object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -337,9 +338,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the TicketSunMaintenance object
+   * Gets the modified attribute of the TicketSunMaintenance object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -347,9 +348,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the TicketSunMaintenance object
+   * Gets the modifiedBy attribute of the TicketSunMaintenance object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -357,9 +358,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the TicketSunMaintenance object
+   * Gets the enabled attribute of the TicketSunMaintenance object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -367,9 +368,9 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the override attribute of the TicketSunMaintenance object
+   * Gets the override attribute of the TicketSunMaintenance object
    *
-   *@return    The override value
+   * @return The override value
    */
   public boolean getOverride() {
     return override;
@@ -377,17 +378,18 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpId             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param tmpId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int tmpId) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
-    pst = db.prepareStatement(" SELECT tsf.*  " +
+    pst = db.prepareStatement(
+        " SELECT tsf.*  " +
         " FROM  ticket_sun_form tsf " +
         " WHERE tsf.form_id = ? ");
 
@@ -409,10 +411,10 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTicketReplacementPartList(Connection db) throws SQLException {
     ticketReplacementPartList = new TicketReplacementPartList();
@@ -421,11 +423,11 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deleteTicketReplacementPartList(Connection db) throws SQLException {
     ticketReplacementPartList = new TicketReplacementPartList();
@@ -434,11 +436,11 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -455,7 +457,8 @@ public class TicketMaintenanceNote extends GenericBean {
           "description_of_service = ? ");
 
       if (!override) {
-        sql.append(" , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
+        sql.append(
+            " , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
       }
       sql.append("WHERE form_id = ? ");
       if (!override) {
@@ -502,11 +505,11 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
 
@@ -548,35 +551,34 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
 
     try {
       db.setAutoCommit(false);
-      PreparedStatement pst = null;
-
-      pst = db.prepareStatement(
+      id = DatabaseUtils.getNextSeq(db, "ticket_sun_form_form_id_seq");
+      PreparedStatement pst = db.prepareStatement(
           "INSERT INTO  ticket_sun_form " +
-          "(link_ticket_id, " +
+          "(" + (id > -1 ? "form_id, " : "") + "link_ticket_id, " +
           "description_of_service, " +
           "enteredby, " +
           "modifiedby) " +
-          "VALUES (?,?,?,?)");
-
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?)");
       int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, linkTicketId);
       pst.setString(++i, descriptionOfService);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
-
       pst.execute();
-      id = DatabaseUtils.getCurrVal(db, "ticket_sun_form_form_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "ticket_sun_form_form_id_seq", id);
       pst.close();
-
       // Save the parts
       insertReplacementParts(db, this.getTicketReplacementPartList());
       db.commit();
@@ -591,11 +593,11 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  inserts the replacement parts
+   * inserts the replacement parts
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpPartList       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param tmpPartList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertReplacementParts(Connection db, TicketReplacementPartList tmpPartList) throws SQLException {
     Iterator itr = tmpPartList.iterator();
@@ -608,10 +610,10 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
 

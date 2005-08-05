@@ -15,35 +15,38 @@
  */
 package com.zeroio.iteam.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.utils.ContentUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.*;
 import java.io.IOException;
-import com.zeroio.utils.ContentUtils;
-import com.darkhorseventures.framework.actions.ActionContext;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id: AssignmentFolderIndexer.java,v 1.2 2004/05/28 03:00:20 matt
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AssignmentFolderIndexer.java,v 1.2 2004/05/28 03:00:20 matt
+ *          Exp $
+ * @created May 27, 2004
  */
 public class AssignmentFolderIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -76,56 +79,73 @@ public class AssignmentFolderIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  assignmentFolder  Description of the Parameter
-   *@param  modified          Description of the Parameter
-   *@exception  IOException   Description of the Exception
+   * @param writer           Description of the Parameter
+   * @param assignmentFolder Description of the Parameter
+   * @param modified         Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, AssignmentFolder assignmentFolder, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "activityfolder"));
-    document.add(Field.Keyword("assignmentFolderId", String.valueOf(assignmentFolder.getId())));
-    document.add(Field.Keyword("requirementId", String.valueOf(assignmentFolder.getRequirementId())));
-    document.add(Field.Keyword("projectId", String.valueOf(assignmentFolder.getProjectId())));
+    document.add(
+        Field.Keyword(
+            "assignmentFolderId", String.valueOf(assignmentFolder.getId())));
+    document.add(
+        Field.Keyword(
+            "requirementId", String.valueOf(
+                assignmentFolder.getRequirementId())));
+    document.add(
+        Field.Keyword(
+            "projectId", String.valueOf(assignmentFolder.getProjectId())));
     document.add(Field.Text("title", assignmentFolder.getName()));
-    document.add(Field.Text("contents",
-        assignmentFolder.getName() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            assignmentFolder.getName() + " " +
         ContentUtils.toText(assignmentFolder.getDescription())));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(assignmentFolder.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(
+                  assignmentFolder.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
-      System.out.println("AssignmentFolderIndexer-> Added: " + assignmentFolder.getId());
+      System.out.println(
+          "AssignmentFolderIndexer-> Added: " + assignmentFolder.getId());
     }
   }
 
 
   /**
-   *  Gets the searchTerm attribute of the AssignmentFolderIndexer class
+   * Gets the searchTerm attribute of the AssignmentFolderIndexer class
    *
-   *@param  assignmentFolder  Description of the Parameter
-   *@return                   The searchTerm value
+   * @param assignmentFolder Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(AssignmentFolder assignmentFolder) {
-    Term searchTerm = new Term("assignmentFolderId", String.valueOf(assignmentFolder.getId()));
+    Term searchTerm = new Term(
+        "assignmentFolderId", String.valueOf(assignmentFolder.getId()));
     return searchTerm;
   }
 
 
   /**
-   *  Gets the deleteTerm attribute of the AssignmentFolderIndexer class
+   * Gets the deleteTerm attribute of the AssignmentFolderIndexer class
    *
-   *@param  assignmentFolder  Description of the Parameter
-   *@return                   The deleteTerm value
+   * @param assignmentFolder Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(AssignmentFolder assignmentFolder) {
-    Term searchTerm = new Term("assignmentFolderId", String.valueOf(assignmentFolder.getId()));
+    Term searchTerm = new Term(
+        "assignmentFolderId", String.valueOf(assignmentFolder.getId()));
     return searchTerm;
   }
 }

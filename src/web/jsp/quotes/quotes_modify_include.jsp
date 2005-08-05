@@ -169,7 +169,7 @@
     </td>
     <td valign="center">
 <% if (quoteBean.getOrgId() == -1 || contactList.size() == 0) { %>
-      <%= contactList.getEmptyHtmlSelect("contactId") %>
+      <%= contactList.getEmptyHtmlSelect(systemStatus, "contactId") %>
 <%} else {%>
       <%= contactList.getHtmlSelect("contactId", quoteBean.getContactId() ) %>
 <%}%>
@@ -272,11 +272,11 @@
     <td>
       <%-- This is a new quote so use the default file item --%>
       <dhv:evaluate if="<%= quoteBean.getId() == -1 %>">
-      	<%= (fileItemList.getHtmlSelectDefaultNone("logoFileId", quoteBean.getLogoFileId(), true)) %>
+      	<%= (fileItemList.getHtmlSelectDefaultNone(systemStatus, "logoFileId", quoteBean.getLogoFileId(), true)) %>
       </dhv:evaluate>
       <%-- This is an existing quote, so don't change the selected value --%>
       <dhv:evaluate if="<%= quoteBean.getId() > -1 %>">
-      	<%= (fileItemList.getHtmlSelectDefaultNone("logoFileId", quoteBean.getLogoFileId(), false)) %>
+      	<%= (fileItemList.getHtmlSelectDefaultNone(systemStatus, "logoFileId", quoteBean.getLogoFileId(), false)) %>
       </dhv:evaluate>
     </td>
   </tr>
@@ -289,3 +289,8 @@
     </td>
   </tr>
 </table>
+<zeroio:dateSelect form="addQuote" field="closed" timestamp="<%= quoteBean.getClosed() %>"  timeZone="<%= User.getTimeZone() %>" showTimeZone="false" hidden="true" />
+<zeroio:dateSelect form="addQuote" field="issuedDate" timestamp="<%= quoteBean.getIssuedDate() %>"  timeZone="<%= User.getTimeZone() %>" showTimeZone="false" hidden="true" />
+<input type="hidden" name="closeIt" value="<%= quoteBean.getCloseIt() %>" />
+<input type="hidden" name="submitAction" value="<%= quoteBean.getSubmitAction() %>" />
+

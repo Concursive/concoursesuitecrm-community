@@ -15,45 +15,40 @@
  */
 package org.aspcfs.modules.products.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.products.configurator.*;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.modules.base.Constants;
-import com.isavvix.tools.*;
-import com.zeroio.webutils.*;
-import org.aspcfs.modules.base.*;
-import java.lang.reflect.*;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.products.base.ProductOption;
+import org.aspcfs.modules.products.base.ProductOptionConfigurator;
+import org.aspcfs.modules.products.base.ProductOptionValues;
+import org.aspcfs.modules.products.base.ProductOptionValuesList;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
+
+import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 7, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created September 7, 2004
  */
 public final class ProductOptionPricings extends CFSModule {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String optionId = context.getRequest().getParameter("optionId");
       ProductOption option = new ProductOption(db, Integer.parseInt(optionId));
@@ -61,10 +56,11 @@ public final class ProductOptionPricings extends CFSModule {
 
       // load the configurator
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, option.getConfiguratorId());
       // query the properties for this option
       configurator.queryProperties(db, option.getId(), false);
-      
+
       // populate the pricing list
       ProductOptionValuesList pricingList = new ProductOptionValuesList();
       pricingList.setOptionId(Integer.parseInt(optionId));
@@ -81,28 +77,32 @@ public final class ProductOptionPricings extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String optionId = context.getRequest().getParameter("optionId");
       ProductOption option = new ProductOption(db, Integer.parseInt(optionId));
       context.getRequest().setAttribute("ProductOption", option);
 
       int nextRangeMin = ProductOption.getNextRangeMin(db, option.getId());
-      context.getRequest().setAttribute("nextRangeMin", String.valueOf(nextRangeMin));
+      context.getRequest().setAttribute(
+          "nextRangeMin", String.valueOf(nextRangeMin));
       // load the configurator
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, option.getConfiguratorId());
       // query the properties for this option
       configurator.queryProperties(db, option.getId(), false);
     } catch (Exception e) {
@@ -116,10 +116,10 @@ public final class ProductOptionPricings extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Connection db = null;
@@ -127,8 +127,10 @@ public final class ProductOptionPricings extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String optionId = context.getRequest().getParameter("optionId");
       ProductOption option = new ProductOption(db, Integer.parseInt(optionId));

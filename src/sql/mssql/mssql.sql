@@ -99,18 +99,6 @@ ALTER TABLE [events_log] ADD
 	)
 GO
 
--- Insert default events
-SET NOCOUNT ON
-SET IDENTITY_INSERT [events] ON
-GO
-INSERT [events] ([event_id],[second],[minute],[hour],[dayofmonth],[month],[dayofweek],[year],[task],[extrainfo],[businessDays],[enabled],[entered])VALUES(1,'0','*/5','*','*','*','*','*','org.aspcfs.apps.notifier.Notifier#doTask','${FILEPATH}','true',1,'Feb  4 2004  1:36:16:717PM')
-INSERT [events] ([event_id],[second],[minute],[hour],[dayofmonth],[month],[dayofweek],[year],[task],[extrainfo],[businessDays],[enabled],[entered])VALUES(2,'0','*/1','*','*','*','*','*','org.aspcfs.apps.reportRunner.ReportRunner#doTask','${FILEPATH}','true',1,'Feb  4 2004  1:36:16:750PM')
-INSERT [events] ([event_id],[second],[minute],[hour],[dayofmonth],[month],[dayofweek],[year],[task],[extrainfo],[businessDays],[enabled],[entered])VALUES(3,'0','0','*/12','*','*','*','*','org.aspcfs.apps.reportRunner.ReportCleanup#doTask','${FILEPATH}','true',1,'Feb  4 2004  1:36:16:750PM')
-INSERT [events] ([event_id],[second],[minute],[hour],[dayofmonth],[month],[dayofweek],[year],[task],[extrainfo],[businessDays],[enabled],[entered])VALUES(4,'0','0','0','*','*','*','*','org.aspcfs.modules.service.tasks.GetURL#doTask','http://${WEBSERVER.URL}/ProcessSystem.do?command=ClearGraphData','true',1,'Feb  4 2004  1:36:16:763PM')
-SET IDENTITY_INSERT [events] OFF
-GO
-SET NOCOUNT OFF
-
 
 CREATE TABLE [access] (
 	[user_id] [int] IDENTITY (0, 1) NOT NULL ,
@@ -237,7 +225,7 @@ CREATE TABLE [field_types] (
 	[data_type] [varchar] (20) NULL ,
 	[operator] [varchar] (50) NULL ,
 	[display_text] [varchar] (50) NULL ,
-	[enabled] [bit] NULL 
+	[enabled] [bit] NOT NULL 
 ) ON [PRIMARY]
 GO
 
@@ -495,6 +483,42 @@ CREATE TABLE [lookup_onsite_model] (
 	[default_item] [bit] NULL ,
 	[level] [int] NULL ,
 	[enabled] [bit] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [lookup_opportunity_budget] (
+	[code] [int] IDENTITY (1, 1) NOT NULL ,
+	[description] [varchar] (50) NOT NULL ,
+	[default_item] [bit] NULL ,
+	[level] [int] NULL ,
+	[enabled] [bit] NULL
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [lookup_opportunity_competitors] (
+	[code] [int] IDENTITY (1, 1) NOT NULL ,
+	[description] [varchar] (50) NOT NULL ,
+	[default_item] [bit] NULL ,
+	[level] [int] NULL ,
+	[enabled] [bit] NULL
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [lookup_opportunity_environment] (
+	[code] [int] IDENTITY (1, 1) NOT NULL ,
+	[description] [varchar] (50) NOT NULL ,
+	[default_item] [bit] NULL ,
+	[level] [int] NULL ,
+	[enabled] [bit] NULL
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [lookup_opportunity_event_compelling] (
+	[code] [int] IDENTITY (1, 1) NOT NULL ,
+	[description] [varchar] (50) NOT NULL ,
+	[default_item] [bit] NULL ,
+	[level] [int] NULL ,
+	[enabled] [bit] NULL
 ) ON [PRIMARY]
 GO
 
@@ -1199,7 +1223,10 @@ CREATE TABLE [campaign] (
 	[modified] [datetime] NOT NULL ,
 	[modifiedby] [int] NOT NULL ,
 	[type] [int] NULL ,
-	[active_date_timezone] [varchar] (255) NULL 
+	[active_date_timezone] [varchar] (255) NULL ,
+	[cc] [varchar] (1024) NULL ,
+	[bcc] [varchar] (1024) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -1246,7 +1273,8 @@ CREATE TABLE [document_store] (
 	[entered] [datetime] NULL ,
 	[enteredBy] [int] NOT NULL ,
 	[modified] [datetime] NULL ,
-	[modifiedBy] [int] NOT NULL 
+	[modifiedBy] [int] NOT NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY]
 GO
 
@@ -1428,7 +1456,8 @@ CREATE TABLE [organization] (
 	[import_id] [int] NULL ,
 	[status_id] [int] NULL ,
 	[alertdate_timezone] [varchar] (255) NULL ,
-	[contract_end_timezone] [varchar] (255) NULL 
+	[contract_end_timezone] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -1540,7 +1569,8 @@ CREATE TABLE [projects] (
 	[calendar_enabled] [bit] NOT NULL ,
 	[calendar_label] [varchar] (50) NULL ,
 	[accounts_enabled] [bit] NOT NULL ,
-	[accounts_label] [varchar] (50) NULL 
+	[accounts_label] [varchar] (50) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -1554,7 +1584,8 @@ CREATE TABLE [relationship] (
 	[entered] [datetime] NOT NULL ,
 	[enteredby] [int] NOT NULL ,
 	[modified] [datetime] NOT NULL ,
-	[modifiedby] [int] NOT NULL 
+	[modifiedby] [int] NOT NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY]
 GO
 
@@ -1644,7 +1675,8 @@ CREATE TABLE [task] (
 	[owner] [int] NULL ,
 	[completedate] [datetime] NULL ,
 	[category_id] [int] NULL ,
-	[duedate_timezone] [varchar] (255) NULL 
+	[duedate_timezone] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -1816,8 +1848,6 @@ CREATE TABLE [contact] (
 	[birthdate] [datetime] NULL ,
 	[notes] [text] NULL ,
 	[site] [int] NULL ,
-	[imname] [varchar] (30) NULL ,
-	[imservice] [int] NULL ,
 	[locale] [int] NULL ,
 	[employee_id] [varchar] (80) NULL ,
 	[employmenttype] [int] NULL ,
@@ -1843,7 +1873,11 @@ CREATE TABLE [contact] (
 	[source] [int] NULL ,
 	[rating] [int] NULL ,
 	[comments] [varchar] (255) NULL ,
-	[conversion_date] [datetime] NULL
+	[conversion_date] [datetime] NULL ,
+	[additional_names] [varchar] (255) NULL ,
+	[nickname] [varchar] (80) NULL ,
+	[role] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2332,7 +2366,8 @@ CREATE TABLE [business_process_hook] (
 	[id] [int] IDENTITY (1, 1) NOT NULL ,
 	[trigger_id] [int] NOT NULL ,
 	[process_id] [int] NOT NULL ,
-	[enabled] [bit] NULL 
+	[enabled] [bit] NULL ,
+	[priority] [int] NOT NULL 
 ) ON [PRIMARY]
 GO
 
@@ -2556,6 +2591,24 @@ CREATE TABLE [help_tips] (
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [history] (
+	[history_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[contact_id] [int] NULL ,
+	[org_id] [int] NULL ,
+	[link_object_id] [int] NOT NULL ,
+	[link_item_id] [int] NULL ,
+	[status] [varchar] (255) NULL ,
+	[type] [varchar] (255) NULL ,
+	[description] [text] NULL ,
+	[level] [int] NULL ,
+	[enabled] [bit] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 CREATE TABLE [opportunity_header] (
 	[opp_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[description] [varchar] (80) NULL ,
@@ -2564,7 +2617,8 @@ CREATE TABLE [opportunity_header] (
 	[entered] [datetime] NOT NULL ,
 	[enteredby] [int] NOT NULL ,
 	[modified] [datetime] NOT NULL ,
-	[modifiedby] [int] NOT NULL 
+	[modifiedby] [int] NOT NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY]
 GO
 
@@ -2593,7 +2647,9 @@ CREATE TABLE [product_catalog] (
 	[start_date] [datetime] NULL ,
 	[expiration_date] [datetime] NULL ,
 	[enabled] [bit] NOT NULL ,
-	[manufacturer_id] [int] NULL 
+	[manufacturer_id] [int] NULL ,
+	[trashed_date] [datetime] NULL ,
+	[active] [bit] NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2853,7 +2909,8 @@ CREATE TABLE [service_contract] (
 	[service_model_notes] [text] NULL ,
 	[initial_start_date_timezone] [varchar] (255) NULL ,
 	[current_start_date_timezone] [varchar] (255) NULL ,
-	[current_end_date_timezone] [varchar] (255) NULL 
+	[current_end_date_timezone] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2926,7 +2983,8 @@ CREATE TABLE [asset] (
 	[purchase_cost] [float] NULL ,
 	[date_listed_timezone] [varchar] (255) NULL ,
 	[expiration_date_timezone] [varchar] (255) NULL ,
-	[purchase_date_timezone] [varchar] (255) NULL 
+	[purchase_date_timezone] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2994,7 +3052,12 @@ CREATE TABLE [opportunity_component] (
 	[enabled] [bit] NOT NULL ,
 	[notes] [text] NULL ,
 	[alertdate_timezone] [varchar] (255) NULL ,
-	[closedate_timezone] [varchar] (255) NULL 
+	[closedate_timezone] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL ,
+	[environment] [int] NULL ,
+	[competitors] [int] NULL ,
+	[compelling_event] [int] NULL ,
+	[budget] [int] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -3273,7 +3336,8 @@ CREATE TABLE [call_log] (
 	[status_id] [int] NOT NULL ,
 	[reminder_value] [int] NULL ,
 	[reminder_type_id] [int] NULL ,
-	[alertdate_timezone] [varchar] (255) NULL 
+	[alertdate_timezone] [varchar] (255) NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -3546,7 +3610,8 @@ CREATE TABLE [quote_entry] (
 	[closed] [datetime] NULL ,
 	[show_total] [bit] NULL ,
 	[show_subtotal] [bit] NULL ,
-	[logo_file_id] [int] NULL 
+	[logo_file_id] [int] NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -3704,7 +3769,8 @@ CREATE TABLE [ticket] (
 	[est_resolution_date_timezone] [varchar] (255) NULL ,
 	[assigned_date_timezone] [varchar] (255) NULL ,
 	[resolution_date_timezone] [varchar] (255) NULL ,
-	[status_id] [int] NULL 
+	[status_id] [int] NULL ,
+	[trashed_date] [datetime] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -3896,21 +3962,21 @@ ALTER TABLE [lookup_call_types] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_contact_rating] WITH NOCHECK ADD
+ALTER TABLE [lookup_contact_rating] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_contact_r__403A8C7D] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_contact_source] WITH NOCHECK ADD
+ALTER TABLE [lookup_contact_source] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_contact_s__3B75D760] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_contactaddress_types] WITH NOCHECK ADD
+ALTER TABLE [lookup_contactaddress_types] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -3959,21 +4025,21 @@ ALTER TABLE [lookup_department] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_document_store_permission_category] WITH NOCHECK ADD
+ALTER TABLE [lookup_document_store_permission_category] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_document___7E62A77F] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_document_store_role] WITH NOCHECK ADD
+ALTER TABLE [lookup_document_store_role] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_document___041B80D5] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_email_model] WITH NOCHECK ADD
+ALTER TABLE [lookup_email_model] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4001,21 +4067,21 @@ ALTER TABLE [lookup_hours_reason] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_im_services] WITH NOCHECK ADD
+ALTER TABLE [lookup_im_services] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_im_servic__36B12243] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_im_types] WITH NOCHECK ADD
+ALTER TABLE [lookup_im_types] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_im_types__31EC6D26] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_industry] WITH NOCHECK ADD
+ALTER TABLE [lookup_industry] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4029,21 +4095,49 @@ ALTER TABLE [lookup_locale] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_news_template] WITH NOCHECK ADD
+ALTER TABLE [lookup_news_template] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_news_temp__0169315C] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_onsite_model] WITH NOCHECK ADD
+ALTER TABLE [lookup_onsite_model] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_opportunity_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_opportunity_budget] WITH NOCHECK ADD
+	 PRIMARY KEY  CLUSTERED
+	(
+		[code]
+	)  ON [PRIMARY]
+GO
+
+ALTER TABLE [lookup_opportunity_competitors] WITH NOCHECK ADD
+	 PRIMARY KEY  CLUSTERED
+	(
+		[code]
+	)  ON [PRIMARY]
+GO
+
+ALTER TABLE [lookup_opportunity_environment] WITH NOCHECK ADD
+	 PRIMARY KEY  CLUSTERED
+	(
+		[code]
+	)  ON [PRIMARY]
+GO
+
+ALTER TABLE [lookup_opportunity_event_compelling] WITH NOCHECK ADD
+	 PRIMARY KEY  CLUSTERED
+	(
+		[code]
+	)  ON [PRIMARY]
+GO
+
+ALTER TABLE [lookup_opportunity_types] WITH NOCHECK ADD
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4113,14 +4207,14 @@ ALTER TABLE [lookup_payment_methods] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_payment_status] WITH NOCHECK ADD
+ALTER TABLE [lookup_payment_status] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_payment_s__246854D6] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_phone_model] WITH NOCHECK ADD
+ALTER TABLE [lookup_phone_model] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4155,14 +4249,14 @@ ALTER TABLE [lookup_product_keyword] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_product_manufacturer] WITH NOCHECK ADD
+ALTER TABLE [lookup_product_manufacturer] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_product_m__72B0FDB1] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_product_ship_time] WITH NOCHECK ADD
+ALTER TABLE [lookup_product_ship_time] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4239,28 +4333,28 @@ ALTER TABLE [lookup_project_status] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_quote_condition] WITH NOCHECK ADD
+ALTER TABLE [lookup_quote_condition] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_quote_con__75985754] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_quote_delivery] WITH NOCHECK ADD
+ALTER TABLE [lookup_quote_delivery] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_quote_del__70D3A237] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_quote_remarks] WITH NOCHECK ADD
+ALTER TABLE [lookup_quote_remarks] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_quote_rem__1328BA3B] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_quote_source] WITH NOCHECK ADD
+ALTER TABLE [lookup_quote_source] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4295,14 +4389,14 @@ ALTER TABLE [lookup_recurring_type] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_relationship_types] WITH NOCHECK ADD
+ALTER TABLE [lookup_relationship_types] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_relations__0C1BC9F9] PRIMARY KEY  CLUSTERED
 	(
 		[type_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_response_model] WITH NOCHECK ADD
+ALTER TABLE [lookup_response_model] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4372,21 +4466,21 @@ ALTER TABLE [lookup_task_priority] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_textmessage_types] WITH NOCHECK ADD
+ALTER TABLE [lookup_textmessage_types] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_textmessa__44FF419A] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_ticket_status] WITH NOCHECK ADD
+ALTER TABLE [lookup_ticket_status] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_ticket_st__770B9E7A] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_ticketsource] WITH NOCHECK ADD
+ALTER TABLE [lookup_ticketsource] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -4407,14 +4501,14 @@ ALTER TABLE [permission_category] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [quote_group] WITH NOCHECK ADD
+ALTER TABLE [quote_group] WITH NOCHECK ADD 
 	CONSTRAINT [PK__quote_group__7A5D0C71] PRIMARY KEY  CLUSTERED
 	(
 		[group_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [search_fields] WITH NOCHECK ADD
+ALTER TABLE [search_fields] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[id]
@@ -4547,14 +4641,14 @@ ALTER TABLE [cfsinbox_message] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [document_store] WITH NOCHECK ADD
+ALTER TABLE [document_store] WITH NOCHECK ADD 
 	CONSTRAINT [PK__document_store__1269A02C] PRIMARY KEY  CLUSTERED
 	(
 		[document_store_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [help_module] WITH NOCHECK ADD
+ALTER TABLE [help_module] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[module_id]
@@ -4582,14 +4676,14 @@ ALTER TABLE [lookup_contact_types] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_document_store_permission] WITH NOCHECK ADD
+ALTER TABLE [lookup_document_store_permission] WITH NOCHECK ADD 
 	CONSTRAINT [PK__lookup_document___09D45A2B] PRIMARY KEY  CLUSTERED
 	(
 		[code]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [lookup_lists_lookup] WITH NOCHECK ADD
+ALTER TABLE [lookup_lists_lookup] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[id]
@@ -4666,14 +4760,14 @@ ALTER TABLE [projects] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [relationship] WITH NOCHECK ADD
+ALTER TABLE [relationship] WITH NOCHECK ADD 
 	CONSTRAINT [PK__relationship__10E07F16] PRIMARY KEY  CLUSTERED
 	(
 		[relationship_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [role] WITH NOCHECK ADD
+ALTER TABLE [role] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[role_id]
@@ -4722,14 +4816,14 @@ ALTER TABLE [viewpoint] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [webdav] WITH NOCHECK ADD
+ALTER TABLE [webdav] WITH NOCHECK ADD 
 	CONSTRAINT [PK__webdav__2F9A1060] PRIMARY KEY  CLUSTERED
 	(
 		[id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [action_item] WITH NOCHECK ADD
+ALTER TABLE [action_item] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[item_id]
@@ -4806,14 +4900,14 @@ ALTER TABLE [custom_field_category] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [document_store_permissions] WITH NOCHECK ADD
+ALTER TABLE [document_store_permissions] WITH NOCHECK ADD 
 	CONSTRAINT [PK__document_store_p__1A0AC1F4] PRIMARY KEY  CLUSTERED
 	(
 		[id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [help_contents] WITH NOCHECK ADD
+ALTER TABLE [help_contents] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[help_id]
@@ -4862,14 +4956,14 @@ ALTER TABLE [product_option] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [project_accounts] WITH NOCHECK ADD
+ALTER TABLE [project_accounts] WITH NOCHECK ADD 
 	CONSTRAINT [PK__project_accounts__4D7F7902] PRIMARY KEY  CLUSTERED
 	(
 		[id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [project_files] WITH NOCHECK ADD
+ALTER TABLE [project_files] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[item_id]
@@ -4883,14 +4977,14 @@ ALTER TABLE [project_issues_categories] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [project_news_category] WITH NOCHECK ADD
+ALTER TABLE [project_news_category] WITH NOCHECK ADD 
 	CONSTRAINT [PK__project_news_cat__1AF3F935] PRIMARY KEY  CLUSTERED
 	(
 		[category_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [project_permissions] WITH NOCHECK ADD
+ALTER TABLE [project_permissions] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[id]
@@ -5002,42 +5096,42 @@ ALTER TABLE [contact_emailaddress] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [contact_imaddress] WITH NOCHECK ADD
+ALTER TABLE [contact_imaddress] WITH NOCHECK ADD 
 	CONSTRAINT [PK__contact_imaddres__7B264821] PRIMARY KEY  CLUSTERED
 	(
 		[address_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [contact_lead_read_map] WITH NOCHECK ADD
+ALTER TABLE [contact_lead_read_map] WITH NOCHECK ADD 
 	CONSTRAINT [PK__contact_lead_rea__0D7A0286] PRIMARY KEY  CLUSTERED
 	(
 		[map_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [contact_lead_skipped_map] WITH NOCHECK ADD
+ALTER TABLE [contact_lead_skipped_map] WITH NOCHECK ADD 
 	CONSTRAINT [PK__contact_lead_ski__09A971A2] PRIMARY KEY  CLUSTERED
 	(
 		[map_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [contact_phone] WITH NOCHECK ADD
+ALTER TABLE [contact_phone] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[phone_id]
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [contact_textmessageaddress] WITH NOCHECK ADD
+ALTER TABLE [contact_textmessageaddress] WITH NOCHECK ADD 
 	CONSTRAINT [PK__contact_textmess__04AFB25B] PRIMARY KEY  CLUSTERED
 	(
 		[address_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [custom_field_group] WITH NOCHECK ADD
+ALTER TABLE [custom_field_group] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[group_id]
@@ -5100,6 +5194,13 @@ ALTER TABLE [help_tips] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
+ALTER TABLE [history] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[history_id]
+	)  ON [PRIMARY] 
+GO
+
 ALTER TABLE [opportunity_header] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
@@ -5128,11 +5229,11 @@ ALTER TABLE [product_option_values] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [project_assignments_folder] WITH NOCHECK ADD
+ALTER TABLE [project_assignments_folder] WITH NOCHECK ADD 
 	CONSTRAINT [project_assignments_folder_pkey] PRIMARY KEY  CLUSTERED
 	(
 		[folder_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
 ALTER TABLE [project_issues] WITH NOCHECK ADD 
@@ -5261,14 +5362,14 @@ ALTER TABLE [product_category_map] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [product_option_map] WITH NOCHECK ADD
+ALTER TABLE [product_option_map] WITH NOCHECK ADD 
 	CONSTRAINT [PK__product_option_m__7740A8A4] PRIMARY KEY  CLUSTERED
 	(
 		[product_option_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [project_assignments] WITH NOCHECK ADD
+ALTER TABLE [project_assignments] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[assignment_id]
@@ -5401,14 +5502,14 @@ ALTER TABLE [order_payment] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [order_payment_status] WITH NOCHECK ADD
+ALTER TABLE [order_payment_status] WITH NOCHECK ADD 
 	CONSTRAINT [PK__order_payment_st__3592E0D8] PRIMARY KEY  CLUSTERED
 	(
 		[payment_status_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [order_product] WITH NOCHECK ADD
+ALTER TABLE [order_product] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[item_id]
@@ -5436,21 +5537,21 @@ ALTER TABLE [payment_creditcard] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [payment_eft] WITH NOCHECK ADD
+ALTER TABLE [payment_eft] WITH NOCHECK ADD 
 	CONSTRAINT [PK__payment_eft__08C03A61] PRIMARY KEY  CLUSTERED
 	(
 		[bank_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [quote_condition] WITH NOCHECK ADD
+ALTER TABLE [quote_condition] WITH NOCHECK ADD 
 	CONSTRAINT [PK__quote_condition__03E676AB] PRIMARY KEY  CLUSTERED
 	(
 		[map_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [quote_entry] WITH NOCHECK ADD
+ALTER TABLE [quote_entry] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[quote_id]
@@ -5478,21 +5579,21 @@ ALTER TABLE [quote_product_options] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [quote_remark] WITH NOCHECK ADD
+ALTER TABLE [quote_remark] WITH NOCHECK ADD 
 	CONSTRAINT [PK__quote_remark__17ED6F58] PRIMARY KEY  CLUSTERED
 	(
 		[map_id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [quotelog] WITH NOCHECK ADD
+ALTER TABLE [quotelog] WITH NOCHECK ADD 
 	CONSTRAINT [PK__quotelog__07B7078F] PRIMARY KEY  CLUSTERED
 	(
 		[id]
-	)  ON [PRIMARY]
+	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [ticket] WITH NOCHECK ADD
+ALTER TABLE [ticket] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[ticketid]
@@ -5551,7 +5652,7 @@ ALTER TABLE [access] WITH NOCHECK ADD
 	CONSTRAINT [DF__access__hidden__0425A276] DEFAULT (0) FOR [hidden]
 GO
 
-ALTER TABLE [asset_category] WITH NOCHECK ADD 
+ALTER TABLE [asset_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__asset_cat__cat_l__542C7691] DEFAULT (0) FOR [cat_level],
 	CONSTRAINT [DF__asset_cat__paren__4668671F] DEFAULT (0) FOR [parent_cat_code],
 	CONSTRAINT [DF__asset_cat__full___55209ACA] DEFAULT ('') FOR [full_description],
@@ -5560,7 +5661,7 @@ ALTER TABLE [asset_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__asset_cat__enabl__57FD0775] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [asset_category_draft] WITH NOCHECK ADD 
+ALTER TABLE [asset_category_draft] WITH NOCHECK ADD
 	CONSTRAINT [DF__asset_cat__link___5AD97420] DEFAULT ((-1)) FOR [link_id],
 	CONSTRAINT [DF__asset_cat__cat_l__5BCD9859] DEFAULT (0) FOR [cat_level],
 	CONSTRAINT [DF__asset_cat__paren__4EFDAD20] DEFAULT (0) FOR [parent_cat_code],
@@ -5570,7 +5671,7 @@ ALTER TABLE [asset_category_draft] WITH NOCHECK ADD
 	CONSTRAINT [DF__asset_cat__enabl__5F9E293D] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [autoguide_ad_run_types] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_ad_run_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__defau__15C52FC4] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__autoguide__level__16B953FD] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__autoguide__enabl__17AD7836] DEFAULT (0) FOR [enabled],
@@ -5578,12 +5679,12 @@ ALTER TABLE [autoguide_ad_run_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__modif__1995C0A8] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [autoguide_make] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_make] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__enter__7093AB15] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__autoguide__modif__7187CF4E] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [autoguide_options] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__defau__0682EC34] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__autoguide__level__0777106D] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__autoguide__enabl__086B34A6] DEFAULT (0) FOR [enabled],
@@ -5591,7 +5692,7 @@ ALTER TABLE [autoguide_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__modif__0A537D18] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [business_process_component_library] WITH NOCHECK ADD 
+ALTER TABLE [business_process_component_library] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__62108194] DEFAULT (1) FOR [enabled]
 GO
 
@@ -5662,49 +5763,49 @@ ALTER TABLE [lookup_contact_source] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_co__enabl__3E52440B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_contactaddress_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_contactaddress_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_co__defau__403A8C7D] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_co__level__412EB0B6] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_co__enabl__4222D4EF] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_contactemail_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_contactemail_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_co__defau__44FF419A] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_co__level__45F365D3] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_co__enabl__46E78A0C] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_contactphone_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_contactphone_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_co__defau__49C3F6B7] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_co__level__4AB81AF0] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_co__enabl__4BAC3F29] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_creditcard_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_creditcard_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_cr__defau__7ADC2F5E] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_cr__level__7BD05397] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_cr__enabl__7CC477D0] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_currency] WITH NOCHECK ADD 
+ALTER TABLE [lookup_currency] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_cu__defau__7226EDCC] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_cu__level__731B1205] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_cu__enabl__740F363E] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_delivery_options] WITH NOCHECK ADD 
+ALTER TABLE [lookup_delivery_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_de__defau__1EA48E88] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_de__level__1F98B2C1] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_de__enabl__208CD6FA] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_department] WITH NOCHECK ADD 
+ALTER TABLE [lookup_department] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_de__defau__1ED998B2] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_de__level__1FCDBCEB] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_de__enabl__20C1E124] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_document_store_permission_category] WITH NOCHECK ADD 
+ALTER TABLE [lookup_document_store_permission_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_do__defau__7F56CBB8] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_do__level__004AEFF1] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_do__enabl__013F142A] DEFAULT (1) FOR [enabled],
@@ -5781,7 +5882,31 @@ ALTER TABLE [lookup_onsite_model] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_on__enabl__2FEF161B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_opportunity_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_opportunity_budget] WITH NOCHECK ADD
+	CONSTRAINT [DF__lookup_op__defau__436BFEE3] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_op__level__4460231C] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_op__enabl__45544755] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_opportunity_competitors] WITH NOCHECK ADD
+	CONSTRAINT [DF__lookup_op__defau__37FA4C37] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_op__level__38EE7070] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_op__enabl__39E294A9] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_opportunity_environment] WITH NOCHECK ADD
+	CONSTRAINT [DF__lookup_op__defau__324172E1] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_op__level__3335971A] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_op__enabl__3429BB53] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_opportunity_event_compelling] WITH NOCHECK ADD
+	CONSTRAINT [DF__lookup_op__defau__3DB3258D] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_op__level__3EA749C6] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_op__enabl__3F9B6DFF] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_opportunity_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_op__defau__467D75B8] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_op__level__477199F1] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_op__enabl__4865BE2A] DEFAULT (1) FOR [enabled]
@@ -5799,43 +5924,43 @@ ALTER TABLE [lookup_order_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__enabl__18A19C6F] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_order_terms] WITH NOCHECK ADD 
+ALTER TABLE [lookup_order_terms] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__defau__2042BE37] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_or__level__2136E270] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_or__enabl__222B06A9] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_order_type] WITH NOCHECK ADD 
+ALTER TABLE [lookup_order_type] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__defau__1B7E091A] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_or__level__1C722D53] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_or__enabl__1D66518C] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_orderaddress_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_orderaddress_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__defau__69B1A35C] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_or__level__6AA5C795] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_or__enabl__6B99EBCE] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_orgaddress_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_orgaddress_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__defau__239E4DCF] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_or__level__24927208] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_or__enabl__25869641] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_orgemail_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_orgemail_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__defau__286302EC] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_or__level__29572725] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_or__enabl__2A4B4B5E] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_orgphone_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_orgphone_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_or__defau__2D27B809] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_or__level__2E1BDC42] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_or__enabl__2F10007B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_payment_methods] WITH NOCHECK ADD 
+ALTER TABLE [lookup_payment_methods] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pa__defau__76177A41] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pa__level__770B9E7A] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pa__enabl__77FFC2B3] DEFAULT (1) FOR [enabled]
@@ -5847,30 +5972,30 @@ ALTER TABLE [lookup_payment_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pa__enabl__2744C181] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_phone_model] WITH NOCHECK ADD 
+ALTER TABLE [lookup_phone_model] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ph__defau__2B2A60FE] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_ph__enabl__2C1E8537] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_category_type] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_category_type] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__76EBA2E9] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__77DFC722] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__78D3EB5B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_conf_result] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_conf_result] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__6B44E613] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__6C390A4C] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__6D2D2E85] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_format] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_format] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__1293BD5E] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__1387E197] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__147C05D0] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_keyword] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_keyword] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__1446FBA6] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__153B1FDF] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__162F4418] DEFAULT (1) FOR [enabled]
@@ -5882,31 +6007,31 @@ ALTER TABLE [lookup_product_manufacturer] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__enabl__758D6A5C] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_ship_time] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_ship_time] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__1C1D2798] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__1D114BD1] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__1E05700A] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_shipping] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_shipping] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__1758727B] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__184C96B4] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__1940BAED] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_tax] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_tax] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__20E1DCB5] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__21D600EE] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__22CA2527] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_product_type] WITH NOCHECK ADD 
+ALTER TABLE [lookup_product_type] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__0DCF0841] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__0EC32C7A] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__0FB750B3] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_project_activity] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_activity] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__5F141958] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__60083D91] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__60FC61CA] DEFAULT (1) FOR [enabled],
@@ -5914,14 +6039,14 @@ ALTER TABLE [lookup_project_activity] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__templ__62E4AA3C] DEFAULT (0) FOR [template_id]
 GO
 
-ALTER TABLE [lookup_project_category] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__370627FE] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__37FA4C37] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__38EE7070] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_pr__group__39E294A9] DEFAULT (0) FOR [group_id]
 GO
 
-ALTER TABLE [lookup_project_loe] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_loe] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__base___76EBA2E9] DEFAULT (0) FOR [base_value],
 	CONSTRAINT [DF__lookup_pr__defau__77DFC722] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__78D3EB5B] DEFAULT (0) FOR [level],
@@ -5929,177 +6054,177 @@ ALTER TABLE [lookup_project_loe] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__group__7ABC33CD] DEFAULT (0) FOR [group_id]
 GO
 
-ALTER TABLE [lookup_project_permission_category] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_permission_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__592635D8] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__5A1A5A11] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__5B0E7E4A] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_pr__group__5C02A283] DEFAULT (0) FOR [group_id]
 GO
 
-ALTER TABLE [lookup_project_priority] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_priority] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__65C116E7] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__66B53B20] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__67A95F59] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_pr__group__689D8392] DEFAULT (0) FOR [group_id]
 GO
 
-ALTER TABLE [lookup_project_role] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_role] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__314D4EA8] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__324172E1] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__3335971A] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_pr__group__3429BB53] DEFAULT (0) FOR [group_id]
 GO
 
-ALTER TABLE [lookup_project_status] WITH NOCHECK ADD 
+ALTER TABLE [lookup_project_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__defau__7132C993] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_pr__level__7226EDCC] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__731B1205] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_pr__group__740F363E] DEFAULT (0) FOR [group_id]
 GO
 
-ALTER TABLE [lookup_quote_condition] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_condition] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__768C7B8D] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__77809FC6] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__7874C3FF] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_quote_delivery] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_delivery] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__71C7C670] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__72BBEAA9] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__73B00EE2] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_quote_remarks] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_remarks] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__141CDE74] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__151102AD] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__160526E6] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_quote_source] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_source] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__5E74FADA] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__5F691F13] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__605D434C] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_quote_status] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__5026DB83] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__511AFFBC] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__520F23F5] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_quote_terms] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_terms] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__59B045BD] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__5AA469F6] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__5B988E2F] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_quote_type] WITH NOCHECK ADD 
+ALTER TABLE [lookup_quote_type] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_qu__defau__54EB90A0] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_qu__level__55DFB4D9] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_qu__enabl__56D3D912] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_recurring_type] WITH NOCHECK ADD 
+ALTER TABLE [lookup_recurring_type] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_re__defau__25A691D2] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_re__level__269AB60B] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_re__enabl__278EDA44] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_relationship_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_relationship_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_re__level__0D0FEE32] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_re__defau__0E04126B] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_re__enabl__0EF836A4] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_response_model] WITH NOCHECK ADD 
+ALTER TABLE [lookup_response_model] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_re__defau__2759D01A] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_re__enabl__284DF453] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_revenue_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_revenue_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_re__defau__1C722D53] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_re__level__1D66518C] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_re__enabl__1E5A75C5] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_revenuedetail_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_revenuedetail_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_re__defau__2136E270] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_re__level__222B06A9] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_re__enabl__231F2AE2] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_sc_category] WITH NOCHECK ADD 
+ALTER TABLE [lookup_sc_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_sc__defau__1FB8AE52] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_sc__enabl__20ACD28B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_sc_type] WITH NOCHECK ADD 
+ALTER TABLE [lookup_sc_type] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_sc__defau__23893F36] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_sc__enabl__247D636F] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_stage] WITH NOCHECK ADD 
+ALTER TABLE [lookup_stage] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_st__defau__18EBB532] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_st__level__19DFD96B] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_st__enabl__1AD3FDA4] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_survey_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_survey_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_su__defau__0F824689] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_su__level__10766AC2] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_su__enabl__116A8EFB] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_task_category] WITH NOCHECK ADD 
+ALTER TABLE [lookup_task_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ta__defau__457442E6] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_ta__level__4668671F] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_ta__enabl__475C8B58] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_task_loe] WITH NOCHECK ADD 
+ALTER TABLE [lookup_task_loe] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ta__defau__40AF8DC9] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_ta__level__41A3B202] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_ta__enabl__4297D63B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_task_priority] WITH NOCHECK ADD 
+ALTER TABLE [lookup_task_priority] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ta__defau__3BEAD8AC] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_ta__level__3CDEFCE5] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_ta__enabl__3DD3211E] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_textmessage_types] WITH NOCHECK ADD 
+ALTER TABLE [lookup_textmessage_types] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_te__defau__45F365D3] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_te__level__46E78A0C] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_te__enabl__47DBAE45] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [lookup_ticket_status] WITH NOCHECK ADD 
+ALTER TABLE [lookup_ticket_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ti__defau__78F3E6EC] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_ti__level__79E80B25] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_ti__enabl__7ADC2F5E] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [UQ__lookup_ticket_st__77FFC2B3] UNIQUE  NONCLUSTERED
 	(
 		[description]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY]
 GO
 
-ALTER TABLE [lookup_ticketsource] WITH NOCHECK ADD 
+ALTER TABLE [lookup_ticketsource] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ti__defau__7AF13DF7] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__lookup_ti__level__7BE56230] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_ti__enabl__7CD98669] DEFAULT (1) FOR [enabled],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[description]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY]
 GO
 
-ALTER TABLE [notification] WITH NOCHECK ADD 
+ALTER TABLE [notification] WITH NOCHECK ADD
 	CONSTRAINT [DF__notificat__item___540C7B00] DEFAULT (getdate()) FOR [item_modified],
 	CONSTRAINT [DF__notificat__attem__55009F39] DEFAULT (getdate()) FOR [attempt]
 GO
 
-ALTER TABLE [permission_category] WITH NOCHECK ADD 
+ALTER TABLE [permission_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__permissio__level__7A672E12] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__permissio__enabl__7B5B524B] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__permissio__activ__7C4F7684] DEFAULT (1) FOR [active],
@@ -6115,24 +6240,24 @@ ALTER TABLE [permission_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__permissio__logos__25518C17] DEFAULT (0) FOR [logos]
 GO
 
-ALTER TABLE [search_fields] WITH NOCHECK ADD 
+ALTER TABLE [search_fields] WITH NOCHECK ADD
 	CONSTRAINT [DF__search_fi__searc__5AD97420] DEFAULT (1) FOR [searchable],
 	CONSTRAINT [DF__search_fi__field__5BCD9859] DEFAULT ((-1)) FOR [field_typeid],
 	CONSTRAINT [DF__search_fi__enabl__5CC1BC92] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [sync_client] WITH NOCHECK ADD 
+ALTER TABLE [sync_client] WITH NOCHECK ADD
 	CONSTRAINT [DF__sync_clie__enter__4E3E9311] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__sync_clie__modif__4F32B74A] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__sync_clie__ancho__5026DB83] DEFAULT (null) FOR [anchor],
 	CONSTRAINT [DF__sync_clie__enabl__550B8C31] DEFAULT (0) FOR [enabled]
 GO
 
-ALTER TABLE [sync_system] WITH NOCHECK ADD 
+ALTER TABLE [sync_system] WITH NOCHECK ADD
 	CONSTRAINT [DF__sync_syst__enabl__5303482E] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [ticket_category] WITH NOCHECK ADD 
+ALTER TABLE [ticket_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_ca__cat_l__0662F0A3] DEFAULT (0) FOR [cat_level],
 	CONSTRAINT [DF__ticket_ca__paren__0559BDD1] DEFAULT (0) FOR [parent_cat_code],
 	CONSTRAINT [DF__ticket_ca__full___075714DC] DEFAULT ('') FOR [full_description],
@@ -6141,7 +6266,7 @@ ALTER TABLE [ticket_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_ca__enabl__0A338187] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [ticket_category_draft] WITH NOCHECK ADD 
+ALTER TABLE [ticket_category_draft] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_ca__link___0D0FEE32] DEFAULT ((-1)) FOR [link_id],
 	CONSTRAINT [DF__ticket_ca__cat_l__0E04126B] DEFAULT (0) FOR [cat_level],
 	CONSTRAINT [DF__ticket_ca__paren__0DEF03D2] DEFAULT (0) FOR [parent_cat_code],
@@ -6151,36 +6276,36 @@ ALTER TABLE [ticket_category_draft] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_ca__enabl__11D4A34F] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [ticket_level] WITH NOCHECK ADD 
+ALTER TABLE [ticket_level] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_le__defau__6E8B6712] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__ticket_le__level__6F7F8B4B] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__ticket_le__enabl__7073AF84] DEFAULT (1) FOR [enabled],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[description]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY]
 GO
 
-ALTER TABLE [ticket_priority] WITH NOCHECK ADD 
+ALTER TABLE [ticket_priority] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_pr__style__00AA174D] DEFAULT ('') FOR [style],
 	CONSTRAINT [DF__ticket_pr__defau__019E3B86] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__ticket_pr__level__02925FBF] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__ticket_pr__enabl__038683F8] DEFAULT (1) FOR [enabled],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[description]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY]
 GO
 
-ALTER TABLE [ticket_severity] WITH NOCHECK ADD 
+ALTER TABLE [ticket_severity] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_se__style__74444068] DEFAULT ('') FOR [style],
 	CONSTRAINT [DF__ticket_se__defau__753864A1] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__ticket_se__level__762C88DA] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__ticket_se__enabl__7720AD13] DEFAULT (1) FOR [enabled],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[description]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY]
 GO
 
 ALTER TABLE [usage_log] WITH NOCHECK ADD 
@@ -6197,15 +6322,15 @@ ALTER TABLE [action_list] WITH NOCHECK ADD
 	CONSTRAINT [DF__action_li__enabl__2CBDA3B5] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [autoguide_model] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_model] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__enter__75586032] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__autoguide__modif__764C846B] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [business_process] WITH NOCHECK ADD 
+ALTER TABLE [business_process] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__6E765879] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__business___enter__6F6A7CB2] DEFAULT (getdate()) FOR [entered],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[process_name]
 	)  ON [PRIMARY] 
@@ -6220,7 +6345,7 @@ ALTER TABLE [business_process_hook_library] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__0FD74C44] DEFAULT (0) FOR [enabled]
 GO
 
-ALTER TABLE [campaign] WITH NOCHECK ADD 
+ALTER TABLE [campaign] WITH NOCHECK ADD
 	CONSTRAINT [DF__campaign__messag__5FD33367] DEFAULT ((-1)) FOR [message_id],
 	CONSTRAINT [DF__campaign__reply___60C757A0] DEFAULT (null) FOR [reply_addr],
 	CONSTRAINT [DF__campaign__subjec__61BB7BD9] DEFAULT (null) FOR [subject],
@@ -6237,12 +6362,12 @@ ALTER TABLE [campaign] WITH NOCHECK ADD
 	CONSTRAINT [DF__campaign__type__6F1576F7] DEFAULT (1) FOR [type]
 GO
 
-ALTER TABLE [category_editor_lookup] WITH NOCHECK ADD 
+ALTER TABLE [category_editor_lookup] WITH NOCHECK ADD
 	CONSTRAINT [DF__category___level__793DFFAF] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__category___enter__7A3223E8] DEFAULT (getdate()) FOR [entered]
 GO
 
-ALTER TABLE [cfsinbox_message] WITH NOCHECK ADD 
+ALTER TABLE [cfsinbox_message] WITH NOCHECK ADD
 	CONSTRAINT [DF__cfsinbox___subje__57DD0BE4] DEFAULT (null) FOR [subject],
 	CONSTRAINT [DF__cfsinbox_m__sent__59C55456] DEFAULT (getdate()) FOR [sent],
 	CONSTRAINT [DF__cfsinbox___enter__5AB9788F] DEFAULT (getdate()) FOR [entered],
@@ -6251,19 +6376,19 @@ ALTER TABLE [cfsinbox_message] WITH NOCHECK ADD
 	CONSTRAINT [DF__cfsinbox___delet__5E8A0973] DEFAULT (0) FOR [delete_flag]
 GO
 
-ALTER TABLE [document_store] WITH NOCHECK ADD 
+ALTER TABLE [document_store] WITH NOCHECK ADD
 	CONSTRAINT [DF__document___reque__135DC465] DEFAULT (getdate()) FOR [requestDate],
 	CONSTRAINT [DF__document___enter__15460CD7] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__document___modif__172E5549] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [help_tableof_contents] WITH NOCHECK ADD 
+ALTER TABLE [help_tableof_contents] WITH NOCHECK ADD
 	CONSTRAINT [DF__help_tabl__enter__06B7F65E] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__help_tabl__modif__08A03ED0] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__help_tabl__enabl__09946309] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [import] WITH NOCHECK ADD 
+ALTER TABLE [import] WITH NOCHECK ADD
 	CONSTRAINT [DF__import__entered__4589517F] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__import__modified__477199F1] DEFAULT (getdate()) FOR [modified]
 GO
@@ -6296,7 +6421,7 @@ ALTER TABLE [lookup_project_permission] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_pr__level__61BB7BD9] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_pr__enabl__62AFA012] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_pr__group__63A3C44B] DEFAULT (0) FOR [group_id],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[permission]
 	)  ON [PRIMARY] 
@@ -6318,13 +6443,13 @@ GO
 ALTER TABLE [module_field_categorylink] WITH NOCHECK ADD 
 	CONSTRAINT [DF__module_fi__level__2E70E1FD] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__module_fi__enter__2F650636] DEFAULT (getdate()) FOR [entered],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[category_id]
 	)  ON [PRIMARY] 
 GO
 
-ALTER TABLE [organization] WITH NOCHECK ADD 
+ALTER TABLE [organization] WITH NOCHECK ADD
 	CONSTRAINT [DF__organizat__ticke__52593CB8] DEFAULT (null) FOR [ticker_symbol],
 	CONSTRAINT [DF__organizat__sales__534D60F1] DEFAULT (0) FOR [sales_rep],
 	CONSTRAINT [DF__organizat__miner__5441852A] DEFAULT (0) FOR [miner_only],
@@ -6339,7 +6464,7 @@ ALTER TABLE [organization] WITH NOCHECK ADD
 	CONSTRAINT [DF__organizat__alert__5FB337D6] DEFAULT (null) FOR [alert]
 GO
 
-ALTER TABLE [permission] WITH NOCHECK ADD 
+ALTER TABLE [permission] WITH NOCHECK ADD
 	CONSTRAINT [DF__permissio__permi__06CD04F7] DEFAULT (0) FOR [permission_view],
 	CONSTRAINT [DF__permissio__permi__07C12930] DEFAULT (0) FOR [permission_add],
 	CONSTRAINT [DF__permissio__permi__08B54D69] DEFAULT (0) FOR [permission_edit],
@@ -6351,16 +6476,16 @@ ALTER TABLE [permission] WITH NOCHECK ADD
 	CONSTRAINT [DF__permissio__viewp__0E6E26BF] DEFAULT (0) FOR [viewpoints]
 GO
 
-ALTER TABLE [process_log] WITH NOCHECK ADD 
+ALTER TABLE [process_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__process_l__enter__6DB73E6A] DEFAULT (getdate()) FOR [entered]
 GO
 
-ALTER TABLE [project_folders] WITH NOCHECK ADD 
+ALTER TABLE [project_folders] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_f__enter__1387E197] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_f__modif__15702A09] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [projects] WITH NOCHECK ADD 
+ALTER TABLE [projects] WITH NOCHECK ADD
 	CONSTRAINT [DF__projects__reques__7E8CC4B1] DEFAULT (getdate()) FOR [requestDate],
 	CONSTRAINT [DF__projects__entere__7F80E8EA] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__projects__modifi__0169315C] DEFAULT (getdate()) FOR [modified],
@@ -6383,26 +6508,26 @@ ALTER TABLE [projects] WITH NOCHECK ADD
 	CONSTRAINT [DF__projects__accoun__23BE4960] DEFAULT (1) FOR [accounts_enabled]
 GO
 
-ALTER TABLE [relationship] WITH NOCHECK ADD 
+ALTER TABLE [relationship] WITH NOCHECK ADD
 	CONSTRAINT [DF__relations__enter__12C8C788] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__relations__modif__13BCEBC1] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [role] WITH NOCHECK ADD 
+ALTER TABLE [role] WITH NOCHECK ADD
 	CONSTRAINT [DF__role__descriptio__72C60C4A] DEFAULT ('') FOR [description],
 	CONSTRAINT [DF__role__entered__74AE54BC] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__role__modified__76969D2E] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__role__enabled__778AC167] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [saved_criterialist] WITH NOCHECK ADD 
+ALTER TABLE [saved_criterialist] WITH NOCHECK ADD
 	CONSTRAINT [DF__saved_cri__enter__573DED66] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__saved_cri__modif__592635D8] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__saved_cri__conta__5C02A283] DEFAULT ((-1)) FOR [contact_source],
 	CONSTRAINT [DF__saved_cri__enabl__5CF6C6BC] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [survey] WITH NOCHECK ADD 
+ALTER TABLE [survey] WITH NOCHECK ADD
 	CONSTRAINT [DF__survey__itemLeng__1446FBA6] DEFAULT ((-1)) FOR [itemLength],
 	CONSTRAINT [DF__survey__type__153B1FDF] DEFAULT ((-1)) FOR [type],
 	CONSTRAINT [DF__survey__enabled__162F4418] DEFAULT (1) FOR [enabled],
@@ -6411,18 +6536,18 @@ ALTER TABLE [survey] WITH NOCHECK ADD
 	CONSTRAINT [DF__survey__modified__19FFD4FC] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [sync_log] WITH NOCHECK ADD 
+ALTER TABLE [sync_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__sync_log__entere__66161CA2] DEFAULT (getdate()) FOR [entered]
 GO
 
-ALTER TABLE [sync_table] WITH NOCHECK ADD 
+ALTER TABLE [sync_table] WITH NOCHECK ADD
 	CONSTRAINT [DF__sync_tabl__enter__56D3D912] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__sync_tabl__modif__57C7FD4B] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__sync_tabl__order__58BC2184] DEFAULT ((-1)) FOR [order_id],
 	CONSTRAINT [DF__sync_tabl__sync___59B045BD] DEFAULT (0) FOR [sync_item]
 GO
 
-ALTER TABLE [task] WITH NOCHECK ADD 
+ALTER TABLE [task] WITH NOCHECK ADD
 	CONSTRAINT [DF__task__entered__4A38F803] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__task__complete__4D1564AE] DEFAULT (0) FOR [complete],
 	CONSTRAINT [DF__task__enabled__4E0988E7] DEFAULT (0) FOR [enabled],
@@ -6430,49 +6555,49 @@ ALTER TABLE [task] WITH NOCHECK ADD
 	CONSTRAINT [DF__task__type__51DA19CB] DEFAULT (1) FOR [type]
 GO
 
-ALTER TABLE [viewpoint] WITH NOCHECK ADD 
+ALTER TABLE [viewpoint] WITH NOCHECK ADD
 	CONSTRAINT [DF__viewpoint__enter__7849DB76] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__viewpoint__modif__7A3223E8] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__viewpoint__enabl__7C1A6C5A] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [webdav] WITH NOCHECK ADD 
+ALTER TABLE [webdav] WITH NOCHECK ADD
 	CONSTRAINT [DF__webdav__entered__318258D2] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__webdav__modified__336AA144] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [account_type_levels] WITH NOCHECK ADD 
+ALTER TABLE [account_type_levels] WITH NOCHECK ADD
 	CONSTRAINT [DF__account_t__enter__690797E6] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__account_t__modif__69FBBC1F] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [action_item] WITH NOCHECK ADD 
+ALTER TABLE [action_item] WITH NOCHECK ADD
 	CONSTRAINT [DF__action_it__enter__318258D2] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__action_it__modif__336AA144] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__action_it__enabl__345EC57D] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [active_campaign_groups] WITH NOCHECK ADD 
+ALTER TABLE [active_campaign_groups] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_ca__group__02284B6B] DEFAULT (null) FOR [groupcriteria]
 GO
 
-ALTER TABLE [active_survey] WITH NOCHECK ADD 
+ALTER TABLE [active_survey] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_su__itemL__2B2A60FE] DEFAULT ((-1)) FOR [itemLength],
 	CONSTRAINT [DF__active_su__enabl__2D12A970] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__active_su__enter__2E06CDA9] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__active_su__modif__2FEF161B] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [autoguide_vehicle] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_vehicle] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__enter__7B113988] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__autoguide__modif__7C055DC1] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [business_process_component] WITH NOCHECK ADD 
+ALTER TABLE [business_process_component] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__75235608] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [business_process_events] WITH NOCHECK ADD 
+ALTER TABLE [business_process_events] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___secon__009508B4] DEFAULT ('0') FOR [second],
 	CONSTRAINT [DF__business___minut__01892CED] DEFAULT ('*') FOR [minute],
 	CONSTRAINT [DF__business_p__hour__027D5126] DEFAULT ('*') FOR [hour],
@@ -6485,15 +6610,15 @@ ALTER TABLE [business_process_events] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enter__092A4EB5] DEFAULT (getdate()) FOR [entered]
 GO
 
-ALTER TABLE [business_process_hook_triggers] WITH NOCHECK ADD 
+ALTER TABLE [business_process_hook_triggers] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__13A7DD28] DEFAULT (0) FOR [enabled]
 GO
 
-ALTER TABLE [business_process_parameter] WITH NOCHECK ADD 
+ALTER TABLE [business_process_parameter] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__78F3E6EC] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [campaign_run] WITH NOCHECK ADD 
+ALTER TABLE [campaign_run] WITH NOCHECK ADD
 	CONSTRAINT [DF__campaign___statu__72E607DB] DEFAULT (0) FOR [status],
 	CONSTRAINT [DF__campaign___run_d__73DA2C14] DEFAULT (getdate()) FOR [run_date],
 	CONSTRAINT [DF__campaign___total__74CE504D] DEFAULT (0) FOR [total_contacts],
@@ -6502,7 +6627,7 @@ ALTER TABLE [campaign_run] WITH NOCHECK ADD
 	CONSTRAINT [DF__campaign___total__77AABCF8] DEFAULT (0) FOR [total_bounced]
 GO
 
-ALTER TABLE [contact] WITH NOCHECK ADD 
+ALTER TABLE [contact] WITH NOCHECK ADD
 	CONSTRAINT [DF__contact__entered__6754599E] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__contact__modifie__693CA210] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__contact__enabled__6B24EA82] DEFAULT (1) FOR [enabled],
@@ -6513,7 +6638,7 @@ ALTER TABLE [contact] WITH NOCHECK ADD
 	CONSTRAINT [DF__contact__lead__05D8E0BE] DEFAULT (0) FOR [lead]
 GO
 
-ALTER TABLE [custom_field_category] WITH NOCHECK ADD 
+ALTER TABLE [custom_field_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__level__3335971A] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__custom_fi__start__3429BB53] DEFAULT (getdate()) FOR [start_date],
 	CONSTRAINT [DF__custom_fi__defau__351DDF8C] DEFAULT (0) FOR [default_item],
@@ -6523,56 +6648,56 @@ ALTER TABLE [custom_field_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__read___38EE7070] DEFAULT (0) FOR [read_only]
 GO
 
-ALTER TABLE [document_store_department_member] WITH NOCHECK ADD 
+ALTER TABLE [document_store_department_member] WITH NOCHECK ADD
 	CONSTRAINT [DF__document___enter__30EE274C] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__document___modif__32D66FBE] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [document_store_role_member] WITH NOCHECK ADD 
+ALTER TABLE [document_store_role_member] WITH NOCHECK ADD
 	CONSTRAINT [DF__document___enter__294D0584] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__document___modif__2B354DF6] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [document_store_user_member] WITH NOCHECK ADD 
+ALTER TABLE [document_store_user_member] WITH NOCHECK ADD
 	CONSTRAINT [DF__document___enter__21ABE3BC] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__document___modif__23942C2E] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [help_contents] WITH NOCHECK ADD 
+ALTER TABLE [help_contents] WITH NOCHECK ADD
 	CONSTRAINT [DF__help_cont__enter__7C3A67EB] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__help_cont__modif__7E22B05D] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__help_cont__enabl__7F16D496] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [help_faqs] WITH NOCHECK ADD 
+ALTER TABLE [help_faqs] WITH NOCHECK ADD
 	CONSTRAINT [DF__help_faqs__enter__2EC5E7B8] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__help_faqs__modif__30AE302A] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__help_faqs__enabl__3296789C] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [news] WITH NOCHECK ADD 
+ALTER TABLE [news] WITH NOCHECK ADD
 	CONSTRAINT [DF__news__created__236943A5] DEFAULT (getdate()) FOR [created]
 GO
 
-ALTER TABLE [organization_address] WITH NOCHECK ADD 
+ALTER TABLE [organization_address] WITH NOCHECK ADD
 	CONSTRAINT [DF__organizat__enter__282DF8C2] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__organizat__modif__2A164134] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__organizat__prima__4E53A1AA] DEFAULT (0) FOR [primary_address]
 GO
 
-ALTER TABLE [organization_emailaddress] WITH NOCHECK ADD 
+ALTER TABLE [organization_emailaddress] WITH NOCHECK ADD
 	CONSTRAINT [DF__organizat__enter__2FCF1A8A] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__organizat__modif__31B762FC] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__organizat__prima__56E8E7AB] DEFAULT (0) FOR [primary_email]
 GO
 
-ALTER TABLE [organization_phone] WITH NOCHECK ADD 
+ALTER TABLE [organization_phone] WITH NOCHECK ADD
 	CONSTRAINT [DF__organizat__enter__37703C52] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__organizat__modif__395884C4] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__organizat__prima__5F7E2DAC] DEFAULT (0) FOR [primary_number]
 GO
 
-ALTER TABLE [product_option] WITH NOCHECK ADD 
+ALTER TABLE [product_option] WITH NOCHECK ADD
 	CONSTRAINT [DF__product_o__allow__74CE504D] DEFAULT (0) FOR [allow_customer_configure],
 	CONSTRAINT [DF__product_o__allow__75C27486] DEFAULT (0) FOR [allow_user_configure],
 	CONSTRAINT [DF__product_o__requi__76B698BF] DEFAULT (0) FOR [required],
@@ -6583,11 +6708,11 @@ ALTER TABLE [product_option] WITH NOCHECK ADD
 	CONSTRAINT [DF__product_o__has_m__6521F869] DEFAULT (0) FOR [has_multiplier]
 GO
 
-ALTER TABLE [project_accounts] WITH NOCHECK ADD 
+ALTER TABLE [project_accounts] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_a__enter__505BE5AD] DEFAULT (getdate()) FOR [entered]
 GO
 
-ALTER TABLE [project_files] WITH NOCHECK ADD 
+ALTER TABLE [project_files] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_fi__size__38B96646] DEFAULT (0) FOR [size],
 	CONSTRAINT [DF__project_f__versi__39AD8A7F] DEFAULT (0) FOR [version],
 	CONSTRAINT [DF__project_f__enabl__3AA1AEB8] DEFAULT (1) FOR [enabled],
@@ -6597,7 +6722,7 @@ ALTER TABLE [project_files] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_f__defau__7B7B4DDC] DEFAULT (0) FOR [default_file]
 GO
 
-ALTER TABLE [project_issues_categories] WITH NOCHECK ADD 
+ALTER TABLE [project_issues_categories] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_i__enabl__77DFC722] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__project_i__enter__78D3EB5B] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_i__modif__7ABC33CD] DEFAULT (getdate()) FOR [modified],
@@ -6612,25 +6737,25 @@ ALTER TABLE [project_news_category] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_n__enabl__1EC48A19] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [project_requirements] WITH NOCHECK ADD 
+ALTER TABLE [project_requirements] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_r__enter__09FE775D] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_r__modif__0BE6BFCF] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [project_team] WITH NOCHECK ADD 
+ALTER TABLE [project_team] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_t__enter__51851410] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_t__modif__536D5C82] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [project_ticket_count] WITH NOCHECK ADD 
+ALTER TABLE [project_ticket_count] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_t__key_c__28D80438] DEFAULT (0) FOR [key_count],
-	 UNIQUE  NONCLUSTERED 
+	 UNIQUE  NONCLUSTERED
 	(
 		[project_id]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY]
 GO
 
-ALTER TABLE [report] WITH NOCHECK ADD 
+ALTER TABLE [report] WITH NOCHECK ADD
 	CONSTRAINT [DF__report__type__0880433F] DEFAULT (1) FOR [type],
 	CONSTRAINT [DF__report__entered__09746778] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__report__modified__0B5CAFEA] DEFAULT (getdate()) FOR [modified],
@@ -6638,7 +6763,7 @@ ALTER TABLE [report] WITH NOCHECK ADD
 	CONSTRAINT [DF__report__custom__0E391C95] DEFAULT (0) FOR [custom]
 GO
 
-ALTER TABLE [revenue] WITH NOCHECK ADD 
+ALTER TABLE [revenue] WITH NOCHECK ADD
 	CONSTRAINT [DF__revenue__transac__26EFBBC6] DEFAULT ((-1)) FOR [transaction_id],
 	CONSTRAINT [DF__revenue__month__27E3DFFF] DEFAULT ((-1)) FOR [month],
 	CONSTRAINT [DF__revenue__year__28D80438] DEFAULT ((-1)) FOR [year],
@@ -6647,44 +6772,44 @@ ALTER TABLE [revenue] WITH NOCHECK ADD
 	CONSTRAINT [DF__revenue__modifie__2E90DD8E] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [role_permission] WITH NOCHECK ADD 
+ALTER TABLE [role_permission] WITH NOCHECK ADD
 	CONSTRAINT [DF__role_perm__role___1332DBDC] DEFAULT (0) FOR [role_view],
 	CONSTRAINT [DF__role_perm__role___14270015] DEFAULT (0) FOR [role_add],
 	CONSTRAINT [DF__role_perm__role___151B244E] DEFAULT (0) FOR [role_edit],
 	CONSTRAINT [DF__role_perm__role___160F4887] DEFAULT (0) FOR [role_delete]
 GO
 
-ALTER TABLE [saved_criteriaelement] WITH NOCHECK ADD 
+ALTER TABLE [saved_criteriaelement] WITH NOCHECK ADD
 	CONSTRAINT [DF__saved_cri__sourc__70C8B53F] DEFAULT ((-1)) FOR [source]
 GO
 
-ALTER TABLE [survey_questions] WITH NOCHECK ADD 
+ALTER TABLE [survey_questions] WITH NOCHECK ADD
 	CONSTRAINT [DF__survey_qu__requi__22951AFD] DEFAULT (0) FOR [required],
 	CONSTRAINT [DF__survey_qu__posit__23893F36] DEFAULT (0) FOR [position]
 GO
 
-ALTER TABLE [sync_conflict_log] WITH NOCHECK ADD 
+ALTER TABLE [sync_conflict_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__sync_conf__statu__61516785] DEFAULT (getdate()) FOR [status_date]
 GO
 
-ALTER TABLE [sync_map] WITH NOCHECK ADD 
+ALTER TABLE [sync_map] WITH NOCHECK ADD
 	CONSTRAINT [DF__sync_map__comple__5D80D6A1] DEFAULT (0) FOR [complete]
 GO
 
-ALTER TABLE [viewpoint_permission] WITH NOCHECK ADD 
+ALTER TABLE [viewpoint_permission] WITH NOCHECK ADD
 	CONSTRAINT [DF__viewpoint__viewp__00DF2177] DEFAULT (0) FOR [viewpoint_view],
 	CONSTRAINT [DF__viewpoint__viewp__01D345B0] DEFAULT (0) FOR [viewpoint_add],
 	CONSTRAINT [DF__viewpoint__viewp__02C769E9] DEFAULT (0) FOR [viewpoint_edit],
 	CONSTRAINT [DF__viewpoint__viewp__03BB8E22] DEFAULT (0) FOR [viewpoint_delete]
 GO
 
-ALTER TABLE [action_item_log] WITH NOCHECK ADD 
+ALTER TABLE [action_item_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__action_it__link___382F5661] DEFAULT ((-1)) FOR [link_item_id],
 	CONSTRAINT [DF__action_it__enter__3A179ED3] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__action_it__modif__3BFFE745] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [active_survey_questions] WITH NOCHECK ADD 
+ALTER TABLE [active_survey_questions] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_su__requi__35A7EF71] DEFAULT (0) FOR [required],
 	CONSTRAINT [DF__active_su__posit__369C13AA] DEFAULT (0) FOR [position],
 	CONSTRAINT [DF__active_su__avera__379037E3] DEFAULT (0.00) FOR [average],
@@ -6697,24 +6822,25 @@ ALTER TABLE [active_survey_questions] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_su__total__3E3D3572] DEFAULT (0) FOR [total7]
 GO
 
-ALTER TABLE [active_survey_responses] WITH NOCHECK ADD 
+ALTER TABLE [active_survey_responses] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_su__conta__45DE573A] DEFAULT ((-1)) FOR [contact_id],
 	CONSTRAINT [DF__active_su__enter__46D27B73] DEFAULT (getdate()) FOR [entered]
 GO
 
-ALTER TABLE [autoguide_inventory] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_inventory] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__is_ne__00CA12DE] DEFAULT (0) FOR [is_new],
 	CONSTRAINT [DF__autoguide___sold__01BE3717] DEFAULT (0) FOR [sold],
 	CONSTRAINT [DF__autoguide__enter__02B25B50] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__autoguide__modif__03A67F89] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [business_process_component_parameter] WITH NOCHECK ADD 
+ALTER TABLE [business_process_component_parameter] WITH NOCHECK ADD
 	CONSTRAINT [DF__business___enabl__7DB89C09] DEFAULT (1) FOR [enabled]
 GO
 
 ALTER TABLE [business_process_hook] WITH NOCHECK ADD 
-	CONSTRAINT [DF__business___enabl__186C9245] DEFAULT (0) FOR [enabled]
+	CONSTRAINT [DF__business___enabl__186C9245] DEFAULT (0) FOR [enabled],
+	CONSTRAINT [DF__business___prior__4218B34E] DEFAULT (0) FOR [priority]
 GO
 
 ALTER TABLE [cfsinbox_messagelink] WITH NOCHECK ADD 
@@ -6808,6 +6934,13 @@ ALTER TABLE [help_tips] WITH NOCHECK ADD
 	CONSTRAINT [DF__help_tips__enabl__4B622666] DEFAULT (1) FOR [enabled]
 GO
 
+ALTER TABLE [history] WITH NOCHECK ADD 
+	CONSTRAINT [DF__history__level__7B5130AA] DEFAULT (10) FOR [level],
+	CONSTRAINT [DF__history__enabled__7C4554E3] DEFAULT (1) FOR [enabled],
+	CONSTRAINT [DF__history__entered__7D39791C] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__history__modifie__7F21C18E] DEFAULT (getdate()) FOR [modified]
+GO
+
 ALTER TABLE [opportunity_header] WITH NOCHECK ADD 
 	CONSTRAINT [DF__opportuni__enter__4D2A7347] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__opportuni__modif__4F12BBB9] DEFAULT (getdate()) FOR [modified]
@@ -6820,7 +6953,8 @@ ALTER TABLE [product_catalog] WITH NOCHECK ADD
 	CONSTRAINT [DF__product_c__modif__36D11DD4] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__product_c__start__37C5420D] DEFAULT (null) FOR [start_date],
 	CONSTRAINT [DF__product_c__expir__38B96646] DEFAULT (null) FOR [expiration_date],
-	CONSTRAINT [DF__product_c__enabl__39AD8A7F] DEFAULT (1) FOR [enabled]
+	CONSTRAINT [DF__product_c__enabl__39AD8A7F] DEFAULT (1) FOR [enabled],
+	CONSTRAINT [DF__product_c__activ__216BEC9A] DEFAULT (1) FOR [active]
 GO
 
 ALTER TABLE [product_category] WITH NOCHECK ADD 
@@ -6861,7 +6995,7 @@ ALTER TABLE [project_files_thumbnail] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_f__modif__35DCF99B] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [project_files_version] WITH NOCHECK ADD 
+ALTER TABLE [project_files_version] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_fi__size__4242D080] DEFAULT (0) FOR [size],
 	CONSTRAINT [DF__project_f__versi__4336F4B9] DEFAULT (0) FOR [version],
 	CONSTRAINT [DF__project_f__enabl__442B18F2] DEFAULT (1) FOR [enabled],
@@ -6870,7 +7004,7 @@ ALTER TABLE [project_files_version] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_f__modif__47FBA9D6] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [project_issues] WITH NOCHECK ADD 
+ALTER TABLE [project_issues] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_i__impor__269AB60B] DEFAULT (0) FOR [importance],
 	CONSTRAINT [DF__project_i__enabl__278EDA44] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__project_i__enter__2882FE7D] DEFAULT (getdate()) FOR [entered],
@@ -6879,7 +7013,7 @@ ALTER TABLE [project_issues] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_i__last___090A5324] DEFAULT (getdate()) FOR [last_reply_date]
 GO
 
-ALTER TABLE [project_news] WITH NOCHECK ADD 
+ALTER TABLE [project_news] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_n__enter__4242D080] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_n__modif__442B18F2] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__project_n__start__46136164] DEFAULT (getdate()) FOR [start_date],
@@ -6895,13 +7029,13 @@ ALTER TABLE [project_news] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_ne__html__4F9CCB9E] DEFAULT (1) FOR [html]
 GO
 
-ALTER TABLE [report_criteria] WITH NOCHECK ADD 
+ALTER TABLE [report_criteria] WITH NOCHECK ADD
 	CONSTRAINT [DF__report_cr__enter__12FDD1B2] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__report_cr__modif__14E61A24] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__report_cr__enabl__16CE6296] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [report_queue] WITH NOCHECK ADD 
+ALTER TABLE [report_queue] WITH NOCHECK ADD
 	CONSTRAINT [DF__report_qu__enter__1D7B6025] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__report_qu__proce__1F63A897] DEFAULT (null) FOR [processed],
 	CONSTRAINT [DF__report_qu__statu__2057CCD0] DEFAULT (0) FOR [status],
@@ -6909,13 +7043,13 @@ ALTER TABLE [report_queue] WITH NOCHECK ADD
 	CONSTRAINT [DF__report_qu__enabl__22401542] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [revenue_detail] WITH NOCHECK ADD 
+ALTER TABLE [revenue_detail] WITH NOCHECK ADD
 	CONSTRAINT [DF__revenue_d__amoun__335592AB] DEFAULT (0) FOR [amount],
 	CONSTRAINT [DF__revenue_d__enter__3631FF56] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__revenue_d__modif__381A47C8] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [scheduled_recipient] WITH NOCHECK ADD 
+ALTER TABLE [scheduled_recipient] WITH NOCHECK ADD
 	CONSTRAINT [DF__scheduled__run_i__06ED0088] DEFAULT ((-1)) FOR [run_id],
 	CONSTRAINT [DF__scheduled__statu__07E124C1] DEFAULT (0) FOR [status_id],
 	CONSTRAINT [DF__scheduled__statu__08D548FA] DEFAULT (getdate()) FOR [status_date],
@@ -6925,38 +7059,38 @@ ALTER TABLE [scheduled_recipient] WITH NOCHECK ADD
 	CONSTRAINT [DF__scheduled__bounc__0CA5D9DE] DEFAULT (null) FOR [bounce_date]
 GO
 
-ALTER TABLE [service_contract] WITH NOCHECK ADD 
+ALTER TABLE [service_contract] WITH NOCHECK ADD
 	CONSTRAINT [DF__service_c__enter__420DC656] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__service_c__modif__43F60EC8] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__service_c__enabl__45DE573A] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [survey_items] WITH NOCHECK ADD 
+ALTER TABLE [survey_items] WITH NOCHECK ADD
 	CONSTRAINT [DF__survey_ite__type__2759D01A] DEFAULT ((-1)) FOR [type]
 GO
 
-ALTER TABLE [active_survey_answers] WITH NOCHECK ADD 
+ALTER TABLE [active_survey_answers] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_su__quant__4B973090] DEFAULT ((-1)) FOR [quant_ans]
 GO
 
-ALTER TABLE [active_survey_items] WITH NOCHECK ADD 
+ALTER TABLE [active_survey_items] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_sur__type__420DC656] DEFAULT ((-1)) FOR [type]
 GO
 
-ALTER TABLE [asset] WITH NOCHECK ADD 
+ALTER TABLE [asset] WITH NOCHECK ADD
 	CONSTRAINT [DF__asset__entered__6C040022] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__asset__modified__6DEC4894] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__asset__enabled__6FD49106] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [autoguide_ad_run] WITH NOCHECK ADD 
+ALTER TABLE [autoguide_ad_run] WITH NOCHECK ADD
 	CONSTRAINT [DF__autoguide__inclu__100C566E] DEFAULT (0) FOR [include_photo],
 	CONSTRAINT [DF__autoguide__compl__11007AA7] DEFAULT ((-1)) FOR [completedby],
 	CONSTRAINT [DF__autoguide__enter__11F49EE0] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__autoguide__modif__12E8C319] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [custom_field_info] WITH NOCHECK ADD 
+ALTER TABLE [custom_field_info] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__level__436BFEE3] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__custom_fi__valid__4460231C] DEFAULT (0) FOR [validation_type],
 	CONSTRAINT [DF__custom_fi__requi__45544755] DEFAULT (0) FOR [required],
@@ -6966,7 +7100,7 @@ ALTER TABLE [custom_field_info] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__enabl__4924D839] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [opportunity_component] WITH NOCHECK ADD 
+ALTER TABLE [opportunity_component] WITH NOCHECK ADD
 	CONSTRAINT [DF__opportuni__stage__55BFB948] DEFAULT (getdate()) FOR [stagedate],
 	CONSTRAINT [DF__opportuni__enter__56B3DD81] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__opportuni__modif__589C25F3] DEFAULT (getdate()) FOR [modified],
@@ -6974,7 +7108,7 @@ ALTER TABLE [opportunity_component] WITH NOCHECK ADD
 	CONSTRAINT [DF__opportuni__enabl__5B78929E] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [package] WITH NOCHECK ADD 
+ALTER TABLE [package] WITH NOCHECK ADD
 	CONSTRAINT [DF__package__list_or__5090EFD7] DEFAULT (10) FOR [list_order],
 	CONSTRAINT [DF__package__entered__52793849] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__package__modifie__546180BB] DEFAULT (getdate()) FOR [modified],
@@ -6983,7 +7117,7 @@ ALTER TABLE [package] WITH NOCHECK ADD
 	CONSTRAINT [DF__package__enabled__573DED66] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [product_catalog_pricing] WITH NOCHECK ADD 
+ALTER TABLE [product_catalog_pricing] WITH NOCHECK ADD
 	CONSTRAINT [DF__product_c__msrp___3F6663D5] DEFAULT (0) FOR [msrp_amount],
 	CONSTRAINT [DF__product_c__price__414EAC47] DEFAULT (0) FOR [price_amount],
 	CONSTRAINT [DF__product_c__recur__4336F4B9] DEFAULT (0) FOR [recurring_amount],
@@ -6995,33 +7129,33 @@ ALTER TABLE [product_catalog_pricing] WITH NOCHECK ADD
 	CONSTRAINT [DF__product_c__cost___338A9CD5] DEFAULT (0) FOR [cost_amount]
 GO
 
-ALTER TABLE [project_assignments] WITH NOCHECK ADD 
+ALTER TABLE [project_assignments] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_a__assig__1758727B] DEFAULT (getdate()) FOR [assign_date],
 	CONSTRAINT [DF__project_a__statu__1940BAED] DEFAULT (getdate()) FOR [status_date],
 	CONSTRAINT [DF__project_a__enter__1A34DF26] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_a__modif__1C1D2798] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [project_issue_replies] WITH NOCHECK ADD 
+ALTER TABLE [project_issue_replies] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_i__reply__2F2FFC0C] DEFAULT (0) FOR [reply_to],
 	CONSTRAINT [DF__project_i__enter__30242045] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_i__modif__320C68B7] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [service_contract_hours] WITH NOCHECK ADD 
+ALTER TABLE [service_contract_hours] WITH NOCHECK ADD
 	CONSTRAINT [DF__service_c__enter__4AA30C57] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__service_c__modif__4C8B54C9] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [active_survey_answer_avg] WITH NOCHECK ADD 
+ALTER TABLE [active_survey_answer_avg] WITH NOCHECK ADD
 	CONSTRAINT [DF__active_su__total__542C7691] DEFAULT (0) FOR [total]
 GO
 
-ALTER TABLE [custom_field_data] WITH NOCHECK ADD 
+ALTER TABLE [custom_field_data] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__selec__5C37ACAD] DEFAULT (0) FOR [selected_item_id]
 GO
 
-ALTER TABLE [custom_field_lookup] WITH NOCHECK ADD 
+ALTER TABLE [custom_field_lookup] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__defau__4CF5691D] DEFAULT (0) FOR [default_item],
 	CONSTRAINT [DF__custom_fi__level__4DE98D56] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__custom_fi__start__4EDDB18F] DEFAULT (getdate()) FOR [start_date],
@@ -7029,12 +7163,12 @@ ALTER TABLE [custom_field_lookup] WITH NOCHECK ADD
 	CONSTRAINT [DF__custom_fi__enabl__50C5FA01] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [opportunity_component_levels] WITH NOCHECK ADD 
+ALTER TABLE [opportunity_component_levels] WITH NOCHECK ADD
 	CONSTRAINT [DF__opportuni__enter__5F492382] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__opportuni__modif__603D47BB] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [package_products_map] WITH NOCHECK ADD 
+ALTER TABLE [package_products_map] WITH NOCHECK ADD
 	CONSTRAINT [DF__package_p__msrp___5CF6C6BC] DEFAULT (0) FOR [msrp_amount],
 	CONSTRAINT [DF__package_p__price__5EDF0F2E] DEFAULT (0) FOR [price_amount],
 	CONSTRAINT [DF__package_p__enter__60C757A0] DEFAULT (getdate()) FOR [entered],
@@ -7043,15 +7177,15 @@ ALTER TABLE [package_products_map] WITH NOCHECK ADD
 	CONSTRAINT [DF__package_p__expir__6497E884] DEFAULT (null) FOR [expiration_date]
 GO
 
-ALTER TABLE [project_assignments_status] WITH NOCHECK ADD 
+ALTER TABLE [project_assignments_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_a__statu__21D600EE] DEFAULT (getdate()) FOR [status_date]
 GO
 
-ALTER TABLE [project_requirements_map] WITH NOCHECK ADD 
+ALTER TABLE [project_requirements_map] WITH NOCHECK ADD
 	CONSTRAINT [DF__project_r__inden__546180BB] DEFAULT (0) FOR [indent]
 GO
 
-ALTER TABLE [call_log] WITH NOCHECK ADD 
+ALTER TABLE [call_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__call_log__entere__66EA454A] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__call_log__modifi__68D28DBC] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__call_log__alert__6ABAD62E] DEFAULT (null) FOR [alert],
@@ -7059,19 +7193,19 @@ ALTER TABLE [call_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__call_log__status__12C8C788] DEFAULT (1) FOR [status_id]
 GO
 
-ALTER TABLE [customer_product] WITH NOCHECK ADD 
+ALTER TABLE [customer_product] WITH NOCHECK ADD
 	CONSTRAINT [DF__customer___statu__1960B67E] DEFAULT (getdate()) FOR [status_date],
 	CONSTRAINT [DF__customer___enter__1A54DAB7] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__customer___modif__1C3D2329] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__customer___enabl__1E256B9B] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [customer_product_history] WITH NOCHECK ADD 
+ALTER TABLE [customer_product_history] WITH NOCHECK ADD
 	CONSTRAINT [DF__customer___enter__23DE44F1] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__customer___modif__25C68D63] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [lookup_call_result] WITH NOCHECK ADD 
+ALTER TABLE [lookup_call_result] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ca__level__5A846E65] DEFAULT (0) FOR [level],
 	CONSTRAINT [DF__lookup_ca__enabl__5B78929E] DEFAULT (1) FOR [enabled],
 	CONSTRAINT [DF__lookup_ca__next___5C6CB6D7] DEFAULT (0) FOR [next_required],
@@ -7079,12 +7213,12 @@ ALTER TABLE [lookup_call_result] WITH NOCHECK ADD
 	CONSTRAINT [DF__lookup_ca__cance__5E54FF49] DEFAULT (0) FOR [canceled_type]
 GO
 
-ALTER TABLE [order_address] WITH NOCHECK ADD 
+ALTER TABLE [order_address] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_add__enter__705EA0EB] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__order_add__modif__7246E95D] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [order_entry] WITH NOCHECK ADD 
+ALTER TABLE [order_entry] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_ent__statu__316D4A39] DEFAULT (getdate()) FOR [status_date],
 	CONSTRAINT [DF__order_ent__contr__32616E72] DEFAULT (null) FOR [contract_date],
 	CONSTRAINT [DF__order_ent__expir__335592AB] DEFAULT (null) FOR [expiration_date],
@@ -7092,7 +7226,7 @@ ALTER TABLE [order_entry] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_ent__modif__381A47C8] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [order_payment] WITH NOCHECK ADD 
+ALTER TABLE [order_payment] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pay__enter__01892CED] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__order_pay__modif__0371755F] DEFAULT (getdate()) FOR [modified]
 GO
@@ -7102,7 +7236,7 @@ ALTER TABLE [order_payment_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pay__modif__3A5795F5] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [order_product] WITH NOCHECK ADD 
+ALTER TABLE [order_product] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pro__quant__3DD3211E] DEFAULT (0) FOR [quantity],
 	CONSTRAINT [DF__order_pro__msrp___3FBB6990] DEFAULT (0) FOR [msrp_amount],
 	CONSTRAINT [DF__order_pro__price__41A3B202] DEFAULT (0) FOR [price_amount],
@@ -7112,7 +7246,7 @@ ALTER TABLE [order_product] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pro__statu__4850AF91] DEFAULT (getdate()) FOR [status_date]
 GO
 
-ALTER TABLE [order_product_options] WITH NOCHECK ADD 
+ALTER TABLE [order_product_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pro__quant__55AAAAAF] DEFAULT (0) FOR [quantity],
 	CONSTRAINT [DF__order_pro__price__5792F321] DEFAULT (0) FOR [price_amount],
 	CONSTRAINT [DF__order_pro__recur__597B3B93] DEFAULT (0) FOR [recurring_amount],
@@ -7120,22 +7254,22 @@ ALTER TABLE [order_product_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pro__total__5C57A83E] DEFAULT (0) FOR [total_price]
 GO
 
-ALTER TABLE [order_product_status] WITH NOCHECK ADD 
+ALTER TABLE [order_product_status] WITH NOCHECK ADD
 	CONSTRAINT [DF__order_pro__enter__4E0988E7] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__order_pro__modif__4FF1D159] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [payment_creditcard] WITH NOCHECK ADD 
+ALTER TABLE [payment_creditcard] WITH NOCHECK ADD
 	CONSTRAINT [DF__payment_c__enter__092A4EB5] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__payment_c__modif__0B129727] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [payment_eft] WITH NOCHECK ADD 
+ALTER TABLE [payment_eft] WITH NOCHECK ADD
 	CONSTRAINT [DF__payment_e__enter__09B45E9A] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__payment_e__modif__0B9CA70C] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [quote_entry] WITH NOCHECK ADD 
+ALTER TABLE [quote_entry] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_ent__statu__67FE6514] DEFAULT (getdate()) FOR [status_date],
 	CONSTRAINT [DF__quote_ent__expir__68F2894D] DEFAULT (null) FOR [expiration_date],
 	CONSTRAINT [DF__quote_ent__issue__6BCEF5F8] DEFAULT (getdate()) FOR [issued],
@@ -7146,12 +7280,12 @@ ALTER TABLE [quote_entry] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_ent__show___010A0A00] DEFAULT (1) FOR [show_subtotal]
 GO
 
-ALTER TABLE [quote_notes] WITH NOCHECK ADD 
+ALTER TABLE [quote_notes] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_not__enter__25E688F4] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__quote_not__modif__27CED166] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [quote_product] WITH NOCHECK ADD 
+ALTER TABLE [quote_product] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_pro__quant__75586032] DEFAULT (0) FOR [quantity],
 	CONSTRAINT [DF__quote_pro__price__7740A8A4] DEFAULT (0) FOR [price_amount],
 	CONSTRAINT [DF__quote_pro__recur__7928F116] DEFAULT (0) FOR [recurring_amount],
@@ -7160,7 +7294,7 @@ ALTER TABLE [quote_product] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_pro__statu__7DEDA633] DEFAULT (getdate()) FOR [status_date]
 GO
 
-ALTER TABLE [quote_product_options] WITH NOCHECK ADD 
+ALTER TABLE [quote_product_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_pro__quant__02B25B50] DEFAULT (0) FOR [quantity],
 	CONSTRAINT [DF__quote_pro__price__049AA3C2] DEFAULT (0) FOR [price_amount],
 	CONSTRAINT [DF__quote_pro__recur__0682EC34] DEFAULT (0) FOR [recurring_amount],
@@ -7168,17 +7302,17 @@ ALTER TABLE [quote_product_options] WITH NOCHECK ADD
 	CONSTRAINT [DF__quote_pro__total__095F58DF] DEFAULT (0) FOR [total_price]
 GO
 
-ALTER TABLE [quotelog] WITH NOCHECK ADD 
+ALTER TABLE [quotelog] WITH NOCHECK ADD
 	CONSTRAINT [DF__quotelog__entere__0F582957] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__quotelog__modifi__114071C9] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [ticket] WITH NOCHECK ADD 
+ALTER TABLE [ticket] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket__entered__1699586C] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__ticket__modified__1881A0DE] DEFAULT (getdate()) FOR [modified]
 GO
 
-ALTER TABLE [ticket_csstm_form] WITH NOCHECK ADD 
+ALTER TABLE [ticket_csstm_form] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_cs__follo__3943762B] DEFAULT (0) FOR [follow_up_required],
 	CONSTRAINT [DF__ticket_cs__enter__3A379A64] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__ticket_cs__modif__3C1FE2D6] DEFAULT (getdate()) FOR [modified],
@@ -7187,4197 +7321,16 @@ ALTER TABLE [ticket_csstm_form] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_cs__labor__3FF073BA] DEFAULT (1) FOR [labor_towards_sc]
 GO
 
-ALTER TABLE [ticket_sun_form] WITH NOCHECK ADD 
+ALTER TABLE [ticket_sun_form] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_su__enter__469D7149] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__ticket_su__modif__4885B9BB] DEFAULT (getdate()) FOR [modified],
 	CONSTRAINT [DF__ticket_su__enabl__4A6E022D] DEFAULT (1) FOR [enabled]
 GO
 
-ALTER TABLE [ticketlog] WITH NOCHECK ADD 
+ALTER TABLE [ticketlog] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticketlog__enter__26CFC035] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__ticketlog__modif__28B808A7] DEFAULT (getdate()) FOR [modified]
 GO
-
-
--- Insert default lookup_product_ship_time
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_product_ship_time] ON
-GO
-INSERT [lookup_product_ship_time] ([code],[description],[default_item],[level],[enabled])VALUES(1,'24 Hours',0,10,1)
-INSERT [lookup_product_ship_time] ([code],[description],[default_item],[level],[enabled])VALUES(2,'2 Days',0,20,1)
-INSERT [lookup_product_ship_time] ([code],[description],[default_item],[level],[enabled])VALUES(3,'1 Week',0,30,1)
-
-SET IDENTITY_INSERT [lookup_product_ship_time] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_document_store_role
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_document_store_role] ON
-GO
-INSERT [lookup_document_store_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(1,'Manager',0,1,1,1)
-INSERT [lookup_document_store_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(2,'Contributor level 3',0,2,1,1)
-INSERT [lookup_document_store_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(3,'Contributor level 2',0,3,1,1)
-INSERT [lookup_document_store_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(4,'Contributor level 1',0,4,1,1)
-INSERT [lookup_document_store_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(5,'Guest',0,5,1,1)
-
-SET IDENTITY_INSERT [lookup_document_store_role] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_product_tax
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_product_tax] ON
-GO
-INSERT [lookup_product_tax] ([code],[description],[default_item],[level],[enabled])VALUES(1,'State Tax',0,10,1)
-INSERT [lookup_product_tax] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Sales Tax',0,20,1)
-
-SET IDENTITY_INSERT [lookup_product_tax] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_industry
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_industry] ON
-GO
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(1,NULL,'Automotive',0,10,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(2,NULL,'Biotechnology',0,20,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(3,NULL,'Broadcasting and Cable',0,30,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(4,NULL,'Computer',0,40,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(5,NULL,'Consulting',0,50,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(6,NULL,'Defense',0,60,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(7,NULL,'Energy',0,70,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(8,NULL,'Education',0,80,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(9,NULL,'Financial Services',0,90,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(10,NULL,'Food',0,100,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(11,NULL,'Healthcare',0,110,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(12,NULL,'Hospitality',0,120,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(13,NULL,'Insurance',0,130,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(14,NULL,'Internet',0,140,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(15,NULL,'Law Firms',0,150,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(16,NULL,'Media',0,160,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(17,NULL,'Pharmaceuticals',0,170,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(18,NULL,'Real Estate',0,180,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(19,NULL,'Retail',0,190,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(20,NULL,'Telecommunications',0,200,1)
-INSERT [lookup_industry] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(21,NULL,'Transportation',0,210,1)
-
-SET IDENTITY_INSERT [lookup_industry] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default database_version
-SET NOCOUNT ON
-SET IDENTITY_INSERT [database_version] ON
-GO
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql_2004-06-15.sql','2004-06-15','Sep 13 2004  9:42:42:060PM')
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(2,'mssql_2004-08-30.sql','2004-08-30','Sep 13 2004  9:42:42:060PM')
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(3,'mssql_2005-01-14.sql','2005-01-14','Sep 13 2004  9:42:42:060PM')
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(4,'mssql_2005-03-30.sql','2005-03-30','Mar 30 2005  10:00:00:060AM')
-
-SET IDENTITY_INSERT [database_version] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_document_store_permission
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_document_store_permission] ON
-GO
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(1,1,'documentcenter-details-view','View document store details',0,10,1,1,5)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(2,1,'documentcenter-details-edit','Modify document store details',0,20,1,1,1)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(3,1,'documentcenter-details-delete','Delete document store',0,30,1,1,1)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(4,2,'documentcenter-team-view','View team members',0,40,1,1,5)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(5,2,'documentcenter-team-view-email','See team member email addresses',0,50,1,1,4)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(6,2,'documentcenter-team-edit','Modify team',0,60,1,1,1)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(7,2,'documentcenter-team-edit-role','Modify team member role',0,70,1,1,1)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(8,3,'documentcenter-documents-view','View documents',0,80,1,1,5)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(9,3,'documentcenter-documents-folders-add','Create folders',0,90,1,1,2)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(10,3,'documentcenter-documents-folders-edit','Modify folders',0,100,1,1,3)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(11,3,'documentcenter-documents-folders-delete','Delete folders',0,110,1,1,2)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(12,3,'documentcenter-documents-files-upload','Upload files',0,120,1,1,4)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(13,3,'documentcenter-documents-files-download','Download files',0,130,1,1,5)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(14,3,'documentcenter-documents-files-rename','Rename files',0,140,1,1,3)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(15,3,'documentcenter-documents-files-delete','View document store details',0,150,1,1,2)
-INSERT [lookup_document_store_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(16,4,'documentcenter-setup-permissions','Configure document store permissions',0,160,1,1,1)
-
-SET IDENTITY_INSERT [lookup_document_store_permission] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_recurring_type
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_recurring_type] ON
-GO
-INSERT [lookup_recurring_type] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Weekly',0,10,1)
-INSERT [lookup_recurring_type] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Monthly',0,20,1)
-INSERT [lookup_recurring_type] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Yearly',0,30,1)
-
-SET IDENTITY_INSERT [lookup_recurring_type] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default ticket_category_draft
-SET NOCOUNT ON
-SET IDENTITY_INSERT [ticket_category_draft] ON
-GO
-INSERT [ticket_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(1,-1,0,0,'Sales',' ',0,10,1)
-INSERT [ticket_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(2,-1,0,0,'Billing',' ',0,20,1)
-INSERT [ticket_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(3,-1,0,0,'Technical',' ',0,30,1)
-INSERT [ticket_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(4,-1,0,0,'Order',' ',0,40,1)
-INSERT [ticket_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(5,-1,0,0,'Other',' ',0,50,1)
-
-SET IDENTITY_INSERT [ticket_category_draft] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_relationship_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_relationship_types] ON
-GO
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(1,42420034,42420034,'Subsidiary of','Parent of',10,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(2,42420034,42420034,'Customer of','Supplier to',20,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(3,42420034,42420034,'Partner of','Partner of',30,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(4,42420034,42420034,'Competitor of','Competitor of',40,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(5,42420034,42420034,'Employee of','Employer of',50,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(6,42420034,42420034,'Department of','Organization made up of',60,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(7,42420034,42420034,'Group of','Organization made up of',70,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(8,42420034,42420034,'Member of','Organization made up of',80,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(9,42420034,42420034,'Consultant to','Consultant of',90,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(10,42420034,42420034,'Influencer of','Influenced by',100,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(11,42420034,42420034,'Enemy of','Enemy of',110,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(12,42420034,42420034,'Proponent of','Endorsed by',120,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(13,42420034,42420034,'Ally of','Ally of',130,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(14,42420034,42420034,'Sponsor of','Sponsored by',140,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(15,42420034,42420034,'Relative of','Relative of',150,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(16,42420034,42420034,'Affiliated with','Affiliated with',160,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(17,42420034,42420034,'Teammate of','Teammate of',170,0,1)
-INSERT [lookup_relationship_types] ([type_id],[category_id_maps_from],[category_id_maps_to],[reciprocal_name_1],[reciprocal_name_2],[level],[default_item],[enabled])VALUES(18,42420034,42420034,'Financier of','Financed by',180,0,1)
-
-SET IDENTITY_INSERT [lookup_relationship_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_module
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_module] ON
-GO
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(1,12,'This is the "Home Page". The top set of tabs shows the individual modules that you can access. The second row are the functions available to you in this module.
-If you are looking for a particular module or function you have seen during training or on someone else''s machine, and it''s NOT visible, then it probably means that you do not have permission for that module or function.
-
-Permissions within the system are assigned to Roles and then Users are assigned to Roles by the System Administrator.','The Home Page has several main features.
-
-Welcome: This is the welcome page. Here you will see a calendar of all of your upcoming alerts in the system, as well as for users that report to you.
-
-Mailbox: The message system is designed to support INTERNAL business messaging needs and to prepare OUTGOING emails to addresses who are already in the system. Messaging is NOT a normal email replacement. It will not send email to addresses assigned "on-the-fly" and it will not receive OUTSIDE email.
-
-Tasks: Tasks allows you to create and assign tasks. Tasks created can be assigned to the creator of the task or an employee working in the system. This page lists the tasks present along with their priorities, due dates and age.
-
-Action Lists: Action Lists allow you to create a list of contacts that are related in some way. For each of the contacts in a list, you can add calls, opportunities, tickets, tasks or send a message, which would correspondingly show up in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket module.
-
-Re-assignments: You can reassign data from one employee to another employee as long as each employee reports to you. The data can be of different types related to accounts, contacts, opportunities, activities, tickets etc, which the newly reassigned employee could view.
-
-Settings: This feature allows you to modify the information about yourself and your location, and also change your password to the system.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(2,2,'The purpose of this module is for the users to view contacts and add new contacts. You can also search for contacts as well as export contact data.','The Contacts module has three main features
-
-Add: A new contact can be added into the system. The contact can be a general contact, or one that is associated with an account. All the details about the contact like the email address, phone numbers, address and some additional details can be added.
-
-Search: Use this page to search for contacts in the system based on different filters.
-
-Export: Contact data can be exported and displayed in different formats, and can be filtered in different ways. The Export page also lets you view the data, download it, and show the number of times the exported data has been downloaded.
-
-Import: The contacts importer is a sophisticated tool for importing contacts into DHV CRM. Features include the ability to custom/auto map fields to application properties, perform error checking and examine import progress.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(3,4,'Pipeline helps in creating opportunities or leads in the company. Each opportunity helps to follow-up on a lead, which might eventually turn into a client. Here you can create an opportunity, search for an existing opportunity in the system, or export the data in different formats. The dashboard displays a progress chart in different views for all the employees working under the hierarchy of the owner of the opportunity.','This Pipeline System has four main features:
-
-Dashboard: Gives you a quick, visual overview of opportunities.
-
-Add: This page lets you add an opportunity into the system. Here a new opportunity can be added by giving the description of the opportunity. You can add a component that is associated with the opportunity. Each component can be assigned to an employee and the type of the component can be selected. For each component the probability of closing the component, the date estimated, the best guess for closing the deal and the duration for that component can be entered.
-
-Search: You can search for an opportunity already existing in the system based on different filters.
-
-Export: The data can be filtered, exported and displayed in different formats.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(4,1,'You are looking at the Accounts module homepage, which has a dashboard view of all your accounts. This view is based on a date range selected from the calendar; by default it shows the schedule for the next seven days. You can optionally view the calendar of those below you in your hierarchy. The scheduled actions of each user can also be viewed. In the Accounts Module, new accounts can be added, existing accounts can be searched based on different filters, revenue for each account can be created/maintained and finally, data can be exported to different formats.','The Accounts module has five main features.
-
-Dashboard: Displays a dashboard view account contract expirations.
-
-Add: Allows you to add a new account
-
-Search: This page provides a search feature for the accounts present in the system
-
-Revenue: Graphically visualizes revenue if the historical data is present in the system. All the accounts with revenue are shown along with a list of employees working under you under the progress chart. You can add accounts, search for the existing ones in the system based on different filters and export the data to different formats
-
-Export: Data can be exported and displayed in different formats. The exported data can be filtered in different ways. You can view the data, download it, and see the number of times an exported report has been downloaded')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(5,6,'Communications is a "Campaign Manager" Module where you can manage complex email. fax, or mail communications with your customers. Communications allows you to create and choose Groups, Messages, and Schedules to define communications scenarios from the simple to the very complex. Groups can range from a single contact chosen from a pick list to the result of a complex query of the Account/Contact database. Messages can be anything from a single-line email to a rich, multimedia product catalog to an interactive survey.','The Communication module has six main features.
-
-Dashboard: Track and analyze campaigns that have been activated and executed.
-Messages can be sent out by any combination of email, fax, or mail merge. The Dashboard shows an overview of sent messages and allows you to drill down and view recipients and any survey results.
-
-Add: This page lets you add a new campaign.
-
-Campaign List: This page lets you add a new campaign into the system.
-
-Groups: Each campaign needs at least one group to send a message to. Use criteria to filter the contacts you need to reach and use them over and over again. As new contacts meet the criteria, they will be included in future campaigns. This page lists the group names. It shows the groups created by you or everybody i.e. all the groups. 
-
-Messages: Compose a message to reach your audience. Each campaign requires a message that will be sent to selected groups. Write the message once, then use it in any number of future campaigns. Modified messages will only affect future campaigns. Displays the list of messages, with the description and other details.
-
-Attachments: Customize and configure your Campaigns with attachments. Attachments can include interactive items, like surveys, or provide additional materials like files.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(6,8,'You are looking at the Help Desk module home page. The dashboard shows the most recent tickets that have been assigned to you, as well as tickets that are in your department, and tickets that have been created by you. You can add new tickets, search for existing tickets based on different filters and export ticket data.','The Help Desk module has four main features.
-
-View: Lists all the tickets assigned to you and the tickets assigned in your department. Details such as the ticket number, priority, age, i.e. how old the ticket is, the company and the tickets assignment are displayed.
-
-Add: You can add a new ticket here.
-
-Search: Form used for searching the tickets that already exist in the system based on different filters and parameters.
-
-Export: This page shows exported data. The data can be exported to different formats. The exported data can be viewed with its subject, the size of the exported data file, when it was created and by whom. It also shows the number of times that particular exported file was downloaded. The exported data, created by you or all the employees can be viewed in two different views. A new data file can also be exported.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(7,22,'You are looking at the Employee module home page. This page displays the details of all the employees present in the system.','The main feature of the employee module is the view.
-
-View: This page displays the details of each employee, which can be viewed, modified or deleted. Each employee record contains details such as the name of the employee, their department, title and phone number. This also lets you add a new employee into the system.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(8,14,'You are looking at the Reports module home page. This page displays a list of generated reports that are ready to be downloaded. It also displays a list of reports that are scheduled to be processed by server. You can add new reports too.','The Reports module has two main features.
-
-Queue: Queue shows the list of reports that are scheduled to be processed by the server.
-
-Add: This shows the different modules present and displays the list of corresponding reports present in each module, allowing you to add a report to the schedule queue.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(9,9,'The admin module lets the user review the system usage, configure modules, and configure the global/system parameters.','This Admin System has five main features.
-
-Users: This section allows the administrator to view and add users and manage user hierarchies. The users are typically employees in your company who interact with your clients or customers, but can be outsides that you have granted permissions on the system.
-
-Roles: This page lists the different roles you have defined in the system, their role description and the number of people present in the system who carry out that role. New roles can be added into the system at any time.
-
-Modules: This page lets you configure various parameters in the modules that meet the needs of your organization, including configuration of lookup lists and custom fields. There are four types of modules. Each module has different number of configure options. The changes in the module affect all the users.
-
-System: You can configure the system for the session timeout and set the time limit for the time out.
-
-Usage: Current System Usage and Billing Usage Information are displayed.')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(10,3,'Auto Guide Brief','Auto Guide Detail')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(11,10,'Help Brief','Help Detail')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(12,5,'Demo Brief','Demo Detail')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(13,11,'System Brief','System Detail')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(14,18,'Brief description for product catalog','detail description for product catalog')
-INSERT [help_module] ([module_id],[category_id],[module_brief_description],[module_detail_description])VALUES(15,7,'The Project management module allows individuals and organizations to share up-to-the-minute information with others. Whether you are sharing information with employees, clients, vendors, friends, and family, the information is easily and securely accessible.','Project detail description')
-
-SET IDENTITY_INSERT [help_module] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_asset_status
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_asset_status] ON
-GO
-INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'In use',1,10,1)
-INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Not in use',0,20,1)
-INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Requires maintenance',0,30,1)
-INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Retired',0,40,1)
-
-SET IDENTITY_INSERT [lookup_asset_status] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_contents
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_contents] ON
-GO
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(1,12,1,'MyCFS.do','Home',NULL,'Overview','You are looking at Home Page view, which has a dashboard view of all your assigned tasks, tickets, assignments, calls you have to make, and accounts that need attention. This view is based on a time selected from the calendar; by default it shows the schedule for the next seven days. You can optionally view the calendar of those below you in your hierarchy.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:527AM',0,'Apr  1 2005  9:44:17:527AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(2,12,1,'MyCFSInbox.do','Inbox',NULL,'Mailbox','The messaging feature is designed to support INTERNAL business messaging needs and to prepare OUTGOING emails to addresses who are already in the system. Messaging is NOT a normal email replacement. It will not send email to address assigned "on-the-fly" and it will not receive OUTSIDE email.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:657AM',0,'Apr  1 2005  9:44:17:657AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(3,12,1,'MyCFSInbox.do','CFSNoteDetails',NULL,'Message Details','This page shows the message details, shows who sent the mail, when it was received and also the text in the mail box.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:687AM',0,'Apr  1 2005  9:44:17:687AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(4,12,1,'MyCFSInbox.do','NewMessage',NULL,'New Message','Sending mail to other users of the system',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:837AM',0,'Apr  1 2005  9:44:17:837AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(5,12,1,'MyCFSInbox.do','ReplyToMessage',NULL,'Reply Message','This pages lets you reply to email. You can also select the list of recipients for your email by clicking the Add Recipients link.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:837AM',0,'Apr  1 2005  9:44:17:837AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(6,12,1,'MyCFSInbox.do','SendMessage',NULL,NULL,'This page shows the list of recipients for whom your email has been sent to',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:857AM',0,'Apr  1 2005  9:44:17:857AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(7,12,1,'MyCFSInbox.do','ForwardMessage',NULL,'Forward message','Each message can be forwarded to any number of recipients',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:857AM',0,'Apr  1 2005  9:44:17:857AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(8,12,1,'MyTasks.do',NULL,NULL,'Tasks','Tasks created can be assigned to the owner/creator of the task or an employee working in the system. This page lists the tasks present along with their priorities, their due dates and age.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:867AM',0,'Apr  1 2005  9:44:17:867AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(9,12,1,'MyTasks.do','New',NULL,'Advanced Task','Allows an advanced task to be created',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:877AM',0,'Apr  1 2005  9:44:17:877AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(10,12,1,'MyTasksForward.do','ForwardMessage',NULL,'Forwarding a Task','A task can be forwarded to any of the recipients. Recipients can either be users of the system or any of the contacts stored in the system. Checking the options fields check box indicates that if the recipient is a user of the system, then a copy of the task is also send to the recipient''s mailbox.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:887AM',0,'Apr  1 2005  9:44:17:887AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(11,12,1,'MyTasks.do','Modify',NULL,'Modify task','Allows you to modify any infomation about a task',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:897AM',0,'Apr  1 2005  9:44:17:897AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(12,12,1,'MyActionLists.do','List',NULL,'Action Lists','Action Lists allow you to create new Action Lists and assign contacts to the Action Lists created. For each of the contacts in a list, you can add a call, opportunity, ticket, task or send a message, which would correspondingly show up in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket module.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:907AM',0,'Apr  1 2005  9:44:17:907AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(13,12,1,'MyActionContacts.do','List',NULL,'Action Contacts','This page will list out all the contacts present for the particular contact list. This also shows the status of the call, opportunity, ticket, task, or the message associated with the contact. This also shows when the contact information was last updated.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:917AM',0,'Apr  1 2005  9:44:17:917AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(14,12,1,'MyActionLists.do','Add',NULL,'Add Action List','Allows you to add an action list. Basically, you describe the group of contacts you will add, then visually design a query to generate the group of contacts.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:937AM',0,'Apr  1 2005  9:44:17:937AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(15,12,1,'MyActionLists.do','Modify',NULL,'Modify Action','The Action Lists details, like the description and status of the Action Lists, can be modified.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:957AM',0,'Apr  1 2005  9:44:17:957AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(16,12,1,'Reassignments.do','Reassign',NULL,'Re-assignments','A user can reassign data from one employee to another employee working under him. The data can be of different types related to accounts, contacts opportunities, activities, tickets etc, which the newly reassigned employee could view in his schedule.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:957AM',0,'Apr  1 2005  9:44:17:957AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(17,12,1,'MyCFS.do','MyProfile',NULL,'My Settings','This is the personal settings page, where you can modify the information about yourself, your location and also change your password to the system.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:967AM',0,'Apr  1 2005  9:44:17:967AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(18,12,1,'MyCFSProfile.do','MyCFSProfile',NULL,'Personal Information','This page lets you update/add your personal information.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:977AM',0,'Apr  1 2005  9:44:17:977AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(19,12,1,'MyCFSSettings.do','MyCFSSettings',NULL,'Location Settings','You can change your location settings',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:987AM',0,'Apr  1 2005  9:44:17:987AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(20,12,1,'MyCFSPassword.do','MyCFSPassword',NULL,'Update password','Your password to the system can be changed',NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:987AM',0,'Apr  1 2005  9:44:17:987AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(21,12,1,'MyTasks.do','ListTasks',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:17:997AM',0,'Apr  1 2005  9:44:17:997AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(22,12,1,'MyTasks.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:007AM',0,'Apr  1 2005  9:44:18:007AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(23,12,1,'MyCFS.do','Home',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:007AM',0,'Apr  1 2005  9:44:18:007AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(24,12,1,'MyTasksForward.do','SendMessage',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:017AM',0,'Apr  1 2005  9:44:18:017AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(25,12,1,'MyCFSProfile.do','UpdateProfile',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:017AM',0,'Apr  1 2005  9:44:18:017AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(26,12,1,'MyCFSInbox.do','CFSNoteTrash',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:027AM',0,'Apr  1 2005  9:44:18:027AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(27,12,1,'MyActionContacts.do','Update',NULL,NULL,'No introduction available',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:027AM',0,'Apr  1 2005  9:44:18:027AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(28,12,1,'MyActionContacts.do','Prepare',NULL,NULL,'You can add the new Action List and also select the contacts to be present in the Action List.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:027AM',0,'Apr  1 2005  9:44:18:027AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(29,12,1,'MyTasks.do','ListTasks',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:037AM',0,'Apr  1 2005  9:44:18:037AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(30,12,1,'MyCFSInbox.do','Inbox',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:037AM',0,'Apr  1 2005  9:44:18:037AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(31,12,1,'MyActionContacts.do','Modify',NULL,'Modify Action List','Allows you to manually add or remove contacts to or from an existing Action List.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:047AM',0,'Apr  1 2005  9:44:18:047AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(32,12,1,'Reassignments.do','DoReassign',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:057AM',0,'Apr  1 2005  9:44:18:057AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(33,12,1,'TaskForm.do','Prepare',NULL,NULL,'Addition of a new Advanced task that can be assigned to the owner or any other employee working  under him.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:057AM',0,'Apr  1 2005  9:44:18:057AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(34,2,2,'ExternalContacts.do','Prepare',NULL,'Add a Contact','A new contact can be added to the system. The contact can be a general contact, or one that is associated with an account. All the details about the contact such as the email address, phone numbers, address and some additional details can be added.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:067AM',0,'Apr  1 2005  9:44:18:067AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(35,2,2,'ExternalContacts.do','SearchContactsForm',NULL,'Search Contacts','Use this page to search for contacts in the system based on different filters',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:107AM',0,'Apr  1 2005  9:44:18:107AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(36,2,2,'ExternalContacts.do','Reports',NULL,'Export','Contact data can be exported and displayed in different formats, and can be filtered in different ways. The Export page also lets you view the data, download it, and shows the number of times the exported data has been downloaded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:107AM',0,'Apr  1 2005  9:44:18:107AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(37,2,2,'ExternalContacts.do','GenerateForm',NULL,'Exporting data','Use this page to generate a Contacts export report.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:117AM',0,'Apr  1 2005  9:44:18:117AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(38,2,2,'ExternalContacts.do','ModifyContact',NULL,'Modify Contact','The details about the contact can be modified here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:127AM',0,'Apr  1 2005  9:44:18:127AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(39,2,2,'ExternalContacts.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:127AM',0,'Apr  1 2005  9:44:18:127AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(40,2,2,'ExternalContacts.do','Save',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:137AM',0,'Apr  1 2005  9:44:18:137AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(41,2,2,'ExternalContactsCalls.do','View',NULL,'Call Details','The calls related to the contact are listed here along with the other details such as the length of the call and the date the call was made. You can also add a call.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:137AM',0,'Apr  1 2005  9:44:18:137AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(42,2,2,'ExternalContactsCalls.do','Add',NULL,'Adding a Call','A new call can be added which is associated with the contact. The type of call can be selected using the drop down list present.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:147AM',0,'Apr  1 2005  9:44:18:147AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(43,2,2,'ExternalContactsCallsForward.do','ForwardMessage',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:147AM',0,'Apr  1 2005  9:44:18:147AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(44,2,2,'ExternalContactsCallsForward.do','SendMessage',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:147AM',0,'Apr  1 2005  9:44:18:147AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(45,2,2,'ExternalContactsOpps.do','ViewOpps',NULL,'Opportunity Details','All the opportunities associated with the contact are shown here, with its best possible total and the when the opportunity was last modified. You can filter the different types of opportunities using the drop down.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:157AM',0,'Apr  1 2005  9:44:18:157AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(46,2,2,'ExternalContactsCalls.do','Details',NULL,'Call Details','Calls associated with the contacts are displayed. The call details are shown with the length of the call, associated notes, alert description, alert date etc.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:167AM',0,'Apr  1 2005  9:44:18:167AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(47,2,2,'ExternalContactsOppComponents.do','Prepare',NULL,'Add a component','A component can be added to an opportunity and associated to any employee present in the system. The component type can also be selected.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:177AM',0,'Apr  1 2005  9:44:18:177AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(48,2,2,'ExternalContactsOpps.do','DetailsOpp',NULL,'Opportunity Details','You can view all the details about the components here, such as the status, the guess amount and the current stage. A new component can also be added to an existing opportunity.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:177AM',0,'Apr  1 2005  9:44:18:177AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(49,2,2,'ExternalContactsOppComponents.do','DetailsComponent',NULL,'Component Details','This page shows the details about the opportunity such as the probability of closing the opportunity, the current stage of the opportunity, etc.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:187AM',0,'Apr  1 2005  9:44:18:187AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(50,2,2,'ExternalContactsCalls.do','Modify',NULL,'Modifying call details','You can modify all the details of the calls.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:197AM',0,'Apr  1 2005  9:44:18:197AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(51,2,2,'ExternalContacts.do','InsertFields',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:197AM',0,'Apr  1 2005  9:44:18:197AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(52,2,2,'ExternalContacts.do','UpdateFields',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:207AM',0,'Apr  1 2005  9:44:18:207AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(53,2,2,'ExternalContacts.do','ListContacts',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:207AM',0,'Apr  1 2005  9:44:18:207AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(54,2,2,'ExternalContacts.do','Clone',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:217AM',0,'Apr  1 2005  9:44:18:217AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(55,2,2,'ExternalContacts.do','AddFolderRecord',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:217AM',0,'Apr  1 2005  9:44:18:217AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(56,2,2,'ExternalContactsOpps.do','Save',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:217AM',0,'Apr  1 2005  9:44:18:217AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(57,2,2,'ExternalContacts.do','SearchContacts',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:217AM',0,'Apr  1 2005  9:44:18:217AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(58,2,2,'ExternalContacts.do','MessageDetails',NULL,NULL,'The selected message is displayed with the message text and attachments, if any.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:227AM',0,'Apr  1 2005  9:44:18:227AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(59,2,2,'ExternalContactsOppComponents.do','SaveComponent',NULL,NULL,'This page shows the details of an opportunity, such as the probability of closing the opportunity, the current stage of the opportunity, etc.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:227AM',0,'Apr  1 2005  9:44:18:227AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(60,2,2,'ExternalContacts.do','SearchContacts',NULL,'List of Contacts','This page shows the list of contacts in the system. The name of the contact along with the company name and phone numbers are shown. If the name of the contact is an account, it''s shown right next to it. You can also add a contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:237AM',0,'Apr  1 2005  9:44:18:237AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(61,2,2,'ExternalContacts.do','ExportReport',NULL,'Overview','Data can be filtered, exported and displayed in different formats. This also shows the number of times an exported data has been downloaded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:237AM',0,'Apr  1 2005  9:44:18:237AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(62,2,2,'ExternalContacts.do','ContactDetails',NULL,'Contact Details','The details about the contact are displayed here along with the record information containing the owner, the employee who entered the details and finally the person who last modified these details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:247AM',0,'Apr  1 2005  9:44:18:247AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(63,2,2,'ExternalContacts.do','ViewMessages',NULL,'Message Details','This page lists all the messages associated with the contact, showing the name of the message, its date and its status.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:257AM',0,'Apr  1 2005  9:44:18:257AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(64,2,2,'ExternalContactsCallsForward.do','ForwardCall',NULL,'Forwarding a call','The details of the calls that are associated with a contact can be forwarded to different employees present in the system.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:297AM',0,'Apr  1 2005  9:44:18:297AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(65,2,2,'ExternalContactsCallsForward.do','SendCall',NULL,'List of recipients','This page shows the list of recipients to whom the call details that are associated with a contact have been forwarded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:307AM',0,'Apr  1 2005  9:44:18:307AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(66,2,2,'ExternalContactsOppComponents.do','ModifyComponent',NULL,'Modifying the component details','The details of the component associated with an opportunity can be modified.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:307AM',0,'Apr  1 2005  9:44:18:307AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(67,2,2,'ExternalContactsOpps.do','ModifyOpp',NULL,'Modify the opportunity','The description of the opportunity can be renamed / updated.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:317AM',0,'Apr  1 2005  9:44:18:317AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(68,2,2,'ExternalContacts.do','Fields',NULL,'List of Folder Records','Each contact can have several folders, and each folder further can have multiple records. You can add a record to a folder. Each record present in the folder displays the record name, when it was entered, who modified this record last and when.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:327AM',0,'Apr  1 2005  9:44:18:327AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(69,2,2,'ExternalContacts.do','ModifyFields',NULL,'Modify Folder Record','Here you can modify the details of the folder record.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:337AM',0,'Apr  1 2005  9:44:18:337AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(70,2,2,'ExternalContactsOpps.do','UpdateOpp',NULL,'Opportunity Details','All the opportunities associated with the contact are shown here, with its best possible total and the when the opportunity was last modified. You can filter the different types of opportunities that can be selected using the drop down and display them.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:347AM',0,'Apr  1 2005  9:44:18:347AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(71,2,2,'ContactsList.do','ContactList',NULL,NULL,'Enables you to select contacts from a list and then add them to the Action List. It shows the name of the contact along with his email and type of contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:357AM',0,'Apr  1 2005  9:44:18:357AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(72,2,2,'Contacts.do','Details',NULL,'Contact detail page','The contact details associated with the account are displayed here. The details such as the account number, email address, phone number and the addresses are shown.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:357AM',0,'Apr  1 2005  9:44:18:357AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(73,2,2,'Contacts.do','ViewMessages',NULL,'List of Messages','The list of messages related to the contacts.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:367AM',0,'Apr  1 2005  9:44:18:367AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(74,2,2,'ContactForm.do','Prepare',NULL,NULL,'Adding/Modifying a new contact',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:377AM',0,'Apr  1 2005  9:44:18:377AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(75,2,2,'ExternalContacts.do',NULL,NULL,'Overview','If a contact already exists in the system, you can search for that contact by name, company, title, contact type or source, by typing the search term in the appropriate field, and clicking the Search button.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:377AM',0,'Apr  1 2005  9:44:18:377AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(76,2,2,'ExternalContactsImports.do','New',NULL,'Add Import','This page allows you to upload a cvs file and import contacts from the uploaded file.  Once uploaded, the import is tagged as "Import Pending."
-
-Once the file is uploaded, the import process can be started off by mapping the contents (the columns) of the file to the the fields of the application.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:477AM',0,'Apr  1 2005  9:44:18:477AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(77,2,2,'ExternalContactsImports.do','InitValidate',NULL,'Process Import','This page displays the first five records of the cvs file, and then maps known columns to the fields of the application. It allows you to cusomize your import by allowing you to map the columns of the cvs file to the fields of the application.
-
-If the uploaded file is erroneous in its content (not in cvs format, or if the number of headings and columns do not match), you are not allowed to process the import until the errors are corrected.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:477AM',0,'Apr  1 2005  9:44:18:477AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(78,2,2,'ExternalContactsImports.do','View',NULL,'Contact Imports','This page lists contact imports and their status. An import may either be unprocessed, queued for processing, running, awaiting approval or approved.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:497AM',0,'Apr  1 2005  9:44:18:497AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(79,4,3,'Leads.do','Dashboard',NULL,'Overview','The progress chart is displayed in different views for all the employees working under the owner or creator of the opportunity. The opportunities are shown, with their names and the probable gross revenue associated with that opportunity. Finally the list of employees reporting to a particular employee/supervisor is also shown below the progress chart',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:517AM',0,'Apr  1 2005  9:44:18:517AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(80,4,3,'Leads.do','Prepare',NULL,'Add a Opportunity','This page lets you add a opportunity into the system.
-
-Here a new opportunity can be added by giving a description of the opportunity, then adding a component that is associated with the opportunity. An opportunity can have one or more components. Each component can be assigned to a different employee and the type of the component can be selected. For each component the probability of closing the component, the date estimated, the best guess for closing the deal and the duration for that component are required.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:527AM',0,'Apr  1 2005  9:44:18:527AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(81,4,3,'Leads.do','SearchForm',NULL,'Search Opportunities','You can search for an existing opportunity based on different filters.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:537AM',0,'Apr  1 2005  9:44:18:537AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(82,4,3,'LeadsReports.do','Default',NULL,'Export Data','Pipeline data can be exported, filtered, and displayed in different formats. You can also view the data online in html format, and see number of times the exported data has been downloaded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:537AM',0,'Apr  1 2005  9:44:18:537AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(83,4,3,'Leads.do','SearchOpp',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:547AM',0,'Apr  1 2005  9:44:18:547AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(84,4,3,'Leads.do','Reports',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:547AM',0,'Apr  1 2005  9:44:18:547AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(85,4,3,'LeadsComponents.do','ModifyComponent',NULL,'Modify Component','You can modify the component details associated with an opportunity in a pipeline.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:557AM',0,'Apr  1 2005  9:44:18:557AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(86,4,3,'LeadsCalls.do','Add',NULL,'Adding a call','You can add a new call here associated with the opportunity.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:567AM',0,'Apr  1 2005  9:44:18:567AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(87,4,3,'Leads.do','ModifyOpp',NULL,'Modify the opportunity:','The description of the opportunity can be modified / updated.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:577AM',0,'Apr  1 2005  9:44:18:577AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(88,4,3,'LeadsCalls.do','Insert',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:577AM',0,'Apr  1 2005  9:44:18:577AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(89,4,3,'LeadsDocuments.do','Modify',NULL,'Modify Document','Modify the Subject or filename of a document.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:587AM',0,'Apr  1 2005  9:44:18:587AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(90,4,3,'LeadsCallsForward.do','ForwardMessage',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:587AM',0,'Apr  1 2005  9:44:18:587AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(91,4,3,'Leads.do','Save',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:587AM',0,'Apr  1 2005  9:44:18:587AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(92,4,3,'Leads.do','GenerateForm',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:597AM',0,'Apr  1 2005  9:44:18:597AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(93,4,3,'LeadsComponents.do','DetailsComponent',NULL,'Component Details','The component details for the opportunity are shown here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:597AM',0,'Apr  1 2005  9:44:18:597AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(94,4,3,'LeadsDocuments.do','AddVersion',NULL,'Upload a new version of document','You can upload a new version of the document and the new version of the file can be selected and uploaded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:597AM',0,'Apr  1 2005  9:44:18:597AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(95,4,3,'Leads.do','Search',NULL,'List of components','The components resulted from the search are shown here. Different views of the components and its types are displayed. The name of the component with the estimated amount of money associated with the opportunity and the probability of that components being a success is shown. This also displays the time for closing the deal (term) and the organization name or the contact name if they are associated with the opportunity. A new opportunity can also be added.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:607AM',0,'Apr  1 2005  9:44:18:607AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(96,4,3,'Leads.do','UpdateOpp',NULL,'Opportunity Details','You can view all the details about the components here and also add a new component to a particular opportunity. Calls and the documents can be associated with the opportunity',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:617AM',0,'Apr  1 2005  9:44:18:617AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(97,4,3,'LeadsCallsForward.do','ForwardCall',NULL,'Forwarding a call','The details of calls associated with a contact can be forwarded to different users present in the system.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:627AM',0,'Apr  1 2005  9:44:18:627AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(98,4,3,'LeadsDocuments.do','View',NULL,'Document Details','In the Documents tab, the documents associated with a particular opportunity can be added to, and viewed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:637AM',0,'Apr  1 2005  9:44:18:637AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(99,4,3,'LeadsCalls.do','Modify',NULL,'Modify call details','You can modify the details of the calls.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:647AM',0,'Apr  1 2005  9:44:18:647AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(100,4,3,'Leads.do','DetailsOpp',NULL,'Opportunity Details','You can view all the details about an opportunity components here and also add a new component to a particular opportunity. Calls and documents can also be added to an opportunity or viewed by clicking on the appropriate tab.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:647AM',0,'Apr  1 2005  9:44:18:647AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(101,4,3,'LeadsCalls.do','View',NULL,'Call Details','Calls associated with the opportunity are shown. Calls can be added to the opportunity, and details about listed calls can be examined.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:667AM',0,'Apr  1 2005  9:44:18:667AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(102,4,3,'Leads.do','ViewOpp',NULL,NULL,'The opportunities resulted from the search are shown here. Different views of the opportunities and its types are displayed. The name of the component with the estimated amount of money associated with the opportunity and the probability of that opportunity being a success are shown. This also displays the time for closing the deal (term) and the organization name or the contact name if they are associated with the opportunity.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:677AM',0,'Apr  1 2005  9:44:18:677AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(103,4,3,'Leads.do',NULL,NULL,NULL,'Pipeline helps in creating prospective opportunities or leads in the company. Each opportunity helps to follow up a lead, who might eventually turn into a client. Here you can create an opportunity, search for an existing opportunity in the system, export the data to different formats. The dashboard reflects the progress chart in different views for all the employees working under the owner/creator of the opportunity.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:687AM',0,'Apr  1 2005  9:44:18:687AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(104,4,3,'LeadsComponents.do','SaveComponent',NULL,'Component Details','The component details for the opportunity are shown here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:687AM',0,'Apr  1 2005  9:44:18:687AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(105,4,3,'LeadsComponents.do','Prepare',NULL,'Add a component','A component can be added to an opportunity and assigned to any employee in the system. The component type can also be selected.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:697AM',0,'Apr  1 2005  9:44:18:697AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(106,4,3,'LeadsCalls.do','Update',NULL,'Call Details','The calls associated with the opportunity are shown. Calls can be added to the opportunity.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:697AM',0,'Apr  1 2005  9:44:18:697AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(107,4,3,'LeadsCalls.do','Details',NULL,'Call Details','Details about the call associated with the opportunity',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:707AM',0,'Apr  1 2005  9:44:18:707AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(108,4,3,'LeadsDocuments.do','Add',NULL,'Upload a document','New documents related to the opportunity can be uploaded into the system.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:707AM',0,'Apr  1 2005  9:44:18:707AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(109,4,3,'LeadsDocuments.do','Details',NULL,'Document Details','This shows all versions of the updated document. The name of the file with it''s size, version and the number of downloads are shown here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:717AM',0,'Apr  1 2005  9:44:18:717AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(110,4,3,'LeadsReports.do','ExportList',NULL,'List of exported data','The data present can be used to export data and display that in different formats. The exported data can be filtered in different ways. This would also let you view the data download it. This also shows the number of times an exported data has been downloaded',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:727AM',0,'Apr  1 2005  9:44:18:727AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(111,4,3,'LeadsReports.do','ExportForm',NULL,'Generating Export data','Generate an exported report from pipeline data',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:737AM',0,'Apr  1 2005  9:44:18:737AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(112,1,4,'Accounts.do','Dashboard',NULL,'Overview','The date range can be modified which is shown in the right hand window by clicking on a specific date on the calendar. Accounts with contract end dates or other required actions appear in the right hand window reminding the user to take action on them. The schedule, actions, alert dates and contract end dates are displayed for user or the employees under him by using the dropdown at the top of the page. Clicking on the alert link will let the user modify the details of the account owner.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:747AM',0,'Apr  1 2005  9:44:18:747AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(113,1,4,'Accounts.do','Add',NULL,'Add an Account','A new account can be added here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:757AM',0,'Apr  1 2005  9:44:18:757AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(114,1,4,'Accounts.do','Modify',NULL,'Modify Account','The details of an account can be modified here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:777AM',0,'Apr  1 2005  9:44:18:777AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(115,1,4,'Contacts.do','View',NULL,'Contact Details','A contact can be associated with an account. The lists of the contacts associated with the account are shown along with the title.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:787AM',0,'Apr  1 2005  9:44:18:787AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(116,1,4,'Accounts.do','Fields',NULL,'Folder Record Details','You create folders for accounts. Each folder can have one or more records associated with it, depending on the type of the folder. The details about records associated with the folder are shown',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:807AM',0,'Apr  1 2005  9:44:18:807AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(117,1,4,'Opportunities.do','View',NULL,'Opportunity Details','Opportunities associated with the contact, showing the best guess total and last modified date.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:817AM',0,'Apr  1 2005  9:44:18:817AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(118,1,4,'RevenueManager.do','View',NULL,'Revenue','The revenue associated with the account is shown here. The details about the revenue like the description, the date and the amount associated are displayed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:847AM',0,'Apr  1 2005  9:44:18:847AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(119,1,4,'RevenueManager.do','View',NULL,'Revenue Details','The revenue associated with the account is shown here. Details about the revenue such as the description, the date, and the amount associated are displayed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:847AM',0,'Apr  1 2005  9:44:18:847AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(120,1,4,'RevenueManager.do','Add',NULL,'Add Revenue','Adding new revenue to an account',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:857AM',0,'Apr  1 2005  9:44:18:857AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(121,1,4,'RevenueManager.do','Modify',NULL,'Modify Revenue','Here revenue details can be modified',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:867AM',0,'Apr  1 2005  9:44:18:867AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(122,1,4,'Accounts.do','ViewTickets',NULL,'Ticket Details','This page shows the complete list of the tickets related to an account, and lets you add a new ticket',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:867AM',0,'Apr  1 2005  9:44:18:867AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(123,1,4,'AccountsDocuments.do','View',NULL,'Document Details','Here the documents associated with the account are listed. New documents related to the account can be added.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:877AM',0,'Apr  1 2005  9:44:18:877AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(124,1,4,'Accounts.do','SearchForm',NULL,'Search Accounts','This page provides the search feature for accounts in the system.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:887AM',0,'Apr  1 2005  9:44:18:887AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(125,1,4,'Accounts.do','Details',NULL,'Account Details','This shows the details of the account, which can be modified. Each account can have folders, contacts, opportunities, revenue, tickets, and documents, for which there are separate tabs.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:897AM',0,'Apr  1 2005  9:44:18:897AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(126,1,4,'RevenueManager.do','Dashboard',NULL,'Revenue Dashboard','This revenue dashboard shows a progress chart for different years and types. All the accounts with revenue are also shown along with a list of employees working under you are also listed under the progress chart. You can add accounts, search for the existing ones in the system based on different filters and export the data in different formats.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:897AM',0,'Apr  1 2005  9:44:18:897AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(127,1,4,'Accounts.do','Reports',NULL,'Export Data','The data can be filtered, exported, displayed, and downloaded in different formats.You can also see the number of times an exported report has been downloaded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:907AM',0,'Apr  1 2005  9:44:18:907AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(128,1,4,'Accounts.do','ModifyFields',NULL,'Modify folder record','The Folder record details can be updated.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:917AM',0,'Apr  1 2005  9:44:18:917AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(129,1,4,'AccountTickets.do','ReopenTicket',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:917AM',0,'Apr  1 2005  9:44:18:917AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(130,1,4,'Accounts.do','Delete',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:917AM',0,'Apr  1 2005  9:44:18:917AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(131,1,4,'Accounts.do','GenerateForm',NULL,'Generate New Export','To generate the Export data',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:927AM',0,'Apr  1 2005  9:44:18:927AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(132,1,4,'AccountContactsCalls.do','View',NULL,'Call Details','Calls associated with the contact',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:927AM',0,'Apr  1 2005  9:44:18:927AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(133,1,4,'Accounts.do','AddFolderRecord',NULL,'Add folder record','A new Folder record can be added to the Folder.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:937AM',0,'Apr  1 2005  9:44:18:937AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(134,1,4,'AccountContactsCalls.do','Add',NULL,'Add a call','You can add a new call, which is associated with a particular contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:937AM',0,'Apr  1 2005  9:44:18:937AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(135,1,4,'AccountsDocuments.do','Add',NULL,'Upload Document','New documents can be uploaded and associated with an account',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:947AM',0,'Apr  1 2005  9:44:18:947AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(136,1,4,'AccountsDocuments.do','Add',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:947AM',0,'Apr  1 2005  9:44:18:947AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(137,1,4,'AccountContactsOpps.do','UpdateOpp',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:947AM',0,'Apr  1 2005  9:44:18:947AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(138,1,4,'AccountTicketsDocuments.do','AddVersion',NULL,NULL,'Upload a New Version of an existing Document',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:957AM',0,'Apr  1 2005  9:44:18:957AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(139,1,4,'Accounts.do','Details',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:957AM',0,'Apr  1 2005  9:44:18:957AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(140,1,4,'Accounts.do','View',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:957AM',0,'Apr  1 2005  9:44:18:957AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(141,1,4,'AccountTickets.do','AddTicket',NULL,'Adding a new Ticket','This page lets you create a new ticket for the account',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:967AM',0,'Apr  1 2005  9:44:18:967AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(142,1,4,'AccountTicketsDocuments.do','View',NULL,'Document Details','Here the documents associated with the ticket are listed. New documents related to the ticket can be added',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:967AM',0,'Apr  1 2005  9:44:18:967AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(143,1,4,'AccountTickets.do','UpdateTicket',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:977AM',0,'Apr  1 2005  9:44:18:977AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(144,1,4,'AccountContactsOppComponents.do','Prepare',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:987AM',0,'Apr  1 2005  9:44:18:987AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(145,1,4,'Accounts.do','InsertFields',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:987AM',0,'Apr  1 2005  9:44:18:987AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(146,1,4,'AccountContactsOpps.do','Save',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:987AM',0,'Apr  1 2005  9:44:18:987AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(147,1,4,'Accounts.do','Search',NULL,NULL,'Lists the Accounts present and also lets you create an account',NULL,NULL,NULL,0,'Apr  1 2005  9:44:18:987AM',0,'Apr  1 2005  9:44:18:987AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(148,1,4,'AccountTicketsDocuments.do','Details',NULL,NULL,'Page shows all the versions of the current document',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:007AM',0,'Apr  1 2005  9:44:19:007AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(149,1,4,'AccountTicketsDocuments.do','Modify',NULL,NULL,'Modify the current document',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:007AM',0,'Apr  1 2005  9:44:19:007AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(150,1,4,'Accounts.do','Insert',NULL,'Account Details','Displays the details of the account, which can be modified. Each account can have folders, the contacts, opportunities, revenue, and tickets. You can update several documents associated with each account.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:007AM',0,'Apr  1 2005  9:44:19:007AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(151,1,4,'AccountContactsCalls.do','Details',NULL,'Call details','The details of the call are shown here which can be modified, deleted or forwarded to any of the users.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:017AM',0,'Apr  1 2005  9:44:19:017AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(152,1,4,'AccountContactsCalls.do','Modify',NULL,'Add / update a call','You can add a new call to a contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:017AM',0,'Apr  1 2005  9:44:19:017AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(153,1,4,'AccountContactsCalls.do','Save',NULL,'Call details','The details of the call are shown here, and can be modified, deleted or forwarded to any of the employees',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:027AM',0,'Apr  1 2005  9:44:19:027AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(154,1,4,'AccountContactsCalls.do','ForwardCall',NULL,'Forward Call','The details of the calls that are associated with a contact can be forwarded to different employees.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:027AM',0,'Apr  1 2005  9:44:19:027AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(155,1,4,'AccountContactsOpps.do','ViewOpps',NULL,'List of Opportunities','Opportunities associated with the contact, showing the best guess total and last modified date.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:037AM',0,'Apr  1 2005  9:44:19:037AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(156,1,4,'AccountContactsOpps.do','DetailsOpp',NULL,'Opportunity Details','You can view all the details about the components here and also add a new component to a particular opportunity. The opportunity can be renamed and its details can be modified',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:047AM',0,'Apr  1 2005  9:44:19:047AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(157,1,4,'AccountTickets.do','TicketDetails',NULL,'Ticket Details','This page lets you view the details of the ticket, and also lets you modify or delete the ticket.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:047AM',0,'Apr  1 2005  9:44:19:047AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(158,1,4,'AccountTickets.do','ModifyTicket',NULL,'Modify ticket','This page lets you modify the ticket information and update its details',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:057AM',0,'Apr  1 2005  9:44:19:057AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(159,1,4,'AccountTicketTasks.do','List',NULL,'Task Details','This page lists the tasks assigned for a particular account. New tasks can be added, which would then appear in the list of tasks, showing their priority and their assignment.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:067AM',0,'Apr  1 2005  9:44:19:067AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(160,1,4,'AccountTicketsDocuments.do','Add',NULL,'Uploading a Document','Upload a new document related to the account.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:077AM',0,'Apr  1 2005  9:44:19:077AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(161,1,4,'AccountTickets.do','ViewHistory',NULL,'Ticket Log History','This page maintains a complete log history of each ticket from its creation till the ticket is closed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:077AM',0,'Apr  1 2005  9:44:19:077AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(162,1,4,'AccountsDocuments.do','Details',NULL,'Document Details','All the versions of the current document are listed here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:087AM',0,'Apr  1 2005  9:44:19:087AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(163,1,4,'AccountsDocuments.do','Modify',NULL,'Modify Document','Modify the document information',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:087AM',0,'Apr  1 2005  9:44:19:087AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(164,1,4,'AccountsDocuments.do','AddVersion',NULL,'Upload New Version','Upload a new document version',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:087AM',0,'Apr  1 2005  9:44:19:087AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(165,1,4,'Accounts.do','ExportReport',NULL,'List of Exported data','The data can be filtered, exported and displayed in different formats. You can then view the data and also download it.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:097AM',0,'Apr  1 2005  9:44:19:097AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(166,1,4,'RevenueManager.do','Details',NULL,'Revenue Details','Details about revenue',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:107AM',0,'Apr  1 2005  9:44:19:107AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(167,1,4,'RevenueManager.do','Dashboard',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:117AM',0,'Apr  1 2005  9:44:19:117AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(168,1,4,'OpportunityForm.do','Prepare',NULL,'Add Opportunity','A new opportunity associated with the contact can be added',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:117AM',0,'Apr  1 2005  9:44:19:117AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(169,1,4,'Opportunities.do','Add',NULL,'Add opportunity','A new opportunity associated with the contact can be added',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:190AM',0,'Apr  1 2005  9:44:19:190AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(170,1,4,'Opportunities.do','Details',NULL,'Opportunity Details','You can view all the details about the components here like the status, the guess amount and the current stage. A new component can also be added to a particular opportunity.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:200AM',0,'Apr  1 2005  9:44:19:200AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(171,1,4,'Opportunities.do','Modify',NULL,'Modify Opportunity','The details of the opportunity can be modified',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:210AM',0,'Apr  1 2005  9:44:19:210AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(172,1,4,'OpportunitiesComponents.do','DetailsComponent',NULL,'Component Details','This page shows the details about the opportunity like what is the probability of closing the opportunity, what is the current stage of the opportunity etc',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:220AM',0,'Apr  1 2005  9:44:19:220AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(173,1,4,'OpportunitiesComponents.do','Prepare',NULL,'Add a component','A component can be added to an opportunity and assigned to any employee present in the system. The component type can also be selected.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:220AM',0,'Apr  1 2005  9:44:19:220AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(174,1,4,'OpportunitiesComponents.do','ModifyComponent',NULL,'Modify Component','The details of the component can be added / updated to an opportunity and assigned to any employee present in the system. The component type can also be selected.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:230AM',0,'Apr  1 2005  9:44:19:230AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(175,1,4,'OpportunitiesComponents.do','SaveComponent',NULL,'Component Details','This page shows the details about the opportunity like what is the probability of closing the opportunity, what is the current stage of the opportunity etc',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:240AM',0,'Apr  1 2005  9:44:19:240AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(176,1,4,'AccountsServiceContracts.do','Add',NULL,'Add Contract','This page allows you to add a service contract to the account. 
-
-A service contract describes the terms and conditions in a contract including the start and end dates, the contract value, the number of hours, service models and other details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:240AM',0,'Apr  1 2005  9:44:19:240AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(177,1,4,'AccountsServiceContracts.do','Modify',NULL,'Modify Contract','This page allows your to modify contract information.
-
-A service contract describes the terms and conditions in a contract including the start and end dates, the contract value, the number of hours, service models and other details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:260AM',0,'Apr  1 2005  9:44:19:260AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(178,1,4,'AccountsServiceContracts.do','List',NULL,'Contracts','This page lists all the service contracts associated with the account. Based on your permissions you would be able to add new service contracts and modify exting ones from this page.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:270AM',0,'Apr  1 2005  9:44:19:270AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(179,1,4,'AccountsServiceContracts.do','View',NULL,'Service Contract Details','This page displays the information of a service contract. The information is divided into general information, block hour information and service model options',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:270AM',0,'Apr  1 2005  9:44:19:270AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(180,1,4,'AccountsAssets.do','List',NULL,'Assets','This page displays assets associated with the service contract of the account. Based on your permissions you would be able to add new assets or modify existing ones from this page.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:280AM',0,'Apr  1 2005  9:44:19:280AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(181,1,4,'AccountsAssets.do','Add',NULL,'Add Asset','This page allows you to add an asset to the account and associate it with a service contract',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:280AM',0,'Apr  1 2005  9:44:19:280AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(182,1,4,'AccountsAssets.do','View',NULL,'Asset Details','This page allows you to view asset details associated with a service contract  of the account.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:300AM',0,'Apr  1 2005  9:44:19:300AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(183,1,4,'AccountsAssets.do','Modify',NULL,'Modify Asset','This page allows you to modify an asset  associated it with a service contract of this account.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:320AM',0,'Apr  1 2005  9:44:19:320AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(184,1,4,'AccountsAssets.do','History',NULL,'Asset History','The page displays the maintenance history of the asset.  This history for the asset is generated when the help desk department initiates a maintenance for this asset. The asset is maintained based on the service model options specified for the asset.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:320AM',0,'Apr  1 2005  9:44:19:320AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(185,1,4,'Contacts.do','Prepare',NULL,'Add Account Contact','This page allows you to add an account contact and to permit the account to use the CRM application as a portal user',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:330AM',0,'Apr  1 2005  9:44:19:330AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(186,1,4,'Contacts.do','Modify',NULL,'Modify contact','The details of an account contact can be modified or updated here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:340AM',0,'Apr  1 2005  9:44:19:340AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(187,1,4,'ContactsPortal.do','View',NULL,'Contact Portal','This page displays the portal information (username, expiration date) of this account contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:350AM',0,'Apr  1 2005  9:44:19:350AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(188,1,4,'ContactsPortal.do','Modify',NULL,'Modify Contact Portal','This page allows you to modify the portal information of the account contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:357AM',0,'Apr  1 2005  9:44:19:357AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(189,1,4,'ContactsPortal.do','Add',NULL,'Add Contact Portal','This page allows you to allow the account contact access to this appication as a portal user. A portal user is allowed to see account information only for the account to which he is listed as a contact.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:367AM',0,'Apr  1 2005  9:44:19:367AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(190,6,5,'CampaignManager.do','Dashboard',NULL,'Communications Dashboard','Track and analyze campaigns that have been activated and executed.
-
-Messages can be sent out by any combination of email, fax, or mail merge. The Dashboard shows an overview of sent messages and allows you to drill down and view recipients and any survey results.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:377AM',0,'Apr  1 2005  9:44:19:377AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(191,6,5,'CampaignManager.do','Add',NULL,'Add a campaign','This page lets you add a new campaign into the system.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:387AM',0,'Apr  1 2005  9:44:19:387AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(192,6,5,'CampaignManager.do','View',NULL,'Campaign List','Create or work on existing campaigns.
-
-The Campaign Builder allows you to select groups of contacts that you would like to send a message to, as well as schedule a delivery date. Additional options are available.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:387AM',0,'Apr  1 2005  9:44:19:387AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(193,6,5,'CampaignManagerGroup.do','View',NULL,'View Groups','Each campaign needs at least one group to which to send a message. Use criteria to filter the contacts you need to reach and use them over and over again. As new contacts meet the criteria, they will be automatically included in future campaigns. This page lists the group names. It shows the groups created by you or everybody; i.e. all the groups.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:397AM',0,'Apr  1 2005  9:44:19:397AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(194,6,5,'CampaignManagerGroup.do','Add',NULL,'Add a Group','A new contact group can be added. Separate criteria can be specified when creating the group. The criteria can be defined to generate a list. The list to be added can be previewed before saving the group details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:407AM',0,'Apr  1 2005  9:44:19:407AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(195,6,5,'CampaignManagerMessage.do','View',NULL,'Message List','Compose a message to reach your audience.
-Each campaign requires a message that will be sent to selected groups. Write the message once, then use it in any number of future campaigns. Modified messages will only affect future campaigns. Displays the list of messages, with the description and other details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:417AM',0,'Apr  1 2005  9:44:19:417AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(196,6,5,'CampaignManagerMessage.do','Add',NULL,'Adding a Message','You can add a new message for the campaign, which would show up in the message list.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:427AM',0,'Apr  1 2005  9:44:19:427AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(197,6,5,'CampaignManagerAttachment.do',NULL,NULL,'Create Attachments','Customize and configure your Campaigns with attachments. Attachments can include interactive items, like surveys, or provide additional materials like files.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:437AM',0,'Apr  1 2005  9:44:19:437AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(198,6,5,'CampaignManagerGroup.do','Details',NULL,NULL,'Contacts of the group are displayed',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:437AM',0,'Apr  1 2005  9:44:19:437AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(199,6,5,'CampaignDocuments.do','AddVersion',NULL,NULL,'version change of a document',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:447AM',0,'Apr  1 2005  9:44:19:447AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(200,6,5,'CampaignManager.do','Dashboard',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:447AM',0,'Apr  1 2005  9:44:19:447AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(201,6,5,'CampaignManagerMessage.do','Insert',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:447AM',0,'Apr  1 2005  9:44:19:447AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(202,6,5,'CampaignManagerGroup.do','Update',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:457AM',0,'Apr  1 2005  9:44:19:457AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(203,6,5,'CampaignDocuments.do','Add',NULL,NULL,'New documents can be uploaded and be associated with the campaign.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:457AM',0,'Apr  1 2005  9:44:19:457AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(204,6,5,'CampaignManager.do','ResponseDetails',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:457AM',0,'Apr  1 2005  9:44:19:457AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(205,6,5,'CampaignManagerGroup.do','Preview',NULL,NULL,'Here details about the contacts, i.e. the name, their company, and their email address are displayed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:467AM',0,'Apr  1 2005  9:44:19:467AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(206,6,5,'CampaignManager.do','PrepareDownload',NULL,'Campaign Details','This page shows the details about the campaign and also shows the list of available documents.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:467AM',0,'Apr  1 2005  9:44:19:467AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(207,6,5,'CampaignManager.do','ViewGroups',NULL,'Groups','The group name along with the contacts present in the Group are listed',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:467AM',0,'Apr  1 2005  9:44:19:467AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(208,6,5,'CampaignManagerSurvey.do','Add',NULL,'Adding a survey','You can add a new survey here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:477AM',0,'Apr  1 2005  9:44:19:477AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(209,6,5,'CampaignManagerSurvey.do','MoveQuestion',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:477AM',0,'Apr  1 2005  9:44:19:477AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(210,6,5,'CampaignManager.do','Details',NULL,'Campaign Details','Campaign details are the number of groups selected for the campaign, the text message of the campaign, when is it scheduled to run, how the delivery of the message done, who entered these details and who modified it are shown here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:477AM',0,'Apr  1 2005  9:44:19:477AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(211,6,5,'CampaignDocuments.do','Details',NULL,NULL,'All Versions of this current Document are shown here with the details like the size of the uploaded file, the number of downloads etc.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:487AM',0,'Apr  1 2005  9:44:19:487AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(212,6,5,'CampaignDocuments.do','Modify',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:497AM',0,'Apr  1 2005  9:44:19:497AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(213,6,5,'CampaignManager.do','Insert',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:497AM',0,'Apr  1 2005  9:44:19:497AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(214,6,5,'CampaignManagerSurvey.do','ViewReturn',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:497AM',0,'Apr  1 2005  9:44:19:497AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(215,6,5,'CampaignManagerMessage.do','Details',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:507AM',0,'Apr  1 2005  9:44:19:507AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(216,6,5,'CampaignManager.do','ViewSchedule',NULL,NULL,'For the campaign you can schedule a delivery date to send the message to the recipients.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:507AM',0,'Apr  1 2005  9:44:19:507AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(217,6,5,'CampaignManagerGroup.do','Modify',NULL,NULL,'Here you can update the group details and also the update contact criteria.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:507AM',0,'Apr  1 2005  9:44:19:507AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(218,6,5,'CampaignManager.do','PreviewRecipients',NULL,'List of Recipients','The page displays a list of recipients with their name, company name, the date when the campaign was sent to those recipients and its status.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:517AM',0,'Apr  1 2005  9:44:19:517AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(219,6,5,'CampaignManager.do','PreviewMessage',NULL,'Message Details','The message details are shown here, in the form of an email with a subject and message.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:557AM',0,'Apr  1 2005  9:44:19:557AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(220,6,5,'CampaignManager.do','PreviewSchedule',NULL,'Campaign Schedule','This shows the delivery date and the delivery method or the campaign.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:557AM',0,'Apr  1 2005  9:44:19:557AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(221,6,5,'CampaignManager.do','ViewResults',NULL,'Campaign Results','This page shows the results of the responses received from all the recipients in the group. This also shows the Last response received.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:557AM',0,'Apr  1 2005  9:44:19:557AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(222,6,5,'CampaignManager.do','ViewResponse',NULL,'Campaign Response','This page shows the responses of all the recipients along with their system IP addresses and their email address',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:567AM',0,'Apr  1 2005  9:44:19:567AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(223,6,5,'CampaignDocuments.do','View',NULL,'Campaign Document details','This page lists all the documents associated with this campaign and for each document it lists the size of the file, the extension and the version of the file.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:567AM',0,'Apr  1 2005  9:44:19:567AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(224,6,5,'CampaignManager.do','ViewDetails',NULL,'Campaign Details','This is the detail page for the campaign, where step-by-step information is given on how to activate the campaign; i.e. what should be selected before a campaign is activated.
-
-This campaign can be configured and can now be activated.
-Once activated, today''s campaigns will begin processing in under 5 minutes and cannot be cancelled.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:577AM',0,'Apr  1 2005  9:44:19:577AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(225,6,5,'CampaignManager.do','AddGroups',NULL,'Choose Groups','Selecting or updating the group / groups for the campaign can be done here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:577AM',0,'Apr  1 2005  9:44:19:577AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(226,6,5,'CampaignManager.do','ViewMessage',NULL,'Message Details','Updating a message for the campaign',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:587AM',0,'Apr  1 2005  9:44:19:587AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(227,6,5,'CampaignManager.do','ViewAttachmentsOverview',NULL,'Attachment Details','For each message, we can add the attachments.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:597AM',0,'Apr  1 2005  9:44:19:597AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(228,6,5,'CampaignManager.do','ViewAttachment',NULL,'Surveys','A survey can be selected for this campaign.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:597AM',0,'Apr  1 2005  9:44:19:597AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(229,6,5,'CampaignManager.do','ManageFileAttachments',NULL,'File Attachments','Campaign can also have a file as an attachment',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:607AM',0,'Apr  1 2005  9:44:19:607AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(230,6,5,'CampaignManager.do','Modify',NULL,'Modify Campaign Details','Updating the campaign name /description',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:607AM',0,'Apr  1 2005  9:44:19:607AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(231,6,5,'CampaignManagerMessage.do','Details',NULL,'Message Details','This page shows the details of the message.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:607AM',0,'Apr  1 2005  9:44:19:607AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(232,6,5,'CampaignManagerMessage.do','Modify',NULL,'Modify Message','This page lets you Add/Update a new message. The message can have an access type, limiting who can view a message.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:617AM',0,'Apr  1 2005  9:44:19:617AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(233,6,5,'CampaignManagerMessage.do','Update',NULL,'Message Details','This page shows the details of the message.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:617AM',0,'Apr  1 2005  9:44:19:617AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(234,6,5,'CampaignManagerMessage.do','Clone',NULL,'Adding a Message','This page lets you Add a new message or Update an existing one. The message can have an access type, defining who can view it.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:627AM',0,'Apr  1 2005  9:44:19:627AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(235,6,5,'CampaignManagerSurvey.do','View',NULL,'List of Surveys','This page displays the surveys created and lets you update them.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:637AM',0,'Apr  1 2005  9:44:19:637AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(236,6,5,'CampaignManagerSurvey.do','InsertAndAdd',NULL,'Survey Questions','Here you can add a new survey question. If the question type is "Item List", you can edit the list of items present in that list and also mark whether the particular question is required or not.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:647AM',0,'Apr  1 2005  9:44:19:647AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(237,6,5,'CampaignManagerSurvey.do','Details',NULL,'Survey Details','The details about the survey are displayed here along with the option to modify, delete and preview the survey.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:647AM',0,'Apr  1 2005  9:44:19:647AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(238,6,5,'CampaignManagerSurvey.do','Modify',NULL,'Survey Details','This page displays all the questions added to a particular survey. It also enables you to add new questions. The order of the questions can be changed by moving questions up or down in the list. Questions can also be edited or deleted.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:657AM',0,'Apr  1 2005  9:44:19:657AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(239,6,5,'CampaignManager.do',NULL,NULL,'Overview','You are looking at the communications module. This page reviews and manages campaigns with the following options: Dashboard, Campaign Builder, Build groups, Create messages and create attachments.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:667AM',0,'Apr  1 2005  9:44:19:667AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(240,8,6,'TroubleTickets.do','Details',NULL,'Ticket Details','This page lets you view the details of the ticket also lets you modify or delete the ticket.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:687AM',0,'Apr  1 2005  9:44:19:687AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(241,8,6,'TroubleTickets.do','Add',NULL,'Add a Ticket','You can add a new ticket here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:687AM',0,'Apr  1 2005  9:44:19:687AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(242,8,6,'TroubleTickets.do','SearchTicketsForm',NULL,'Search Existing Tickets','Form used for searching existing tickets based on different filters and parameters.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:697AM',0,'Apr  1 2005  9:44:19:697AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(243,8,6,'TroubleTickets.do','Reports',NULL,'Export Data','This is the page shows exported data.
-The data can be exported in different formats. The exported data can be viewed with its subject, the size of the exported data file, when it was created and by whom. It also shows the number of times that particular exported file was downloaded. A new data file can also be exported.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:697AM',0,'Apr  1 2005  9:44:19:697AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(244,8,6,'TroubleTickets.do','Modify',NULL,'Modify Ticket','Here you can modify ticket details like information, classification, assignment and resolution.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:707AM',0,'Apr  1 2005  9:44:19:707AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(245,8,6,'TroubleTickets.do','Modify',NULL,'Modify Ticket Details','Here you can modify the ticket details like ticket information, it''s classification, the ticket?s assignment and it''s resolution.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:707AM',0,'Apr  1 2005  9:44:19:707AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(246,8,6,'TroubleTicketTasks.do','List',NULL,'List of Tasks','This page lists the tasks assigned for a particular ticket. New tasks can be added, which would then appear in the list of tasks, showing their priority, their assignment and other details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:717AM',0,'Apr  1 2005  9:44:19:717AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(247,8,6,'TroubleTicketsDocuments.do','View',NULL,'List of Documents','Here the documents associated with a ticket are listed. New documents related to the ticket can be added.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:727AM',0,'Apr  1 2005  9:44:19:727AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(248,8,6,'TroubleTicketsFolders.do','Fields',NULL,'List of Folder Records','New folders can be created for each ticket. New Folders are defined and configured in the Admin Module. This page also displays a list of records with their details such as when the record was created, last modified, the action performed on the record etc.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:737AM',0,'Apr  1 2005  9:44:19:737AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(249,8,6,'TroubleTicketsFolders.do','AddFolderRecord',NULL,'Add Folder Record','The details of the record are added',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:737AM',0,'Apr  1 2005  9:44:19:737AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(250,8,6,'TroubleTickets.do','ViewHistory',NULL,'Ticket Log History','The log history of the ticket is maintained.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:747AM',0,'Apr  1 2005  9:44:19:747AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(251,8,6,'TroubleTickets.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:747AM',0,'Apr  1 2005  9:44:19:747AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(252,8,6,'TroubleTickets.do','Insert',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:747AM',0,'Apr  1 2005  9:44:19:747AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(253,8,6,'TroubleTicketsFolders.do','InsertFields',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:757AM',0,'Apr  1 2005  9:44:19:757AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(254,8,6,'TroubleTickets.do','GenerateForm',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:757AM',0,'Apr  1 2005  9:44:19:757AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(255,8,6,'TroubleTickets.do','Details',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:757AM',0,'Apr  1 2005  9:44:19:757AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(256,8,6,'TroubleTickets.do','Update',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:757AM',0,'Apr  1 2005  9:44:19:757AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(257,8,6,'TroubleTickets.do','ExportReport',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:757AM',0,'Apr  1 2005  9:44:19:757AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(258,8,6,'TroubleTicketsFolders.do','ModifyFields',NULL,'Modify Folder Record','This lists the details of the folder record, which can be modified.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:767AM',0,'Apr  1 2005  9:44:19:767AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(259,8,6,'TroubleTicketsFolders.do','UpdateFields',NULL,'Folder Record Details','The details about the folder along with the record information such as when the record was created and when it was modified is displayed here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:767AM',0,'Apr  1 2005  9:44:19:767AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(260,8,6,'TroubleTickets.do','SearchTickets',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:777AM',0,'Apr  1 2005  9:44:19:777AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(261,8,6,'TroubleTickets.do','Home',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:777AM',0,'Apr  1 2005  9:44:19:777AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(262,8,6,'TroubleTicketsDocuments.do','Add',NULL,'Adding a Document','A new document related to a ticket can be uploaded.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:777AM',0,'Apr  1 2005  9:44:19:777AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(263,8,6,'TroubleTicketsDocuments.do','Details',NULL,'Document Details','This page shows all the versions of the current document.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:777AM',0,'Apr  1 2005  9:44:19:777AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(264,8,6,'TroubleTicketsDocuments.do','Modify',NULL,'Modify Document Details','This page lets you modify the ticket information and update the details.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:787AM',0,'Apr  1 2005  9:44:19:787AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(265,8,6,'TroubleTicketsDocuments.do','AddVersion',NULL,'Add version number to Documents','You can upload a new version of an existing document.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:787AM',0,'Apr  1 2005  9:44:19:787AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(266,8,6,'TroubleTickets.do','Home',NULL,'Overview','This page displays the complete list of the tickets assigned to the user, the list of the tickets present in his department and finally the list of the tickets created by the user. For each ticket, the details about the ticket, such as the ticket number, priority, age of the ticket, the company and finally the assignment details are displayed. The issue details are also shown separately for each ticket.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:797AM',0,'Apr  1 2005  9:44:19:797AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(267,8,6,'TroubleTicketActivityLog.do','List',NULL,'Activity Log','This page lists the services (activities performed) rendered to a client after a ticket has been created.  Each Activity Log is usually a sequence of descriptions of the work done during the business days of the week. To resolve the issues listed in a ticket,  multiple activity logs (usually one for each business week) may be required.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:817AM',0,'Apr  1 2005  9:44:19:817AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(268,8,6,'TroubleTicketActivityLog.do','Add',NULL,'Add Activity Log','This page allows you to describe the activity performed on each day in order to resolve the issue specified in the ticket.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:827AM',0,'Apr  1 2005  9:44:19:827AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(269,8,6,'TroubleTicketActivityLog.do','View',NULL,'Activity Log Details','This page displays activities performed on each day in order to resolve the issue specified in the ticket. It also displays follow up information if they are recorded during creation or modification of the activity log.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:840AM',0,'Apr  1 2005  9:44:19:840AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(270,8,6,'TroubleTicketActivityLog.do','Modify',NULL,'Modify Activity Log','This page allows you to edit the activities performed on each day in order to resolve the issue specified in the ticket.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:850AM',0,'Apr  1 2005  9:44:19:850AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(271,8,6,'TroubleTicketMaintenanceNotes.do','List',NULL,'Maintenance Notes','This page displays a list of maintenance notes performed on an asset.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:860AM',0,'Apr  1 2005  9:44:19:860AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(272,8,6,'TroubleTicketMaintenanceNotes.do','Add',NULL,'Add Maintenance Note','This page allows you to create a maintenance note.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:870AM',0,'Apr  1 2005  9:44:19:870AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(273,8,6,'TroubleTicketMaintenanceNotes.do','Modify',NULL,'Modify Maintenance Note','This page allows you to modify a maintenance note.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:880AM',0,'Apr  1 2005  9:44:19:880AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(274,22,7,'CompanyDirectory.do','ListEmployees',NULL,'Overview','The details of each employee can be viewed, modified or deleted and a new detailed employee record can be added.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:900AM',0,'Apr  1 2005  9:44:19:900AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(275,22,7,'CompanyDirectory.do','EmployeeDetails',NULL,'Employee Details','This is the employee detail page. This page displays the email, phone number, addresses and additional details of each employee.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:910AM',0,'Apr  1 2005  9:44:19:910AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(276,22,7,'CompanyDirectory.do','Prepare',NULL,'Add an Employee','You can add an employee into the system. The details of the employee such as his email address; phone numbers, address and other additional details can be given along with his name',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:910AM',0,'Apr  1 2005  9:44:19:910AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(277,22,7,'CompanyDirectory.do','ModifyEmployee',NULL,'Modify Employee Details','Employee details such as the name of the employee, email address, phone numbers and address can be modified here.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:910AM',0,'Apr  1 2005  9:44:19:910AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(278,22,7,'CompanyDirectory.do','Save',NULL,NULL,'This page shows the details of the employee record, which can be modified or deleted.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:920AM',0,'Apr  1 2005  9:44:19:920AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(279,14,8,'Reports.do','ViewQueue',NULL,'Overview','This is the home of the reports. 
-
-A list of customized reports can be viewed and the queue of the reports that are scheduled to be processed by the server are also displayed. Each report that is ready to be retrieved is displayed along with its details such as the subject of the report, the date when the report was generated, report status and finally the size of the report for the user to download.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:930AM',0,'Apr  1 2005  9:44:19:930AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(280,14,8,'Reports.do','RunReport',NULL,'List of Modules','This shows the different modules present and displays the list of corresponding reports present in each module.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:930AM',0,'Apr  1 2005  9:44:19:930AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(281,14,8,'Reports.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:940AM',0,'Apr  1 2005  9:44:19:940AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(282,14,8,'Reports.do','CancelReport',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:940AM',0,'Apr  1 2005  9:44:19:940AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(283,14,8,'Reports.do','ParameterList',NULL,'Parameters specification','This page takes the parameters that need to be specified to run the report.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:940AM',0,'Apr  1 2005  9:44:19:940AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(284,14,8,'Reports.do','ListReports',NULL,'Lis of Reports','In this module, you can choose the report that you want to run from the list of the reports.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:950AM',0,'Apr  1 2005  9:44:19:950AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(285,14,8,'Reports.do','CriteriaList',NULL,'Criteria List','You can choose to base this report on previously saved criteria, or continue and create new criteria.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:950AM',0,'Apr  1 2005  9:44:19:950AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(286,14,8,'Reports.do','GenerateReport',NULL,'Reports Added To Queue','This page shows that the requested report is added to the queue. Also lets you know the details about the report and queue status.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:960AM',0,'Apr  1 2005  9:44:19:960AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(287,14,8,'Reports.do',NULL,NULL,'Overview',NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:960AM',0,'Apr  1 2005  9:44:19:960AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(288,9,9,'Users.do','ListUsers',NULL,'List of Users','This section allows the administrator to view and add users and manage user hierarchies. The users are typically employees in your company who interact with your clients or customers.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:980AM',0,'Apr  1 2005  9:44:19:980AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(289,9,9,'Users.do','InsertUserForm',NULL,'Adding a New User','This form allows new users to be added to the system and records their contact information.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:19:990AM',0,'Apr  1 2005  9:44:19:990AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(290,9,9,'Users.do','ModifyUser',NULL,'Modify User Details','This form provides the administrator with an editable view of the user information, and also allows the administrator to view the users login history and view points.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:010AM',0,'Apr  1 2005  9:44:20:010AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(291,9,9,'Users.do','ViewLog',NULL,'User Login History','Provides a login history of the chosen user.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:010AM',0,'Apr  1 2005  9:44:20:010AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(292,9,9,'Viewpoints.do','ListViewpoints',NULL,'Viewpoints of User','The page displays the viewpoints of the employees regarding a particular module in the system. Lets you add a new viewpoint. The details displayed are when the viewpoint was entered and whether it is enabled or not.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:020AM',0,'Apr  1 2005  9:44:20:020AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(293,9,9,'Viewpoints.do','InsertViewpointForm',NULL,'Add Viewpoint','The contact name can be selected and the permissions /access for the modules can be given.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:030AM',0,'Apr  1 2005  9:44:20:030AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(294,9,9,'Viewpoints.do','ViewpointDetails',NULL,'Update Viewpoint','You can update a viewpoint and set the permissions to access different modules.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:040AM',0,'Apr  1 2005  9:44:20:040AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(295,9,9,'Roles.do','ListRoles',NULL,'List of Roles','You are looking at roles. 
-
-This page lists the different roles present in the system, their role descriptions and the number of people present in the system who are assigned that role. New roles can be added at any time.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:040AM',0,'Apr  1 2005  9:44:20:040AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(296,9,9,'Roles.do','InsertRoleForm',NULL,'Add a New Role','This page will let you Add/Update the roles in the system. Also lets you change the permissions. The permissions can be changed or set for each module separately depending on the role.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:050AM',0,'Apr  1 2005  9:44:20:050AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(297,9,9,'Roles.do','RoleDetails',NULL,'Update Role','This page will let you update the roles in the system. Also lets you change the permissions. The permissions can be changed or set for each module separately depending on the role.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:050AM',0,'Apr  1 2005  9:44:20:050AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(298,9,9,'Admin.do','Config',NULL,'Configure Modules','This page lets you configure modules that meet the needs of your organization, including configuration of lookup lists and custom fields. Depending on permissions, each module that you can configure is listed and each module has a different number of configure options. The changes typically affect all users immediately.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:060AM',0,'Apr  1 2005  9:44:20:060AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(299,9,9,'Admin.do','ConfigDetails',NULL,'Configuration Options','You can configure different options in each module.The following are some of the configuration options that you might see in the modules. Some of these options are specific to the module so they might NOT be present in all the modules.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:060AM',0,'Apr  1 2005  9:44:20:060AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(300,9,9,'Admin.do','ModifyList',NULL,'Edit Lookup List','This page lets you edit and add to the list items.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:080AM',0,'Apr  1 2005  9:44:20:080AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(301,9,9,'AdminFieldsFolder.do','AddFolder',NULL,'Adding a New Folder','Add/Update the existing folder here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:080AM',0,'Apr  1 2005  9:44:20:080AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(302,9,9,'AdminFieldsFolder.do','ModifyFolder',NULL,'Modify Existing Folder','Update the existing folder here',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:080AM',0,'Apr  1 2005  9:44:20:080AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(303,9,9,'AdminConfig.do','ListGlobalParams',NULL,'Configure System','You can configure the system for the session idle timeout and set the time for the time out.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:090AM',0,'Apr  1 2005  9:44:20:090AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(304,9,9,'AdminConfig.do','ModifyTimeout',NULL,'Modify Timeout','The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:090AM',0,'Apr  1 2005  9:44:20:090AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(305,9,9,'Admin.do','Usage',NULL,'Resource Usage Details','Current System Usage and Billing Usage Information are displayed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:100AM',0,'Apr  1 2005  9:44:20:100AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(306,9,9,'Admin.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:100AM',0,'Apr  1 2005  9:44:20:100AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(307,9,9,'Users.do','DisableUserConfirm',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:100AM',0,'Apr  1 2005  9:44:20:100AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(308,9,9,'AdminFieldsFolder.do',NULL,NULL,'Custom Folders','This page lists all the custom folders created in the General Contacts; let''s you edit them and also allow you to enable/disable the folders.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:110AM',0,'Apr  1 2005  9:44:20:110AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(309,9,9,'AdminFieldsFolder.do','ListFolders',NULL,'List of Custom Folders','This page lists all the custom folders created in the General Contacts; let''s you edit them and also allow you to enable/disable the folders.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:120AM',0,'Apr  1 2005  9:44:20:120AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(310,9,9,'AdminFields.do','ModifyField',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:130AM',0,'Apr  1 2005  9:44:20:130AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(311,9,9,'Admin.do','ListGlobalParams',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:130AM',0,'Apr  1 2005  9:44:20:130AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(312,9,9,'Admin.do','ModifyTimeout',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:130AM',0,'Apr  1 2005  9:44:20:130AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(313,9,9,'AdminObjectEvents.do',NULL,NULL,'Object Events:','The list of Object Events are displayed along with the corresponding Triggered Processes. The number of components and whether that Object Event is available or not is also shown.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:140AM',0,'Apr  1 2005  9:44:20:140AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(314,9,9,'AdminFieldsGroup.do','AddGroup',NULL,NULL,'Add a group',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:140AM',0,'Apr  1 2005  9:44:20:140AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(315,9,9,'AdminFields.do','AddField',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:150AM',0,'Apr  1 2005  9:44:20:150AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(316,9,9,'Admin.do','UpdateList',NULL,NULL,'The Lookup List displays all the list names, which can be edited, the number of items can be known and the ones present can be previewed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:150AM',0,'Apr  1 2005  9:44:20:150AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(317,9,9,'AdminScheduledEvents.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:160AM',0,'Apr  1 2005  9:44:20:160AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(318,9,9,'Admin.do','Config',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:160AM',0,'Apr  1 2005  9:44:20:160AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(319,9,9,'Admin.do','EditLists',NULL,'Lookup Lists','The Lookup List displays all the list names, which can be edited, the number of items is displayed and the ones present can be previewed.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:160AM',0,'Apr  1 2005  9:44:20:160AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(320,9,9,'AdminFieldsGroup.do','ListGroups',NULL,'Folder Details','This page lists the folder details and the groups added to this folder. Each group can further have a custom field created or deleted. You can also place it in the desired position in the dropdown list.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:170AM',0,'Apr  1 2005  9:44:20:170AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(321,9,9,'AdminCategories.do','ViewActive',NULL,'Active Category Details','The four different levels for the "Active" and "Draft" categories are displayed. The level1 has the category name, which is further classified into sub directories/levels. The level1 has the sublevel called level2 which in turn has sublevel called level3 and so on.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:180AM',0,'Apr  1 2005  9:44:20:180AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(322,9,9,'AdminCategories.do','View',NULL,'Draft Category Details','The four different levels for the active and the draft categories are displayed. The level1 has the category name, which is further classified into sub directories/levels. The level1 has the sublevel called level2 which in turn has sublevel called level3 and so on. The draft categories can be edited and activated. The activated draft categories would be then reflected in the Active Categories list. The modified/updated draft category can also be reverted to its original state.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:190AM',0,'Apr  1 2005  9:44:20:190AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(323,9,9,'Users.do','InsertUserForm',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:200AM',0,'Apr  1 2005  9:44:20:200AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(324,9,9,'Users.do','UpdateUser',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:200AM',0,'Apr  1 2005  9:44:20:200AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(325,9,9,'Users.do','AddUser',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:200AM',0,'Apr  1 2005  9:44:20:200AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(326,9,9,'Users.do','UserDetails',NULL,'User Details','This form provides the administrator with more information about the user, namely information pertaining to the users login history and view points.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:200AM',0,'Apr  1 2005  9:44:20:200AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(327,9,9,'Roles.do',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:210AM',0,'Apr  1 2005  9:44:20:210AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(328,9,9,'Roles.do','ListRoles',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:210AM',0,'Apr  1 2005  9:44:20:210AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(329,9,9,'Viewpoints.do','InsertViewpoint',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:220AM',0,'Apr  1 2005  9:44:20:220AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(330,9,9,'Viewpoints.do','InsertViewpoint',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:220AM',0,'Apr  1 2005  9:44:20:220AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(331,9,9,'Admin.do',NULL,NULL,'Overview','You are looking at the Admin module home page. Here you can manage the system by reviewing its usage, configuring specific modules and system parameters.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:220AM',0,'Apr  1 2005  9:44:20:220AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(332,11,13,'Search.do','SiteSearch',NULL,NULL,NULL,NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:260AM',0,'Apr  1 2005  9:44:20:260AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(333,11,13,'Search.do','SiteSearch',NULL,'General Search','You can search the system for data associated with a particular key term. This can be done using the search data text box present on the left side of the window. The data associated with the corresponding key term is looked for in different modules for a match and the results are displayed per module. The search results are shown with detail description.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:260AM',0,'Apr  1 2005  9:44:20:260AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(334,18,14,'ProductsCatalog.do','ListAllProducts',NULL,'a','b',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:270AM',0,'Apr  1 2005  9:44:20:270AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(335,7,15,'ProjectManagement.do','ProjectCenter','Setup','Setup','Within the  Setup  tab you also have the choice to  either "Configure Permissions" or "Customize Project"  for this project. 
-
-Configuring Permissions allows you to define what members of your project can be allowed to view, add, change, or delete.
-
-Customizing the project allows you to show(or hide) the tabs and change the tab names according to your preferences.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:280AM',0,'Apr  1 2005  9:44:20:280AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(336,7,15,'ProjectManagement.do','CustomizeProject',NULL,'Customize Project','This "Customize Project" view allows you to change the names for each of the project subtabs. Changing the names of the tabs does not change any of the existing functionality for that tab.
-
-It also allows you to turn off the subtabs based on your preferences.  Turning tabs off can be helpful if you do not intend to have any information under that tab. Making things simple for your team members certainly helps to streamline the usage of your project.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:280AM',0,'Apr  1 2005  9:44:20:280AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(337,7,15,'ProjectManagement.do','ProjectCenter','Details','Project Details','This view displays information about a project.
-
-The General Information section displays the project status, the title (also the project name), a description, the budget and relevant dates (start date, entered, modified and estimated close date)   for the project.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:280AM',0,'Apr  1 2005  9:44:20:280AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(338,7,15,'ProjectManagement.do','ConfigurePermissions',NULL,'Configure Permissions','The "Configure Permissions"  screen shows you a list of all permissions that can be adjusted in your project. Each tab is represented and has a variety of permissions that can be adjusted.
-
-For example, the first group is entitled,  Project Details,  which contains three permissions that can be adjusted:
-1. View project details   defines which role(s) can view the project  Details  tab.
-2. Modify project details   defines which role(s) can modify the information on the project  Details  tab.
-3. Delete project   defines which role(s) can permanently delete this project
-
-The screen also allows you to define what members of your project can be allowed to view, add, change, or delete. Later on, when you add users to your project, you will need to know the answer to  what will each user be able to access in my project?',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:280AM',0,'Apr  1 2005  9:44:20:280AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(339,7,15,'ProjectManagement.do','ProjectCenter','News','News','News articles are essentially bits of news that you can add to your project for others to review. Others can also add news items if you provide them access.
-
-To add a news article, select the  Add News Article  link. You will be presented with a form with fields that allow you to describe the news item.
-
-You can also filter the list of news items you want listed based on prec-configured criterias namely "Current News," "Archived News," "Unreleased News," and "New Drafts."',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:290AM',0,'Apr  1 2005  9:44:20:290AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(340,7,15,'ProjectManagementNews.do','Add',NULL,'Add News','This screen allows you to add a news item.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:290AM',0,'Apr  1 2005  9:44:20:290AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(341,7,15,'ProjectManagement.do','ProjectCenter','Team','Team','Lists the currently added team members and some information about them. You will always be added when you create a new project.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:310AM',0,'Apr  1 2005  9:44:20:310AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(342,7,15,'ProjectManagement.do','ProjectCenter',NULL,'Setup','Within the  Setup  tab you also have the choice to  Configure Permissions  for this project. Permissions allow you to define what members of your project can be allowed to view, add, change, or delete.
-
-To setup team members, choose the  Modify Team  link. At this point you will now have a page with four (4) lists, some of which are empty. The right most list shows you the team members of your project. The left most list shows you ways in which you can add a team member.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:310AM',0,'Apr  1 2005  9:44:20:310AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(343,7,15,'ProjectManagementTeam.do','Modify',NULL,'Modify Team','This page allows you to modify (add and remove) members from the project team.
-
-This page shows you four (4) lists, some of which are empty. The right most list shows you the team members of your project. The left most list shows you ways in which you can add a team member.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:310AM',0,'Apr  1 2005  9:44:20:310AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(344,7,15,'ProjectManagement.do','ProjectCenter','Issues_Categories','Discussion','While news articles provide a formal way to announce and disseminate project happenings, discussion groups allow for more informal camaraderie and collaboration.
-
-Discussion groups are comprised of forums, topics and messages.
-
-Forums provide some sort of categorization among what is being discussed. For example, you might have forums for  Suggestions,   Status Reports  and  Resources.  Small projects might have just one forum, while larger projects may require multiple forums.
-
-Once a forum has been created, it''s time to create a topic for discussion. A topic is simply a subject and a message. Forums can have multiple topics in which users can reply to and comment on.
-
-Once a topic has been posted, other team members can reply.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:330AM',0,'Apr  1 2005  9:44:20:330AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(345,7,15,'ProjectManagement.do','ProjectCenter','File_Library','Documents','The Projects module comes with a sophisticated document management tool. You can use it to store versions of documents in a hierarchy of folders. When you select the  Documents  tab you are presented with a list of folders and files that belong to the project.
-
-To create a folder, select the  New Folder  link. To store a file, select the  Submit File  link. When uploading a file you can specify a subject for the file that gets displayed in the list. You can store documents at the top level, or you can navigate into any available folder and then store a file there.
-
-Once a file exists in the document library, you will see it appear in the list. By choosing the  Select  button next to the file, you are presented with several options,namely
-
-1. View File History:  Viewing the file''s history shows the versions that exist for a file and how many times each version has been downloaded.
-2. Download File:  This will begin downloading the file to your computer.
-3. View File Contents:  The file will be displayed in a popup window; only certain types can be displayed, for example PDF, Excel, HTML, Text, and Word documents.
-4. Rename File:  This will allow you to modify the subject of a file.
-5. Add Version: This allows you to upload a new version to an existing document; the existing file will not be altered and can be downloaded or deleted separately; version numbers can be indicated as: (a) Major -  Generally a substantial amount of content has    been added or modified (b) Minor -  Generally some amount of content has been added or modified (c) Changes - Generally a small amount of content has been added or modified.
-6. Move File:   This allows you to move the file to another folder.
-7. Delete File:  This will delete the file and all versions of the file; to delete just a version of the file.
-You can choose the  View File History  link for additional options',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:330AM',0,'Apr  1 2005  9:44:20:330AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(346,7,15,'ProjectManagement.do','ProjectCenter','Lists_Categories','Lists','Lists allow you to place items on a list that you can mark as incomplete or complete.
-
-Projects can have any number of lists and each list can have any number of items. An item on the list can also have a memo area if necessary.
-
-Lists are good for jotting down related items to be referenced later. While to-do items can be added to the list and checked off, they can also be done in the  Plan  or  Tickets  tabs.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:340AM',0,'Apr  1 2005  9:44:20:340AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(347,7,15,'ProjectManagement.do','ProjectCenter','Requirements','Project Plan','The plan tab is perhaps the most functionally rich feature of the projects module.
-
-Plans can be used for creating a high-level view of project milestones or objectives and then proceeding to low-level details.
-
-1. Start with an outline. Outlines can be used to organize objectives for the project. To create a new outline, click the  "New Outline" link. You are presented a number of fields that allow you to describe all the information for the outline.
-
-2. Detail the outline with activities and assignments.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:340AM',0,'Apr  1 2005  9:44:20:340AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(348,7,15,'ProjectManagementRequirements.do','Add',NULL,'Add Outline','This page allows you to add an outline. Listed below is a description of the fields shown in this screen.
-
-a) Title  - a project milestone to be displayed.
-b) Requested By -  The name of a person that may have initiated the reason for the milestone; could be the name of a client.
-c) Department or Company - The organization that may have initiated the reason for the milestone; could be the name of a company.
-d) Expected Dates - The date in which the milestone is expected to begin and the date in which the milestone is expected to be completed on.
-e) Level of Effort  - An estimate as to how much time this milestone could take, and a field for how long the milestone actual took.
-f) Status -  Indicates whether the outline is approved and/or closed (complete.)
-g) Details - Text describing the goals of this outline
-
-When all required fields of the screen are entered, you can save the outline. The saved outline appears in the outline list.
-
-Once you create the outline, the next task would be to elaborate the outline with activities and assignments.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:350AM',0,'Apr  1 2005  9:44:20:350AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(349,7,15,'ProjectManagement.do','ProjectCenter','Assignments','Plan Outline','This page allows you to view outline details, add activities, and activity folders
-
-When you click on  the name of the outline, a drop-down menu appears with the option to 
-a) Add Activity Folder 
-b) Add Activity 
-
-An Activity Folder allows you to create sections in your outline. This can be useful when you are building the outline and haven''t yet decided how to group Activities.
-
-Activities are specific items to be completed toward this project objective or
-milestone.
-
-Activities have several fields: 
-a) Description - A specific task to be completed; this will be displayed on the outline. 
-b) Indent Level  - since the outline is hierarchical, each item on the outline can be moved to the left or right; by selecting the left/right arrows the indent level will increase and decrease; items with a higher number then the item above will appear indented.
-c) Priority - Indicates the importance of this activity; there are three (3) options: A Low, A Normal (default,) A High.
-d) Assigned To  - The activity can be assigned to any member of the project.
-e) Status -  Describes the state of this activity; there are six (6) options: 
-  (i)A Not Started
-  (ii)A In Progress
-  (iii)A Complete
-  (iv)A Closed  - Similar to complete, but used when the activity    may no longer be necessary and the item was not completed.
-  (v) A On Hold -  Indicates that this activity is waiting on some other factor; for example, another activity needs to be completed before this one.
-  (vi)A Waiting on Requirements - Indicates that more information is needed in order to complete this activity.
-f) Keywords -  additional words to keep track of activities; for example, maybe the expected output of this activity: Excel, Java, Press Release, etc.; a future version of the software might allow for searching keywords.
-g) Level of Effort -  The estimated time it should take for this activity to be completed; an additional field is used to record the actual time this activity took.
-h) Due Date  - The date in which this activity should be completed by.
-
-When all of the information on the activity has been recorded, choose  Save  or  Save & New.   Save  will simply record the activity, and refresh the outline.  Save & New  will record the activity, refresh the outline, and then provide another form to continue adding activities.
-
-Once an activity is in the list, you can select the activity from the list and a menu will appear with the following options: 
-a) Arrow buttons -  The arrows allow you to move this Activity item up and down the list, or indent the activity to the left and right.
-b) Add Activity Folder - Adds an Activity Folder below this Activity.
-c) Add Activity -  Adds another Activity below this one.
-d) View/Update this Activity - Depending on your permissions, and whether the activity is assigned to you, you can modify the activity, otherwise you can only view the activity without making changes.
-e) Delete Activity',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:350AM',0,'Apr  1 2005  9:44:20:350AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(350,7,15,'ProjectManagement.do','ProjectCenter','Tickets','Tickets','Once the project gets going, you might run into some unexpected issues that need to be recorded and resolved. The  Tickets  tab is a good place to capture these.
-
-This page displays a list of tickets for this project. Each item in the list gives a snapshot of the information of the ticket.
-
-The list can be filtered to view only the open tickets, only the closed tickets or to view all tickets.
-
-The snapshot includes, the ticket Id, the status, the ticket issue (only partially displayed if it is elaborate,) the priority, the team member it was assigned to, the age of ticket and when the ticket was last modified.
-
-The displayed list can be sorted based on all the underlined column headers of the list.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:350AM',0,'Apr  1 2005  9:44:20:350AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(351,7,15,'ProjectManagementTickets.do','Add',NULL,'Add Ticket','Tickets  are issues that can be assigned to a team member. A ticket has the following fields:
-1. Issue  - The complete issue that has come up; this can be a request for information or a problem that has occurred, be specific without adding comments.
-2. Severity -  Describes the impact on the project using one of three (3) choices: (a) Normal (b) Important (c) Critical 
-3. Priority -  Describes when the issue should be resolved, possibly ahead of other issues; there are three (3) choices: 
-(a) Scheduled -  The team member assigned should schedule this issue and take care of it when convenient. 
-(b) Next  - The team member assigned should take care of this issue ahead of other lower priority items. 
-(c) Immediate  - The team member assigned should take care of this issue right away, typically because the impact is severe.
-4. Assign To -  The team member that has been assigned this ticket.
-5. User Comments -  Any additional comments to provide that are not part of the issue; a ticket can have any number of comments; each comment is dated and attributed to the user that made a comment and can later be seen in the ticket history.
-6. Solution - A description of how this ticket was resolved.
-7. Close Ticket   Indicates whether this ticket is complete and needs no further action.
-
-Once a ticket has been added, its details can be reviewed. A ticket also has a history in which you can see the progress or escalation that has occurred with the ticket. Once a ticket has been closed, it can be re-opened later, if necessary.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:360AM',0,'Apr  1 2005  9:44:20:360AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(352,7,15,'ProjectManagement.do',NULL,NULL,'Projects','This page provides a snap shot of all recent items (of the last 7 days) of all the projects that a you are a member of.
-
-By changing the filter, you can choose to view information over a longer time period (14 days or 30 days), or a shorter time period(24hrs or 48hrs.)',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:360AM',0,'Apr  1 2005  9:44:20:360AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(353,7,15,'ProjectManagement.do','RSVP',NULL,'Invitations','This page displays the projects to which you have been invited to.  By accepting an invitation, you become a team member of the project and assume a role (applicable to this project alone) assigned by the owner (or creator) of the project.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:360AM',0,'Apr  1 2005  9:44:20:360AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(354,7,15,'ProjectManagementSearch.do','ShowForm',NULL,'Search','This page allows you to search for items in a project based on the search item. For advanced search options, you may click on the "tips" link.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:360AM',0,'Apr  1 2005  9:44:20:360AM',1)
-INSERT [help_contents] ([help_id],[category_id],[link_module_id],[module],[section],[subsection],[title],[description],[nextcontent],[prevcontent],[upcontent],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(355,7,15,'ProjectManagement.do','AddProject',NULL,'Add Project','This page allows you to create a new project.
-
-The following fields are requested: 
-1. Title -  A brief name for your project.
-2. Short Description -  A brief description for your project
-3. Start Date - The date in which the project started or will start 4. Estimated End Date  - The date in which you believe the project will be finished .
-5. Requested By -  The name of a person that may have initiated the reason for the project; could be the name of a client.
-6. Organization - The organization that may have initiated the reason for the project; could be the name of a company.
-7. Budget  - A high-level view of the project budget; this figure generally is an estimate.
-8. Status - Specifies whether the project has been approved or if it is closed (finished.)
-
-Once the fields have been successfully submitted, a new project is created. You should see the name of the project you created and several tabs underneath that will contain all the information for your project.',NULL,NULL,NULL,0,'Apr  1 2005  9:44:20:370AM',0,'Apr  1 2005  9:44:20:370AM',1)
-
-SET IDENTITY_INSERT [help_contents] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_sc_category
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_sc_category] ON
-GO
-INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Consulting',0,10,1)
-INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Hardware Maintenance',0,20,1)
-INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Manufacturer''s Maintenance',0,30,1)
-INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Monitoring',0,40,1)
-INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Time and Materials',0,50,1)
-INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Warranty',0,60,1)
-
-SET IDENTITY_INSERT [lookup_sc_category] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default role
-SET NOCOUNT ON
-SET IDENTITY_INSERT [role] ON
-GO
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(1,'Administrator','Performs system configuration and maintenance',0,'Apr  1 2005  9:44:06:040AM',0,'Apr  1 2005  9:44:06:040AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(2,'Operations Manager','Manages operations',0,'Apr  1 2005  9:44:06:500AM',0,'Apr  1 2005  9:44:06:500AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(3,'Sales Manager','Manages all accounts and opportunities',0,'Apr  1 2005  9:44:07:070AM',0,'Apr  1 2005  9:44:07:070AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(4,'Salesperson','Manages own accounts and opportunities',0,'Apr  1 2005  9:44:07:390AM',0,'Apr  1 2005  9:44:07:390AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(5,'Customer Service Manager','Manages all tickets',0,'Apr  1 2005  9:44:08:160AM',0,'Apr  1 2005  9:44:08:160AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(6,'Customer Service Representative','Manages own tickets',0,'Apr  1 2005  9:44:08:390AM',0,'Apr  1 2005  9:44:08:390AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(7,'Marketing Manager','Manages communications',0,'Apr  1 2005  9:44:08:590AM',0,'Apr  1 2005  9:44:08:590AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(8,'Accounting Manager','Reviews revenue and opportunities',0,'Apr  1 2005  9:44:09:023AM',0,'Apr  1 2005  9:44:09:023AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(9,'HR Representative','Manages employee information',0,'Apr  1 2005  9:44:09:363AM',0,'Apr  1 2005  9:44:09:363AM',1,0)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(10,'Customer','Customer portal user',0,'Apr  1 2005  9:44:09:473AM',0,'Apr  1 2005  9:44:09:473AM',1,1)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(11,'Products and Services Customer','Products and Services portal user',0,'Apr  1 2005  9:44:09:503AM',0,'Apr  1 2005  9:44:09:503AM',0,420041011)
-
-SET IDENTITY_INSERT [role] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_contact_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_contact_types] ON
-GO
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(1,'Acquaintance',0,10,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(2,'Competitor',0,20,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(3,'Customer',0,30,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(4,'Friend',0,40,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(5,'Prospect',0,50,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(6,'Shareholder',0,60,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(7,'Vendor',0,70,1,NULL,0)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(8,'Accounting',0,80,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(9,'Administrative',0,90,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(10,'Business Development',0,100,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(11,'Customer Service',0,110,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(12,'Engineering',0,120,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(13,'Executive',0,130,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(14,'Finance',0,140,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(15,'Marketing',0,150,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(16,'Operations',0,160,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(17,'Procurement',0,170,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(18,'Sales',0,180,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(19,'Shipping/Receiving',0,190,1,NULL,1)
-INSERT [lookup_contact_types] ([code],[description],[default_item],[level],[enabled],[user_id],[category])VALUES(20,'Technology',0,200,1,NULL,1)
-
-SET IDENTITY_INSERT [lookup_contact_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_call_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_call_types] ON
-GO
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Incoming Call',1,10,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Outgoing Call',0,20,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Proactive Call',0,30,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Inhouse Meeting',0,40,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Outside Appointment',0,50,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Proactive Meeting',0,60,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Email Servicing',0,70,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Email Proactive',0,80,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Fax Servicing',0,90,1)
-INSERT [lookup_call_types] ([code],[description],[default_item],[level],[enabled])VALUES(10,'Fax Proactive',0,100,1)
-
-SET IDENTITY_INSERT [lookup_call_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_response_model
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_response_model] ON
-GO
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'No response time guaranteed',0,10,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'M-F 8AM-5PM 8 hours',0,20,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'M-F 8AM-5PM 6 hours',0,30,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'M-F 8AM-5PM 4 hours',0,40,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'M-F 8AM-5PM same day',0,50,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(6,'M-F 8AM-5PM next business day',0,60,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(7,'M-F 8AM-8PM 4 hours',0,70,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(8,'M-F 8AM-8PM 2 hours',0,80,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(9,'24x7 8 hours',0,90,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(10,'24x7 4 hours',0,100,1)
-INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(11,'24x7 2 hours',0,110,1)
-
-SET IDENTITY_INSERT [lookup_response_model] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_account_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_account_types] ON
-GO
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Small',0,10,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Medium',0,20,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Large',0,30,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Contract',0,40,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Non-contract',0,50,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Territory 1: Northeast',0,60,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Territory 2: Southeast',0,70,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Territory 3: Midwest',0,80,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Territory 4: Northwest',0,90,1)
-INSERT [lookup_account_types] ([code],[description],[default_item],[level],[enabled])VALUES(10,'Territory 5: Southwest',0,100,1)
-
-SET IDENTITY_INSERT [lookup_account_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_order_status
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_order_status] ON
-GO
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Pending',0,10,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'In Progress',0,20,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Cancelled',0,30,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Rejected',0,40,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Complete',0,50,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Closed',0,60,1)
-
-SET IDENTITY_INSERT [lookup_order_status] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default permission_category
-SET NOCOUNT ON
-SET IDENTITY_INSERT [permission_category] ON
-GO
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(1,'Accounts',NULL,700,1,1,1,1,0,0,0,0,1,0,1,0,1)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(2,'Contacts',NULL,500,1,1,1,1,0,0,0,0,1,0,0,0,2)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(3,'Auto Guide',NULL,800,0,0,0,0,0,0,0,0,0,0,0,0,3)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(4,'Pipeline',NULL,600,1,1,0,1,1,0,0,0,1,0,0,0,4)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(5,'Demo',NULL,2300,0,0,0,0,0,0,0,0,0,0,0,0,5)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(6,'Communications',NULL,1100,1,1,0,0,0,0,0,0,1,0,0,0,6)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(7,'Projects',NULL,1200,1,1,0,0,0,0,0,0,0,0,1,0,7)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(8,'Help Desk',NULL,1500,1,1,1,1,0,1,1,1,1,0,0,0,8)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(9,'Admin',NULL,2000,1,1,0,0,0,0,0,0,1,0,0,0,9)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(10,'Help',NULL,2100,1,1,0,0,0,0,0,0,0,0,0,0,10)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(11,'System',NULL,100,1,1,0,0,0,0,0,0,0,0,0,0,13)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(12,'My Home Page',NULL,200,1,1,0,0,0,0,0,0,1,0,0,0,14)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(13,'QA',NULL,2200,0,0,0,0,0,0,0,0,0,0,0,0,15)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(14,'Reports',NULL,1900,1,1,0,0,0,0,0,0,0,0,0,0,16)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(15,'Assets',NULL,1400,1,1,0,1,0,1,0,0,0,0,0,0,130041000)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(16,'Service Contracts',NULL,1300,1,1,0,1,0,0,0,0,0,0,0,0,130041100)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(17,'Leads',NULL,400,1,1,0,1,0,0,0,0,0,0,0,0,228051100)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(18,'Product Catalog',NULL,1800,1,1,1,1,0,0,0,0,0,1,0,0,330041409)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(19,'Products and Services',NULL,300,0,0,0,0,0,0,0,0,0,0,0,0,420041014)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(20,'Quotes',NULL,900,1,1,0,1,0,0,0,0,0,0,0,1,420041017)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(21,'Orders',NULL,1000,0,0,0,0,0,0,0,0,1,0,0,0,420041018)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(22,'Employees',NULL,1700,1,1,1,1,0,0,0,0,1,0,0,0,1111031131)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products],[webdav],[logos],[constant])VALUES(23,'Documents',NULL,1600,1,1,0,0,0,0,0,0,0,0,1,0,1202041528)
-
-SET IDENTITY_INSERT [permission_category] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_call_priority
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_call_priority] ON
-GO
-INSERT [lookup_call_priority] ([code],[description],[default_item],[level],[enabled],[weight])VALUES(1,'Low',1,10,1,10)
-INSERT [lookup_call_priority] ([code],[description],[default_item],[level],[enabled],[weight])VALUES(2,'Medium',0,20,1,20)
-INSERT [lookup_call_priority] ([code],[description],[default_item],[level],[enabled],[weight])VALUES(3,'High',0,30,1,30)
-
-SET IDENTITY_INSERT [lookup_call_priority] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_tableof_contents
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_tableof_contents] ON
-GO
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(1,'Modules',NULL,NULL,NULL,NULL,1,5,0,'Apr  1 2005  9:44:20:390AM',0,'Apr  1 2005  9:44:20:390AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(2,'My Home Page',NULL,NULL,1,12,2,5,0,'Apr  1 2005  9:44:20:400AM',0,'Apr  1 2005  9:44:20:400AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(3,'Overview',NULL,NULL,2,12,3,5,0,'Apr  1 2005  9:44:20:400AM',0,'Apr  1 2005  9:44:20:400AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(4,'Mailbox',NULL,NULL,2,12,3,10,0,'Apr  1 2005  9:44:20:420AM',0,'Apr  1 2005  9:44:20:420AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(5,'Message Details',NULL,NULL,4,12,4,15,0,'Apr  1 2005  9:44:20:420AM',0,'Apr  1 2005  9:44:20:420AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(6,'New Message',NULL,NULL,4,12,4,20,0,'Apr  1 2005  9:44:20:430AM',0,'Apr  1 2005  9:44:20:430AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(7,'Reply Message',NULL,NULL,4,12,4,25,0,'Apr  1 2005  9:44:20:430AM',0,'Apr  1 2005  9:44:20:430AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(8,'SendMessage',NULL,NULL,4,12,4,30,0,'Apr  1 2005  9:44:20:430AM',0,'Apr  1 2005  9:44:20:430AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(9,'Forward message',NULL,NULL,4,12,4,35,0,'Apr  1 2005  9:44:20:440AM',0,'Apr  1 2005  9:44:20:440AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(10,'Tasks',NULL,NULL,2,12,3,40,0,'Apr  1 2005  9:44:20:440AM',0,'Apr  1 2005  9:44:20:440AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(11,'Advanced Task',NULL,NULL,10,12,4,45,0,'Apr  1 2005  9:44:20:450AM',0,'Apr  1 2005  9:44:20:450AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(12,'Forwarding a Task',NULL,NULL,10,12,4,50,0,'Apr  1 2005  9:44:20:450AM',0,'Apr  1 2005  9:44:20:450AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(13,'Modify task',NULL,NULL,10,12,4,55,0,'Apr  1 2005  9:44:20:460AM',0,'Apr  1 2005  9:44:20:460AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(14,'Action Lists',NULL,NULL,2,12,3,60,0,'Apr  1 2005  9:44:20:460AM',0,'Apr  1 2005  9:44:20:460AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(15,'Action Contacts',NULL,NULL,14,12,4,65,0,'Apr  1 2005  9:44:20:470AM',0,'Apr  1 2005  9:44:20:470AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(16,'Add Action List',NULL,NULL,14,12,4,70,0,'Apr  1 2005  9:44:20:470AM',0,'Apr  1 2005  9:44:20:470AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(17,'Modify Action',NULL,NULL,14,12,4,75,0,'Apr  1 2005  9:44:20:470AM',0,'Apr  1 2005  9:44:20:470AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(18,'Re-assignments',NULL,NULL,2,12,3,80,0,'Apr  1 2005  9:44:20:480AM',0,'Apr  1 2005  9:44:20:480AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(19,'My Settings',NULL,NULL,2,12,3,85,0,'Apr  1 2005  9:44:20:480AM',0,'Apr  1 2005  9:44:20:480AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(20,'Personal Information',NULL,NULL,19,12,4,90,0,'Apr  1 2005  9:44:20:490AM',0,'Apr  1 2005  9:44:20:490AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(21,'Location Settings',NULL,NULL,19,12,4,95,0,'Apr  1 2005  9:44:20:490AM',0,'Apr  1 2005  9:44:20:490AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(22,'Update password',NULL,NULL,19,12,4,100,0,'Apr  1 2005  9:44:20:490AM',0,'Apr  1 2005  9:44:20:490AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(23,'Contacts',NULL,NULL,1,2,2,10,0,'Apr  1 2005  9:44:20:500AM',0,'Apr  1 2005  9:44:20:500AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(24,'Add a Contact',NULL,NULL,23,2,3,5,0,'Apr  1 2005  9:44:20:500AM',0,'Apr  1 2005  9:44:20:500AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(25,'Search Contacts',NULL,NULL,23,2,3,10,0,'Apr  1 2005  9:44:20:500AM',0,'Apr  1 2005  9:44:20:500AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(26,'Export',NULL,NULL,23,2,3,15,0,'Apr  1 2005  9:44:20:510AM',0,'Apr  1 2005  9:44:20:510AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(27,'Exporting data',NULL,NULL,26,2,4,20,0,'Apr  1 2005  9:44:20:510AM',0,'Apr  1 2005  9:44:20:510AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(28,'Pipeline',NULL,NULL,1,4,2,15,0,'Apr  1 2005  9:44:20:510AM',0,'Apr  1 2005  9:44:20:510AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(29,'Overview',NULL,NULL,28,4,3,5,0,'Apr  1 2005  9:44:20:520AM',0,'Apr  1 2005  9:44:20:520AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(30,'Add a Opportunity',NULL,NULL,28,4,3,10,0,'Apr  1 2005  9:44:20:520AM',0,'Apr  1 2005  9:44:20:520AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(31,'Search Opportunities',NULL,NULL,28,4,3,15,0,'Apr  1 2005  9:44:20:530AM',0,'Apr  1 2005  9:44:20:530AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(32,'Export Data',NULL,NULL,28,4,3,20,0,'Apr  1 2005  9:44:20:580AM',0,'Apr  1 2005  9:44:20:580AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(33,'Accounts',NULL,NULL,1,1,2,20,0,'Apr  1 2005  9:44:20:580AM',0,'Apr  1 2005  9:44:20:580AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(34,'Overview',NULL,NULL,33,1,3,5,0,'Apr  1 2005  9:44:20:580AM',0,'Apr  1 2005  9:44:20:580AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(35,'Add an Account',NULL,NULL,33,1,3,10,0,'Apr  1 2005  9:44:20:590AM',0,'Apr  1 2005  9:44:20:590AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(36,'Modify Account',NULL,NULL,33,1,3,15,0,'Apr  1 2005  9:44:20:610AM',0,'Apr  1 2005  9:44:20:610AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(37,'Contact Details',NULL,NULL,36,1,4,20,0,'Apr  1 2005  9:44:20:610AM',0,'Apr  1 2005  9:44:20:610AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(38,'Folder Record Details',NULL,NULL,36,1,4,25,0,'Apr  1 2005  9:44:20:620AM',0,'Apr  1 2005  9:44:20:620AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(39,'Opportunity Details',NULL,NULL,36,1,4,30,0,'Apr  1 2005  9:44:20:620AM',0,'Apr  1 2005  9:44:20:620AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(40,'Revenue',NULL,NULL,36,1,4,35,0,'Apr  1 2005  9:44:20:620AM',0,'Apr  1 2005  9:44:20:620AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(41,'Revenue Details',NULL,NULL,40,1,5,40,0,'Apr  1 2005  9:44:20:630AM',0,'Apr  1 2005  9:44:20:630AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(42,'Add Revenue',NULL,NULL,40,1,5,45,0,'Apr  1 2005  9:44:20:630AM',0,'Apr  1 2005  9:44:20:630AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(43,'Modify Revenue',NULL,NULL,40,1,5,50,0,'Apr  1 2005  9:44:20:630AM',0,'Apr  1 2005  9:44:20:630AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(44,'Ticket Details',NULL,NULL,36,1,4,55,0,'Apr  1 2005  9:44:20:640AM',0,'Apr  1 2005  9:44:20:640AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(45,'Document Details',NULL,NULL,36,1,4,60,0,'Apr  1 2005  9:44:20:640AM',0,'Apr  1 2005  9:44:20:640AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(46,'Search Accounts',NULL,NULL,33,1,3,65,0,'Apr  1 2005  9:44:20:640AM',0,'Apr  1 2005  9:44:20:640AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(47,'Account Details',NULL,NULL,33,1,3,70,0,'Apr  1 2005  9:44:20:650AM',0,'Apr  1 2005  9:44:20:650AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(48,'Revenue Dashboard',NULL,NULL,33,1,3,75,0,'Apr  1 2005  9:44:20:650AM',0,'Apr  1 2005  9:44:20:650AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(49,'Export Data',NULL,NULL,33,1,3,80,0,'Apr  1 2005  9:44:20:650AM',0,'Apr  1 2005  9:44:20:650AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(50,'Communications',NULL,NULL,1,6,2,25,0,'Apr  1 2005  9:44:20:660AM',0,'Apr  1 2005  9:44:20:660AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(51,'Communications Dashboard',NULL,NULL,50,6,3,5,0,'Apr  1 2005  9:44:20:670AM',0,'Apr  1 2005  9:44:20:670AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(52,'Add a campaign',NULL,NULL,50,6,3,10,0,'Apr  1 2005  9:44:20:670AM',0,'Apr  1 2005  9:44:20:670AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(53,'Campaign List',NULL,NULL,50,6,3,15,0,'Apr  1 2005  9:44:20:680AM',0,'Apr  1 2005  9:44:20:680AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(54,'View Groups',NULL,NULL,50,6,3,20,0,'Apr  1 2005  9:44:20:680AM',0,'Apr  1 2005  9:44:20:680AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(55,'Add a Group',NULL,NULL,50,6,3,25,0,'Apr  1 2005  9:44:20:680AM',0,'Apr  1 2005  9:44:20:680AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(56,'Message List',NULL,NULL,50,6,3,30,0,'Apr  1 2005  9:44:20:690AM',0,'Apr  1 2005  9:44:20:690AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(57,'Adding a Message',NULL,NULL,50,6,3,35,0,'Apr  1 2005  9:44:20:690AM',0,'Apr  1 2005  9:44:20:690AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(58,'Create Attachments',NULL,NULL,50,6,3,40,0,'Apr  1 2005  9:44:20:690AM',0,'Apr  1 2005  9:44:20:690AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(59,'Help Desk',NULL,NULL,1,8,2,30,0,'Apr  1 2005  9:44:20:700AM',0,'Apr  1 2005  9:44:20:700AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(60,'Ticket Details',NULL,NULL,59,8,3,5,0,'Apr  1 2005  9:44:20:700AM',0,'Apr  1 2005  9:44:20:700AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(61,'Add a Ticket',NULL,NULL,59,8,3,10,0,'Apr  1 2005  9:44:20:700AM',0,'Apr  1 2005  9:44:20:700AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(62,'Search Existing Tickets',NULL,NULL,59,8,3,15,0,'Apr  1 2005  9:44:20:710AM',0,'Apr  1 2005  9:44:20:710AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(63,'Export Data',NULL,NULL,59,8,3,20,0,'Apr  1 2005  9:44:20:710AM',0,'Apr  1 2005  9:44:20:710AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(64,'Modify Ticket',NULL,NULL,59,8,3,25,0,'Apr  1 2005  9:44:20:710AM',0,'Apr  1 2005  9:44:20:710AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(65,'Modify Ticket Details',NULL,NULL,64,8,4,30,0,'Apr  1 2005  9:44:20:740AM',0,'Apr  1 2005  9:44:20:740AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(66,'List of Tasks',NULL,NULL,64,8,4,35,0,'Apr  1 2005  9:44:20:740AM',0,'Apr  1 2005  9:44:20:740AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(67,'List of Documents',NULL,NULL,64,8,4,40,0,'Apr  1 2005  9:44:20:750AM',0,'Apr  1 2005  9:44:20:750AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(68,'List of Folder Records',NULL,NULL,64,8,4,45,0,'Apr  1 2005  9:44:20:750AM',0,'Apr  1 2005  9:44:20:750AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(69,'Add Folder Record',NULL,NULL,64,8,4,50,0,'Apr  1 2005  9:44:20:760AM',0,'Apr  1 2005  9:44:20:760AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(70,'Ticket Log History',NULL,NULL,64,8,4,55,0,'Apr  1 2005  9:44:20:770AM',0,'Apr  1 2005  9:44:20:770AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(71,'Employees',NULL,NULL,1,22,2,35,0,'Apr  1 2005  9:44:20:770AM',0,'Apr  1 2005  9:44:20:770AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(72,'Overview',NULL,NULL,71,22,3,5,0,'Apr  1 2005  9:44:20:780AM',0,'Apr  1 2005  9:44:20:780AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(73,'Employee Details',NULL,NULL,71,22,3,10,0,'Apr  1 2005  9:44:20:780AM',0,'Apr  1 2005  9:44:20:780AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(74,'Add an Employee',NULL,NULL,71,22,3,15,0,'Apr  1 2005  9:44:20:780AM',0,'Apr  1 2005  9:44:20:780AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(75,'Modify Employee Details',NULL,NULL,71,22,3,20,0,'Apr  1 2005  9:44:20:790AM',0,'Apr  1 2005  9:44:20:790AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(76,'Reports',NULL,NULL,1,14,2,40,0,'Apr  1 2005  9:44:20:790AM',0,'Apr  1 2005  9:44:20:790AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(77,'Overview',NULL,NULL,76,14,3,5,0,'Apr  1 2005  9:44:20:790AM',0,'Apr  1 2005  9:44:20:790AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(78,'List of Modules',NULL,NULL,76,14,3,10,0,'Apr  1 2005  9:44:20:800AM',0,'Apr  1 2005  9:44:20:800AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(79,'Admin',NULL,NULL,1,9,2,45,0,'Apr  1 2005  9:44:20:800AM',0,'Apr  1 2005  9:44:20:800AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(80,'List of Users',NULL,NULL,79,9,3,5,0,'Apr  1 2005  9:44:20:800AM',0,'Apr  1 2005  9:44:20:800AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(81,'Adding a New User',NULL,NULL,80,9,4,10,0,'Apr  1 2005  9:44:20:810AM',0,'Apr  1 2005  9:44:20:810AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(82,'Modify User Details',NULL,NULL,80,9,4,15,0,'Apr  1 2005  9:44:20:810AM',0,'Apr  1 2005  9:44:20:810AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(83,'User Login History',NULL,NULL,80,9,4,20,0,'Apr  1 2005  9:44:20:810AM',0,'Apr  1 2005  9:44:20:810AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(84,'Viewpoints of User',NULL,NULL,80,9,4,25,0,'Apr  1 2005  9:44:20:820AM',0,'Apr  1 2005  9:44:20:820AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(85,'Add Viewpoint',NULL,NULL,84,9,5,30,0,'Apr  1 2005  9:44:20:820AM',0,'Apr  1 2005  9:44:20:820AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(86,'Update Viewpoint',NULL,NULL,84,9,5,35,0,'Apr  1 2005  9:44:20:820AM',0,'Apr  1 2005  9:44:20:820AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(87,'List of Roles',NULL,NULL,79,9,3,40,0,'Apr  1 2005  9:44:20:830AM',0,'Apr  1 2005  9:44:20:830AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(88,'Add a New Role',NULL,NULL,87,9,4,45,0,'Apr  1 2005  9:44:20:830AM',0,'Apr  1 2005  9:44:20:830AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(89,'Update Role',NULL,NULL,87,9,4,50,0,'Apr  1 2005  9:44:20:830AM',0,'Apr  1 2005  9:44:20:830AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(90,'Configure Modules',NULL,NULL,79,9,3,55,0,'Apr  1 2005  9:44:20:840AM',0,'Apr  1 2005  9:44:20:840AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(91,'Configuration Options',NULL,NULL,90,9,4,60,0,'Apr  1 2005  9:44:20:840AM',0,'Apr  1 2005  9:44:20:840AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(92,'Edit Lookup List',NULL,NULL,91,9,5,65,0,'Apr  1 2005  9:44:20:850AM',0,'Apr  1 2005  9:44:20:850AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(93,'Adding a New Folder',NULL,NULL,91,9,5,70,0,'Apr  1 2005  9:44:20:850AM',0,'Apr  1 2005  9:44:20:850AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(94,'Modify Existing Folder',NULL,NULL,91,9,5,75,0,'Apr  1 2005  9:44:20:850AM',0,'Apr  1 2005  9:44:20:850AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(95,'Configure System',NULL,NULL,79,9,3,80,0,'Apr  1 2005  9:44:20:860AM',0,'Apr  1 2005  9:44:20:860AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(96,'Modify Timeout',NULL,NULL,95,9,4,85,0,'Apr  1 2005  9:44:20:860AM',0,'Apr  1 2005  9:44:20:860AM',1)
-INSERT [help_tableof_contents] ([content_id],[displaytext],[firstchild],[nextsibling],[parent],[category_id],[contentlevel],[contentorder],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(97,'Resource Usage Details',NULL,NULL,79,9,3,90,0,'Apr  1 2005  9:44:20:870AM',0,'Apr  1 2005  9:44:20:870AM',1)
-
-SET IDENTITY_INSERT [help_tableof_contents] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_phone_model
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_phone_model] ON
-GO
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'No phone support',0,10,1)
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'< 15 minutes',0,20,1)
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'< 5 minutes',0,30,1)
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'M-F 7AM-4PM',0,40,1)
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'M-F 8AM-5PM',0,50,1)
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(6,'M-F 8AM-8PM',0,60,1)
-INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(7,'24x7',0,70,1)
-
-SET IDENTITY_INSERT [lookup_phone_model] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default state
-SET NOCOUNT ON
-INSERT [state] ([state_code],[state])VALUES('AK','Alaska')
-INSERT [state] ([state_code],[state])VALUES('AL','Alabama')
-INSERT [state] ([state_code],[state])VALUES('AR','Arkansas')
-INSERT [state] ([state_code],[state])VALUES('AZ','Arizona')
-INSERT [state] ([state_code],[state])VALUES('CA','California')
-INSERT [state] ([state_code],[state])VALUES('CO','Colorado')
-INSERT [state] ([state_code],[state])VALUES('CT','Connecticut')
-INSERT [state] ([state_code],[state])VALUES('DC','Washington D.C.')
-INSERT [state] ([state_code],[state])VALUES('DE','Delaware')
-INSERT [state] ([state_code],[state])VALUES('FL','Florida')
-INSERT [state] ([state_code],[state])VALUES('GA','Georgia')
-INSERT [state] ([state_code],[state])VALUES('HI','Hawaii')
-INSERT [state] ([state_code],[state])VALUES('ID','Idaho')
-INSERT [state] ([state_code],[state])VALUES('IL','Illinois')
-INSERT [state] ([state_code],[state])VALUES('IN','Indiana')
-INSERT [state] ([state_code],[state])VALUES('KS','Kansas')
-INSERT [state] ([state_code],[state])VALUES('KY','Kentucky')
-INSERT [state] ([state_code],[state])VALUES('LA','Louisiana')
-INSERT [state] ([state_code],[state])VALUES('MA','Massachusetts')
-INSERT [state] ([state_code],[state])VALUES('MD','Maryland')
-INSERT [state] ([state_code],[state])VALUES('ME','Maine')
-INSERT [state] ([state_code],[state])VALUES('MI','Michigan')
-INSERT [state] ([state_code],[state])VALUES('MN','Minnesota')
-INSERT [state] ([state_code],[state])VALUES('MO','Mossouri')
-INSERT [state] ([state_code],[state])VALUES('MS','Mississippi')
-INSERT [state] ([state_code],[state])VALUES('MT','Montana')
-INSERT [state] ([state_code],[state])VALUES('NC','North Carolina')
-INSERT [state] ([state_code],[state])VALUES('ND','North Dakota')
-INSERT [state] ([state_code],[state])VALUES('NE','Nebraska')
-INSERT [state] ([state_code],[state])VALUES('NH','New Hampshire')
-INSERT [state] ([state_code],[state])VALUES('NJ','New Jersey')
-INSERT [state] ([state_code],[state])VALUES('NM','New Mexico')
-INSERT [state] ([state_code],[state])VALUES('NV','Nevada')
-INSERT [state] ([state_code],[state])VALUES('NY','New York')
-INSERT [state] ([state_code],[state])VALUES('OH','Ohio')
-INSERT [state] ([state_code],[state])VALUES('OK','Oklahoma')
-INSERT [state] ([state_code],[state])VALUES('OR','Oregon')
-INSERT [state] ([state_code],[state])VALUES('PA','Pennsylvania')
-INSERT [state] ([state_code],[state])VALUES('RI','Rhode Island')
-INSERT [state] ([state_code],[state])VALUES('SC','South Carolina')
-INSERT [state] ([state_code],[state])VALUES('SD','South Dakota')
-INSERT [state] ([state_code],[state])VALUES('TN','Tennessee')
-INSERT [state] ([state_code],[state])VALUES('TX','Texas')
-INSERT [state] ([state_code],[state])VALUES('UT','Utah')
-INSERT [state] ([state_code],[state])VALUES('VA','Virginia')
-INSERT [state] ([state_code],[state])VALUES('VT','Vermont')
-INSERT [state] ([state_code],[state])VALUES('WA','Washington')
-INSERT [state] ([state_code],[state])VALUES('WI','Wisconsin')
-INSERT [state] ([state_code],[state])VALUES('WV','West Virginia')
-INSERT [state] ([state_code],[state])VALUES('WY','Wyoming')
-
-SET NOCOUNT OFF
- 
--- Insert default lookup_order_type
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_order_type] ON
-GO
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(1,'New',0,10,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Change',0,20,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Upgrade',0,30,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Downgrade',0,40,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Disconnect',0,50,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Move',0,60,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Return',0,70,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Suspend',0,80,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Unsuspend',0,90,1)
-
-SET IDENTITY_INSERT [lookup_order_type] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_department
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_department] ON
-GO
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Accounting',0,10,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Administration',0,20,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Billing',0,30,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Customer Relations',0,40,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Engineering',0,50,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Finance',0,60,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Human Resources',0,70,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Legal',0,80,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Marketing',0,90,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(10,'Operations',0,100,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(11,'Purchasing',0,110,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(12,'Sales',0,120,1)
-INSERT [lookup_department] ([code],[description],[default_item],[level],[enabled])VALUES(13,'Shipping/Receiving',0,130,1)
-
-SET IDENTITY_INSERT [lookup_department] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_call_reminder
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_call_reminder] ON
-GO
-INSERT [lookup_call_reminder] ([code],[description],[base_value],[default_item],[level],[enabled])VALUES(1,'Minute(s)',60,1,10,1)
-INSERT [lookup_call_reminder] ([code],[description],[base_value],[default_item],[level],[enabled])VALUES(2,'Hour(s)',3600,0,20,1)
-INSERT [lookup_call_reminder] ([code],[description],[base_value],[default_item],[level],[enabled])VALUES(3,'Day(s)',86400,0,30,1)
-INSERT [lookup_call_reminder] ([code],[description],[base_value],[default_item],[level],[enabled])VALUES(4,'Week(s)',604800,0,40,1)
-INSERT [lookup_call_reminder] ([code],[description],[base_value],[default_item],[level],[enabled])VALUES(5,'Month(s)',18144000,0,50,1)
-
-SET IDENTITY_INSERT [lookup_call_reminder] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_onsite_model
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_onsite_model] ON
-GO
-INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'No onsite service',0,10,1)
-INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'M-F 7AM-4PM',0,20,1)
-INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'M-F 8AM-5PM',0,30,1)
-INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'M-F 8AM-8PM',0,40,1)
-INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'24x7',0,50,1)
-
-SET IDENTITY_INSERT [lookup_onsite_model] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default autoguide_options
-SET NOCOUNT ON
-SET IDENTITY_INSERT [autoguide_options] ON
-GO
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(1,'A/T',0,10,0,'Apr  1 2005  9:43:59:720AM','Apr  1 2005  9:43:59:720AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(2,'4-CYL',0,20,0,'Apr  1 2005  9:43:59:730AM','Apr  1 2005  9:43:59:730AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(3,'6-CYL',0,30,0,'Apr  1 2005  9:43:59:730AM','Apr  1 2005  9:43:59:730AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(4,'V-8',0,40,0,'Apr  1 2005  9:43:59:730AM','Apr  1 2005  9:43:59:730AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(5,'CRUISE',0,50,0,'Apr  1 2005  9:43:59:730AM','Apr  1 2005  9:43:59:730AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(6,'5-SPD',0,60,0,'Apr  1 2005  9:43:59:730AM','Apr  1 2005  9:43:59:730AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(7,'4X4',0,70,0,'Apr  1 2005  9:43:59:730AM','Apr  1 2005  9:43:59:730AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(8,'2-DOOR',0,80,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(9,'4-DOOR',0,90,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(10,'LEATHER',0,100,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(11,'P/DL',0,110,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(12,'T/W',0,120,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(13,'P/SEATS',0,130,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(14,'P/WIND',0,140,0,'Apr  1 2005  9:43:59:740AM','Apr  1 2005  9:43:59:740AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(15,'P/S',0,150,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(16,'BEDLINE',0,160,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(17,'LOW MILES',0,170,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(18,'EX CLEAN',0,180,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(19,'LOADED',0,190,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(20,'A/C',0,200,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(21,'SUNROOF',0,210,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(22,'AM/FM ST',0,220,0,'Apr  1 2005  9:43:59:750AM','Apr  1 2005  9:43:59:750AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(23,'CASS',0,225,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(24,'CD PLYR',0,230,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(25,'ABS',0,240,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(26,'ALARM',0,250,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(27,'SLD R. WIN',0,260,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(28,'AIRBAG',0,270,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(29,'1 OWNER',0,280,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-INSERT [autoguide_options] ([option_id],[option_name],[default_item],[level],[enabled],[entered],[modified])VALUES(30,'ALLOY WH',0,290,0,'Apr  1 2005  9:43:59:760AM','Apr  1 2005  9:43:59:760AM')
-
-SET IDENTITY_INSERT [autoguide_options] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_email_model
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_email_model] ON
-GO
-INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'No email support',0,10,1)
-INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'2 hours',0,20,1)
-INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'4 hours',0,30,1)
-INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Same day',0,40,1)
-INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Next business day',0,50,1)
-
-SET IDENTITY_INSERT [lookup_email_model] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_orgaddress_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_orgaddress_types] ON
-GO
-INSERT [lookup_orgaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Primary',0,10,1)
-INSERT [lookup_orgaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Auxiliary',0,20,1)
-INSERT [lookup_orgaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Billing',0,30,1)
-INSERT [lookup_orgaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Shipping',0,40,1)
-
-SET IDENTITY_INSERT [lookup_orgaddress_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_payment_status
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_payment_status] ON
-GO
-INSERT [lookup_payment_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Pending',0,10,1)
-INSERT [lookup_payment_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'In Progress',0,20,1)
-INSERT [lookup_payment_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Approved',0,30,1)
-INSERT [lookup_payment_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Declined',0,40,1)
-
-SET IDENTITY_INSERT [lookup_payment_status] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_call_result
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_call_result] ON
-GO
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(1,'Yes - Business progressing',10,1,1,0,NULL,0)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(2,'No - No business at this time',20,1,0,0,NULL,0)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(3,'Unsure - Unsure or no contact made',30,1,1,0,NULL,0)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(4,'Lost to competitor',40,1,0,0,NULL,1)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(5,'No further interest',50,1,0,0,NULL,1)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(6,'Event postponed/canceled',60,1,0,0,NULL,1)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(7,'Another pending action',70,1,0,0,NULL,1)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(8,'Another contact handling event',80,1,0,0,NULL,1)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(9,'Contact no longer with company',90,1,0,0,NULL,1)
-INSERT [lookup_call_result] ([result_id],[description],[level],[enabled],[next_required],[next_days],[next_call_type_id],[canceled_type])VALUES(10,'Servicing',100,1,0,0,NULL,0)
-
-SET IDENTITY_INSERT [lookup_call_result] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_tableofcontentitem_links
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_tableofcontentitem_links] ON
-GO
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(1,3,1,0,'Apr  1 2005  9:44:20:420AM',0,'Apr  1 2005  9:44:20:420AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(2,4,2,0,'Apr  1 2005  9:44:20:420AM',0,'Apr  1 2005  9:44:20:420AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(3,5,3,0,'Apr  1 2005  9:44:20:430AM',0,'Apr  1 2005  9:44:20:430AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(4,6,4,0,'Apr  1 2005  9:44:20:430AM',0,'Apr  1 2005  9:44:20:430AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(5,7,5,0,'Apr  1 2005  9:44:20:430AM',0,'Apr  1 2005  9:44:20:430AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(6,8,6,0,'Apr  1 2005  9:44:20:440AM',0,'Apr  1 2005  9:44:20:440AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(7,9,7,0,'Apr  1 2005  9:44:20:440AM',0,'Apr  1 2005  9:44:20:440AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(8,10,8,0,'Apr  1 2005  9:44:20:450AM',0,'Apr  1 2005  9:44:20:450AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(9,11,9,0,'Apr  1 2005  9:44:20:450AM',0,'Apr  1 2005  9:44:20:450AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(10,12,10,0,'Apr  1 2005  9:44:20:460AM',0,'Apr  1 2005  9:44:20:460AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(11,13,11,0,'Apr  1 2005  9:44:20:460AM',0,'Apr  1 2005  9:44:20:460AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(12,14,12,0,'Apr  1 2005  9:44:20:460AM',0,'Apr  1 2005  9:44:20:460AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(13,15,13,0,'Apr  1 2005  9:44:20:470AM',0,'Apr  1 2005  9:44:20:470AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(14,16,14,0,'Apr  1 2005  9:44:20:470AM',0,'Apr  1 2005  9:44:20:470AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(15,17,15,0,'Apr  1 2005  9:44:20:480AM',0,'Apr  1 2005  9:44:20:480AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(16,18,16,0,'Apr  1 2005  9:44:20:480AM',0,'Apr  1 2005  9:44:20:480AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(17,19,17,0,'Apr  1 2005  9:44:20:480AM',0,'Apr  1 2005  9:44:20:480AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(18,20,18,0,'Apr  1 2005  9:44:20:490AM',0,'Apr  1 2005  9:44:20:490AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(19,21,19,0,'Apr  1 2005  9:44:20:490AM',0,'Apr  1 2005  9:44:20:490AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(20,22,20,0,'Apr  1 2005  9:44:20:500AM',0,'Apr  1 2005  9:44:20:500AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(21,24,34,0,'Apr  1 2005  9:44:20:500AM',0,'Apr  1 2005  9:44:20:500AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(22,25,35,0,'Apr  1 2005  9:44:20:510AM',0,'Apr  1 2005  9:44:20:510AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(23,26,36,0,'Apr  1 2005  9:44:20:510AM',0,'Apr  1 2005  9:44:20:510AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(24,27,37,0,'Apr  1 2005  9:44:20:510AM',0,'Apr  1 2005  9:44:20:510AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(25,29,79,0,'Apr  1 2005  9:44:20:520AM',0,'Apr  1 2005  9:44:20:520AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(26,30,80,0,'Apr  1 2005  9:44:20:530AM',0,'Apr  1 2005  9:44:20:530AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(27,31,81,0,'Apr  1 2005  9:44:20:550AM',0,'Apr  1 2005  9:44:20:550AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(28,32,82,0,'Apr  1 2005  9:44:20:580AM',0,'Apr  1 2005  9:44:20:580AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(29,34,112,0,'Apr  1 2005  9:44:20:590AM',0,'Apr  1 2005  9:44:20:590AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(30,35,113,0,'Apr  1 2005  9:44:20:610AM',0,'Apr  1 2005  9:44:20:610AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(31,36,114,0,'Apr  1 2005  9:44:20:610AM',0,'Apr  1 2005  9:44:20:610AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(32,37,115,0,'Apr  1 2005  9:44:20:610AM',0,'Apr  1 2005  9:44:20:610AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(33,38,116,0,'Apr  1 2005  9:44:20:620AM',0,'Apr  1 2005  9:44:20:620AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(34,39,117,0,'Apr  1 2005  9:44:20:620AM',0,'Apr  1 2005  9:44:20:620AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(35,40,118,0,'Apr  1 2005  9:44:20:630AM',0,'Apr  1 2005  9:44:20:630AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(36,41,119,0,'Apr  1 2005  9:44:20:630AM',0,'Apr  1 2005  9:44:20:630AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(37,42,120,0,'Apr  1 2005  9:44:20:630AM',0,'Apr  1 2005  9:44:20:630AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(38,43,121,0,'Apr  1 2005  9:44:20:640AM',0,'Apr  1 2005  9:44:20:640AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(39,44,122,0,'Apr  1 2005  9:44:20:640AM',0,'Apr  1 2005  9:44:20:640AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(40,45,123,0,'Apr  1 2005  9:44:20:640AM',0,'Apr  1 2005  9:44:20:640AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(41,46,124,0,'Apr  1 2005  9:44:20:650AM',0,'Apr  1 2005  9:44:20:650AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(42,47,125,0,'Apr  1 2005  9:44:20:650AM',0,'Apr  1 2005  9:44:20:650AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(43,48,126,0,'Apr  1 2005  9:44:20:650AM',0,'Apr  1 2005  9:44:20:650AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(44,49,127,0,'Apr  1 2005  9:44:20:660AM',0,'Apr  1 2005  9:44:20:660AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(45,51,190,0,'Apr  1 2005  9:44:20:670AM',0,'Apr  1 2005  9:44:20:670AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(46,52,191,0,'Apr  1 2005  9:44:20:670AM',0,'Apr  1 2005  9:44:20:670AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(47,53,192,0,'Apr  1 2005  9:44:20:680AM',0,'Apr  1 2005  9:44:20:680AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(48,54,193,0,'Apr  1 2005  9:44:20:680AM',0,'Apr  1 2005  9:44:20:680AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(49,55,194,0,'Apr  1 2005  9:44:20:680AM',0,'Apr  1 2005  9:44:20:680AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(50,56,195,0,'Apr  1 2005  9:44:20:690AM',0,'Apr  1 2005  9:44:20:690AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(51,57,196,0,'Apr  1 2005  9:44:20:690AM',0,'Apr  1 2005  9:44:20:690AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(52,58,197,0,'Apr  1 2005  9:44:20:690AM',0,'Apr  1 2005  9:44:20:690AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(53,60,240,0,'Apr  1 2005  9:44:20:700AM',0,'Apr  1 2005  9:44:20:700AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(54,61,241,0,'Apr  1 2005  9:44:20:700AM',0,'Apr  1 2005  9:44:20:700AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(55,62,242,0,'Apr  1 2005  9:44:20:710AM',0,'Apr  1 2005  9:44:20:710AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(56,63,243,0,'Apr  1 2005  9:44:20:710AM',0,'Apr  1 2005  9:44:20:710AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(57,64,244,0,'Apr  1 2005  9:44:20:720AM',0,'Apr  1 2005  9:44:20:720AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(58,65,245,0,'Apr  1 2005  9:44:20:740AM',0,'Apr  1 2005  9:44:20:740AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(59,66,246,0,'Apr  1 2005  9:44:20:750AM',0,'Apr  1 2005  9:44:20:750AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(60,67,247,0,'Apr  1 2005  9:44:20:750AM',0,'Apr  1 2005  9:44:20:750AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(61,68,248,0,'Apr  1 2005  9:44:20:750AM',0,'Apr  1 2005  9:44:20:750AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(62,69,249,0,'Apr  1 2005  9:44:20:770AM',0,'Apr  1 2005  9:44:20:770AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(63,70,250,0,'Apr  1 2005  9:44:20:770AM',0,'Apr  1 2005  9:44:20:770AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(64,72,274,0,'Apr  1 2005  9:44:20:780AM',0,'Apr  1 2005  9:44:20:780AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(65,73,275,0,'Apr  1 2005  9:44:20:780AM',0,'Apr  1 2005  9:44:20:780AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(66,74,276,0,'Apr  1 2005  9:44:20:790AM',0,'Apr  1 2005  9:44:20:790AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(67,75,277,0,'Apr  1 2005  9:44:20:790AM',0,'Apr  1 2005  9:44:20:790AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(68,77,279,0,'Apr  1 2005  9:44:20:790AM',0,'Apr  1 2005  9:44:20:790AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(69,78,280,0,'Apr  1 2005  9:44:20:800AM',0,'Apr  1 2005  9:44:20:800AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(70,80,288,0,'Apr  1 2005  9:44:20:800AM',0,'Apr  1 2005  9:44:20:800AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(71,81,289,0,'Apr  1 2005  9:44:20:810AM',0,'Apr  1 2005  9:44:20:810AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(72,82,290,0,'Apr  1 2005  9:44:20:810AM',0,'Apr  1 2005  9:44:20:810AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(73,83,291,0,'Apr  1 2005  9:44:20:820AM',0,'Apr  1 2005  9:44:20:820AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(74,84,292,0,'Apr  1 2005  9:44:20:820AM',0,'Apr  1 2005  9:44:20:820AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(75,85,293,0,'Apr  1 2005  9:44:20:820AM',0,'Apr  1 2005  9:44:20:820AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(76,86,294,0,'Apr  1 2005  9:44:20:830AM',0,'Apr  1 2005  9:44:20:830AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(77,87,295,0,'Apr  1 2005  9:44:20:830AM',0,'Apr  1 2005  9:44:20:830AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(78,88,296,0,'Apr  1 2005  9:44:20:830AM',0,'Apr  1 2005  9:44:20:830AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(79,89,297,0,'Apr  1 2005  9:44:20:840AM',0,'Apr  1 2005  9:44:20:840AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(80,90,298,0,'Apr  1 2005  9:44:20:840AM',0,'Apr  1 2005  9:44:20:840AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(81,91,299,0,'Apr  1 2005  9:44:20:850AM',0,'Apr  1 2005  9:44:20:850AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(82,92,300,0,'Apr  1 2005  9:44:20:850AM',0,'Apr  1 2005  9:44:20:850AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(83,93,301,0,'Apr  1 2005  9:44:20:850AM',0,'Apr  1 2005  9:44:20:850AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(84,94,302,0,'Apr  1 2005  9:44:20:860AM',0,'Apr  1 2005  9:44:20:860AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(85,95,303,0,'Apr  1 2005  9:44:20:860AM',0,'Apr  1 2005  9:44:20:860AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(86,96,304,0,'Apr  1 2005  9:44:20:860AM',0,'Apr  1 2005  9:44:20:860AM',1)
-INSERT [help_tableofcontentitem_links] ([link_id],[global_link_id],[linkto_content_id],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(87,97,305,0,'Apr  1 2005  9:44:20:870AM',0,'Apr  1 2005  9:44:20:870AM',1)
-
-SET IDENTITY_INSERT [help_tableofcontentitem_links] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_hours_reason
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_hours_reason] ON
-GO
-INSERT [lookup_hours_reason] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Purchase',0,10,1)
-INSERT [lookup_hours_reason] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Renewal',0,20,1)
-INSERT [lookup_hours_reason] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Correction',0,30,1)
-
-SET IDENTITY_INSERT [lookup_hours_reason] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default permission
-SET NOCOUNT ON
-SET IDENTITY_INSERT [permission] ON
-GO
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(1,1,'accounts',1,0,0,0,'Access to Accounts module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(2,1,'accounts-accounts',1,1,1,1,'Account Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(3,1,'accounts-accounts-folders',1,1,1,1,'Folders',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(4,1,'accounts-accounts-contacts',1,1,1,1,'Contacts',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(5,1,'accounts-accounts-contacts-opportunities',1,1,1,1,'Contact Opportunities',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(6,1,'accounts-accounts-contacts-calls',1,1,1,1,'Contact Activities',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(7,1,'accounts-accounts-contacts-completed-calls',0,0,1,0,'Completed Activities',70,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(8,1,'accounts-accounts-contacts-messages',1,1,1,1,'Contact Messages',80,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(9,1,'accounts-accounts-contacts-move',1,0,0,0,'Move contacts to other accounts',90,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(10,1,'accounts-accounts-opportunities',1,1,1,1,'Opportunities',100,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(11,1,'accounts-accounts-tickets',1,1,1,1,'Tickets',110,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(12,1,'accounts-accounts-tickets-tasks',1,1,1,1,'Ticket Tasks',120,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(13,1,'accounts-accounts-tickets-folders',1,1,1,1,'Ticket Folders',130,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(14,1,'accounts-accounts-tickets-documents',1,1,1,1,'Ticket Documents',140,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(15,1,'accounts-accounts-documents',1,1,1,1,'Documents',150,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(16,1,'accounts-accounts-reports',1,1,0,1,'Export Account Data',160,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(17,1,'accounts-dashboard',1,0,0,0,'Dashboard',170,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(18,1,'accounts-accounts-revenue',1,1,1,1,'Revenue',180,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(19,1,'accounts-autoguide-inventory',1,1,1,1,'Auto Guide Vehicle Inventory',190,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(20,1,'accounts-service-contracts',1,1,1,1,'Service Contracts',200,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(21,1,'accounts-assets',1,1,1,1,'Assets',210,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(22,1,'accounts-accounts-tickets-maintenance-report',1,1,1,1,'Ticket Maintenance Notes',220,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(23,1,'accounts-accounts-tickets-activity-log',1,1,1,1,'Ticket Activities',230,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(24,1,'portal-user',1,1,1,1,'Customer Portal User',240,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(25,1,'accounts-quotes',1,1,1,1,'Quotes',250,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(26,1,'accounts-orders',1,1,1,1,'Orders',260,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(27,1,'accounts-products',1,1,1,1,'Products and Services',270,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(28,1,'accounts-accounts-contacts-imports',1,1,1,1,'Import Accounts/Contacts',280,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(29,1,'accounts-accounts-relationships',1,1,1,1,'Relationships',290,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(30,1,'accounts-accounts-contact-updater',1,0,0,0,'Request contact information update',300,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(31,1,'accounts-projects',1,0,0,0,'Projects',310,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(32,2,'contacts',1,0,0,0,'Access to Contacts module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(33,2,'contacts-external_contacts',1,1,1,1,'General Contact Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(34,2,'contacts-external_contacts-reports',1,1,0,1,'Export Contact Data',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(35,2,'contacts-external_contacts-folders',1,1,1,1,'Folders',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(36,2,'contacts-external_contacts-calls',1,1,1,1,'Activities',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(37,2,'contacts-external_contacts-messages',1,0,0,0,'Messages',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(38,2,'contacts-external_contacts-opportunities',1,1,1,1,'Opportunities',70,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(39,2,'contacts-external_contacts-imports',1,1,1,1,'Imports',80,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(40,2,'contacts-external-contact-updater',1,0,0,0,'Request contact information update',90,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(41,3,'autoguide',1,0,0,0,'Access to the Auto Guide module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(42,3,'autoguide-adruns',0,0,1,0,'Ad Run complete status',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(43,4,'pipeline',1,0,0,0,'Access to Pipeline module',10,1,1,1)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(44,4,'pipeline-opportunities',1,1,1,1,'Opportunity Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(45,4,'pipeline-dashboard',1,0,0,0,'Dashboard',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(46,4,'pipeline-reports',1,1,0,1,'Export Opportunity Data',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(47,4,'pipeline-opportunities-calls',1,1,1,1,'Activities',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(48,4,'pipeline-opportunities-documents',1,1,1,1,'Documents',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(49,5,'demo',1,1,1,1,'Access to Demo/Non-working features',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(50,6,'campaign',1,0,0,0,'Access to Communications module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(51,6,'campaign-dashboard',1,0,0,0,'Dashboard',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(52,6,'campaign-campaigns',1,1,1,1,'Campaign Records',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(53,6,'campaign-campaigns-groups',1,1,1,1,'Group Records',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(54,6,'campaign-campaigns-messages',1,1,1,1,'Message Records',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(55,6,'campaign-campaigns-surveys',1,1,1,1,'Survey Records',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(56,6,'campaign-campaign-contact-updater',1,0,0,0,'Request contact information update',70,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(57,7,'projects',1,0,0,0,'Access to Project Management module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(58,7,'projects-personal',1,0,0,0,'Personal View',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(59,7,'projects-enterprise',1,0,0,0,'Enterprise View',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(60,7,'projects-projects',1,1,1,1,'Project Records',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(61,8,'tickets',1,0,0,0,'Access to Help Desk module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(62,8,'tickets-tickets',1,1,1,1,'Ticket Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(63,8,'tickets-reports',1,1,1,1,'Export Ticket Data',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(64,8,'tickets-tickets-tasks',1,1,1,1,'Tasks',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(65,8,'tickets-maintenance-report',1,1,1,1,'Maintenance Notes',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(66,8,'tickets-activity-log',1,1,1,1,'Activities',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(67,9,'admin',1,0,0,0,'Access to Admin module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(68,9,'admin-users',1,1,1,1,'Users',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(69,9,'admin-roles',1,1,1,1,'Roles',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(70,9,'admin-usage',1,0,0,0,'System Usage',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(71,9,'admin-sysconfig',1,0,1,0,'System Configuration',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(72,9,'admin-sysconfig-lists',1,0,1,0,'Configure Lookup Lists',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(73,9,'admin-sysconfig-folders',1,1,1,1,'Configure Custom Folders & Fields',70,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(74,9,'admin-object-workflow',1,1,1,1,'Configure Object Workflow',80,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(75,9,'admin-sysconfig-categories',1,1,1,1,'Configure Module Categories',90,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(76,9,'admin-sysconfig-products',1,1,1,1,'Product Catalog Editor',100,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(77,9,'admin-sysconfig-logos',1,1,1,1,'Configure Module Logos',110,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(78,10,'help',1,0,0,0,'Access to Help System',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(79,11,'globalitems-search',1,0,0,0,'Access to Global Search',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(80,11,'globalitems-myitems',1,0,0,0,'Access to My Items',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(81,11,'globalitems-recentitems',1,0,0,0,'Access to Recent Items',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(82,12,'myhomepage',1,0,0,0,'Access to My Home Page module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(83,12,'myhomepage-dashboard',1,0,0,0,'View Performance Dashboard',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(84,12,'myhomepage-miner',1,1,0,1,'Industry News records',30,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(85,12,'myhomepage-inbox',1,0,0,0,'Mailbox',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(86,12,'myhomepage-tasks',1,1,1,1,'Tasks',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(87,12,'myhomepage-reassign',1,0,1,0,'Re-assign Items',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(88,12,'myhomepage-profile',1,0,0,0,'Profile',70,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(89,12,'myhomepage-profile-personal',1,0,1,0,'Personal Information',80,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(90,12,'myhomepage-profile-settings',1,0,1,0,'Settings',90,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(91,12,'myhomepage-profile-password',0,0,1,0,'Password',100,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(92,12,'myhomepage-action-lists',1,1,1,1,'Action Lists',110,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(93,13,'qa',1,1,1,1,'Access to QA Tool',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(94,14,'reports',1,0,0,0,'Access to Reports module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(95,17,'sales',1,0,0,0,'Access to the Leads Module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(96,17,'sales-leads',1,1,1,1,'Lead Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(97,17,'sales-import',1,0,0,0,'Access to Import Leads',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(98,18,'product-catalog',1,0,0,0,'Access to Product Catalog module',10,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(99,18,'product-catalog-product',1,1,1,1,'Products',20,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(100,19,'products',1,0,0,0,'Access to Products and Services module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(101,20,'quotes',1,0,0,0,'Access to Quotes module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(102,20,'quotes-quotes',1,1,1,1,'Quote Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(103,21,'orders',1,0,0,0,'Access to Orders module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(104,21,'orders-orders',1,1,1,1,'Order Records',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(105,22,'employees',1,0,0,0,'Access to Employee module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(106,22,'contacts-internal_contacts',1,1,1,1,'Employees',20,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(107,22,'contacts-internal_contacts-folders',1,1,1,1,'Folders',30,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(108,22,'contacts-internal_contacts-projects',1,0,0,0,'Projects',40,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(109,23,'documents',1,0,0,0,'Access to Documents module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(110,23,'documents_documentstore',1,1,1,1,'Manage Document Stores',20,1,1,0)
-
-SET IDENTITY_INSERT [permission] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_survey_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_survey_types] ON
-GO
-INSERT [lookup_survey_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Open-Ended',0,10,1)
-INSERT [lookup_survey_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Quantitative (no comments)',0,20,1)
-INSERT [lookup_survey_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Quantitative (with comments)',0,30,1)
-INSERT [lookup_survey_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Item List',0,40,1)
-
-SET IDENTITY_INSERT [lookup_survey_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_orgemail_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_orgemail_types] ON
-GO
-INSERT [lookup_orgemail_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Primary',0,10,1)
-INSERT [lookup_orgemail_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Auxiliary',0,20,1)
-
-SET IDENTITY_INSERT [lookup_orgemail_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_lists_lookup
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_lists_lookup] ON
-GO
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(1,1,1,'lookupList','lookup_account_types',10,'Account Types','Apr  1 2005  9:44:03:897AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(2,1,2,'lookupList','lookup_revenue_types',20,'Revenue Types','Apr  1 2005  9:44:04:057AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(3,1,3,'contactType','lookup_contact_types',30,'Contact Types','Apr  1 2005  9:44:04:057AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(4,1,819041648,'lookupList','lookup_orgemail_types',40,'Email Types','Apr  1 2005  9:44:04:057AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(5,1,819041649,'lookupList','lookup_orgaddress_types',50,'Address Types','Apr  1 2005  9:44:04:057AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(6,1,819041650,'lookupList','lookup_orgphone_types',60,'Phone Types','Apr  1 2005  9:44:04:067AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(7,1,302051030,'lookupList','lookup_industry',70,'Industry Types','Apr  1 2005  9:44:04:067AM',1)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(8,2,1,'contactType','lookup_contact_types',10,'Types','Apr  1 2005  9:44:04:197AM',2)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(9,2,2,'lookupList','lookup_contactemail_types',20,'Email Types','Apr  1 2005  9:44:04:197AM',2)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(10,2,3,'lookupList','lookup_contactaddress_types',30,'Address Types','Apr  1 2005  9:44:04:207AM',2)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(11,2,4,'lookupList','lookup_contactphone_types',40,'Phone Types','Apr  1 2005  9:44:04:207AM',2)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(12,4,1,'lookupList','lookup_stage',10,'Stage','Apr  1 2005  9:44:04:297AM',4)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(13,4,2,'lookupList','lookup_opportunity_types',20,'Opportunity Types','Apr  1 2005  9:44:04:317AM',4)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(14,8,1,'lookupList','lookup_ticketsource',10,'Ticket Source','Apr  1 2005  9:44:04:467AM',8)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(15,8,2,'lookupList','ticket_severity',20,'Ticket Severity','Apr  1 2005  9:44:04:467AM',8)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(16,8,3,'lookupList','ticket_priority',30,'Ticket Priority','Apr  1 2005  9:44:04:467AM',8)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(17,15,130041304,'lookupList','lookup_asset_status',10,'Asset Status','Apr  1 2005  9:44:05:280AM',130041000)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(18,16,130041305,'lookupList','lookup_sc_category',10,'Service Contract Category','Apr  1 2005  9:44:05:290AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(19,16,130041306,'lookupList','lookup_sc_type',20,'Service Contract Type','Apr  1 2005  9:44:05:290AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(20,16,116041409,'lookupList','lookup_response_model',30,'Response Time Model','Apr  1 2005  9:44:05:290AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(21,16,116041410,'lookupList','lookup_phone_model',40,'Phone Service Model','Apr  1 2005  9:44:05:290AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(22,16,116041411,'lookupList','lookup_onsite_model',50,'Onsite Service Model','Apr  1 2005  9:44:05:300AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(23,16,116041412,'lookupList','lookup_email_model',60,'Email Service Model','Apr  1 2005  9:44:05:300AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(24,16,308041546,'lookupList','lookup_hours_reason',70,'Contract Hours Adjustment Reason','Apr  1 2005  9:44:05:310AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(25,17,228051102,'lookupList','lookup_contact_rating',10,'Contact Rating','Apr  1 2005  9:44:05:330AM',228051100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(26,17,228051103,'lookupList','lookup_contact_source',20,'Contact Source','Apr  1 2005  9:44:05:340AM',228051100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(27,18,1017040901,'lookupList','lookup_product_type',10,'Product Types','Apr  1 2005  9:44:05:350AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(28,18,1017040902,'lookupList','lookup_product_format',20,'Product Format Types','Apr  1 2005  9:44:05:360AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(29,18,1017040903,'lookupList','lookup_product_shipping',30,'Product Shipping Types','Apr  1 2005  9:44:05:360AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(30,18,1017040904,'lookupList','lookup_product_ship_time',40,'Product Shipping Times','Apr  1 2005  9:44:05:360AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(31,18,1017040905,'lookupList','lookup_product_category_type',50,'Product Category Types','Apr  1 2005  9:44:05:360AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(32,18,1017040906,'lookupList','lookup_product_tax',60,'Product Tax Types','Apr  1 2005  9:44:05:360AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(33,18,1017040907,'lookupList','lookup_currency',70,'Currency Types','Apr  1 2005  9:44:05:360AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(34,18,1017040908,'lookupList','lookup_recurring_type',80,'Price Recurring Types','Apr  1 2005  9:44:05:370AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(35,18,1017040909,'lookupList','lookup_product_manufacturer',90,'Product Manufacturer Types','Apr  1 2005  9:44:05:370AM',330041409)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(36,20,1123041000,'lookupList','lookup_quote_status',10,'Quote Status','Apr  1 2005  9:44:05:400AM',420041017)
---INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(37,20,1123041001,'lookupList','lookup_quote_type',20,'Quote Types','Apr  1 2005  9:44:05:630AM',420041017)
---INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(38,20,1123041002,'lookupList','lookup_quote_terms',30,'Quote Terms','Apr  1 2005  9:44:05:880AM',420041017)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(39,20,1123041003,'lookupList','lookup_quote_source',40,'Quote Source','Apr  1 2005  9:44:05:890AM',420041017)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(40,20,1123041004,'lookupList','lookup_quote_delivery',50,'Quote Delivery','Apr  1 2005  9:44:05:890AM',420041017)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(41,20,1123041005,'lookupList','lookup_quote_condition',60,'Quote Terms & Conditions','Apr  1 2005  9:44:05:910AM',420041017)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(42,20,1123041006,'lookupList','lookup_quote_remarks',70,'Quote Remarks','Apr  1 2005  9:44:05:910AM',420041017)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(43,22,1111031132,'lookupList','lookup_department',10,'Departments','Apr  1 2005  9:44:05:960AM',1111031131)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(44,2,111051354,'lookupList','lookup_textmessage_types',50,'Text Messaging Types','Apr  1 2005  9:44:05:960AM',2)
-
-SET IDENTITY_INSERT [lookup_lists_lookup] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_opportunity_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_opportunity_types] ON
-GO
-INSERT [lookup_opportunity_types] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(1,NULL,'Annuity',0,10,1)
-INSERT [lookup_opportunity_types] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(2,NULL,'Consultation',0,20,1)
-INSERT [lookup_opportunity_types] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(3,NULL,'Development',0,30,1)
-INSERT [lookup_opportunity_types] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(4,NULL,'Maintenance',0,40,1)
-INSERT [lookup_opportunity_types] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(5,NULL,'Product Sales',0,50,1)
-INSERT [lookup_opportunity_types] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(6,NULL,'Services',0,60,1)
-
-SET IDENTITY_INSERT [lookup_opportunity_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default survey
-SET NOCOUNT ON
-SET IDENTITY_INSERT [survey] ON
-GO
-INSERT [survey] ([survey_id],[name],[description],[intro],[outro],[itemLength],[type],[enabled],[status],[entered],[enteredby],[modified],[modifiedby])VALUES(1,'Address Update Request',NULL,NULL,NULL,-1,2,1,-1,'Apr  1 2005  9:44:14:910AM',0,'Apr  1 2005  9:44:14:910AM',0)
-
-SET IDENTITY_INSERT [survey] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_orgphone_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_orgphone_types] ON
-GO
-INSERT [lookup_orgphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Main',0,10,1)
-INSERT [lookup_orgphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Fax',0,20,1)
-
-SET IDENTITY_INSERT [lookup_orgphone_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default autoguide_ad_run_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [autoguide_ad_run_types] ON
-GO
-INSERT [autoguide_ad_run_types] ([code],[description],[default_item],[level],[enabled],[entered],[modified])VALUES(1,'In Column',0,1,1,'Apr  1 2005  9:44:00:040AM','Apr  1 2005  9:44:00:040AM')
-INSERT [autoguide_ad_run_types] ([code],[description],[default_item],[level],[enabled],[entered],[modified])VALUES(2,'Display',0,2,1,'Apr  1 2005  9:44:00:100AM','Apr  1 2005  9:44:00:100AM')
-INSERT [autoguide_ad_run_types] ([code],[description],[default_item],[level],[enabled],[entered],[modified])VALUES(3,'Both',0,3,1,'Apr  1 2005  9:44:00:100AM','Apr  1 2005  9:44:00:100AM')
-
-SET IDENTITY_INSERT [autoguide_ad_run_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default webdav
-SET NOCOUNT ON
-SET IDENTITY_INSERT [webdav] ON
-GO
-INSERT [webdav] ([id],[category_id],[class_name],[entered],[enteredby],[modified],[modifiedby])VALUES(1,1,'org.aspcfs.modules.accounts.webdav.AccountsWebdavContext','Apr  1 2005  9:44:04:127AM',0,'Apr  1 2005  9:44:04:127AM',0)
-INSERT [webdav] ([id],[category_id],[class_name],[entered],[enteredby],[modified],[modifiedby])VALUES(2,7,'com.zeroio.iteam.webdav.ProjectsWebdavContext','Apr  1 2005  9:44:04:417AM',0,'Apr  1 2005  9:44:04:417AM',0)
-INSERT [webdav] ([id],[category_id],[class_name],[entered],[enteredby],[modified],[modifiedby])VALUES(3,23,'org.aspcfs.modules.documents.webdav.DocumentsWebdavContext','Apr  1 2005  9:44:05:980AM',0,'Apr  1 2005  9:44:05:980AM',0)
-
-SET IDENTITY_INSERT [webdav] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_im_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_im_types] ON
-GO
-INSERT [lookup_im_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Business',0,10,1)
-INSERT [lookup_im_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Personal',0,20,1)
-INSERT [lookup_im_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Other',0,30,1)
-
-SET IDENTITY_INSERT [lookup_im_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_features
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_features] ON
-GO
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(1,1,NULL,'You can view the accounts that need attention',0,'Apr  1 2005  9:44:17:547AM',0,'Apr  1 2005  9:44:17:547AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(2,1,NULL,'You can make calls with the contact information readily accessible',0,'Apr  1 2005  9:44:17:547AM',0,'Apr  1 2005  9:44:17:547AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(3,1,NULL,'You can view the tasks assigned to you',0,'Apr  1 2005  9:44:17:547AM',0,'Apr  1 2005  9:44:17:547AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(4,1,NULL,'You can view the tickets assigned to you',0,'Apr  1 2005  9:44:17:547AM',0,'Apr  1 2005  9:44:17:547AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(5,2,NULL,'The select button can be used to view the details, reply, forward or delete a particular message.',0,'Apr  1 2005  9:44:17:667AM',0,'Apr  1 2005  9:44:17:667AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(6,2,NULL,'You can add a new message',0,'Apr  1 2005  9:44:17:667AM',0,'Apr  1 2005  9:44:17:667AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(7,2,NULL,'Clicking on the message will show the details of the message',0,'Apr  1 2005  9:44:17:677AM',0,'Apr  1 2005  9:44:17:677AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(8,2,NULL,'The drop down can be used to select the messages present in the inbox, sent messages, or archived ones',0,'Apr  1 2005  9:44:17:687AM',0,'Apr  1 2005  9:44:17:687AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(9,2,NULL,'Sort on one of the column headers by clicking on the column of your choice',0,'Apr  1 2005  9:44:17:687AM',0,'Apr  1 2005  9:44:17:687AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(10,3,NULL,'You can reply, archive, forward or delete each message by clicking the corresponding button',0,'Apr  1 2005  9:44:17:837AM',0,'Apr  1 2005  9:44:17:837AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(11,4,NULL,'A new message can be composed either to the contacts or the employees present in the recipients list. The options field can be checked to send a copy to the employees task list apart from sending the employee an email.',0,'Apr  1 2005  9:44:17:837AM',0,'Apr  1 2005  9:44:17:837AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(12,5,NULL,'You can send the email by clicking the send button',0,'Apr  1 2005  9:44:17:847AM',0,'Apr  1 2005  9:44:17:847AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(13,5,NULL,'You can add to the list of recipients by using the link "Add Recipients"',0,'Apr  1 2005  9:44:17:847AM',0,'Apr  1 2005  9:44:17:847AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(14,5,NULL,'You can click the check box to send an Internet email to the recipients',0,'Apr  1 2005  9:44:17:847AM',0,'Apr  1 2005  9:44:17:847AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(15,5,NULL,'Type directly in the Body test field to modify the message',0,'Apr  1 2005  9:44:17:847AM',0,'Apr  1 2005  9:44:17:847AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(16,7,NULL,'You can add the list of recipients by using the link "Add Recipients" and also click the check box which would send an email to the recipients',0,'Apr  1 2005  9:44:17:857AM',0,'Apr  1 2005  9:44:17:857AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(17,7,NULL,'You can send the email by clicking the send button',0,'Apr  1 2005  9:44:17:857AM',0,'Apr  1 2005  9:44:17:857AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(18,7,NULL,'You can edit the message by typing directly in the Body text area',0,'Apr  1 2005  9:44:17:867AM',0,'Apr  1 2005  9:44:17:867AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(19,8,NULL,'You can add a quick task. This task would have just the description and whether the task is personal or not',0,'Apr  1 2005  9:44:17:867AM',0,'Apr  1 2005  9:44:17:867AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(20,8,NULL,'For each of the existing tasks, you can view, modify, forward or delete the tasks by clicking on the Action button, and making a selection.',0,'Apr  1 2005  9:44:17:867AM',0,'Apr  1 2005  9:44:17:867AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(21,8,NULL,'You can select to view your tasks or tasks assigned by you to others working under you. Each can be viewed in three different modes. i.e. the completed tasks, uncompleted tasks or both.',0,'Apr  1 2005  9:44:17:867AM',0,'Apr  1 2005  9:44:17:867AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(22,8,NULL,'You can add a detailed (advanced) task, where you can set up the priority, status, whether the task is shared or not, task assignment, give the estimated time and add some detailed notes for it.',0,'Apr  1 2005  9:44:17:877AM',0,'Apr  1 2005  9:44:17:877AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(23,9,NULL,'Link this task to a contact and when you look at the task list, there will be a link to the contact record next to the task, allowing you to go directly to the contact.',0,'Apr  1 2005  9:44:17:877AM',0,'Apr  1 2005  9:44:17:877AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(24,9,NULL,'Filling in a Due Date will make ths task show up on that date in the Home Page calendar.',0,'Apr  1 2005  9:44:17:887AM',0,'Apr  1 2005  9:44:17:887AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(25,9,NULL,'Making the task personal will hide it from your hierarchy.',0,'Apr  1 2005  9:44:17:887AM',0,'Apr  1 2005  9:44:17:887AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(26,9,NULL,'You can assign a task to people lower than you in your hierarchy.',0,'Apr  1 2005  9:44:17:887AM',0,'Apr  1 2005  9:44:17:887AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(27,9,NULL,'Marking a task as complete will document the task as having been done, and immediately remove it from the Task List.',0,'Apr  1 2005  9:44:17:887AM',0,'Apr  1 2005  9:44:17:887AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(28,10,NULL,'Allows you to forward a task to one or more users of the system. Checking the options fields check box indicates that if the recipient is a user of the system, then a copy of the task is send to the recipient''s Internet email.',0,'Apr  1 2005  9:44:17:897AM',0,'Apr  1 2005  9:44:17:897AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(29,10,NULL,'The Subject line is mandatory',0,'Apr  1 2005  9:44:17:897AM',0,'Apr  1 2005  9:44:17:897AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(30,10,NULL,'You can add more text to the body of the message by typing directly in the Body text area',0,'Apr  1 2005  9:44:17:897AM',0,'Apr  1 2005  9:44:17:897AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(31,11,NULL,'Due dates will show on the Home Page calendar',0,'Apr  1 2005  9:44:17:907AM',0,'Apr  1 2005  9:44:17:907AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(32,11,NULL,'Completing a task will remove it from the task list',0,'Apr  1 2005  9:44:17:907AM',0,'Apr  1 2005  9:44:17:907AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(33,11,NULL,'You can assign a task to someone lower than you in your heirarchy',0,'Apr  1 2005  9:44:17:907AM',0,'Apr  1 2005  9:44:17:907AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(34,11,NULL,'You can Add or Change the contact that this task is linked to. When viewing the task, you will be able to view the contact information with one click.',0,'Apr  1 2005  9:44:17:907AM',0,'Apr  1 2005  9:44:17:907AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(35,12,NULL,'You can also view all the in progress Action Lists, completed lists, or both together.',0,'Apr  1 2005  9:44:17:917AM',0,'Apr  1 2005  9:44:17:917AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(36,12,NULL,'You can also keep track of the progress of your contacts. The number of them Completed and the Total are shown in the Progress Columns.',0,'Apr  1 2005  9:44:17:917AM',0,'Apr  1 2005  9:44:17:917AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(37,12,NULL,'You can add a new Action List with a description and status. You can select the contacts for this new Action List. For each of the contacts in the Action List, you can select a corresponding action with the Action Button: view details, modify contact, add contacts or delete the Action List.',0,'Apr  1 2005  9:44:17:917AM',0,'Apr  1 2005  9:44:17:917AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(38,13,NULL,'Clicking on the contact name will give you a pop up with more details about the contact and also about the related folders, calls, messages and opportunities.',0,'Apr  1 2005  9:44:17:917AM',0,'Apr  1 2005  9:44:17:917AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(39,13,NULL,'You can add contacts to the list and also Modify the List using "Add Contacts to list" and "Modify List" respectively.',0,'Apr  1 2005  9:44:17:927AM',0,'Apr  1 2005  9:44:17:927AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(40,13,NULL,'For the Action List you can also view all the in progress contacts, completed contacts or both.',0,'Apr  1 2005  9:44:17:927AM',0,'Apr  1 2005  9:44:17:927AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(41,13,NULL,'For each of the contacts you can add a call, opportunity, ticket, task or send a message, which would correspondingly appear in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket tab.',0,'Apr  1 2005  9:44:17:927AM',0,'Apr  1 2005  9:44:17:927AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(42,14,NULL,'Select where the contacts will come from (General Contact, Account Contacts) in the From dropdown.',0,'Apr  1 2005  9:44:17:937AM',0,'Apr  1 2005  9:44:17:937AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(43,14,NULL,'Enter some search text, depending on the Operator you chose.',0,'Apr  1 2005  9:44:17:937AM',0,'Apr  1 2005  9:44:17:937AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(44,14,NULL,'Choose an Operator based on the Field you chose.',0,'Apr  1 2005  9:44:17:947AM',0,'Apr  1 2005  9:44:17:947AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(45,14,NULL,'Choose one of the many Field Names on which to base your query.',0,'Apr  1 2005  9:44:17:947AM',0,'Apr  1 2005  9:44:17:947AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(46,14,NULL,'You can Add or Remove contacts manually with the Add/Remove Contacts link.',0,'Apr  1 2005  9:44:17:947AM',0,'Apr  1 2005  9:44:17:947AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(47,14,NULL,'Add your query with the Add button at the bottom of the query frame. You can have multipe queries that make up the criteria for a group. You will get the result of all the queries.',0,'Apr  1 2005  9:44:17:947AM',0,'Apr  1 2005  9:44:17:947AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(48,14,NULL,'Save the Action List and generate the list of contacts by clicking the Save button at the bottom or top of the page.',0,'Apr  1 2005  9:44:17:947AM',0,'Apr  1 2005  9:44:17:947AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(49,15,NULL,'You can check the status checkbox to indicate that the New Action List is complete.',0,'Apr  1 2005  9:44:17:957AM',0,'Apr  1 2005  9:44:17:957AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(50,15,NULL,'The details of the New Action List can be saved by clicking the save button.',0,'Apr  1 2005  9:44:17:957AM',0,'Apr  1 2005  9:44:17:957AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(51,16,NULL,'Click Update at the bottom of the page to save your reassignment, Cancel to quit the page without saving, and Reset to reset all the fields to their defaults and start over.',0,'Apr  1 2005  9:44:17:967AM',0,'Apr  1 2005  9:44:17:967AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(52,16,NULL,'Choose a User to reassign data from in the top dropdown. Only users below you in your hierarchy will be present here.',0,'Apr  1 2005  9:44:17:967AM',0,'Apr  1 2005  9:44:17:967AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(53,16,NULL,'Select one or more To Users in the To User column to reassign the various assets to. The number of each type of asset available to be reassigned is shown in parentheses after the asset in the first column.',0,'Apr  1 2005  9:44:17:967AM',0,'Apr  1 2005  9:44:17:967AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(54,17,NULL,'The location of the employee can be changed, i.e. the time zone can be changed by clicking on "Configure my location."',0,'Apr  1 2005  9:44:17:967AM',0,'Apr  1 2005  9:44:17:967AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(55,17,NULL,'You can update your personal information by clicking on "Update my personal information."',0,'Apr  1 2005  9:44:17:977AM',0,'Apr  1 2005  9:44:17:977AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(56,17,NULL,'You can change your password by clicking on "Change my password."',0,'Apr  1 2005  9:44:17:977AM',0,'Apr  1 2005  9:44:17:977AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(57,18,NULL,'Save your changes by clicking the Update button at the top or bottom of the page. The Cancel button forgets the changes and quits the page. The Reset button resets all fields to their original values so you can start over.',0,'Apr  1 2005  9:44:17:977AM',0,'Apr  1 2005  9:44:17:977AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(58,18,NULL,'The only required field is your last name, but you should fill in as much as you can to make the system as useful as possible. Email address is particularly useful.',0,'Apr  1 2005  9:44:17:987AM',0,'Apr  1 2005  9:44:17:987AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(59,19,NULL,'The location settings can be changed by selecting the time zone from the drop down list and clicking the update button to update the settings.',0,'Apr  1 2005  9:44:17:987AM',0,'Apr  1 2005  9:44:17:987AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(60,20,NULL,'You can update your password by clicking on the update button.',0,'Apr  1 2005  9:44:17:997AM',0,'Apr  1 2005  9:44:17:997AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(61,21,NULL,'For each of the existing tasks, you can view, modify, forward or delete the tasks by clicking on the Action button',0,'Apr  1 2005  9:44:17:997AM',0,'Apr  1 2005  9:44:17:997AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(62,21,NULL,'You can add a quick task. This task would have just the description and whether the task is personal or not',0,'Apr  1 2005  9:44:17:997AM',0,'Apr  1 2005  9:44:17:997AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(63,21,NULL,'You can add or update a detailed task called advanced task, wherein you can set up the priority, the status, whether the task is shared or not, also is the task assigned to self or someone working under the owner of the tasks, give the estimated time and add some detailed notes in it.',0,'Apr  1 2005  9:44:17:997AM',0,'Apr  1 2005  9:44:17:997AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(64,21,NULL,'Checking the existing task''s check box indicates that the particular task is completed.',0,'Apr  1 2005  9:44:18:007AM',0,'Apr  1 2005  9:44:18:007AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(65,21,NULL,'You can select to view your tasks or tasks assigned by you to others. Each task can be viewed in three different modes i.e. the completed tasks, uncompleted tasks or all the tasks.',0,'Apr  1 2005  9:44:18:007AM',0,'Apr  1 2005  9:44:18:007AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(66,28,NULL,'You can add the new Action List here. Along with description and the status you need to select the contacts you want in this Action List. You can populate the list in two ways. The first is to use the Add/Remove contacts.',0,'Apr  1 2005  9:44:18:027AM',0,'Apr  1 2005  9:44:18:027AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(67,28,NULL,'The second is to define the criteria to generate the list. Once it''s generated we can add them to the selected criteria and contacts by using the add feature present.',0,'Apr  1 2005  9:44:18:037AM',0,'Apr  1 2005  9:44:18:037AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(68,31,NULL,'Check new contacts to add them to your list, uncheck existing contacts to remove them from your list.',0,'Apr  1 2005  9:44:18:047AM',0,'Apr  1 2005  9:44:18:047AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(69,31,NULL,'Select All Contact, My Contacts or Account Contacts from the dropdown at the top.',0,'Apr  1 2005  9:44:18:047AM',0,'Apr  1 2005  9:44:18:047AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(70,31,NULL,'Finish by clicking Done at the bottom of the page.',0,'Apr  1 2005  9:44:18:047AM',0,'Apr  1 2005  9:44:18:047AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(71,33,NULL,'You can add or update a detailed task called advanced task, wherein you can set up a priority, status, whether the task is shared or not, also is the task assigned to you or someone working under the owner of the tasks, give the estimated time and add some detailed notes to it.',0,'Apr  1 2005  9:44:18:057AM',0,'Apr  1 2005  9:44:18:057AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(72,34,NULL,'You can select the contact category using the radio button and if the contact category is someone permanently associated with an account, then you can select the contact using the "select" next to it.',0,'Apr  1 2005  9:44:18:097AM',0,'Apr  1 2005  9:44:18:097AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(73,34,NULL,'You can save the details about the employee using the "Save" button.',0,'Apr  1 2005  9:44:18:097AM',0,'Apr  1 2005  9:44:18:097AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(74,34,NULL,'The "Save & New" button saves the details of the employee and also opens up a blank form start another contact.',0,'Apr  1 2005  9:44:18:097AM',0,'Apr  1 2005  9:44:18:097AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(75,34,NULL,'The only mandatory field is the Last Name, however, it is important to fill in as much as possible. These fields can be used for various types of queries later.',0,'Apr  1 2005  9:44:18:097AM',0,'Apr  1 2005  9:44:18:097AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(76,34,NULL,'The contact type can be selected using the "select" link next to the contact type.',0,'Apr  1 2005  9:44:18:097AM',0,'Apr  1 2005  9:44:18:097AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(77,35,NULL,'If the contact already exists in the system, you can search for that contact by name, company, title, contact type or source.',0,'Apr  1 2005  9:44:18:107AM',0,'Apr  1 2005  9:44:18:107AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(78,36,NULL,'New export data can be generated by choosing the "Generate new export" link at the top of the page',0,'Apr  1 2005  9:44:18:107AM',0,'Apr  1 2005  9:44:18:107AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(79,36,NULL,'Use the dropdown to choose which data to display: the list of all the exported data in the system or only your own.',0,'Apr  1 2005  9:44:18:117AM',0,'Apr  1 2005  9:44:18:117AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(80,36,NULL,'The exported data can be viewed in html format by clicking on the report name. The exported data can also be downloaded in CSV format or deleted by clicking the Select button in the action field.',0,'Apr  1 2005  9:44:18:117AM',0,'Apr  1 2005  9:44:18:117AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(81,37,NULL,'You can add all the fields or add / delete single fields from the report by using the buttons in the middle of the page. First highlight a field on the left to add or a field on the right to delete.',0,'Apr  1 2005  9:44:18:117AM',0,'Apr  1 2005  9:44:18:117AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(82,37,NULL,'Use the Up and Down buttons on the right to sort the fields.',0,'Apr  1 2005  9:44:18:117AM',0,'Apr  1 2005  9:44:18:117AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(83,37,NULL,'The Subject is mandatory. Select which set of contacts the export will come from with Criteria. Select the Primary sort with the Sorting dropdown.',0,'Apr  1 2005  9:44:18:127AM',0,'Apr  1 2005  9:44:18:127AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(84,37,NULL,'Click the Generate button when you are ready to generate the exported report.',0,'Apr  1 2005  9:44:18:127AM',0,'Apr  1 2005  9:44:18:127AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(85,38,NULL,'You can update, cancel or reset the details of the contact using the corresponding buttons.',0,'Apr  1 2005  9:44:18:127AM',0,'Apr  1 2005  9:44:18:127AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(86,41,NULL,'You can also click on the select button under the action field to view, modify, forward or delete a call.',0,'Apr  1 2005  9:44:18:137AM',0,'Apr  1 2005  9:44:18:137AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(87,41,NULL,'Clicking on the subject of the call will give complete details about the call.',0,'Apr  1 2005  9:44:18:137AM',0,'Apr  1 2005  9:44:18:137AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(88,41,NULL,'You can add a call associated with a contact.',0,'Apr  1 2005  9:44:18:147AM',0,'Apr  1 2005  9:44:18:147AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(89,42,NULL,'The save button lets you create a new call which is associated with the call.',0,'Apr  1 2005  9:44:18:147AM',0,'Apr  1 2005  9:44:18:147AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(90,45,NULL,'You can click the select button under the action column for viewing, modifying and deleting an opportunity.',0,'Apr  1 2005  9:44:18:157AM',0,'Apr  1 2005  9:44:18:157AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(91,45,NULL,'Clicking on the name of the opportunity will show a detailed description of the opportunity.',0,'Apr  1 2005  9:44:18:157AM',0,'Apr  1 2005  9:44:18:157AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(92,45,NULL,'Choosing the different types of opportunities from the drop down can filter the display.',0,'Apr  1 2005  9:44:18:167AM',0,'Apr  1 2005  9:44:18:167AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(93,45,NULL,'Add an opportunity associated with a contact.',0,'Apr  1 2005  9:44:18:167AM',0,'Apr  1 2005  9:44:18:167AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(94,46,NULL,'You can modify, delete or forward each call using the corresponding buttons.',0,'Apr  1 2005  9:44:18:167AM',0,'Apr  1 2005  9:44:18:167AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(95,47,NULL,'The component type can be selected using the "select" button.',0,'Apr  1 2005  9:44:18:177AM',0,'Apr  1 2005  9:44:18:177AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(96,47,NULL,'You can assign the component to any of the employees present using the dropdown list present.',0,'Apr  1 2005  9:44:18:177AM',0,'Apr  1 2005  9:44:18:177AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(97,48,NULL,'An opportunity can be renamed or deleted using the buttons present at the bottom of the page.',0,'Apr  1 2005  9:44:18:187AM',0,'Apr  1 2005  9:44:18:187AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(98,48,NULL,'Clicking on the select button lets you view, modify or delete the details about a component.',0,'Apr  1 2005  9:44:18:187AM',0,'Apr  1 2005  9:44:18:187AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(99,48,NULL,'Clicking on the name of the component shows the details about that component.',0,'Apr  1 2005  9:44:18:187AM',0,'Apr  1 2005  9:44:18:187AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(100,48,NULL,'Add a new component associated with the contact.',0,'Apr  1 2005  9:44:18:187AM',0,'Apr  1 2005  9:44:18:187AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(101,49,NULL,'You can modify or delete the opportunity using the modify or delete button.',0,'Apr  1 2005  9:44:18:197AM',0,'Apr  1 2005  9:44:18:197AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(102,50,NULL,'The type of the call can be selected using the drop down list and all the other details related to the call are updated using the update button.',0,'Apr  1 2005  9:44:18:197AM',0,'Apr  1 2005  9:44:18:197AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(103,58,NULL,'You can click the attachments or the surveys link present along with the message text.',0,'Apr  1 2005  9:44:18:227AM',0,'Apr  1 2005  9:44:18:227AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(104,59,NULL,'You can modify or delete the opportunity using the modify or the delete button.',0,'Apr  1 2005  9:44:18:227AM',0,'Apr  1 2005  9:44:18:227AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(105,60,NULL,'You can also click the select button under the action field to view, modify, clone or delete a contact.',0,'Apr  1 2005  9:44:18:237AM',0,'Apr  1 2005  9:44:18:237AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(106,60,NULL,'Clicking the name of the contact will display additional details about the contact.',0,'Apr  1 2005  9:44:18:237AM',0,'Apr  1 2005  9:44:18:237AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(107,60,NULL,'Add a contact using the link "Add a Contact" at the top of the page',0,'Apr  1 2005  9:44:18:237AM',0,'Apr  1 2005  9:44:18:237AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(108,61,NULL,'You can also choose to display the list of all the exported data in the system or the exported data created by you.',0,'Apr  1 2005  9:44:18:247AM',0,'Apr  1 2005  9:44:18:247AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(109,61,NULL,'The exported data can be viewed as a .csv file or in html format. The exported data can also be deleted when the select button in the action field is clicked.',0,'Apr  1 2005  9:44:18:247AM',0,'Apr  1 2005  9:44:18:247AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(110,61,NULL,'New export data can be generated, which lets you choose from the contacts list.',0,'Apr  1 2005  9:44:18:247AM',0,'Apr  1 2005  9:44:18:247AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(111,62,NULL,'You can modify, clone, or delete the details of the contact.',0,'Apr  1 2005  9:44:18:247AM',0,'Apr  1 2005  9:44:18:247AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(112,63,NULL,'Clicking on the name of the message displays more details about the message.',0,'Apr  1 2005  9:44:18:287AM',0,'Apr  1 2005  9:44:18:287AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(113,63,NULL,'You can view the messages in two different views, i.e. all the messages present or the messages created/assigned by you.',0,'Apr  1 2005  9:44:18:297AM',0,'Apr  1 2005  9:44:18:297AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(114,64,NULL,'You can select the list of the recipients to whom you want to forward the particular call to by using the "Add Recipients" link.',0,'Apr  1 2005  9:44:18:297AM',0,'Apr  1 2005  9:44:18:297AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(115,66,NULL,'The component type can be selected using the "select" link.',0,'Apr  1 2005  9:44:18:307AM',0,'Apr  1 2005  9:44:18:307AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(116,66,NULL,'You can assign the component to any user using the dropdown list provided.',0,'Apr  1 2005  9:44:18:307AM',0,'Apr  1 2005  9:44:18:307AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(117,67,NULL,'You can update or cancel the information changed using the "update" or "cancel" button.',0,'Apr  1 2005  9:44:18:327AM',0,'Apr  1 2005  9:44:18:327AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(118,68,NULL,'The folders can be selected using the drop down list.',0,'Apr  1 2005  9:44:18:337AM',0,'Apr  1 2005  9:44:18:337AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(119,68,NULL,'You can click on the record name, to view the folder record details.',0,'Apr  1 2005  9:44:18:337AM',0,'Apr  1 2005  9:44:18:337AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(120,68,NULL,'You can view the details and modify them by clicking the select button under the action column.',0,'Apr  1 2005  9:44:18:337AM',0,'Apr  1 2005  9:44:18:337AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(121,68,NULL,'You can add a new record to a folder using the "Add a record to this folder" link.',0,'Apr  1 2005  9:44:18:337AM',0,'Apr  1 2005  9:44:18:337AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(122,68,NULL,'The folders can be selected using the drop down list.',0,'Apr  1 2005  9:44:18:337AM',0,'Apr  1 2005  9:44:18:337AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(123,69,NULL,'The changes made in the details of the folders can be updated or canceled using the "Update" or "Cancel" button.',0,'Apr  1 2005  9:44:18:347AM',0,'Apr  1 2005  9:44:18:347AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(124,70,NULL,'You can also click the select button under the action column for viewing, modifying and deleting an opportunity.',0,'Apr  1 2005  9:44:18:347AM',0,'Apr  1 2005  9:44:18:347AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(125,70,NULL,'Clicking on the name of the opportunity will display the details of the opportunity.',0,'Apr  1 2005  9:44:18:347AM',0,'Apr  1 2005  9:44:18:347AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(126,70,NULL,'Choosing the different types of opportunities from the drop down filters the display.',0,'Apr  1 2005  9:44:18:357AM',0,'Apr  1 2005  9:44:18:357AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(127,70,NULL,'Add an opportunity associated with a contact.',0,'Apr  1 2005  9:44:18:357AM',0,'Apr  1 2005  9:44:18:357AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(128,71,NULL,'You can filter the contact list in three different views. The views are all contacts, your contacts and Account contacts.',0,'Apr  1 2005  9:44:18:357AM',0,'Apr  1 2005  9:44:18:357AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(129,71,NULL,'Check any or all the contacts from the list you want to assign to your action List.',0,'Apr  1 2005  9:44:18:357AM',0,'Apr  1 2005  9:44:18:357AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(130,72,NULL,'You can also view, modify, clone or delete the contact by clicking the corresponding button.',0,'Apr  1 2005  9:44:18:367AM',0,'Apr  1 2005  9:44:18:367AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(131,72,NULL,'You can associate calls, messages and opportunities with each of the contacts already in the system.',0,'Apr  1 2005  9:44:18:367AM',0,'Apr  1 2005  9:44:18:367AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(132,73,NULL,'You can view all the messages related to the contact or only the messages owned by you. (My messages)',0,'Apr  1 2005  9:44:18:367AM',0,'Apr  1 2005  9:44:18:367AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(133,74,NULL,'This is for adding or updating a new detailed employee record into the system. The last name is the only mandatory field in creating an employee record, However it is important to add as much information as you can.',0,'Apr  1 2005  9:44:18:377AM',0,'Apr  1 2005  9:44:18:377AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(134,75,NULL,'If the contact already exists in the system, you can search for that contact by name, company, title, contact type or source, by typing the search term in the appropriate field, and clicking the Search button.',0,'Apr  1 2005  9:44:18:377AM',0,'Apr  1 2005  9:44:18:377AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(135,75,NULL,'You can filter, export, and display data in different formats by clicking the Export link at the top of the page.',0,'Apr  1 2005  9:44:18:467AM',0,'Apr  1 2005  9:44:18:467AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(136,75,NULL,'Click Add to add a new contact into the application.',0,'Apr  1 2005  9:44:18:467AM',0,'Apr  1 2005  9:44:18:467AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(137,75,NULL,'You may also import your existing contacts from microsoft outlook( or comparable cvs format) into the application.',0,'Apr  1 2005  9:44:18:467AM',0,'Apr  1 2005  9:44:18:467AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(138,77,NULL,'This page is four sections.',0,'Apr  1 2005  9:44:18:477AM',0,'Apr  1 2005  9:44:18:477AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(139,77,NULL,'The ''Import Properties" section displays the file that was imported and the Name provided to identify the import.',0,'Apr  1 2005  9:44:18:477AM',0,'Apr  1 2005  9:44:18:477AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(140,77,NULL,'The next section displays the heading of the import file and four records following it.',0,'Apr  1 2005  9:44:18:477AM',0,'Apr  1 2005  9:44:18:477AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(141,77,NULL,'The "general errors/warnings" section displays errors in the CVS file.',0,'Apr  1 2005  9:44:18:487AM',0,'Apr  1 2005  9:44:18:487AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(142,77,NULL,'The "Field Mappings" section lists all the columns in the file based on the heading and maps known columns in the file to the fields in the application.',0,'Apr  1 2005  9:44:18:487AM',0,'Apr  1 2005  9:44:18:487AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(143,77,NULL,'Against each listed column heading in the field mappings section is a drop list that displays the list of fields that exist to store contact information in the CRM application. Using this drop list you may modify automatically identified field mappings and map those that the application failed to automatically identify.',0,'Apr  1 2005  9:44:18:487AM',0,'Apr  1 2005  9:44:18:487AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(144,78,NULL,'An import goes though various stages before finally being approved and locked.',0,'Apr  1 2005  9:44:18:497AM',0,'Apr  1 2005  9:44:18:497AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(145,78,NULL,'The first stage of an import is the unprocessed stage. In this stage, an import file in cvs format is uploaded to the application. In this stage the import is tagged as ''Import Pending.''',0,'Apr  1 2005  9:44:18:497AM',0,'Apr  1 2005  9:44:18:497AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(146,78,NULL,'In the second stage, the unprocessed contacts file that was uploaded is queued to be processed. To do so, you need to map the various columns in the cvs file to the relevant contact fields(names, emails, telephones, etc) in the application. When the columns are mapped, the import is queued to be processed. Only one import is processed at a time, hence subsequent imports are queued until all previous imports are processed.',0,'Apr  1 2005  9:44:18:497AM',0,'Apr  1 2005  9:44:18:497AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(147,78,NULL,'When an import is being processed (or running) the CRM application reads the cvs file, and creates contacts in the application. After the entire file is processed, the contacts are tagged as ''Pending approval''.',0,'Apr  1 2005  9:44:18:497AM',0,'Apr  1 2005  9:44:18:497AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(148,78,NULL,'When the contacts are tagged as "Pending approval",  you may examine whether the import worked as it was expected, and decide whether the imported contacts can be used for the due course of business. If you find that the mappings you specified were erroneous or insufficient, you may delete the import (which also deletes all contacts of the import) and create another one.',0,'Apr  1 2005  9:44:18:507AM',0,'Apr  1 2005  9:44:18:507AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(149,78,NULL,'During the import process, some records in the cvs file may fail to import to the application. The failure is usually due to an incorrect specification of phone number, or very large names, etc. Such failed records are copied to an "error file" and available for you to examine. You may correct the information in the error file and run an import for this file alone, or you may add the records to the application manually.',0,'Apr  1 2005  9:44:18:507AM',0,'Apr  1 2005  9:44:18:507AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(150,78,NULL,'When an import is approved, the contacts of this import are visible in the contacts list view and these contacts are ready to be used in the application.',0,'Apr  1 2005  9:44:18:507AM',0,'Apr  1 2005  9:44:18:507AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(151,78,NULL,'When a import is approved, its results can only be viewed. The contacts of an approved import cannot be deleted en mass.',0,'Apr  1 2005  9:44:18:507AM',0,'Apr  1 2005  9:44:18:507AM',NULL,NULL,1,8)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(152,79,NULL,'You can view the progress chart in different views for all the employees working under the owner or creator of the opportunity. The views can be selected from the drop down box present under the chart. The mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.',0,'Apr  1 2005  9:44:18:517AM',0,'Apr  1 2005  9:44:18:517AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(153,79,NULL,'The opportunities created are also shown, with their names and the probable gross revenue associated with that opportunity. Clicking on the opportunities shows a details page for the opportunity.',0,'Apr  1 2005  9:44:18:517AM',0,'Apr  1 2005  9:44:18:517AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(154,79,NULL,'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart. Clicking on an employee shows the Opportunity page from that person''s point of view. You can then work your way back up the chain by clicking the Up One Level link.',0,'Apr  1 2005  9:44:18:517AM',0,'Apr  1 2005  9:44:18:517AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(155,80,NULL,'The probability of Close, Estimated Close Date, Best Guess Estimate (what will the gross revenue be for this component?), and Estimated Term (over what time period?), are mandatory fields.',0,'Apr  1 2005  9:44:18:527AM',0,'Apr  1 2005  9:44:18:527AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(156,80,NULL,'You can assign the component to yourself or one of the users in your hierarchy.',0,'Apr  1 2005  9:44:18:527AM',0,'Apr  1 2005  9:44:18:527AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(157,80,NULL,'The Component Description is a mandatory field. Be descriptive as you will be using this to search on later.',0,'Apr  1 2005  9:44:18:527AM',0,'Apr  1 2005  9:44:18:527AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(158,80,NULL,'Use the Save button to save your changes and exit, Cancel to cancel your changes and exit, and Reset to cancel your changes and start over.',0,'Apr  1 2005  9:44:18:527AM',0,'Apr  1 2005  9:44:18:527AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(159,80,NULL,'Enter an Alert Description and Date to remind yourself to follow up on this component at a later date.',0,'Apr  1 2005  9:44:18:537AM',0,'Apr  1 2005  9:44:18:537AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(160,80,NULL,'You must associate the component with either a Contact or an Account. Choose one of the radio buttons, then one of the Select links.',0,'Apr  1 2005  9:44:18:537AM',0,'Apr  1 2005  9:44:18:537AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(161,81,NULL,'Existing opportunities can be searched using this feature. Opportunities can be searched on description, account name, or contact name with whom the opportunity is associated. It can also be searched by current progress / stage of the opportunity or the closing date range.',0,'Apr  1 2005  9:44:18:537AM',0,'Apr  1 2005  9:44:18:537AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(162,82,NULL,'The exported data can be viewed or downloaded as a .csv file or in html format. The exported data can also be deleted when the select button in the action column is clicked.',0,'Apr  1 2005  9:44:18:547AM',0,'Apr  1 2005  9:44:18:547AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(163,82,NULL,'You can also choose to display the list of all the exported data in the system or the exported data created by you.',0,'Apr  1 2005  9:44:18:547AM',0,'Apr  1 2005  9:44:18:547AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(164,82,NULL,'New export data can be generated by choosing from the contacts list.',0,'Apr  1 2005  9:44:18:547AM',0,'Apr  1 2005  9:44:18:547AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(165,85,NULL,'Component Description is a mandatory field',0,'Apr  1 2005  9:44:18:557AM',0,'Apr  1 2005  9:44:18:557AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(166,85,NULL,'Use Update at the top or bottom to save your changes, Cancel to quit this page without saving, and Reset to reset all fields to default and start over.',0,'Apr  1 2005  9:44:18:557AM',0,'Apr  1 2005  9:44:18:557AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(167,85,NULL,'Add an Alert Description and Date to alert you via a CRM System Message to take a new action',0,'Apr  1 2005  9:44:18:557AM',0,'Apr  1 2005  9:44:18:557AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(168,85,NULL,'Probability of close, Estimated Close Date (when you will get the revenue), Best Guess Estimate (how much revenue you will get), and Estimated Term (what term the revenue will be realized over) are all the mandatory fields.',0,'Apr  1 2005  9:44:18:557AM',0,'Apr  1 2005  9:44:18:557AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(169,85,NULL,'You can select a Component Type from the dropdown. These component types are configurable by your System Administrator.',0,'Apr  1 2005  9:44:18:567AM',0,'Apr  1 2005  9:44:18:567AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(170,85,NULL,'You can assign the component to any User using the dropdown list present.',0,'Apr  1 2005  9:44:18:567AM',0,'Apr  1 2005  9:44:18:567AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(171,86,NULL,'The type of the call can be a phone, fax or in person. Some notes regarding the call can be noted. You can add an alert to remind you to follow up on this call.',0,'Apr  1 2005  9:44:18:567AM',0,'Apr  1 2005  9:44:18:567AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(172,86,NULL,'The Contact dropdown is automatically populated with the correct contacts for the company or account you are dealing with.',0,'Apr  1 2005  9:44:18:567AM',0,'Apr  1 2005  9:44:18:567AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(173,87,NULL,'You can update or cancel the information changed using the "update" or "cancel" button present.',0,'Apr  1 2005  9:44:18:577AM',0,'Apr  1 2005  9:44:18:577AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(174,89,NULL,'You can update the details of the documents using the update button.',0,'Apr  1 2005  9:44:18:587AM',0,'Apr  1 2005  9:44:18:587AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(175,93,NULL,'The component details are shown with additional options for modifying and deleting the component.',0,'Apr  1 2005  9:44:18:597AM',0,'Apr  1 2005  9:44:18:597AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(176,94,NULL,'The document can be uploaded using the upload button.',0,'Apr  1 2005  9:44:18:607AM',0,'Apr  1 2005  9:44:18:607AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(177,94,NULL,'The new version of the document can be selected from your local computer using the browse button.',0,'Apr  1 2005  9:44:18:607AM',0,'Apr  1 2005  9:44:18:607AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(178,95,NULL,'For each of the component you can view the details, modify the content or delete it completely using the select button in the Action column.',0,'Apr  1 2005  9:44:18:607AM',0,'Apr  1 2005  9:44:18:607AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(179,95,NULL,'You can add an opportunity here by giving complete details about the opportunity.',0,'Apr  1 2005  9:44:18:607AM',0,'Apr  1 2005  9:44:18:607AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(180,95,NULL,'The search results for existing opportunities are displayed here.',0,'Apr  1 2005  9:44:18:617AM',0,'Apr  1 2005  9:44:18:617AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(181,95,NULL,'There are different views of the opportunities you can choose from the drop down list and the corresponding types for the opportunities.',0,'Apr  1 2005  9:44:18:617AM',0,'Apr  1 2005  9:44:18:617AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(182,96,NULL,'In the Documents tab, documents associated with an opportunity can be added. This also displays the documents already linked with this opportunity and other details about the document. Details can be viewed, downloaded, modified or deleted by using the select button in the action column',0,'Apr  1 2005  9:44:18:617AM',0,'Apr  1 2005  9:44:18:617AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(183,96,NULL,'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column.',0,'Apr  1 2005  9:44:18:617AM',0,'Apr  1 2005  9:44:18:617AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(184,96,NULL,'You can rename or delete the opportunity itself using the buttons below.',0,'Apr  1 2005  9:44:18:627AM',0,'Apr  1 2005  9:44:18:627AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(185,96,NULL,'You can modify, view and delete the details of any particular component by clicking the select button in the action column.',0,'Apr  1 2005  9:44:18:627AM',0,'Apr  1 2005  9:44:18:627AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(186,96,NULL,'In the Components tab, you can add a component. It also displays the status, amount and the date when the component will be closed.',0,'Apr  1 2005  9:44:18:627AM',0,'Apr  1 2005  9:44:18:627AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(187,96,NULL,'There are three tabs in each opportunity i.e. components, calls and documents.',0,'Apr  1 2005  9:44:18:627AM',0,'Apr  1 2005  9:44:18:627AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(188,96,NULL,'You get the organization name or the contact name at the top, which on clicking will take you to the Account details.',0,'Apr  1 2005  9:44:18:627AM',0,'Apr  1 2005  9:44:18:627AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(189,97,NULL,'You can select the list of the recipients to whom you want to forward a call to by using the "Add Recipients" link. This will bring up a window with all users, from which you can then choose using check boxes.',0,'Apr  1 2005  9:44:18:637AM',0,'Apr  1 2005  9:44:18:637AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(190,97,NULL,'You can email a copy of the call to a user''s Internet email by checking the Email check box.',0,'Apr  1 2005  9:44:18:637AM',0,'Apr  1 2005  9:44:18:637AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(191,97,NULL,'You can add to the message by simply typing in the Body text box.',0,'Apr  1 2005  9:44:18:637AM',0,'Apr  1 2005  9:44:18:637AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(192,98,NULL,'The version of the particular document can be modified using the add version link.',0,'Apr  1 2005  9:44:18:637AM',0,'Apr  1 2005  9:44:18:637AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(193,98,NULL,'A document can be viewed, downloaded, modified or deleted by using the select button in the action column.',0,'Apr  1 2005  9:44:18:637AM',0,'Apr  1 2005  9:44:18:637AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(194,98,NULL,'A click on the subject of the document will show all the versions present.',0,'Apr  1 2005  9:44:18:647AM',0,'Apr  1 2005  9:44:18:647AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(195,99,NULL,'The type of the call can be selected using the drop down list and all the other details related to the call are updated using the update button',0,'Apr  1 2005  9:44:18:647AM',0,'Apr  1 2005  9:44:18:647AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(196,100,NULL,'In the Calls tab you can add a call to the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column',0,'Apr  1 2005  9:44:18:647AM',0,'Apr  1 2005  9:44:18:647AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(197,100,NULL,'In the Components tab, you can add a component. It also displays the status, amount and the date when the component will be closed.',0,'Apr  1 2005  9:44:18:657AM',0,'Apr  1 2005  9:44:18:657AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(198,100,NULL,'There are three tabs in each opportunity i.e. components, calls and documents.',0,'Apr  1 2005  9:44:18:657AM',0,'Apr  1 2005  9:44:18:657AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(199,100,NULL,'You can rename or delete the whole opportunity (not just one of these components) using the buttons at the bottom.',0,'Apr  1 2005  9:44:18:657AM',0,'Apr  1 2005  9:44:18:657AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(200,100,NULL,'The organization or contact name appears on top, above the Components Tab, which when clicked, will take you to the Account details.',0,'Apr  1 2005  9:44:18:657AM',0,'Apr  1 2005  9:44:18:657AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(201,100,NULL,'You can modify, view and delete the details of any component by clicking the select button in the Action column, on the far left.',0,'Apr  1 2005  9:44:18:657AM',0,'Apr  1 2005  9:44:18:657AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(202,100,NULL,'In the Documents tab, documents associated with the particular opportunity can be added. This also displays the documents already linked with this opportunity and other details about the document. Details can be viewed, downloaded, modified or deleted by using the select button in the action column',0,'Apr  1 2005  9:44:18:657AM',0,'Apr  1 2005  9:44:18:657AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(203,101,NULL,'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column',0,'Apr  1 2005  9:44:18:667AM',0,'Apr  1 2005  9:44:18:667AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(204,101,NULL,'If the call subject is clicked then complete details about the call are displayed.',0,'Apr  1 2005  9:44:18:667AM',0,'Apr  1 2005  9:44:18:667AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(205,102,NULL,'There are different views of the opportunities you can choose from the dropdown list and the corresponding types of the opportunities.',0,'Apr  1 2005  9:44:18:677AM',0,'Apr  1 2005  9:44:18:677AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(206,102,NULL,'You can add an opportunity here by giving complete details about the opportunity.',0,'Apr  1 2005  9:44:18:677AM',0,'Apr  1 2005  9:44:18:677AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(207,102,NULL,'The search results for existing opportunities are displayed here.',0,'Apr  1 2005  9:44:18:677AM',0,'Apr  1 2005  9:44:18:677AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(208,102,NULL,'For each of the components you can view the details, modify the content or delete it completely using the select button in the Action column. You can click on any of the component names, which shows more details about the component, such as the calls and documents associated with it.',0,'Apr  1 2005  9:44:18:677AM',0,'Apr  1 2005  9:44:18:677AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(209,103,NULL,'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart.',0,'Apr  1 2005  9:44:18:687AM',0,'Apr  1 2005  9:44:18:687AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(210,103,NULL,'Opportunities are displayed, with name and probable revemue. Clicking on the opportunities displays more details of the opportunity.',0,'Apr  1 2005  9:44:18:687AM',0,'Apr  1 2005  9:44:18:687AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(211,103,NULL,'You can view the progress chart in different views for all the employees working under the owner or creator of the opportunity. The views can be selected from the drop down box under the chart. The mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.',0,'Apr  1 2005  9:44:18:687AM',0,'Apr  1 2005  9:44:18:687AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(212,104,NULL,'The component details are shown with additional options for modifying and deleting the component.',0,'Apr  1 2005  9:44:18:697AM',0,'Apr  1 2005  9:44:18:697AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(213,105,NULL,'The component type can be selected using the "select" link.',0,'Apr  1 2005  9:44:18:697AM',0,'Apr  1 2005  9:44:18:697AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(214,105,NULL,'You can assign the component to any of the employee present using the dropdown list.',0,'Apr  1 2005  9:44:18:697AM',0,'Apr  1 2005  9:44:18:697AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(215,106,NULL,'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. Call details can be viewed, modified, forwarded or deleted by using the select button in the action column.',0,'Apr  1 2005  9:44:18:707AM',0,'Apr  1 2005  9:44:18:707AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(216,106,NULL,'If the call subject is clicked then it will display complete details about the call.',0,'Apr  1 2005  9:44:18:707AM',0,'Apr  1 2005  9:44:18:707AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(217,107,NULL,'You can modify, delete and forward each of the calls.',0,'Apr  1 2005  9:44:18:707AM',0,'Apr  1 2005  9:44:18:707AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(218,108,NULL,'Clicking the Upload button will upload the selected document into the system.',0,'Apr  1 2005  9:44:18:717AM',0,'Apr  1 2005  9:44:18:717AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(219,108,NULL,'Clicking the Browse button opens a file browser on your own system. Simply navigate to the file on your drive that you want to upload and click Open. This will close the window and bring you back to the upload page.',0,'Apr  1 2005  9:44:18:717AM',0,'Apr  1 2005  9:44:18:717AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(220,108,NULL,'Add a very descriptive Subject for the file. This is a mandatory field.',0,'Apr  1 2005  9:44:18:717AM',0,'Apr  1 2005  9:44:18:717AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(221,109,NULL,'All the versions of the document can be downloaded from here. Simply select the version you want and click the Download link on the far left.',0,'Apr  1 2005  9:44:18:717AM',0,'Apr  1 2005  9:44:18:717AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(222,110,NULL,'The exported data can be viewed as a .csv file or in the html format. The exported data can also be deleted when the select button in the action field is clicked.',0,'Apr  1 2005  9:44:18:727AM',0,'Apr  1 2005  9:44:18:727AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(223,110,NULL,'You can also choose to display the list of all the exported data in the system or the exported data created by you.',0,'Apr  1 2005  9:44:18:727AM',0,'Apr  1 2005  9:44:18:727AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(224,110,NULL,'New export data can be generated, which lets you choose from the contacts list.',0,'Apr  1 2005  9:44:18:727AM',0,'Apr  1 2005  9:44:18:727AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(225,110,NULL,'Click on the subject of the new export, the data is displayed in html format',0,'Apr  1 2005  9:44:18:727AM',0,'Apr  1 2005  9:44:18:727AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(226,111,NULL,'Click the Generate button at top or bottom to generate the report from the fields you have included. Click cancel to quit and go back to the Export Data page.',0,'Apr  1 2005  9:44:18:737AM',0,'Apr  1 2005  9:44:18:737AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(227,111,NULL,'Highlight the fields you want to include in the left column and click the Add or All link. Highlight fields in the right column and click the Del link to remove them.',0,'Apr  1 2005  9:44:18:737AM',0,'Apr  1 2005  9:44:18:737AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(228,111,NULL,'Use the Sorting dropdown to sort the report by one of a variety of fields',0,'Apr  1 2005  9:44:18:737AM',0,'Apr  1 2005  9:44:18:737AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(229,111,NULL,'Use the Criteria dropdown to use opportunities from My or All Opportunities',0,'Apr  1 2005  9:44:18:737AM',0,'Apr  1 2005  9:44:18:737AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(230,111,NULL,'The Subject is a mandatory field.',0,'Apr  1 2005  9:44:18:747AM',0,'Apr  1 2005  9:44:18:747AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(231,112,NULL,'Clicking on the alert link will let you modify the details of the account owner.',0,'Apr  1 2005  9:44:18:747AM',0,'Apr  1 2005  9:44:18:747AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(232,112,NULL,'Accounts with contract end dates or other required actions will appear in the right hand window where you can take action on them.',0,'Apr  1 2005  9:44:18:757AM',0,'Apr  1 2005  9:44:18:757AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(233,112,NULL,'You can view the schedule, actions, alert dates and contract end dates for yourself or your employees by using the dropdown at the top of the page.',0,'Apr  1 2005  9:44:18:757AM',0,'Apr  1 2005  9:44:18:757AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(234,112,NULL,'You can modify the date range shown in the right hand window by clicking on a specific date on the calendar, or on one of the arrows to the left of each week on the calendar to give you a week''s view. Clicking on "Back To Next 7 Days View" at the top of the right window changes the view to the next seven days. The day or week you are currently viewing is highlighted in yellow. Today''s date is highlighted in blue. You can change the month and year using the dropdowns at the top of the calendar, and you can always return to today by using the Today link, also at the top of the calendar.',0,'Apr  1 2005  9:44:18:757AM',0,'Apr  1 2005  9:44:18:757AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(235,113,NULL,'Use the Insert button at top or bottom to save your changes, Cancel to quit without saving, and Reset to reset all the fields to their default values and start over.',0,'Apr  1 2005  9:44:18:767AM',0,'Apr  1 2005  9:44:18:767AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(236,113,NULL,'It''s a faily straightforward "fill in the blanks" exercise. There should be a "Primary" or "Business", or "Main" version of phone/fax numbers and addresses because other modules such as Communications Manager use these to perform other actions.',0,'Apr  1 2005  9:44:18:767AM',0,'Apr  1 2005  9:44:18:767AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(237,113,NULL,'Fill in as many fields as possible. Most of them can be used later as search terms and for queries in reports.',0,'Apr  1 2005  9:44:18:767AM',0,'Apr  1 2005  9:44:18:767AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(238,113,NULL,'Depending on whether you have chosen Organization or Individual, there are mandatory description fields to fill out about the account.',0,'Apr  1 2005  9:44:18:767AM',0,'Apr  1 2005  9:44:18:767AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(239,113,NULL,'Choose whether this account is an Organization or an Individual with the appropriate radio button.',0,'Apr  1 2005  9:44:18:777AM',0,'Apr  1 2005  9:44:18:777AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(240,113,NULL,'Clicking the Select link next to Account Type(s) will open a window with a variety of choices for Account Types. You cah choose and number by clicking the checkboxes to the left. It is important to use this feature as your choice(s) are used for searches and as the subject of querries in reports in other parts of the application.',0,'Apr  1 2005  9:44:18:777AM',0,'Apr  1 2005  9:44:18:777AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(241,114,NULL,'The account owner can also be changed using the drop down list',0,'Apr  1 2005  9:44:18:777AM',0,'Apr  1 2005  9:44:18:777AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(242,114,NULL,'The account type can be selected using the "Select" button',0,'Apr  1 2005  9:44:18:777AM',0,'Apr  1 2005  9:44:18:777AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(243,114,NULL,'This is for adding or updating account details. The last name or the organization name, based on the classification, is the only mandatory field in creating a new account. The type of account can be selected using the select option given next to the account type',0,'Apr  1 2005  9:44:18:777AM',0,'Apr  1 2005  9:44:18:777AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(244,114,NULL,'If the Account has a contract, you should enter a contract end date in the fields provided. This will generate an icon on the Home Page and an alert for the owner of the account that action must be taken at a prearranged time.',0,'Apr  1 2005  9:44:18:787AM',0,'Apr  1 2005  9:44:18:787AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(245,115,NULL,'You can also view, modify, clone and delete the contact by clicking the select button under the action column.',0,'Apr  1 2005  9:44:18:797AM',0,'Apr  1 2005  9:44:18:797AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(246,115,NULL,'When the name of the contact is clicked, it shows details of that contact, with the options to modify, clone and delete the contact details.',0,'Apr  1 2005  9:44:18:797AM',0,'Apr  1 2005  9:44:18:797AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(247,115,NULL,'You can add a contact, which is associated with the account.',0,'Apr  1 2005  9:44:18:807AM',0,'Apr  1 2005  9:44:18:807AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(248,116,NULL,'Using the select button in the action column you can view details and modify the record.',0,'Apr  1 2005  9:44:18:807AM',0,'Apr  1 2005  9:44:18:807AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(249,116,NULL,'You can click on the record type to view the folders details and modify them.',0,'Apr  1 2005  9:44:18:807AM',0,'Apr  1 2005  9:44:18:807AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(250,116,NULL,'A new record can be added to the folder.',0,'Apr  1 2005  9:44:18:817AM',0,'Apr  1 2005  9:44:18:817AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(251,116,NULL,'The folders can be populated by configuring the module in the admin tab.. The type of the folder can be changed using the drop down list shown.',0,'Apr  1 2005  9:44:18:817AM',0,'Apr  1 2005  9:44:18:817AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(252,117,NULL,'Opportunities associated with the contact, showing the best guess total and last modified date.',0,'Apr  1 2005  9:44:18:827AM',0,'Apr  1 2005  9:44:18:827AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(253,117,NULL,'You can add an opportunity.',0,'Apr  1 2005  9:44:18:827AM',0,'Apr  1 2005  9:44:18:827AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(254,117,NULL,'Three types of opportunities are present which can be selected from the drop down list.',0,'Apr  1 2005  9:44:18:827AM',0,'Apr  1 2005  9:44:18:827AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(255,117,NULL,'When the description of the opportunity is clicked, it will give you more details about the opportunity and the components present in it.',0,'Apr  1 2005  9:44:18:837AM',0,'Apr  1 2005  9:44:18:837AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(256,118,NULL,'By clicking on the description of the revenue you get the details about that revenue along with the options to modify and delete its details.',0,'Apr  1 2005  9:44:18:847AM',0,'Apr  1 2005  9:44:18:847AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(257,118,NULL,'You can view your revenue or all the revenues associated with the account using the drop down box.',0,'Apr  1 2005  9:44:18:847AM',0,'Apr  1 2005  9:44:18:847AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(258,118,NULL,'You can also view, modify and delete the details of the revenue by clicking the select button in the action column.',0,'Apr  1 2005  9:44:18:847AM',0,'Apr  1 2005  9:44:18:847AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(259,118,NULL,'Add / update a new revenue associated with the account.',0,'Apr  1 2005  9:44:18:847AM',0,'Apr  1 2005  9:44:18:847AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(260,119,NULL,'Clicking on the description of the revenue displays its details, along with options to modify and delete them.',0,'Apr  1 2005  9:44:18:857AM',0,'Apr  1 2005  9:44:18:857AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(261,119,NULL,'You can view your revenue or all the revenues associated with the account using the drop down box.',0,'Apr  1 2005  9:44:18:857AM',0,'Apr  1 2005  9:44:18:857AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(262,119,NULL,'You can also view, modify and delete the details of the revenue by clicking the select button in the action column.',0,'Apr  1 2005  9:44:18:857AM',0,'Apr  1 2005  9:44:18:857AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(263,119,NULL,'Add / update a new revenue associated with the account.',0,'Apr  1 2005  9:44:18:857AM',0,'Apr  1 2005  9:44:18:857AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(264,120,NULL,'Add new revenue to an account.',0,'Apr  1 2005  9:44:18:867AM',0,'Apr  1 2005  9:44:18:867AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(265,121,NULL,'Fill in the blanks and use "Update" to save your changes or "Reset" to return to the original values.',0,'Apr  1 2005  9:44:18:867AM',0,'Apr  1 2005  9:44:18:867AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(266,122,NULL,'You can also click the select button under the action column to view, modify or delete the ticket.',0,'Apr  1 2005  9:44:18:867AM',0,'Apr  1 2005  9:44:18:867AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(267,122,NULL,'Clicking on the ticket number will let you view the details, modify or delete the ticket.',0,'Apr  1 2005  9:44:18:877AM',0,'Apr  1 2005  9:44:18:877AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(268,122,NULL,'Add a new ticket.',0,'Apr  1 2005  9:44:18:877AM',0,'Apr  1 2005  9:44:18:877AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(269,123,NULL,'The details of the documents can be viewed or modified by clicking on the select button under the Action column.',0,'Apr  1 2005  9:44:18:877AM',0,'Apr  1 2005  9:44:18:877AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(270,123,NULL,'Document versions can be updated by using the "add version" link.',0,'Apr  1 2005  9:44:18:887AM',0,'Apr  1 2005  9:44:18:887AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(271,123,NULL,'A new document can be added which is associated with the account.',0,'Apr  1 2005  9:44:18:887AM',0,'Apr  1 2005  9:44:18:887AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(272,123,NULL,'You can view the details of, modify, download or delete the documents associated with the account.',0,'Apr  1 2005  9:44:18:887AM',0,'Apr  1 2005  9:44:18:887AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(273,124,NULL,'You can search for accounts in the system. The search can be based on the account name, phone number or the account type. Three types of accounts can be selected from the drop down list shown.',0,'Apr  1 2005  9:44:18:897AM',0,'Apr  1 2005  9:44:18:897AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(274,125,NULL,'Click Modify at the top or bottom of the page to modify these datails.',0,'Apr  1 2005  9:44:18:897AM',0,'Apr  1 2005  9:44:18:897AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(275,126,NULL,'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart.',0,'Apr  1 2005  9:44:18:897AM',0,'Apr  1 2005  9:44:18:897AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(276,126,NULL,'The Accounts present are also shown, with name and the amount of money associated with that Account. Clicking on the Account displays the details of the Account.',0,'Apr  1 2005  9:44:18:907AM',0,'Apr  1 2005  9:44:18:907AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(277,126,NULL,'You can view the progress chart in different views for all the employees working under the owner or creator of the Account. The views can be selected from the drop down box present under the chart. A mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.',0,'Apr  1 2005  9:44:18:907AM',0,'Apr  1 2005  9:44:18:907AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(278,127,NULL,'The exported data can be viewed as a .csv file or in the html format. The exported data can also be deleted when the select button in the action field is clicked.',0,'Apr  1 2005  9:44:18:907AM',0,'Apr  1 2005  9:44:18:907AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(279,127,NULL,'You can also choose to display the list of all the exported data in the system or the exported data created by you.',0,'Apr  1 2005  9:44:18:907AM',0,'Apr  1 2005  9:44:18:907AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(280,127,NULL,'New export data can be generated using the "Generate new export" link.',0,'Apr  1 2005  9:44:18:917AM',0,'Apr  1 2005  9:44:18:917AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(281,128,NULL,'The details are updated by clicking the Update button.',0,'Apr  1 2005  9:44:18:917AM',0,'Apr  1 2005  9:44:18:917AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(282,131,NULL,'There are filters through which you can exactly select the data needed to generate the export data. Apart from selecting the type of accounts and the criteria, you can also select the fields required and then sort them.',0,'Apr  1 2005  9:44:18:927AM',0,'Apr  1 2005  9:44:18:927AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(283,132,NULL,'Using the select button under the action column you can view the details about the call, modify the call, forward the call or delete the call on the whole.',0,'Apr  1 2005  9:44:18:927AM',0,'Apr  1 2005  9:44:18:927AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(284,132,NULL,'Clicking on the subject of the call will show you the details about the call that was made to the contact.',0,'Apr  1 2005  9:44:18:927AM',0,'Apr  1 2005  9:44:18:927AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(285,132,NULL,'You can add a call associated with the contact using the "Add a call" link.',0,'Apr  1 2005  9:44:18:937AM',0,'Apr  1 2005  9:44:18:937AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(286,133,NULL,'Record details can be saved using the save button.',0,'Apr  1 2005  9:44:18:937AM',0,'Apr  1 2005  9:44:18:937AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(287,134,NULL,'The details of the new call can be saved using the save button.',0,'Apr  1 2005  9:44:18:937AM',0,'Apr  1 2005  9:44:18:937AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(288,134,NULL,'The call type can be selected from the dropdown box.',0,'Apr  1 2005  9:44:18:947AM',0,'Apr  1 2005  9:44:18:947AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(289,135,NULL,'You can browse your local system to select a new document to upload.',0,'Apr  1 2005  9:44:18:947AM',0,'Apr  1 2005  9:44:18:947AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(290,138,NULL,'You can upload a new version of an existing document.',0,'Apr  1 2005  9:44:18:957AM',0,'Apr  1 2005  9:44:18:957AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(291,141,NULL,'You can insert a new ticket, add the ticket source and also assign new contact.',0,'Apr  1 2005  9:44:18:967AM',0,'Apr  1 2005  9:44:18:967AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(292,142,NULL,'The details of the documents can be viewed or modified by clicking on the select button under the Action column',0,'Apr  1 2005  9:44:18:977AM',0,'Apr  1 2005  9:44:18:977AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(293,142,NULL,'You can view the details, modify, download or delete the documents associated with the ticket',0,'Apr  1 2005  9:44:18:977AM',0,'Apr  1 2005  9:44:18:977AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(294,142,NULL,'A new document can be added which is associated with the ticket',0,'Apr  1 2005  9:44:18:977AM',0,'Apr  1 2005  9:44:18:977AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(295,142,NULL,'The document versions can be updated by using the "add version" link',0,'Apr  1 2005  9:44:18:977AM',0,'Apr  1 2005  9:44:18:977AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(296,147,NULL,'Clicking on the account name shows complete details about the account',0,'Apr  1 2005  9:44:18:997AM',0,'Apr  1 2005  9:44:18:997AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(297,147,NULL,'You can add a new account',0,'Apr  1 2005  9:44:18:997AM',0,'Apr  1 2005  9:44:18:997AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(298,147,NULL,'The select button in the Action column allows you to view, modify and archive the account. Archiving makes the account invisible, but it is still in the database.',0,'Apr  1 2005  9:44:18:997AM',0,'Apr  1 2005  9:44:18:997AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(299,148,NULL,'You can download all the versions of the documents',0,'Apr  1 2005  9:44:19:007AM',0,'Apr  1 2005  9:44:19:007AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(300,149,NULL,'You can modify / update the current document information, such as the subject and the filename',0,'Apr  1 2005  9:44:19:007AM',0,'Apr  1 2005  9:44:19:007AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(301,150,NULL,'The details of the account can be modified here. The details can be saved using the Modify button.',0,'Apr  1 2005  9:44:19:017AM',0,'Apr  1 2005  9:44:19:017AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(302,151,NULL,'You can modify, delete or forward the calls using the corresponding buttons.',0,'Apr  1 2005  9:44:19:017AM',0,'Apr  1 2005  9:44:19:017AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(303,152,NULL,'The details of the new call can be saved using the save button.',0,'Apr  1 2005  9:44:19:027AM',0,'Apr  1 2005  9:44:19:027AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(304,152,NULL,'The call type can be selected from the dropdown box.',0,'Apr  1 2005  9:44:19:027AM',0,'Apr  1 2005  9:44:19:027AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(305,153,NULL,'You can modify, delete or forward the calls using the corresponding buttons.',0,'Apr  1 2005  9:44:19:027AM',0,'Apr  1 2005  9:44:19:027AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(306,154,NULL,'You can select the list of the recipients to whom you want to forward the particular call to by using the "Add Recipients" link.',0,'Apr  1 2005  9:44:19:037AM',0,'Apr  1 2005  9:44:19:037AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(307,155,NULL,'You can also view, modify and delete the opportunity associated with the contact.',0,'Apr  1 2005  9:44:19:037AM',0,'Apr  1 2005  9:44:19:037AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(308,155,NULL,'When the description of the opportunity is clicked, it will display more details about the opportunity and its components.',0,'Apr  1 2005  9:44:19:037AM',0,'Apr  1 2005  9:44:19:037AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(309,155,NULL,'Add an opportunity.',0,'Apr  1 2005  9:44:19:037AM',0,'Apr  1 2005  9:44:19:037AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(310,155,NULL,'Select an opportunity type from the drop down list.',0,'Apr  1 2005  9:44:19:047AM',0,'Apr  1 2005  9:44:19:047AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(311,156,NULL,'You can rename or delete the opportunity itself using the buttons below.',0,'Apr  1 2005  9:44:19:047AM',0,'Apr  1 2005  9:44:19:047AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(312,156,NULL,'You can modify, view and delete the details of any particular component by clicking the select button in the action column.',0,'Apr  1 2005  9:44:19:047AM',0,'Apr  1 2005  9:44:19:047AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(313,156,NULL,'You can add a new component associated with the account. It also displays the status, amount and the date when the component will be closed.',0,'Apr  1 2005  9:44:19:047AM',0,'Apr  1 2005  9:44:19:047AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(314,157,NULL,'Lets you modify or delete the ticket information',0,'Apr  1 2005  9:44:19:057AM',0,'Apr  1 2005  9:44:19:057AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(315,157,NULL,'You can view the tasks and documents related to a ticket along with the history of that document by clicking on the corresponding links.',0,'Apr  1 2005  9:44:19:057AM',0,'Apr  1 2005  9:44:19:057AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(316,158,NULL,'You can also have tasks and documents related to a ticket along with the document history.',0,'Apr  1 2005  9:44:19:067AM',0,'Apr  1 2005  9:44:19:067AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(317,158,NULL,'Lets you modify / update the ticket information.',0,'Apr  1 2005  9:44:19:067AM',0,'Apr  1 2005  9:44:19:067AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(318,159,NULL,'The details of the task can be viewed or modified by clicking on the select button under the Action column.',0,'Apr  1 2005  9:44:19:067AM',0,'Apr  1 2005  9:44:19:067AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(319,159,NULL,'You can update the task by clicking on the description of the task.',0,'Apr  1 2005  9:44:19:067AM',0,'Apr  1 2005  9:44:19:067AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(320,159,NULL,'You can add a task which is associated with the existing ticket.',0,'Apr  1 2005  9:44:19:077AM',0,'Apr  1 2005  9:44:19:077AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(321,160,NULL,'The document can be uploaded using the browse button.',0,'Apr  1 2005  9:44:19:077AM',0,'Apr  1 2005  9:44:19:077AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(322,162,NULL,'You can download all the different versions of the documents using the "Download" link in the Action column.',0,'Apr  1 2005  9:44:19:087AM',0,'Apr  1 2005  9:44:19:087AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(323,163,NULL,'The subject and the filename of the document can be modified.',0,'Apr  1 2005  9:44:19:087AM',0,'Apr  1 2005  9:44:19:087AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(324,164,NULL,'The subject and the file name can be changed. The version number is updated when an updated document is uploaded.',0,'Apr  1 2005  9:44:19:097AM',0,'Apr  1 2005  9:44:19:097AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(325,165,NULL,'The exported data can be viewed as a .csv file or in html format. The exported data can also be deleted when the select button in the action field is clicked.',0,'Apr  1 2005  9:44:19:097AM',0,'Apr  1 2005  9:44:19:097AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(326,165,NULL,'You can also choose to display a list of all the exported data in the system or the exported data created by you.',0,'Apr  1 2005  9:44:19:097AM',0,'Apr  1 2005  9:44:19:097AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(327,165,NULL,'New export data can be generated using the "Generate new export" link.',0,'Apr  1 2005  9:44:19:097AM',0,'Apr  1 2005  9:44:19:097AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(328,166,NULL,'Revenue details along with the option to modify and delete revenue.',0,'Apr  1 2005  9:44:19:107AM',0,'Apr  1 2005  9:44:19:107AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(329,168,NULL,'You can add / update an opportunity here and assign it to an employee. The opportunity can be associated with an account or a contact. Each opportunity created requires the estimate or the probability of closing the deal, the duration and the best estimate of the person following up the lead.',0,'Apr  1 2005  9:44:19:140AM',0,'Apr  1 2005  9:44:19:140AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(330,169,NULL,'You can add / update an opportunity here and assign it to an employee. The opportunity can be associated with an account or a contact. Each opportunity created requires the estimate or the probability of closing the deal, the duration and the best estimate of the person following up the lead.',0,'Apr  1 2005  9:44:19:200AM',0,'Apr  1 2005  9:44:19:200AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(331,170,NULL,'An opportunity can be renamed or deleted using the buttons present at the bottom of the page',0,'Apr  1 2005  9:44:19:200AM',0,'Apr  1 2005  9:44:19:200AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(332,170,NULL,'Clicking on the select button lets you view, modify or delete the details about the component',0,'Apr  1 2005  9:44:19:200AM',0,'Apr  1 2005  9:44:19:200AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(333,170,NULL,'Clicking on the name of the component would show the details about the component',0,'Apr  1 2005  9:44:19:200AM',0,'Apr  1 2005  9:44:19:200AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(334,170,NULL,'Add a new component which is associated with the account.',0,'Apr  1 2005  9:44:19:210AM',0,'Apr  1 2005  9:44:19:210AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(335,171,NULL,'The description of the opportunity can be changed using the update button.',0,'Apr  1 2005  9:44:19:210AM',0,'Apr  1 2005  9:44:19:210AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(336,172,NULL,'You can modify and delete the opportunity created using the modify and the delete buttons',0,'Apr  1 2005  9:44:19:220AM',0,'Apr  1 2005  9:44:19:220AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(337,173,NULL,'The component type can be selected using the ?select ? link',0,'Apr  1 2005  9:44:19:220AM',0,'Apr  1 2005  9:44:19:220AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(338,173,NULL,'You can assign the component to any of the employee present using the dropdown list present.',0,'Apr  1 2005  9:44:19:220AM',0,'Apr  1 2005  9:44:19:220AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(339,174,NULL,'The component type can be selected using the ?select ? link',0,'Apr  1 2005  9:44:19:230AM',0,'Apr  1 2005  9:44:19:230AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(340,174,NULL,'You can assign the component to any of the employee present using the dropdown list present.',0,'Apr  1 2005  9:44:19:230AM',0,'Apr  1 2005  9:44:19:230AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(341,174,NULL,'Clicking the update button can save the changes made to the component',0,'Apr  1 2005  9:44:19:240AM',0,'Apr  1 2005  9:44:19:240AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(342,175,NULL,'You can modify and delete the opportunity created using the modify and the delete buttons',0,'Apr  1 2005  9:44:19:240AM',0,'Apr  1 2005  9:44:19:240AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(343,176,NULL,'This page is contains a general information section, a block hour information section and service model options section.',0,'Apr  1 2005  9:44:19:240AM',0,'Apr  1 2005  9:44:19:240AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(344,176,NULL,'The general information section allows you to enter a service contract number, the start and end dates, the contract value, category, type, labor categories and free form description and billing notes.',0,'Apr  1 2005  9:44:19:250AM',0,'Apr  1 2005  9:44:19:250AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(345,176,NULL,'The category and type of for service contacts are configured by your administrator to suit your business requirements. If you find, that a category or type required to describe the contract is not available in the list, please contract your manager of administrator to add the options. The options can be added using the administrator view.',0,'Apr  1 2005  9:44:19:250AM',0,'Apr  1 2005  9:44:19:250AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(346,176,NULL,'The block hour information allows you to specify or adjust the hours associated with the contract.  The adjust link opens a pop up that allows you to enter hours credited or hours subtracted (preced with a ''-'' for negative numbers) a description and choose from a pre-configured list, the reason for the change. Again, if you do not find the required reason, please contact your manager or administrator to add the new option.',0,'Apr  1 2005  9:44:19:250AM',0,'Apr  1 2005  9:44:19:250AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(347,176,NULL,'When your company performs work as a result of requests to the help desk department, the hours remaining is modified based on the travel and labor hours counted towards this contract.',0,'Apr  1 2005  9:44:19:250AM',0,'Apr  1 2005  9:44:19:250AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(348,176,NULL,'The service model options allow you to specify the terms of the service contract for various types of services (telephone, onsite, email or a general response time.) All the service model options are mandatory. If  one of the service model options is not relevant to the account, it is required to explicitly choose the option that specifies that this option is not not applicable. Hence, it is recommended that each of these lists be pre-configured with at least the "not applicable" option.',0,'Apr  1 2005  9:44:19:250AM',0,'Apr  1 2005  9:44:19:250AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(349,176,NULL,'The select link in the labor categories field, allows multiple labor categories to be assigned to this service contract. The select link opens a pop up that displays labor category codes and a description of these codes. These labor category records were either setup during initial system installation or through the products module of this CRM application. If you require a labor category that is not available in the list view of the popup, you may add one using the catalog module if you have permission to add them, or contact your manager or administrator who has permissions to add labor categories using the catalog module.',0,'Apr  1 2005  9:44:19:250AM',0,'Apr  1 2005  9:44:19:250AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(350,177,NULL,'This page is contains a general information section, a block hour information section and service model options section.',0,'Apr  1 2005  9:44:19:260AM',0,'Apr  1 2005  9:44:19:260AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(351,177,NULL,'The functionality and business rule for the general information section and the service model options section are similar to those of "add contract".',0,'Apr  1 2005  9:44:19:270AM',0,'Apr  1 2005  9:44:19:270AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(352,177,NULL,'The block hour information section allows you adjust the hours for this contract. The adjust link is similar to that in the "add contract" page and allows you to either reimburse or subtract (precede with a ''-'') the hours for this contract. The new hours as a result of the adjustment is displayed when the pop up closes and is saved only when the service contract is updated.',0,'Apr  1 2005  9:44:19:270AM',0,'Apr  1 2005  9:44:19:270AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(353,179,NULL,'A history link is visible if hours where specified for this contract or when as a result of work orders to the help desk department, hours were counted towards this contract.',0,'Apr  1 2005  9:44:19:270AM',0,'Apr  1 2005  9:44:19:270AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(354,179,NULL,'The history link opens a popup that shows a list of entries that modified the hours. The hours may have been modified(or initially added)  when the service contract was created, or as a result of work orders to the help desk department or due to an explicit modification of the service contract details.',0,'Apr  1 2005  9:44:19:280AM',0,'Apr  1 2005  9:44:19:280AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(355,179,NULL,'The labor categories field displays a list of comma seperated labor category codes specified for this contract. A description of these codes can be viewed from the catalog module of this CRM application.',0,'Apr  1 2005  9:44:19:280AM',0,'Apr  1 2005  9:44:19:280AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(356,181,NULL,'The information about an asset is categorized into the specific asset information, asset category, the service contract information, the service options for this asset, the warranty information and financial information. It also allows additional notes to be entered for this asset.',0,'Apr  1 2005  9:44:19:280AM',0,'Apr  1 2005  9:44:19:280AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(357,181,NULL,'The serial number is mandatory to add an asset. It is usually provided by the manufacturer of the asset.',0,'Apr  1 2005  9:44:19:290AM',0,'Apr  1 2005  9:44:19:290AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(358,181,NULL,'The date listed is prefilled with the current date and specifies the date when the asset was recorded to be part of the service contract for this account.',0,'Apr  1 2005  9:44:19:290AM',0,'Apr  1 2005  9:44:19:290AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(359,181,NULL,'The Asset Tag is an internal identifier provided for the asset. The asset tag is usually unique for all assets associated with an account.',0,'Apr  1 2005  9:44:19:290AM',0,'Apr  1 2005  9:44:19:290AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(360,181,NULL,'The category section allows you to categorize the asset to a fine level of detail (e.g., Hardware - Server - Blade Server). Level 1, Level 2 and Level 3 are drop lists where the contents visible in each level depends upon the item chosen in the preceding level.',0,'Apr  1 2005  9:44:19:290AM',0,'Apr  1 2005  9:44:19:290AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(361,181,NULL,'The information in the drop lists of the category section are preconfigured in the admin module. If you have to add or modify the categories that need to be displayed, you may do so by configuring the asset module. An administrator or a person with access to the admin module would be able to configure the categories that need to be displayed in the category section of this page.',0,'Apr  1 2005  9:44:19:290AM',0,'Apr  1 2005  9:44:19:290AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(362,181,NULL,'The service model options section allows you to specify the service model options for an asset. The service model options for an asset are defaulted to the the service model options of the service contract that this asset is associated with. These may be changed by choosing another item from the respective drop lists.',0,'Apr  1 2005  9:44:19:290AM',0,'Apr  1 2005  9:44:19:290AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(363,181,NULL,'In the service contract section of this page, the select link opens a pop up and displays a list of service contracts associated with the account. Clicking on the add link against a service contract record in the pop up associates the specified service contract with the asset. The association is permanently recorded only when the asset is saved.',0,'Apr  1 2005  9:44:19:300AM',0,'Apr  1 2005  9:44:19:300AM',NULL,NULL,1,8)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(364,182,NULL,'The asset details are categorized into specific asset information, asset category, service contract information, service options for this asset, warranty information and financial information.',0,'Apr  1 2005  9:44:19:310AM',0,'Apr  1 2005  9:44:19:310AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(365,182,NULL,'The service model options for this asset displays the items chosen when the asset record was created or modified. If they are specified to default to the service options in the service contract, the option is preceded by the word ''Default''.',0,'Apr  1 2005  9:44:19:310AM',0,'Apr  1 2005  9:44:19:310AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(366,185,NULL,'The account contact information  consists of the contact''s name and contact information (email, telephone and postal addresses.)',0,'Apr  1 2005  9:44:19:330AM',0,'Apr  1 2005  9:44:19:330AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(367,185,NULL,'The ''select'' link of the contact type field open''s a popup that allows you to choose the contact types that are applicable for this contact. The contact types are preconfigured in the admin module. If you do not find a contact type that you need, you may edit the types in the admin module or contact your supervisor or an administrator who has permissions to do so.',0,'Apr  1 2005  9:44:19:330AM',0,'Apr  1 2005  9:44:19:330AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(368,185,NULL,'Checking the box at the end of this page enables you to provide portal access to this account contact. Since portal usage information is sent by email to the account contacts, to complete the process of providing portal access to an account contact, it is mandatory for the account contact to have an email address.',0,'Apr  1 2005  9:44:19:340AM',0,'Apr  1 2005  9:44:19:340AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(369,186,NULL,'The ''select'' link of the contact type field open''s a popup that allows you to choose the contact types that are applicable for this contact. The contact types are preconfigured in the admin module. If you do not find a contact type that you need, you may edit the types in the admin module or contact your supervisor or an administrator who has permissions to do so.',0,'Apr  1 2005  9:44:19:350AM',0,'Apr  1 2005  9:44:19:350AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(370,186,NULL,'The details can be updated using the update button.',0,'Apr  1 2005  9:44:19:350AM',0,'Apr  1 2005  9:44:19:350AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(371,186,NULL,'The account contact information consists of the contact''s name and contact information (email, telephone and postal addresses.)',0,'Apr  1 2005  9:44:19:350AM',0,'Apr  1 2005  9:44:19:350AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(372,187,NULL,'Based on your permissions, you can provide portal access to an account contact who does not have portal access, edit the portal user information and disable(or enable) the portal user from this page.',0,'Apr  1 2005  9:44:19:350AM',0,'Apr  1 2005  9:44:19:350AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(373,187,NULL,'If the account contact does not have an email address, you will not be allowed to add or edit the portal user information for the account contact.',0,'Apr  1 2005  9:44:19:357AM',0,'Apr  1 2005  9:44:19:357AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(374,188,NULL,'The information that is modified in this page affects portal access to the application for the user.',0,'Apr  1 2005  9:44:19:357AM',0,'Apr  1 2005  9:44:19:357AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(375,188,NULL,'The information than can be modified are, the portal role (if more than one role exists,) the expiration date and the password.',0,'Apr  1 2005  9:44:19:357AM',0,'Apr  1 2005  9:44:19:357AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(376,188,NULL,'The password is automatically generated and mailed to the account contact, hence, for this purpose it is mandatory for the account contact to have an email address when the portal information is modified.',0,'Apr  1 2005  9:44:19:357AM',0,'Apr  1 2005  9:44:19:357AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(377,189,NULL,'This page allows you to specify the portall role, the expiration date and the email to which portal access information (username and password) is sent.',0,'Apr  1 2005  9:44:19:367AM',0,'Apr  1 2005  9:44:19:367AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(378,189,NULL,'The password is automatically generated and mailed to the account contact, hence, for this purpose it is mandatory for the account contact to have an email address when the portal information is modified.',0,'Apr  1 2005  9:44:19:367AM',0,'Apr  1 2005  9:44:19:367AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(379,190,NULL,'Clicking the select button under the action column gives you the option to view the details about the campaign, download the mail merge and also lets you to export it to Excel.',0,'Apr  1 2005  9:44:19:377AM',0,'Apr  1 2005  9:44:19:377AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(380,190,NULL,'Clicking on the campaign name gives you complete details about the campaign.',0,'Apr  1 2005  9:44:19:377AM',0,'Apr  1 2005  9:44:19:377AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(381,190,NULL,'You can display the campaigns created and their details using three different views by selecting from the drop down list.',0,'Apr  1 2005  9:44:19:387AM',0,'Apr  1 2005  9:44:19:387AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(382,191,NULL,'This creates a new Campaign. This takes in both the campaign and its description.',0,'Apr  1 2005  9:44:19:387AM',0,'Apr  1 2005  9:44:19:387AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(383,192,NULL,'You can view, modify and delete details by clicking the select button under the action column.',0,'Apr  1 2005  9:44:19:387AM',0,'Apr  1 2005  9:44:19:387AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(384,192,NULL,'For each of the campaign, the groups, message and delivery columns show whether they are complete or not. Clicking on these will help you choose the group, message and the delivery date.',0,'Apr  1 2005  9:44:19:397AM',0,'Apr  1 2005  9:44:19:397AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(385,192,NULL,'Clicking the name of the campaign shows you more details about the campaign and also shows the list of the things to be selected before a campaign can be activated',0,'Apr  1 2005  9:44:19:397AM',0,'Apr  1 2005  9:44:19:397AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(386,192,NULL,'You can view your incomplete campaigns or all the incomplete campaigns. You can select the view with the drop down list at the top.',0,'Apr  1 2005  9:44:19:397AM',0,'Apr  1 2005  9:44:19:397AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(387,192,NULL,'Add a campaign',0,'Apr  1 2005  9:44:19:397AM',0,'Apr  1 2005  9:44:19:397AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(388,193,NULL,'You can also click the select button under the Action column for viewing, modifying or deleting the details.',0,'Apr  1 2005  9:44:19:397AM',0,'Apr  1 2005  9:44:19:397AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(389,193,NULL,'Clicking the group name will show the list of contacts present in the group.',0,'Apr  1 2005  9:44:19:407AM',0,'Apr  1 2005  9:44:19:407AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(390,193,NULL,'Add a contact group using the link "Add a Contact Group".',0,'Apr  1 2005  9:44:19:407AM',0,'Apr  1 2005  9:44:19:407AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(391,193,NULL,'You can filter the list of groups displayed by selecting from the drop down.',0,'Apr  1 2005  9:44:19:407AM',0,'Apr  1 2005  9:44:19:407AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(392,194,NULL,'You can preview the details of the group by clicking on the preview button.',0,'Apr  1 2005  9:44:19:407AM',0,'Apr  1 2005  9:44:19:407AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(393,194,NULL,'You can also select from the list of "Selected criteria and contacts" and remove them by clicking the remove button.',0,'Apr  1 2005  9:44:19:407AM',0,'Apr  1 2005  9:44:19:407AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(394,194,NULL,'You can define the criteria to generate the list by using the different filters present and then add them to the "Selected criteria and contacts".',0,'Apr  1 2005  9:44:19:417AM',0,'Apr  1 2005  9:44:19:417AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(395,194,NULL,'You can select the criteria for the group to be created. Clicking the "Add/Remove Contacts" can choose the specific contacts.',0,'Apr  1 2005  9:44:19:417AM',0,'Apr  1 2005  9:44:19:417AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(396,195,NULL,'You can view, modify, clone or delete each of the messages.',0,'Apr  1 2005  9:44:19:417AM',0,'Apr  1 2005  9:44:19:417AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(397,195,NULL,'The dropdown list acts as filters for displaying the messages that meet certain criteria.',0,'Apr  1 2005  9:44:19:417AM',0,'Apr  1 2005  9:44:19:417AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(398,195,NULL,'Clicking on the message name will show details about the message, which can be updated.',0,'Apr  1 2005  9:44:19:427AM',0,'Apr  1 2005  9:44:19:427AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(399,195,NULL,'Add a new message',0,'Apr  1 2005  9:44:19:427AM',0,'Apr  1 2005  9:44:19:427AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(400,196,NULL,'The new message can be saved by clicking the save message button.',0,'Apr  1 2005  9:44:19:437AM',0,'Apr  1 2005  9:44:19:437AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(401,196,NULL,'The permissions or the access type for the message can be chosen from drop down box.',0,'Apr  1 2005  9:44:19:437AM',0,'Apr  1 2005  9:44:19:437AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(402,197,NULL,'Clicking on the "surveys" will let you create new interactive surveys.',0,'Apr  1 2005  9:44:19:437AM',0,'Apr  1 2005  9:44:19:437AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(403,198,NULL,'You can use the preview button to view the details about the contacts in a group.',0,'Apr  1 2005  9:44:19:447AM',0,'Apr  1 2005  9:44:19:447AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(404,198,NULL,'You can modify or delete a group.',0,'Apr  1 2005  9:44:19:447AM',0,'Apr  1 2005  9:44:19:447AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(405,199,NULL,'You can change the version of the document when ever an updated document is uploaded.',0,'Apr  1 2005  9:44:19:447AM',0,'Apr  1 2005  9:44:19:447AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(406,203,NULL,'You can browse to select a new document to upload if its related to the campaign.',0,'Apr  1 2005  9:44:19:457AM',0,'Apr  1 2005  9:44:19:457AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(407,205,NULL,'You can also go back from the current detailed view to the group details criteria.',0,'Apr  1 2005  9:44:19:467AM',0,'Apr  1 2005  9:44:19:467AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(408,206,NULL,'You can download from the list of documents available by using the "download" link under the action column.',0,'Apr  1 2005  9:44:19:467AM',0,'Apr  1 2005  9:44:19:467AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(409,208,NULL,'The name of the survey is a mandatory field for creating a survey. A description, introduction and thank-you note can also be added.',0,'Apr  1 2005  9:44:19:477AM',0,'Apr  1 2005  9:44:19:477AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(410,210,NULL,'You can download the mail merge shown at the bottom of the details.',0,'Apr  1 2005  9:44:19:487AM',0,'Apr  1 2005  9:44:19:487AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(411,211,NULL,'Different versions of the document can be downloaded using the "download" link in the action column.',0,'Apr  1 2005  9:44:19:487AM',0,'Apr  1 2005  9:44:19:487AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(412,216,NULL,'You can update the campaign schedule by filling in the run date and the delivery method whether it''s an email, fax or letter or any other method.',0,'Apr  1 2005  9:44:19:507AM',0,'Apr  1 2005  9:44:19:507AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(413,217,NULL,'You can also generate a list of contacts be selecting from the filters and adding them to the "selected criteria and contacts" list.',0,'Apr  1 2005  9:44:19:507AM',0,'Apr  1 2005  9:44:19:507AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(414,217,NULL,'You can choose the contacts in the group using the "Add / Remove contacts" link present.',0,'Apr  1 2005  9:44:19:517AM',0,'Apr  1 2005  9:44:19:517AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(415,217,NULL,'You can update the name of the group',0,'Apr  1 2005  9:44:19:517AM',0,'Apr  1 2005  9:44:19:517AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(416,219,NULL,'There can be multiple attachments to a single message. The attachment that needs to be downloaded has to be selected first and then downloaded.',0,'Apr  1 2005  9:44:19:557AM',0,'Apr  1 2005  9:44:19:557AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(417,223,NULL,'The details of the documents can be viewed or modified by clicking on the select button under the Action column.',0,'Apr  1 2005  9:44:19:567AM',0,'Apr  1 2005  9:44:19:567AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(418,223,NULL,'You can view the details, modify, download or delete the documents associated with the account.',0,'Apr  1 2005  9:44:19:567AM',0,'Apr  1 2005  9:44:19:567AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(419,223,NULL,'A new document can be added to the account.',0,'Apr  1 2005  9:44:19:567AM',0,'Apr  1 2005  9:44:19:567AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(420,223,NULL,'The document versions can be updated by using the "add version" link.',0,'Apr  1 2005  9:44:19:577AM',0,'Apr  1 2005  9:44:19:577AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(421,224,NULL,'The name of the campaign can be changed or deleted by using the buttons at the bottom of the page.',0,'Apr  1 2005  9:44:19:577AM',0,'Apr  1 2005  9:44:19:577AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(422,224,NULL,'You can choose a group / groups, a message for the campaign, and a delivery date for the campaign to start. You can also add attachments to the messages you send to recipients.',0,'Apr  1 2005  9:44:19:577AM',0,'Apr  1 2005  9:44:19:577AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(423,225,NULL,'You can check the groups you want for the current campaign.',0,'Apr  1 2005  9:44:19:587AM',0,'Apr  1 2005  9:44:19:587AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(424,225,NULL,'You can also add attachments to the messages you send to recipients by clicking the preview recipient''s link next to each group.',0,'Apr  1 2005  9:44:19:587AM',0,'Apr  1 2005  9:44:19:587AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(425,225,NULL,'You can view all the groups present or the groups created by you just by choosing from the drop down box.',0,'Apr  1 2005  9:44:19:587AM',0,'Apr  1 2005  9:44:19:587AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(426,226,NULL,'You can select a message for this campaign from the dropdown list of all the messages or just your messages.',0,'Apr  1 2005  9:44:19:597AM',0,'Apr  1 2005  9:44:19:597AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(427,226,NULL,'The messages can be of multiple types, which can be used as filters and can be selected from the drop down list. For each type you have further classification.',0,'Apr  1 2005  9:44:19:597AM',0,'Apr  1 2005  9:44:19:597AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(428,227,NULL,'The attachments configured are the surveys or the file attachments. Using the links "change survey" and "change file attachments", you can change either of them.',0,'Apr  1 2005  9:44:19:597AM',0,'Apr  1 2005  9:44:19:597AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(429,228,NULL,'You can view and select from all, or only your own surveys.',0,'Apr  1 2005  9:44:19:597AM',0,'Apr  1 2005  9:44:19:607AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(430,229,NULL,'You can download or remove the file name. You can also upload files using the browse button.',0,'Apr  1 2005  9:44:19:607AM',0,'Apr  1 2005  9:44:19:607AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(431,230,NULL,'The name and the description of the campaign can be changed.',0,'Apr  1 2005  9:44:19:607AM',0,'Apr  1 2005  9:44:19:607AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(432,231,NULL,'You can modify, delete or clone the message details by clicking on corresponding buttons.',0,'Apr  1 2005  9:44:19:617AM',0,'Apr  1 2005  9:44:19:617AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(433,232,NULL,'You can select font properties for the text of the message along with the size and indentation.',0,'Apr  1 2005  9:44:19:617AM',0,'Apr  1 2005  9:44:19:617AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(434,232,NULL,'The name of the message and the access type can be given, which specifies who can view the message.',0,'Apr  1 2005  9:44:19:617AM',0,'Apr  1 2005  9:44:19:617AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(435,233,NULL,'You can modify, delete or clone the message details by clicking on corresponding buttons.',0,'Apr  1 2005  9:44:19:627AM',0,'Apr  1 2005  9:44:19:627AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(436,234,NULL,'You can select font properties for the text of the message along with the size and indentation.',0,'Apr  1 2005  9:44:19:627AM',0,'Apr  1 2005  9:44:19:627AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(437,234,NULL,'The name of the message and the access type can be given, which specifies who can view the message.',0,'Apr  1 2005  9:44:19:637AM',0,'Apr  1 2005  9:44:19:637AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(438,235,NULL,'You can also view, modify and delete the details of a survey.',0,'Apr  1 2005  9:44:19:637AM',0,'Apr  1 2005  9:44:19:637AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(439,235,NULL,'Clicking on the name of the survey shows its details.',0,'Apr  1 2005  9:44:19:637AM',0,'Apr  1 2005  9:44:19:637AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(440,235,NULL,'Add a new survey',0,'Apr  1 2005  9:44:19:637AM',0,'Apr  1 2005  9:44:19:637AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(441,235,NULL,'You can view all or your own surveys using the drop down list.',0,'Apr  1 2005  9:44:19:637AM',0,'Apr  1 2005  9:44:19:637AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(442,236,NULL,'The "Save & Add" button saves the current question and lets you add another one immediately.',0,'Apr  1 2005  9:44:19:647AM',0,'Apr  1 2005  9:44:19:647AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(443,236,NULL,'You can also specify whether the particular question is required or not by checking the checkbox.',0,'Apr  1 2005  9:44:19:647AM',0,'Apr  1 2005  9:44:19:647AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(444,236,NULL,'If the selected question type is "Item List", then an Edit button is enabled which helps in adding new elements to the existing list.',0,'Apr  1 2005  9:44:19:647AM',0,'Apr  1 2005  9:44:19:647AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(445,236,NULL,'A new question type can be selected through the drop down list.',0,'Apr  1 2005  9:44:19:647AM',0,'Apr  1 2005  9:44:19:647AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(446,237,NULL,'The preview button shows you the survey questions in a pop-up window.',0,'Apr  1 2005  9:44:19:657AM',0,'Apr  1 2005  9:44:19:657AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(447,237,NULL,'You can modify, delete, and preview the survey details using the buttons at the top of the page.',0,'Apr  1 2005  9:44:19:657AM',0,'Apr  1 2005  9:44:19:657AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(448,237,NULL,'You can view the survey introduction text, the questions and the thank-you text.',0,'Apr  1 2005  9:44:19:657AM',0,'Apr  1 2005  9:44:19:657AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(449,238,NULL,'You can add questions to the survey here.',0,'Apr  1 2005  9:44:19:657AM',0,'Apr  1 2005  9:44:19:657AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(450,238,NULL,'Clicking the "Done" button can save the survey and you can also traverse back by clicking the "Back" button.',0,'Apr  1 2005  9:44:19:667AM',0,'Apr  1 2005  9:44:19:667AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(451,238,NULL,'The survey questions can be moved up or down using the "Up" or "Down" links present in the action field.',0,'Apr  1 2005  9:44:19:667AM',0,'Apr  1 2005  9:44:19:667AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(452,238,NULL,'You can edit or delete any of the survey questions using the "edit" or "del" link under the action field.',0,'Apr  1 2005  9:44:19:667AM',0,'Apr  1 2005  9:44:19:667AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(453,238,NULL,'You can add new survey questions here.',0,'Apr  1 2005  9:44:19:667AM',0,'Apr  1 2005  9:44:19:667AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(454,239,NULL,'You can click on "Create Attachments" and include interactive items, like surveys, or provide additional materials like files.',0,'Apr  1 2005  9:44:19:667AM',0,'Apr  1 2005  9:44:19:667AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(455,239,NULL,'Clicking the "Create Message"  link lets you compose a message to reach your audience.',0,'Apr  1 2005  9:44:19:677AM',0,'Apr  1 2005  9:44:19:677AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(456,239,NULL,'You can click the "Build Groups" link to assemble dynamic distribution of groups. Each campaign needs at least one group to send a message to.',0,'Apr  1 2005  9:44:19:677AM',0,'Apr  1 2005  9:44:19:677AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(457,239,NULL,'The "Campaign Builder" can be clicked to select groups of contacts that you would like to send a message to, schedule a delivery date, etc.',0,'Apr  1 2005  9:44:19:677AM',0,'Apr  1 2005  9:44:19:677AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(458,239,NULL,'You can click on the "Dashboard" to view the sent messages and to drill down and view recipients and survey results.',0,'Apr  1 2005  9:44:19:677AM',0,'Apr  1 2005  9:44:19:677AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(459,240,NULL,'Lets you modify or delete ticket information',0,'Apr  1 2005  9:44:19:687AM',0,'Apr  1 2005  9:44:19:687AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(460,240,NULL,'You can also store tasks and documents related to a ticket.',0,'Apr  1 2005  9:44:19:687AM',0,'Apr  1 2005  9:44:19:687AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(461,241,NULL,'For each new ticket you can select the organization, the contact and also the issue for which the ticket is being created. The assignment and the resolution of the ticket can also be entered.',0,'Apr  1 2005  9:44:19:697AM',0,'Apr  1 2005  9:44:19:697AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(462,242,NULL,'The search can be done based on different parameters like the ticket number, account associated, priority, employee whom the ticket is assigned etc.',0,'Apr  1 2005  9:44:19:697AM',0,'Apr  1 2005  9:44:19:697AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(463,243,NULL,'Clicking on the subject of the exported data shows you the details of the ticket like the ticket ID, the organization and its issue (why the particular ticket was generated).',0,'Apr  1 2005  9:44:19:697AM',0,'Apr  1 2005  9:44:19:697AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(464,243,NULL,'Clicking on the select button under the action column lets you view the data, download the data in .CSV format or delete the data.',0,'Apr  1 2005  9:44:19:707AM',0,'Apr  1 2005  9:44:19:707AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(465,243,NULL,'You can filter the exported date generated, by you or by all employees using the dropdown list.',0,'Apr  1 2005  9:44:19:707AM',0,'Apr  1 2005  9:44:19:707AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(466,243,NULL,'You can generate a new exported data by clicking the link "Generate new export".',0,'Apr  1 2005  9:44:19:707AM',0,'Apr  1 2005  9:44:19:707AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(467,244,NULL,'You can save the details of the modified ticket by clicking the "Update" button.',0,'Apr  1 2005  9:44:19:707AM',0,'Apr  1 2005  9:44:19:707AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(468,245,NULL,'You can save the details of the modified ticket by clicking the "Update" button.',0,'Apr  1 2005  9:44:19:717AM',0,'Apr  1 2005  9:44:19:717AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(469,246,NULL,'The details of the task can be viewed or modified by clicking on the select button under the Action column.',0,'Apr  1 2005  9:44:19:717AM',0,'Apr  1 2005  9:44:19:717AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(470,246,NULL,'You can update the task by clicking on the description of the task.',0,'Apr  1 2005  9:44:19:727AM',0,'Apr  1 2005  9:44:19:727AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(471,246,NULL,'You can add a task which is associated with the existing ticket.',0,'Apr  1 2005  9:44:19:727AM',0,'Apr  1 2005  9:44:19:727AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(472,247,NULL,'The details of the documents can be viewed or modified by clicking on the select button under the Action column.',0,'Apr  1 2005  9:44:19:727AM',0,'Apr  1 2005  9:44:19:727AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(473,247,NULL,'You can view the details, modify, download or delete the documents associated with the ticket.',0,'Apr  1 2005  9:44:19:727AM',0,'Apr  1 2005  9:44:19:727AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(474,247,NULL,'A new document associated with the ticket can be added.',0,'Apr  1 2005  9:44:19:727AM',0,'Apr  1 2005  9:44:19:727AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(475,247,NULL,'The document versions can be updated by using the "add version" link.',0,'Apr  1 2005  9:44:19:737AM',0,'Apr  1 2005  9:44:19:737AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(476,248,NULL,'A new record is added into the folder using the link "Add a record to this folder". Multiple records can be added to this folder if the folder has the necessary settings.',0,'Apr  1 2005  9:44:19:737AM',0,'Apr  1 2005  9:44:19:737AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(477,248,NULL,'You can select the custom folder using the drop down list.',0,'Apr  1 2005  9:44:19:737AM',0,'Apr  1 2005  9:44:19:737AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(478,249,NULL,'The details are saved by clicking the save button.',0,'Apr  1 2005  9:44:19:747AM',0,'Apr  1 2005  9:44:19:747AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(479,250,NULL,'A chronological history of all actions associated with a ticket is maintined.',0,'Apr  1 2005  9:44:19:747AM',0,'Apr  1 2005  9:44:19:747AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(480,258,NULL,'The changes can be saved using the "Update" button.',0,'Apr  1 2005  9:44:19:767AM',0,'Apr  1 2005  9:44:19:767AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(481,259,NULL,'You can modify the folder information along with the record details by clicking on the Modify button.',0,'Apr  1 2005  9:44:19:767AM',0,'Apr  1 2005  9:44:19:767AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(482,262,NULL,'The document can be uploaded using the browse button.',0,'Apr  1 2005  9:44:19:777AM',0,'Apr  1 2005  9:44:19:777AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(483,263,NULL,'You can download all the versions of a document.',0,'Apr  1 2005  9:44:19:787AM',0,'Apr  1 2005  9:44:19:787AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(484,264,NULL,'You can also have tasks and documents related to a ticket.',0,'Apr  1 2005  9:44:19:787AM',0,'Apr  1 2005  9:44:19:787AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(485,264,NULL,'Lets you modify / update the ticket information.',0,'Apr  1 2005  9:44:19:787AM',0,'Apr  1 2005  9:44:19:787AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(486,265,NULL,'A new version of a file can be uploaded using the browse button.',0,'Apr  1 2005  9:44:19:797AM',0,'Apr  1 2005  9:44:19:797AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(487,266,NULL,'You can delete a record by clicking on "Del" next to the record.',0,'Apr  1 2005  9:44:19:797AM',0,'Apr  1 2005  9:44:19:797AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(488,266,NULL,'You can add a record by clicking on "Add Ticket".',0,'Apr  1 2005  9:44:19:807AM',0,'Apr  1 2005  9:44:19:807AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(489,266,NULL,'You can view more records in a particular section by clicking "Show More".',0,'Apr  1 2005  9:44:19:807AM',0,'Apr  1 2005  9:44:19:807AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(490,266,NULL,'You can view more details by clicking on the record.',0,'Apr  1 2005  9:44:19:807AM',0,'Apr  1 2005  9:44:19:807AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(491,266,NULL,'You can update a record by clicking on "Edit" next to the record.',0,'Apr  1 2005  9:44:19:807AM',0,'Apr  1 2005  9:44:19:807AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(492,267,NULL,'The first activity date displays the date at which work started in an activity log and the last activity date displays the last date that work was done for the activity log.',0,'Apr  1 2005  9:44:19:817AM',0,'Apr  1 2005  9:44:19:817AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(493,267,NULL,'You may view, add, edit and delete activity logs from this page based on your permissions',0,'Apr  1 2005  9:44:19:817AM',0,'Apr  1 2005  9:44:19:817AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(494,267,NULL,'Adding, editing and deleting activity logs with hours counting towards a service contract changes the hours remaining in a service contract. The hours remaining is displayed in the ticket header.',0,'Apr  1 2005  9:44:19:827AM',0,'Apr  1 2005  9:44:19:827AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(495,268,NULL,'This page is divided into the general information, per day description of service and additional information sections',0,'Apr  1 2005  9:44:19:827AM',0,'Apr  1 2005  9:44:19:827AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(496,268,NULL,'The ''General Information'' section displays the associated service contract.',0,'Apr  1 2005  9:44:19:827AM',0,'Apr  1 2005  9:44:19:827AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(497,268,NULL,'The ''Per Day Description of Service'' section that allows you to enter description of work done.',0,'Apr  1 2005  9:44:19:827AM',0,'Apr  1 2005  9:44:19:827AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(498,268,NULL,'The ''Additional information'' section that allows you to enter the follow up information and phone and engineer response time.',0,'Apr  1 2005  9:44:19:827AM',0,'Apr  1 2005  9:44:19:827AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(499,269,NULL,'This page is divided into the general information, per day description of service and additional information sections',0,'Apr  1 2005  9:44:19:850AM',0,'Apr  1 2005  9:44:19:850AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(500,269,NULL,'The travel time and the labor time in the per day description section are summed and displayed to you for reference.',0,'Apr  1 2005  9:44:19:850AM',0,'Apr  1 2005  9:44:19:850AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(501,270,NULL,'This page is divided into the general information, per day description of service and additional information sections',0,'Apr  1 2005  9:44:19:850AM',0,'Apr  1 2005  9:44:19:850AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(502,270,NULL,'The ''General Information'' section displays the associated service contract.',0,'Apr  1 2005  9:44:19:850AM',0,'Apr  1 2005  9:44:19:850AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(503,270,NULL,'The ''Per Day Description of Service'' section that allows you to enter description of work done.',0,'Apr  1 2005  9:44:19:850AM',0,'Apr  1 2005  9:44:19:850AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(504,270,NULL,'# The ''Additional information'' section that allows you to enter the follow up information and phone and engineer response time.',0,'Apr  1 2005  9:44:19:860AM',0,'Apr  1 2005  9:44:19:860AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(505,271,NULL,'This page displays information about an asset that is relevant for maintenance work to be done on the asset and then displays the maintenance notes for the asset created to resolve the issue recorded in the ticket.',0,'Apr  1 2005  9:44:19:870AM',0,'Apr  1 2005  9:44:19:870AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(506,271,NULL,'You may view, add, edit and delete maintenance notes from this page based on your permissions.',0,'Apr  1 2005  9:44:19:870AM',0,'Apr  1 2005  9:44:19:870AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(507,272,NULL,'This page is divided into a general maintenance information section and a replacement parts section.',0,'Apr  1 2005  9:44:19:870AM',0,'Apr  1 2005  9:44:19:870AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(508,272,NULL,'The general mainetenance information section allows you to enter a description relating the reason for failure of the asset, or a description relating to the neccessity to service or upgrade the asset to keep it performing optimally or to include additional features.',0,'Apr  1 2005  9:44:19:870AM',0,'Apr  1 2005  9:44:19:870AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(509,272,NULL,'The replacement parts section allows you to enter the part number and a description of the part in each row. It initially displays three rows, allowing three parts to be entered. If additional parts need to be entered, you may save this maintenance note and choose to modify it. The modify page allows you to enter an additional part. Alternatively, to add more replacement parts, you may create another maintenance note.',0,'Apr  1 2005  9:44:19:870AM',0,'Apr  1 2005  9:44:19:870AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(510,273,NULL,'This page is divided into a general maintenance information section and a replacement parts section.',0,'Apr  1 2005  9:44:19:880AM',0,'Apr  1 2005  9:44:19:880AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(511,273,NULL,'The general mainetenance information section allows you to modify the description relating the reason for failure of the asset, or a description relating to the neccessity to service or upgrade the asset to keep it performing optimally or to include additional features.',0,'Apr  1 2005  9:44:19:880AM',0,'Apr  1 2005  9:44:19:880AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(512,273,NULL,'The replacement parts section allows you to enter the part number and a description of the part in each row.  It displays one additional row to allow you to enter an additional replacement part. If more parts need to be entered, you may update this maintenance note and choose to modify it again. Alternatively, to add more replacement parts, you may create another maintenance note.',0,'Apr  1 2005  9:44:19:880AM',0,'Apr  1 2005  9:44:19:880AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(513,274,NULL,'A new detailed employee record can be added.',0,'Apr  1 2005  9:44:19:900AM',0,'Apr  1 2005  9:44:19:900AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(514,274,NULL,'The details of each employee can be viewed, modified or deleted using the select button in the action column.',0,'Apr  1 2005  9:44:19:900AM',0,'Apr  1 2005  9:44:19:900AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(515,275,NULL,'You can modify or delete the employee details using the modify or delete buttons.',0,'Apr  1 2005  9:44:19:910AM',0,'Apr  1 2005  9:44:19:910AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(516,276,NULL,'The "Save" button saves the details of the employee entered.',0,'Apr  1 2005  9:44:19:910AM',0,'Apr  1 2005  9:44:19:910AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(517,276,NULL,'The "Save & New" button lets you to save the details of one employee and enter another employee in one operation.',0,'Apr  1 2005  9:44:19:910AM',0,'Apr  1 2005  9:44:19:910AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(518,277,NULL,'Clicking on the update button saves the modified details of the employee.',0,'Apr  1 2005  9:44:19:920AM',0,'Apr  1 2005  9:44:19:920AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(519,278,NULL,'The employee record can be modified or deleted from the system completely.',0,'Apr  1 2005  9:44:19:920AM',0,'Apr  1 2005  9:44:19:920AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(520,279,NULL,'You can cancel the reports that are scheduled to be processed by the server by the clicking the select button.',0,'Apr  1 2005  9:44:19:930AM',0,'Apr  1 2005  9:44:19:930AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(521,279,NULL,'The generated reports can be deleted or viewed/downloaded in .pdf format by clicking the select button under the action column.',0,'Apr  1 2005  9:44:19:930AM',0,'Apr  1 2005  9:44:19:930AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(522,279,NULL,'Add a new report',0,'Apr  1 2005  9:44:19:930AM',0,'Apr  1 2005  9:44:19:930AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(523,280,NULL,'There are four different modules and you can click on the module where you want to generate the report.',0,'Apr  1 2005  9:44:19:940AM',0,'Apr  1 2005  9:44:19:940AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(524,283,NULL,'You can use the "generate report" button to run the report.',0,'Apr  1 2005  9:44:19:950AM',0,'Apr  1 2005  9:44:19:950AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(525,283,NULL,'If the parameters exist, you can specify the name of the criteria for future reference and click the check box present at the bottom of the page.',0,'Apr  1 2005  9:44:19:950AM',0,'Apr  1 2005  9:44:19:950AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(526,284,NULL,'You can run the report by clicking on the title of the report.',0,'Apr  1 2005  9:44:19:950AM',0,'Apr  1 2005  9:44:19:950AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(527,285,NULL,'If the criteria are present, select the criteria, then continue to enter the parameters to run the report.',0,'Apr  1 2005  9:44:19:960AM',0,'Apr  1 2005  9:44:19:960AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(528,286,NULL,'You can view the queue either by using the link in the text or using the view queue button.',0,'Apr  1 2005  9:44:19:960AM',0,'Apr  1 2005  9:44:19:960AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(529,287,NULL,'You can cancel the report that is scheduled to be processed by the server by clicking the select button and selecting "Cancel".',0,'Apr  1 2005  9:44:19:960AM',0,'Apr  1 2005  9:44:19:960AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(530,287,NULL,'You can view the reports generated, download them or delete them by clicking on the select button under the action column.',0,'Apr  1 2005  9:44:19:960AM',0,'Apr  1 2005  9:44:19:960AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(531,287,NULL,'A new report can be generated by clicking on the link "Add a Report".',0,'Apr  1 2005  9:44:19:970AM',0,'Apr  1 2005  9:44:19:970AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(532,288,NULL,'The alphabetical slide rule allows users to be listed based on their last name. Simply click on the starting letter desired.',0,'Apr  1 2005  9:44:19:980AM',0,'Apr  1 2005  9:44:19:980AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(533,288,NULL,'The columns "Name", ''Username" and "Role" can be clicked to display the users in the ascending or descending order of the chosen criteria.',0,'Apr  1 2005  9:44:19:980AM',0,'Apr  1 2005  9:44:19:980AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(534,288,NULL,'The "Add New User" link opens a window that allows the administrator to add new users.',0,'Apr  1 2005  9:44:19:980AM',0,'Apr  1 2005  9:44:19:980AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(535,288,NULL,'The "select" buttons in the "Action" column alongside the name of each user opens a pop-up menu that provides the administrator with options to view more information, modify user information, or disable (or inactivate) the user.',0,'Apr  1 2005  9:44:19:990AM',0,'Apr  1 2005  9:44:19:990AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(536,288,NULL,'The list is displayed with 10 names per page by default. Additional items in the list may be viewed by clicking on the "Previous" and "Next" navigation links at the bottom of the table or by changing the number of items to be displayed per page.',0,'Apr  1 2005  9:44:19:990AM',0,'Apr  1 2005  9:44:19:990AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(537,288,NULL,'The users of the CRM system are listed in alphabetical order. Their user name, role and who they report to are also listed to provide a quick overview of information for each user.',0,'Apr  1 2005  9:44:19:990AM',0,'Apr  1 2005  9:44:19:990AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(538,288,NULL,'The drop list provides a filter to either view only the active or only the inactive users. Inactive users are those who do not have the privilege to use the system currently either because their user names have been disabled or they have expired. These users may be activated (enabled) at a later time.',0,'Apr  1 2005  9:44:19:990AM',0,'Apr  1 2005  9:44:19:990AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(539,289,NULL,'The ''Reports To" field allows the administrator to setup a user hierarchy. The drop list displays all the users of the system and allows one to be chosen.',0,'Apr  1 2005  9:44:20:000AM',0,'Apr  1 2005  9:44:20:000AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(540,289,NULL,'The "Role" drop list allows a role to be associated with a user. This association determines the privileges the user may have when he accesses the system.',0,'Apr  1 2005  9:44:20:000AM',0,'Apr  1 2005  9:44:20:000AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(541,289,NULL,'The "Password" fields allows the administrator to setup a password for the user. The password is used along with the Username to login to the system. Since the password is stored in encrypted form and cannot be interpreted, the administrator is asked to confirm the users password. The user may subsequently change his password according to personal preferences.',0,'Apr  1 2005  9:44:20:000AM',0,'Apr  1 2005  9:44:20:000AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(542,289,NULL,'The Username is the phrase that is used by the user to login to the system. It must be unique.',0,'Apr  1 2005  9:44:20:000AM',0,'Apr  1 2005  9:44:20:000AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(543,289,NULL,'An "Expire Date" may be set for each user after which the user is disabled. If this field is left blank the user is active indefinitely. This date can either be typed in the mm/dd/yyyy format or chosen from a calendar that can be accessed from the icon at the right of the field.',0,'Apr  1 2005  9:44:20:000AM',0,'Apr  1 2005  9:44:20:000AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(544,289,NULL,'The contact field allows the administrator to associate contact information with the user. The administrator may either create new contact information or choose one from the existing list of contacts. This information provides the administrator with the user''s e-mail, telephone and (or) fax number, postal address and any other information that may help the administrator or the system manager to contact the user.',0,'Apr  1 2005  9:44:20:000AM',0,'Apr  1 2005  9:44:20:000AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(545,290,NULL,'The "Cancel" button allows current and uncommitted changes to be undone.',0,'Apr  1 2005  9:44:20:010AM',0,'Apr  1 2005  9:44:20:010AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(546,290,NULL,'When the "Generate new password" field is checked, the system constructs a password for the user and uses the contact information to email the new password to the user.',0,'Apr  1 2005  9:44:20:010AM',0,'Apr  1 2005  9:44:20:010AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(547,290,NULL,'The "Disable" button provides a quick link to the administrator to disable the user.',0,'Apr  1 2005  9:44:20:010AM',0,'Apr  1 2005  9:44:20:010AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(548,290,NULL,'The "Username", "Role", "Reports To" and password of the user are editable. For more information about each of these fields see help on "Add user".',0,'Apr  1 2005  9:44:20:010AM',0,'Apr  1 2005  9:44:20:010AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(549,291,NULL,'The list is displayed by default with 10 items per page, additional items in the login history may be viewed by clicking on the "Previous" and "Next" navigation links at the bottom of the table or by changing the number of items to be displayed on a page.',0,'Apr  1 2005  9:44:20:020AM',0,'Apr  1 2005  9:44:20:020AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(550,291,NULL,'The login history of the user displays the IP address of the computer from which the user logged in, and the date/time when the user logged in.',0,'Apr  1 2005  9:44:20:020AM',0,'Apr  1 2005  9:44:20:020AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(551,292,NULL,'Clicking on the select button under the action column would let you to view the details about the viewpoint also modify them.',0,'Apr  1 2005  9:44:20:020AM',0,'Apr  1 2005  9:44:20:020AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(552,292,NULL,'You can click on the contact under the viewpoint column to know more details about that viewpoint and its permissions.',0,'Apr  1 2005  9:44:20:020AM',0,'Apr  1 2005  9:44:20:020AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(553,292,NULL,'You can add a new viewpoint using the link "Add New Viewpoint".',0,'Apr  1 2005  9:44:20:030AM',0,'Apr  1 2005  9:44:20:030AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(554,293,NULL,'You can add a new viewpoint by any employee by clicking the add button.',0,'Apr  1 2005  9:44:20:030AM',0,'Apr  1 2005  9:44:20:030AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(555,293,NULL,'The permissions for the different modules can be given by checking the Access checkbox.',0,'Apr  1 2005  9:44:20:030AM',0,'Apr  1 2005  9:44:20:030AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(556,293,NULL,'The contact can be selected and removed using the links "change contact" and "clear contact".',0,'Apr  1 2005  9:44:20:030AM',0,'Apr  1 2005  9:44:20:030AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(557,294,NULL,'The details can be updated using the update button.',0,'Apr  1 2005  9:44:20:040AM',0,'Apr  1 2005  9:44:20:040AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(558,294,NULL,'You can also set the permissions to access different modules by checking the check box under the Access column.',0,'Apr  1 2005  9:44:20:040AM',0,'Apr  1 2005  9:44:20:040AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(559,294,NULL,'You can enable the viewpoint by checking the "Enabled" checkbox.',0,'Apr  1 2005  9:44:20:040AM',0,'Apr  1 2005  9:44:20:040AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(560,295,NULL,'You can also click the select button under the action column to view or modify the details of roles.',0,'Apr  1 2005  9:44:20:040AM',0,'Apr  1 2005  9:44:20:040AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(561,295,NULL,'Clicking on the role name gives you details about the role and the permissions it provides.',0,'Apr  1 2005  9:44:20:050AM',0,'Apr  1 2005  9:44:20:050AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(562,295,NULL,'You can add a new role into the system.',0,'Apr  1 2005  9:44:20:050AM',0,'Apr  1 2005  9:44:20:050AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(563,296,NULL,'Clicking the update button updates the role.',0,'Apr  1 2005  9:44:20:050AM',0,'Apr  1 2005  9:44:20:050AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(564,297,NULL,'The update of the role can be done by clicking the update button.',0,'Apr  1 2005  9:44:20:060AM',0,'Apr  1 2005  9:44:20:060AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(565,298,NULL,'Clicking on the module name will display a list of module items that can be configured.',0,'Apr  1 2005  9:44:20:060AM',0,'Apr  1 2005  9:44:20:060AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(566,299,NULL,'Scheduled Events: A timer triggers a customizable workflow process.',0,'Apr  1 2005  9:44:20:060AM',0,'Apr  1 2005  9:44:20:060AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(567,299,NULL,'Object Events: An Action triggers customizable workflow process. For example, when an object is inserted, updated, deleted or selected, a process is triggered.',0,'Apr  1 2005  9:44:20:070AM',0,'Apr  1 2005  9:44:20:070AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(568,299,NULL,'Categories: This lets you create hierarchical categories for a specific feature in the module.',0,'Apr  1 2005  9:44:20:070AM',0,'Apr  1 2005  9:44:20:070AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(569,299,NULL,'Lookup Lists: You can view the drop-down lists used in the module and make changes.',0,'Apr  1 2005  9:44:20:070AM',0,'Apr  1 2005  9:44:20:070AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(570,299,NULL,'Custom Folders and Fields: Custom folders allows you to create forms that will be present within each module, essentially custom fields.',0,'Apr  1 2005  9:44:20:070AM',0,'Apr  1 2005  9:44:20:070AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(571,300,NULL,'You can create a new item type using the add button and add it to the existing list. You can position the item in the list using the up and down buttons, remove it using the remove button and also sort the list. The final changes can be saved using the "Save Changes" button.',0,'Apr  1 2005  9:44:20:080AM',0,'Apr  1 2005  9:44:20:080AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(572,301,NULL,'You can update the existing the folder, set the options for the records and the permissions for the users.',0,'Apr  1 2005  9:44:20:080AM',0,'Apr  1 2005  9:44:20:080AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(573,302,NULL,'You can update the existing the folder, set the options for the records and the permissions for the users.',0,'Apr  1 2005  9:44:20:090AM',0,'Apr  1 2005  9:44:20:090AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(574,303,NULL,'The "Edit" link will let you alter the time for which the users session ends.',0,'Apr  1 2005  9:44:20:090AM',0,'Apr  1 2005  9:44:20:090AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(575,304,NULL,'The time out can be set by selecting the time from the drop down and clicking the update button.',0,'Apr  1 2005  9:44:20:090AM',0,'Apr  1 2005  9:44:20:090AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(576,305,NULL,'The usage can be displayed for the current date or a custom date can be specified. This can be selected from the drop down of the date range.',0,'Apr  1 2005  9:44:20:100AM',0,'Apr  1 2005  9:44:20:100AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(577,305,NULL,'The start date and the end date can be specified if the date range is "custom date range". The update can be done using the update button.',0,'Apr  1 2005  9:44:20:100AM',0,'Apr  1 2005  9:44:20:100AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(578,308,NULL,'You can also enable or disable the custom folders by clicking "yes" or "no".',0,'Apr  1 2005  9:44:20:110AM',0,'Apr  1 2005  9:44:20:110AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(579,308,NULL,'Clicking on the custom folder will give details about that folder and also lets you add groups.',0,'Apr  1 2005  9:44:20:110AM',0,'Apr  1 2005  9:44:20:110AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(580,308,NULL,'You can update an existing folder using the edit button under the action column.',0,'Apr  1 2005  9:44:20:110AM',0,'Apr  1 2005  9:44:20:110AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(581,308,NULL,'You can update an existing folder using the edit button under the action column.',0,'Apr  1 2005  9:44:20:120AM',0,'Apr  1 2005  9:44:20:120AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(582,308,NULL,'Add a folder to the general contacts module.',0,'Apr  1 2005  9:44:20:120AM',0,'Apr  1 2005  9:44:20:120AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(583,309,NULL,'You can also enable or disable the custom folders by clicking "yes" or "no".',0,'Apr  1 2005  9:44:20:120AM',0,'Apr  1 2005  9:44:20:120AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(584,309,NULL,'You can update an existing folder using the edit button under the action column.',0,'Apr  1 2005  9:44:20:120AM',0,'Apr  1 2005  9:44:20:120AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(585,309,NULL,'Clicking on the custom folder will give details about that folder and also lets you add groups.',0,'Apr  1 2005  9:44:20:120AM',0,'Apr  1 2005  9:44:20:120AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(586,309,NULL,'You can update an existing folder using the edit button under the action column.',0,'Apr  1 2005  9:44:20:130AM',0,'Apr  1 2005  9:44:20:130AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(587,309,NULL,'Add a folder to the general contacts module.',0,'Apr  1 2005  9:44:20:130AM',0,'Apr  1 2005  9:44:20:130AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(588,313,NULL,'You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.',0,'Apr  1 2005  9:44:20:140AM',0,'Apr  1 2005  9:44:20:140AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(589,313,NULL,'You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.',0,'Apr  1 2005  9:44:20:140AM',0,'Apr  1 2005  9:44:20:140AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(590,314,NULL,'You can add a group name and save it using the "save" button.',0,'Apr  1 2005  9:44:20:140AM',0,'Apr  1 2005  9:44:20:140AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(591,316,NULL,'You can click "Edit" in the Action column to update or delete a contact type.',0,'Apr  1 2005  9:44:20:150AM',0,'Apr  1 2005  9:44:20:150AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(592,316,NULL,'You can preview all the items present in a List name using the drop down in the preview column.',0,'Apr  1 2005  9:44:20:160AM',0,'Apr  1 2005  9:44:20:160AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(593,319,NULL,'You can click "Edit" in the Action column to update or delete a contact type.',0,'Apr  1 2005  9:44:20:160AM',0,'Apr  1 2005  9:44:20:160AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(594,319,NULL,'You can preview all the items present in a List name using the drop down in the preview column.',0,'Apr  1 2005  9:44:20:170AM',0,'Apr  1 2005  9:44:20:170AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(595,320,NULL,'You can also delete the folder and all the fields using the "Delete this folder and all fields" at the bottom of the page.',0,'Apr  1 2005  9:44:20:170AM',0,'Apr  1 2005  9:44:20:170AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(596,320,NULL,'The groups can also be moved up or down using the "Up" and "Down". They can also be edited and deleted using the "Edit" and "Del" links.',0,'Apr  1 2005  9:44:20:170AM',0,'Apr  1 2005  9:44:20:170AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(597,320,NULL,'The custom field can also be edited and deleted using the corresponding links "Edit" and "Del".',0,'Apr  1 2005  9:44:20:170AM',0,'Apr  1 2005  9:44:20:170AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(598,320,NULL,'The custom field created can be moved up or down for the display using the corresponding links "Up" and "Down".',0,'Apr  1 2005  9:44:20:170AM',0,'Apr  1 2005  9:44:20:170AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(599,320,NULL,'You can add a custom field for the group using the "Add a custom field" link.',0,'Apr  1 2005  9:44:20:180AM',0,'Apr  1 2005  9:44:20:180AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(600,320,NULL,'Add a group to the folder selected',0,'Apr  1 2005  9:44:20:180AM',0,'Apr  1 2005  9:44:20:180AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(601,320,NULL,'You can select the folder by using the drop down box under the general contacts module.',0,'Apr  1 2005  9:44:20:180AM',0,'Apr  1 2005  9:44:20:180AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(602,321,NULL,'Clicking on the list of categories displayed in level1 shows you its sub levels or sub-directories present in level2 and clicking on these in turn shows its subdirectories in level3 and so on.',0,'Apr  1 2005  9:44:20:180AM',0,'Apr  1 2005  9:44:20:180AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(603,321,NULL,'You can select to display either the Active Categories or the Draft Categories by clicking on the tabs "Active Categories" and "Draft Categories" respectively.',0,'Apr  1 2005  9:44:20:180AM',0,'Apr  1 2005  9:44:20:180AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(604,322,NULL,'The activated list can be brought back / reverted to the active list by clicking the "Revert to Active List".',0,'Apr  1 2005  9:44:20:190AM',0,'Apr  1 2005  9:44:20:190AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(605,322,NULL,'You can activate each level by using the "Activate now" button.',0,'Apr  1 2005  9:44:20:190AM',0,'Apr  1 2005  9:44:20:190AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(606,322,NULL,'In the draft categories you can edit your category using the edit button present at the bottom of each level.',0,'Apr  1 2005  9:44:20:190AM',0,'Apr  1 2005  9:44:20:190AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(607,322,NULL,'You can select to display either the Active Categories or the Draft Categories by clicking on the tabs "Active Categories" and "Draft Categories" respectively.',0,'Apr  1 2005  9:44:20:190AM',0,'Apr  1 2005  9:44:20:190AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(608,322,NULL,'Clicking on the list of categories displayed in level1 shows you its sub-levels or sub-directories present in level2 and clicking on these in turn would shows their subdirectories in level3 and so on.',0,'Apr  1 2005  9:44:20:200AM',0,'Apr  1 2005  9:44:20:200AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(609,326,NULL,'The "Modify" button in the "Details" tab provides a quick link that allows the users information to be modified without having to browse back to the previous window.',0,'Apr  1 2005  9:44:20:210AM',0,'Apr  1 2005  9:44:20:210AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(610,326,NULL,'The "Employee Link" in the ''Primary Information" table header provides a quick link to view the user''s contact information.',0,'Apr  1 2005  9:44:20:210AM',0,'Apr  1 2005  9:44:20:210AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(611,326,NULL,'The "Details" tab displays the information about the user in a non-editable format.',0,'Apr  1 2005  9:44:20:210AM',0,'Apr  1 2005  9:44:20:210AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(612,326,NULL,'The "Disable" button provides a quick link to disable/inactivate the user.',0,'Apr  1 2005  9:44:20:210AM',0,'Apr  1 2005  9:44:20:210AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(613,331,NULL,'The user and module section allows the administrator to manage users, roles, role hierarchy and manage modules.',0,'Apr  1 2005  9:44:20:220AM',0,'Apr  1 2005  9:44:20:220AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(614,331,NULL,'The global parameters and server configuration module allows the administrator to set the session timeout parameter.',0,'Apr  1 2005  9:44:20:230AM',0,'Apr  1 2005  9:44:20:230AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(615,331,NULL,'The usage section allows the administrator to view the total number of users, memory used, and system usage parameters for various time intervals.',0,'Apr  1 2005  9:44:20:230AM',0,'Apr  1 2005  9:44:20:230AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(616,331,NULL,'The administration module is divided into distinct categories such as managing users, module configuration, setting global parameters, server configuration and monitoring system usage and resources.',0,'Apr  1 2005  9:44:20:230AM',0,'Apr  1 2005  9:44:20:230AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(617,333,NULL,'Clicking on the different links of the search results will direct you to the corresponding details in the modules.',0,'Apr  1 2005  9:44:20:260AM',0,'Apr  1 2005  9:44:20:260AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(618,338,NULL,'Users can be assigned one of the following roles, namely, Guest, Observer, Contributor and Project Lead. The Guest role is the least privileged role in a project and the Project Lead role is the most privileged role.',0,'Apr  1 2005  9:44:20:290AM',0,'Apr  1 2005  9:44:20:290AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(619,338,NULL,'When a role is allowed a permission, the permission is also available to more privileged roles. For e.g., if a the permission "View project details" is allowed for the "Guest", all superior roles namely, Observer, Contributor and Project Lead also inherit this permission. Similarly, if the "Modify Project Details" is assigned to "Project Lead" no other role inherits this privilege as the "Project Lead" role is the most superior (as in most privileged) role among preconfigured roles in the projects module.',0,'Apr  1 2005  9:44:20:290AM',0,'Apr  1 2005  9:44:20:290AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(620,340,NULL,'This page contains the following fields',0,'Apr  1 2005  9:44:20:290AM',0,'Apr  1 2005  9:44:20:290AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(621,340,NULL,'Status: Determines whether the article is shown when users view news articles; there are three possible choices: a) Draft if you are not finished with composing the article, choose Draft and you can finish the article later; even though you will see this article in your Current News list, other users will not unless they have access to to view Draft  articles b)Unapproved if you are finished, but would like the article to be approved before allowing others to view, choose Unapproved; even though you will see this article in your Current News list, others will not unless they have access to view Unapproved  articles c)Published indicates that the article is finished, approved, and ready to be seen by other users.',0,'Apr  1 2005  9:44:20:300AM',0,'Apr  1 2005  9:44:20:300AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(622,340,NULL,'Position: Articles are typically displayed in the list by the most recent date first; if you would like certain articles to appear before others, no matter what their date is set to, then you can group them by position in which lower numbered articles always appear before higher numbered articles; by default 10 is used for all articles, so a number of 1-9 would appear before 10.',0,'Apr  1 2005  9:44:20:300AM',0,'Apr  1 2005  9:44:20:300AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(623,340,NULL,'Start Date/Time: The specific date and time in which the article should be allowed to be viewed; prior to this time, only users who can see unreleased articles have access to this article; when the date/time occurs, the article will automatically be visible in Current News for the rest of the users in your project with access to the News Article list.',0,'Apr  1 2005  9:44:20:300AM',0,'Apr  1 2005  9:44:20:300AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(624,340,NULL,'Archive Date/Time: The specific date and time in which the article should automatically be archived from the default view; users who have access to archived articles will be able to review these.',0,'Apr  1 2005  9:44:20:300AM',0,'Apr  1 2005  9:44:20:300AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(625,340,NULL,'Subject: Each article needs a headline that gets displayed.',0,'Apr  1 2005  9:44:20:300AM',0,'Apr  1 2005  9:44:20:300AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(626,340,NULL,'Intro: Each article can have an unlimited amount of text, however you might want to have an introduction to the article and require that the user choose to read any additional pages by selecting a  read more  link that appears when an article has an additional page.',0,'Apr  1 2005  9:44:20:300AM',0,'Apr  1 2005  9:44:20:300AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(627,340,NULL,'Once you have finished your news article, and have completed the fields, choose to  Save  the article. If you would like to add an additional page to the article, choose  Save and Add a Page.',0,'Apr  1 2005  9:44:20:310AM',0,'Apr  1 2005  9:44:20:310AM',NULL,NULL,1,8)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(628,340,NULL,'Viewing the  News  tab will now show your article.',0,'Apr  1 2005  9:44:20:310AM',0,'Apr  1 2005  9:44:20:310AM',NULL,NULL,1,9)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(629,343,NULL,'Team members can be invited from: 1. Open projects   if you have existing projects, that are open, then you can begin by adding contacts from your open projects 2. Closed projects   if you have existing projects, that have been closed, then you can begin by adding contacts from a closed project 3. Email address   if the contact is not listed in one of your projects, then you can invite them by their email address.',0,'Apr  1 2005  9:44:20:320AM',0,'Apr  1 2005  9:44:20:320AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(630,343,NULL,'The first list allows you to choose a method for inviting your contact. Depending on your choice, you will either be asked to choose a project in which to select a contact from, or you will be asked to input an email address. When you have selected a contact, make sure they show up in the right most list before continuing.',0,'Apr  1 2005  9:44:20:320AM',0,'Apr  1 2005  9:44:20:320AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(631,343,NULL,'To remove a team member from your project, simply select them in the right column and they will be removed when the team is updated.',0,'Apr  1 2005  9:44:20:320AM',0,'Apr  1 2005  9:44:20:320AM',NULL,NULL,1,3)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(632,343,NULL,'When you are finished modifying the team, choose  Update Team  to finalize the changes. If you added a contact by email address, and the CRM application is not familiar with that address, then you will be asked if you are certain you would like to invite them to the project. Choosing  Yes  will require that you input their first and last name.',0,'Apr  1 2005  9:44:20:320AM',0,'Apr  1 2005  9:44:20:320AM',NULL,NULL,1,4)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(633,343,NULL,'When contacts are added to a project, whether they are users (have accounts) of CRM or not, each contact will be sent an email inviting them to your project.',0,'Apr  1 2005  9:44:20:320AM',0,'Apr  1 2005  9:44:20:320AM',NULL,NULL,1,5)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(634,343,NULL,'When you return to the list of users, you can modify their role in the project by using the drop-down menu next to their name. As soon as the drop-down is changed, the system immediately updates the user''s role.',0,'Apr  1 2005  9:44:20:320AM',0,'Apr  1 2005  9:44:20:320AM',NULL,NULL,1,6)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(635,343,NULL,'All added team members are initially identified as  invited.  This means that you would like them to be on this project, but the contact will need to be informed of this action and asked to accept the invitation. If the contact does not have an account, then they will receive an email that allows them to easily obtain an account before accepting your invitation.',0,'Apr  1 2005  9:44:20:330AM',0,'Apr  1 2005  9:44:20:330AM',NULL,NULL,1,7)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(636,347,NULL,'This page lists all the project plans. Each item in the list provides a snapshot of the outline including the outline''s start date, the start date, the description and status, the progress made in completing the items of the outline and the effort expended in completing the items of the outline.',0,'Apr  1 2005  9:44:20:340AM',0,'Apr  1 2005  9:44:20:340AM',NULL,NULL,1,1)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(637,347,NULL,'Using the drop list as a filter you can choose to view only open outlines, only closed outlines or view all outlines.',0,'Apr  1 2005  9:44:20:340AM',0,'Apr  1 2005  9:44:20:340AM',NULL,NULL,1,2)
-INSERT [help_features] ([feature_id],[link_help_id],[link_feature_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled],[level])VALUES(638,347,NULL,'When you click on the select option, you are presented with a choice view, edit or delete the outline.',0,'Apr  1 2005  9:44:20:350AM',0,'Apr  1 2005  9:44:20:350AM',NULL,NULL,1,3)
-
-SET IDENTITY_INSERT [help_features] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default role_permission
-SET NOCOUNT ON
-SET IDENTITY_INSERT [role_permission] ON
-GO
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(1,1,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(2,1,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(3,1,84,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(4,1,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(5,1,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(6,1,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(7,1,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(8,1,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(9,1,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(10,1,92,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(11,1,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(12,1,100,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(13,1,95,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(14,1,96,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(15,1,97,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(16,1,32,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(17,1,33,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(18,1,34,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(19,1,35,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(20,1,36,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(21,1,37,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(22,1,38,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(23,1,39,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(24,1,40,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(25,1,43,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(26,1,44,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(27,1,45,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(28,1,46,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(29,1,47,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(30,1,48,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(31,1,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(32,1,2,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(33,1,3,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(34,1,4,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(35,1,5,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(36,1,6,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(37,1,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(38,1,8,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(39,1,9,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(40,1,10,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(41,1,11,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(42,1,12,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(43,1,13,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(44,1,14,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(45,1,15,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(46,1,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(47,1,20,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(48,1,21,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(49,1,22,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(50,1,23,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(51,1,25,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(52,1,26,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(53,1,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(54,1,29,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(55,1,30,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(56,1,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(57,1,24,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(58,1,101,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(59,1,102,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(60,1,103,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(61,1,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(62,1,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(63,1,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(64,1,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(65,1,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(66,1,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(67,1,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(68,1,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(69,1,62,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(70,1,63,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(71,1,64,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(72,1,65,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(73,1,66,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(74,1,105,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(75,1,106,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(76,1,107,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(77,1,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(78,1,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(79,1,67,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(80,1,68,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(81,1,69,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(82,1,71,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(83,1,70,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(84,1,72,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(85,1,73,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(86,1,74,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(87,1,75,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(88,1,76,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(89,1,77,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(90,1,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(91,1,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(92,1,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(93,1,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(94,1,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(95,1,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(96,1,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(97,1,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(98,1,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(99,1,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(100,2,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(101,2,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(102,2,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(103,2,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(104,2,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(105,2,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(106,2,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(107,2,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(108,2,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(109,2,92,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(110,2,32,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(111,2,33,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(112,2,34,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(113,2,35,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(114,2,36,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(115,2,37,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(116,2,38,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(117,2,39,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(118,2,43,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(119,2,44,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(120,2,45,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(121,2,46,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(122,2,47,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(123,2,48,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(124,2,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(125,2,2,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(126,2,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(127,2,4,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(128,2,5,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(129,2,6,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(130,2,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(131,2,8,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(132,2,10,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(133,2,11,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(134,2,15,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(135,2,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(136,2,18,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(137,2,14,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(138,2,13,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(139,2,12,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(140,2,20,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(141,2,29,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(142,2,21,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(143,2,22,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(144,2,23,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(145,2,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(146,2,24,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(147,2,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(148,2,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(149,2,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(150,2,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(151,2,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(152,2,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(153,2,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(154,2,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(155,2,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(156,2,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(157,2,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(158,2,62,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(159,2,63,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(160,2,64,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(161,2,65,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(162,2,66,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(163,2,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(164,2,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(165,2,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(166,2,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(167,2,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(168,2,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(169,2,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(170,2,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(171,2,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(172,2,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(173,2,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(174,2,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(175,2,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(176,2,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(177,3,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(178,3,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(179,3,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(180,3,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(181,3,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(182,3,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(183,3,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(184,3,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(185,3,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(186,3,92,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(187,3,95,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(188,3,96,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(189,3,97,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(190,3,32,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(191,3,33,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(192,3,34,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(193,3,35,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(194,3,36,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(195,3,37,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(196,3,38,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(197,3,39,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(198,3,43,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(199,3,44,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(200,3,45,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(201,3,46,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(202,3,47,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(203,3,48,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(204,3,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(205,3,2,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(206,3,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(207,3,4,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(208,3,5,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(209,3,6,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(210,3,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(211,3,8,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(212,3,9,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(213,3,10,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(214,3,11,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(215,3,15,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(216,3,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(217,3,17,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(218,3,18,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(219,3,14,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(220,3,13,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(221,3,12,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(222,3,20,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(223,3,21,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(224,3,22,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(225,3,23,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(226,3,29,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(227,3,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(228,3,24,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(229,3,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(230,3,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(231,3,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(232,3,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(233,3,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(234,3,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(235,3,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(236,3,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(237,3,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(238,3,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(239,3,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(240,3,62,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(241,3,63,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(242,3,64,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(243,3,65,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(244,3,66,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(245,3,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(246,3,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(247,3,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(248,3,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(249,3,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(250,3,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(251,3,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(252,3,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(253,3,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(254,3,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(255,3,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(256,3,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(257,3,25,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(258,3,101,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(259,3,102,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(260,3,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(261,3,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(262,3,40,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(263,3,30,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(264,4,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(265,4,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(266,4,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(267,4,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(268,4,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(269,4,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(270,4,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(271,4,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(272,4,92,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(273,4,95,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(274,4,96,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(275,4,97,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(276,4,32,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(277,4,33,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(278,4,34,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(279,4,36,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(280,4,37,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(281,4,38,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(282,4,39,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(283,4,43,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(284,4,44,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(285,4,45,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(286,4,46,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(287,4,47,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(288,4,48,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(289,4,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(290,4,2,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(291,4,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(292,4,4,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(293,4,5,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(294,4,6,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(295,4,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(296,4,8,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(297,4,10,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(298,4,11,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(299,4,15,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(300,4,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(301,4,17,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(302,4,18,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(303,4,14,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(304,4,13,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(305,4,12,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(306,4,20,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(307,4,21,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(308,4,22,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(309,4,23,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(310,4,29,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(311,4,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(312,4,24,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(313,4,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(314,4,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(315,4,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(316,4,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(317,4,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(318,4,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(319,4,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(320,4,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(321,4,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(322,4,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(323,4,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(324,4,62,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(325,4,63,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(326,4,64,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(327,4,65,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(328,4,66,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(329,4,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(330,4,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(331,4,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(332,4,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(333,4,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(334,4,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(335,4,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(336,4,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(337,4,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(338,4,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(339,4,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(340,4,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(341,4,25,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(342,4,101,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(343,4,102,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(344,4,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(345,4,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(346,4,40,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(347,4,30,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(348,5,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(349,5,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(350,5,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(351,5,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(352,5,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(353,5,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(354,5,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(355,5,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(356,5,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(357,5,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(358,5,2,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(359,5,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(360,5,4,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(361,5,6,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(362,5,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(363,5,8,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(364,5,9,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(365,5,11,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(366,5,15,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(367,5,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(368,5,14,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(369,5,13,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(370,5,12,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(371,5,20,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(372,5,21,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(373,5,22,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(374,5,23,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(375,5,29,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(376,5,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(377,5,24,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(378,5,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(379,5,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(380,5,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(381,5,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(382,5,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(383,5,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(384,5,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(385,5,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(386,5,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(387,5,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(388,5,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(389,5,62,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(390,5,63,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(391,5,64,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(392,5,65,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(393,5,66,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(394,5,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(395,5,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(396,5,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(397,5,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(398,5,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(399,5,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(400,5,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(401,5,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(402,5,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(403,5,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(404,5,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(405,5,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(406,5,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(407,5,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(408,6,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(409,6,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(410,6,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(411,6,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(412,6,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(413,6,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(414,6,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(415,6,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(416,6,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(417,6,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(418,6,2,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(419,6,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(420,6,4,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(421,6,6,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(422,6,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(423,6,8,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(424,6,11,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(425,6,15,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(426,6,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(427,6,14,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(428,6,13,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(429,6,12,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(430,6,20,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(431,6,21,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(432,6,22,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(433,6,23,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(434,6,29,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(435,6,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(436,6,24,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(437,6,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(438,6,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(439,6,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(440,6,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(441,6,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(442,6,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(443,6,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(444,6,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(445,6,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(446,6,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(447,6,62,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(448,6,63,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(449,6,64,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(450,6,65,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(451,6,66,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(452,6,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(453,6,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(454,6,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(455,6,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(456,6,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(457,6,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(458,6,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(459,6,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(460,6,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(461,6,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(462,6,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(463,6,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(464,6,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(465,6,110,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(466,7,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(467,7,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(468,7,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(469,7,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(470,7,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(471,7,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(472,7,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(473,7,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(474,7,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(475,7,92,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(476,7,32,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(477,7,33,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(478,7,34,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(479,7,35,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(480,7,36,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(481,7,37,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(482,7,38,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(483,7,39,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(484,7,43,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(485,7,44,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(486,7,45,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(487,7,46,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(488,7,47,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(489,7,48,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(490,7,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(491,7,2,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(492,7,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(493,7,4,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(494,7,5,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(495,7,6,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(496,7,7,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(497,7,8,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(498,7,10,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(499,7,11,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(500,7,15,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(501,7,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(502,7,17,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(503,7,18,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(504,7,14,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(505,7,13,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(506,7,12,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(507,7,20,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(508,7,21,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(509,7,22,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(510,7,23,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(511,7,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(512,7,29,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(513,7,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(514,7,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(515,7,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(516,7,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(517,7,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(518,7,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(519,7,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(520,7,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(521,7,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(522,7,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(523,7,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(524,7,62,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(525,7,63,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(526,7,64,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(527,7,65,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(528,7,66,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(529,7,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(530,7,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(531,7,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(532,7,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(533,7,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(534,7,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(535,7,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(536,7,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(537,7,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(538,7,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(539,7,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(540,7,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(541,7,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(542,7,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(543,8,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(544,8,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(545,8,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(546,8,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(547,8,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(548,8,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(549,8,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(550,8,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(551,8,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(552,8,32,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(553,8,33,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(554,8,34,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(555,8,35,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(556,8,36,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(557,8,37,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(558,8,38,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(559,8,39,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(560,8,43,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(561,8,44,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(562,8,45,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(563,8,46,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(564,8,47,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(565,8,48,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(566,8,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(567,8,2,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(568,8,3,1,1,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(569,8,4,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(570,8,6,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(571,8,8,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(572,8,10,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(573,8,11,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(574,8,15,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(575,8,16,1,1,0,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(576,8,18,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(577,8,14,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(578,8,13,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(579,8,12,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(580,8,20,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(581,8,21,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(582,8,22,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(583,8,23,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(584,8,28,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(585,8,29,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(586,8,31,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(587,8,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(588,8,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(589,8,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(590,8,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(591,8,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(592,8,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(593,8,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(594,8,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(595,8,56,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(596,8,61,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(597,8,62,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(598,8,63,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(599,8,64,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(600,8,65,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(601,8,66,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(602,8,105,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(603,8,106,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(604,8,108,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(605,8,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(606,8,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(607,8,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(608,8,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(609,8,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(610,8,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(611,8,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(612,8,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(613,8,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(614,8,25,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(615,8,101,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(616,8,102,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(617,8,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(618,8,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(619,9,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(620,9,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(621,9,85,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(622,9,86,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(623,9,87,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(624,9,88,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(625,9,89,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(626,9,90,1,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(627,9,91,0,0,1,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(628,9,98,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(629,9,99,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(630,9,50,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(631,9,51,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(632,9,52,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(633,9,53,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(634,9,54,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(635,9,55,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(636,9,105,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(637,9,106,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(638,9,94,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(639,9,78,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(640,9,79,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(641,9,80,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(642,9,81,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(643,9,57,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(644,9,58,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(645,9,59,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(646,9,60,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(647,9,109,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(648,9,110,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(649,9,107,1,1,1,1)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(650,10,1,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(651,10,2,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(652,10,4,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(653,10,20,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(654,10,21,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(655,10,22,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(656,10,23,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(657,10,4,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(658,10,11,1,1,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(659,11,82,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(660,11,83,1,0,0,0)
-INSERT [role_permission] ([id],[role_id],[permission_id],[role_view],[role_add],[role_edit],[role_delete])VALUES(661,11,100,1,0,0,0)
-
-SET IDENTITY_INSERT [role_permission] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_component_library
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_component_library] ON
-GO
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(1,'org.aspcfs.modules.troubletickets.components.LoadTicketDetails',1,'org.aspcfs.modules.troubletickets.components.LoadTicketDetails','Load all ticket information for use in other steps',1)
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(2,'org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed',1,'org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed','Was the ticket just closed?',1)
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(3,'org.aspcfs.modules.components.SendUserNotification',1,'org.aspcfs.modules.components.SendUserNotification','Send an email notification to a user',1)
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(4,'org.aspcfs.modules.troubletickets.components.SendTicketSurvey',1,'org.aspcfs.modules.troubletickets.components.SendTicketSurvey','org.aspcfs.modules.troubletickets.components.SendTicketSurvey',1)
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(5,'org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned',1,'org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned','Was the ticket just assigned or reassigned?',1)
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(6,'org.aspcfs.modules.troubletickets.components.GenerateTicketList',2,'org.aspcfs.modules.troubletickets.components.GenerateTicketList','Generate a list of tickets based on specified parameters.  Are there any tickets matching the parameters?',1)
-INSERT [business_process_component_library] ([component_id],[component_name],[type_id],[class_name],[description],[enabled])VALUES(7,'org.aspcfs.modules.troubletickets.components.SendTicketListReport',2,'org.aspcfs.modules.troubletickets.components.SendTicketListReport','Sends a ticket report to specified users with the specified parameters',1)
-
-SET IDENTITY_INSERT [business_process_component_library] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default category_editor_lookup
-SET NOCOUNT ON
-SET IDENTITY_INSERT [category_editor_lookup] ON
-GO
-INSERT [category_editor_lookup] ([id],[module_id],[constant_id],[table_name],[level],[description],[entered],[category_id],[max_levels])VALUES(1,8,202041401,'ticket_category',10,'Ticket Categories','Apr  1 2005  9:44:04:507AM',8,4)
-INSERT [category_editor_lookup] ([id],[module_id],[constant_id],[table_name],[level],[description],[entered],[category_id],[max_levels])VALUES(2,15,202041400,'asset_category',10,'Asset Categories','Apr  1 2005  9:44:05:280AM',130041000,3)
-
-SET IDENTITY_INSERT [category_editor_lookup] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_im_services
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_im_services] ON
-GO
-INSERT [lookup_im_services] ([code],[description],[default_item],[level],[enabled])VALUES(1,'AOL Instant Messenger',0,10,1)
-INSERT [lookup_im_services] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Jabber Instant Messenger',0,20,1)
-INSERT [lookup_im_services] ([code],[description],[default_item],[level],[enabled])VALUES(3,'MSN Instant Messenger',0,30,1)
-
-SET IDENTITY_INSERT [lookup_im_services] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_component_result_lookup
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_component_result_lookup] ON
-GO
-INSERT [business_process_component_result_lookup] ([result_id],[component_id],[return_id],[description],[level],[enabled])VALUES(1,2,1,'Yes',0,1)
-INSERT [business_process_component_result_lookup] ([result_id],[component_id],[return_id],[description],[level],[enabled])VALUES(2,2,0,'No',1,1)
-INSERT [business_process_component_result_lookup] ([result_id],[component_id],[return_id],[description],[level],[enabled])VALUES(3,5,1,'Yes',0,1)
-
-SET IDENTITY_INSERT [business_process_component_result_lookup] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_stage
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_stage] ON
-GO
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(1,NULL,'Prospecting',0,10,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(2,NULL,'Qualification',0,20,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(3,NULL,'Needs Analysis',0,30,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(4,NULL,'Value Proposition',0,40,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(5,NULL,'Perception Analysis',0,50,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(6,NULL,'Proposal/Price Quote',0,60,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(7,NULL,'Negotiation/Review',0,70,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(8,NULL,'Closed Won',0,80,1)
-INSERT [lookup_stage] ([code],[order_id],[description],[default_item],[level],[enabled])VALUES(9,NULL,'Closed Lost',0,90,1)
-
-SET IDENTITY_INSERT [lookup_stage] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_project_permission_category
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_project_permission_category] ON
-GO
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(1,'Project Details',0,10,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(2,'Team Members',0,20,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(3,'News',0,30,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(4,'Plan/Outlines',0,40,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(5,'Lists',0,50,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(6,'Discussion',0,60,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(7,'Tickets',0,70,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(8,'Document Library',0,80,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(9,'Accounts',0,90,1,1)
-INSERT [lookup_project_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(10,'Setup',0,100,1,1)
-
-SET IDENTITY_INSERT [lookup_project_permission_category] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_contact_source
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_contact_source] ON
-GO
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Advertisement',0,10,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Employee Referral',0,20,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(3,'External Referral',0,30,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Partner',0,40,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Public Relations',0,50,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Trade Show',0,60,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Web',0,70,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Word of Mouth',0,80,1)
-INSERT [lookup_contact_source] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Other',0,90,1)
-
-SET IDENTITY_INSERT [lookup_contact_source] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default module_field_categorylink
-SET NOCOUNT ON
-SET IDENTITY_INSERT [module_field_categorylink] ON
-GO
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(1,1,1,10,'Accounts','Apr  1 2005  9:44:03:887AM')
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(2,2,2,10,'Contacts','Apr  1 2005  9:44:04:197AM')
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(3,8,11072003,10,'Tickets','Apr  1 2005  9:44:04:457AM')
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(4,18,200403192,10,'Product Catalog Categories','Apr  1 2005  9:44:05:350AM')
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(5,22,120200513,10,'Employees','Apr  1 2005  9:44:05:960AM')
-
-SET IDENTITY_INSERT [module_field_categorylink] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_parameter_library
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_parameter_library] ON
-GO
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(1,3,'notification.module',NULL,'Tickets',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(2,3,'notification.itemId',NULL,'${this.id}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(3,3,'notification.itemModified',NULL,'${this.modified}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(4,3,'notification.userToNotify',NULL,'${previous.enteredBy}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(5,3,'notification.subject',NULL,'Centric CRM Ticket Closed: ${this.paddedId}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(6,3,'notification.body',NULL,'The following ticket in Centric CRM has been closed:
-
---- Ticket Details ---
-
-Ticket # ${this.paddedId}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Comment: ${this.comment}
-
-Closed by: ${ticketModifiedByContact.nameFirstLast}
-
-Solution: ${this.solution}
-',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(7,6,'notification.module',NULL,'Tickets',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(8,6,'notification.itemId',NULL,'${this.id}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(9,6,'notification.itemModified',NULL,'${this.modified}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(10,6,'notification.userToNotify',NULL,'${this.assignedTo}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(11,6,'notification.subject',NULL,'Centric CRM Ticket Assigned: ${this.paddedId}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(12,6,'notification.body',NULL,'The following ticket in Centric CRM has been assigned to you:
-
---- Ticket Details ---
-
-Ticket # ${this.paddedId}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Assigned By: ${ticketModifiedByContact.nameFirstLast}
-Comment: ${this.comment}
-',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(13,7,'ticketList.onlyOpen',NULL,'true',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(14,7,'ticketList.onlyAssigned',NULL,'true',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(15,7,'ticketList.onlyUnassigned',NULL,'true',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(16,7,'ticketList.minutesOlderThan',NULL,'10',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(17,7,'ticketList.lastAnchor',NULL,'${process.lastAnchor}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(18,7,'ticketList.nextAnchor',NULL,'${process.nextAnchor}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(19,8,'notification.users.to',NULL,'${this.enteredBy}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(20,8,'notification.contacts.to',NULL,'${this.contactId}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(21,8,'notification.subject',NULL,'Centric CRM Unassigned Ticket Report (${objects.size})',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(22,8,'notification.body',NULL,'** This is an automated message **
-
-The following tickets in Centric CRM are unassigned and need attention:
-
-',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(23,8,'report.ticket.content',NULL,'----- Ticket Details -----
-Ticket # ${this.paddedId}
-Created: ${this.enteredString}
-Organization: ${ticketOrganization.name}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Last Modified By: ${ticketModifiedByContact.nameFirstLast}
-Comment: ${this.comment}
-
-
-',1)
-
-SET IDENTITY_INSERT [business_process_parameter_library] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_delivery_options
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_delivery_options] ON
-GO
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Email only',0,10,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Fax only',0,20,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Letter only',0,30,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Email then Fax',0,40,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Email then Letter',0,50,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Email, Fax, then Letter',0,60,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Broadcast',0,70,1)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Instant Message',0,80,0)
-INSERT [lookup_delivery_options] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Secure Socket',0,90,0)
-
-SET IDENTITY_INSERT [lookup_delivery_options] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_project_permission
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_project_permission] ON
-GO
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(1,1,'project-details-view','View project details',0,10,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(2,1,'project-details-edit','Modify project details',0,20,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(3,1,'project-details-delete','Delete project',0,30,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(4,2,'project-team-view','View team members',0,40,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(5,2,'project-team-view-email','See team member email addresses',0,50,1,1,3)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(6,2,'project-team-edit','Modify team',0,60,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(7,2,'project-team-edit-role','Modify team member role',0,70,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(8,3,'project-news-view','View current news',0,80,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(9,3,'project-news-view-unreleased','View unreleased news',0,90,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(10,3,'project-news-view-archived','View archived news',0,100,1,1,3)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(11,3,'project-news-add','Add news',0,110,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(12,3,'project-news-edit','Edit news',0,120,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(13,3,'project-news-delete','Delete news',0,130,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(14,4,'project-plan-view','View outlines',0,140,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(15,4,'project-plan-outline-add','Add an outline',0,150,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(16,4,'project-plan-outline-edit','Modify details of an existing outline',0,160,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(17,4,'project-plan-outline-delete','Delete an outline',0,170,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(18,4,'project-plan-outline-modify','Make changes to an outline',0,180,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(19,4,'project-plan-activities-assign','Re-assign activities',0,190,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(20,5,'project-lists-view','View lists',0,200,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(21,5,'project-lists-add','Add a list',0,210,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(22,5,'project-lists-edit','Modify details of an existing list',0,220,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(23,5,'project-lists-delete','Delete a list',0,230,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(24,5,'project-lists-modify','Make changes to list items',0,240,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(25,6,'project-discussion-forums-view','View discussion forums',0,250,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(26,6,'project-discussion-forums-add','Add discussion forum',0,260,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(27,6,'project-discussion-forums-edit','Modify discussion forum',0,270,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(28,6,'project-discussion-forums-delete','Delete discussion forum',0,280,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(29,6,'project-discussion-topics-view','View forum topics',0,290,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(30,6,'project-discussion-topics-add','Add forum topics',0,300,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(31,6,'project-discussion-topics-edit','Modify forum topics',0,310,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(32,6,'project-discussion-topics-delete','Delete forum topics',0,320,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(33,6,'project-discussion-messages-add','Post messages',0,330,1,1,3)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(34,6,'project-discussion-messages-reply','Reply to messages',0,340,1,1,3)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(35,6,'project-discussion-messages-edit','Modify existing messages',0,350,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(36,6,'project-discussion-messages-delete','Delete messages',0,360,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(37,7,'project-tickets-view','View tickets',0,370,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(38,7,'project-tickets-add','Add a ticket',0,380,1,1,3)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(39,7,'project-tickets-edit','Modify existing ticket',0,390,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(40,7,'project-tickets-delete','Delete tickets',0,400,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(41,7,'project-tickets-assign','Assign tickets',0,410,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(42,8,'project-documents-view','View documents',0,420,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(43,8,'project-documents-folders-add','Create folders',0,430,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(44,8,'project-documents-folders-edit','Modify folders',0,440,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(45,8,'project-documents-folders-delete','Delete folders',0,450,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(46,8,'project-documents-files-upload','Upload files',0,460,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(47,8,'project-documents-files-download','Download files',0,470,1,1,4)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(48,8,'project-documents-files-rename','Rename files',0,480,1,1,2)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(49,8,'project-documents-files-delete','Delete files',0,490,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(50,9,'project-accounts-view','View account links',0,500,1,1,3)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(51,9,'project-accounts-manage','Manage account links',0,510,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(52,10,'project-setup-customize','Customize project features',0,520,1,1,1)
-INSERT [lookup_project_permission] ([code],[category_id],[permission],[description],[default_item],[level],[enabled],[group_id],[default_role])VALUES(53,10,'project-setup-permissions','Configure project permissions',0,530,1,1,1)
-
-SET IDENTITY_INSERT [lookup_project_permission] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process] ON
-GO
-INSERT [business_process] ([process_id],[process_name],[description],[type_id],[link_module_id],[component_start_id],[enabled],[entered])VALUES(1,'dhv.ticket.insert','Ticket change notification',1,8,1,1,'Apr  1 2005  9:44:23:443AM')
-INSERT [business_process] ([process_id],[process_name],[description],[type_id],[link_module_id],[component_start_id],[enabled],[entered])VALUES(2,'dhv.report.ticketList.overdue','Overdue ticket notification',2,8,7,1,'Apr  1 2005  9:44:23:773AM')
-
-SET IDENTITY_INSERT [business_process] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_textmessage_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_textmessage_types] ON
-GO
-INSERT [lookup_textmessage_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Business',0,10,1)
-INSERT [lookup_textmessage_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Personal',0,20,1)
-INSERT [lookup_textmessage_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Other',0,30,1)
-
-SET IDENTITY_INSERT [lookup_textmessage_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_component
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_component] ON
-GO
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(1,1,1,NULL,NULL,1)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(2,1,2,1,NULL,1)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(3,1,3,2,1,1)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(4,1,4,2,1,0)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(5,1,5,2,0,1)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(6,1,3,5,1,1)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(7,2,6,NULL,NULL,1)
-INSERT [business_process_component] ([id],[process_id],[component_id],[parent_id],[parent_result_id],[enabled])VALUES(8,2,7,7,NULL,1)
-
-SET IDENTITY_INSERT [business_process_component] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default report
-SET NOCOUNT ON
-SET IDENTITY_INSERT [report] ON
-GO
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(1,1,NULL,'accounts_type.xml',1,'Accounts by Type','What are my accounts by type?','Apr  1 2005  9:44:04:077AM',0,'Apr  1 2005  9:44:04:077AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(2,1,NULL,'accounts_recent.xml',1,'Accounts by Date Added','What are my recent accounts?','Apr  1 2005  9:44:04:087AM',0,'Apr  1 2005  9:44:04:087AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(3,1,NULL,'accounts_expire.xml',1,'Accounts by Contract End Date','Which accounts are expiring?','Apr  1 2005  9:44:04:087AM',0,'Apr  1 2005  9:44:04:087AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(4,1,NULL,'accounts_current.xml',1,'Current Accounts','What are my current accounts?','Apr  1 2005  9:44:04:087AM',0,'Apr  1 2005  9:44:04:087AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(5,1,NULL,'accounts_contacts.xml',1,'Account Contacts','Who are the contacts in each account?','Apr  1 2005  9:44:04:087AM',0,'Apr  1 2005  9:44:04:087AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(6,1,NULL,'folder_accounts.xml',1,'Account Folders','What is the folder data for each account?','Apr  1 2005  9:44:04:117AM',0,'Apr  1 2005  9:44:04:117AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(7,2,NULL,'contacts_user.xml',1,'Contacts','Who are my contacts?','Apr  1 2005  9:44:04:207AM',0,'Apr  1 2005  9:44:04:207AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(8,4,NULL,'opportunity_pipeline.xml',1,'Opportunities by Stage','What are my upcoming opportunities by stage?','Apr  1 2005  9:44:04:327AM',0,'Apr  1 2005  9:44:04:327AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(9,4,NULL,'opportunity_account.xml',1,'Opportunities by Account','What are all the accounts associated with my opportunities?','Apr  1 2005  9:44:04:327AM',0,'Apr  1 2005  9:44:04:327AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(10,4,NULL,'opportunity_owner.xml',1,'Opportunities by Owner','What are all the opportunities based on ownership?','Apr  1 2005  9:44:04:327AM',0,'Apr  1 2005  9:44:04:327AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(11,4,NULL,'opportunity_contact.xml',1,'Opportunity Contacts','Who are the contacts of my opportunities?','Apr  1 2005  9:44:04:327AM',0,'Apr  1 2005  9:44:04:327AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(12,6,NULL,'campaign.xml',1,'Campaigns by date','What are my active campaigns?','Apr  1 2005  9:44:04:387AM',0,'Apr  1 2005  9:44:04:387AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(13,8,NULL,'tickets_department.xml',1,'Tickets by Department','What tickets are there in each department?','Apr  1 2005  9:44:04:467AM',0,'Apr  1 2005  9:44:04:467AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(14,8,NULL,'ticket_summary_date.xml',1,'Ticket counts by Department','How many tickets are there in the system on a particular date?','Apr  1 2005  9:44:04:467AM',0,'Apr  1 2005  9:44:04:467AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(15,8,NULL,'ticket_summary_range.xml',1,'Ticket activity by Department','How many tickets exist within a date range?','Apr  1 2005  9:44:04:477AM',0,'Apr  1 2005  9:44:04:477AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(16,8,NULL,'open_calls_report.xml',1,'Open Calls','Which tickets are open?','Apr  1 2005  9:44:04:477AM',0,'Apr  1 2005  9:44:04:477AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(17,8,NULL,'contract_review_report.xml',1,'Contract Review','What is the expiration date for each contract?','Apr  1 2005  9:44:04:477AM',0,'Apr  1 2005  9:44:04:477AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(18,8,NULL,'call_history_report.xml',1,'Call History','How have tickets been resolved?','Apr  1 2005  9:44:04:477AM',0,'Apr  1 2005  9:44:04:477AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(19,8,NULL,'assets_under_contract_report.xml',1,'Assets Under Contract','Which assets are covered by contracts?','Apr  1 2005  9:44:04:477AM',0,'Apr  1 2005  9:44:04:477AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(20,8,NULL,'activity_log_report.xml',1,'Contract Activity Summary','What is the hourly summary for each contract?','Apr  1 2005  9:44:04:487AM',0,'Apr  1 2005  9:44:04:487AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(21,8,NULL,'callvolume_day_assignee.xml',1,'Call Volume by Assignee per Day','How many tickets are there by assignee per day?','Apr  1 2005  9:44:04:487AM',0,'Apr  1 2005  9:44:04:487AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(22,8,NULL,'callvolume_month_assignee.xml',1,'Call Volume by Assignee per Month','How many tickets are there by assignee per month?','Apr  1 2005  9:44:04:487AM',0,'Apr  1 2005  9:44:04:487AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(23,8,NULL,'callvolume_day_cat.xml',1,'Call Volume by Category per Day','How many tickets are there by category per day?','Apr  1 2005  9:44:04:487AM',0,'Apr  1 2005  9:44:04:487AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(24,8,NULL,'callvolume_month_cat.xml',1,'Call Volume by Category per Month','How many tickets are there by category per month?','Apr  1 2005  9:44:04:497AM',0,'Apr  1 2005  9:44:04:497AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(25,8,NULL,'callvolume_day_enteredby.xml',1,'Call Volume by User Entered per Day','How many tickets are there by user who entered the ticket per day?','Apr  1 2005  9:44:04:497AM',0,'Apr  1 2005  9:44:04:497AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(26,8,NULL,'callvolume_month_ent.xml',1,'Call Volume by User Entered per Month','How many tickets are there by user who entered the ticket per month?','Apr  1 2005  9:44:04:497AM',0,'Apr  1 2005  9:44:04:497AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(27,9,NULL,'users.xml',1,'System Users','Who are all the users of the system?','Apr  1 2005  9:44:05:057AM',0,'Apr  1 2005  9:44:05:057AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(28,12,NULL,'task_date.xml',1,'Task list by due date','What are the tasks due withing a date range?','Apr  1 2005  9:44:05:260AM',0,'Apr  1 2005  9:44:05:260AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(29,12,NULL,'task_nodate.xml',1,'Task list','What are all the tasks in the system?','Apr  1 2005  9:44:05:260AM',0,'Apr  1 2005  9:44:05:260AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(30,22,NULL,'employees.xml',1,'Employees','Who are the employees in my organization?','Apr  1 2005  9:44:05:970AM',0,'Apr  1 2005  9:44:05:970AM',0,1,0)
-
-SET IDENTITY_INSERT [report] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default asset_category_draft
-SET NOCOUNT ON
-SET IDENTITY_INSERT [asset_category_draft] ON
-GO
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(1,-1,0,0,'Software',' ',0,10,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(2,-1,0,0,'Hardware',' ',0,20,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(3,-1,1,1,'Operating Systems',' ',0,30,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(4,-1,1,1,'Application Software',' ',0,40,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(5,-1,1,2,'Desktops',' ',0,50,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(6,-1,2,4,'Mail Server',' ',0,60,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(7,-1,2,4,'CRM',' ',0,70,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(8,-1,2,3,'Linux',' ',0,80,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(9,-1,2,3,'Unix',' ',0,90,1)
-INSERT [asset_category_draft] ([id],[link_id],[cat_level],[parent_cat_code],[description],[full_description],[default_item],[level],[enabled])VALUES(10,-1,2,3,'Windows 2003',' ',0,100,1)
-
-SET IDENTITY_INSERT [asset_category_draft] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_business_rules
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_business_rules] ON
-GO
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(1,1,'You can view your calendar and the calendars of those who work for you',0,'Apr  1 2005  9:44:17:567AM',0,'Apr  1 2005  9:44:17:567AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(2,77,'Apart from email addresses, you may not map more than one column of the cvs file to the same field of the application. An attempt to do so, displays error messages against the rows for which such a mapping was specified.',0,'Apr  1 2005  9:44:18:487AM',0,'Apr  1 2005  9:44:18:487AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(3,176,'The current end date should be greater than the current contract date if the current contract date is specified. If current contract date is not specified, the current end date should be greater than the initial contract date.',0,'Apr  1 2005  9:44:19:260AM',0,'Apr  1 2005  9:44:19:260AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(4,176,'The current contract date is not required. If it is left blank, it is prefilled with the initial contract date when this contract record is saved.',0,'Apr  1 2005  9:44:19:260AM',0,'Apr  1 2005  9:44:19:260AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(5,181,'For most assets it is percieved that the puchased date is earler than the expiration date. As the application does not enforce this rule, it is recommended that you verify the entry in these two fields before saving the information about the asset. It is possible for an asset to have an expiration date that is earlier than the purchased date if the asset is a pre-used asset, and its warranty expired during the time it was with the previous owner or if the warranty does not transfer with the transfer of the asset.',0,'Apr  1 2005  9:44:19:300AM',0,'Apr  1 2005  9:44:19:300AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(6,183,'Similar to the adding an asset',0,'Apr  1 2005  9:44:19:320AM',0,'Apr  1 2005  9:44:19:320AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(7,185,'An account contact may have a number of email addresses, this page allows one email address to be chosen as the primary email address. The primary email address is by default used to email the account contact about portal usage information. However, if the account contact has only one email address, it is not required to choose it as the primary contact.',0,'Apr  1 2005  9:44:19:340AM',0,'Apr  1 2005  9:44:19:340AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(8,186,'An account contact may have a number of email addresses, this page allows one email address to be chosen as the primary email address. The primary email address is by default used to email the account contact about portal usage information. However, if the account contact has only one email address, it is not required to choose it as the primary contact.',0,'Apr  1 2005  9:44:19:350AM',0,'Apr  1 2005  9:44:19:350AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(9,266,'Other tickets in my Department: These are records that are assigned to anyone in your department, are unassigned in your department, and are open.',0,'Apr  1 2005  9:44:19:807AM',0,'Apr  1 2005  9:44:19:807AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(10,266,'Tickets assigned to me: These are records that are assigned to you and are open',0,'Apr  1 2005  9:44:19:807AM',0,'Apr  1 2005  9:44:19:807AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(11,266,'Tickets created by me: These are records that have been entered by you and are open',0,'Apr  1 2005  9:44:19:817AM',0,'Apr  1 2005  9:44:19:817AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(12,268,'If the follow up field is checked, the alert date and description are mandatory.',0,'Apr  1 2005  9:44:19:840AM',0,'Apr  1 2005  9:44:19:840AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(13,268,'The phone and engineer response time are text fields that allow you to enter the "time of day'' when the response was made.',0,'Apr  1 2005  9:44:19:840AM',0,'Apr  1 2005  9:44:19:840AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(14,268,'All fields in a row of the description of service section is mandatory.',0,'Apr  1 2005  9:44:19:840AM',0,'Apr  1 2005  9:44:19:840AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(15,268,'The travel time and the labor time can be selected from the drop list. If you choose the values in these duration fields to count towards a service contract, the hours remaining in the service contract is changed accordingly when this activity log is saved.',0,'Apr  1 2005  9:44:19:840AM',0,'Apr  1 2005  9:44:19:840AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(16,270,'All fields in a row of the description of service section is mandatory.',0,'Apr  1 2005  9:44:19:860AM',0,'Apr  1 2005  9:44:19:860AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(17,270,'If the follow up field is checked, the alert date and description are mandatory.',0,'Apr  1 2005  9:44:19:860AM',0,'Apr  1 2005  9:44:19:860AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(18,270,'The phone and engineer response time are text fields that allow you to enter the "time of day'' when the response was made.',0,'Apr  1 2005  9:44:19:860AM',0,'Apr  1 2005  9:44:19:860AM',NULL,NULL,1)
-INSERT [help_business_rules] ([rule_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[completedate],[completedby],[enabled])VALUES(19,270,'The travel time and the labor time can be selected from the drop list. If you choose the values in these duration fields to count towards a service contract, the hours remaining in the service contract is changed accordingly when this activity log is saved.',0,'Apr  1 2005  9:44:19:860AM',0,'Apr  1 2005  9:44:19:860AM',NULL,NULL,1)
-
-SET IDENTITY_INSERT [help_business_rules] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_component_parameter
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_component_parameter] ON
-GO
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(1,3,1,'Tickets',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(2,3,2,'${this.id}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(3,3,3,'${this.modified}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(4,3,4,'${previous.enteredBy}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(5,3,5,'Centric CRM Ticket Closed: ${this.paddedId}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(6,3,6,'The following ticket in Centric CRM has been closed:
-
---- Ticket Details ---
-
-Ticket # ${this.paddedId}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Comment: ${this.comment}
-
-Closed by: ${ticketModifiedByContact.nameFirstLast}
-
-Solution: ${this.solution}
-',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(7,6,7,'Tickets',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(8,6,8,'${this.id}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(9,6,9,'${this.modified}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(10,6,10,'${this.assignedTo}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(11,6,11,'Centric CRM Ticket Assigned: ${this.paddedId}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(12,6,12,'The following ticket in Centric CRM has been assigned to you:
-
---- Ticket Details ---
-
-Ticket # ${this.paddedId}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Assigned By: ${ticketModifiedByContact.nameFirstLast}
-Comment: ${this.comment}
-',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(13,7,13,'true',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(14,7,14,'true',0)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(15,7,15,'true',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(16,7,16,'10',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(17,7,17,'${process.lastAnchor}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(18,7,18,'${process.nextAnchor}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(19,8,19,'${this.enteredBy}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(20,8,20,'${this.contactId}',0)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(21,8,21,'Centric CRM Unassigned Ticket Report (${objects.size})',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(22,8,22,'** This is an automated message **
-
-The following tickets in Centric CRM are unassigned and need attention:
-
-',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(23,8,23,'----- Ticket Details -----
-Ticket # ${this.paddedId}
-Created: ${this.enteredString}
-Organization: ${ticketOrganization.name}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Last Modified By: ${ticketModifiedByContact.nameFirstLast}
-Comment: ${this.comment}
-
-
-',1)
-
-SET IDENTITY_INSERT [business_process_component_parameter] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_quote_status
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_quote_status] ON
-GO
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Incomplete',0,10,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Pending internal approval',0,20,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Approved internally',0,30,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Unapproved internally',0,40,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Pending customer acceptance',0,50,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Accepted by customer',0,60,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Rejected by customer',0,70,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Changes requested by customer',0,80,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Cancelled',0,90,1)
-INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(10,'Complete',0,100,1)
-
-SET IDENTITY_INSERT [lookup_quote_status] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_contactaddress_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_contactaddress_types] ON
-GO
-INSERT [lookup_contactaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Business',0,10,1)
-INSERT [lookup_contactaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Home',0,20,1)
-INSERT [lookup_contactaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Other',0,30,1)
-
-SET IDENTITY_INSERT [lookup_contactaddress_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_product_conf_result
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_product_conf_result] ON
-GO
-INSERT [lookup_product_conf_result] ([code],[description],[default_item],[level],[enabled])VALUES(1,'integer',0,10,1)
-INSERT [lookup_product_conf_result] ([code],[description],[default_item],[level],[enabled])VALUES(2,'float',0,20,1)
-INSERT [lookup_product_conf_result] ([code],[description],[default_item],[level],[enabled])VALUES(3,'boolean',0,30,1)
-INSERT [lookup_product_conf_result] ([code],[description],[default_item],[level],[enabled])VALUES(4,'timestamp',0,40,1)
-INSERT [lookup_product_conf_result] ([code],[description],[default_item],[level],[enabled])VALUES(5,'string',0,50,1)
-
-SET IDENTITY_INSERT [lookup_product_conf_result] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_task_priority
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_task_priority] ON
-GO
-INSERT [lookup_task_priority] ([code],[description],[default_item],[level],[enabled])VALUES(1,'1',1,10,1)
-INSERT [lookup_task_priority] ([code],[description],[default_item],[level],[enabled])VALUES(2,'2',0,20,1)
-INSERT [lookup_task_priority] ([code],[description],[default_item],[level],[enabled])VALUES(3,'3',0,30,1)
-INSERT [lookup_task_priority] ([code],[description],[default_item],[level],[enabled])VALUES(4,'4',0,40,1)
-INSERT [lookup_task_priority] ([code],[description],[default_item],[level],[enabled])VALUES(5,'5',0,50,1)
-
-SET IDENTITY_INSERT [lookup_task_priority] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_quote_type
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_quote_type] ON
-GO
-INSERT [lookup_quote_type] ([code],[description],[default_item],[level],[enabled])VALUES(1,'New',0,10,1)
-INSERT [lookup_quote_type] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Change',0,20,1)
-INSERT [lookup_quote_type] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Upgrade/Downgrade',0,30,1)
-INSERT [lookup_quote_type] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Disconnect',0,40,1)
-INSERT [lookup_quote_type] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Move',0,50,1)
-
-SET IDENTITY_INSERT [lookup_quote_type] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_contactemail_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_contactemail_types] ON
-GO
-INSERT [lookup_contactemail_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Business',0,10,1)
-INSERT [lookup_contactemail_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Personal',0,20,1)
-INSERT [lookup_contactemail_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Other',0,30,1)
-
-SET IDENTITY_INSERT [lookup_contactemail_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default product_option_configurator
-SET NOCOUNT ON
-SET IDENTITY_INSERT [product_option_configurator] ON
-GO
-INSERT [product_option_configurator] ([configurator_id],[short_description],[long_description],[class_name],[result_type],[configurator_name])VALUES(1,'A text field for free-form additional information','String Configurator','org.aspcfs.modules.products.configurator.StringConfigurator',1,'Text')
-INSERT [product_option_configurator] ([configurator_id],[short_description],[long_description],[class_name],[result_type],[configurator_name])VALUES(2,'A check box for yes/no information','Checkbox Configurator','org.aspcfs.modules.products.configurator.CheckboxConfigurator',1,'Check Box')
-INSERT [product_option_configurator] ([configurator_id],[short_description],[long_description],[class_name],[result_type],[configurator_name])VALUES(3,'A list of available choices that can be selected','LookupList Configurator','org.aspcfs.modules.products.configurator.LookupListConfigurator',1,'Lookup List')
-INSERT [product_option_configurator] ([configurator_id],[short_description],[long_description],[class_name],[result_type],[configurator_name])VALUES(4,'An input field allowing numbers only','Numerical Configurator','org.aspcfs.modules.products.configurator.NumericalConfigurator',1,'Number')
-
-SET IDENTITY_INSERT [product_option_configurator] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_task_loe
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_task_loe] ON
-GO
-INSERT [lookup_task_loe] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Minute(s)',0,10,1)
-INSERT [lookup_task_loe] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Hour(s)',0,20,1)
-INSERT [lookup_task_loe] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Day(s)',0,30,1)
-INSERT [lookup_task_loe] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Week(s)',0,40,1)
-INSERT [lookup_task_loe] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Month(s)',0,50,1)
-
-SET IDENTITY_INSERT [lookup_task_loe] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_contactphone_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_contactphone_types] ON
-GO
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Business',0,10,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Business2',0,20,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Business Fax',0,30,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Home',0,40,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Home2',0,50,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Home Fax',0,60,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Mobile',0,70,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Pager',0,80,1)
-INSERT [lookup_contactphone_types] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Other',0,90,1)
-
-SET IDENTITY_INSERT [lookup_contactphone_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_quote_source
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_quote_source] ON
-GO
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Email',0,10,1)
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Fax',0,20,1)
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Incoming Phone Call',0,30,1)
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Outgoing Phone Call',0,40,1)
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(5,'In Person',0,50,1)
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Mail',0,60,1)
-INSERT [lookup_quote_source] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Agent Request',0,70,1)
-
-SET IDENTITY_INSERT [lookup_quote_source] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default help_tips
-SET NOCOUNT ON
-SET IDENTITY_INSERT [help_tips] ON
-GO
-INSERT [help_tips] ([tip_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(1,1,'Assign due dates for tasks so that you can be alerted',0,'Apr  1 2005  9:44:17:577AM',0,'Apr  1 2005  9:44:17:577AM',1)
-INSERT [help_tips] ([tip_id],[link_help_id],[description],[enteredby],[entered],[modifiedby],[modified],[enabled])VALUES(2,266,'Make sure to resolve your tickets as soon as possible so they don''t appear here!',0,'Apr  1 2005  9:44:19:817AM',0,'Apr  1 2005  9:44:19:817AM',1)
-
-SET IDENTITY_INSERT [help_tips] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_access_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_access_types] ON
-GO
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(1,626030330,'Controlled-Hierarchy',1,10,1,626030335)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(2,626030330,'Public',0,20,1,626030334)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(3,626030330,'Personal',0,30,1,626030333)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(4,626030331,'Public',1,40,1,626030334)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(5,626030332,'Public',1,50,1,626030334)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(6,707031028,'Controlled-Hierarchy',1,60,1,626030335)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(7,707031028,'Public',0,70,1,626030334)
-INSERT [lookup_access_types] ([code],[link_module_id],[description],[default_item],[level],[enabled],[rule_id])VALUES(8,707031028,'Personal',0,80,1,626030333)
-
-SET IDENTITY_INSERT [lookup_access_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_hook_library
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_hook_library] ON
-GO
-INSERT [business_process_hook_library] ([hook_id],[link_module_id],[hook_class],[enabled])VALUES(1,8,'org.aspcfs.modules.troubletickets.base.Ticket',1)
-
-SET IDENTITY_INSERT [business_process_hook_library] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_project_priority
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_project_priority] ON
-GO
-INSERT [lookup_project_priority] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(1,'Low',0,10,1,1,NULL,10)
-INSERT [lookup_project_priority] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(2,'Normal',1,20,1,1,NULL,20)
-INSERT [lookup_project_priority] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(3,'High',0,30,1,1,NULL,30)
-
-SET IDENTITY_INSERT [lookup_project_priority] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default ticket_level
-SET NOCOUNT ON
-SET IDENTITY_INSERT [ticket_level] ON
-GO
-INSERT [ticket_level] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Entry level',0,10,1)
-INSERT [ticket_level] ([code],[description],[default_item],[level],[enabled])VALUES(2,'First level',0,20,1)
-INSERT [ticket_level] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Second level',0,30,1)
-INSERT [ticket_level] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Third level',0,40,1)
-INSERT [ticket_level] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Top level',0,50,1)
-
-SET IDENTITY_INSERT [ticket_level] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default organization
-SET NOCOUNT ON
-SET IDENTITY_INSERT [organization] ON
-GO
-INSERT [organization] ([org_id],[name],[account_number],[account_group],[url],[revenue],[employees],[notes],[sic_code],[ticker_symbol],[taxid],[lead],[sales_rep],[miner_only],[defaultlocale],[fiscalmonth],[entered],[enteredby],[modified],[modifiedby],[enabled],[industry_temp_code],[owner],[duplicate_id],[custom1],[custom2],[contract_end],[alertdate],[alert],[custom_data],[namesalutation],[namelast],[namefirst],[namemiddle],[namesuffix],[import_id],[status_id],[alertdate_timezone],[contract_end_timezone])VALUES(0,'My Company',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,NULL,NULL,'Apr  1 2005  9:43:53:190AM',0,'Apr  1 2005  9:43:53:190AM',0,1,NULL,0,-1,-1,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)
-
-SET IDENTITY_INSERT [organization] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_hook_triggers
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_hook_triggers] ON
-GO
-INSERT [business_process_hook_triggers] ([trigger_id],[action_type_id],[hook_id],[enabled])VALUES(1,2,1,1)
-INSERT [business_process_hook_triggers] ([trigger_id],[action_type_id],[hook_id],[enabled])VALUES(2,1,1,1)
-
-SET IDENTITY_INSERT [business_process_hook_triggers] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_project_status
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_project_status] ON
-GO
-INSERT [lookup_project_status] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(1,'Not Started',0,10,1,1,'box.gif',1)
-INSERT [lookup_project_status] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(2,'In Progress',0,20,1,1,'box.gif',2)
-INSERT [lookup_project_status] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(3,'Complete',0,30,1,1,'box-checked.gif',3)
-INSERT [lookup_project_status] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(4,'Closed',0,40,1,1,'box-closed.gif',4)
-INSERT [lookup_project_status] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(5,'On Hold',0,50,1,1,'box-hold.gif',5)
-INSERT [lookup_project_status] ([code],[description],[default_item],[level],[enabled],[group_id],[graphic],[type])VALUES(6,'Waiting on Reqs',0,60,1,1,'box-hold.gif',5)
-
-SET IDENTITY_INSERT [lookup_project_status] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default business_process_hook
-SET NOCOUNT ON
-SET IDENTITY_INSERT [business_process_hook] ON
-GO
-INSERT [business_process_hook] ([id],[trigger_id],[process_id],[enabled])VALUES(1,1,1,1)
-INSERT [business_process_hook] ([id],[trigger_id],[process_id],[enabled])VALUES(2,2,1,1)
-
-SET IDENTITY_INSERT [business_process_hook] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default ticket_severity
-SET NOCOUNT ON
-SET IDENTITY_INSERT [ticket_severity] ON
-GO
-INSERT [ticket_severity] ([code],[description],[style],[default_item],[level],[enabled])VALUES(1,'Normal','background-color:lightgreen;color:black;',0,10,1)
-INSERT [ticket_severity] ([code],[description],[style],[default_item],[level],[enabled])VALUES(2,'Important','background-color:yellow;color:black;',0,20,1)
-INSERT [ticket_severity] ([code],[description],[style],[default_item],[level],[enabled])VALUES(3,'Critical','background-color:red;color:black;font-weight:bold;',0,30,1)
-
-SET IDENTITY_INSERT [ticket_severity] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_orderaddress_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_orderaddress_types] ON
-GO
-INSERT [lookup_orderaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Billing',0,10,1)
-INSERT [lookup_orderaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Shipping',0,20,1)
-
-SET IDENTITY_INSERT [lookup_orderaddress_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default sync_system
-SET NOCOUNT ON
-SET IDENTITY_INSERT [sync_system] ON
-GO
-INSERT [sync_system] ([system_id],[application_name],[enabled])VALUES(1,'Deprecated',1)
-INSERT [sync_system] ([system_id],[application_name],[enabled])VALUES(2,'Auto Guide PocketPC',1)
-INSERT [sync_system] ([system_id],[application_name],[enabled])VALUES(3,'Unused',1)
-INSERT [sync_system] ([system_id],[application_name],[enabled])VALUES(4,'CFSHttpXMLWriter',1)
-INSERT [sync_system] ([system_id],[application_name],[enabled])VALUES(5,'Test',1)
-
-SET IDENTITY_INSERT [sync_system] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_project_loe
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_project_loe] ON
-GO
-INSERT [lookup_project_loe] ([code],[description],[base_value],[default_item],[level],[enabled],[group_id])VALUES(1,'Minute(s)',60,1,10,1,0)
-INSERT [lookup_project_loe] ([code],[description],[base_value],[default_item],[level],[enabled],[group_id])VALUES(2,'Hour(s)',3600,0,20,1,0)
-INSERT [lookup_project_loe] ([code],[description],[base_value],[default_item],[level],[enabled],[group_id])VALUES(3,'Day(s)',86400,0,30,1,0)
-INSERT [lookup_project_loe] ([code],[description],[base_value],[default_item],[level],[enabled],[group_id])VALUES(4,'Week(s)',604800,0,40,1,0)
-INSERT [lookup_project_loe] ([code],[description],[base_value],[default_item],[level],[enabled],[group_id])VALUES(5,'Month(s)',18144000,0,50,1,0)
-
-SET IDENTITY_INSERT [lookup_project_loe] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default sync_table
-SET NOCOUNT ON
-SET IDENTITY_INSERT [sync_table] ON
-GO
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(1,1,'ticket','org.aspcfs.modules.troubletickets.base.Ticket','Apr  1 2005  9:43:59:230AM','Apr  1 2005  9:43:59:230AM',NULL,-1,0,'id')
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(2,2,'syncClient','org.aspcfs.modules.service.base.SyncClient','Apr  1 2005  9:43:59:240AM','Apr  1 2005  9:43:59:240AM',NULL,2,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(3,2,'user','org.aspcfs.modules.admin.base.User','Apr  1 2005  9:43:59:240AM','Apr  1 2005  9:43:59:240AM',NULL,4,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(4,2,'account','org.aspcfs.modules.accounts.base.Organization','Apr  1 2005  9:43:59:240AM','Apr  1 2005  9:43:59:240AM',NULL,5,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(5,2,'accountInventory','org.aspcfs.modules.media.autoguide.base.Inventory','Apr  1 2005  9:43:59:240AM','Apr  1 2005  9:43:59:240AM',NULL,6,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(6,2,'inventoryOption','org.aspcfs.modules.media.autoguide.base.InventoryOption','Apr  1 2005  9:43:59:240AM','Apr  1 2005  9:43:59:240AM',NULL,8,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(7,2,'adRun','org.aspcfs.modules.media.autoguide.base.AdRun','Apr  1 2005  9:43:59:240AM','Apr  1 2005  9:43:59:240AM',NULL,10,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(8,2,'tableList','org.aspcfs.modules.service.base.SyncTableList','Apr  1 2005  9:43:59:250AM','Apr  1 2005  9:43:59:250AM',NULL,12,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(9,2,'status_master',NULL,'Apr  1 2005  9:43:59:250AM','Apr  1 2005  9:43:59:250AM',NULL,14,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(10,2,'system',NULL,'Apr  1 2005  9:43:59:260AM','Apr  1 2005  9:43:59:260AM',NULL,16,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(11,2,'userList','org.aspcfs.modules.admin.base.UserList','Apr  1 2005  9:43:59:260AM','Apr  1 2005  9:43:59:260AM','CREATE TABLE users ( user_id              int NOT NULL, record_status_id     int NULL, user_name            nvarchar(20) NULL, pin                  nvarchar(20) NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',50,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(12,2,'XIF18users',NULL,'Apr  1 2005  9:43:59:330AM','Apr  1 2005  9:43:59:330AM','CREATE INDEX XIF18users ON users ( record_status_id )',60,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(13,2,'makeList','org.aspcfs.modules.media.autoguide.base.MakeList','Apr  1 2005  9:43:59:330AM','Apr  1 2005  9:43:59:330AM','CREATE TABLE make ( make_id              int NOT NULL, make_name            nvarchar(20) NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',70,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(14,2,'XIF2make',NULL,'Apr  1 2005  9:43:59:340AM','Apr  1 2005  9:43:59:340AM','CREATE INDEX XIF2make ON make ( record_status_id )',80,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(15,2,'modelList','org.aspcfs.modules.media.autoguide.base.ModelList','Apr  1 2005  9:43:59:340AM','Apr  1 2005  9:43:59:340AM','CREATE TABLE model ( model_id             int NOT NULL, make_id              int NULL, record_status_id     int NULL, model_name           nvarchar(40) NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',100,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(16,2,'XIF3model',NULL,'Apr  1 2005  9:43:59:340AM','Apr  1 2005  9:43:59:340AM','CREATE INDEX XIF3model ON model ( record_status_id )',110,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(17,2,'XIF5model',NULL,'Apr  1 2005  9:43:59:340AM','Apr  1 2005  9:43:59:340AM','CREATE INDEX XIF5model ON model ( make_id )',120,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(18,2,'vehicleList','org.aspcfs.modules.media.autoguide.base.VehicleList','Apr  1 2005  9:43:59:340AM','Apr  1 2005  9:43:59:340AM','CREATE TABLE vehicle ( year                 nvarchar(4) NOT NULL, vehicle_id           int NOT NULL, model_id             int NULL, make_id              int NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (vehicle_id), FOREIGN KEY (model_id) REFERENCES model (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',130,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(19,2,'XIF30vehicle',NULL,'Apr  1 2005  9:43:59:340AM','Apr  1 2005  9:43:59:340AM','CREATE INDEX XIF30vehicle ON vehicle ( make_id )',140,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(20,2,'XIF31vehicle',NULL,'Apr  1 2005  9:43:59:350AM','Apr  1 2005  9:43:59:350AM','CREATE INDEX XIF31vehicle ON vehicle ( model_id )',150,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(21,2,'XIF4vehicle',NULL,'Apr  1 2005  9:43:59:350AM','Apr  1 2005  9:43:59:350AM','CREATE INDEX XIF4vehicle ON vehicle ( record_status_id )',160,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(22,2,'accountList','org.aspcfs.modules.accounts.base.OrganizationList','Apr  1 2005  9:43:59:350AM','Apr  1 2005  9:43:59:350AM','CREATE TABLE account ( account_id           int NOT NULL, account_name         nvarchar(80) NULL, record_status_id     int NULL, address              nvarchar(80) NULL, modified             datetime NULL, city                 nvarchar(80) NULL, state                nvarchar(2) NULL, notes                nvarchar(255) NULL, zip                  nvarchar(11) NULL, phone                nvarchar(20) NULL, contact              nvarchar(20) NULL, dmv_number           nvarchar(20) NULL, owner_id             int NULL, entered              datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',170,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(23,2,'XIF16account',NULL,'Apr  1 2005  9:43:59:350AM','Apr  1 2005  9:43:59:350AM','CREATE INDEX XIF16account ON account ( record_status_id )',180,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(24,2,'accountInventoryList','org.aspcfs.modules.media.autoguide.base.InventoryList','Apr  1 2005  9:43:59:350AM','Apr  1 2005  9:43:59:350AM','CREATE TABLE account_inventory ( inventory_id         int NOT NULL, vin                  nvarchar(20) NULL, vehicle_id           int NULL, account_id           int NULL, mileage              nvarchar(20) NULL, enteredby            int NULL, new                  bit, condition            nvarchar(20) NULL, comments             nvarchar(255) NULL, stock_no             nvarchar(20) NULL, ext_color            nvarchar(20) NULL, int_color            nvarchar(20) NULL, style                nvarchar(40) NULL, invoice_price        money NULL, selling_price        money NULL, selling_price_text		nvarchar(100) NULL, modified             datetime NULL, sold                 int NULL, modifiedby           int NULL, record_status_id     int NULL, entered              datetime NULL, PRIMARY KEY (inventory_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',190,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(25,2,'XIF10account_inventory',NULL,'Apr  1 2005  9:43:59:360AM','Apr  1 2005  9:43:59:360AM','CREATE INDEX XIF10account_inventory ON account_inventory ( record_status_id )',200,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(26,2,'XIF10account_inventory',NULL,'Apr  1 2005  9:43:59:360AM','Apr  1 2005  9:43:59:360AM','CREATE INDEX XIF11account_inventory ON account_inventory ( modifiedby )',210,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(27,2,'XIF19account_inventory',NULL,'Apr  1 2005  9:43:59:360AM','Apr  1 2005  9:43:59:360AM','CREATE INDEX XIF19account_inventory ON account_inventory ( account_id )',220,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(28,2,'XIF35account_inventory',NULL,'Apr  1 2005  9:43:59:360AM','Apr  1 2005  9:43:59:360AM','CREATE INDEX XIF35account_inventory ON account_inventory ( vehicle_id )',230,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(29,2,'optionList','org.aspcfs.modules.media.autoguide.base.OptionList','Apr  1 2005  9:43:59:370AM','Apr  1 2005  9:43:59:370AM','CREATE TABLE options ( option_id            int NOT NULL, option_name          nvarchar(20) NULL, record_status_id     int NULL, record_status_date   datetime NULL, PRIMARY KEY (option_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',330,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(30,2,'XIF24options',NULL,'Apr  1 2005  9:43:59:370AM','Apr  1 2005  9:43:59:370AM','CREATE INDEX XIF24options ON options ( record_status_id )',340,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(31,2,'inventoryOptionList','org.aspcfs.modules.media.autoguide.base.InventoryOptionList','Apr  1 2005  9:43:59:370AM','Apr  1 2005  9:43:59:370AM','CREATE TABLE inventory_options ( inventory_id         int NOT NULL, option_id            int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (option_id, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (option_id) REFERENCES options (option_id) )',350,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(32,2,'XIF25inventory_options',NULL,'Apr  1 2005  9:43:59:370AM','Apr  1 2005  9:43:59:370AM','CREATE INDEX XIF25inventory_options ON inventory_options ( option_id )',360,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(33,2,'XIF27inventory_options',NULL,'Apr  1 2005  9:43:59:380AM','Apr  1 2005  9:43:59:380AM','CREATE INDEX XIF27inventory_options ON inventory_options ( record_status_id )',370,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(34,2,'XIF33inventory_options',NULL,'Apr  1 2005  9:43:59:380AM','Apr  1 2005  9:43:59:380AM','CREATE INDEX XIF33inventory_options ON inventory_options ( inventory_id )',380,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(35,2,'adTypeList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:380AM','Apr  1 2005  9:43:59:380AM','CREATE TABLE ad_type ( ad_type_id           int NOT NULL, ad_type_name         nvarchar(20) NULL, PRIMARY KEY (ad_type_id) )',385,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(36,2,'adRunList','org.aspcfs.modules.media.autoguide.base.AdRunList','Apr  1 2005  9:43:59:380AM','Apr  1 2005  9:43:59:380AM','CREATE TABLE ad_run ( ad_run_id            int NOT NULL, record_status_id     int NULL, inventory_id         int NULL, ad_type_id           int NULL, ad_run_date          datetime NULL, has_picture          int NULL, modified             datetime NULL, entered              datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (ad_run_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (ad_type_id) REFERENCES ad_type (ad_type_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',390,1,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(37,2,'XIF22ad_run',NULL,'Apr  1 2005  9:43:59:380AM','Apr  1 2005  9:43:59:380AM','CREATE INDEX XIF22ad_run ON ad_run ( record_status_id )',400,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(38,2,'XIF36ad_run',NULL,'Apr  1 2005  9:43:59:380AM','Apr  1 2005  9:43:59:380AM','CREATE INDEX XIF36ad_run ON ad_run ( ad_type_id )',402,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(39,2,'XIF37ad_run',NULL,'Apr  1 2005  9:43:59:390AM','Apr  1 2005  9:43:59:390AM','CREATE INDEX XIF37ad_run ON ad_run ( inventory_id )',404,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(40,2,'inventory_picture',NULL,'Apr  1 2005  9:43:59:390AM','Apr  1 2005  9:43:59:390AM','CREATE TABLE inventory_picture ( picture_name         nvarchar(20) NOT NULL, inventory_id         int NOT NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (picture_name, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )',410,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(41,2,'XIF23inventory_picture',NULL,'Apr  1 2005  9:43:59:390AM','Apr  1 2005  9:43:59:390AM','CREATE INDEX XIF23inventory_picture ON inventory_picture ( record_status_id )',420,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(42,2,'XIF32inventory_picture',NULL,'Apr  1 2005  9:43:59:400AM','Apr  1 2005  9:43:59:400AM','CREATE INDEX XIF32inventory_picture ON inventory_picture ( inventory_id )',430,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(43,2,'preferences',NULL,'Apr  1 2005  9:43:59:400AM','Apr  1 2005  9:43:59:400AM','CREATE TABLE preferences ( user_id              int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )',440,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(44,2,'XIF29preferences',NULL,'Apr  1 2005  9:43:59:400AM','Apr  1 2005  9:43:59:400AM','CREATE INDEX XIF29preferences ON preferences ( record_status_id )',450,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(45,2,'user_account',NULL,'Apr  1 2005  9:43:59:410AM','Apr  1 2005  9:43:59:410AM','CREATE TABLE user_account ( user_id              int NOT NULL, account_id           int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id, account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )',460,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(46,2,'XIF14user_account',NULL,'Apr  1 2005  9:43:59:420AM','Apr  1 2005  9:43:59:420AM','CREATE INDEX XIF14user_account ON user_account ( user_id )',470,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(47,2,'XIF15user_account',NULL,'Apr  1 2005  9:43:59:420AM','Apr  1 2005  9:43:59:420AM','CREATE INDEX XIF15user_account ON user_account ( account_id )',480,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(48,2,'XIF17user_account',NULL,'Apr  1 2005  9:43:59:420AM','Apr  1 2005  9:43:59:420AM','CREATE INDEX XIF17user_account ON user_account ( record_status_id )',490,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(49,2,'deleteInventoryCache','org.aspcfs.modules.media.autoguide.actions.DeleteInventoryCache','Apr  1 2005  9:43:59:420AM','Apr  1 2005  9:43:59:420AM',NULL,500,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(50,4,'lookupIndustry','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(51,4,'lookupIndustryList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(52,4,'systemPrefs','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(53,4,'systemModules','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(54,4,'systemModulesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(55,4,'lookupContactTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(56,4,'lookupContactTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:430AM','Apr  1 2005  9:43:59:430AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(57,4,'lookupAccountTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(58,4,'lookupAccountTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(59,4,'lookupDepartment','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(60,4,'lookupDepartmentList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(61,4,'lookupOrgAddressTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(62,4,'lookupOrgAddressTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(63,4,'lookupOrgEmailTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(64,4,'lookupOrgEmailTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:440AM','Apr  1 2005  9:43:59:440AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(65,4,'lookupOrgPhoneTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:450AM','Apr  1 2005  9:43:59:450AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(66,4,'lookupOrgPhoneTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:450AM','Apr  1 2005  9:43:59:450AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(67,4,'lookupInstantMessengerTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:450AM','Apr  1 2005  9:43:59:450AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(68,4,'lookupInstantMessengerTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:450AM','Apr  1 2005  9:43:59:450AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(69,4,'lookupEmploymentTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(70,4,'lookupEmploymentTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(71,4,'lookupLocale','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(72,4,'lookupLocaleList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(73,4,'lookupContactAddressTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(74,4,'lookupContactAddressTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(75,4,'lookupContactEmailTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(76,4,'lookupContactEmailTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:460AM','Apr  1 2005  9:43:59:460AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(77,4,'lookupContactPhoneTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(78,4,'lookupContactPhoneTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(79,4,'lookupStage','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(80,4,'lookupStageList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(81,4,'lookupDeliveryOptions','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(82,4,'lookupDeliveryOptionsList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(83,4,'lookupCallTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(84,4,'lookupCallTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:470AM','Apr  1 2005  9:43:59:470AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(85,4,'ticketCategory','org.aspcfs.modules.troubletickets.base.TicketCategory','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(86,4,'ticketCategoryList','org.aspcfs.modules.troubletickets.base.TicketCategoryList','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(87,4,'ticketSeverity','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(88,4,'ticketSeverityList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(89,4,'lookupTicketSource','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(90,4,'lookupTicketSourceList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(91,4,'ticketPriority','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(92,4,'ticketPriorityList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:480AM','Apr  1 2005  9:43:59:480AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(93,4,'lookupRevenueTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(94,4,'lookupRevenueTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(95,4,'lookupRevenueDetailTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(96,4,'lookupRevenueDetailTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(97,4,'lookupSurveyTypes','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(98,4,'lookupSurveyTypesList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(99,4,'syncClient','org.aspcfs.modules.service.base.SyncClient','Apr  1 2005  9:43:59:490AM','Apr  1 2005  9:43:59:490AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(100,4,'user','org.aspcfs.modules.admin.base.User','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(101,4,'userList','org.aspcfs.modules.admin.base.UserList','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(102,4,'contact','org.aspcfs.modules.contacts.base.Contact','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,'id')
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(103,4,'contactList','org.aspcfs.modules.contacts.base.ContactList','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(104,4,'ticket','org.aspcfs.modules.troubletickets.base.Ticket','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,'id')
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(105,4,'ticketList','org.aspcfs.modules.troubletickets.base.TicketList','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(106,4,'account','org.aspcfs.modules.accounts.base.Organization','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,'id')
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(107,4,'accountList','org.aspcfs.modules.accounts.base.OrganizationList','Apr  1 2005  9:43:59:500AM','Apr  1 2005  9:43:59:500AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(108,4,'role','org.aspcfs.modules.admin.base.Role','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(109,4,'roleList','org.aspcfs.modules.admin.base.RoleList','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(110,4,'permissionCategory','org.aspcfs.modules.admin.base.PermissionCategory','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(111,4,'permissionCategoryList','org.aspcfs.modules.admin.base.PermissionCategoryList','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(112,4,'permission','org.aspcfs.modules.admin.base.Permission','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(113,4,'permissionList','org.aspcfs.modules.admin.base.PermissionList','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(114,4,'rolePermission','org.aspcfs.modules.admin.base.RolePermission','Apr  1 2005  9:43:59:510AM','Apr  1 2005  9:43:59:510AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(115,4,'rolePermissionList','org.aspcfs.modules.admin.base.RolePermissionList','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(116,4,'opportunity','org.aspcfs.modules.pipeline.base.Opportunity','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(117,4,'opportunityList','org.aspcfs.modules.pipeline.base.OpportunityList','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(118,4,'call','org.aspcfs.modules.contacts.base.Call','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(119,4,'callList','org.aspcfs.modules.contacts.base.CallList','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(120,4,'customFieldCategory','org.aspcfs.modules.base.CustomFieldCategory','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(121,4,'customFieldCategoryList','org.aspcfs.modules.base.CustomFieldCategoryList','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(122,4,'customFieldGroup','org.aspcfs.modules.base.CustomFieldGroup','Apr  1 2005  9:43:59:520AM','Apr  1 2005  9:43:59:520AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(123,4,'customFieldGroupList','org.aspcfs.modules.base.CustomFieldGroupList','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(124,4,'customField','org.aspcfs.modules.base.CustomField','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(125,4,'customFieldList','org.aspcfs.modules.base.CustomFieldList','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(126,4,'customFieldLookup','org.aspcfs.utils.web.LookupElement','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(127,4,'customFieldLookupList','org.aspcfs.utils.web.LookupList','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(128,4,'customFieldRecord','org.aspcfs.modules.base.CustomFieldRecord','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,'id')
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(129,4,'customFieldRecordList','org.aspcfs.modules.base.CustomFieldRecordList','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(130,4,'contactEmailAddress','org.aspcfs.modules.contacts.base.ContactEmailAddress','Apr  1 2005  9:43:59:530AM','Apr  1 2005  9:43:59:530AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(131,4,'contactEmailAddressList','org.aspcfs.modules.contacts.base.ContactEmailAddressList','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(132,4,'customFieldData','org.aspcfs.modules.base.CustomFieldData','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(133,4,'lookupProjectActivity','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(134,4,'lookupProjectActivityList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(135,4,'lookupProjectIssues','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(136,4,'lookupProjectIssuesList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(137,4,'lookupProjectLoe','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(138,4,'lookupProjectLoeList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:540AM','Apr  1 2005  9:43:59:540AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(139,4,'lookupProjectPriority','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:550AM','Apr  1 2005  9:43:59:550AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(140,4,'lookupProjectPriorityList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:550AM','Apr  1 2005  9:43:59:550AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(141,4,'lookupProjectStatus','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:550AM','Apr  1 2005  9:43:59:550AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(142,4,'lookupProjectStatusList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:550AM','Apr  1 2005  9:43:59:550AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(143,4,'project','com.zeroio.iteam.base.Project','Apr  1 2005  9:43:59:550AM','Apr  1 2005  9:43:59:550AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(144,4,'projectList','com.zeroio.iteam.base.ProjectList','Apr  1 2005  9:43:59:560AM','Apr  1 2005  9:43:59:560AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(145,4,'requirement','com.zeroio.iteam.base.Requirement','Apr  1 2005  9:43:59:560AM','Apr  1 2005  9:43:59:560AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(146,4,'requirementList','com.zeroio.iteam.base.RequirementList','Apr  1 2005  9:43:59:560AM','Apr  1 2005  9:43:59:560AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(147,4,'assignment','com.zeroio.iteam.base.Assignment','Apr  1 2005  9:43:59:560AM','Apr  1 2005  9:43:59:560AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(148,4,'assignmentList','com.zeroio.iteam.base.AssignmentList','Apr  1 2005  9:43:59:560AM','Apr  1 2005  9:43:59:560AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(149,4,'issue','com.zeroio.iteam.base.Issue','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(150,4,'issueList','com.zeroio.iteam.base.IssueList','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(151,4,'issueReply','com.zeroio.iteam.base.IssueReply','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(152,4,'issueReplyList','com.zeroio.iteam.base.IssueReplyList','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(153,4,'teamMember','com.zeroio.iteam.base.TeamMember','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(154,4,'fileItem','com.zeroio.iteam.base.FileItem','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(155,4,'fileItemList','com.zeroio.iteam.base.FileItemList','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(156,4,'fileItemVersion','com.zeroio.iteam.base.FileItemVersion','Apr  1 2005  9:43:59:570AM','Apr  1 2005  9:43:59:570AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(157,4,'fileItemVersionList','com.zeroio.iteam.base.FileItemVersionList','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(158,4,'fileDownloadLog','com.zeroio.iteam.base.FileDownloadLog','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(159,4,'contactAddress','org.aspcfs.modules.contacts.base.ContactAddress','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(160,4,'contactAddressList','org.aspcfs.modules.contacts.base.ContactAddressList','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(161,4,'contactPhoneNumber','org.aspcfs.modules.contacts.base.ContactPhoneNumber','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(162,4,'contactPhoneNumberList','org.aspcfs.modules.contacts.base.ContactPhoneNumberList','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(163,4,'organizationPhoneNumber','org.aspcfs.modules.accounts.base.OrganizationPhoneNumber','Apr  1 2005  9:43:59:580AM','Apr  1 2005  9:43:59:580AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(164,4,'organizationPhoneNumberList','org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList','Apr  1 2005  9:43:59:590AM','Apr  1 2005  9:43:59:590AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(165,4,'organizationEmailAddress','org.aspcfs.modules.accounts.base.OrganizationEmailAddress','Apr  1 2005  9:43:59:590AM','Apr  1 2005  9:43:59:590AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(166,4,'organizationEmailAddressList','org.aspcfs.modules.accounts.base.OrganizationEmailAddressList','Apr  1 2005  9:43:59:590AM','Apr  1 2005  9:43:59:590AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(167,4,'organizationAddress','org.aspcfs.modules.accounts.base.OrganizationAddress','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(168,4,'organizationAddressList','org.aspcfs.modules.accounts.base.OrganizationAddressList','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(169,4,'ticketLog','org.aspcfs.modules.troubletickets.base.TicketLog','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(170,4,'ticketLogList','org.aspcfs.modules.troubletickets.base.TicketLogList','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(171,4,'message','org.aspcfs.modules.communications.base.Message','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(172,4,'messageList','org.aspcfs.modules.communications.base.MessageList','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(173,4,'searchCriteriaElements','org.aspcfs.modules.communications.base.SearchCriteriaList','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(174,4,'searchCriteriaElementsList','org.aspcfs.modules.communications.base.SearchCriteriaListList','Apr  1 2005  9:43:59:600AM','Apr  1 2005  9:43:59:600AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(175,4,'savedCriteriaElement','org.aspcfs.modules.communications.base.SavedCriteriaElement','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(176,4,'searchFieldElement','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(177,4,'searchFieldElementList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(178,4,'revenue','org.aspcfs.modules.accounts.base.Revenue','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(179,4,'revenueList','org.aspcfs.modules.accounts.base.RevenueList','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(180,4,'campaign','org.aspcfs.modules.communications.base.Campaign','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(181,4,'campaignList','org.aspcfs.modules.communications.base.CampaignList','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(182,4,'scheduledRecipient','org.aspcfs.modules.communications.base.ScheduledRecipient','Apr  1 2005  9:43:59:610AM','Apr  1 2005  9:43:59:610AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(183,4,'scheduledRecipientList','org.aspcfs.modules.communications.base.ScheduledRecipientList','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(184,4,'accessLog','org.aspcfs.modules.admin.base.AccessLog','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(185,4,'accessLogList','org.aspcfs.modules.admin.base.AccessLogList','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(186,4,'accountTypeLevels','org.aspcfs.modules.accounts.base.AccountTypeLevel','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(187,4,'fieldTypes','org.aspcfs.utils.web.CustomLookupElement','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(188,4,'fieldTypesList','org.aspcfs.utils.web.CustomLookupList','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(189,4,'excludedRecipient','org.aspcfs.modules.communications.base.ExcludedRecipient','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(190,4,'campaignRun','org.aspcfs.modules.communications.base.CampaignRun','Apr  1 2005  9:43:59:620AM','Apr  1 2005  9:43:59:620AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(191,4,'campaignRunList','org.aspcfs.modules.communications.base.CampaignRunList','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(192,4,'campaignListGroups','org.aspcfs.modules.communications.base.CampaignListGroup','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(193,5,'ticket','org.aspcfs.modules.troubletickets.base.Ticket','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,-1,0,'id')
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(194,5,'ticketCategory','org.aspcfs.modules.troubletickets.base.TicketCategory','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(195,5,'ticketCategoryList','org.aspcfs.modules.troubletickets.base.TicketCategoryList','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(196,5,'syncClient','org.aspcfs.modules.service.base.SyncClient','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,2,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(197,5,'accountList','org.aspcfs.modules.accounts.base.OrganizationList','Apr  1 2005  9:43:59:630AM','Apr  1 2005  9:43:59:630AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(198,5,'userList','org.aspcfs.modules.admin.base.UserList','Apr  1 2005  9:43:59:640AM','Apr  1 2005  9:43:59:640AM',NULL,-1,0,NULL)
-INSERT [sync_table] ([table_id],[system_id],[element_name],[mapped_class_name],[entered],[modified],[create_statement],[order_id],[sync_item],[object_key])VALUES(199,5,'contactList','org.aspcfs.modules.contacts.base.ContactList','Apr  1 2005  9:43:59:640AM','Apr  1 2005  9:43:59:640AM',NULL,-1,0,NULL)
-
-SET IDENTITY_INSERT [sync_table] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default field_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [field_types] ON
-GO
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(1,0,'string','=','is',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(2,0,'string','!=','is not',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(3,0,'string','= | or field_name is null','is empty',0)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(4,0,'string','!= | and field_name is not null','is not empty',0)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(5,0,'string','like %search_value%','contains',0)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(6,0,'string','not like %search_value%','does not contain',0)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(7,1,'date','<','before',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(8,1,'date','>','after',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(9,1,'date','between','between',0)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(10,1,'date','<=','on or before',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(11,1,'date','>=','on or after',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(12,2,'number','>','greater than',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(13,2,'number','<','less than',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(14,2,'number','=','equals',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(15,2,'number','>=','greater than or equal to',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(16,2,'number','<=','less than or equal to',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(17,2,'number','is not null','exist',1)
-INSERT [field_types] ([id],[data_typeid],[data_type],[operator],[display_text],[enabled])VALUES(18,2,'number','is null','does not exist',1)
-
-SET IDENTITY_INSERT [field_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_quote_delivery
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_quote_delivery] ON
-GO
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Email',0,10,1)
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Fax',0,20,1)
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(3,'In Person',0,30,1)
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(4,'DHL',0,40,1)
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(5,'FEDEX',0,50,1)
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(6,'UPS',0,60,1)
-INSERT [lookup_quote_delivery] ([code],[description],[default_item],[level],[enabled])VALUES(7,'USPS',0,70,1)
-
-SET IDENTITY_INSERT [lookup_quote_delivery] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_ticketsource
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_ticketsource] ON
-GO
-INSERT [lookup_ticketsource] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Phone',0,10,1)
-INSERT [lookup_ticketsource] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Email',0,20,1)
-INSERT [lookup_ticketsource] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Web',0,30,1)
-INSERT [lookup_ticketsource] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Letter',0,40,1)
-INSERT [lookup_ticketsource] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Other',0,50,1)
-
-SET IDENTITY_INSERT [lookup_ticketsource] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default search_fields
-SET NOCOUNT ON
-SET IDENTITY_INSERT [search_fields] ON
-GO
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(1,'company','Company Name',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(2,'namefirst','Contact First Name',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(3,'namelast','Contact Last Name',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(4,'entered','Entered Date',1,1,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(5,'zip','Zip Code',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(6,'areacode','Area Code',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(7,'city','City',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(8,'typeId','Contact Type',1,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(9,'contactId','Contact ID',0,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(10,'title','Contact Title',0,0,NULL,NULL,1)
-INSERT [search_fields] ([id],[field],[description],[searchable],[field_typeid],[table_name],[object_class],[enabled])VALUES(11,'accountTypeId','Account Type',1,0,NULL,NULL,1)
-
-SET IDENTITY_INSERT [search_fields] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_project_role
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_project_role] ON
-GO
-INSERT [lookup_project_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(1,'Project Lead',0,10,1,1)
-INSERT [lookup_project_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(2,'Contributor',0,20,1,1)
-INSERT [lookup_project_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(3,'Observer',0,30,1,1)
-INSERT [lookup_project_role] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(4,'Guest',0,100,1,1)
-
-SET IDENTITY_INSERT [lookup_project_role] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default access
-SET NOCOUNT ON
-SET IDENTITY_INSERT [access] ON
-GO
-INSERT [access] ([user_id],[username],[password],[contact_id],[role_id],[manager_id],[startofday],[endofday],[locale],[timezone],[last_ip],[last_login],[enteredby],[entered],[modifiedby],[modified],[expires],[alias],[assistant],[enabled],[currency],[language],[webdav_password],[hidden])VALUES(0,'dhvadmin','---',-1,1,-1,8,18,NULL,'America/New_York',NULL,'Apr  1 2005  9:43:53:170AM',0,'Apr  1 2005  9:43:53:170AM',0,'Apr  1 2005  9:43:53:170AM',NULL,-1,-1,1,NULL,NULL,NULL,0)
-
-SET IDENTITY_INSERT [access] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_product_format
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_product_format] ON
-GO
-INSERT [lookup_product_format] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Physical',0,10,1)
-INSERT [lookup_product_format] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Electronic',0,20,1)
-
-SET IDENTITY_INSERT [lookup_product_format] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_payment_methods
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_payment_methods] ON
-GO
-INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Cash',0,10,1)
-INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Credit Card',0,20,1)
-INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Personal Check',0,30,1)
-INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Money Order',0,40,1)
-INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Certified Check',0,50,1)
-
-SET IDENTITY_INSERT [lookup_payment_methods] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_product_shipping
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_product_shipping] ON
-GO
-INSERT [lookup_product_shipping] ([code],[description],[default_item],[level],[enabled])VALUES(1,'DHL',0,10,1)
-INSERT [lookup_product_shipping] ([code],[description],[default_item],[level],[enabled])VALUES(2,'FEDEX',0,20,1)
-INSERT [lookup_product_shipping] ([code],[description],[default_item],[level],[enabled])VALUES(3,'UPS',0,30,1)
-INSERT [lookup_product_shipping] ([code],[description],[default_item],[level],[enabled])VALUES(4,'USPS',0,40,1)
-
-SET IDENTITY_INSERT [lookup_product_shipping] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_creditcard_types
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_creditcard_types] ON
-GO
-INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Visa',0,10,1)
-INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Master Card',0,20,1)
-INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'American Express',0,30,1)
-INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Discover',0,40,1)
-
-SET IDENTITY_INSERT [lookup_creditcard_types] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default ticket_priority
-SET NOCOUNT ON
-SET IDENTITY_INSERT [ticket_priority] ON
-GO
-INSERT [ticket_priority] ([code],[description],[style],[default_item],[level],[enabled])VALUES(1,'Next',' ',0,10,1)
-INSERT [ticket_priority] ([code],[description],[style],[default_item],[level],[enabled])VALUES(2,'As Scheduled','background-color:lightgreen;color:black;',0,20,1)
-INSERT [ticket_priority] ([code],[description],[style],[default_item],[level],[enabled])VALUES(3,'Urgent','background-color:yellow;color:black;',0,30,1)
-INSERT [ticket_priority] ([code],[description],[style],[default_item],[level],[enabled])VALUES(4,'Critical','background-color:red;color:black;font-weight:bold;',0,40,1)
-
-SET IDENTITY_INSERT [ticket_priority] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_document_store_permission_category
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_document_store_permission_category] ON
-GO
-INSERT [lookup_document_store_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(1,'Document Store Details',0,10,1,0)
-INSERT [lookup_document_store_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(2,'Team Members',0,20,1,0)
-INSERT [lookup_document_store_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(3,'Document Library',0,30,1,0)
-INSERT [lookup_document_store_permission_category] ([code],[description],[default_item],[level],[enabled],[group_id])VALUES(4,'Setup',0,40,1,0)
-
-SET IDENTITY_INSERT [lookup_document_store_permission_category] OFF
-GO
-SET NOCOUNT OFF
-
-
-
-
-
 
  CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]
 GO
@@ -11517,8 +7470,8 @@ ALTER TABLE [action_list] ADD
 	)
 GO
 
-ALTER TABLE [autoguide_model] ADD 
-	 FOREIGN KEY 
+ALTER TABLE [autoguide_model] ADD
+	 FOREIGN KEY
 	(
 		[make_id]
 	) REFERENCES [autoguide_make] (
@@ -11526,7 +7479,7 @@ ALTER TABLE [autoguide_model] ADD
 	)
 GO
 
-ALTER TABLE [business_process] ADD 
+ALTER TABLE [business_process] ADD
 	 FOREIGN KEY 
 	(
 		[link_module_id]
@@ -11598,7 +7551,7 @@ ALTER TABLE [cfsinbox_message] ADD
 	)
 GO
 
-ALTER TABLE [document_store] ADD
+ALTER TABLE [document_store] ADD 
 	CONSTRAINT [FK__document___appro__1451E89E] FOREIGN KEY
 	(
 		[approvalBy]
@@ -11691,7 +7644,7 @@ ALTER TABLE [lookup_contact_types] ADD
 	)
 GO
 
-ALTER TABLE [lookup_document_store_permission] ADD
+ALTER TABLE [lookup_document_store_permission] ADD 
 	CONSTRAINT [FK__lookup_do__categ__0BBCA29D] FOREIGN KEY
 	(
 		[category_id]
@@ -11877,7 +7830,7 @@ ALTER TABLE [projects] ADD
 	)
 GO
 
-ALTER TABLE [relationship] ADD
+ALTER TABLE [relationship] ADD 
 	CONSTRAINT [FK__relations__type___11D4A34F] FOREIGN KEY
 	(
 		[type_id]
@@ -12027,7 +7980,7 @@ ALTER TABLE [viewpoint] ADD
 	)
 GO
 
-ALTER TABLE [webdav] ADD
+ALTER TABLE [webdav] ADD 
 	CONSTRAINT [FK__webdav__category__308E3499] FOREIGN KEY
 	(
 		[category_id]
@@ -12120,14 +8073,14 @@ ALTER TABLE [active_survey] ADD
 	)
 GO
 
-ALTER TABLE [autoguide_vehicle] ADD 
-	 FOREIGN KEY 
+ALTER TABLE [autoguide_vehicle] ADD
+	 FOREIGN KEY
 	(
 		[make_id]
 	) REFERENCES [autoguide_make] (
 		[make_id]
 	),
-	 FOREIGN KEY 
+	 FOREIGN KEY
 	(
 		[model_id]
 	) REFERENCES [autoguide_model] (
@@ -12135,7 +8088,7 @@ ALTER TABLE [autoguide_vehicle] ADD
 	)
 GO
 
-ALTER TABLE [business_process_component] ADD 
+ALTER TABLE [business_process_component] ADD
 	 FOREIGN KEY 
 	(
 		[component_id]
@@ -12300,7 +8253,7 @@ ALTER TABLE [custom_field_category] ADD
 	)
 GO
 
-ALTER TABLE [document_store_department_member] ADD
+ALTER TABLE [document_store_department_member] ADD 
 	CONSTRAINT [FK__document___docum__2E11BAA1] FOREIGN KEY
 	(
 		[document_store_id]
@@ -12333,7 +8286,7 @@ ALTER TABLE [document_store_department_member] ADD
 	)
 GO
 
-ALTER TABLE [document_store_permissions] ADD
+ALTER TABLE [document_store_permissions] ADD 
 	CONSTRAINT [FK__document___docum__1AFEE62D] FOREIGN KEY
 	(
 		[document_store_id]
@@ -12354,7 +8307,7 @@ ALTER TABLE [document_store_permissions] ADD
 	)
 GO
 
-ALTER TABLE [document_store_role_member] ADD
+ALTER TABLE [document_store_role_member] ADD 
 	CONSTRAINT [FK__document___docum__267098D9] FOREIGN KEY
 	(
 		[document_store_id]
@@ -12387,7 +8340,7 @@ ALTER TABLE [document_store_role_member] ADD
 	)
 GO
 
-ALTER TABLE [document_store_user_member] ADD
+ALTER TABLE [document_store_user_member] ADD 
 	CONSTRAINT [FK__document___docum__1ECF7711] FOREIGN KEY
 	(
 		[document_store_id]
@@ -12597,7 +8550,7 @@ ALTER TABLE [product_option] ADD
 	)
 GO
 
-ALTER TABLE [project_accounts] ADD
+ALTER TABLE [project_accounts] ADD 
 	CONSTRAINT [FK__project_a__org_i__4F67C174] FOREIGN KEY
 	(
 		[org_id]
@@ -12654,7 +8607,7 @@ ALTER TABLE [project_issues_categories] ADD
 	)
 GO
 
-ALTER TABLE [project_news_category] ADD
+ALTER TABLE [project_news_category] ADD 
 	CONSTRAINT [FK__project_n__proje__1BE81D6E] FOREIGN KEY
 	(
 		[project_id]
@@ -13011,14 +8964,14 @@ ALTER TABLE [active_survey_responses] ADD
 	)
 GO
 
-ALTER TABLE [autoguide_inventory] ADD 
-	 FOREIGN KEY 
+ALTER TABLE [autoguide_inventory] ADD
+	 FOREIGN KEY
 	(
 		[account_id]
 	) REFERENCES [organization] (
 		[org_id]
 	),
-	 FOREIGN KEY 
+	 FOREIGN KEY
 	(
 		[vehicle_id]
 	) REFERENCES [autoguide_vehicle] (
@@ -13026,7 +8979,7 @@ ALTER TABLE [autoguide_inventory] ADD
 	)
 GO
 
-ALTER TABLE [business_process_component_parameter] ADD 
+ALTER TABLE [business_process_component_parameter] ADD
 	 FOREIGN KEY 
 	(
 		[component_id]
@@ -13131,7 +9084,7 @@ ALTER TABLE [contact_emailaddress] ADD
 	)
 GO
 
-ALTER TABLE [contact_imaddress] ADD
+ALTER TABLE [contact_imaddress] ADD 
 	CONSTRAINT [FK__contact_i__conta__7C1A6C5A] FOREIGN KEY
 	(
 		[contact_id]
@@ -13164,7 +9117,7 @@ ALTER TABLE [contact_imaddress] ADD
 	)
 GO
 
-ALTER TABLE [contact_lead_read_map] ADD
+ALTER TABLE [contact_lead_read_map] ADD 
 	CONSTRAINT [FK__contact_l__conta__0F624AF8] FOREIGN KEY
 	(
 		[contact_id]
@@ -13179,7 +9132,7 @@ ALTER TABLE [contact_lead_read_map] ADD
 	)
 GO
 
-ALTER TABLE [contact_lead_skipped_map] ADD
+ALTER TABLE [contact_lead_skipped_map] ADD 
 	CONSTRAINT [FK__contact_l__conta__0B91BA14] FOREIGN KEY
 	(
 		[contact_id]
@@ -13221,7 +9174,7 @@ ALTER TABLE [contact_phone] ADD
 	)
 GO
 
-ALTER TABLE [contact_textmessageaddress] ADD
+ALTER TABLE [contact_textmessageaddress] ADD 
 	CONSTRAINT [FK__contact_t__conta__05A3D694] FOREIGN KEY
 	(
 		[contact_id]
@@ -13467,6 +9420,33 @@ ALTER TABLE [help_tips] ADD
 		[modifiedby]
 	) REFERENCES [access] (
 		[user_id]
+	)
+GO
+
+ALTER TABLE [history] ADD 
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [organization] (
+		[org_id]
 	)
 GO
 
@@ -13806,26 +9786,26 @@ ALTER TABLE [project_issues] ADD
 	)
 GO
 
-ALTER TABLE [project_news] ADD
+ALTER TABLE [project_news] ADD 
 	CONSTRAINT [FK__project_n__categ__22951AFD] FOREIGN KEY
 	(
 		[category_id]
 	) REFERENCES [project_news_category] (
 		[category_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[enteredby]
 	) REFERENCES [access] (
 		[user_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[modifiedby]
 	) REFERENCES [access] (
 		[user_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[project_id]
 	) REFERENCES [projects] (
@@ -14115,8 +10095,8 @@ ALTER TABLE [asset] ADD
 	)
 GO
 
-ALTER TABLE [autoguide_ad_run] ADD 
-	 FOREIGN KEY 
+ALTER TABLE [autoguide_ad_run] ADD
+	 FOREIGN KEY
 	(
 		[inventory_id]
 	) REFERENCES [autoguide_inventory] (
@@ -14124,8 +10104,8 @@ ALTER TABLE [autoguide_ad_run] ADD
 	)
 GO
 
-ALTER TABLE [autoguide_inventory_options] ADD 
-	 FOREIGN KEY 
+ALTER TABLE [autoguide_inventory_options] ADD
+	 FOREIGN KEY
 	(
 		[inventory_id]
 	) REFERENCES [autoguide_inventory] (
@@ -14133,7 +10113,7 @@ ALTER TABLE [autoguide_inventory_options] ADD
 	)
 GO
 
-ALTER TABLE [custom_field_info] ADD 
+ALTER TABLE [custom_field_info] ADD
 	 FOREIGN KEY 
 	(
 		[group_id]
@@ -14145,11 +10125,35 @@ GO
 ALTER TABLE [opportunity_component] ADD 
 	 FOREIGN KEY 
 	(
+		[budget]
+	) REFERENCES [lookup_opportunity_budget] (
+		[code]
+	),
+	 FOREIGN KEY
+	(
+		[competitors]
+	) REFERENCES [lookup_opportunity_competitors] (
+		[code]
+	),
+	 FOREIGN KEY
+	(
+		[compelling_event]
+	) REFERENCES [lookup_opportunity_event_compelling] (
+		[code]
+	),
+	 FOREIGN KEY
+	(
 		[enteredby]
 	) REFERENCES [access] (
 		[user_id]
 	),
 	 FOREIGN KEY 
+	(
+		[environment]
+	) REFERENCES [lookup_opportunity_environment] (
+		[code]
+	),
+	 FOREIGN KEY
 	(
 		[modifiedby]
 	) REFERENCES [access] (
@@ -14316,7 +10320,7 @@ ALTER TABLE [product_keyword_map] ADD
 	)
 GO
 
-ALTER TABLE [product_option_map] ADD
+ALTER TABLE [product_option_map] ADD 
 	CONSTRAINT [FK__product_o__optio__7928F116] FOREIGN KEY
 	(
 		[option_id]
@@ -14481,7 +10485,7 @@ ALTER TABLE [service_contract_products] ADD
 	)
 GO
 
-ALTER TABLE [taskcategorylink_news] ADD
+ALTER TABLE [taskcategorylink_news] ADD 
 	CONSTRAINT [FK__taskcateg__categ__7C7A5F0D] FOREIGN KEY
 	(
 		[category_id]
@@ -14604,8 +10608,8 @@ ALTER TABLE [package_products_map] ADD
 	)
 GO
 
-ALTER TABLE [project_assignments_status] ADD
-	 FOREIGN KEY
+ALTER TABLE [project_assignments_status] ADD 
+	 FOREIGN KEY 
 	(
 		[assignment_id]
 	) REFERENCES [project_assignments] (
@@ -14617,7 +10621,7 @@ ALTER TABLE [project_assignments_status] ADD
 	) REFERENCES [lookup_project_status] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[user_id]
 	) REFERENCES [access] (
@@ -14803,19 +10807,19 @@ ALTER TABLE [customer_product_history] ADD
 	) REFERENCES [access] (
 		[user_id]
 	),
-	CONSTRAINT [FK__customer___order__22800C64] FOREIGN KEY
-	(
-		[order_item_id]
-	) REFERENCES [order_product] (
-		[item_id]
-	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[order_id]
 	) REFERENCES [order_entry] (
 		[order_id]
 	),
-	 FOREIGN KEY
+	 CONSTRAINT [FK__customer___order__22800C64] FOREIGN KEY
+	(
+		[order_item_id]
+	) REFERENCES [order_product] (
+		[item_id]
+	),
+	 FOREIGN KEY 
 	(
 		[org_id]
 	) REFERENCES [organization] (
@@ -14934,7 +10938,7 @@ ALTER TABLE [order_entry] ADD
 	)
 GO
 
-ALTER TABLE [order_payment] ADD
+ALTER TABLE [order_payment] ADD 
 	CONSTRAINT [FK__order_pay__bank___32B6742D] FOREIGN KEY
 	(
 		[bank_id]
@@ -14947,7 +10951,7 @@ ALTER TABLE [order_payment] ADD
 	) REFERENCES [payment_creditcard] (
 		[creditcard_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[enteredby]
 	) REFERENCES [access] (
@@ -14959,25 +10963,25 @@ ALTER TABLE [order_payment] ADD
 	) REFERENCES [customer_product_history] (
 		[history_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[modifiedby]
 	) REFERENCES [access] (
 		[user_id]
 	),
-	CONSTRAINT [FK__order_pay__order__2B155265] FOREIGN KEY
-	(
-		[order_item_id]
-	) REFERENCES [order_product] (
-		[item_id]
-	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[order_id]
 	) REFERENCES [order_entry] (
 		[order_id]
 	),
-	 FOREIGN KEY
+	 CONSTRAINT [FK__order_pay__order__2B155265] FOREIGN KEY
+	(
+		[order_item_id]
+	) REFERENCES [order_product] (
+		[item_id]
+	),
+	 FOREIGN KEY 
 	(
 		[payment_method_id]
 	) REFERENCES [lookup_payment_methods] (
@@ -14991,7 +10995,7 @@ ALTER TABLE [order_payment] ADD
 	)
 GO
 
-ALTER TABLE [order_payment_status] ADD
+ALTER TABLE [order_payment_status] ADD 
 	CONSTRAINT [FK__order_pay__enter__396371BC] FOREIGN KEY
 	(
 		[enteredby]
@@ -15180,7 +11184,7 @@ ALTER TABLE [order_product_status] ADD
 	)
 GO
 
-ALTER TABLE [payment_creditcard] ADD
+ALTER TABLE [payment_creditcard] ADD 
 	CONSTRAINT [FK__payment_c__card___02133CD2] FOREIGN KEY
 	(
 		[card_type]
@@ -15207,7 +11211,7 @@ ALTER TABLE [payment_creditcard] ADD
 	)
 GO
 
-ALTER TABLE [payment_eft] ADD
+ALTER TABLE [payment_eft] ADD 
 	CONSTRAINT [FK__payment_e__enter__0AA882D3] FOREIGN KEY
 	(
 		[enteredby]
@@ -15228,7 +11232,7 @@ ALTER TABLE [payment_eft] ADD
 	)
 GO
 
-ALTER TABLE [quote_condition] ADD
+ALTER TABLE [quote_condition] ADD 
 	CONSTRAINT [FK__quote_con__condi__05CEBF1D] FOREIGN KEY
 	(
 		[condition_id]
@@ -15243,20 +11247,26 @@ ALTER TABLE [quote_condition] ADD
 	)
 GO
 
-ALTER TABLE [quote_entry] ADD
-	 FOREIGN KEY
+ALTER TABLE [quote_entry] ADD 
+	 FOREIGN KEY 
 	(
 		[contact_id]
 	) REFERENCES [contact] (
 		[contact_id]
 	),
-	CONSTRAINT [FK__quote_ent__deliv__7F21C18E] FOREIGN KEY
+	 FOREIGN KEY 
+	(
+		[customer_product_id]
+	) REFERENCES [customer_product] (
+		[customer_product_id]
+	),
+	 CONSTRAINT [FK__quote_ent__deliv__7F21C18E] FOREIGN KEY
 	(
 		[delivery_id]
 	) REFERENCES [lookup_quote_delivery] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[enteredby]
 	) REFERENCES [access] (
@@ -15274,7 +11284,7 @@ ALTER TABLE [quote_entry] ADD
 	) REFERENCES [project_files] (
 		[item_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[modifiedby]
 	) REFERENCES [access] (
@@ -15286,43 +11296,49 @@ ALTER TABLE [quote_entry] ADD
 	) REFERENCES [opportunity_header] (
 		[opp_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[org_id]
 	) REFERENCES [organization] (
 		[org_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[parent_id]
 	) REFERENCES [quote_entry] (
 		[quote_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
 	(
 		[quote_terms_id]
 	) REFERENCES [lookup_quote_terms] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[quote_type_id]
 	) REFERENCES [lookup_quote_type] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[source_id]
 	) REFERENCES [lookup_quote_source] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[status_id]
 	) REFERENCES [lookup_quote_status] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[ticketid]
 	) REFERENCES [ticket] (
@@ -15351,38 +11367,38 @@ ALTER TABLE [quote_notes] ADD
 	)
 GO
 
-ALTER TABLE [quote_product] ADD
-	 FOREIGN KEY
+ALTER TABLE [quote_product] ADD 
+	 FOREIGN KEY 
 	(
 		[price_currency]
 	) REFERENCES [lookup_currency] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[product_id]
 	) REFERENCES [product_catalog] (
 		[product_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[quote_id]
 	) REFERENCES [quote_entry] (
 		[quote_id]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[recurring_currency]
 	) REFERENCES [lookup_currency] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[recurring_type]
 	) REFERENCES [lookup_recurring_type] (
 		[code]
 	),
-	 FOREIGN KEY
+	 FOREIGN KEY 
 	(
 		[status_id]
 	) REFERENCES [lookup_quote_status] (
@@ -15474,7 +11490,7 @@ ALTER TABLE [quote_product_options] ADD
 	)
 GO
 
-ALTER TABLE [quote_remark] ADD
+ALTER TABLE [quote_remark] ADD 
 	CONSTRAINT [FK__quote_rem__quote__18E19391] FOREIGN KEY
 	(
 		[quote_id]
@@ -15489,7 +11505,7 @@ ALTER TABLE [quote_remark] ADD
 	)
 GO
 
-ALTER TABLE [quotelog] ADD
+ALTER TABLE [quotelog] ADD 
 	CONSTRAINT [FK__quotelog__delive__0D6FE0E5] FOREIGN KEY
 	(
 		[delivery_id]
@@ -15646,7 +11662,7 @@ ALTER TABLE [ticket] ADD
 	) REFERENCES [lookup_ticketsource] (
 		[code]
 	),
-	CONSTRAINT [FK__ticket__status_i__6EEB59C5] FOREIGN KEY 
+	CONSTRAINT [FK__ticket__status_i__6EEB59C5] FOREIGN KEY
 	(
 		[status_id]
 	) REFERENCES [lookup_ticket_status] (

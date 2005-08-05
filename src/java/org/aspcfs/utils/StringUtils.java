@@ -15,20 +15,23 @@
  */
 package org.aspcfs.utils;
 
-import java.util.ArrayList;
-import java.util.regex.*;
-import java.io.*;
-import java.util.*;
+import sun.misc.BASE64Encoder;
+
 import javax.servlet.ServletContext;
-import sun.misc.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- *  Variety of methods for Strings
+ * Variety of methods for Strings
  *
- *@author     mrajkowski
- *@created    May 21, 2002
- *@version    $Id: StringUtils.java,v 1.15.14.1 2003/08/22 19:25:51 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: StringUtils.java,v 1.15.14.1 2003/08/22 19:25:51 mrajkowski
+ *          Exp $
+ * @created May 21, 2002
  */
 public class StringUtils {
 
@@ -37,10 +40,10 @@ public class StringUtils {
 
 
   /**
-   *  Gets the integerNumber attribute of the StringUtils class
+   * Gets the integerNumber attribute of the StringUtils class
    *
-   *@param  in  Description of Parameter
-   *@return     The integerNumber value
+   * @param in Description of Parameter
+   * @return The integerNumber value
    */
   public static int getIntegerNumber(String in) {
     return Integer.parseInt(getNumber(in));
@@ -48,10 +51,10 @@ public class StringUtils {
 
 
   /**
-   *  Gets the doubleNumber attribute of the StringUtils class
+   * Gets the doubleNumber attribute of the StringUtils class
    *
-   *@param  in  Description of Parameter
-   *@return     The doubleNumber value
+   * @param in Description of Parameter
+   * @return The doubleNumber value
    */
   public static double getDoubleNumber(String in) {
     return Double.parseDouble(getNumber(in));
@@ -59,12 +62,12 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  str  Description of Parameter
-   *@param  o    Description of Parameter
-   *@param  n    Description of Parameter
-   *@return      Description of the Returned Value
+   * @param str Description of Parameter
+   * @param o   Description of Parameter
+   * @param n   Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String replace(String str, String o, String n) {
     boolean all = true;
@@ -97,10 +100,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of Parameter
-   *@return    Description of the Returned Value
+   * @param s Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toString(String s) {
     if (s != null) {
@@ -112,10 +115,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of Parameter
-   *@return    Description of the Returned Value
+   * @param s Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toHtml(String s) {
     if (s != null) {
@@ -131,10 +134,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of Parameter
-   *@return    Description of the Returned Value
+   * @param s Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toHtmlValue(String s) {
     if (s != null) {
@@ -149,6 +152,15 @@ public class StringUtils {
       htmlReady = replace(htmlReady, "\r", "<br>");
       htmlReady = replace(htmlReady, "//lt;", "<");
       htmlReady = replace(htmlReady, "//gt;", ">");
+      htmlReady = toHtmlChars(htmlReady);
+      return (htmlReady);
+    } else {
+      return ("");
+    }
+  }
+
+  public static String toHtmlChars(String htmlReady) {
+    if (htmlReady != null) {
       htmlReady = replace(htmlReady, "\u00A1", "&iexcl;");
       htmlReady = replace(htmlReady, "\u00A2", "&cent;");
       htmlReady = replace(htmlReady, "\u00A3", "&pound;");
@@ -253,10 +265,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toPseudoHtmlValue(String s) {
     String htmlReady = toHtmlValue(s);
@@ -266,11 +278,11 @@ public class StringUtils {
 
 
   /**
-   *  This method converts HTML back to text. Used especially for converting a
-   *  hidden html form element into a text area
+   * This method converts HTML back to text. Used especially for converting a
+   * hidden html form element into a text area
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String fromHtmlValue(String s) {
     if (s != null) {
@@ -289,10 +301,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toHtmlText(String s) {
     s = replace(s, "<br>\r\n", "<br>");
@@ -302,10 +314,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toHtmlTextValue(String s) {
     s = replace(s, "<br>\r\n", "\r\n");
@@ -317,10 +329,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toHtmlTextBlank(String s) {
     String htmlReady = replace(s, "<br>", "");
@@ -329,14 +341,16 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inDate  Description of Parameter
-   *@return         Description of the Returned Value
+   * @param inDate Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toDateTimeString(java.sql.Timestamp inDate) {
     try {
-      return java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG).format(inDate);
+      return java.text.DateFormat.getDateTimeInstance(
+          java.text.DateFormat.SHORT, java.text.DateFormat.LONG).format(
+              inDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -344,14 +358,16 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inDate  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param inDate Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toDateTimeString(java.util.Date inDate) {
     try {
-      return java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG).format(inDate);
+      return java.text.DateFormat.getDateTimeInstance(
+          java.text.DateFormat.SHORT, java.text.DateFormat.LONG).format(
+              inDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -359,14 +375,15 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inDate  Description of Parameter
-   *@return         Description of the Returned Value
+   * @param inDate Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toDateString(java.sql.Timestamp inDate) {
     try {
-      return java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(inDate);
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(
+          inDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -374,14 +391,15 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inDate  Description of Parameter
-   *@return         Description of the Returned Value
+   * @param inDate Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toDateString(java.sql.Date inDate) {
     try {
-      return java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(inDate);
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(
+          inDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -389,14 +407,15 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inDate  Description of Parameter
-   *@return         Description of the Returned Value
+   * @param inDate Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toLongDateString(java.util.Date inDate) {
     try {
-      return java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(inDate);
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(
+          inDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -404,14 +423,15 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inDate  Description of Parameter
-   *@return         Description of the Returned Value
+   * @param inDate Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toFullDateString(java.util.Date inDate) {
     try {
-      return java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL).format(inDate);
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL).format(
+          inDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -419,10 +439,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of Parameter
-   *@return    Description of the Returned Value
+   * @param s Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String sqlReplace(String s) {
     //s = replace(s, "<br>", "\r");
@@ -444,10 +464,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  in  Description of Parameter
-   *@return     Description of the Returned Value
+   * @param in Description of Parameter
+   * @return Description of the Returned Value
    */
   public static boolean hasText(String in) {
     return (in != null && !("".equals(in)));
@@ -455,10 +475,10 @@ public class StringUtils {
 
 
   /**
-   *  Gets the number attribute of the StringUtils class
+   * Gets the number attribute of the StringUtils class
    *
-   *@param  in  Description of Parameter
-   *@return     The number value
+   * @param in Description of Parameter
+   * @return The number value
    */
   private static String getNumber(String in) {
     StringBuffer sb = new StringBuffer();
@@ -472,11 +492,11 @@ public class StringUtils {
 
 
   /**
-   *  Loads text into a string from a file
+   * Loads text into a string from a file
    *
-   *@param  file                     Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  java.io.IOException  Description of the Exception
+   * @param file Description of the Parameter
+   * @return Description of the Return Value
+   * @throws java.io.IOException Description of the Exception
    */
   public static String loadText(File file) throws java.io.IOException {
     String ls = System.getProperty("line.separator");
@@ -493,11 +513,11 @@ public class StringUtils {
 
 
   /**
-   *  Loads text into a string from a file
+   * Loads text into a string from a file
    *
-   *@param  filename                 Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  java.io.IOException  Description of the Exception
+   * @param filename Description of the Parameter
+   * @return Description of the Return Value
+   * @throws java.io.IOException Description of the Exception
    */
   public static String loadText(String filename) throws java.io.IOException {
     String ls = System.getProperty("line.separator");
@@ -512,14 +532,26 @@ public class StringUtils {
     return text.toString();
   }
 
+  public static void loadText(String filename, ArrayList lines, boolean ignoreComments) throws java.io.IOException {
+    BufferedReader in = new BufferedReader(new FileReader(filename));
+    String line = null;
+    while ((line = in.readLine()) != null) {
+      if (!ignoreComments || (ignoreComments && !line.startsWith("#") && !"".equals(
+          line.trim()))) {
+        lines.add(line);
+      }
+    }
+    in.close();
+  }
+
 
   /**
-   *  Load text into a string from the context resource
+   * Load text into a string from the context resource
    *
-   *@param  context          Description of the Parameter
-   *@param  filename         Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param context  Description of the Parameter
+   * @param filename Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   public static String loadText(ServletContext context, String filename) throws IOException {
     InputStream in = context.getResourceAsStream(filename);
@@ -534,11 +566,11 @@ public class StringUtils {
 
 
   /**
-   *  Writes a string of text to a file
+   * Writes a string of text to a file
    *
-   *@param  filename                 Description of the Parameter
-   *@param  data                     Description of the Parameter
-   *@exception  java.io.IOException  Description of the Exception
+   * @param filename Description of the Parameter
+   * @param data     Description of the Parameter
+   * @throws java.io.IOException Description of the Exception
    */
   public static void saveText(String filename, String data) throws java.io.IOException {
     BufferedWriter out = new BufferedWriter(new FileWriter(filename));
@@ -548,10 +580,10 @@ public class StringUtils {
 
 
   /**
-   *  Adds a feature to the S attribute of the StringUtils class
+   * Adds a feature to the S attribute of the StringUtils class
    *
-   *@param  count  The feature to be added to the S attribute
-   *@return        Description of the Return Value
+   * @param count The feature to be added to the S attribute
+   * @return Description of the Return Value
    */
   public static String addS(long count) {
     if (count == 1) {
@@ -563,10 +595,10 @@ public class StringUtils {
 
 
   /**
-   *  Adds a feature to the ES attribute of the StringUtils class
+   * Adds a feature to the ES attribute of the StringUtils class
    *
-   *@param  count  The feature to be added to the ES attribute
-   *@return        Description of the Return Value
+   * @param count The feature to be added to the ES attribute
+   * @return Description of the Return Value
    */
   public static String addES(long count) {
     if (count == 1) {
@@ -578,12 +610,12 @@ public class StringUtils {
 
 
   /**
-   *  Convert the string to an int, or if not an int, return the specified
-   *  default value
+   * Convert the string to an int, or if not an int, return the specified
+   * default value
    *
-   *@param  tmp           Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param tmp          Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int parseInt(String tmp, int defaultValue) {
     try {
@@ -595,11 +627,11 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp           Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param tmp          Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return Description of the Return Value
    */
   public static double parseDouble(String tmp, double defaultValue) {
     try {
@@ -611,13 +643,13 @@ public class StringUtils {
 
 
   /**
-   *  Reads a line of text in the Excel CSV format<br>
-   *  Each field is separated by a comma, except some fields have quotes around
-   *  them because the field has commas or spaces.<br>
-   *  TODO: Test to see how quotes within fields are treated
+   * Reads a line of text in the Excel CSV format<br>
+   * Each field is separated by a comma, except some fields have quotes around
+   * them because the field has commas or spaces.<br>
+   * TODO: Test to see how quotes within fields are treated
    *
-   *@param  line  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param line Description of the Parameter
+   * @return Description of the Return Value
    */
   public static ArrayList parseExcelCSVLine(String line) {
     if (line == null) {
@@ -659,11 +691,11 @@ public class StringUtils {
 
 
   /**
-   *  Converts a delimited String to an ArrayList
+   * Converts a delimited String to an ArrayList
    *
-   *@param  str        Description of the Parameter
-   *@param  tokenizer  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param str       Description of the Parameter
+   * @param tokenizer Description of the Parameter
+   * @return Description of the Return Value
    */
   public static ArrayList toArrayList(String str, String tokenizer) {
     ArrayList convertedList = null;
@@ -679,12 +711,12 @@ public class StringUtils {
 
 
   /**
-   *  Replaces all occurances of the matching pattern in the source string
+   * Replaces all occurances of the matching pattern in the source string
    *
-   *@param  source       Description of the Parameter
-   *@param  replacement  Description of the Parameter
-   *@param  thisPattern  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param source      Description of the Parameter
+   * @param replacement Description of the Parameter
+   * @param thisPattern Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String replacePattern(String source, String thisPattern, String replacement) {
     Pattern pattern = Pattern.compile(thisPattern);
@@ -697,12 +729,12 @@ public class StringUtils {
 
 
   /**
-   *  Generates a random string of letters with the resulting length being
-   *  between the specified lo and hi range
+   * Generates a random string of letters with the resulting length being
+   * between the specified lo and hi range
    *
-   *@param  lo  Description of the Parameter
-   *@param  hi  Description of the Parameter
-   *@return     Description of the Return Value
+   * @param lo Description of the Parameter
+   * @param hi Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String randomString(int lo, int hi) {
     int n = rand(lo, hi);
@@ -715,11 +747,11 @@ public class StringUtils {
 
 
   /**
-   *  Returns a random number that falls within the specified range
+   * Returns a random number that falls within the specified range
    *
-   *@param  lo  Description of the Parameter
-   *@param  hi  Description of the Parameter
-   *@return     Description of the Return Value
+   * @param lo Description of the Parameter
+   * @param hi Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int rand(int lo, int hi) {
     int n = hi - lo + 1;
@@ -732,10 +764,10 @@ public class StringUtils {
 
 
   /**
-   *  Mimics the Javascript ESCAPE function
+   * Mimics the Javascript ESCAPE function
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String jsEscape(String s) {
     if (s != null) {
@@ -778,10 +810,10 @@ public class StringUtils {
 
 
   /**
-   *  Used to escape special symbols within a JavaScript quoted block
+   * Used to escape special symbols within a JavaScript quoted block
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String jsStringEscape(String s) {
     if (s != null) {
@@ -800,10 +832,10 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inString  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param inString Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toBase64(String inString) {
     try {
@@ -816,11 +848,11 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  text  Description of the Parameter
-   *@param  size  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param text Description of the Parameter
+   * @param size Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String trimToSize(String text, int size) {
     if (text != null && text.length() > size) {
@@ -832,11 +864,11 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  text  Description of the Parameter
-   *@param  size  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param text Description of the Parameter
+   * @param size Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String trimToSizeNoDots(String text, int size) {
     if (text != null && text.length() > size) {
@@ -844,6 +876,38 @@ public class StringUtils {
     } else {
       return text;
     }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param str Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static String parseToDbString(String str) {
+    return parseToDbString(str, ",");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param str        Description of the Parameter
+   * @param delimiters Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static String parseToDbString(String str, String delimiters) {
+    StringBuffer result = new StringBuffer("");
+    StringTokenizer tokenizer = new StringTokenizer(str, delimiters);
+    for (int i = 0; tokenizer.hasMoreTokens(); i++) {
+      String token = tokenizer.nextToken();
+      if (i > 0) {
+        result.append(", ");
+      }
+      result.append("'" + token.trim() + "'");
+    }
+    return result.toString();
   }
 }
 

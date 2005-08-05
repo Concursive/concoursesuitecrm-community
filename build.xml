@@ -3,7 +3,7 @@
 
  Notes: 
    The easiest way to get started is to run "ant deploy"
-   
+
    The build process will instruct you to have several environment variables
    and to customize the build.properties.  The build will fail until all
    installation conditions are met.
@@ -21,7 +21,8 @@
   <!-- constants -->
   <property name="POSTGRESQL" value="postgresql"/>
   <property name="MSSQL" value="mssql"/>
-  
+  <property name="DAFFODILDB" value="daffodildb"/>
+
   <!-- computed properties -->
   <property name="fs" value="${file.separator}"/>
   <property name="lf" value="${line.separator}"/>
@@ -69,8 +70,12 @@
   
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
-    <tstamp><format property="date.short" pattern="yyyyMMdd-HHmmss"/></tstamp>
-    <tstamp><format property="date.long" pattern="yyyy-MM-dd hh:mm:ss aa"/></tstamp>
+    <tstamp>
+      <format property="date.short" pattern="yyyyMMdd-HHmmss"/>
+    </tstamp>
+    <tstamp>
+      <format property="date.long" pattern="yyyy-MM-dd hh:mm:ss aa"/>
+    </tstamp>
     <!-- log the build -->
     <record name="${base.dir}/build.log" append="no"/>
     <fail unless="env.CATALINA_HOME">Initialization aborted ${lf}${lf}Environment variable CATALINA_HOME is not defined.</fail>
@@ -83,16 +88,16 @@
   
   <!-- See if servlet API file exists -->
   <target name="init.servlet4.exists" depends="init.environment">
-    <available file="${CATALINA_HOME}/common/lib/servlet.jar" 
-               property="build.servlet4.present"/>
+    <available file="${CATALINA_HOME}/common/lib/servlet.jar"
+      property="build.servlet4.present"/>
   </target>
   <target name="init.servlet4.set" depends="init.servlet4.exists" if="build.servlet4.present">
     <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"/>
     <echo message="Web Server: Tomcat 4.x"/>
   </target>
   <target name="init.servlet5.exists" depends="init.environment">
-    <available file="${CATALINA_HOME}/common/lib/servlet-api.jar" 
-               property="build.servlet5.present"/>
+    <available file="${CATALINA_HOME}/common/lib/servlet-api.jar"
+      property="build.servlet5.present"/>
   </target>
   <target name="init.servlet5.set" depends="init.servlet5.exists" if="build.servlet5.present">
     <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet-api.jar"/>
@@ -101,25 +106,25 @@
   
   <!-- See if the properties file exists -->
   <target name="init.buildfile.exists" depends="init.environment">
-    <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" 
-               property="build.config.present"/>
+    <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
+      property="build.config.present"/>
   </target>
   
   <!-- Reports an invalid location that must be fixed -->
-  <target name="init.buildfile.location" depends="init.buildfile.exists" 
-          unless="build.config.present">
+  <target name="init.buildfile.location" depends="init.buildfile.exists"
+    unless="build.config.present">
     <available file="${CFS_HOME}/WEB-INF/build.properties" property="build.config.old"/>
     <fail if="build.config.old">Initialization aborted${lf}${lf}The build.properties file needs to be moved to ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs} making any necessary changes as compared with the master.properties file.${lf}${lf}Old File: ${CFS_HOME}${fs}WEB-INF${fs}build.properties${lf}New File: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties${lf}Source Template: ${base.dir}${fs}master.properties</fail>
   </target>
-  
+
   <!-- Create the properties file if not exists -->
-  <target name="init.buildfile.create" depends="init.buildfile.exists,init.buildfile.location" 
-          unless="build.config.present">
+  <target name="init.buildfile.create" depends="init.buildfile.exists,init.buildfile.location"
+    unless="build.config.present">
     <mkdir dir="${CFS_HOME}/WEB-INF"/>
     <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary"/>
-    <copy file="${base.dir}/master.properties" 
-          tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
-          overwrite="false"/>
+    <copy file="${base.dir}/master.properties"
+      tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
+      overwrite="false"/>
     <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" property="build.config.present"/>
   </target>
   
@@ -127,8 +132,8 @@
   <target name="init.loadproperties" depends="init.buildfile.create">
     <!-- IF src build.properties is newer than CFS_HOME build.properties, abort now and have user update -->
     <uptodate property="build.config.uptodate"
-            srcfile="${base.dir}/master.properties"
-            targetfile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
+      srcfile="${base.dir}/master.properties"
+      targetfile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
     <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}The build.properties file might be out of date.  Compare and update the site copy with the source template, making any necessary changes.${lf}${lf}Site File: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties${lf}Source Template: master.properties</fail>
     <loadproperties srcFile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties">
       <filterchain>
@@ -152,7 +157,7 @@
       </fileset>
     </copy>
   </target>
-  
+
   <!-- Configure classpath as both object and a property -->
   <target name="init.classpath" depends="init.classpath.uptodate">
     <path id="cfs2.classpath">
@@ -163,11 +168,11 @@
         <include name="*.jar"/>
       </fileset>
     </path>
-    <property name="CLASSPATH" refid="cfs2.classpath" />
+    <property name="CLASSPATH" refid="cfs2.classpath"/>
   </target>
   
   <!-- Prepare ant for processing -->
-  <target name="init" depends="init.loadproperties,init.classpath,init.servlet4.set,init.servlet5.set" 
+  <target name="init" depends="init.loadproperties,init.classpath,init.servlet4.set,init.servlet5.set"
     description="Verify system environment needed by install">
     <!-- Default properties if not otherwise specified in build.properties -->
     <property name="DEBUGLEVEL" value="none"/>
@@ -183,6 +188,7 @@
     <property name="SITE.DBTYPE" value=""/>
     <property name="SITE.DRIVER" value=""/>
     <property name="SITE.URL" value=""/>
+    <property name="SITE.APPEND" value=""/>
     <property name="SITE.USER" value=""/>
     <property name="SITE.PASSWORD" value=""/>
     <!-- External Servers -->
@@ -198,47 +204,48 @@
     <echo message="Java version: ${java.version}"/>
     <echo message="Source Path: ${base.dir}"/>
     <echo message="Destination Path: ${CFS_HOME}"/>
+    <echo message="Locale: ${LOCALE.NAME}"/>
   </target>
-  
+
   <target name="taskdef.upgradeDatabase" depends="init">
-    <taskdef name="upgradeDatabase" 
-        classname="org.aspcfs.ant.tasks.UpgradeDatabaseTask">
-        <classpath>
-          <fileset dir="${build.lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-          <fileset dir="${lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-        </classpath>
+    <taskdef name="upgradeDatabase"
+      classname="org.aspcfs.ant.tasks.UpgradeDatabaseTask">
+      <classpath>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
     </taskdef>
   </target>
-  
+
   <target name="taskdef.jasper" depends="init">
-    <taskdef name="compileJasperReport" 
-        classname="net.sf.jasperreports.ant.JRAntCompileTask">
-        <classpath>
-          <fileset dir="${build.lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-          <fileset dir="${lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-        </classpath>
+    <taskdef name="compileJasperReport"
+      classname="net.sf.jasperreports.ant.JRAntCompileTask">
+      <classpath>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
     </taskdef>
   </target>
-  
+
   <target name="taskdef.register" depends="init">
-    <taskdef name="register" 
-        classname="org.aspcfs.ant.tasks.RegisterTask">
-        <classpath>
-          <fileset dir="${build.lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-          <fileset dir="${lib.dir}">
-            <include name="*.jar"/>
-          </fileset>
-        </classpath>
+    <taskdef name="register"
+      classname="org.aspcfs.ant.tasks.RegisterTask">
+      <classpath>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
     </taskdef>
   </target>
   
@@ -264,30 +271,26 @@
       </and>
     </condition>
   </target>
-  
+
   <target name="compile.delete"
-          depends="init,compile.checkdelete"
-          unless="compile.donotdelete">
+    depends="init,compile.checkdelete"
+    unless="compile.donotdelete">
     <!-- Get rid of any classes in the source dir that shouldn't be there -->
     <delete>
-        <fileset dir= "${src.classes.dir}" includes="**/*.class"/>
+      <fileset dir="${src.classes.dir}" includes="**/*.class"/>
     </delete>
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
   </target>
   
   <!-- Compile the Java source code -->
-  <target name="compile" 
-          description="Compile all .java source files"
-          depends="init,compile.delete"
-          unless="classes.uptodate">
+  <target name="compile"
+    description="Compile all .java source files"
+    depends="init,compile.delete"
+    unless="classes.uptodate">
     <!-- Compile the code -->
-    <!--
-    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
-           debug="true" debuglevel="lines, vars, source">
-    -->
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off"
-        fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
+      fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
@@ -295,31 +298,31 @@
   </target>
   
   <!-- Generate the .jar files -->
-  <target name="jar" 
-          depends="init"
-          unless="classes.uptodate">
+  <target name="jar"
+    depends="init"
+    unless="classes.uptodate">
     <delete dir="${build.lib.dir}"/>
     <mkdir dir="${build.lib.dir}"/>
     <!-- darkhorseventures.jar -->
     <jar jarfile="${build.lib.dir}/darkhorseventures.jar"
-          basedir="${build.classes.dir}"
-          includes="com/darkhorseventures/**/*.class"/>
+      basedir="${build.classes.dir}"
+      includes="com/darkhorseventures/**/*.class"/>
     <!-- isavvix.jar -->
     <jar jarfile="${build.lib.dir}/isavvix.jar"
-          basedir="${build.classes.dir}"
-          includes="com/isavvix/**/*.class"/>
+      basedir="${build.classes.dir}"
+      includes="com/isavvix/**/*.class"/>
     <!-- zeroio-iteam.jar -->
     <jar jarfile="${build.lib.dir}/zeroio-iteam.jar"
-          basedir="${build.classes.dir}"
-          includes="com/zeroio/**/*.class"/>
+      basedir="${build.classes.dir}"
+      includes="com/zeroio/**/*.class"/>
     <!-- aspcfs.jar -->
     <jar jarfile="${build.lib.dir}/aspcfs.jar"
-          basedir="${build.classes.dir}"
-          includes="org/aspcfs/**/*.class"/>
+      basedir="${build.classes.dir}"
+      includes="org/aspcfs/**/*.class"/>
     <!-- jcrontab.jar -->
     <jar jarfile="${build.lib.dir}/jcrontab.jar"
-          basedir="${build.classes.dir}"
-          includes="org/jcrontab/**/*.class"/>
+      basedir="${build.classes.dir}"
+      includes="org/jcrontab/**/*.class"/>
     <!-- webdav.jar -->
     <copy todir="${build.classes.dir}/org/apache/catalina/servlets">
       <fileset dir="${src.classes.dir}/org/apache/catalina/servlets">
@@ -327,23 +330,23 @@
       </fileset>
     </copy>
     <jar jarfile="${build.lib.dir}/webdav.jar"
-          basedir="${build.classes.dir}"
-          includes="org/apache/**/*.class,org/apache/**/*.properties"/>
+      basedir="${build.classes.dir}"
+      includes="org/apache/**/*.class,org/apache/**/*.properties"/>
   </target>
-  
+
   <target name="build"
-          description="Create .jar files for compiled classes"
-          depends="init,compile,jar">
+    description="Create .jar files for compiled classes"
+    depends="init,compile,jar">
     <mkdir dir="${build.lib.dir}"/>
   </target>
   
   <!-- Delete outdated files -->
   <target name="deploy.delete" description="Removes outdated files from web application">
-    <delete verbose="true" >
+    <delete verbose="true">
       <fileset dir="${CFS_HOME}" includesfile="${base.dir}/build.cleanup"/>
     </delete>
   </target>
-  
+
   <target name="deploy.copy">
     <!-- Copy the .jars, only if new -->
     <copy todir="${CFS_HOME}/WEB-INF/lib">
@@ -362,11 +365,11 @@
         <include name="**"/>
       </fileset>
     </copy>
-    <copy todir="${CFS_HOME}" >
+    <copy todir="${CFS_HOME}">
       <fileset dir="${src.web.dir}">
-        <include name="images/**" />
-        <include name="javascript/**" />
-        <include name="css/**" />
+        <include name="images/**"/>
+        <include name="javascript/**"/>
+        <include name="css/**"/>
       </fileset>
     </copy>
     <!-- Copy the configuration files -->
@@ -390,17 +393,24 @@
         <include name="*.js"/>
       </fileset>
     </copy>
+    <!-- Copy the font files-->
+    <mkdir dir="${CFS_HOME}/WEB-INF/fonts"/>
+    <copy todir="${CFS_HOME}/WEB-INF/fonts">
+      <fileset dir="${src.dir}/fonts">
+        <include name="*.ttf"/>
+      </fileset>
+    </copy>
     <!-- Copy this build file -->
     <copy file="${base.dir}/build.xml" todir="${CFS_HOME}/WEB-INF/fileLibrary" verbose="true"/>
   </target>
-  
+
   <target name="deploy.jasper.check" depends="init">
     <uptodate property="deploy.jasper.uptodate">
       <srcfiles dir="${src.dir}/jasper_reports" includes="*.xml"/>
       <mapper type="merge" to="${CFS_HOME}/WEB-INF/reports/accounts_type.jasper"/>
     </uptodate>
   </target>
-  
+
   <target name="deploy.jasper" depends="deploy.jasper.check,taskdef.jasper" unless="deploy.jasper.uptodate">
     <echo message="Installing JasperReport files"/>
     <!-- Copy the jasperreports, only if new -->
@@ -411,15 +421,15 @@
     </copy>
     <!-- The old .jasper file must be removed when a new .xml is copied -->
     <delete>
-        <fileset dir= "${CFS_HOME}/WEB-INF/reports" includes="*.jasper"/>
+      <fileset dir="${CFS_HOME}/WEB-INF/reports" includes="*.jasper"/>
     </delete>
     <!-- Compile the reports -->
     <compileJasperReport
-        srcdir="${CFS_HOME}/WEB-INF/reports"
-        destdir="${CFS_HOME}/WEB-INF/reports"
-        compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
+      srcdir="${CFS_HOME}/WEB-INF/reports"
+      destdir="${CFS_HOME}/WEB-INF/reports"
+      compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
   </target>
-  
+
   <!-- See if there is an updated file to merge -->
   <target name="deploy.merge.prepare">
     <!-- Generate a new CFS_HOME web.xml if any of the following: -->
@@ -431,61 +441,61 @@
         <available file="${CFS_HOME}/WEB-INF/web.xml"/>
         <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
         <uptodate srcfile="${src.web.dir}/WEB-INF/web.xml"
-                  targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
+          targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
         <uptodate srcfile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
-                  targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
+          targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
         <uptodate targetfile="${CFS_HOME}/WEB-INF/web.xml">
           <srcfiles dir="${CFS_HOME}/WEB-INF" includes="*.xml,*.tld" excludes="web.xml"/>
         </uptodate>
       </and>
     </condition>
   </target>
-  
+
   <!-- Merge meta-data with build.properties, only if changed so reload doesn't kick in -->
   <target name="deploy.merge" depends="deploy.merge.prepare" unless="deploy.merge.uptodate">
     <echo message="Installing web.xml configuration file"/>
     <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@KEYSTORE@" value="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}keystore"/>
+      token="@KEYSTORE@" value="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}keystore"/>
   </target>
-  
+
   <!-- Log the deployment procss to the web-app folder -->
   <target name="log.deploy" depends="init.loadproperties">
     <mkdir dir="${CFS_HOME}/WEB-INF/logs"/>
     <record name="${CFS_HOME}/WEB-INF/logs/deploy-${date.short}.log" append="no"/>
   </target>
-  
+
   <target name="log.upgradedb" depends="init.loadproperties">
     <mkdir dir="${CFS_HOME}/WEB-INF/logs"/>
     <record name="${CFS_HOME}/WEB-INF/logs/upgradedb-${date.short}.log" append="no"/>
   </target>
-  
+
   <target name="log.installdb" depends="init.loadproperties">
     <mkdir dir="${CFS_HOME}/WEB-INF/logs"/>
     <record name="${CFS_HOME}/WEB-INF/logs/installdb-${date.short}.log" append="no"/>
   </target>
-  
+
   <!-- Check if keyfile exists -->
   <target name="keyfile.exists" depends="init">
     <available file="${CFS_HOME}/WEB-INF/fileLibrary/keystore" property="keyfile.present"/>
   </target>
-  
+
   <!-- Generate keyfile for new system -->
   <target name="keyfile" depends="keyfile.exists" unless="keyfile.present">
-    <genkey alias="cfs" 
-            keystore="${CFS_HOME}/WEB-INF/fileLibrary/keystore"
-            storepass="aspcfs" 
-            storetype="JKS"
-            keyalg="RSA"
-            keysize="1024"
-            validity="${KEYSTORE.VALIDITY}">
+    <genkey alias="cfs"
+      keystore="${CFS_HOME}/WEB-INF/fileLibrary/keystore"
+      storepass="aspcfs"
+      storetype="JKS"
+      keyalg="RSA"
+      keysize="1024"
+      validity="${KEYSTORE.VALIDITY}">
       <dname>
         <param name="CN" value="${KEYSTORE.COMMONNAME}"/>
         <param name="OU" value="${KEYSTORE.ORGANIZATIONALUNIT}"/>
-        <param name="O"  value="${KEYSTORE.ORGANIZATION}"/>
-        <param name="L"  value="${KEYSTORE.CITY}"/>
+        <param name="O" value="${KEYSTORE.ORGANIZATION}"/>
+        <param name="L" value="${KEYSTORE.CITY}"/>
         <param name="ST" value="${KEYSTORE.STATE}"/>
-        <param name="C"  value="${KEYSTORE.COUNTRY}"/>
+        <param name="C" value="${KEYSTORE.COUNTRY}"/>
       </dname>
     </genkey>
     <!-- Prepare a CSR to get signed
@@ -500,12 +510,12 @@
     keytool -export -alias cfs -file ${CFS_HOME}/WEB-INF/fileLibrary/domain.cert -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
     -->
   </target>
-  
+
   <!-- Check if license exists -->
   <target name="license.exists" depends="init">
     <available file="${CFS_HOME}/WEB-INF/fileLibrary/init/input.txt" property="license.present"/>
   </target>
-  
+
   <!-- Generate license for new system -->
   <target name="license" depends="license.exists,taskdef.register" unless="license.present">
     <fail unless="LICENSE.ORGANIZATION">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
@@ -515,31 +525,31 @@
     <fail unless="LICENSE.PROFILE">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
     <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/init"/>
     <register
-        organization="${LICENSE.ORGANIZATION}"
-        firstName="${LICENSE.FIRST_NAME}"
-        lastName="${LICENSE.LAST_NAME}"
-        email="${LICENSE.EMAIL}"
-        profile="${LICENSE.PROFILE}"
-        webPath="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}init${fs}">
+      organization="${LICENSE.ORGANIZATION}"
+      firstName="${LICENSE.FIRST_NAME}"
+      lastName="${LICENSE.LAST_NAME}"
+      email="${LICENSE.EMAIL}"
+      profile="${LICENSE.PROFILE}"
+      webPath="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}init${fs}">
     </register>
   </target>
-  
+
   <!-- Copy all data to the web-app folder and finalize any items -->
   <target name="deploy"
-          description="Compile, build, copy, and configure web application"
-          depends="log.deploy,classes.prepare,build,keyfile,license,deploy.delete,deploy.copy,deploy.merge,deploy.jasper">
+    description="Compile, build, copy, and configure web application"
+    depends="log.deploy,classes.prepare,build,keyfile,license,deploy.delete,deploy.copy,deploy.merge,deploy.jasper">
     <mkdir dir="${CFS_HOME}/graphs"/>
   </target>
-  
+
   <target name="dev.configure">
     <property name="compile.donotdelete.property" value="true"/>
   </target>
-  
+
   <target name="dev"
-          description="Deploy without deleting previously compiled source"
-          depends="dev.configure,deploy">
+    description="Deploy without deleting previously compiled source"
+    depends="dev.configure,deploy">
   </target>
-  
+
   <!-- Generate .java/.class files out of the web-app .jsps -->
   <target name="test" depends="init,deploy"
     description="Compile deployed JSPs to check for errors">
@@ -558,29 +568,29 @@
     </java>
     <mkdir dir="${build.jspclasses.dir}"/>
     <javac srcdir="${build.jsp.dir}" destdir="${build.jspclasses.dir}"
-           verbose="off" deprecation="on">
-     <classpath>
-       <path refid="cfs2.classpath"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/jcrontab.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/webdav.jar"/>
-     </classpath>
-     <include name="**/*.java"/>
-     <exclude name="**/*finclude_jsp.java"/>
-     <exclude name="**/*fmenu_jsp.java"/>
-     <exclude name="**/*frelationships_*fview2_jsp.java"/>
+      verbose="off" deprecation="on">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/jcrontab.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/webdav.jar"/>
+      </classpath>
+      <include name="**/*.java"/>
+      <exclude name="**/*finclude_jsp.java"/>
+      <exclude name="**/*fmenu_jsp.java"/>
+      <exclude name="**/*frelationships_*fview2_jsp.java"/>
     </javac>
   </target>
-  
+
   <!-- Create a WAR -->
   <target name="dist"
-          description="Compile, build, and generate web archive"
-          depends="classes.prepare,build,dist.archive">
+    description="Compile, build, and generate web archive"
+    depends="classes.prepare,build,dist.archive">
   </target>
-  
+
   <target name="dist.archive" depends="taskdef.jasper">
     <delete dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}"/>
@@ -603,10 +613,10 @@
     </copy>
     <!-- aspcfs.jar -->
     <jar jarfile="${dist.dir}/cfs/WEB-INF/lib/aspcfs.jar"
-          basedir="${build.classes.dir}"
-          includes="org/aspcfs/**/*.class"
-          excludes="org/aspcfs/modules/setup/actions/SetupServer.class"
-    />
+      basedir="${build.classes.dir}"
+      includes="org/aspcfs/**/*.class"
+      excludes="org/aspcfs/modules/setup/actions/SetupServer.class"
+      />
     <!-- Copy the web data -->
     <copy todir="${dist.dir}/cfs">
       <fileset dir="${src.web.dir}/jsp">
@@ -615,14 +625,14 @@
     </copy>
     <copy todir="${dist.dir}/cfs">
       <fileset dir="${src.web.dir}/html">
-        <include name="**" />
+        <include name="**"/>
       </fileset>
     </copy>
     <copy todir="${dist.dir}/cfs">
       <fileset dir="${src.web.dir}">
-        <include name="images/**" />
-        <include name="javascript/**" />
-        <include name="css/**" />
+        <include name="images/**"/>
+        <include name="javascript/**"/>
+        <include name="css/**"/>
       </fileset>
     </copy>
     <!-- Copy the configuration files -->
@@ -653,14 +663,32 @@
         <include name="mssql_*.sql"/>
       </fileset>
     </copy>
+    <!-- Copy the database files (DaffodilDB) -->
+    <copy file="${src.sql.dir}/daffodildb/daffodildb.zip" todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/daffodildb">
+        <include name="daffodildb_*.sql"/>
+      </fileset>
+    </copy>
     <!-- Copy the database files (Common) -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
       <fileset dir="${src.sql.dir}/upgrade">
         <include name="*.bsh"/>
       </fileset>
     </copy>
+    <!-- Copy the database files (Common) -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/init">
+        <include name="*.bsh"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/init">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
     <copy file="${src.sql.dir}/init/help.xml"
-          todir="${dist.dir}/cfs/WEB-INF/setup"/>
+      todir="${dist.dir}/cfs/WEB-INF/setup"/>
     <!-- Copy and compile the reports -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/reports">
@@ -669,11 +697,11 @@
       </fileset>
     </copy>
     <compileJasperReport
-        srcdir="${dist.dir}/cfs/WEB-INF/reports"
-        destdir="${dist.dir}/cfs/WEB-INF/reports"
-        compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
+      srcdir="${dist.dir}/cfs/WEB-INF/reports"
+      destdir="${dist.dir}/cfs/WEB-INF/reports"
+      compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
     <delete>
-        <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
+      <fileset dir="${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>
     <!-- Copy the language files -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/languages"/>
@@ -688,13 +716,20 @@
         <include name="*.js"/>
       </fileset>
     </copy>
+    <!-- Copy the fonts -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/fonts"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/fonts">
+      <fileset dir="${src.dir}/fonts">
+        <include name="*.ttf"/>
+      </fileset>
+    </copy>
     <!-- Archive the folder -->
     <war destfile="${dist.dir}/centric.war"
-         webxml="${src.web.dir}/WEB-INF/web.xml"
-         basedir="${dist.dir}/cfs"
-         compress="true"
-         manifest="${pref.dir}/cfs/war/MANIFEST.MF"
-         />
+      webxml="${src.web.dir}/WEB-INF/web.xml"
+      basedir="${dist.dir}/cfs"
+      compress="true"
+      manifest="${pref.dir}/cfs/war/MANIFEST.MF"
+      />
     <!-- Create the distributable .zip file -->
     <zip destfile="${dist.dir}/centric_war.zip">
       <fileset dir="${doc.dir}" includes="Binary*EULA.rtf"/>
@@ -704,14 +739,15 @@
     </zip>
     <!-- Cleanup files -->
     <delete dir="${dist.dir}/cfs"/>
+    <echo message=".war file created: ${dist.dir}${fs}centric.war"/>
   </target>
   
   <!-- Create sourcecode distribution -->
   <target name="source"
-          description="Compile, build, and generate source archive"
-          depends="deploy,source.archive">
+    description="Compile, build, and generate source archive"
+    depends="deploy,source.archive">
   </target>
-  
+
   <target name="source.archive">
     <property name="zip.dir" value="centric_crm"/>
     <delete dir="${dist.dir}"/>
@@ -721,27 +757,28 @@
     <copy file="${base.dir}/pref/cfs/source/readme-libraries.txt" todir="${dist.dir}" verbose="true"/>
     <buildnumber file="source.number"/>
     <replace file="${dist.dir}/readme.txt"
-             token="@BUILD.NUMBER@" value="${build.number}"/>
+      token="@BUILD.NUMBER@" value="${build.number}"/>
     <replace file="${dist.dir}/readme.txt"
-             token="@BUILD.DATE@" value="${date.long}"/>
+      token="@BUILD.DATE@" value="${date.long}"/>
     <replace file="${dist.dir}/readme-libraries.txt"
-             token="@BUILD.NUMBER@" value="${build.number}"/>
+      token="@BUILD.NUMBER@" value="${build.number}"/>
     <replace file="${dist.dir}/readme-libraries.txt"
-             token="@BUILD.DATE@" value="${date.long}"/>
+      token="@BUILD.DATE@" value="${date.long}"/>
     <!-- Ignore certain code when zipping -->
     <mkdir dir="${dist.dir}/files/src"/>
     <copy todir="${dist.dir}/files">
       <fileset dir="${base.dir}">
         <!-- src/java -->
-        <include name="src/java/**" />
+        <include name="src/java/**"/>
         <exclude name="**/Zlib.java"/>
         <exclude name="**/NetDescAccountsReader.java"/>
         <exclude name="src/java/org/aspcfs/modules/media/autoguide/**"/>
         <exclude name="**/SendTicketToBPM.java"/>
         <exclude name="src/java/org/aspcfs/modules/healthcare/edit/**"/>
         <exclude name="src/java/org/aspcfs/modules/setup/actions/SetupServer.java"/>
+        <exclude name="src/java/org/aspcfs/ant/tasks/RegisterTask.java"/>
         <!-- src/web/jsp -->
-        <include name="src/web/jsp/**" />
+        <include name="src/web/jsp/**"/>
         <exclude name="src/web/jsp/media/autoguide/**"/>
         <exclude name="src/web/jsp/healthcare/edit/**"/>
         <exclude name="src/web/jsp/media/autoguide/**"/>
@@ -755,7 +792,7 @@
         <exclude name="src/web/jsp/setup/validate.jsp"/>
         <exclude name="src/web/jsp/setup/validate_success.jsp"/>
         <!-- master.properties -->
-        <include name="master.properties" />
+        <include name="master.properties"/>
       </fileset>
       <filterchain>
         <filterreader classname="org.aspcfs.ant.filters.StripSection">
@@ -776,124 +813,151 @@
     <zip destfile="${dist.dir}/${zip.dir}_source.zip">
       <!-- main directory -->
       <zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}"/>
-      <zipfileset dir="pref/cfs/source" includes="license.txt" prefix="${zip.dir}" />
+      <zipfileset dir="pref/cfs/source" includes="license.txt" prefix="${zip.dir}"/>
       <zipfileset dir="pref/cfs/source" includes="build.xml" prefix="${zip.dir}"/>
-      <zipfileset dir="${dist.dir}/files" includes="master.properties" prefix="${zip.dir}" />
+      <zipfileset dir="${base.dir}" includes="build.cleanup" prefix="${zip.dir}"/>
+      <zipfileset dir="${dist.dir}/files" includes="master.properties" prefix="${zip.dir}"/>
       <!-- sub directories: prefs -->
-      <zipfileset dir="pref/jedit" prefix="${zip.dir}/pref/jedit" />
-      <zipfileset dir="pref/cfs/notifier" prefix="${zip.dir}/pref/cfs/notifier" />
-      <zipfileset dir="pref/cfs/system" prefix="${zip.dir}/pref/cfs/system" />
-      <zipfileset dir="pref/cfs/transfer" prefix="${zip.dir}/pref/cfs/transfer" />
-      <zipfileset dir="pref/cfs/source" includes="MANIFEST.MF" fullpath="${zip.dir}/pref/cfs/war/MANIFEST.MF" />
+      <zipfileset dir="pref/jedit" prefix="${zip.dir}/pref/jedit"/>
+      <zipfileset dir="pref/cfs/notifier" prefix="${zip.dir}/pref/cfs/notifier"/>
+      <zipfileset dir="pref/cfs/system" prefix="${zip.dir}/pref/cfs/system"/>
+      <zipfileset dir="pref/cfs/transfer" prefix="${zip.dir}/pref/cfs/transfer"/>
+      <zipfileset dir="pref/cfs/source" includes="MANIFEST.MF" fullpath="${zip.dir}/pref/cfs/war/MANIFEST.MF"/>
       <!-- sub directories: src/jasper_reports -->
-      <zipfileset dir="src/jasper_reports" prefix="${zip.dir}/src/jasper_reports" />
+      <zipfileset dir="src/jasper_reports" prefix="${zip.dir}/src/jasper_reports"/>
       <!-- sub directories: src/java -->
-      <zipfileset 
-          dir="${dist.dir}/files/src/java" 
-          prefix="${zip.dir}/src/java"/>
+      <zipfileset
+        dir="${dist.dir}/files/src/java"
+        prefix="${zip.dir}/src/java"/>
       <!-- sub directories: src/sql -->
-      <zipfileset 
-          dir="src/sql/postgresql" 
-          includes="new_*.sql"
-          excludes="new_autoguide.sql"
-          prefix="${zip.dir}/src/sql/postgresql" />
-      <zipfileset 
-          dir="src/sql/mssql" 
-          includes="new_*.sql"
-          excludes="new_autoguide.sql"
-          prefix="${zip.dir}/src/sql/mssql" />
-      <zipfileset 
-          dir="src/sql/init" 
-          includes="*.sql, *.xml" 
-          excludes="autoguide.sql" 
-          prefix="${zip.dir}/src/sql/init" />
+      <zipfileset
+        dir="src/sql/postgresql"
+        includes="new_*.sql"
+        excludes="new_autoguide.sql"
+        prefix="${zip.dir}/src/sql/postgresql"/>
+      <zipfileset
+        dir="src/sql/postgresql/upgrade"
+        includes="*.sql,*.txt"
+        prefix="${zip.dir}/src/sql/postgresql/upgade"/>
+      <zipfileset
+        dir="src/sql/mssql"
+        includes="new_*.sql"
+        excludes="new_autoguide.sql"
+        prefix="${zip.dir}/src/sql/mssql"/>
+      <zipfileset
+        dir="src/sql/mssql/upgrade"
+        includes="*.sql,*.txt"
+        prefix="${zip.dir}/src/sql/mssql/upgrade"/>
+      <zipfileset
+        dir="src/sql/daffodildb"
+        includes="new_*.sql"
+        excludes="new_autoguide.sql"
+        prefix="${zip.dir}/src/sql/daffodildb"/>
+      <zipfileset
+        dir="src/sql/daffodildb/upgrade"
+        includes="*.sql,*.txt"
+        prefix="${zip.dir}/src/sql/daffodildb/upgrade"/>
+      <zipfileset
+        dir="src/sql/init"
+        includes="*.sql, *.xml, *.bsh"
+        excludes="autoguide.sql"
+        prefix="${zip.dir}/src/sql/init"/>
+      <zipfileset
+        dir="src/sql/upgrade"
+        includes="*.bsh"
+        prefix="${zip.dir}/src/sql/upgrade"/>
       <!-- sub directories: src/web/images -->
-      <zipfileset 
-          dir="src/web/images"
-          excludes="virginian*"
-          prefix="${zip.dir}/src/web/images" />
+      <zipfileset
+        dir="src/web/images"
+        excludes="virginian*"
+        prefix="${zip.dir}/src/web/images"/>
       <!-- sub directories: src/web/WEB-INF -->
-      <zipfileset 
-          dir="src/web/WEB-INF"
-          excludes="keystore"
-          prefix="${zip.dir}/src/web/WEB-INF" />
+      <zipfileset
+        dir="src/web/WEB-INF"
+        excludes="keystore"
+        prefix="${zip.dir}/src/web/WEB-INF"/>
       <!-- sub directories: src/web/css -->
-      <zipfileset 
-          dir="src/web/css"
-          prefix="${zip.dir}/src/web/css" />
+      <zipfileset
+        dir="src/web/css"
+        prefix="${zip.dir}/src/web/css"/>
       <!-- sub directories: src/web/html -->
-      <zipfileset 
-          dir="src/web/html"
-          prefix="${zip.dir}/src/web/html" />
+      <zipfileset
+        dir="src/web/html"
+        prefix="${zip.dir}/src/web/html"/>
       <!-- sub directories: src/web/javascript -->
-      <zipfileset 
-          dir="src/web/javascript"
-          prefix="${zip.dir}/src/web/javascript" />
+      <zipfileset
+        dir="src/web/javascript"
+        prefix="${zip.dir}/src/web/javascript"/>
       <!-- sub directories: src/web/jsp -->
-      <zipfileset 
-          dir="${dist.dir}/files/src/web"
-          prefix="${zip.dir}/src/web" />
+      <zipfileset
+        dir="${dist.dir}/files/src/web"
+        prefix="${zip.dir}/src/web"/>
       <!-- language files -->
-      <zipfileset 
-          dir="src/languages" 
-          prefix="${zip.dir}/src/languages" />
+      <zipfileset
+        dir="src/languages"
+        prefix="${zip.dir}/src/languages"/>
+      <zipfileset
+        dir="src/fonts"
+        prefix="${zip.dir}/src/fonts"/>
     </zip>
     <!-- Libraries -->
     <zip destfile="${dist.dir}/${zip.dir}_libraries.zip">
-      <zipfileset 
-          dir="${dist.dir}" 
-          includes="readme-libraries.txt" 
-          fullpath="${zip.dir}/readme-libraries.txt"
-          />
-      <zipfileset 
-          dir="lib"
-          excludes="ccp_integration.jar, ms*.jar" 
-          prefix="${zip.dir}/lib" />
+      <zipfileset
+        dir="${dist.dir}"
+        includes="readme-libraries.txt"
+        fullpath="${zip.dir}/readme-libraries.txt"
+        />
+      <zipfileset
+        dir="lib"
+        excludes="ccp_integration.jar, ms*.jar"
+        prefix="${zip.dir}/lib"/>
     </zip>
     <!-- delete temporary files -->
     <delete>
-        <fileset dir= "${dist.dir}" includes="*.txt"/>
+      <fileset dir="${dist.dir}" includes="*.txt"/>
     </delete>
     <delete dir="${dist.dir}/files"/>
   </target>
 
   <!-- Create tools distribution -->
   <target name="tools"
-          description="Compile, build, and generate tools archive"
-          depends="deploy,tools.archive">
+    description="Compile, build, and generate tools archive"
+    depends="deploy,tools.archive">
   </target>
 
   <target name="tools.archive">
-    <property name="zip.dir" value="centric_crm"/>
+    <property name="zip.dir" value="centric_crm_tools"/>
+    <property name="tools.version" value="0.2"/>
     <delete dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}"/>
     <!-- Update the build number -->
     <copy file="${base.dir}/pref/cfs/tools/readme.txt" todir="${dist.dir}" verbose="true"/>
     <buildnumber file="tools.number"/>
     <replace file="${dist.dir}/readme.txt"
-             token="@BUILD.NUMBER@" value="${build.number}"/>
+      token="@BUILD.NUMBER@" value="${build.number}"/>
     <replace file="${dist.dir}/readme.txt"
-             token="@BUILD.DATE@" value="${date.long}"/>
+      token="@BUILD.DATE@" value="${date.long}"/>
+    <copy file="${base.dir}/pref/cfs/transfer/import-mappings.xml" todir="${dist.dir}" verbose="true"/>
     <!-- Ignore certain code when zipping -->
     <mkdir dir="${dist.dir}/files/src"/>
     <copy todir="${dist.dir}/files" verbose="true">
       <fileset dir="${base.dir}">
         <!-- src/java -->
-        <include name="src/java/org/aspcfs/utils/CRMConnection.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/Transfer.java" />
-        <include name="src/java/org/aspcfs/utils/XMLUtils.java" />
-        <include name="src/java/org/aspcfs/utils/HTTPUtils.java" />
-        <include name="src/java/org/aspcfs/utils/HttpsTrustManager.java" />
-        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifier.java" />
-        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java" />
-        <include name="src/java/org/aspcfs/utils/StringUtils.java" />
-        <include name="src/java/org/aspcfs/utils/ObjectUtils.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/DataRecord.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/DataField.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/DataWriter.java" />
-        <include name="src/java/org/aspcfs/apps/transfer/DataReader.java" />
+        <include name="src/java/org/aspcfs/utils/CRMConnection.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/Transfer.java"/>
+        <include name="src/java/org/aspcfs/utils/XMLUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/HTTPUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsTrustManager.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifier.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java"/>
+        <include name="src/java/org/aspcfs/utils/StringUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/ObjectUtils.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataRecord.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataField.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataWriter.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataReader.java"/>
       </fileset>
       <filterchain>
         <filterreader classname="org.aspcfs.ant.filters.StripSection">
@@ -910,75 +974,101 @@
         </filterreader>
       </filterchain>
     </copy>
-    <jar jarfile="${dist.dir}/${zip.dir}-tools.jar"
+    <jar jarfile="${dist.dir}/${zip.dir}-${tools.version}.jar"
           basedir="${dist.dir}/files/src/java"/>
     <!-- Create the distributable .zip file -->
-    <zip destfile="${dist.dir}/${zip.dir}_tools.zip">
+    <zip destfile="${dist.dir}/${zip.dir}.zip">
       <!-- main directory -->
       <zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}"/>
-      <zipfileset dir="${dist.dir}" includes="${zip.dir}-tools.jar" prefix="${zip.dir}"/>
+      <zipfileset dir="${dist.dir}" includes="import-mappings.xml" prefix="${zip.dir}"/>
+      <zipfileset dir="${dist.dir}" includes="${zip.dir}-${tools.version}.jar" prefix="${zip.dir}"/>
     </zip>
     <!-- delete temporary files -->
     <delete>
-        <fileset dir= "${dist.dir}" includes="*.txt"/>
+      <fileset dir="${dist.dir}" includes="*.txt"/>
     </delete>
     <delete dir="${dist.dir}/files"/>
   </target>
 
   <!-- Remove the build folder -->
   <target name="clean"
-          description="Delete the temporary build folder used by the install"
-          depends="init">
+    description="Delete the temporary build folder used by the install"
+    depends="init">
     <delete dir="${build.dir}"/>
     <delete dir="${dist.dir}"/>
   </target>
-  
+
   <target name="installgk.databasename">
     <property name="DATABASE.NAME" value="${GATEKEEPER.URL}"/>
   </target>
-  
+
   <!-- Install the gatekeeper to store all of the database references -->
-  <target name="installgk" depends="init,installgk.databasename,install.prepare"
+  <target name="installgk" depends="init,installgk.databasename,install.prepare,installgk.database,installgk.abortOnDB,installgk2"
+    description="Gatekeeper database ">
+  </target>
+
+  <target name="installgk.database" depends="init,installgk.databasename,install.prepare"
     description="Create tables for gatekeeper database">
-    <echo message="Attempting to create gatekeeper tables and database permissions, the gatekeeper user and database must already have been created at the database."/>
+    <echo message="Initializing schema..."/>
     <sql
-        driver="${GATEKEEPER.DRIVER}"
-        url="${GATEKEEPER.URL}"
-        userid="${GATEKEEPER.USER}"
-        password="${GATEKEEPER.PASSWORD}">
+      driver="${GATEKEEPER.DRIVER}"
+      url="${GATEKEEPER.URL}"
+      userid="${GATEKEEPER.USER}"
+      password="${GATEKEEPER.PASSWORD}">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
       <transaction src="${src.sql.dir}/${GATEKEEPER.DBTYPE}/new_gatekeeper.sql"/>
-      <transaction src="${build.sql.dir}/gatekeeper.sql"/>
     </sql>
   </target>
-  
+
+  <target name="installgk2" depends="init,installgk.databasename,install.prepare,taskdef.upgradeDatabase"
+    description="Insert data in gatekeeper database">
+    <echo message="Inserting data..."/>
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${GATEKEEPER.DRIVER}"
+      url="${GATEKEEPER.URL}"
+      user="${GATEKEEPER.USER}"
+      password="${GATEKEEPER.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}"
+      baseFile="${src.sql.dir}${fs}init${fs}events_gk.bsh">
+    </upgradeDatabase>
+  </target>
+
+  <target name="installgk.abortOnDB">
+    <condition property="ABORT">
+      <equals arg1="${GATEKEEPER.DBTYPE}" arg2="${DAFFODILDB}" casesensitive="false" trim="true"/>
+    </condition>
+    <fail if="ABORT">Step of gatekeeper installation complete, now execute the next installgk# script.</fail>
+  </target>
+
   <target name="install.prepare.dbname" unless="DATABASE.NAME">
     <!-- Ask for the database name -->
     <input message="Enter database name: " addproperty="DATABASE.NAME"/>
     <!-- Display all information about database here, except password -->
     <echo message="Driver: ${SITE.DRIVER}"/>
-    <echo message="URL: ${SITE.URL}${DATABASE.NAME}"/>
+    <echo message="URL: ${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
     <echo message="Username: ${SITE.USER}"/>
   </target>
   
   <!-- Ask about gatekeeper record -->
   <target name="install.gatekeeper.init" depends="init">
     <input message="Add a gatekeeper site record? "
-           validargs="y,n"
-           addproperty="SKIP.GATEKEEPER"/>
+      validargs="y,n"
+      addproperty="SKIP.GATEKEEPER"/>
     <condition property="DATABASE.SKIP_GATEKEEPER">
       <equals arg1="n" arg2="${SKIP.GATEKEEPER}"/>
     </condition>
   </target>
-  
+
   <!-- Prepare files for any database type -->
   <target name="install.prepare.init" depends="init,install.prepare.dbname">
     <!-- Verify database can be overwritten -->
     <input message="The database '${DATABASE.NAME}' will be modified and must already exist, continue? "
-           validargs="y,n"
-           addproperty="DATABASE.DELETE"/>
+      validargs="y,n"
+      addproperty="DATABASE.DELETE"/>
     <condition property="ABORT">
       <equals arg1="n" arg2="${DATABASE.DELETE}"/>
     </condition>
@@ -990,15 +1080,17 @@
     <condition property="DBTYPE.MSSQL">
       <equals arg1="${SITE.DBTYPE}" arg2="${MSSQL}" casesensitive="false" trim="true"/>
     </condition>
+    <condition property="DBTYPE.DAFFODILDB">
+      <equals arg1="${SITE.DBTYPE}" arg2="${DAFFODILDB}" casesensitive="false" trim="true"/>
+    </condition>
     <!-- Copy template files to be used -->
     <delete dir="${build.sql.dir}" failonerror="false"/>
     <mkdir dir="${build.sql.dir}"/>
     <copy todir="${build.sql.dir}">
       <fileset dir="${src.sql.dir}/init">
-        <include name="*.sql" />
+        <include name="*.sql"/>
       </fileset>
     </copy>
-    <replace file="${build.sql.dir}/gatekeeper.sql" token="@CFS_HOME@" value="${CFS_HOME}"/>
   </target>
   
   <!-- Prepare the PostgreSQL files -->
@@ -1020,29 +1112,44 @@
       <include name="*.sql"/>
     </replace>
   </target>
-  
-  <target name="install.prepare" depends="install.check.postgresql,install.check.mssql">
+
+  <!-- Prepare the DaffodilDB files -->
+  <target name="install.check.daffodildb" depends="install.prepare.init" if="DBTYPE.DAFFODILDB">
+    <replace dir="${build.sql.dir}" token="@TRUE@" value="true">
+      <include name="*.sql"/>
+    </replace>
+    <replace dir="${build.sql.dir}" token="@FALSE@" value="false">
+      <include name="*.sql"/>
+    </replace>
+  </target>
+
+  <target name="install.abortOnDB">
+    <condition property="ABORT">
+      <equals arg1="${SITE.DBTYPE}" arg2="${DAFFODILDB}" casesensitive="false" trim="true"/>
+    </condition>
+    <fail if="ABORT">This database type requires additional ant installdb commands.${lf}${lf}SOLUTION: Now execute "ant installdb${INSTALL.NEXT_ID}"</fail>
+  </target>
+
+  <target name="install.prepare" depends="install.check.postgresql,install.check.mssql,install.check.daffodildb">
     <echo message="SQL files prepared for database type: ${SITE.DBTYPE}"/>
   </target>
-  
+
   <target name="install.database" depends="init,install.prepare">
+    <property name="INSTALL.NEXT_ID" value="2"/>
     <echo message="Building database"/>
     <!-- TODO: Optionally create database -->
     
     <!-- Create database and initialize data -->
     <sql
-        driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
-        userid="${SITE.USER}"
-        password="${SITE.PASSWORD}">
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      userid="${SITE.USER}"
+      password="${SITE.PASSWORD}">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
       <!-- base data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
-      <transaction src="${build.sql.dir}/code_tables.sql"/>
-      <transaction src="${build.sql.dir}/access.sql"/>
-      <transaction src="${build.sql.dir}/organization.sql"/>
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
       <!-- project management -->
@@ -1064,10 +1171,11 @@
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
       <!-- synchronization api -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_sync.sql"/>
-      <transaction src="${build.sql.dir}/sync.sql"/>
       <!-- autoguide module -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_autoguide.sql"/>
+      <!--
       <transaction src="${build.sql.dir}/autoguide.sql"/>
+      -->
       <!-- revenue manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
       <!-- task management -->
@@ -1079,13 +1187,43 @@
       <!-- additional fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms_append_fields.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote_adjustment.sql" />
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_history.sql" />
       </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
-  
+
+  <!-- Insert required default data -->
+  <target name="install.system" depends="init,install.prepare,taskdef.upgradeDatabase">
+    <property name="INSTALL.NEXT_ID" value="3"/>
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}"
+      baseFile="${src.sql.dir}${fs}init${fs}database.bsh"
+      specificDatabase="${DATABASE.NAME}"
+      processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}"
+      baseFile="${src.sql.dir}${fs}init${fs}sync.bsh"
+      specificDatabase="${DATABASE.NAME}"
+      processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+  </target>
+
   <!-- Install permissions -->
   <target name="install.permissions" depends="init,install.prepare">
-    <echo message="Process file: ${src.sql.dir}${fs}init${fs}permissions.xml"/>
+    <echo message="Process file: ${src.sql.dir}${fs}init${fs}permissions_${LOCALE.NAME}.xml"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -1093,9 +1231,9 @@
           <include name="*.jar"/>
         </fileset>
       </classpath>
-      <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions.xml"/>
+      <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions_${LOCALE.NAME}.xml"/>
       <sysproperty key="driver" value="${SITE.DRIVER}"/>
-      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <sysproperty key="user" value="${SITE.USER}"/>
       <sysproperty key="pass" value="${SITE.PASSWORD}"/>
       <arg value="${src.sql.dir}${fs}init${fs}permissions-dataimport.xml"/>
@@ -1111,10 +1249,10 @@
     <echo message="Deleting existing help contents..."/>
     <!-- Delete the old help -->
     <sql
-        driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
-        userid="${SITE.USER}"
-        password="${SITE.PASSWORD}">
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      userid="${SITE.USER}"
+      password="${SITE.PASSWORD}">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
@@ -1145,7 +1283,7 @@
       </classpath>
       <arg value="${src.sql.dir}${fs}init${fs}help.xml"/>
       <arg value="${SITE.DRIVER}"/>
-      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <arg value="${SITE.USER}"/>
       <arg value="${SITE.PASSWORD}"/>
     </java>
@@ -1153,9 +1291,10 @@
 
   <target name="install.language" unless="LOCALE.NAME">
     <!-- Ask for the language -->
-    <input message="Enter the database data locale: "
+    <echo message="Only available locales can be selected..."/>
+    <input message="Which locale should be used for the data? "
            addproperty="LOCALE.NAME"
-           validargs="en_US"/>
+           validargs="de_DE,en_US,es_VE,pt_BR"/>
   </target>
 
   <target name="install.lookup" depends="init,install.prepare.dbname,install.language">
@@ -1175,32 +1314,32 @@
       </classpath>
       <arg value="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}/lookuplists_${LOCALE.NAME}.xml"/>
       <arg value="${SITE.DRIVER}"/>
-      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <arg value="${SITE.USER}"/>
       <arg value="${SITE.PASSWORD}"/>
     </java>
-  </target> 
+  </target>
 
   <!-- Add a site record to the sites table -->
-  <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init" unless="DATABASE.SKIP_GATEKEEPER">
-    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com or 127.0.0.1: " 
-           addproperty="SITE.VIRTUAL_HOST"/>
-    <sql
-        driver="${GATEKEEPER.DRIVER}"
-        url="${GATEKEEPER.URL}"
-        userid="${GATEKEEPER.USER}"
-        password="${GATEKEEPER.PASSWORD}">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-      </classpath>
-      <![CDATA[
-        INSERT INTO sites (sitecode, vhost, dbhost, dbname, dbuser, dbpw, driver) 
-        VALUES ('${SITE.APPCODE}', '${SITE.VIRTUAL_HOST}', '${SITE.URL}${DATABASE.NAME}', '${DATABASE.NAME}', '${SITE.USER}', '${SITE.PASSWORD}', '${SITE.DRIVER}');
-      ]]>
-    </sql>
-    <echo message="Make sure to set ENABLED = TRUE in sites table if events for this site should be processed."/>
+  <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init,taskdef.upgradeDatabase" unless="DATABASE.SKIP_GATEKEEPER">
+    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com or 127.0.0.1: "
+      addproperty="SITE.VIRTUAL_HOST"/>
+    <input message="Enable CRON?"
+      addproperty="SITE.CRON"
+      validargs="y,n"/>
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${GATEKEEPER.DRIVER}"
+      url="${GATEKEEPER.URL}"
+      user="${GATEKEEPER.USER}"
+      password="${GATEKEEPER.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}"
+      baseFile="${src.sql.dir}${fs}init${fs}addsite_gk.bsh"
+      params="APPCODE=${SITE.APPCODE}|VIRTUAL_HOST=${SITE.VIRTUAL_HOST}|DATABASE_URL=${SITE.URL}${DATABASE.NAME}${SITE.APPEND}|DATABASE_NAME=${DATABASE.NAME}|DATABASE_USER=${SITE.USER}|DATABASE_PASSWORD=${SITE.PASSWORD}|DATABASE_DRIVER=${SITE.DRIVER}|CRON=${SITE.CRON}">
+    </upgradeDatabase>
   </target>
-  
+
   <!-- Copy the default .XML preferences for this system -->
   <target name="install.copyprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
     <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
@@ -1211,40 +1350,48 @@
     </copy>
     <!-- Install the workflow.xml to the database -->
     <upgradeDatabase
-        sitecode="${SITE.APPCODE}"
-        driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
-        user="${SITE.USER}"
-        password="${SITE.PASSWORD}"
-        servletJar="${servletJar}"
-        webPath="${CFS_HOME}"
-        baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
-        specificDatabase="${DATABASE.NAME}"
-        processSpecifiedDatabaseOnly="true">
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}${fs}"
+      baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
+      specificDatabase="${DATABASE.NAME}"
+      processSpecifiedDatabaseOnly="true"
+      locale="${LOCALE.NAME}">
     </upgradeDatabase>
   </target>
   <!-- Delete the preferences from this system -->
   <target name="install.deleteprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
     <!-- Delete the workflow from the database -->
     <upgradeDatabase
-        sitecode="${SITE.APPCODE}"
-        driver="${SITE.DRIVER}"
-        url="${SITE.URL}${DATABASE.NAME}"
-        user="${SITE.USER}"
-        password="${SITE.PASSWORD}"
-        servletJar="${servletJar}"
-        webPath="${CFS_HOME}"
-        baseFile="${src.sql.dir}${fs}init${fs}workflow-delete.bsh"
-        specificDatabase="${DATABASE.NAME}"
-        processSpecifiedDatabaseOnly="true">
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}${fs}"
+      baseFile="${src.sql.dir}${fs}init${fs}workflow-delete.bsh"
+      specificDatabase="${DATABASE.NAME}"
+      processSpecifiedDatabaseOnly="true">
     </upgradeDatabase>
   </target>
   
   <!-- Installs a new database -->
-  <target name="installdb" depends="log.installdb,install.database,install.permissions,install.lookup,install.help,install.copyprefs,install.addsite"
+  <!-- Split into multiple calls due to embedded database locking -->
+  <target name="installdb" depends="log.installdb,install.database,install.abortOnDB,install.system,install.permissions,install.lookup,install.help,install.copyprefs,install.addsite"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
-  
+  <target name="installdb2" depends="log.installdb,install.prepare.dbname,install.system,install.abortOnDB"
+    description="Create tables, insert base records and permissions into new database, copy XML files">
+  </target>
+  <target name="installdb3" depends="log.installdb,install.prepare.dbname,install.permissions,install.lookup,install.help,install.copyprefs,install.addsite"
+    description="Create tables, insert base records and permissions into new database, copy XML files">
+  </target>
+
   <!-- Programmatically upgrades installed databases for
        the specified appcode and file, runs against the build code,
        not the installed code so that scripts can be run before OR after
@@ -1261,37 +1408,38 @@
       <mapper type="merge" to="${build.lib.dir}/aspcfs.jar"/>
     </uptodate>
   </target>
-  <target name="upgradedb" depends="log.upgradedb,taskdef.upgradeDatabase,taskdef.jasper,upgradedb.name,upgradedb.site,upgradedb.uptodate,build" 
+  <target name="upgradedb" depends="log.upgradedb,taskdef.upgradeDatabase,taskdef.jasper,upgradedb.name,upgradedb.site,upgradedb.uptodate,build"
     description="Upgrades all databases in the gatekeeper with a specified script file, for current sitecode">
     <fail unless="arg1">Missing arg1 -- the file to process</fail>
     <fail unless="arg2">Missing arg2 -- the database to process</fail>
     <upgradeDatabase
-        sitecode="${GATEKEEPER.APPCODE}"
-        driver="${GATEKEEPER.DRIVER}"
-        url="${GATEKEEPER.URL}"
-        user="${GATEKEEPER.USER}"
-        password="${GATEKEEPER.PASSWORD}"
-        servletJar="${servletJar}"
-        webPath="${CFS_HOME}"
-        baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}"
-        specificDatabase="${arg2}">
+      sitecode="${GATEKEEPER.APPCODE}"
+      driver="${GATEKEEPER.DRIVER}"
+      url="${GATEKEEPER.URL}"
+      user="${GATEKEEPER.USER}"
+      password="${GATEKEEPER.PASSWORD}"
+      servletJar="${servletJar}"
+      webPath="${CFS_HOME}"
+      baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}"
+      specificDatabase="${arg2}"
+      locale="${LOCALE.NAME}">
     </upgradeDatabase>
   </target>
-  
+
   <!-- Generate Java Docs -->
   <target name="docs" description="Generate JavaDocs" depends="compile">
     <mkdir dir="${build.docs.dir}"/>
     <javadoc sourcepath="${src.classes.dir}"
-          packagenames="com.*,org.*"
-          destdir="${build.docs.dir}"
-          maxmemory="128m"
-          breakiterator="true"
-          author="true"
-          version="true"
-          excludepackagenames="javax.servlet">
+      packagenames="com.*,org.*"
+      destdir="${build.docs.dir}"
+      maxmemory="128m"
+      breakiterator="true"
+      author="true"
+      version="true"
+      excludepackagenames="javax.servlet">
       <tag name="created" description="Date file was created"/>
       <header>Centric CRM</header>
-      <footer>Copyright 2001-2004 Dark Horse Ventures</footer>
+      <footer>Copyright 2001-2005 Dark Horse Ventures, LLC</footer>
       <classpath>
         <path refid="cfs2.classpath"/>
         <!--
@@ -1309,15 +1457,15 @@
     <mkdir dir="${build.pref.dir}"/>
     <copy file="${pref.dir}/cfs/transfer/import-generalcontacts.xml" todir="${build.pref.dir}" overwrite="true"/>
     <replace file="${build.pref.dir}/import-generalcontacts.xml"
-             token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
+      token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
     <replace file="${build.pref.dir}/import-generalcontacts.xml"
-             token="@CSV.FILE@" value="${arg1}"/>
+      token="@CSV.FILE@" value="${arg1}"/>
     <replace file="${build.pref.dir}/import-generalcontacts.xml"
-             token="@URL@" value="${arg2}"/>
+      token="@URL@" value="${arg2}"/>
     <replace file="${build.pref.dir}/import-generalcontacts.xml"
-             token="@CODE@" value="${arg3}"/>
+      token="@CODE@" value="${arg3}"/>
     <replace file="${build.pref.dir}/import-generalcontacts.xml"
-             token="@SYSTEM.ID@" value="4"/>
+      token="@SYSTEM.ID@" value="4"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -1329,7 +1477,7 @@
     </java>
   </target>
   
-  <!-- General Contact Importer based on CSV spec -->
+  <!-- Account Contact Importer based on CSV spec -->
   <target name="import.accountcontacts" depends="init">
     <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
     <fail unless="arg2">Missing arg2: Virtual Host to import to not specified</fail>
@@ -1337,17 +1485,17 @@
     <mkdir dir="${build.pref.dir}"/>
     <copy file="${pref.dir}/cfs/transfer/import-accountcontacts.xml" todir="${build.pref.dir}" overwrite="true"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
+      token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@CSV.FILE@" value="${arg1}"/>
+      token="@CSV.FILE@" value="${arg1}"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@URL@" value="${arg2}"/>
+      token="@URL@" value="${arg2}"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@ID@" value="${arg3}"/>
+      token="@ID@" value="${arg3}"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@CODE@" value="${arg4}"/>
+      token="@CODE@" value="${arg4}"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@SYSTEM.ID@" value="4"/>
+      token="@SYSTEM.ID@" value="4"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -1359,7 +1507,7 @@
     </java>
   </target>
   
-  <!-- General Contact Importer based on CSV spec -->
+  <!-- Accounts Importer based on CSV spec -->
   <target name="import.accounts" depends="init">
     <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
     <fail unless="arg2">Missing arg2: Virtual Host to import to not specified</fail>
@@ -1367,15 +1515,15 @@
     <mkdir dir="${build.pref.dir}"/>
     <copy file="${pref.dir}/cfs/transfer/import-accounts.xml" todir="${build.pref.dir}" overwrite="true"/>
     <replace file="${build.pref.dir}/import-accounts.xml"
-             token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
+      token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
     <replace file="${build.pref.dir}/import-accounts.xml"
-             token="@CSV.FILE@" value="${arg1}"/>
+      token="@CSV.FILE@" value="${arg1}"/>
     <replace file="${build.pref.dir}/import-accounts.xml"
-             token="@URL@" value="${arg2}"/>
+      token="@URL@" value="${arg2}"/>
     <replace file="${build.pref.dir}/import-accounts.xml"
-             token="@CODE@" value="${arg3}"/>
+      token="@CODE@" value="${arg3}"/>
     <replace file="${build.pref.dir}/import-accounts.xml"
-             token="@SYSTEM.ID@" value="4"/>
+      token="@SYSTEM.ID@" value="4"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -1386,8 +1534,8 @@
       <arg value="${build.pref.dir}${fs}import-accounts.xml"/>
     </java>
   </target>
-  
-  
+
+
   <!-- Test the XML HTTP API -->
   <target name="import.unittest" depends="init">
     <fail unless="arg2">Missing arg2: Virtual Host to import to not specified</fail>
@@ -1395,11 +1543,11 @@
     <mkdir dir="${build.pref.dir}"/>
     <copy file="${pref.dir}/cfs/transfer/import-unittest.xml" todir="${build.pref.dir}" overwrite="true"/>
     <replace file="${build.pref.dir}/import-unittest.xml"
-             token="@URL@" value="${arg2}"/>
+      token="@URL@" value="${arg2}"/>
     <replace file="${build.pref.dir}/import-unittest.xml"
-             token="@CODE@" value="${arg3}"/>
+      token="@CODE@" value="${arg3}"/>
     <replace file="${build.pref.dir}/import-unittest.xml"
-             token="@SYSTEM.ID@" value="4"/>
+      token="@SYSTEM.ID@" value="4"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -1410,11 +1558,11 @@
       <arg value="${build.pref.dir}${fs}import-unittest.xml"/>
     </java>
   </target>
-  
-  
 
 
-  
+
+
+
 
 
 
@@ -1430,12 +1578,12 @@
       </classpath>
       <sysproperty key="file" value="${arg1}"/>
       <sysproperty key="driver" value="${SITE.DRIVER}"/>
-      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <sysproperty key="user" value="${SITE.USER}"/>
       <sysproperty key="pass" value="${SITE.PASSWORD}"/>
     </java>
   </target>
-  
+
   <!-- Run KBB Vehicle Import -->
   <target name="run.parsekbb" depends="init,install.prepare">
     <java classname="org.aspcfs.modules.media.autoguide.utils.ParseKBB" fork="yes" failonerror="yes">
@@ -1446,13 +1594,13 @@
       </classpath>
       <sysproperty key="file" value="${arg1}"/>
       <sysproperty key="driver" value="${SITE.DRIVER}"/>
-      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <sysproperty key="user" value="${SITE.USER}"/>
       <sysproperty key="pass" value="${SITE.PASSWORD}"/>
     </java>
   </target>
-  
-  
+
+
   <!-- Run Net Decisions import (one-time process) -->
   <target name="run.netdecisions" depends="init">
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
@@ -1465,7 +1613,7 @@
       <arg value="${bin.dir}${fs}netDesc-loadAccounts.xml"/>
     </java>
   </target>
-  
+
   <!-- Test the EDIT transaction server -->
   <target name="run.edit" depends="init">
     <java classname="org.aspcfs.modules.healthcare.edit.apps.HttpPostTransaction" fork="yes" failonerror="yes">

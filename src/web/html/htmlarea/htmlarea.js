@@ -59,6 +59,8 @@ function HTMLArea(textarea, config) {
 	// start from 1, htmlarea.js is already loaded
 	for (var i = 1; i < scripts.length; ++i) {
 		var script = document.createElement("script");
+		script.type = "text/javascript";
+		script.charset = "UTF-8";
 		script.src = scripts[i];
 		head.appendChild(script);
 	}

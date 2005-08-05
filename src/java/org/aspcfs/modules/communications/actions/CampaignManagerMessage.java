@@ -31,27 +31,28 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Actions for dealing with Messages in the Communications Module
+ * Actions for dealing with Messages in the Communications Module
  *
- *@author     chris price
- *@created    October 18, 2001
- *@version    $Id: CampaignManager.java,v 1.1 2001/10/18 12:45:57 mrajkowski Exp
- *      $
+ * @author chris price
+ * @version $Id: CampaignManager.java,v 1.1 2001/10/18 12:45:57 mrajkowski Exp
+ *          $
+ * @created October 18, 2001
  */
 public final class CampaignManagerMessage extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandView(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignMessageListInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "CampaignMessageListInfo");
     pagedListInfo.setLink("CampaignManagerMessage.do?command=View");
     Connection db = null;
     MessageList messageList = new MessageList();
@@ -59,9 +60,11 @@ public final class CampaignManagerMessage extends CFSModule {
       db = this.getConnection(context);
       messageList.setPagedListInfo(pagedListInfo);
       if ("all".equals(pagedListInfo.getListView())) {
-        messageList.setAllMessages(true, this.getUserId(context), this.getUserRange(context));
+        messageList.setAllMessages(
+            true, this.getUserId(context), this.getUserRange(context));
       } else if ("hierarchy".equals(pagedListInfo.getListView())) {
-        messageList.setControlledHierarchyOnly(true, this.getUserRange(context));
+        messageList.setControlledHierarchyOnly(
+            true, this.getUserRange(context));
         messageList.setPersonalId(this.getUserId(context));
       } else if ("personal".equals(pagedListInfo.getListView())) {
         messageList.setOwner(this.getUserId(context));
@@ -97,10 +100,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
@@ -118,7 +121,8 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("PermissionError");
       }
       //get access types
-      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.COMMUNICATION_MESSAGES);
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(
+          db, AccessType.COMMUNICATION_MESSAGES);
       context.getRequest().setAttribute("AccessTypeList", accessTypeList);
     } catch (Exception e) {
       errorMessage = e;
@@ -145,10 +149,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
@@ -179,7 +183,8 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     if (resultCount == 1) {
       context.getRequest().setAttribute("MessageDetails", newMessage);
-      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
+          "return").equals("list")) {
         return (executeCommandView(context));
       } else {
         return ("UpdateOK");
@@ -188,7 +193,7 @@ public final class CampaignManagerMessage extends CFSModule {
       if (resultCount == -1 || !isValid) {
         context.getRequest().setAttribute("MessageDetails", newMessage);
         return ("ModifyOK");
-      }      
+      }
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -196,10 +201,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
@@ -227,11 +232,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandAdd(ActionContext context) {
 
@@ -251,7 +255,8 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       //get access types
-      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.COMMUNICATION_MESSAGES);
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(
+          db, AccessType.COMMUNICATION_MESSAGES);
       context.getRequest().setAttribute("AccessTypeList", accessTypeList);
 
     } catch (Exception e) {
@@ -273,11 +278,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandInsert(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
@@ -314,11 +318,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-messages-delete"))) {
@@ -337,13 +340,17 @@ public final class CampaignManagerMessage extends CFSModule {
       }
       recordDeleted = thisMessage.delete(db);
       if (!recordDeleted) {
-        String inactiveCounter = ""+thisMessage.getInactiveCount();
+        String inactiveCounter = "" + thisMessage.getInactiveCount();
         String label = "";
         HashMap map = new HashMap();
         map.put("${message.inactiveCount}", inactiveCounter);
-        map.put("${message.campaign}", (thisMessage.getInactiveCount() == 1 ? "campaign is" : "campaigns are"));
-        map.put("${message.use}", (thisMessage.getInactiveCount() == 1 ? "uses" : "use") );
-        Template template = new Template(systemStatus.getLabel("object.validation.actionError.canNotDeleteMessage"));
+        map.put(
+            "${message.campaign}", (thisMessage.getInactiveCount() == 1 ? "campaign is" : "campaigns are"));
+        map.put(
+            "${message.use}", (thisMessage.getInactiveCount() == 1 ? "uses" : "use"));
+        Template template = new Template(
+            systemStatus.getLabel(
+                "object.validation.actionError.canNotDeleteMessage"));
         template.setParseElements(map);
         thisMessage.getErrors().put("actionError", template.getParsedText());
       }
@@ -354,7 +361,8 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "CampaignManagerMessage.do?command=View");
+        context.getRequest().setAttribute(
+            "refreshUrl", "CampaignManagerMessage.do?command=View");
         return ("DeleteOK");
       } else {
         processErrors(context, thisMessage.getErrors());
@@ -368,11 +376,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandPreviewMessage(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-messages-view")) {
@@ -394,10 +401,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
 
@@ -417,7 +424,8 @@ public final class CampaignManagerMessage extends CFSModule {
       newMessage = new Message(db, passedId);
 
       //get access types
-      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.COMMUNICATION_MESSAGES);
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(
+          db, AccessType.COMMUNICATION_MESSAGES);
       context.getRequest().setAttribute("AccessTypeList", accessTypeList);
     } catch (Exception e) {
       errorMessage = e;
@@ -446,10 +454,10 @@ public final class CampaignManagerMessage extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -476,15 +484,19 @@ public final class CampaignManagerMessage extends CFSModule {
       }
       DependencyList dependencies = thisMessage.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
 
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerMessage.do?command=Delete&id=" + id + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='CampaignManagerMessage.do?command=Delete&id=" + id + "'");
       } else {
-        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.messageCampaignHeader"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        htmlDialog.setHeader(
+            systemStatus.getLabel("confirmdelete.messageCampaignHeader"));
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;

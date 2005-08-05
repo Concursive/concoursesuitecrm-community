@@ -15,31 +15,42 @@
  */
 package org.aspcfs.modules.media.autoguide.readers;
 
-import org.aspcfs.apps.transfer.*;
-import java.sql.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.media.autoguide.base.*;
-import org.aspcfs.modules.base.Constants;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.writer.TextWriter;
-import java.io.*;
 import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
-import com.darkhorseventures.database.*;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.media.autoguide.base.Inventory;
+import org.aspcfs.modules.media.autoguide.base.InventoryList;
+import org.aspcfs.modules.media.autoguide.base.Option;
+import org.aspcfs.utils.ImageUtils;
+import org.aspcfs.utils.NCFTPApp;
+import org.aspcfs.utils.StringUtils;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 /**
- *  Queries vehicle data from the Auto Guide database, grabs and resizes any
- *  associated pictures, then FTPs all of the data to the pilotonline server.
+ * Queries vehicle data from the Auto Guide database, grabs and resizes any
+ * associated pictures, then FTPs all of the data to the pilotonline server.
  *
- *@author     matt rajkowski
- *@created    October 7, 2002
- *@version    $Id: PilotOnlineReader.java,v 1.5 2002/10/23 13:22:11 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: PilotOnlineReader.java,v 1.5 2002/10/23 13:22:11 mrajkowski
+ *          Exp $
+ * @created October 7, 2002
  */
 public class PilotOnlineReader implements DataReader {
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String fs = System.getProperty("file.separator");
   private String driver = null;
@@ -61,9 +72,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the driver attribute of the PilotOnlineReader object
+   * Sets the driver attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new driver value
+   * @param tmp The new driver value
    */
   public void setDriver(String tmp) {
     this.driver = tmp;
@@ -71,9 +82,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the url attribute of the PilotOnlineReader object
+   * Sets the url attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -81,9 +92,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the user attribute of the PilotOnlineReader object
+   * Sets the user attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(String tmp) {
     this.user = tmp;
@@ -91,9 +102,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the password attribute of the PilotOnlineReader object
+   * Sets the password attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new password value
+   * @param tmp The new password value
    */
   public void setPassword(String tmp) {
     this.password = tmp;
@@ -101,9 +112,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the pictureSourcePath attribute of the PilotOnlineReader object
+   * Sets the pictureSourcePath attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new pictureSourcePath value
+   * @param tmp The new pictureSourcePath value
    */
   public void setPictureSourcePath(String tmp) {
     if (tmp.endsWith(fs)) {
@@ -115,9 +126,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the pictureDestinationPath attribute of the PilotOnlineReader object
+   * Sets the pictureDestinationPath attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new pictureDestinationPath value
+   * @param tmp The new pictureDestinationPath value
    */
   public void setPictureDestinationPath(String tmp) {
     if (tmp.endsWith(fs)) {
@@ -129,9 +140,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the ftpData attribute of the PilotOnlineReader object
+   * Sets the ftpData attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new ftpData value
+   * @param tmp The new ftpData value
    */
   public void setFtpData(String tmp) {
     this.ftpData = tmp;
@@ -139,9 +150,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the ftpPictures attribute of the PilotOnlineReader object
+   * Sets the ftpPictures attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new ftpPictures value
+   * @param tmp The new ftpPictures value
    */
   public void setFtpPictures(String tmp) {
     this.ftpPictures = tmp;
@@ -149,9 +160,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logUrl attribute of the PilotOnlineReader object
+   * Sets the logUrl attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logUrl value
+   * @param tmp The new logUrl value
    */
   public void setLogUrl(String tmp) {
     this.logUrl = tmp;
@@ -159,9 +170,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logId attribute of the PilotOnlineReader object
+   * Sets the logId attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logId value
+   * @param tmp The new logId value
    */
   public void setLogId(String tmp) {
     this.logId = tmp;
@@ -169,9 +180,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logCode attribute of the PilotOnlineReader object
+   * Sets the logCode attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logCode value
+   * @param tmp The new logCode value
    */
   public void setLogCode(String tmp) {
     this.logCode = tmp;
@@ -179,9 +190,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logSystemId attribute of the PilotOnlineReader object
+   * Sets the logSystemId attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logSystemId value
+   * @param tmp The new logSystemId value
    */
   public void setLogSystemId(int tmp) {
     this.logSystemId = tmp;
@@ -189,9 +200,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logSystemId attribute of the PilotOnlineReader object
+   * Sets the logSystemId attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logSystemId value
+   * @param tmp The new logSystemId value
    */
   public void setLogSystemId(String tmp) {
     this.logSystemId = Integer.parseInt(tmp);
@@ -199,9 +210,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logClientId attribute of the PilotOnlineReader object
+   * Sets the logClientId attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logClientId value
+   * @param tmp The new logClientId value
    */
   public void setLogClientId(int tmp) {
     this.logClientId = tmp;
@@ -209,9 +220,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Sets the logClientId attribute of the PilotOnlineReader object
+   * Sets the logClientId attribute of the PilotOnlineReader object
    *
-   *@param  tmp  The new logClientId value
+   * @param tmp The new logClientId value
    */
   public void setLogClientId(String tmp) {
     this.logClientId = Integer.parseInt(tmp);
@@ -219,9 +230,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the driver attribute of the PilotOnlineReader object
+   * Gets the driver attribute of the PilotOnlineReader object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     return driver;
@@ -229,9 +240,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the url attribute of the PilotOnlineReader object
+   * Gets the url attribute of the PilotOnlineReader object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -239,9 +250,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the user attribute of the PilotOnlineReader object
+   * Gets the user attribute of the PilotOnlineReader object
    *
-   *@return    The user value
+   * @return The user value
    */
   public String getUser() {
     return user;
@@ -249,9 +260,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the password attribute of the PilotOnlineReader object
+   * Gets the password attribute of the PilotOnlineReader object
    *
-   *@return    The password value
+   * @return The password value
    */
   public String getPassword() {
     return password;
@@ -259,9 +270,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the pictureSourcePath attribute of the PilotOnlineReader object
+   * Gets the pictureSourcePath attribute of the PilotOnlineReader object
    *
-   *@return    The pictureSourcePath value
+   * @return The pictureSourcePath value
    */
   public String getPictureSourcePath() {
     return pictureSourcePath;
@@ -269,9 +280,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the pictureDestinationPath attribute of the PilotOnlineReader object
+   * Gets the pictureDestinationPath attribute of the PilotOnlineReader object
    *
-   *@return    The pictureDestinationPath value
+   * @return The pictureDestinationPath value
    */
   public String getPictureDestinationPath() {
     return pictureDestinationPath;
@@ -279,9 +290,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the ftpData attribute of the PilotOnlineReader object
+   * Gets the ftpData attribute of the PilotOnlineReader object
    *
-   *@return    The ftpData value
+   * @return The ftpData value
    */
   public String getFtpData() {
     return ftpData;
@@ -289,9 +300,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the ftpPictures attribute of the PilotOnlineReader object
+   * Gets the ftpPictures attribute of the PilotOnlineReader object
    *
-   *@return    The ftpPictures value
+   * @return The ftpPictures value
    */
   public String getFtpPictures() {
     return ftpPictures;
@@ -299,9 +310,9 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the PilotOnlineReader object
+   * Gets the version attribute of the PilotOnlineReader object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -309,31 +320,29 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the PilotOnlineReader object
+   * Gets the name attribute of the PilotOnlineReader object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Pilot Online Reader/FTP";
   }
 
 
-
   /**
-   *  Gets the description attribute of the PilotOnlineReader object
+   * Gets the description attribute of the PilotOnlineReader object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Reads dealer and vehicle data for PilotOnline";
   }
 
 
-
   /**
-   *  Gets the configured attribute of the PilotOnlineReader object
+   * Gets the configured attribute of the PilotOnlineReader object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     boolean configOK = true;
@@ -359,7 +368,8 @@ public class PilotOnlineReader implements DataReader {
     }
 
     if (pictureDestinationPath == null) {
-      logger.info("PilotOnlineReader-> Config: pictureDestinationPath not set");
+      logger.info(
+          "PilotOnlineReader-> Config: pictureDestinationPath not set");
       configOK = false;
     }
 
@@ -377,16 +387,16 @@ public class PilotOnlineReader implements DataReader {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
-    processLog.add("INFO: PilotOnlineReader-> Started " + new java.util.Date());
+    processLog.add(
+        "INFO: PilotOnlineReader-> Started " + new java.util.Date());
 
     //Connect to database
     ConnectionPool sqlDriver = null;
@@ -401,7 +411,8 @@ public class PilotOnlineReader implements DataReader {
       connectionElement.setDriver(driver);
       db = sqlDriver.getConnection(connectionElement);
     } catch (SQLException e) {
-      processLog.add("ERROR: Could not get database connection: " + e.toString());
+      processLog.add(
+          "ERROR: Could not get database connection: " + e.toString());
       processOK = false;
     }
 
@@ -413,38 +424,38 @@ public class PilotOnlineReader implements DataReader {
       Calendar runDateEnd = Calendar.getInstance();
 
       switch (runDateStart.get(Calendar.DAY_OF_WEEK)) {
-          case Calendar.SATURDAY:
-            runDateStart.add(Calendar.DATE, -3);
-            runDateEnd.add(Calendar.DATE, -3);
-            break;
-          case Calendar.SUNDAY:
-            runDateStart.add(Calendar.DATE, -4);
-            runDateEnd.add(Calendar.DATE, -4);
-            break;
-          case Calendar.MONDAY:
-            runDateStart.add(Calendar.DATE, -5);
-            runDateEnd.add(Calendar.DATE, -5);
-            break;
-          case Calendar.TUESDAY:
+        case Calendar.SATURDAY:
+          runDateStart.add(Calendar.DATE, -3);
+          runDateEnd.add(Calendar.DATE, -3);
+          break;
+        case Calendar.SUNDAY:
+          runDateStart.add(Calendar.DATE, -4);
+          runDateEnd.add(Calendar.DATE, -4);
+          break;
+        case Calendar.MONDAY:
+          runDateStart.add(Calendar.DATE, -5);
+          runDateEnd.add(Calendar.DATE, -5);
+          break;
+        case Calendar.TUESDAY:
+          runDateStart.add(Calendar.DATE, 1);
+          runDateEnd.add(Calendar.DATE, 1);
+          break;
+        case Calendar.WEDNESDAY:
+          break;
+        case Calendar.THURSDAY:
+          runDateStart.add(Calendar.DATE, -1);
+          runDateEnd.add(Calendar.DATE, -1);
+          break;
+        case Calendar.FRIDAY:
+          runDateStart.add(Calendar.DATE, -2);
+          runDateEnd.add(Calendar.DATE, -2);
+          break;
+        default:
+          while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
             runDateStart.add(Calendar.DATE, 1);
             runDateEnd.add(Calendar.DATE, 1);
-            break;
-          case Calendar.WEDNESDAY:
-            break;
-          case Calendar.THURSDAY:
-            runDateStart.add(Calendar.DATE, -1);
-            runDateEnd.add(Calendar.DATE, -1);
-            break;
-          case Calendar.FRIDAY:
-            runDateStart.add(Calendar.DATE, -2);
-            runDateEnd.add(Calendar.DATE, -2);
-            break;
-          default:
-            while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
-              runDateStart.add(Calendar.DATE, 1);
-              runDateEnd.add(Calendar.DATE, 1);
-            }
-            break;
+          }
+          break;
       }
       //Define the final date range
       runDateStart.add(Calendar.DATE, -2);
@@ -460,7 +471,8 @@ public class PilotOnlineReader implements DataReader {
       runDateEnd.set(Calendar.SECOND, 0);
       runDateEnd.set(Calendar.MILLISECOND, 0);
 
-      processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size() + " for " + runDateStart.getTime() + " through " + runDateEnd.getTime());
+      processLog.add(
+          "INFO: Processing organizations/vehicles: " + organizationList.size() + " for " + runDateStart.getTime() + " through " + runDateEnd.getTime());
       int vehicleCount = 0;
       Iterator organizations = organizationList.iterator();
       while (organizations.hasNext()) {
@@ -468,8 +480,10 @@ public class PilotOnlineReader implements DataReader {
         InventoryList inventoryList = new InventoryList();
         inventoryList.setOrgId(dealer.getId());
         inventoryList.setShowSold(Constants.FALSE);
-        inventoryList.setAdRunDateStart(new java.sql.Date(runDateStart.getTime().getTime()));
-        inventoryList.setAdRunDateEnd(new java.sql.Date(runDateEnd.getTime().getTime()));
+        inventoryList.setAdRunDateStart(
+            new java.sql.Date(runDateStart.getTime().getTime()));
+        inventoryList.setAdRunDateEnd(
+            new java.sql.Date(runDateEnd.getTime().getTime()));
         inventoryList.setBuildPictureId(true);
         inventoryList.setBuildOptions(true);
         inventoryList.buildList(db);
@@ -486,8 +500,10 @@ public class PilotOnlineReader implements DataReader {
           thisRecord.addField("accountName", dealer.getName());
           //Vehicle Info
           thisRecord.addField("id", vehicle.getId());
-          thisRecord.addField("make", vehicle.getVehicle().getMake().getName());
-          thisRecord.addField("model", vehicle.getVehicle().getModel().getName());
+          thisRecord.addField(
+              "make", vehicle.getVehicle().getMake().getName());
+          thisRecord.addField(
+              "model", vehicle.getVehicle().getModel().getName());
           thisRecord.addField("year", vehicle.getVehicle().getYear());
           thisRecord.addField("color", vehicle.getExteriorColor());
           thisRecord.addField("mileage", vehicle.getMileageString());
@@ -508,12 +524,14 @@ public class PilotOnlineReader implements DataReader {
           thisRecord.addField("sellingPrice", vehicle.getSellingPriceString());
           //Dealer Info
           thisRecord.addField("accountPhone", dealer.getPhoneNumber("Main"));
-          thisRecord.addField("accountEmail", dealer.getEmailAddress("Primary"));
+          thisRecord.addField(
+              "accountEmail", dealer.getEmailAddress("Primary"));
           //Picture
           if (vehicle.hasPicture()) {
             String pictureName = vehicle.getPicture().getFilename();
             if (pictureName.endsWith("TH")) {
-              pictureName = pictureName.substring(0, pictureName.indexOf("TH"));
+              pictureName = pictureName.substring(
+                  0, pictureName.indexOf("TH"));
             }
             thisRecord.addField("pictureFilename", pictureName + ".jpg");
             picturesToProcess.add(pictureName);
@@ -526,7 +544,8 @@ public class PilotOnlineReader implements DataReader {
       processLog.add("INFO: Vehicles added-> " + vehicleCount);
     } catch (Exception ex) {
       ex.printStackTrace(System.out);
-      processLog.add("ERROR: Querying organizations/vehicles-> " + ex.getMessage());
+      processLog.add(
+          "ERROR: Querying organizations/vehicles-> " + ex.getMessage());
       processOK = false;
     } finally {
       writer.close();
@@ -537,7 +556,8 @@ public class PilotOnlineReader implements DataReader {
 
     //Process the vehicle pictures
     if (processOK && picturesToProcess.size() > 0) {
-      processLog.add("INFO: Processing pictures (resize/copy): " + picturesToProcess.size());
+      processLog.add(
+          "INFO: Processing pictures (resize/copy): " + picturesToProcess.size());
       Iterator pictures = picturesToProcess.iterator();
       int failureCount = 0;
       while (pictures.hasNext()) {
@@ -547,10 +567,12 @@ public class PilotOnlineReader implements DataReader {
             thisPicture.substring(0, 4) + fs +
             thisPicture.substring(4, 8) + fs +
             thisPicture);
-        File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
+        File destinationPicture = new File(
+            pictureDestinationPath + thisPicture + ".jpg");
         if (sourcePicture.exists() && !destinationPicture.exists()) {
           try {
-            ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
+            ImageUtils.saveThumbnail(
+                sourcePicture, destinationPicture, 285.0, -1.0);
           } catch (Exception e) {
             ++failureCount;
             e.printStackTrace(System.out);
@@ -583,7 +605,8 @@ public class PilotOnlineReader implements DataReader {
       }
     } else {
       if (picturesToProcess.size() > 0) {
-        processLog.add("ERROR: FTP Sending pictures-> Skipped because of previous error");
+        processLog.add(
+            "ERROR: FTP Sending pictures-> Skipped because of previous error");
       }
     }
 
@@ -605,10 +628,12 @@ public class PilotOnlineReader implements DataReader {
         }
       }
     } else {
-      processLog.add("ERROR: FTP Sending data-> Skipped because of previous error");
+      processLog.add(
+          "ERROR: FTP Sending data-> Skipped because of previous error");
     }
 
-    processLog.add("INFO: PilotOnlineReader-> Finished " + new java.util.Date());
+    processLog.add(
+        "INFO: PilotOnlineReader-> Finished " + new java.util.Date());
 
     if (logUrl != null) {
       try {
@@ -658,10 +683,10 @@ public class PilotOnlineReader implements DataReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  in  Description of the Parameter
-   *@return     Description of the Return Value
+   * @param in Description of the Parameter
+   * @return Description of the Return Value
    */
   private static String toOneLine(String in) {
     if (in != null && in.length() > 0) {

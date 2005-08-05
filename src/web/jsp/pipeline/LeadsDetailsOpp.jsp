@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="ComponentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
 <jsp:useBean id="LeadsComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -74,9 +74,11 @@ function reopenOpportunity(id) {
   &nbsp;<br>
 </dhv:evaluate>
 <dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
-  <dhv:permission name="pipeline-opportunities-add">
-    <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
-  </dhv:permission>
+  <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>">
+    <dhv:permission name="pipeline-opportunities-add">
+      <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
+    </dhv:permission>
+  </dhv:evaluate>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
@@ -92,7 +94,7 @@ function reopenOpportunity(id) {
         <%= LeadsComponentListInfo.getSortIcon("oc.closed") %>
       </th>
       <th align="center" nowrap>
-        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "viewSource") %>">Guess<br><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></a></strong>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_revenue_add.Guess">Guess</dhv:label><br><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></a></strong>
         <%= LeadsComponentListInfo.getSortIcon("oc.guessvalue") %>
       </th>
       <th nowrap>
@@ -120,7 +122,7 @@ function reopenOpportunity(id) {
     <tr class="row<%= rowid %>">
       <td width="8" valign="top" align="center" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuOpp', '<%= thisComponent.getId() %>');"
+         <a href="javascript:displayMenu('select<%= i %>','menuOpp', '<%= thisComponent.getId() %>', '<%= thisComponent.isTrashed() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td width="100%" valign="top">
@@ -163,6 +165,11 @@ function reopenOpportunity(id) {
   <br>
   <dhv:pagedListControl object="LeadsComponentListInfo"/>
   &nbsp;<br>
-  <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
-  <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= opportunityHeader.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=Search', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+  <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>">
+    <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+    <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= opportunityHeader.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=Search', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= opportunityHeader.isTrashed() %>">
+    <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=RestoreOpp&id=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+  </dhv:evaluate>
 </dhv:container>

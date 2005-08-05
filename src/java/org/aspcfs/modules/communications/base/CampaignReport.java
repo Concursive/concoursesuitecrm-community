@@ -15,31 +15,28 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import java.io.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.actionlist.base.ActionItemLog;
-import com.zeroio.webutils.*;
 import com.zeroio.iteam.base.FileItem;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.hssf.record.*;
-import org.apache.poi.hssf.model.*;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.*;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    September 29, 2003
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created September 29, 2003
  */
 public class CampaignReport {
 
@@ -58,15 +55,16 @@ public class CampaignReport {
 
 
   /**
-   *  Constructor for the CampaignReport object
+   * Constructor for the CampaignReport object
    */
-  public CampaignReport() { }
+  public CampaignReport() {
+  }
 
 
   /**
-   *  Sets the campaignId attribute of the CampaignReport object
+   * Sets the campaignId attribute of the CampaignReport object
    *
-   *@param  campaignId  The new campaignId value
+   * @param campaignId The new campaignId value
    */
   public void setCampaignId(int campaignId) {
     this.campaignId = campaignId;
@@ -74,9 +72,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the workBook attribute of the CampaignReport object
+   * Sets the workBook attribute of the CampaignReport object
    *
-   *@param  workBook  The new workBook value
+   * @param workBook The new workBook value
    */
   public void setWorkBook(HSSFWorkbook workBook) {
     this.workBook = workBook;
@@ -84,9 +82,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the enteredBy attribute of the CampaignReport object
+   * Sets the enteredBy attribute of the CampaignReport object
    *
-   *@param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -94,9 +92,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the modifiedBy attribute of the CampaignReport object
+   * Sets the modifiedBy attribute of the CampaignReport object
    *
-   *@param  modifiedBy  The new modifiedBy value
+   * @param modifiedBy The new modifiedBy value
    */
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
@@ -104,9 +102,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the subject attribute of the CampaignReport object
+   * Sets the subject attribute of the CampaignReport object
    *
-   *@param  subject  The new subject value
+   * @param subject The new subject value
    */
   public void setSubject(String subject) {
     this.subject = subject;
@@ -114,9 +112,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the filePath attribute of the CampaignReport object
+   * Sets the filePath attribute of the CampaignReport object
    *
-   *@param  filePath  The new filePath value
+   * @param filePath The new filePath value
    */
   public void setFilePath(String filePath) {
     this.filePath = filePath;
@@ -124,9 +122,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the filenameToUse attribute of the CampaignReport object
+   * Sets the filenameToUse attribute of the CampaignReport object
    *
-   *@param  filenameToUse  The new filenameToUse value
+   * @param filenameToUse The new filenameToUse value
    */
   public void setFilenameToUse(String filenameToUse) {
     this.filenameToUse = filenameToUse;
@@ -134,9 +132,9 @@ public class CampaignReport {
 
 
   /**
-   *  Sets the thisItem attribute of the CampaignReport object
+   * Sets the thisItem attribute of the CampaignReport object
    *
-   *@param  thisItem  The new thisItem value
+   * @param thisItem The new thisItem value
    */
   public void setThisItem(FileItem thisItem) {
     this.thisItem = thisItem;
@@ -144,9 +142,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the filenameToUse attribute of the CampaignReport object
+   * Gets the filenameToUse attribute of the CampaignReport object
    *
-   *@return    The filenameToUse value
+   * @return The filenameToUse value
    */
   public String getFilenameToUse() {
     return filenameToUse;
@@ -154,9 +152,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the thisItem attribute of the CampaignReport object
+   * Gets the thisItem attribute of the CampaignReport object
    *
-   *@return    The thisItem value
+   * @return The thisItem value
    */
   public FileItem getThisItem() {
     return thisItem;
@@ -164,9 +162,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the filePath attribute of the CampaignReport object
+   * Gets the filePath attribute of the CampaignReport object
    *
-   *@return    The filePath value
+   * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -174,9 +172,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the enteredBy attribute of the CampaignReport object
+   * Gets the enteredBy attribute of the CampaignReport object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -184,9 +182,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the modifiedBy attribute of the CampaignReport object
+   * Gets the modifiedBy attribute of the CampaignReport object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -194,9 +192,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the subject attribute of the CampaignReport object
+   * Gets the subject attribute of the CampaignReport object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -204,9 +202,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the workBook attribute of the CampaignReport object
+   * Gets the workBook attribute of the CampaignReport object
    *
-   *@return    The workBook value
+   * @return The workBook value
    */
   public HSSFWorkbook getWorkBook() {
     return workBook;
@@ -214,9 +212,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the campaignId attribute of the CampaignReport object
+   * Gets the campaignId attribute of the CampaignReport object
    *
-   *@return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -224,9 +222,9 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the headerStyle attribute of the CampaignReport object
+   * Gets the headerStyle attribute of the CampaignReport object
    *
-   *@return    The headerStyle value
+   * @return The headerStyle value
    */
   private HSSFCellStyle getHeaderStyle() {
     //create a style for the header cell
@@ -234,8 +232,7 @@ public class CampaignReport {
         workBook.createCellStyle();
 
     //align it left
-    headerStyle.setAlignment(
-        HSSFCellStyle.ALIGN_LEFT);
+    headerStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 
     //set a font
     HSSFFont font = workBook.createFont();
@@ -247,10 +244,10 @@ public class CampaignReport {
 
 
   /**
-   *  Gets the caption attribute of the CampaignReport object
+   * Gets the caption attribute of the CampaignReport object
    *
-   *@param  questionType  Description of the Parameter
-   *@return               The caption value
+   * @param questionType Description of the Parameter
+   * @return The caption value
    */
   private String getCaption(int questionType) {
     String caption = null;
@@ -268,10 +265,10 @@ public class CampaignReport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(Connection db) throws SQLException {
 
@@ -288,7 +285,7 @@ public class CampaignReport {
 
       int surveyId = thisCampaign.getSurveyId();
       ActiveSurveyQuestionList questionList = new ActiveSurveyQuestionList();
-      if (surveyId != -1){
+      if (surveyId != -1) {
         //build the questions
         questionList.setActiveSurveyId(surveyId);
         questionList.buildList(db);
@@ -322,12 +319,12 @@ public class CampaignReport {
 
 
   /**
-   *  Adds the Campaign Header
+   * Adds the Campaign Header
    *
-   *@param  sheet         The feature to be added to the CampaignHeader
-   *      attribute
-   *@param  thisCampaign  The feature to be added to the CampaignHeader
-   *      attribute
+   * @param sheet        The feature to be added to the CampaignHeader
+   *                     attribute
+   * @param thisCampaign The feature to be added to the CampaignHeader
+   *                     attribute
    */
   private void addCampaignHeader(HSSFSheet sheet, Campaign thisCampaign) {
     // ***************header data******************//
@@ -367,15 +364,15 @@ public class CampaignReport {
 
 
   /**
-   *  Adds the Summary Report sheet
+   * Adds the Summary Report sheet
    *
-   *@param  db                The feature to be added to the SummaryReport
-   *      attribute
-   *@param  campaign          The feature to be added to the SummaryReport
-   *      attribute
-   *@param  questionList      The feature to be added to the SummaryReport
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db           The feature to be added to the SummaryReport
+   *                     attribute
+   * @param campaign     The feature to be added to the SummaryReport
+   *                     attribute
+   * @param questionList The feature to be added to the SummaryReport
+   *                     attribute
+   * @throws SQLException Description of the Exception
    */
   public void addSummaryReport(Connection db, Campaign campaign, ActiveSurveyQuestionList questionList) throws SQLException {
 
@@ -433,21 +430,22 @@ public class CampaignReport {
       thisRow = sheet.createRow((short) (sheet.getLastRowNum() + 3));
 
       thisCell = thisRow.createCell((short) 0);
-      thisCell.setCellValue("Note: Detailed reports for each question are available in the corresponding sheets contained in this report.");
+      thisCell.setCellValue(
+          "Note: Detailed reports for each question are available in the corresponding sheets contained in this report.");
     }
   }
 
 
   /**
-   *  Adds Summary Report for each question
+   * Adds Summary Report for each question
    *
-   *@param  db                The feature to be added to the QuestionsSummary
-   *      attribute
-   *@param  sheet             The feature to be added to the QuestionsSummary
-   *      attribute
-   *@param  questionList      The feature to be added to the QuestionsSummary
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db           The feature to be added to the QuestionsSummary
+   *                     attribute
+   * @param sheet        The feature to be added to the QuestionsSummary
+   *                     attribute
+   * @param questionList The feature to be added to the QuestionsSummary
+   *                     attribute
+   * @throws SQLException Description of the Exception
    */
   public void addQuestionSummary(Connection db, HSSFSheet sheet, ActiveSurveyQuestionList questionList) throws SQLException {
 
@@ -475,7 +473,8 @@ public class CampaignReport {
       if (count == 0) {
         spaceBtwQuestions = 1;
       }
-      HSSFRow thisRow = sheet.createRow((short) (sheet.getLastRowNum() + spaceBtwQuestions));
+      HSSFRow thisRow = sheet.createRow(
+          (short) (sheet.getLastRowNum() + spaceBtwQuestions));
 
       //create a style for the questions
       HSSFCellStyle questionStyle =
@@ -505,11 +504,13 @@ public class CampaignReport {
       } else if (type == SurveyQuestion.QUANT_NOCOMMENTS) {
         thisRow = sheet.createRow((short) (sheet.getLastRowNum() + 1));
         thisCell = thisRow.createCell((short) 0);
-        thisCell.setCellValue("Response: Avg " + thisQuestion.getAverageValue());
+        thisCell.setCellValue(
+            "Response: Avg " + thisQuestion.getAverageValue());
       } else if (type == SurveyQuestion.QUANT_COMMENTS) {
         thisRow = sheet.createRow((short) (sheet.getLastRowNum() + 1));
         thisCell = thisRow.createCell((short) 0);
-        thisCell.setCellValue("Response: Avg " + thisQuestion.getAverageValue());
+        thisCell.setCellValue(
+            "Response: Avg " + thisQuestion.getAverageValue());
       } else if (type == SurveyQuestion.ITEMLIST) {
         //add itemlist header row
         thisRow = sheet.createRow((short) (sheet.getLastRowNum() + 1));
@@ -533,10 +534,12 @@ public class CampaignReport {
           thisCell.setCellValue((++itemCount) + ". " + tmp.getDescription());
 
           //get count of answers
-          int answerCount = ActiveSurveyAnswerItemList.getItemCount(db, tmp.getId());
+          int answerCount = ActiveSurveyAnswerItemList.getItemCount(
+              db, tmp.getId());
 
           //add item description
-          thisCell = thisRow.createCell((short) (thisRow.getLastCellNum() + 1));
+          thisCell = thisRow.createCell(
+              (short) (thisRow.getLastCellNum() + 1));
           thisCell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
           thisCell.setCellValue(answerCount);
         }
@@ -546,10 +549,10 @@ public class CampaignReport {
 
 
   /**
-   *  Adds question description to the report
+   * Adds question description to the report
    *
-   *@param  sheet     The feature to be added to the QuestionToReport attribute
-   *@param  question  The feature to be added to the QuestionToReport attribute
+   * @param sheet    The feature to be added to the QuestionToReport attribute
+   * @param question The feature to be added to the QuestionToReport attribute
    */
   public void addQuestionToReport(HSSFSheet sheet, ActiveSurveyQuestion question) {
 
@@ -565,11 +568,9 @@ public class CampaignReport {
     HSSFCellStyle columnHeaderStyle =
         workBook.createCellStyle();
 
-    columnHeaderStyle.setFillBackgroundColor(
-        HSSFColor.BLUE_GREY.index);
+    columnHeaderStyle.setFillBackgroundColor(HSSFColor.BLUE_GREY.index);
 
-    columnHeaderStyle.setFillForegroundColor(
-        HSSFColor.BLUE_GREY.index);
+    columnHeaderStyle.setFillForegroundColor(HSSFColor.BLUE_GREY.index);
 
     HSSFFont font = workBook.createFont();
     font.setColor(HSSFFont.COLOR_RED);
@@ -584,22 +585,24 @@ public class CampaignReport {
 
 
   /**
-   *  Adds all possible answers to a question(if it applies)
+   * Adds all possible answers to a question(if it applies)
    *
-   *@param  sheet     The feature to be added to the PossibleAnswersToReport
-   *      attribute
-   *@param  question  The feature to be added to the PossibleAnswersToReport
-   *      attribute
+   * @param sheet    The feature to be added to the PossibleAnswersToReport
+   *                 attribute
+   * @param question The feature to be added to the PossibleAnswersToReport
+   *                 attribute
    */
   public void addPossibleAnswersToReport(HSSFSheet sheet, ActiveSurveyQuestion question) {
     //create a header row
-    HSSFRow answerTypeRow = sheet.createRow((short) (sheet.getLastRowNum() + 2));
+    HSSFRow answerTypeRow = sheet.createRow(
+        (short) (sheet.getLastRowNum() + 2));
 
     HSSFCell colHeading1 =
         answerTypeRow.createCell((short) 0);
 
     if (question.getType() == SurveyQuestion.ITEMLIST) {
-      HSSFRow optionsRow = sheet.createRow((short) (sheet.getLastRowNum() + 1));
+      HSSFRow optionsRow = sheet.createRow(
+          (short) (sheet.getLastRowNum() + 1));
       //add index for this entry
       HSSFCell options =
           optionsRow.createCell((short) 0);
@@ -610,7 +613,8 @@ public class CampaignReport {
       Iterator i = itemList.iterator();
       while (i.hasNext()) {
         ActiveSurveyQuestionItem tmp = (ActiveSurveyQuestionItem) i.next();
-        HSSFRow itemListRow = sheet.createRow((short) (sheet.getLastRowNum() + 1));
+        HSSFRow itemListRow = sheet.createRow(
+            (short) (sheet.getLastRowNum() + 1));
 
         //add the item description
         HSSFCell thisItem =
@@ -623,15 +627,15 @@ public class CampaignReport {
 
 
   /**
-   *  Adds response to a question
+   * Adds response to a question
    *
-   *@param  db                The feature to be added to the ResponsesToReport
-   *      attribute
-   *@param  sheet             The feature to be added to the ResponsesToReport
-   *      attribute
-   *@param  question          The feature to be added to the ResponsesToReport
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the ResponsesToReport
+   *                 attribute
+   * @param sheet    The feature to be added to the ResponsesToReport
+   *                 attribute
+   * @param question The feature to be added to the ResponsesToReport
+   *                 attribute
+   * @throws SQLException Description of the Exception
    */
   public void addResponsesToReport(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
 
@@ -666,15 +670,15 @@ public class CampaignReport {
 
 
   /**
-   *  Adds an Open Ended response
+   * Adds an Open Ended response
    *
-   *@param  db                The feature to be added to the OpenEndedResponse
-   *      attribute
-   *@param  sheet             The feature to be added to the OpenEndedResponse
-   *      attribute
-   *@param  question          The feature to be added to the OpenEndedResponse
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the OpenEndedResponse
+   *                 attribute
+   * @param sheet    The feature to be added to the OpenEndedResponse
+   *                 attribute
+   * @param question The feature to be added to the OpenEndedResponse
+   *                 attribute
+   * @throws SQLException Description of the Exception
    */
   public void addOpenEndedResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
     //add header
@@ -713,15 +717,15 @@ public class CampaignReport {
 
 
   /**
-   *  Adds a Response to a Quantitative question
+   * Adds a Response to a Quantitative question
    *
-   *@param  db                The feature to be added to the QuantResponse
-   *      attribute
-   *@param  sheet             The feature to be added to the QuantResponse
-   *      attribute
-   *@param  question          The feature to be added to the QuantResponse
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the QuantResponse
+   *                 attribute
+   * @param sheet    The feature to be added to the QuantResponse
+   *                 attribute
+   * @param question The feature to be added to the QuantResponse
+   *                 attribute
+   * @throws SQLException Description of the Exception
    */
   public void addQuantResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
     //add header
@@ -764,15 +768,15 @@ public class CampaignReport {
 
 
   /**
-   *  Adds a Response to a Quantitative question with Comments
+   * Adds a Response to a Quantitative question with Comments
    *
-   *@param  db                The feature to be added to the
-   *      QuantWithCommentsResponse attribute
-   *@param  sheet             The feature to be added to the
-   *      QuantWithCommentsResponse attribute
-   *@param  question          The feature to be added to the
-   *      QuantWithCommentsResponse attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the
+   *                 QuantWithCommentsResponse attribute
+   * @param sheet    The feature to be added to the
+   *                 QuantWithCommentsResponse attribute
+   * @param question The feature to be added to the
+   *                 QuantWithCommentsResponse attribute
+   * @throws SQLException Description of the Exception
    */
   public void addQuantWithCommentsResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
     //add header
@@ -819,15 +823,15 @@ public class CampaignReport {
 
 
   /**
-   *  Adds a Response to an ItemList
+   * Adds a Response to an ItemList
    *
-   *@param  db                The feature to be added to the ItemListResponse
-   *      attribute
-   *@param  sheet             The feature to be added to the ItemListResponse
-   *      attribute
-   *@param  question          The feature to be added to the ItemListResponse
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the ItemListResponse
+   *                 attribute
+   * @param sheet    The feature to be added to the ItemListResponse
+   *                 attribute
+   * @param question The feature to be added to the ItemListResponse
+   *                 attribute
+   * @throws SQLException Description of the Exception
    */
   public void addItemListResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
     PreparedStatement pst = null;
@@ -892,10 +896,10 @@ public class CampaignReport {
 
 
   /**
-   *  Adds the details of the recipient to the report
+   * Adds the details of the recipient to the report
    *
-   *@param  dataRow      The feature to be added to the ContactDetails attribute
-   *@param  thisContact  The feature to be added to the ContactDetails attribute
+   * @param dataRow     The feature to be added to the ContactDetails attribute
+   * @param thisContact The feature to be added to the ContactDetails attribute
    */
   private void addContactDetails(HSSFRow dataRow, Contact thisContact) {
     int startIndex = dataRow.getLastCellNum() + 1;
@@ -922,10 +926,10 @@ public class CampaignReport {
 
 
   /**
-   *  Adds the header for the Open Ended and Quantitative questions
+   * Adds the header for the Open Ended and Quantitative questions
    *
-   *@param  sheet       The feature to be added to the Header attribute
-   *@param  headerType  The feature to be added to the Header attribute
+   * @param sheet      The feature to be added to the Header attribute
+   * @param headerType The feature to be added to the Header attribute
    */
   public void addHeader(HSSFSheet sheet, String[] headerType) {
     HSSFRow headerRow = sheet.createRow((short) (sheet.getLastRowNum() + 2));
@@ -939,10 +943,10 @@ public class CampaignReport {
 
 
   /**
-   *  Adds the header for an ItemList
+   * Adds the header for an ItemList
    *
-   *@param  sheet     The feature to be added to the ItemListHeader attribute
-   *@param  question  The feature to be added to the ItemListHeader attribute
+   * @param sheet    The feature to be added to the ItemListHeader attribute
+   * @param question The feature to be added to the ItemListHeader attribute
    */
   public void addItemListHeader(HSSFSheet sheet, ActiveSurveyQuestion question) {
     HSSFRow headerRow = sheet.createRow((short) (sheet.getLastRowNum() + 2));
@@ -966,13 +970,12 @@ public class CampaignReport {
   }
 
 
-
   /**
-   *  Save and Insert the report
+   * Save and Insert the report
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
     int fileSize = save();
@@ -991,10 +994,10 @@ public class CampaignReport {
 
 
   /**
-   *  Save the report
+   * Save the report
    *
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public int save() throws Exception {
     this.generateFilename();
@@ -1009,10 +1012,10 @@ public class CampaignReport {
 
 
   /**
-   *  Generate the filename of the report
+   * Generate the filename of the report
    *
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public String generateFilename() throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -1022,11 +1025,11 @@ public class CampaignReport {
 
 
   /**
-   *  Build a response record from the ResultSet
+   * Build a response record from the ResultSet
    *
-   *@param  rs                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected SurveyAnswer buildResponseRecord(ResultSet rs) throws SQLException {
     SurveyAnswer thisAnswer = new SurveyAnswer();
@@ -1042,11 +1045,11 @@ public class CampaignReport {
 
 
   /**
-   *  Build a Item Record from the ResultSet
+   * Build a Item Record from the ResultSet
    *
-   *@param  rs                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected SurveyAnswerItem buildItemRecord(ResultSet rs) throws SQLException {
     SurveyAnswerItem thisAnswer = new SurveyAnswerItem();

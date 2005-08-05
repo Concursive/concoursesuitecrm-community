@@ -15,22 +15,25 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
- *  List of Action Contacts
+ * List of Action Contacts
  *
- * @author     akhi_m
- * @created    April 23, 2003
+ * @author akhi_m
+ * @version $Id$
+ * @created April 23, 2003
  */
 public class ActionContactsList extends ArrayList {
   private boolean buildHistory = false;
@@ -39,18 +42,20 @@ public class ActionContactsList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private boolean completeOnly = false;
   private boolean inProgressOnly = false;
+  private int displayOnlyDisabledContacts = Constants.UNDEFINED;
 
 
   /**
-   *Constructor for the ActionContactsList object
+   * Constructor for the ActionContactsList object
    */
-  public ActionContactsList() { }
+  public ActionContactsList() {
+  }
 
 
   /**
-   *  Sets the buildHistory attribute of the ActionContactsList object
+   * Sets the buildHistory attribute of the ActionContactsList object
    *
-   * @param  buildHistory  The new buildHistory value
+   * @param buildHistory The new buildHistory value
    */
   public void setBuildHistory(boolean buildHistory) {
     this.buildHistory = buildHistory;
@@ -58,9 +63,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Sets the actionId attribute of the ActionContactsList object
+   * Sets the actionId attribute of the ActionContactsList object
    *
-   * @param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
@@ -68,9 +73,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionContactsList object
+   * Sets the pagedListInfo attribute of the ActionContactsList object
    *
-   * @param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -78,9 +83,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionContactsList object
+   * Sets the enteredBy attribute of the ActionContactsList object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -88,9 +93,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Sets the completeOnly attribute of the ActionContactsList object
+   * Sets the completeOnly attribute of the ActionContactsList object
    *
-   * @param  completeOnly  The new completeOnly value
+   * @param completeOnly The new completeOnly value
    */
   public void setCompleteOnly(boolean completeOnly) {
     this.completeOnly = completeOnly;
@@ -98,9 +103,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Sets the inProgressOnly attribute of the ActionContactsList object
+   * Sets the inProgressOnly attribute of the ActionContactsList object
    *
-   * @param  inProgressOnly  The new inProgressOnly value
+   * @param inProgressOnly The new inProgressOnly value
    */
   public void setInProgressOnly(boolean inProgressOnly) {
     this.inProgressOnly = inProgressOnly;
@@ -108,9 +113,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Gets the completeOnly attribute of the ActionContactsList object
+   * Gets the completeOnly attribute of the ActionContactsList object
    *
-   * @return    The completeOnly value
+   * @return The completeOnly value
    */
   public boolean getCompleteOnly() {
     return completeOnly;
@@ -118,9 +123,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Gets the inProgressOnly attribute of the ActionContactsList object
+   * Gets the inProgressOnly attribute of the ActionContactsList object
    *
-   * @return    The inProgressOnly value
+   * @return The inProgressOnly value
    */
   public boolean getInProgressOnly() {
     return inProgressOnly;
@@ -128,9 +133,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionContactsList object
+   * Gets the enteredBy attribute of the ActionContactsList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -138,9 +143,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ActionContactsList object
+   * Gets the pagedListInfo attribute of the ActionContactsList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -148,9 +153,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Gets the actionId attribute of the ActionContactsList object
+   * Gets the actionId attribute of the ActionContactsList object
    *
-   * @return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -158,9 +163,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Gets the buildHistory attribute of the ActionContactsList object
+   * Gets the buildHistory attribute of the ActionContactsList object
    *
-   * @return    The buildHistory value
+   * @return The buildHistory value
    */
   public boolean getBuildHistory() {
     return buildHistory;
@@ -168,10 +173,43 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Gets the displayOnlyDisabledContacts attribute of the ActionContactsList
+   * object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @return The displayOnlyDisabledContacts value
+   */
+  public int getDisplayOnlyDisabledContacts() {
+    return displayOnlyDisabledContacts;
+  }
+
+
+  /**
+   * Sets the displayOnlyDisabledContacts attribute of the ActionContactsList
+   * object
+   *
+   * @param tmp The new displayOnlyDisabledContacts value
+   */
+  public void setDisplayOnlyDisabledContacts(int tmp) {
+    this.displayOnlyDisabledContacts = tmp;
+  }
+
+
+  /**
+   * Sets the displayOnlyDisabledContacts attribute of the ActionContactsList
+   * object
+   *
+   * @param tmp The new displayOnlyDisabledContacts value
+   */
+  public void setDisplayOnlyDisabledContacts(String tmp) {
+    this.displayOnlyDisabledContacts = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -216,20 +254,14 @@ public class ActionContactsList extends ArrayList {
         "ai.modifiedby, ai.modified, ai.enabled " +
         "FROM action_item ai " +
         "WHERE ai.item_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ActionContact thisContact = new ActionContact(rs);
       this.add(thisContact);
     }
@@ -245,9 +277,9 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -263,15 +295,25 @@ public class ActionContactsList extends ArrayList {
     } else if (inProgressOnly) {
       sqlFilter.append("AND (ai.completedate IS NULL) ");
     }
+
+    if (getDisplayOnlyDisabledContacts() == Constants.UNDEFINED) {
+      sqlFilter.append(
+          "AND ai.link_item_id NOT IN (SELECT contact_id " +
+          "FROM contact where enabled = ? OR trashed_date IS NOT NULL) ");
+    } else if (getDisplayOnlyDisabledContacts() == Constants.TRUE) {
+      sqlFilter.append(
+          "AND ai.link_item_id IN (SELECT contact_id " +
+          "FROM contact where enabled = ? OR trashed_date IS NOT NULL) ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -279,16 +321,21 @@ public class ActionContactsList extends ArrayList {
     if (actionId != -1) {
       pst.setInt(++i, actionId);
     }
+    if (getDisplayOnlyDisabledContacts() == Constants.UNDEFINED) {
+      pst.setBoolean(++i, false);
+    } else if (getDisplayOnlyDisabledContacts() == Constants.TRUE) {
+      pst.setBoolean(++i, false);
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  contactList       Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param contactList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, ContactList contactList) throws SQLException {
     Iterator i = contactList.iterator();
@@ -308,11 +355,11 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Updates the action list based on the new set of action contacts
+   * Updates the action list based on the new set of action contacts
    *
-   * @param  db                Description of the Parameter
-   * @param  contacts          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param contacts Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db, String contacts) throws SQLException {
 
@@ -321,8 +368,7 @@ public class ActionContactsList extends ArrayList {
     //delete log items for deleted contacts
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM action_item_log " +
-        "WHERE item_id IN (SELECT item_id from action_item ai where ai.action_id = ? AND ai.link_item_id NOT IN (" + contacts + ") ) "
-        );
+        "WHERE item_id IN (SELECT item_id from action_item ai where ai.action_id = ? AND ai.link_item_id NOT IN (" + contacts + ") ) ");
     pst.setInt(++i, this.getActionId());
     pst.execute();
     pst.close();
@@ -331,8 +377,7 @@ public class ActionContactsList extends ArrayList {
     i = 0;
     pst = db.prepareStatement(
         "DELETE FROM action_item " +
-        "WHERE action_id = ? AND link_item_id NOT IN (" + contacts + ") "
-        );
+        "WHERE action_id = ? AND link_item_id NOT IN (" + contacts + ") ");
     pst.setInt(++i, this.getActionId());
     pst.execute();
     pst.close();
@@ -353,12 +398,12 @@ public class ActionContactsList extends ArrayList {
 
 
   /**
-   *  Checks to see if the specified contact is on this list
+   * Checks to see if the specified contact is on this list
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @return                   The contactOnList value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @return The contactOnList value
+   * @throws SQLException Description of the Exception
    */
   public boolean isContactOnList(Connection db, int contactId) throws SQLException {
     boolean onList = false;

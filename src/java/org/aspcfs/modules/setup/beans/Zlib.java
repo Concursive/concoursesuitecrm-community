@@ -29,11 +29,11 @@ import java.security.Key;
 import java.util.HashMap;
 
 /**
- *  Handles the information that appears in the license
+ * Handles the information that appears in the license
  *
- *@author     matt rajkowski
- *@created    September 9, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 9, 2003
  */
 public class Zlib {
   public final static String CRLF = System.getProperty("line.separator");
@@ -56,15 +56,16 @@ public class Zlib {
 
 
   /**
-   *  Constructor for the Zlib object
+   * Constructor for the Zlib object
    */
-  public Zlib() { }
+  public Zlib() {
+  }
 
 
   /**
-   *  Takes a license that has been serialized, decodes it and performs a test
+   * Takes a license that has been serialized, decodes it and performs a test
    *
-   *@param  xml  Description of the Parameter
+   * @param xml Description of the Parameter
    */
   public Zlib(XMLUtils xml) {
     try {
@@ -83,16 +84,17 @@ public class Zlib {
       BASE64Decoder decoder = new BASE64Decoder();
       key = (Key) ObjectUtils.toObject(decoder.decodeBuffer(keyText));
       //Test the key
-      text = PrivateString.decrypt(key, XMLUtils.getNodeText(xml.getFirstChild("text")));
+      text = PrivateString.decrypt(
+          key, XMLUtils.getNodeText(xml.getFirstChild("text")));
     } catch (Exception e) {
     }
   }
 
 
   /**
-   *  Sets the key attribute of the Zlib object
+   * Sets the key attribute of the Zlib object
    *
-   *@param  tmp  The new key value
+   * @param tmp The new key value
    */
   public void setKey(Key tmp) {
     this.key = tmp;
@@ -100,9 +102,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the keyText attribute of the Zlib object
+   * Sets the keyText attribute of the Zlib object
    *
-   *@param  tmp  The new keyText value
+   * @param tmp The new keyText value
    */
   public void setKeyText(String tmp) {
     this.keyText = tmp;
@@ -110,9 +112,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the nameFirst attribute of the Zlib object
+   * Sets the nameFirst attribute of the Zlib object
    *
-   *@param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -120,9 +122,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the nameLast attribute of the Zlib object
+   * Sets the nameLast attribute of the Zlib object
    *
-   *@param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -130,9 +132,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the company attribute of the Zlib object
+   * Sets the company attribute of the Zlib object
    *
-   *@param  tmp  The new company value
+   * @param tmp The new company value
    */
   public void setCompany(String tmp) {
     this.company = tmp;
@@ -140,9 +142,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the email attribute of the Zlib object
+   * Sets the email attribute of the Zlib object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -150,9 +152,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the edition attribute of the Zlib object
+   * Sets the edition attribute of the Zlib object
    *
-   *@param  tmp  The new edition value
+   * @param tmp The new edition value
    */
   public void setEdition(String tmp) {
     this.edition = tmp;
@@ -160,9 +162,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the text attribute of the Zlib object
+   * Sets the text attribute of the Zlib object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -170,9 +172,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the text2 attribute of the Zlib object
+   * Sets the text2 attribute of the Zlib object
    *
-   *@param  tmp  The new text2 value
+   * @param tmp The new text2 value
    */
   public void setText2(String tmp) {
     this.text2 = tmp;
@@ -180,9 +182,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the profile attribute of the Zlib object
+   * Sets the profile attribute of the Zlib object
    *
-   *@param  tmp  The new profile value
+   * @param tmp The new profile value
    */
   public void setProfile(String tmp) {
     this.profile = tmp;
@@ -190,9 +192,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the mailError attribute of the Zlib object
+   * Sets the mailError attribute of the Zlib object
    *
-   *@param  tmp  The new mailError value
+   * @param tmp The new mailError value
    */
   public void setMailError(String tmp) {
     this.mailError = tmp;
@@ -200,9 +202,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the os attribute of the Zlib object
+   * Sets the os attribute of the Zlib object
    *
-   *@param  tmp  The new os value
+   * @param tmp The new os value
    */
   public void setOs(String tmp) {
     this.os = tmp;
@@ -210,9 +212,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the java attribute of the Zlib object
+   * Sets the java attribute of the Zlib object
    *
-   *@param  tmp  The new java value
+   * @param tmp The new java value
    */
   public void setJava(String tmp) {
     this.java = tmp;
@@ -220,9 +222,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the webserver attribute of the Zlib object
+   * Sets the webserver attribute of the Zlib object
    *
-   *@param  tmp  The new webserver value
+   * @param tmp The new webserver value
    */
   public void setWebserver(String tmp) {
     this.webserver = tmp;
@@ -230,9 +232,9 @@ public class Zlib {
 
 
   /**
-   *  Sets the systemStatus attribute of the Zlib object
+   * Sets the systemStatus attribute of the Zlib object
    *
-   *@param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -240,9 +242,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the systemStatus attribute of the Zlib object
+   * Gets the systemStatus attribute of the Zlib object
    *
-   *@return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -250,9 +252,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the key attribute of the Zlib object
+   * Gets the key attribute of the Zlib object
    *
-   *@return    The key value
+   * @return The key value
    */
   public Key getKey() {
     return key;
@@ -260,9 +262,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the keyText attribute of the Zlib object
+   * Gets the keyText attribute of the Zlib object
    *
-   *@return    The keyText value
+   * @return The keyText value
    */
   public String getKeyText() {
     return keyText;
@@ -270,9 +272,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the nameFirst attribute of the Zlib object
+   * Gets the nameFirst attribute of the Zlib object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -280,9 +282,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the nameLast attribute of the Zlib object
+   * Gets the nameLast attribute of the Zlib object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -290,9 +292,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the company attribute of the Zlib object
+   * Gets the company attribute of the Zlib object
    *
-   *@return    The company value
+   * @return The company value
    */
   public String getCompany() {
     return company;
@@ -300,9 +302,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the email attribute of the Zlib object
+   * Gets the email attribute of the Zlib object
    *
-   *@return    The email value
+   * @return The email value
    */
   public String getEmail() {
     return email;
@@ -310,9 +312,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the edition attribute of the Zlib object
+   * Gets the edition attribute of the Zlib object
    *
-   *@return    The edition value
+   * @return The edition value
    */
   public String getEdition() {
     return edition;
@@ -320,9 +322,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the text attribute of the Zlib object
+   * Gets the text attribute of the Zlib object
    *
-   *@return    The text value
+   * @return The text value
    */
   public String getText() {
     return text;
@@ -330,9 +332,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the text2 attribute of the Zlib object
+   * Gets the text2 attribute of the Zlib object
    *
-   *@return    The text2 value
+   * @return The text2 value
    */
   public String getText2() {
     return text2;
@@ -340,9 +342,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the profile attribute of the Zlib object
+   * Gets the profile attribute of the Zlib object
    *
-   *@return    The profile value
+   * @return The profile value
    */
   public String getProfile() {
     return profile;
@@ -350,9 +352,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the mailError attribute of the Zlib object
+   * Gets the mailError attribute of the Zlib object
    *
-   *@return    The mailError value
+   * @return The mailError value
    */
   public String getMailError() {
     return mailError;
@@ -360,9 +362,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the os attribute of the Zlib object
+   * Gets the os attribute of the Zlib object
    *
-   *@return    The os value
+   * @return The os value
    */
   public String getOs() {
     return os;
@@ -370,9 +372,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the java attribute of the Zlib object
+   * Gets the java attribute of the Zlib object
    *
-   *@return    The java value
+   * @return The java value
    */
   public String getJava() {
     return java;
@@ -380,9 +382,9 @@ public class Zlib {
 
 
   /**
-   *  Gets the webserver attribute of the Zlib object
+   * Gets the webserver attribute of the Zlib object
    *
-   *@return    The webserver value
+   * @return The webserver value
    */
   public String getWebserver() {
     return webserver;
@@ -390,13 +392,14 @@ public class Zlib {
 
 
   /**
-   *  Gets the valid attribute of the Zlib object
+   * Gets the valid attribute of the Zlib object
    *
-   *@return    The valid value
+   * @return The valid value
    */
   public boolean isValid() {
     try {
-      if (text.startsWith("5USERBINARY") || text.startsWith("ENTERPRISE") || text.startsWith("UPGRADE")) {
+      if (text.startsWith("5USERBINARY") || text.startsWith("ENTERPRISE") || text.startsWith(
+          "UPGRADE")) {
         return true;
       }
     } catch (Exception e) {
@@ -407,15 +410,16 @@ public class Zlib {
 
 
   /**
-   *  Used for encrypting and sending the license back to the requesting user
+   * Used for encrypting and sending the license back to the requesting user
    *
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean sendEmailRegistration(ActionContext context) throws Exception {
     String theLicense = "<license>" + getCode() + "</license>" + CRLF;
     SMTPMessage mail = new SMTPMessage();
-    mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
+    mail.setHost(
+        ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
     mail.setType("text/plain");
     mail.addTo(email);
     mail.setFrom("Centric CRM Registration <registration@centriccrm.com>");
@@ -424,7 +428,8 @@ public class Zlib {
       mail.setSubject(systemStatus.getLabel("mail.subject.crmRegistration"));
       HashMap map = new HashMap();
       map.put("${crlf}", "" + CRLF);
-      Template template = new Template(systemStatus.getLabel("mail.body.crmRegistration"));
+      Template template = new Template(
+          systemStatus.getLabel("mail.body.crmRegistration"));
       template.setParseElements(map);
       mail.setBody(template.getParsedText() + CRLF);
     } else {
@@ -438,8 +443,7 @@ public class Zlib {
           "Some mail programs may have a problem with the attachment, if so please report " +
           "the client mail application name and the mail server software name to Centric CRM." + CRLF +
           CRLF +
-          "The Centric CRM Team" + CRLF
-          );
+          "The Centric CRM Team" + CRLF);
     }
     mail.addByteArrayAttachment("license.txt", theLicense, "text/plain");
     if (mail.send() == 2) {
@@ -451,11 +455,12 @@ public class Zlib {
 
 
   /**
-   *  Gets the code attribute of the Zlib object
+   * Gets the code attribute of the Zlib object
    *
-   *@return                                                     The code value
-   *@exception  javax.xml.parsers.ParserConfigurationException  Description of
-   *      the Exception
+   * @return The code value
+   * @throws javax.xml.parsers.ParserConfigurationException
+   *          Description of
+   *          the Exception
    */
   public String getCode() throws javax.xml.parsers.ParserConfigurationException {
     //Build an XML document needed for license
@@ -467,39 +472,48 @@ public class Zlib {
     document.appendChild(rootElement);
     //First name
     Element nameFirstElement = document.createElement("nameFirst");
-    nameFirstElement.appendChild(document.createTextNode(StringUtils.toString(nameFirst)));
+    nameFirstElement.appendChild(
+        document.createTextNode(StringUtils.toString(nameFirst)));
     rootElement.appendChild(nameFirstElement);
     //Last name
     Element nameLastElement = document.createElement("nameLast");
-    nameLastElement.appendChild(document.createTextNode(StringUtils.toString(nameLast)));
+    nameLastElement.appendChild(
+        document.createTextNode(StringUtils.toString(nameLast)));
     rootElement.appendChild(nameLastElement);
     //Company name
     Element companyElement = document.createElement("company");
-    companyElement.appendChild(document.createTextNode(StringUtils.toString(company)));
+    companyElement.appendChild(
+        document.createTextNode(StringUtils.toString(company)));
     rootElement.appendChild(companyElement);
     //Email address
     Element emailElement = document.createElement("email");
-    emailElement.appendChild(document.createTextNode(StringUtils.toString(email)));
+    emailElement.appendChild(
+        document.createTextNode(StringUtils.toString(email)));
     rootElement.appendChild(emailElement);
     //Profile
     Element profileElement = document.createElement("profile");
-    profileElement.appendChild(document.createTextNode(StringUtils.toString(profile)));
+    profileElement.appendChild(
+        document.createTextNode(StringUtils.toString(profile)));
     rootElement.appendChild(profileElement);
     //License
     Element licenseElement = document.createElement("license");
-    licenseElement.appendChild(document.createTextNode(StringUtils.toString(text)));
+    licenseElement.appendChild(
+        document.createTextNode(StringUtils.toString(text)));
     rootElement.appendChild(licenseElement);
     //License name
     Element editionElement = document.createElement("edition");
-    editionElement.appendChild(document.createTextNode(StringUtils.toString(edition)));
+    editionElement.appendChild(
+        document.createTextNode(StringUtils.toString(edition)));
     rootElement.appendChild(editionElement);
     //crc
     Element crcElement = document.createElement("text2");
-    crcElement.appendChild(document.createTextNode(StringUtils.toString(text2)));
+    crcElement.appendChild(
+        document.createTextNode(StringUtils.toString(text2)));
     rootElement.appendChild(crcElement);
     //Date and time approved
     Element dateTimeElement = document.createElement("entered");
-    dateTimeElement.appendChild(document.createTextNode(String.valueOf(new java.util.Date())));
+    dateTimeElement.appendChild(
+        document.createTextNode(String.valueOf(new java.util.Date())));
     rootElement.appendChild(dateTimeElement);
     //Encrypt it
     return PrivateString.encrypt(key, XMLUtils.toString(rootElement));

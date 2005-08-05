@@ -14,33 +14,32 @@
 
 package org.jcrontab.data;
 
-import java.util.Vector;
 import org.jcrontab.log.Log;
 
 /**
- *  This DAO Gives all the methods necesary to build CrontabEntries This class
- *  is an abstraction to make esaier the integration of new DataSources that
- *  help to access CrontabEntries in new ways
+ * This DAO Gives all the methods necesary to build CrontabEntries This class
+ * is an abstraction to make esaier the integration of new DataSources that
+ * help to access CrontabEntries in new ways
  *
- *@author     Israel Olalla
- *@created    November, 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November, 2002
  */
 public class CrontabEntryDAO {
   /**
-   *  This insntance grants only an instance of this DAO in every system
+   * This insntance grants only an instance of this DAO in every system
    */
   private static CrontabEntryDAO instance;
 
   /**
-   *  This DataSource is the reason of this class
+   * This DataSource is the reason of this class
    */
   private static DataSource dao = null;
 
 
   /**
-   *  Default constructor This one initializes everything maybe could use lazy
-   *  inizialization
+   * Default constructor This one initializes everything maybe could use lazy
+   * inizialization
    */
   private CrontabEntryDAO() {
     if (dao == null) {
@@ -54,10 +53,10 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  This method returns the singleton is very important to grant That only a
-   *  Thread accesses at a time
+   * This method returns the singleton is very important to grant That only a
+   * Thread accesses at a time
    *
-   *@return    The instance value
+   * @return The instance value
    */
   public static synchronized CrontabEntryDAO getInstance() {
     if (instance == null) {
@@ -68,10 +67,10 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  Gets all the CrontabEntryBean from the DataSource
+   * Gets all the CrontabEntryBean from the DataSource
    *
-   *@return             CrontabEntryBean[]
-   *@throws  Exception
+   * @return CrontabEntryBean[]
+   * @throws Exception
    */
   public CrontabEntryBean[] findAll() throws Exception {
     return dao.findAll();
@@ -79,11 +78,11 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  cp             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param cp Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public CrontabEntryBean[] findAll(Object cp) throws Exception {
     return dao.findAll(cp);
@@ -91,11 +90,11 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  searches the CrontabEntryBean from the DataSource
+   * searches the CrontabEntryBean from the DataSource
    *
-   *@param  ceb         Description of the Parameter
-   *@return             CrontabEntryBean
-   *@throws  Exception
+   * @param ceb Description of the Parameter
+   * @return CrontabEntryBean
+   * @throws Exception
    */
   public CrontabEntryBean find(CrontabEntryBean ceb) throws Exception {
     return dao.find(ceb);
@@ -103,10 +102,10 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  stores CrontabEntryBean in the DataSource
+   * stores CrontabEntryBean in the DataSource
    *
-   *@param  list        Description of the Parameter
-   *@throws  Exception
+   * @param list Description of the Parameter
+   * @throws Exception
    */
   public void store(CrontabEntryBean[] list) throws Exception {
     dao.store(list);
@@ -114,10 +113,10 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  stores CrontabEntryBean in the DataSource
+   * stores CrontabEntryBean in the DataSource
    *
-   *@param  bean        Description of the Parameter
-   *@throws  Exception
+   * @param bean Description of the Parameter
+   * @throws Exception
    */
   public void store(CrontabEntryBean bean) throws Exception {
     dao.store(bean);
@@ -125,10 +124,10 @@ public class CrontabEntryDAO {
 
 
   /**
-   *  removes CrontabEntryBean from the DataSource
+   * removes CrontabEntryBean from the DataSource
    *
-   *@param  list        Description of the Parameter
-   *@throws  Exception
+   * @param list Description of the Parameter
+   * @throws Exception
    */
   public void remove(CrontabEntryBean[] list) throws Exception {
     dao.remove(list);

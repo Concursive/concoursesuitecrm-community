@@ -15,22 +15,25 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
 import java.sql.*;
-import java.text.*;
-import org.aspcfs.utils.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  When a user goes to the "Folders" section of a module, there are several
- *  categories of folders. Each of these CustomFieldCategory objects then has
- *  groups of fields.
+ * When a user goes to the "Folders" section of a module, there are several
+ * categories of folders. Each of these CustomFieldCategory objects then has
+ * groups of fields.
  *
- *@author     mrajkowski
- *@created    January 16, 2002
- *@version    $Id: CustomFieldCategory.java,v 1.3 2002/03/15 22:29:34 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: CustomFieldCategory.java,v 1.3 2002/03/15 22:29:34 mrajkowski
+ *          Exp $
+ * @created January 16, 2002
  */
 public class CustomFieldCategory extends ArrayList {
 
@@ -71,9 +74,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the onlyWarnings attribute of the CustomFieldCategory object
+   * Gets the onlyWarnings attribute of the CustomFieldCategory object
    *
-   *@return    The onlyWarnings value
+   * @return The onlyWarnings value
    */
   public boolean getOnlyWarnings() {
     return onlyWarnings;
@@ -81,9 +84,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the onlyWarnings attribute of the CustomFieldCategory object
+   * Sets the onlyWarnings attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new onlyWarnings value
+   * @param tmp The new onlyWarnings value
    */
   public void setOnlyWarnings(boolean tmp) {
     this.onlyWarnings = tmp;
@@ -91,9 +94,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the onlyWarnings attribute of the CustomFieldCategory object
+   * Sets the onlyWarnings attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new onlyWarnings value
+   * @param tmp The new onlyWarnings value
    */
   public void setOnlyWarnings(String tmp) {
     this.onlyWarnings = DatabaseUtils.parseBoolean(tmp);
@@ -101,9 +104,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the numberOfRecords attribute of the CustomFieldCategory object
+   * Sets the numberOfRecords attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new numberOfRecords value
+   * @param tmp The new numberOfRecords value
    */
   public void setNumberOfRecords(int tmp) {
     this.numberOfRecords = tmp;
@@ -111,9 +114,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the numberOfRecords attribute of the CustomFieldCategory object
+   * Sets the numberOfRecords attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new numberOfRecords value
+   * @param tmp The new numberOfRecords value
    */
   public void setNumberOfRecords(String tmp) {
     this.numberOfRecords = Integer.parseInt(tmp);
@@ -121,9 +124,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the numberOfRecords attribute of the CustomFieldCategory object
+   * Gets the numberOfRecords attribute of the CustomFieldCategory object
    *
-   *@return    The numberOfRecords value
+   * @return The numberOfRecords value
    */
   public int getNumberOfRecords() {
     return numberOfRecords;
@@ -131,19 +134,17 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomFieldCategory object
-   *
-   *@since
+   * Constructor for the CustomFieldCategory object
    */
-  public CustomFieldCategory() { }
+  public CustomFieldCategory() {
+  }
 
 
   /**
-   *  Constructor for the CustomFieldCategory object
+   * Constructor for the CustomFieldCategory object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public CustomFieldCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -151,17 +152,16 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomFieldCategory object
+   * Constructor for the CustomFieldCategory object
    *
-   *@param  db                Description of Parameter
-   *@param  categoryId        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param categoryId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public CustomFieldCategory(Connection db, int categoryId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         " SELECT " +
-        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc.level as level,  " +
+        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc.\"level\" AS \"level\",  " +
         " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
         " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
         " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
@@ -178,10 +178,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Id attribute of the CustomFieldCategory object
+   * Sets the Id attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -189,9 +188,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the CustomFieldCategory object
+   * Sets the id attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -199,10 +198,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the CategoryId attribute of the CustomFieldCategory object
+   * Sets the CategoryId attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new CategoryId value
-   *@since
+   * @param tmp The new CategoryId value
    */
   public void setCategoryId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -210,10 +208,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the ModuleId attribute of the CustomFieldCategory object
+   * Sets the ModuleId attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new ModuleId value
-   *@since
+   * @param tmp The new ModuleId value
    */
   public void setModuleId(int tmp) {
     this.moduleId = tmp;
@@ -221,10 +218,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the ModuleId attribute of the CustomFieldCategory object
+   * Sets the ModuleId attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new ModuleId value
-   *@since
+   * @param tmp The new ModuleId value
    */
   public void setModuleId(String tmp) {
     this.moduleId = Integer.parseInt(tmp);
@@ -232,10 +228,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Name attribute of the CustomFieldCategory object
+   * Sets the Name attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Name value
-   *@since
+   * @param tmp The new Name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -243,10 +238,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Description attribute of the CustomFieldCategory object
+   * Sets the Description attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Description value
-   *@since
+   * @param tmp The new Description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -254,10 +248,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Level attribute of the CustomFieldCategory object
+   * Sets the Level attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Level value
-   *@since
+   * @param tmp The new Level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -265,9 +258,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the level attribute of the CustomFieldCategory object
+   * Sets the level attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -275,10 +268,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the StartDate attribute of the CustomFieldCategory object
+   * Sets the StartDate attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new StartDate value
-   *@since
+   * @param tmp The new StartDate value
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
@@ -286,9 +278,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the startDate attribute of the CustomFieldCategory object
+   * Sets the startDate attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DateUtils.parseTimestampString(tmp);
@@ -296,10 +288,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the EndDate attribute of the CustomFieldCategory object
+   * Sets the EndDate attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new EndDate value
-   *@since
+   * @param tmp The new EndDate value
    */
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
@@ -307,9 +298,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the endDate attribute of the CustomFieldCategory object
+   * Sets the endDate attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(String tmp) {
     this.endDate = DateUtils.parseTimestampString(tmp);
@@ -317,10 +308,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the DefaultItem attribute of the CustomFieldCategory object
+   * Sets the DefaultItem attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new DefaultItem value
-   *@since
+   * @param tmp The new DefaultItem value
    */
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
@@ -328,20 +318,20 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the defaultItem attribute of the CustomFieldCategory object
+   * Sets the defaultItem attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new defaultItem value
+   * @param tmp The new defaultItem value
    */
   public void setDefaultItem(String tmp) {
-    this.defaultItem = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.defaultItem = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the Entered attribute of the CustomFieldCategory object
+   * Sets the Entered attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Entered value
-   *@since
+   * @param tmp The new Entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -349,9 +339,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the entered attribute of the CustomFieldCategory object
+   * Sets the entered attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -359,9 +349,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the modified attribute of the CustomFieldCategory object
+   * Sets the modified attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -369,10 +359,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the EnteredBy attribute of the CustomFieldCategory object
+   * Sets the EnteredBy attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -380,9 +369,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the CustomFieldCategory object
+   * Sets the enteredBy attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -390,10 +379,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Modified attribute of the CustomFieldCategory object
+   * Sets the Modified attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Modified value
-   *@since
+   * @param tmp The new Modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -401,10 +389,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the CustomFieldCategory object
+   * Sets the ModifiedBy attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -412,9 +399,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the CustomFieldCategory object
+   * Sets the modifiedBy attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -422,10 +409,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Enabled attribute of the CustomFieldCategory object
+   * Sets the Enabled attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Enabled value
-   *@since
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -433,9 +419,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the CustomFieldCategory object
+   * Sets the enabled attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -443,10 +429,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the LinkModuleId attribute of the CustomFieldCategory object
+   * Sets the LinkModuleId attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new LinkModuleId value
-   *@since
+   * @param tmp The new LinkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -454,10 +439,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the LinkItemId attribute of the CustomFieldCategory object
+   * Sets the LinkItemId attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new LinkItemId value
-   *@since
+   * @param tmp The new LinkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -465,10 +449,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the RecordId attribute of the CustomFieldCategory object
+   * Sets the RecordId attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new RecordId value
-   *@since
+   * @param tmp The new RecordId value
    */
   public void setRecordId(int tmp) {
     this.recordId = tmp;
@@ -476,10 +459,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the IncludeEnabled attribute of the CustomFieldCategory object
+   * Sets the IncludeEnabled attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new IncludeEnabled value
-   *@since
+   * @param tmp The new IncludeEnabled value
    */
   public void setIncludeEnabled(int tmp) {
     this.includeEnabled = tmp;
@@ -487,10 +469,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the IncludeScheduled attribute of the CustomFieldCategory object
+   * Sets the IncludeScheduled attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new IncludeScheduled value
-   *@since
+   * @param tmp The new IncludeScheduled value
    */
   public void setIncludeScheduled(int tmp) {
     this.includeScheduled = tmp;
@@ -498,10 +479,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the BuildResources attribute of the CustomFieldCategory object
+   * Sets the BuildResources attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new BuildResources value
-   *@since
+   * @param tmp The new BuildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -509,10 +489,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Errors attribute of the CustomFieldCategory object
+   * Sets the Errors attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new Errors value
-   *@since
+   * @param tmp The new Errors value
    */
   public void setErrors(HashMap tmp) {
     this.errors = tmp;
@@ -520,10 +499,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the Parameters attribute of the CustomFieldCategory object
+   * Sets the Parameters attribute of the CustomFieldCategory object
    *
-   *@param  context  The new Parameters value
-   *@since
+   * @param context The new Parameters value
    */
   public void setParameters(ActionContext context) {
     Iterator i = this.iterator();
@@ -535,9 +513,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the warnings attribute of the CustomFieldCategory object
+   * Sets the warnings attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new warnings value
+   * @param tmp The new warnings value
    */
   public void setWarnings(HashMap tmp) {
     this.warnings = tmp;
@@ -545,9 +523,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the canNotContinue attribute of the CustomFieldCategory object
+   * Sets the canNotContinue attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new canNotContinue value
+   * @param tmp The new canNotContinue value
    */
   public void setCanNotContinue(boolean tmp) {
     this.canNotContinue = tmp;
@@ -555,9 +533,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the canNotContinue attribute of the CustomFieldCategory object
+   * Sets the canNotContinue attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new canNotContinue value
+   * @param tmp The new canNotContinue value
    */
   public void setCanNotContinue(String tmp) {
     this.canNotContinue = DatabaseUtils.parseBoolean(tmp);
@@ -565,9 +543,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the canNotContinue attribute of the CustomFieldCategory object
+   * Gets the canNotContinue attribute of the CustomFieldCategory object
    *
-   *@return    The canNotContinue value
+   * @return The canNotContinue value
    */
   public boolean getCanNotContinue() {
     return canNotContinue;
@@ -575,9 +553,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the warnings attribute of the CustomFieldCategory object
+   * Gets the warnings attribute of the CustomFieldCategory object
    *
-   *@return    The warnings value
+   * @return The warnings value
    */
   public HashMap getWarnings() {
     return warnings;
@@ -585,9 +563,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the linkModuleId attribute of the CustomFieldCategory object
+   * Gets the linkModuleId attribute of the CustomFieldCategory object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -595,9 +573,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the linkItemId attribute of the CustomFieldCategory object
+   * Gets the linkItemId attribute of the CustomFieldCategory object
    *
-   *@return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -605,10 +583,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Id attribute of the CustomFieldCategory object
+   * Gets the Id attribute of the CustomFieldCategory object
    *
-   *@return    The Id value
-   *@since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -616,9 +593,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the allowMultipleRecords attribute of the CustomFieldCategory object
+   * Sets the allowMultipleRecords attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new allowMultipleRecords value
+   * @param tmp The new allowMultipleRecords value
    */
   public void setAllowMultipleRecords(boolean tmp) {
     this.allowMultipleRecords = tmp;
@@ -626,19 +603,20 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the allowMultipleRecords attribute of the CustomFieldCategory object
+   * Sets the allowMultipleRecords attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new allowMultipleRecords value
+   * @param tmp The new allowMultipleRecords value
    */
   public void setAllowMultipleRecords(String tmp) {
-    this.allowMultipleRecords = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.allowMultipleRecords = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Gets the allowMultipleRecords attribute of the CustomFieldCategory object
+   * Gets the allowMultipleRecords attribute of the CustomFieldCategory object
    *
-   *@return    The allowMultipleRecords value
+   * @return The allowMultipleRecords value
    */
   public boolean getAllowMultipleRecords() {
     return allowMultipleRecords;
@@ -646,9 +624,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the readOnly attribute of the CustomFieldCategory object
+   * Sets the readOnly attribute of the CustomFieldCategory object
    *
-   *@param  readOnly  The new readOnly value
+   * @param readOnly The new readOnly value
    */
   public void setReadOnly(boolean readOnly) {
     this.readOnly = readOnly;
@@ -656,31 +634,30 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Sets the readOnly attribute of the CustomFieldCategory object
+   * Sets the readOnly attribute of the CustomFieldCategory object
    *
-   *@param  tmp  The new readOnly value
+   * @param tmp The new readOnly value
    */
   public void setReadOnly(String tmp) {
-    this.readOnly = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.readOnly = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Gets the readOnly attribute of the CustomFieldCategory object
+   * Gets the readOnly attribute of the CustomFieldCategory object
    *
-   *@return    The readOnly value
+   * @return The readOnly value
    */
   public boolean getReadOnly() {
     return readOnly;
   }
 
 
-
   /**
-   *  Gets the ModuleId attribute of the CustomFieldCategory object
+   * Gets the ModuleId attribute of the CustomFieldCategory object
    *
-   *@return    The ModuleId value
-   *@since
+   * @return The ModuleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -688,10 +665,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the RecordId attribute of the CustomFieldCategory object
+   * Gets the RecordId attribute of the CustomFieldCategory object
    *
-   *@return    The RecordId value
-   *@since
+   * @return The RecordId value
    */
   public int getRecordId() {
     return recordId;
@@ -699,10 +675,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Name attribute of the CustomFieldCategory object
+   * Gets the Name attribute of the CustomFieldCategory object
    *
-   *@return    The Name value
-   *@since
+   * @return The Name value
    */
   public String getName() {
     return name;
@@ -710,10 +685,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Description attribute of the CustomFieldCategory object
+   * Gets the Description attribute of the CustomFieldCategory object
    *
-   *@return    The Description value
-   *@since
+   * @return The Description value
    */
   public String getDescription() {
     return description;
@@ -721,10 +695,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Level attribute of the CustomFieldCategory object
+   * Gets the Level attribute of the CustomFieldCategory object
    *
-   *@return    The Level value
-   *@since
+   * @return The Level value
    */
   public int getLevel() {
     return level;
@@ -732,10 +705,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the StartDate attribute of the CustomFieldCategory object
+   * Gets the StartDate attribute of the CustomFieldCategory object
    *
-   *@return    The StartDate value
-   *@since
+   * @return The StartDate value
    */
   public java.sql.Timestamp getStartDate() {
     return startDate;
@@ -743,10 +715,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the EndDate attribute of the CustomFieldCategory object
+   * Gets the EndDate attribute of the CustomFieldCategory object
    *
-   *@return    The EndDate value
-   *@since
+   * @return The EndDate value
    */
   public java.sql.Timestamp getEndDate() {
     return endDate;
@@ -754,10 +725,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the DefaultItem attribute of the CustomFieldCategory object
+   * Gets the DefaultItem attribute of the CustomFieldCategory object
    *
-   *@return    The DefaultItem value
-   *@since
+   * @return The DefaultItem value
    */
   public boolean getDefaultItem() {
     return defaultItem;
@@ -765,10 +735,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Entered attribute of the CustomFieldCategory object
+   * Gets the Entered attribute of the CustomFieldCategory object
    *
-   *@return    The Entered value
-   *@since
+   * @return The Entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -776,15 +745,15 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the EnteredString attribute of the CustomFieldCategory object
+   * Gets the EnteredString attribute of the CustomFieldCategory object
    *
-   *@return    The EnteredString value
-   *@since
+   * @return The EnteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -792,10 +761,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the EnteredBy attribute of the CustomFieldCategory object
+   * Gets the EnteredBy attribute of the CustomFieldCategory object
    *
-   *@return    The EnteredBy value
-   *@since
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -803,10 +771,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Modified attribute of the CustomFieldCategory object
+   * Gets the Modified attribute of the CustomFieldCategory object
    *
-   *@return    The Modified value
-   *@since
+   * @return The Modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -814,16 +781,16 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the ModifiedDateTimeString attribute of the CustomFieldCategory
-   *  object
+   * Gets the ModifiedDateTimeString attribute of the CustomFieldCategory
+   * object
    *
-   *@return    The ModifiedDateTimeString value
-   *@since
+   * @return The ModifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -831,10 +798,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the CustomFieldCategory object
+   * Gets the ModifiedBy attribute of the CustomFieldCategory object
    *
-   *@return    The ModifiedBy value
-   *@since
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -842,10 +808,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Enabled attribute of the CustomFieldCategory object
+   * Gets the Enabled attribute of the CustomFieldCategory object
    *
-   *@return    The Enabled value
-   *@since
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -853,10 +818,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Errors attribute of the CustomFieldCategory object
+   * Gets the Errors attribute of the CustomFieldCategory object
    *
-   *@return    The Errors value
-   *@since
+   * @return The Errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -864,11 +828,10 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the Group attribute of the CustomFieldCategory object
+   * Gets the Group attribute of the CustomFieldCategory object
    *
-   *@param  tmp  Description of Parameter
-   *@return      The Group value
-   *@since
+   * @param tmp Description of Parameter
+   * @return The Group value
    */
   public CustomFieldGroup getGroup(int tmp) {
     Iterator i = this.iterator();
@@ -883,10 +846,10 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the fieldValue attribute of the CustomFieldCategory object
+   * Gets the fieldValue attribute of the CustomFieldCategory object
    *
-   *@param  fieldId  Description of Parameter
-   *@return          The fieldValue value
+   * @param fieldId Description of Parameter
+   * @return The fieldValue value
    */
   public String getFieldValue(int fieldId) {
     Iterator groups = this.iterator();
@@ -905,9 +868,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Checks if the group contains any fields.
+   * Checks if the group contains any fields.
    *
-   *@return    The empty value
+   * @return The empty value
    */
   public boolean isEmpty() {
     boolean empty = true;
@@ -925,10 +888,10 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  fieldId  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param fieldId Description of Parameter
+   * @return Description of the Returned Value
    */
   public boolean hasField(int fieldId) {
     Iterator groups = this.iterator();
@@ -947,11 +910,10 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildResources(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -973,9 +935,10 @@ public class CustomFieldCategory extends ArrayList {
         "WHERE cfg.category_id = " + id + " ");
 
     createFilter(sqlFilter);
-    sqlOrder.append("ORDER BY level, group_id, group_name ");
+    sqlOrder.append("ORDER BY \"level\", group_id, group_name ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -1002,10 +965,10 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecordId(Connection db) throws SQLException {
     String sql =
@@ -1028,12 +991,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int resultId = -1;
@@ -1080,12 +1042,12 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  recordId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param recordId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int insertGroup(Connection db, int recordId) throws SQLException {
     int catResult = 1;
@@ -1105,12 +1067,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int insert(Connection db) throws SQLException {
     /*
@@ -1134,11 +1095,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int doInsert(Connection db) throws SQLException {
     int resultId = -1;
@@ -1181,24 +1142,29 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insertCategory(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
-
+    id = DatabaseUtils.getNextSeq(db, "custom_field_ca_category_id_seq");
     sql.append("INSERT INTO custom_field_category ");
     sql.append("(module_id, category_name, description, ");
     sql.append("multiple_records, read_only, ");
+    if (id > -1) {
+      sql.append("category_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
     sql.append("enabled ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1212,7 +1178,9 @@ public class CustomFieldCategory extends ArrayList {
 
     pst.setBoolean(++i, this.getAllowMultipleRecords());
     pst.setBoolean(++i, this.getReadOnly());
-
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -1222,19 +1190,18 @@ public class CustomFieldCategory extends ArrayList {
     pst.execute();
     pst.close();
 
-    id = DatabaseUtils.getCurrVal(db, "custom_field_ca_category_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "custom_field_ca_category_id_seq", id);
 
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean toggleEnabled(Connection db) throws SQLException {
     if (id == -1) {
@@ -1257,12 +1224,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean updateCategory(Connection db) throws SQLException {
     if (id == -1) {
@@ -1289,16 +1255,16 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean deleteCategory(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomFieldCategory-> Delete Category: Mod(" + moduleId + ") Cat " + id);
+      System.out.println(
+          "CustomFieldCategory-> Delete Category: Mod(" + moduleId + ") Cat " + id);
     }
     if (moduleId == -1 || id == -1) {
       System.out.println("CustomFieldCategory-> Form Error");
@@ -1344,11 +1310,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     moduleId = rs.getInt("module_id");
@@ -1368,10 +1334,9 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -1379,9 +1344,11 @@ public class CustomFieldCategory extends ArrayList {
     }
 
     if (includeScheduled == TRUE) {
-      sqlFilter.append("AND CURRENT_TIMESTAMP > cfg.start_date AND (CURRENT_TIMESTAMP < cfg.end_date OR cfg.end_date IS NULL) ");
+      sqlFilter.append(
+          "AND CURRENT_TIMESTAMP > cfg.start_date AND (CURRENT_TIMESTAMP < cfg.end_date OR cfg.end_date IS NULL) ");
     } else if (includeScheduled == FALSE) {
-      sqlFilter.append("AND (CURRENT_TIMESTAMP < cfg.start_date OR (CURRENT_TIMESTAMP > cfg.end_date AND cfg.end_date IS NOT NULL)) ");
+      sqlFilter.append(
+          "AND (CURRENT_TIMESTAMP < cfg.start_date OR (CURRENT_TIMESTAMP > cfg.end_date AND cfg.end_date IS NOT NULL)) ");
     }
 
     if (includeEnabled == TRUE || includeEnabled == FALSE) {
@@ -1391,12 +1358,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -1412,10 +1378,10 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  return the unique CF ids of the fields on the form page for inserting a
-   *  new record in this category.
+   * return the unique CF ids of the fields on the form page for inserting a
+   * new record in this category.
    *
-   *@return    The formFieldIds value
+   * @return The formFieldIds value
    */
   public ArrayList getFormFieldIds() {
     ArrayList a = new ArrayList();
@@ -1435,14 +1401,14 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the category_id provided the category_name attribute of the
-   *  CustomFieldCategory class
+   * Gets the category_id provided the category_name attribute of the
+   * CustomFieldCategory class
    *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@param  categoryName      Description of the Parameter
-   *@return                   The idFromName value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param moduleId     Description of the Parameter
+   * @param categoryName Description of the Parameter
+   * @return The idFromName value
+   * @throws SQLException Description of the Exception
    */
   public static int getIdFromName(Connection db, int moduleId, String categoryName) throws SQLException {
     int result = -1;
@@ -1455,8 +1421,7 @@ public class CustomFieldCategory extends ArrayList {
         " (SELECT max(category_id) " +
         " FROM custom_field_category " +
         " WHERE module_id = ? " +
-        " AND category_name = ?) "
-        );
+        " AND category_name = ?) ");
     pst.setInt(1, moduleId);
     pst.setString(2, categoryName);
     pst.setInt(3, moduleId);
@@ -1472,15 +1437,15 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  linkModuleId      Description of the Parameter
-   *@param  linkItemId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkModuleId Description of the Parameter
+   * @param linkItemId   Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void determineNumberOfRecords(Connection db, int linkModuleId, int linkItemId)
-       throws SQLException {
+      throws SQLException {
     CustomFieldRecordList recordList = new CustomFieldRecordList();
     recordList.setLinkModuleId(linkModuleId);
     recordList.setLinkItemId(linkItemId);
@@ -1491,11 +1456,11 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean hasMultipleRecords(Connection db) throws SQLException {
     boolean hasMultiple = false;

@@ -1,44 +1,43 @@
 package org.aspcfs.modules.actions;
 
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.modules.pipeline.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    July 19, 2004
- * @version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created July 19, 2004
  */
 public final class OpportunitySelector extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     OpportunityHeaderList oppList = null;
 
     try {
       db = this.getConnection(context);
       String orgId = (String) context.getRequest().getParameter("orgId");
-      String displayFieldId = (String) context.getRequest().getParameter("displayFieldId");
-      String hiddenFieldId = (String) context.getRequest().getParameter("hiddenFieldId");
+      String displayFieldId = (String) context.getRequest().getParameter(
+          "displayFieldId");
+      String hiddenFieldId = (String) context.getRequest().getParameter(
+          "hiddenFieldId");
 
-      PagedListInfo oppPagedInfo = this.getPagedListInfo(context, "opportunityListInfo");
-      oppPagedInfo.setLink("OpportunitySelector.do?command=List&orgId=" + orgId + "&hiddenFieldId=" + hiddenFieldId + "&displayFieldId=" + displayFieldId);
+      PagedListInfo oppPagedInfo = this.getPagedListInfo(
+          context, "opportunityListInfo");
+      oppPagedInfo.setLink(
+          "OpportunitySelector.do?command=List&orgId=" + orgId + "&hiddenFieldId=" + hiddenFieldId + "&displayFieldId=" + displayFieldId);
 
       oppList = new OpportunityHeaderList();
       oppList.setPagedListInfo(oppPagedInfo);

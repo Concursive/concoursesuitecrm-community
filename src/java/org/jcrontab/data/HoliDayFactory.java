@@ -14,16 +14,14 @@
 
 package org.jcrontab.data;
 
-import java.util.Properties;
 import org.jcrontab.Crontab;
-import org.jcrontab.log.Log;
 
 /**
- *  This Factory builds a HoliDay Source using teh given information.
+ * This Factory builds a HoliDay Source using teh given information.
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public class HoliDayFactory {
@@ -32,22 +30,24 @@ public class HoliDayFactory {
 
 
   /**
-   *  Default Constructor private
+   * Default Constructor private
    */
-  private HoliDayFactory() { }
+  private HoliDayFactory() {
+  }
 
 
   /**
-   *  This method returns the DataFactory of the System This method grants the
-   *  Singleton pattern
+   * This method returns the DataFactory of the System This method grants the
+   * Singleton pattern
    *
-   *@return                DataSource I have a lot of doubts about how this
-   *      method is done.
-   *@exception  Exception  Description of the Exception
+   * @return DataSource I have a lot of doubts about how this
+   *         method is done.
+   * @throws Exception Description of the Exception
    */
   public static HoliDaySource getInstance() throws Exception {
     if (hds == null) {
-      hds = ((HoliDaySource) Class.forName(Crontab.getInstance()
+      hds = ((HoliDaySource) Class.forName(
+          Crontab.getInstance()
           .getProperty("org.jcrontab.data.holidaysource"))
           .newInstance());
     }
@@ -56,10 +56,10 @@ public class HoliDayFactory {
 
 
   /**
-   *  This method returns the HoliDaySource of the System
+   * This method returns the HoliDaySource of the System
    *
-   *@return    HoliDaySource I have a lot of doubts about how this method is
-   *      done.
+   * @return HoliDaySource I have a lot of doubts about how this method is
+   *         done.
    */
 
   public HoliDaySource getDAO() {

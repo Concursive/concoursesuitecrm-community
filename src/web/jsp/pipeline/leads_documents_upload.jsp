@@ -98,15 +98,12 @@ function reopenOpportunity(id) {
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
     <tr class="subtab">
       <td>
-  <%
-  String documentFolderList = "LeadsDocuments.do?command=View&headerId="+ opportunityHeader.getId();
-  String documentModule = "Pipeline";
-  %>
-        <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
+        <% String documentLink = "LeadsDocuments.do?command=View&headerId="+opportunityHeader.getId()+addLinkParams(request, "viewSource"); %>
+        <zeroio:folderHierarchy module="Pipeline" link="<%= documentLink %>" showLastLink="false"/>
       </td>
     </tr>
   </table>
-  <dhv:formMessage />
+  <dhv:formMessage showSpace="false"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

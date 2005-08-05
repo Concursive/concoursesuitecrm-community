@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.troubletickets.components;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
-import org.aspcfs.modules.troubletickets.base.TicketList;
-import java.sql.*;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ComponentInterface;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Generates a list of tickets based on specified parameters
+ * Generates a list of tickets based on specified parameters
  *
- *@author     matt rajkowski
- *@created    May 8, 2003
- *@version    $Id: GenerateTicketList.java,v 1.1 2003/05/16 18:55:58 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: GenerateTicketList.java,v 1.1 2003/05/16 18:55:58 mrajkowski
+ *          Exp $
+ * @created May 8, 2003
  */
 public class GenerateTicketList extends ObjectHookComponent implements ComponentInterface {
 
@@ -41,9 +43,9 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
 
 
   /**
-   *  Gets the description attribute of the GenerateTicketList object
+   * Gets the description attribute of the GenerateTicketList object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Generate a list of tickets based on specified parameters.  Are there any tickets matching the parameters?";
@@ -51,30 +53,37 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
 
 
   /**
-   *  Builds a TicketList, based on context parameters, then puts the list in
-   *  the context to be used by other components
+   * Builds a TicketList, based on context parameters, then puts the list in
+   * the context to be used by other components
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     boolean result = false;
     TicketList tickets = new TicketList();
-    tickets.setOnlyOpen(context.getParameterAsBoolean(GenerateTicketList.ONLY_OPEN));
+    tickets.setOnlyOpen(
+        context.getParameterAsBoolean(GenerateTicketList.ONLY_OPEN));
     if (context.hasParameter(GenerateTicketList.ONLY_ASSIGNED)) {
-      tickets.setOnlyAssigned(context.getParameterAsBoolean(GenerateTicketList.ONLY_ASSIGNED));
+      tickets.setOnlyAssigned(
+          context.getParameterAsBoolean(GenerateTicketList.ONLY_ASSIGNED));
     }
     if (context.hasParameter(GenerateTicketList.ONLY_UNASSIGNED)) {
-      tickets.setOnlyUnassigned(context.getParameterAsBoolean(GenerateTicketList.ONLY_UNASSIGNED));
+      tickets.setOnlyUnassigned(
+          context.getParameterAsBoolean(GenerateTicketList.ONLY_UNASSIGNED));
     }
-    if (context.hasParameter(GenerateTicketList.LAST_ANCHOR) || context.hasParameter(GenerateTicketList.NEXT_ANCHOR)) {
+    if (context.hasParameter(GenerateTicketList.LAST_ANCHOR) || context.hasParameter(
+        GenerateTicketList.NEXT_ANCHOR)) {
       //Tell ticketList to get a recent list only, eliminating previously reported tickets
       tickets.setSyncType(Constants.SYNC_QUERY);
-      tickets.setLastAnchor(context.getParameter(GenerateTicketList.LAST_ANCHOR));
-      tickets.setNextAnchor(context.getParameter(GenerateTicketList.NEXT_ANCHOR));
+      tickets.setLastAnchor(
+          context.getParameter(GenerateTicketList.LAST_ANCHOR));
+      tickets.setNextAnchor(
+          context.getParameter(GenerateTicketList.NEXT_ANCHOR));
     }
     if (context.hasParameter(GenerateTicketList.MINUTES_OLDER_THAN)) {
-      tickets.setMinutesOlderThan(context.getParameterAsInt(GenerateTicketList.MINUTES_OLDER_THAN));
+      tickets.setMinutesOlderThan(
+          context.getParameterAsInt(GenerateTicketList.MINUTES_OLDER_THAN));
     }
     Connection db = null;
     try {

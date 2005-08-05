@@ -16,11 +16,14 @@
 package org.aspcfs.modules.quotes.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.DatabaseUtils;
 
@@ -30,11 +33,11 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 /**
- *  This represents a Quote in the Quote Entry System
+ * This represents a Quote in the Quote Entry System
  *
- * @author     ananth
- * @created    March 24, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created March 24, 2004
  */
 public class Quote extends GenericBean {
   //Quote submitAction types
@@ -81,6 +84,7 @@ public class Quote extends GenericBean {
   private int enteredBy = -1;
   private Timestamp modified = null;
   private int modifiedBy = -1;
+  private Timestamp trashedDate = null;
 
   // Organization & billing contact info
   private String name = null;
@@ -108,13 +112,12 @@ public class Quote extends GenericBean {
   private boolean closeIt = false;
   private String canPrint = "false";
   private boolean canNotCopyExpirationDate = false;
-
-
+  private SystemStatus systemStatus = null;
 
   /**
-   *  Gets the logoFileId attribute of the Quote object
+   * Gets the logoFileId attribute of the Quote object
    *
-   * @return    The logoFileId value
+   * @return The logoFileId value
    */
   public int getLogoFileId() {
     return logoFileId;
@@ -122,9 +125,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the logoFileId attribute of the Quote object
+   * Sets the logoFileId attribute of the Quote object
    *
-   * @param  tmp  The new logoFileId value
+   * @param tmp The new logoFileId value
    */
   public void setLogoFileId(int tmp) {
     this.logoFileId = tmp;
@@ -132,9 +135,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the logoFileId attribute of the Quote object
+   * Sets the logoFileId attribute of the Quote object
    *
-   * @param  tmp  The new logoFileId value
+   * @param tmp The new logoFileId value
    */
   public void setLogoFileId(String tmp) {
     this.logoFileId = Integer.parseInt(tmp);
@@ -142,9 +145,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Quote object
+   * Sets the id attribute of the Quote object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -153,9 +156,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Quote object
+   * Sets the id attribute of the Quote object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -164,9 +167,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the Quote object
+   * Sets the parentId attribute of the Quote object
    *
-   * @param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -174,9 +177,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the Quote object
+   * Sets the parentId attribute of the Quote object
    *
-   * @param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -184,9 +187,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Quote object
+   * Sets the orgId attribute of the Quote object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -194,9 +197,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Quote object
+   * Sets the orgId attribute of the Quote object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -204,9 +207,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the Quote object
+   * Sets the contactId attribute of the Quote object
    *
-   * @param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -214,9 +217,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the Quote object
+   * Sets the contactId attribute of the Quote object
    *
-   * @param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -224,9 +227,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the sourceId attribute of the Quote object
+   * Sets the sourceId attribute of the Quote object
    *
-   * @param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(int tmp) {
     this.sourceId = tmp;
@@ -234,9 +237,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the sourceId attribute of the Quote object
+   * Sets the sourceId attribute of the Quote object
    *
-   * @param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(String tmp) {
     this.sourceId = Integer.parseInt(tmp);
@@ -244,9 +247,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the grandTotal attribute of the Quote object
+   * Sets the grandTotal attribute of the Quote object
    *
-   * @param  tmp  The new grandTotal value
+   * @param tmp The new grandTotal value
    */
   public void setGrandTotal(double tmp) {
     this.grandTotal = tmp;
@@ -254,9 +257,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the grandTotal attribute of the Quote object
+   * Sets the grandTotal attribute of the Quote object
    *
-   * @param  tmp  The new grandTotal value
+   * @param tmp The new grandTotal value
    */
   public void setGrandTotal(String tmp) {
     this.grandTotal = Double.parseDouble(tmp);
@@ -264,9 +267,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Quote object
+   * Sets the statusId attribute of the Quote object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -274,9 +277,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Quote object
+   * Sets the statusId attribute of the Quote object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -284,9 +287,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the Quote object
+   * Sets the statusDate attribute of the Quote object
    *
-   * @param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(Timestamp tmp) {
     this.statusDate = tmp;
@@ -294,9 +297,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the Quote object
+   * Sets the statusDate attribute of the Quote object
    *
-   * @param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(String tmp) {
     this.statusDate = DatabaseUtils.parseTimestamp(tmp);
@@ -304,9 +307,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the issuedDate attribute of the Quote object
+   * Sets the issuedDate attribute of the Quote object
    *
-   * @param  tmp  The new issuedDate value
+   * @param tmp The new issuedDate value
    */
   public void setIssuedDate(Timestamp tmp) {
     this.issuedDate = tmp;
@@ -314,9 +317,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the issuedDate attribute of the Quote object
+   * Sets the issuedDate attribute of the Quote object
    *
-   * @param  tmp  The new issuedDate value
+   * @param tmp The new issuedDate value
    */
   public void setIssuedDate(String tmp) {
     this.issuedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -324,9 +327,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the Quote object
+   * Sets the productId attribute of the Quote object
    *
-   * @param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -334,9 +337,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the Quote object
+   * Sets the productId attribute of the Quote object
    *
-   * @param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -344,9 +347,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the customerProductId attribute of the Quote object
+   * Sets the customerProductId attribute of the Quote object
    *
-   * @param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(int tmp) {
     this.customerProductId = tmp;
@@ -354,9 +357,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the customerProductId attribute of the Quote object
+   * Sets the customerProductId attribute of the Quote object
    *
-   * @param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
@@ -364,9 +367,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the headerId attribute of the Quote object
+   * Sets the headerId attribute of the Quote object
    *
-   * @param  tmp  The new headerId value
+   * @param tmp The new headerId value
    */
   public void setHeaderId(int tmp) {
     this.headerId = tmp;
@@ -374,9 +377,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the headerId attribute of the Quote object
+   * Sets the headerId attribute of the Quote object
    *
-   * @param  tmp  The new headerId value
+   * @param tmp The new headerId value
    */
   public void setHeaderId(String tmp) {
     this.headerId = Integer.parseInt(tmp);
@@ -384,9 +387,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the version attribute of the Quote object
+   * Sets the version attribute of the Quote object
    *
-   * @param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(String tmp) {
     this.version = tmp;
@@ -394,9 +397,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the versionList attribute of the Quote object
+   * Sets the versionList attribute of the Quote object
    *
-   * @param  tmp  The new versionList value
+   * @param tmp The new versionList value
    */
   public void setVersionList(QuoteList tmp) {
     this.versionList = tmp;
@@ -404,9 +407,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildCompleteVersionList attribute of the Quote object
+   * Sets the buildCompleteVersionList attribute of the Quote object
    *
-   * @param  tmp  The new buildCompleteVersionList value
+   * @param tmp The new buildCompleteVersionList value
    */
   public void setBuildCompleteVersionList(boolean tmp) {
     this.buildCompleteVersionList = tmp;
@@ -414,9 +417,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildCompleteVersionList attribute of the Quote object
+   * Sets the buildCompleteVersionList attribute of the Quote object
    *
-   * @param  tmp  The new buildCompleteVersionList value
+   * @param tmp The new buildCompleteVersionList value
    */
   public void setBuildCompleteVersionList(String tmp) {
     this.buildCompleteVersionList = DatabaseUtils.parseBoolean(tmp);
@@ -424,9 +427,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the groupId attribute of the Quote object
+   * Sets the groupId attribute of the Quote object
    *
-   * @param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -434,9 +437,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the groupId attribute of the Quote object
+   * Sets the groupId attribute of the Quote object
    *
-   * @param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -444,9 +447,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the groupId attribute of the Quote object
+   * Gets the groupId attribute of the Quote object
    *
-   * @return    The groupId value
+   * @return The groupId value
    */
   public int getGroupId() {
     return groupId;
@@ -454,9 +457,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildCompleteVersionList attribute of the Quote object
+   * Gets the buildCompleteVersionList attribute of the Quote object
    *
-   * @return    The buildCompleteVersionList value
+   * @return The buildCompleteVersionList value
    */
   public boolean getBuildCompleteVersionList() {
     return buildCompleteVersionList;
@@ -464,9 +467,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the versionList attribute of the Quote object
+   * Gets the versionList attribute of the Quote object
    *
-   * @return    The versionList value
+   * @return The versionList value
    */
   public QuoteList getVersionList() {
     return versionList;
@@ -474,9 +477,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the version attribute of the Quote object
+   * Gets the version attribute of the Quote object
    *
-   * @return    The version value
+   * @return The version value
    */
   public String getVersion() {
     return version;
@@ -484,9 +487,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the headerId attribute of the Quote object
+   * Gets the headerId attribute of the Quote object
    *
-   * @return    The headerId value
+   * @return The headerId value
    */
   public int getHeaderId() {
     return headerId;
@@ -494,9 +497,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the productId attribute of the Quote object
+   * Gets the productId attribute of the Quote object
    *
-   * @return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -504,9 +507,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the customerProductId attribute of the Quote object
+   * Gets the customerProductId attribute of the Quote object
    *
-   * @return    The customerProductId value
+   * @return The customerProductId value
    */
   public int getCustomerProductId() {
     return customerProductId;
@@ -514,9 +517,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the issuedDate attribute of the Quote object
+   * Gets the issuedDate attribute of the Quote object
    *
-   * @return    The issuedDate value
+   * @return The issuedDate value
    */
   public Timestamp getIssuedDate() {
     return issuedDate;
@@ -524,9 +527,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Quote object
+   * Sets the expirationDate attribute of the Quote object
    *
-   * @param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
@@ -534,9 +537,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Quote object
+   * Sets the expirationDate attribute of the Quote object
    *
-   * @param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(String tmp) {
     this.expirationDate = DatabaseUtils.parseTimestamp(tmp);
@@ -544,9 +547,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the quoteTermsId attribute of the Quote object
+   * Sets the quoteTermsId attribute of the Quote object
    *
-   * @param  tmp  The new quoteTermsId value
+   * @param tmp The new quoteTermsId value
    */
   public void setQuoteTermsId(int tmp) {
     this.quoteTermsId = tmp;
@@ -554,9 +557,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the quoteTermsId attribute of the Quote object
+   * Sets the quoteTermsId attribute of the Quote object
    *
-   * @param  tmp  The new quoteTermsId value
+   * @param tmp The new quoteTermsId value
    */
   public void setQuoteTermsId(String tmp) {
     this.quoteTermsId = Integer.parseInt(tmp);
@@ -564,9 +567,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the quoteTypeId attribute of the Quote object
+   * Sets the quoteTypeId attribute of the Quote object
    *
-   * @param  tmp  The new quoteTypeId value
+   * @param tmp The new quoteTypeId value
    */
   public void setQuoteTypeId(int tmp) {
     this.quoteTypeId = tmp;
@@ -574,9 +577,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the quoteTypeId attribute of the Quote object
+   * Sets the quoteTypeId attribute of the Quote object
    *
-   * @param  tmp  The new quoteTypeId value
+   * @param tmp The new quoteTypeId value
    */
   public void setQuoteTypeId(String tmp) {
     this.quoteTypeId = Integer.parseInt(tmp);
@@ -584,9 +587,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the shortDescription attribute of the Quote object
+   * Sets the shortDescription attribute of the Quote object
    *
-   * @param  tmp  The new shortDescription value
+   * @param tmp The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -594,9 +597,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the Quote object
+   * Sets the notes attribute of the Quote object
    *
-   * @param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -604,9 +607,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Quote object
+   * Sets the entered attribute of the Quote object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -614,9 +617,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Quote object
+   * Sets the entered attribute of the Quote object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -624,9 +627,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Quote object
+   * Sets the enteredBy attribute of the Quote object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -634,9 +637,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Quote object
+   * Sets the enteredBy attribute of the Quote object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -644,9 +647,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Quote object
+   * Sets the modified attribute of the Quote object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -654,9 +657,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Quote object
+   * Sets the modified attribute of the Quote object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -664,9 +667,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Quote object
+   * Sets the modifiedBy attribute of the Quote object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -674,9 +677,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Quote object
+   * Sets the modifiedBy attribute of the Quote object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -684,9 +687,33 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Quote object
+   * Sets the trashedDate attribute of the Quote object
    *
-   * @param  tmp  The new name value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the Quote object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+  public boolean isTrashed() {
+    return (trashedDate != null);
+  }
+
+
+  /**
+   * Sets the name attribute of the Quote object
+   *
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -694,9 +721,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the Quote object
+   * Sets the nameLast attribute of the Quote object
    *
-   * @param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -704,9 +731,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the Quote object
+   * Sets the nameFirst attribute of the Quote object
    *
-   * @param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -714,9 +741,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the nameMiddle attribute of the Quote object
+   * Sets the nameMiddle attribute of the Quote object
    *
-   * @param  tmp  The new nameMiddle value
+   * @param tmp The new nameMiddle value
    */
   public void setNameMiddle(String tmp) {
     this.nameMiddle = tmp;
@@ -724,9 +751,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildProducts attribute of the Quote object
+   * Sets the buildProducts attribute of the Quote object
    *
-   * @param  tmp  The new buildProducts value
+   * @param tmp The new buildProducts value
    */
   public void setBuildProducts(boolean tmp) {
     this.buildProducts = tmp;
@@ -734,9 +761,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildProducts attribute of the Quote object
+   * Sets the buildProducts attribute of the Quote object
    *
-   * @param  tmp  The new buildProducts value
+   * @param tmp The new buildProducts value
    */
   public void setBuildProducts(String tmp) {
     this.buildProducts = DatabaseUtils.parseBoolean(tmp);
@@ -744,9 +771,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the productList attribute of the Quote object
+   * Sets the productList attribute of the Quote object
    *
-   * @param  tmp  The new productList value
+   * @param tmp The new productList value
    */
   public void setProductList(QuoteProductList tmp) {
     this.productList = tmp;
@@ -754,9 +781,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the ticketId attribute of the Quote object
+   * Sets the ticketId attribute of the Quote object
    *
-   * @param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
@@ -764,9 +791,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the ticketId attribute of the Quote object
+   * Sets the ticketId attribute of the Quote object
    *
-   * @param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(String tmp) {
     this.ticketId = Integer.parseInt(tmp);
@@ -774,9 +801,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the ticket attribute of the Quote object
+   * Sets the ticket attribute of the Quote object
    *
-   * @param  tmp  The new ticket value
+   * @param tmp The new ticket value
    */
   public void setTicket(Ticket tmp) {
     this.ticket = tmp;
@@ -784,9 +811,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildTicket attribute of the Quote object
+   * Sets the buildTicket attribute of the Quote object
    *
-   * @param  tmp  The new buildTicket value
+   * @param tmp The new buildTicket value
    */
   public void setBuildTicket(boolean tmp) {
     this.buildTicket = tmp;
@@ -794,9 +821,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildTicket attribute of the Quote object
+   * Sets the buildTicket attribute of the Quote object
    *
-   * @param  tmp  The new buildTicket value
+   * @param tmp The new buildTicket value
    */
   public void setBuildTicket(String tmp) {
     this.buildTicket = DatabaseUtils.parseBoolean(tmp);
@@ -804,9 +831,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildTicket attribute of the Quote object
+   * Gets the buildTicket attribute of the Quote object
    *
-   * @return    The buildTicket value
+   * @return The buildTicket value
    */
   public boolean getBuildTicket() {
     return buildTicket;
@@ -814,9 +841,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the ticket attribute of the Quote object
+   * Gets the ticket attribute of the Quote object
    *
-   * @return    The ticket value
+   * @return The ticket value
    */
   public Ticket getTicket() {
     return ticket;
@@ -824,9 +851,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Quote object
+   * Gets the id attribute of the Quote object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -834,9 +861,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the parentId attribute of the Quote object
+   * Gets the parentId attribute of the Quote object
    *
-   * @return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -844,9 +871,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the Quote object
+   * Gets the orgId attribute of the Quote object
    *
-   * @return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -854,9 +881,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the contactId attribute of the Quote object
+   * Gets the contactId attribute of the Quote object
    *
-   * @return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -864,9 +891,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the sourceId attribute of the Quote object
+   * Gets the sourceId attribute of the Quote object
    *
-   * @return    The sourceId value
+   * @return The sourceId value
    */
   public int getSourceId() {
     return sourceId;
@@ -874,9 +901,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the grandTotal attribute of the Quote object
+   * Gets the grandTotal attribute of the Quote object
    *
-   * @return    The grandTotal value
+   * @return The grandTotal value
    */
   public double getGrandTotal() {
     return grandTotal;
@@ -884,9 +911,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Quote object
+   * Gets the statusId attribute of the Quote object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -894,9 +921,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the statusDate attribute of the Quote object
+   * Gets the statusDate attribute of the Quote object
    *
-   * @return    The statusDate value
+   * @return The statusDate value
    */
   public Timestamp getStatusDate() {
     return statusDate;
@@ -904,9 +931,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the expirationDate attribute of the Quote object
+   * Gets the expirationDate attribute of the Quote object
    *
-   * @return    The expirationDate value
+   * @return The expirationDate value
    */
   public Timestamp getExpirationDate() {
     return expirationDate;
@@ -914,9 +941,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the quoteTermsId attribute of the Quote object
+   * Gets the quoteTermsId attribute of the Quote object
    *
-   * @return    The quoteTermsId value
+   * @return The quoteTermsId value
    */
   public int getQuoteTermsId() {
     return quoteTermsId;
@@ -924,9 +951,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the quoteTypeId attribute of the Quote object
+   * Gets the quoteTypeId attribute of the Quote object
    *
-   * @return    The quoteTypeId value
+   * @return The quoteTypeId value
    */
   public int getQuoteTypeId() {
     return quoteTypeId;
@@ -934,9 +961,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the shortDescription attribute of the Quote object
+   * Gets the shortDescription attribute of the Quote object
    *
-   * @return    The shortDescription value
+   * @return The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -944,9 +971,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the Quote object
+   * Gets the notes attribute of the Quote object
    *
-   * @return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -954,9 +981,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Quote object
+   * Gets the entered attribute of the Quote object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -964,9 +991,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Quote object
+   * Gets the enteredBy attribute of the Quote object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -974,9 +1001,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Quote object
+   * Gets the modified attribute of the Quote object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -984,9 +1011,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Quote object
+   * Gets the modifiedBy attribute of the Quote object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -994,9 +1021,19 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the Quote object
+   * Gets the trashedDate attribute of the Quote object
    *
-   * @return    The name value
+   * @return The trashedDate value
+   */
+  public Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the name attribute of the Quote object
+   *
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -1004,9 +1041,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the Quote object
+   * Gets the nameLast attribute of the Quote object
    *
-   * @return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -1014,9 +1051,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the Quote object
+   * Gets the nameFirst attribute of the Quote object
    *
-   * @return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -1024,9 +1061,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the nameMiddle attribute of the Quote object
+   * Gets the nameMiddle attribute of the Quote object
    *
-   * @return    The nameMiddle value
+   * @return The nameMiddle value
    */
   public String getNameMiddle() {
     return nameMiddle;
@@ -1034,9 +1071,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildProducts attribute of the Quote object
+   * Gets the buildProducts attribute of the Quote object
    *
-   * @return    The buildProducts value
+   * @return The buildProducts value
    */
   public boolean getBuildProducts() {
     return buildProducts;
@@ -1044,9 +1081,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the productList attribute of the Quote object
+   * Gets the productList attribute of the Quote object
    *
-   * @return    The productList value
+   * @return The productList value
    */
   public QuoteProductList getProductList() {
     return productList;
@@ -1054,9 +1091,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the ticketId attribute of the Quote object
+   * Gets the ticketId attribute of the Quote object
    *
-   * @return    The ticketId value
+   * @return The ticketId value
    */
   public int getTicketId() {
     return ticketId;
@@ -1064,9 +1101,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the deliveryId attribute of the Quote object
+   * Gets the deliveryId attribute of the Quote object
    *
-   * @return    The deliveryId value
+   * @return The deliveryId value
    */
   public int getDeliveryId() {
     return deliveryId;
@@ -1074,9 +1111,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the deliveryId attribute of the Quote object
+   * Sets the deliveryId attribute of the Quote object
    *
-   * @param  tmp  The new deliveryId value
+   * @param tmp The new deliveryId value
    */
   public void setDeliveryId(int tmp) {
     this.deliveryId = tmp;
@@ -1084,9 +1121,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the deliveryId attribute of the Quote object
+   * Sets the deliveryId attribute of the Quote object
    *
-   * @param  tmp  The new deliveryId value
+   * @param tmp The new deliveryId value
    */
   public void setDeliveryId(String tmp) {
     this.deliveryId = Integer.parseInt(tmp);
@@ -1094,9 +1131,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the contact attribute of the Quote object
+   * Gets the contact attribute of the Quote object
    *
-   * @return    The contact value
+   * @return The contact value
    */
   public Contact getContact() {
     return contact;
@@ -1104,9 +1141,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the contact attribute of the Quote object
+   * Sets the contact attribute of the Quote object
    *
-   * @param  tmp  The new contact value
+   * @param tmp The new contact value
    */
   public void setContact(Contact tmp) {
     this.contact = tmp;
@@ -1114,9 +1151,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the organization attribute of the Quote object
+   * Gets the organization attribute of the Quote object
    *
-   * @return    The organization value
+   * @return The organization value
    */
   public Organization getOrganization() {
     return organization;
@@ -1124,9 +1161,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the organization attribute of the Quote object
+   * Sets the organization attribute of the Quote object
    *
-   * @param  tmp  The new organization value
+   * @param tmp The new organization value
    */
   public void setOrganization(Organization tmp) {
     this.organization = tmp;
@@ -1134,9 +1171,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildResources attribute of the Quote object
+   * Gets the buildResources attribute of the Quote object
    *
-   * @return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -1144,9 +1181,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildResources attribute of the Quote object
+   * Sets the buildResources attribute of the Quote object
    *
-   * @param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -1154,9 +1191,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildResources attribute of the Quote object
+   * Sets the buildResources attribute of the Quote object
    *
-   * @param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -1164,9 +1201,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the history attribute of the Quote object
+   * Gets the history attribute of the Quote object
    *
-   * @return    The history value
+   * @return The history value
    */
   public QuoteLogList getHistory() {
     return history;
@@ -1174,9 +1211,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the history attribute of the Quote object
+   * Sets the history attribute of the Quote object
    *
-   * @param  tmp  The new history value
+   * @param tmp The new history value
    */
   public void setHistory(QuoteLogList tmp) {
     this.history = tmp;
@@ -1184,9 +1221,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildHistory attribute of the Quote object
+   * Gets the buildHistory attribute of the Quote object
    *
-   * @return    The buildHistory value
+   * @return The buildHistory value
    */
   public boolean getBuildHistory() {
     return buildHistory;
@@ -1194,9 +1231,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildHistory attribute of the Quote object
+   * Sets the buildHistory attribute of the Quote object
    *
-   * @param  tmp  The new buildHistory value
+   * @param tmp The new buildHistory value
    */
   public void setBuildHistory(boolean tmp) {
     this.buildHistory = tmp;
@@ -1204,9 +1241,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildHistory attribute of the Quote object
+   * Sets the buildHistory attribute of the Quote object
    *
-   * @param  tmp  The new buildHistory value
+   * @param tmp The new buildHistory value
    */
   public void setBuildHistory(String tmp) {
     this.buildHistory = DatabaseUtils.parseBoolean(tmp);
@@ -1214,9 +1251,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildConditions attribute of the Quote object
+   * Gets the buildConditions attribute of the Quote object
    *
-   * @return    The buildConditions value
+   * @return The buildConditions value
    */
   public boolean getBuildConditions() {
     return buildConditions;
@@ -1224,9 +1261,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildConditions attribute of the Quote object
+   * Sets the buildConditions attribute of the Quote object
    *
-   * @param  tmp  The new buildConditions value
+   * @param tmp The new buildConditions value
    */
   public void setBuildConditions(boolean tmp) {
     this.buildConditions = tmp;
@@ -1234,9 +1271,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildConditions attribute of the Quote object
+   * Sets the buildConditions attribute of the Quote object
    *
-   * @param  tmp  The new buildConditions value
+   * @param tmp The new buildConditions value
    */
   public void setBuildConditions(String tmp) {
     this.buildConditions = DatabaseUtils.parseBoolean(tmp);
@@ -1244,9 +1281,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the conditions attribute of the Quote object
+   * Gets the conditions attribute of the Quote object
    *
-   * @return    The conditions value
+   * @return The conditions value
    */
   public QuoteConditionList getConditions() {
     return conditions;
@@ -1254,9 +1291,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the conditions attribute of the Quote object
+   * Sets the conditions attribute of the Quote object
    *
-   * @param  tmp  The new conditions value
+   * @param tmp The new conditions value
    */
   public void setConditions(QuoteConditionList tmp) {
     this.conditions = tmp;
@@ -1264,9 +1301,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the buildRemarks attribute of the Quote object
+   * Gets the buildRemarks attribute of the Quote object
    *
-   * @return    The buildRemarks value
+   * @return The buildRemarks value
    */
   public boolean getBuildRemarks() {
     return buildRemarks;
@@ -1274,9 +1311,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildRemarks attribute of the Quote object
+   * Sets the buildRemarks attribute of the Quote object
    *
-   * @param  tmp  The new buildRemarks value
+   * @param tmp The new buildRemarks value
    */
   public void setBuildRemarks(boolean tmp) {
     this.buildRemarks = tmp;
@@ -1284,9 +1321,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the buildRemarks attribute of the Quote object
+   * Sets the buildRemarks attribute of the Quote object
    *
-   * @param  tmp  The new buildRemarks value
+   * @param tmp The new buildRemarks value
    */
   public void setBuildRemarks(String tmp) {
     this.buildRemarks = DatabaseUtils.parseBoolean(tmp);
@@ -1294,9 +1331,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the remarks attribute of the Quote object
+   * Gets the remarks attribute of the Quote object
    *
-   * @return    The remarks value
+   * @return The remarks value
    */
   public QuoteRemarkList getRemarks() {
     return remarks;
@@ -1304,9 +1341,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the remarks attribute of the Quote object
+   * Sets the remarks attribute of the Quote object
    *
-   * @param  tmp  The new remarks value
+   * @param tmp The new remarks value
    */
   public void setRemarks(QuoteRemarkList tmp) {
     this.remarks = tmp;
@@ -1314,9 +1351,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the emailAddress attribute of the Quote object
+   * Gets the emailAddress attribute of the Quote object
    *
-   * @return    The emailAddress value
+   * @return The emailAddress value
    */
   public String getEmailAddress() {
     return emailAddress;
@@ -1324,9 +1361,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the emailAddress attribute of the Quote object
+   * Sets the emailAddress attribute of the Quote object
    *
-   * @param  tmp  The new emailAddress value
+   * @param tmp The new emailAddress value
    */
   public void setEmailAddress(String tmp) {
     this.emailAddress = tmp;
@@ -1334,9 +1371,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the phoneNumber attribute of the Quote object
+   * Gets the phoneNumber attribute of the Quote object
    *
-   * @return    The phoneNumber value
+   * @return The phoneNumber value
    */
   public String getPhoneNumber() {
     return phoneNumber;
@@ -1344,9 +1381,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the phoneNumber attribute of the Quote object
+   * Sets the phoneNumber attribute of the Quote object
    *
-   * @param  tmp  The new phoneNumber value
+   * @param tmp The new phoneNumber value
    */
   public void setPhoneNumber(String tmp) {
     this.phoneNumber = tmp;
@@ -1354,9 +1391,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the address attribute of the Quote object
+   * Gets the address attribute of the Quote object
    *
-   * @return    The address value
+   * @return The address value
    */
   public String getAddress() {
     return address;
@@ -1364,9 +1401,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the address attribute of the Quote object
+   * Sets the address attribute of the Quote object
    *
-   * @param  tmp  The new address value
+   * @param tmp The new address value
    */
   public void setAddress(String tmp) {
     this.address = tmp;
@@ -1374,9 +1411,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the faxNumber attribute of the Quote object
+   * Gets the faxNumber attribute of the Quote object
    *
-   * @return    The faxNumber value
+   * @return The faxNumber value
    */
   public String getFaxNumber() {
     return faxNumber;
@@ -1384,9 +1421,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the faxNumber attribute of the Quote object
+   * Sets the faxNumber attribute of the Quote object
    *
-   * @param  tmp  The new faxNumber value
+   * @param tmp The new faxNumber value
    */
   public void setFaxNumber(String tmp) {
     this.faxNumber = tmp;
@@ -1394,9 +1431,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the submitType attribute of the Quote object
+   * Gets the submitType attribute of the Quote object
    *
-   * @return    The submitType value
+   * @return The submitType value
    */
   public String getSubmitType() {
     return submitType;
@@ -1404,9 +1441,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the submitType attribute of the Quote object
+   * Sets the submitType attribute of the Quote object
    *
-   * @param  tmp  The new submitType value
+   * @param tmp The new submitType value
    */
   public void setSubmitType(String tmp) {
     this.submitType = tmp;
@@ -1414,9 +1451,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the submitAction attribute of the Quote object
+   * Gets the submitAction attribute of the Quote object
    *
-   * @return    The submitAction value
+   * @return The submitAction value
    */
   public int getSubmitAction() {
     return submitAction;
@@ -1424,9 +1461,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the submitAction attribute of the Quote object
+   * Sets the submitAction attribute of the Quote object
    *
-   * @param  tmp  The new submitAction value
+   * @param tmp The new submitAction value
    */
   public void setSubmitAction(int tmp) {
     this.submitAction = tmp;
@@ -1434,9 +1471,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the submitAction attribute of the Quote object
+   * Sets the submitAction attribute of the Quote object
    *
-   * @param  tmp  The new submitAction value
+   * @param tmp The new submitAction value
    */
   public void setSubmitAction(String tmp) {
     this.submitAction = Integer.parseInt(tmp);
@@ -1444,9 +1481,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the closeIt attribute of the Quote object
+   * Gets the closeIt attribute of the Quote object
    *
-   * @return    The closeIt value
+   * @return The closeIt value
    */
   public boolean getCloseIt() {
     return closeIt;
@@ -1454,9 +1491,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the closeIt attribute of the Quote object
+   * Sets the closeIt attribute of the Quote object
    *
-   * @param  tmp  The new closeIt value
+   * @param tmp The new closeIt value
    */
   public void setCloseIt(boolean tmp) {
     this.closeIt = tmp;
@@ -1464,9 +1501,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the closeIt attribute of the Quote object
+   * Sets the closeIt attribute of the Quote object
    *
-   * @param  tmp  The new closeIt value
+   * @param tmp The new closeIt value
    */
   public void setCloseIt(String tmp) {
     this.closeIt = DatabaseUtils.parseBoolean(tmp);
@@ -1474,9 +1511,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the Quote object
+   * Gets the closed attribute of the Quote object
    *
-   * @return    The closed value
+   * @return The closed value
    */
   public Timestamp getClosed() {
     return closed;
@@ -1484,9 +1521,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Quote object
+   * Sets the closed attribute of the Quote object
    *
-   * @param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(Timestamp tmp) {
     this.closed = tmp;
@@ -1494,19 +1531,23 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Quote object
+   * Sets the closed attribute of the Quote object
    *
-   * @param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     this.closed = DatabaseUtils.parseTimestamp(tmp);
   }
 
+  public boolean isClosed() {
+    return (closed != null);
+  }
+
 
   /**
-   *  Gets the canPrint attribute of the Quote object
+   * Gets the canPrint attribute of the Quote object
    *
-   * @return    The canPrint value
+   * @return The canPrint value
    */
   public String getCanPrint() {
     return canPrint;
@@ -1514,9 +1555,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the canPrint attribute of the Quote object
+   * Sets the canPrint attribute of the Quote object
    *
-   * @param  tmp  The new canPrint value
+   * @param tmp The new canPrint value
    */
   public void setCanPrint(String tmp) {
     this.canPrint = tmp;
@@ -1524,9 +1565,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the padded groupId attribute of the Quote object
+   * Gets the padded groupId attribute of the Quote object
    *
-   * @return    The padded groupId value
+   * @return The padded groupId value
    */
   public String getPaddedGroupId() {
     String padded = (String.valueOf(this.getGroupId()));
@@ -1538,9 +1579,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the showTotal attribute of the Quote object
+   * Gets the showTotal attribute of the Quote object
    *
-   * @return    The showTotal value
+   * @return The showTotal value
    */
   public boolean getShowTotal() {
     return showTotal;
@@ -1548,9 +1589,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the showTotal attribute of the Quote object
+   * Sets the showTotal attribute of the Quote object
    *
-   * @param  tmp  The new showTotal value
+   * @param tmp The new showTotal value
    */
   public void setShowTotal(boolean tmp) {
     this.showTotal = tmp;
@@ -1558,9 +1599,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the showTotal attribute of the Quote object
+   * Sets the showTotal attribute of the Quote object
    *
-   * @param  tmp  The new showTotal value
+   * @param tmp The new showTotal value
    */
   public void setShowTotal(String tmp) {
     this.showTotal = DatabaseUtils.parseBoolean(tmp);
@@ -1568,9 +1609,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the showSubtotal attribute of the Quote object
+   * Gets the showSubtotal attribute of the Quote object
    *
-   * @return    The showSubtotal value
+   * @return The showSubtotal value
    */
   public boolean getShowSubtotal() {
     return showSubtotal;
@@ -1578,9 +1619,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the showSubtotal attribute of the Quote object
+   * Sets the showSubtotal attribute of the Quote object
    *
-   * @param  tmp  The new showSubtotal value
+   * @param tmp The new showSubtotal value
    */
   public void setShowSubtotal(boolean tmp) {
     this.showSubtotal = tmp;
@@ -1588,9 +1629,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the showSubtotal attribute of the Quote object
+   * Sets the showSubtotal attribute of the Quote object
    *
-   * @param  tmp  The new showSubtotal value
+   * @param tmp The new showSubtotal value
    */
   public void setShowSubtotal(String tmp) {
     this.showSubtotal = DatabaseUtils.parseBoolean(tmp);
@@ -1598,9 +1639,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Gets the canNotCopyExpirationDate attribute of the Quote object
+   * Gets the canNotCopyExpirationDate attribute of the Quote object
    *
-   * @return    The canNotCopyExpirationDate value
+   * @return The canNotCopyExpirationDate value
    */
   public boolean getCanNotCopyExpirationDate() {
     return canNotCopyExpirationDate;
@@ -1608,9 +1649,9 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the canNotCopyExpirationDate attribute of the Quote object
+   * Sets the canNotCopyExpirationDate attribute of the Quote object
    *
-   * @param  tmp  The new canNotCopyExpirationDate value
+   * @param tmp The new canNotCopyExpirationDate value
    */
   public void setCanNotCopyExpirationDate(boolean tmp) {
     this.canNotCopyExpirationDate = tmp;
@@ -1618,29 +1659,55 @@ public class Quote extends GenericBean {
 
 
   /**
-   *  Sets the canNotCopyExpirationDate attribute of the Quote object
+   * Sets the canNotCopyExpirationDate attribute of the Quote object
    *
-   * @param  tmp  The new canNotCopyExpirationDate value
+   * @param tmp The new canNotCopyExpirationDate value
    */
   public void setCanNotCopyExpirationDate(String tmp) {
     this.canNotCopyExpirationDate = DatabaseUtils.parseBoolean(tmp);
   }
 
-public String getStatusName() { return statusName; }
-public void setStatusName(String tmp) { this.statusName = tmp; }
 
   /**
-   *  Constructor for the Quote object
-   */
-  public Quote() { }
-
-
-  /**
-   *  Constructor for the Quote object
+   * Gets the statusName attribute of the Quote object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @return The statusName value
+   */
+  public String getStatusName() {
+    return statusName;
+  }
+
+
+  /**
+   * Sets the statusName attribute of the Quote object
+   *
+   * @param tmp The new statusName value
+   */
+  public void setStatusName(String tmp) {
+    this.statusName = tmp;
+  }
+
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
+
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+  /**
+   * Constructor for the Quote object
+   */
+  public Quote() {
+  }
+
+
+  /**
+   * Constructor for the Quote object
+   *
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Quote(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -1648,10 +1715,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Constructor for the Quote object
+   * Constructor for the Quote object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Quote(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -1659,11 +1726,11 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -1678,8 +1745,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
         " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
         " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
         " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
-        " WHERE qe.quote_id = ? "
-        );
+        " WHERE qe.quote_id = ? ");
     PreparedStatement pst = db.prepareStatement(sb.toString());
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -1689,7 +1755,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     rs.close();
     pst.close();
     if (this.id == -1) {
-      throw new SQLException("Quote Entry not found");
+      throw new SQLException(Constants.NOT_FOUND_ERROR);
     }
     if (buildProducts) {
       this.buildProducts(db);
@@ -1697,23 +1763,23 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     if (buildResources) {
       this.buildResources(db);
     }
-    if (buildHistory) {
-      this.buildHistory(db);
-    }
     if (buildConditions) {
       this.buildConditions(db);
     }
     if (buildRemarks) {
       this.buildRemarks(db);
     }
+    if (buildHistory) {
+      this.buildHistory(db);
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //quote_entry table
@@ -1751,6 +1817,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     showTotal = rs.getBoolean("show_total");
     showSubtotal = rs.getBoolean("show_subtotal");
     logoFileId = DatabaseUtils.getInt(rs, "logo_file_id");
+    trashedDate = rs.getTimestamp("trashed_date");
 
     //Organization and contact information
     name = rs.getString("name");
@@ -1762,10 +1829,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildProducts(Connection db) throws SQLException {
     productList.setQuoteId(this.getId());
@@ -1782,10 +1849,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     if (this.getContactId() != -1) {
@@ -1801,10 +1868,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRemarks(Connection db) throws SQLException {
     remarks.setQuoteId(this.getId());
@@ -1813,11 +1880,11 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -1829,13 +1896,18 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       }
 
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "quote_entry_quote_id_seq");
       sql.append(
-          "INSERT INTO quote_entry(parent_id, org_id, contact_id, source_id, grand_total, " +
-          "status_id, status_date, expiration_date, show_total, show_subtotal, logo_file_id, ");
+          "INSERT INTO quote_entry (parent_id, org_id, contact_id, source_id, grand_total, " +
+          "status_id, status_date, expiration_date, show_total, show_subtotal, logo_file_id, trashed_date, ");
+      if (id > -1) {
+        sql.append("quote_id, ");
+      }
       if (this.getCloseIt() || this.getClosed() != null) {
         sql.append("closed, ");
       }
-      sql.append("quote_terms_id, quote_type_id, " +
+      sql.append(
+          "quote_terms_id, quote_type_id, " +
           "issued, short_description, notes, ticketid, product_id, " +
           "customer_product_id, opp_id, version, group_id, delivery_id, " +
           "email_address, phone_number, address, fax_number, submit_action, ");
@@ -1847,7 +1919,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
         sql.append("modified, ");
       }
       sql.append("modifiedby )");
-      sql.append(" VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (this.getClosed() != null) {
         sql.append("?, ");
       } else if (this.getCloseIt()) {
@@ -1875,6 +1950,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       pst.setBoolean(++i, this.getShowTotal());
       pst.setBoolean(++i, this.getShowSubtotal());
       DatabaseUtils.setInt(pst, ++i, this.getLogoFileId());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (this.getClosed() != null) {
         DatabaseUtils.setTimestamp(pst, ++i, this.getClosed());
       }
@@ -1905,7 +1984,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "quote_entry_quote_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "quote_entry_quote_id_seq", id);
       if (this.getEntered() == null) {
         updateEntry(db);
       }
@@ -1939,11 +2018,11 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1977,6 +2056,9 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       conditions.setQuoteId(this.getId());
       conditions.buildList(db);
       conditions.delete(db);
+      
+      //delete the contact history for this quote.
+      ContactHistory.deleteObject(db, OrganizationHistory.QUOTE, this.getId());
 
       //delete the quote remarks associated with this quote
       QuoteRemarkList remarks = new QuoteRemarkList();
@@ -2002,11 +2084,9 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
           " FROM quote_entry qe " +
           " LEFT JOIN quote_entry pqe " +
           " ON ( qe.parent_id = pqe.quote_id ) " +
-          " WHERE pqe.quote_id = ? "
-          );
+          " WHERE pqe.quote_id = ? ");
       pst.setInt(1, this.getId());
       rs = pst.executeQuery();
-
       if (rs.next()) {
         childQuoteId = rs.getInt("quote_id");
       }
@@ -2028,7 +2108,8 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       quoteList.setGroupId(this.getGroupId());
       quoteList.buildList(db);
       if (quoteList.size() == 0) {
-        pst = db.prepareStatement("DELETE FROM quote_group WHERE group_id = ? ");
+        pst = db.prepareStatement(
+            "DELETE FROM quote_group WHERE group_id = ? ");
         pst.setInt(1, this.getGroupId());
         pst.execute();
         pst.close();
@@ -2051,20 +2132,23 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
     if (this.getId() == -1) {
       return -1;
     }
+    // NOTE: For daffodil, needs to happen before the UPDATE quote_entry
+    updateEntry(db);
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("UPDATE quote_entry " +
+    sql.append(
+        "UPDATE quote_entry " +
         " SET parent_id = ?, " +
         " org_id = ?, " +
         " contact_id = ?, " +
@@ -2080,7 +2164,8 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     } else if (this.getCloseIt()) {
       sql.append(" closed = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-    sql.append(" quote_terms_id = ?, " +
+    sql.append(
+        " quote_terms_id = ?, " +
         " quote_type_id = ?, " +
         " issued = ?, " +
         " short_description = ?, " +
@@ -2098,7 +2183,8 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
         " fax_number = ?, " +
         " submit_action = ?, " +
         " modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-        " modifiedby = ? " +
+        " modifiedby = ?, " +
+        " trashed_date = ? " +
         " WHERE quote_id = ? ");
 
     int i = 0;
@@ -2135,21 +2221,141 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     pst.setString(++i, this.getFaxNumber());
     DatabaseUtils.setInt(pst, ++i, this.getSubmitAction());
     pst.setInt(++i, this.getModifiedBy());
+    pst.setTimestamp(++i, this.getTrashedDate());
     pst.setInt(++i, this.getId());
 
     resultCount = pst.executeUpdate();
     pst.close();
-    updateEntry(db);
+    this.setBuildProducts(true);
+    this.setBuildResources(true);
+    this.setBuildConditions(true);
+    this.setBuildRemarks(true);
+    this.queryRecord(db, this.getId());
     return resultCount;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param toTrash Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    boolean commit = true;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    StringBuffer sql = new StringBuffer();
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      sql.append(
+          "UPDATE quote_entry " +
+          "SET trashed_date = ? , " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+          "modifiedby = ? " +
+          "WHERE quote_id = ? ");
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      if (toTrash) {
+        DatabaseUtils.setTimestamp(
+            pst, ++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+      }
+      DatabaseUtils.setInt(pst, ++i, tmpUserId);
+      pst.setInt(++i, this.id);
+      pst.executeUpdate();
+      pst.close();
+      
+      /*
+       *  update the child quote's parent id
+       *  The root quote has the highest version number for a quote group.
+       *  The child quote is the next numerical version of the current quote.
+       *  New versions are added to the root quotes only.
+       *  Adding a version to the version 2 will result in a version 5 if there is already a version 4.
+       *  On deleting/trashing a quote, its parent quote's parent_id (parent of) is set to the next numerical version's quote_id.
+       */
+      if (toTrash) {
+        Quote childQuote = new Quote();
+        int childQuoteId = -1;
+        pst = db.prepareStatement(
+            " SELECT qe.quote_id AS quote_id " +
+            " FROM quote_entry qe " +
+            " LEFT JOIN quote_entry pqe " +
+            " ON ( qe.parent_id = pqe.quote_id ) " +
+            " WHERE pqe.quote_id = ? ");
+        pst.setInt(1, this.getId());
+        rs = pst.executeQuery();
+
+        if (rs.next()) {
+          childQuoteId = rs.getInt("quote_id");
+        }
+        rs.close();
+        pst.close();
+        if (childQuoteId != -1) {
+          childQuote.queryRecord(db, childQuoteId);
+          childQuote.setParentId(this.getParentId());
+          childQuote.update(db);
+        }
+      } else {
+        /*If untrashing the quote from a group, search for 
+        the quote's previous parent and the child and insert the quote 
+        in between them*/
+        Quote childQuote = new Quote();
+        int childQuoteId = -1;
+        pst = db.prepareStatement(
+            " SELECT MAX(quote_id) AS quote_id " +
+            " FROM quote_entry " +
+            " WHERE quote_id < ? " +
+            " AND group_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.setInt(2, this.getGroupId());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          childQuoteId = rs.getInt("quote_id");
+        }
+        rs.close();
+        pst.close();
+        if (childQuoteId != -1) {
+          childQuote.queryRecord(db, childQuoteId);
+          this.setParentId(childQuote.getParentId());
+          childQuote.setParentId(this.getId());
+          this.update(db);
+          childQuote.update(db);
+        }
+      }
+
+      // Disable the contact history for the quote
+      ContactHistory.trash(
+          db, OrganizationHistory.QUOTE, this.getId(), !toTrash);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2165,8 +2371,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       pst = db.prepareStatement(
           "SELECT count(*) as parentcount " +
           "FROM quote_entry " +
-          "WHERE parent_id = ? "
-          );
+          "WHERE parent_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2185,14 +2390,38 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       throw new SQLException(e.getMessage());
     }
 
+    // Check for quotes noes that belong to this quote
+    try {
+      i = 0;
+      pst = db.prepareStatement(
+          " SELECT count(*) as recordcount " +
+          " FROM quote_notes " +
+          " WHERE quote_id = ?");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        int recordCount = rs.getInt("recordcount");
+        if (recordCount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("quotenotes");
+          thisDependency.setCount(recordCount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
+        }
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+
     // Check for orders that are based off this quote
     try {
       i = 0;
       pst = db.prepareStatement(
           " SELECT count(*) as recordcount " +
           " FROM order_entry " +
-          " WHERE quote_id = ?"
-          );
+          " WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2210,15 +2439,14 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
-
+    
     // Check for the History of this quote
     try {
       i = 0;
       pst = db.prepareStatement(
           " SELECT count(*) as recordcount " +
           " FROM quotelog " +
-          " WHERE quote_id = ?"
-          );
+          " WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2243,8 +2471,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       pst = db.prepareStatement(
           " SELECT count(*) as recordcount " +
           " FROM quote_condition " +
-          " WHERE quote_id = ?"
-          );
+          " WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2292,9 +2519,9 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Gets the timeZoneParams attribute of the Quote class
+   * Gets the timeZoneParams attribute of the Quote class
    *
-   * @return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
 
@@ -2310,10 +2537,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void retrieveTicket(Connection db) throws SQLException {
     if (ticketId != -1) {
@@ -2323,11 +2550,11 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Gets the orderId attribute of the Quote object
+   * Gets the orderId attribute of the Quote object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The orderId value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The orderId value
+   * @throws SQLException Description of the Exception
    */
   public int getOrderId(Connection db) throws SQLException {
     int orderId = -1;
@@ -2337,8 +2564,7 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     PreparedStatement pst = db.prepareStatement(
         " SELECT oe.order_id as order_id " +
         " FROM order_entry oe LEFT JOIN quote_entry qe ON ( oe.quote_id = qe.quote_id ) " +
-        " WHERE oe.quote_id = ? "
-        );
+        " WHERE oe.quote_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -2352,27 +2578,28 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildVersionList(Connection db) throws SQLException {
     versionList = new QuoteList();
     versionList.setParentId(this.getId());
     versionList.setTopOnly(Constants.UNDEFINED);
-    versionList.setBuildCompleteVersionList(this.getBuildCompleteVersionList());
+    versionList.setBuildCompleteVersionList(
+        this.getBuildCompleteVersionList());
     versionList.buildList(db);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  copyQuote         Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param copyQuote Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Quote copyQuote(Connection db, Quote copyQuote) throws SQLException {
     copyQuote.setBuildCompleteVersionList(this.getBuildCompleteVersionList());
@@ -2412,7 +2639,8 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     if (copyQuote.getQuoteTypeId() == -1) {
       copyQuote.setQuoteTypeId(this.getQuoteTypeId());
     }
-    if (copyQuote.getShortDescription() == null || "".equals(copyQuote.getShortDescription())) {
+    if (copyQuote.getShortDescription() == null || "".equals(
+        copyQuote.getShortDescription())) {
       copyQuote.setShortDescription(this.getShortDescription());
     }
     if (copyQuote.getSourceId() == -1) {
@@ -2434,13 +2662,16 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     if (copyQuote.getAddress() == null || "".equals(copyQuote.getAddress())) {
       copyQuote.setAddress(this.getAddress());
     }
-    if (copyQuote.getEmailAddress() == null || "".equals(copyQuote.getEmailAddress())) {
+    if (copyQuote.getEmailAddress() == null || "".equals(
+        copyQuote.getEmailAddress())) {
       copyQuote.setEmailAddress(this.getEmailAddress());
     }
-    if (copyQuote.getPhoneNumber() == null || "".equals(copyQuote.getPhoneNumber())) {
+    if (copyQuote.getPhoneNumber() == null || "".equals(
+        copyQuote.getPhoneNumber())) {
       copyQuote.setPhoneNumber(this.getPhoneNumber());
     }
-    if (copyQuote.getFaxNumber() == null || "".equals(copyQuote.getFaxNumber())) {
+    if (copyQuote.getFaxNumber() == null || "".equals(
+        copyQuote.getFaxNumber())) {
       copyQuote.setFaxNumber(this.getFaxNumber());
     }
     if (copyQuote.getLogoFileId() == -1) {
@@ -2490,11 +2721,11 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Quote clone(Connection db) throws SQLException {
     Quote newQuote = null;
@@ -2506,7 +2737,8 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       }
       Quote clone = new Quote();
       clone.setVersion(clone.getNewVersion());
-      clone.setNotes("Cloned from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
+      clone.setNotes(
+          "Cloned from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
       clone.createNewGroup(db);
       newQuote = this.copyQuote(db, clone);
       if (commit) {
@@ -2528,12 +2760,12 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  clone             Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param clone Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Quote clone(Connection db, Quote clone) throws SQLException {
     Quote newQuote = null;
@@ -2545,7 +2777,8 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
       }
 
       String oldNotes = clone.getNotes();
-      clone.setNotes("Cloned from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
+      clone.setNotes(
+          "Cloned from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
       if (oldNotes != null && !"".equals(oldNotes)) {
         clone.setNotes(clone.getNotes() + oldNotes + "\n");
       }
@@ -2571,17 +2804,18 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Quote addVersion(Connection db) throws SQLException {
     Quote verQuote = new Quote();
     Quote rootQuote = new Quote(db, this.getRootQuote(db, this.getParentId()));
     verQuote.setVersion(rootQuote.getNewVersion());
-    verQuote.setNotes("Version derived from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
+    verQuote.setNotes(
+        "Version derived from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
     verQuote.setGroupId(this.getGroupId());
     verQuote = this.copyQuote(db, verQuote);
     rootQuote.setParentId(verQuote.getId());
@@ -2591,18 +2825,19 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Adds a feature to the Version attribute of the Quote object
+   * Adds a feature to the Version attribute of the Quote object
    *
-   * @param  db                The feature to be added to the Version attribute
-   * @param  verQuote          The feature to be added to the Version attribute
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the Version attribute
+   * @param verQuote The feature to be added to the Version attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Quote addVersion(Connection db, Quote verQuote) throws SQLException {
     Quote rootQuote = new Quote(db, this.getRootQuote(db, this.getParentId()));
     verQuote.setVersion(rootQuote.getNewVersion());
     String oldNotes = verQuote.getNotes();
-    verQuote.setNotes("Version derived from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
+    verQuote.setNotes(
+        "Version derived from Quote #" + this.getGroupId() + " version " + this.getVersion() + "\n\n");
     if (oldNotes != null && !"".equals(oldNotes)) {
       verQuote.setNotes(verQuote.getNotes() + oldNotes + "\n");
     }
@@ -2615,9 +2850,9 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Gets the newVersion attribute of the Quote object
+   * Gets the newVersion attribute of the Quote object
    *
-   * @return    The newVersion value
+   * @return The newVersion value
    */
   public String getNewVersion() {
     return new String((getVersionNumber() + 1) + ".0");
@@ -2625,9 +2860,9 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Gets the versionNumber attribute of the Quote object
+   * Gets the versionNumber attribute of the Quote object
    *
-   * @return    The versionNumber value
+   * @return The versionNumber value
    */
   public int getVersionNumber() {
     return (int) Math.round(Double.parseDouble(this.getVersion()));
@@ -2635,12 +2870,12 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Gets the rootQuote attribute of the Quote object
+   * Gets the rootQuote attribute of the Quote object
    *
-   * @param  db                Description of the Parameter
-   * @param  parentId          Description of the Parameter
-   * @return                   The rootQuote value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param parentId Description of the Parameter
+   * @return The rootQuote value
+   * @throws SQLException Description of the Exception
    */
   public int getRootQuote(Connection db, int parentId) throws SQLException {
     int result = -1;
@@ -2659,24 +2894,32 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void createNewGroup(Connection db) throws SQLException {
     PreparedStatement pst = null;
-    pst = db.prepareStatement("INSERT INTO quote_group (unused) VALUES (null) ");
+    id = DatabaseUtils.getNextSeq(db, "quote_group_group_id_seq");
+    pst = db.prepareStatement(
+        "INSERT INTO quote_group " +
+        "(" + (id > -1 ? "group_id, " : "") + "unused) VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "null) ");
+    if (id > -1) {
+      pst.setInt(1, id);
+    }
     pst.execute();
     pst.close();
-    this.setGroupId(DatabaseUtils.getCurrVal(db, "quote_group_group_id_seq"));
+    this.setGroupId(
+        DatabaseUtils.getCurrVal(db, "quote_group_group_id_seq", id));
   }
 
 
   /**
-   *  Gets the numberParams attribute of the Quote class
+   * Gets the numberParams attribute of the Quote class
    *
-   * @return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -2686,22 +2929,25 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Method to build the history of the quote
+   * Method to build the history of the quote
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildHistory(Connection db) throws SQLException {
     this.history.setQuoteId(this.getId());
+    if (systemStatus != null) {
+      this.history.setSystemStatus(systemStatus);
+    }
     this.history.buildList(db);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildConditions(Connection db) throws SQLException {
     QuoteConditionList condtns = new QuoteConditionList();
@@ -2712,10 +2958,10 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateEntry(Connection db) throws SQLException {
     QuoteLog thisEntry = new QuoteLog();
@@ -2729,11 +2975,12 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
     thisEntry.setIssuedDate(this.getIssuedDate());
     thisEntry.setGrandTotal(this.getGrandTotal());
     if (this.getCloseIt() && this.getClosed() == null) {
-      thisEntry.setClosed(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+      thisEntry.setClosed(new Timestamp(System.currentTimeMillis()));
     } else {
       thisEntry.setClosed(this.getClosed());
     }
-    thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
+    thisEntry.process(
+        db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     /*
      *  history.add(thisEntry);
      *  Iterator hist = history.iterator();
@@ -2746,9 +2993,9 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Gets the submitActionString attribute of the Quote object
+   * Gets the submitActionString attribute of the Quote object
    *
-   * @return    The submitActionString value
+   * @return The submitActionString value
    */
   public String getSubmitActionString() {
     if (this.getSubmitAction() == Quote.EMAIL) {
@@ -2763,12 +3010,13 @@ public void setStatusName(String tmp) { this.statusName = tmp; }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasExpired() {
-    if (this.getExpirationDate() != null && this.getExpirationDate().before(Calendar.getInstance().getTime())) {
+    if (this.getExpirationDate() != null && this.getExpirationDate().before(
+        Calendar.getInstance().getTime())) {
       return true;
     }
     return false;

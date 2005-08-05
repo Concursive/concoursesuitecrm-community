@@ -15,19 +15,18 @@
  */
 package org.aspcfs.modules.help.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
-import java.util.*;
-import java.text.*;
+
+import java.sql.*;
+import java.text.DateFormat;
 
 /**
- *  Represents a Help Business Rule
+ * Represents a Help Business Rule
  *
- *@author     akhi_m
- *@created    July 9, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created July 9, 2003
  */
 public class HelpBusinessRule extends GenericBean {
   //static variables
@@ -48,18 +47,18 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpBusinessRule object
+   * Constructor for the HelpBusinessRule object
    */
-  public HelpBusinessRule() { }
-
+  public HelpBusinessRule() {
+  }
 
 
   /**
-   *  Constructor for the HelpBusinessRule object
+   * Constructor for the HelpBusinessRule object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpBusinessRule(Connection db, int thisId) throws SQLException {
     if (thisId == -1) {
@@ -85,10 +84,10 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpBusinessRule object
+   * Constructor for the HelpBusinessRule object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpBusinessRule(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -96,9 +95,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpBusinessRule object
+   * Sets the id attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -106,9 +105,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpBusinessRule object
+   * Sets the id attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -116,9 +115,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpBusinessRule object
+   * Sets the linkHelpId attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new linkHelpId value
+   * @param tmp The new linkHelpId value
    */
   public void setLinkHelpId(int tmp) {
     this.linkHelpId = tmp;
@@ -126,9 +125,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpBusinessRule object
+   * Sets the linkHelpId attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new linkHelpId value
+   * @param tmp The new linkHelpId value
    */
   public void setLinkHelpId(String tmp) {
     this.linkHelpId = Integer.parseInt(tmp);
@@ -136,9 +135,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the HelpBusinessRule object
+   * Sets the description attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -146,9 +145,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpBusinessRule object
+   * Sets the enteredBy attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -156,9 +155,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpBusinessRule object
+   * Sets the enteredBy attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -166,9 +165,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpBusinessRule object
+   * Sets the entered attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -176,9 +175,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpBusinessRule object
+   * Sets the entered attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -186,9 +185,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpBusinessRule object
+   * Sets the modifiedBy attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -196,9 +195,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpBusinessRule object
+   * Sets the modifiedBy attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -206,9 +205,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpBusinessRule object
+   * Sets the modified attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -216,9 +215,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpBusinessRule object
+   * Sets the modified attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -226,9 +225,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the HelpBusinessRule object
+   * Sets the complete attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new complete value
+   * @param tmp The new complete value
    */
   public void setComplete(boolean tmp) {
     this.complete = tmp;
@@ -236,9 +235,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the HelpBusinessRule object
+   * Sets the complete attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new complete value
+   * @param tmp The new complete value
    */
   public void setComplete(String tmp) {
     this.complete = DatabaseUtils.parseBoolean(tmp);
@@ -246,9 +245,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the HelpBusinessRule object
+   * Sets the enabled attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -256,9 +255,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the HelpBusinessRule object
+   * Sets the enabled attribute of the HelpBusinessRule object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -266,9 +265,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the HelpBusinessRule object
+   * Sets the completeDate attribute of the HelpBusinessRule object
    *
-   *@param  completeDate  The new completeDate value
+   * @param completeDate The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp completeDate) {
     this.completeDate = completeDate;
@@ -276,9 +275,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the HelpBusinessRule object
+   * Gets the completeDate attribute of the HelpBusinessRule object
    *
-   *@return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -286,9 +285,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Sets the completedBy attribute of the HelpBusinessRule object
+   * Sets the completedBy attribute of the HelpBusinessRule object
    *
-   *@param  completedBy  The new completedBy value
+   * @param completedBy The new completedBy value
    */
   public void setCompletedBy(int completedBy) {
     this.completedBy = completedBy;
@@ -296,9 +295,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the completedBy attribute of the HelpBusinessRule object
+   * Gets the completedBy attribute of the HelpBusinessRule object
    *
-   *@return    The completedBy value
+   * @return The completedBy value
    */
   public int getCompletedBy() {
     return completedBy;
@@ -306,9 +305,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the completeDateString attribute of the HelpBusinessRule object
+   * Gets the completeDateString attribute of the HelpBusinessRule object
    *
-   *@return    The completeDateString value
+   * @return The completeDateString value
    */
   public String getCompleteDateString() {
     String tmp = "";
@@ -321,9 +320,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the HelpBusinessRule object
+   * Gets the id attribute of the HelpBusinessRule object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -331,9 +330,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the linkHelpId attribute of the HelpBusinessRule object
+   * Gets the linkHelpId attribute of the HelpBusinessRule object
    *
-   *@return    The linkHelpId value
+   * @return The linkHelpId value
    */
   public int getLinkHelpId() {
     return linkHelpId;
@@ -341,9 +340,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the HelpBusinessRule object
+   * Gets the description attribute of the HelpBusinessRule object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -351,9 +350,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the HelpBusinessRule object
+   * Gets the enteredBy attribute of the HelpBusinessRule object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -361,9 +360,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the HelpBusinessRule object
+   * Gets the entered attribute of the HelpBusinessRule object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -371,9 +370,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the HelpBusinessRule object
+   * Gets the modifiedBy attribute of the HelpBusinessRule object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -381,9 +380,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the HelpBusinessRule object
+   * Gets the modified attribute of the HelpBusinessRule object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -391,9 +390,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the complete attribute of the HelpBusinessRule object
+   * Gets the complete attribute of the HelpBusinessRule object
    *
-   *@return    The complete value
+   * @return The complete value
    */
   public boolean getComplete() {
     return complete;
@@ -401,9 +400,9 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the HelpBusinessRule object
+   * Gets the enabled attribute of the HelpBusinessRule object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -411,21 +410,24 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Insert a Business Rule
+   * Insert a Business Rule
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
+      id = DatabaseUtils.getNextSeq(db, "help_business_rules_rule_id_seq");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO help_business_rules " +
-          "(link_help_id, description, enteredby, modifiedby, enabled, completedate, completedby) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ? ) "
-          );
+          "(" + (id > -1 ? "rule_id, " : "") + "link_help_id, description, enteredby, modifiedby, enabled, completedate, completedby) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ? ) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getLinkHelpId());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getEnteredBy());
@@ -439,8 +441,9 @@ public class HelpBusinessRule extends GenericBean {
         pst.setTimestamp(++i, null);
       }
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "help_business_rules_rule_id_seq");
       pst.close();
+      this.id = DatabaseUtils.getCurrVal(
+          db, "help_business_rules_rule_id_seq", id);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -453,11 +456,11 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Update a Business Rule
+   * Update a Business Rule
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     String sql = null;
@@ -475,8 +478,7 @@ public class HelpBusinessRule extends GenericBean {
       pst = db.prepareStatement(
           "UPDATE help_business_rules " +
           "SET modifiedby = ?, description = ?, enabled = ?, completedate = ?, completedby = ? " +
-          "WHERE rule_id = ? AND modified = ? "
-          );
+          "WHERE rule_id = ? AND modified = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       pst.setBoolean(++i, this.getEnabled());
@@ -506,11 +508,11 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Delete a Business Rule
+   * Delete a Business Rule
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -536,10 +538,10 @@ public class HelpBusinessRule extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("rule_id");

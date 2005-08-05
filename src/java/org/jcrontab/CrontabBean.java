@@ -26,61 +26,61 @@ package org.jcrontab;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Calendar;
 
 /**
- *  This Bean represents an Event. Basically defines all the information
- *  necesary. Extends Seriazable to be saved in binary format when neded.
+ * This Bean represents an Event. Basically defines all the information
+ * necesary. Extends Seriazable to be saved in binary format when neded.
  *
- *@author     Israel Olalla
- *@created    November 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November 2002
  */
 
 public class CrontabBean implements Serializable {
 
   /**
-   *  This calendar defines the CrontabBean
+   * This calendar defines the CrontabBean
    */
   public Calendar cal;
   /**
-   *  Time in milliseconds from 1970 to the execution of this CrontabBean
+   * Time in milliseconds from 1970 to the execution of this CrontabBean
    */
   public long timeMillis;
   /**
-   *  This CrontabBean Id
+   * This CrontabBean Id
    */
   public int id;
   /**
-   *  This CrontabBean name
+   * This CrontabBean name
    */
   public String className;
   /**
-   *  This CrontabBean methodName
+   * This CrontabBean methodName
    */
   public String methodName;
   /**
-   *  This CrontabBean bextraInfo to save time if the extraInfo Exists
+   * This CrontabBean bextraInfo to save time if the extraInfo Exists
    */
   public boolean bextraInfo = false;
   /**
-   *  This CrontabBean extraInfo I mean the parameters given :-)
+   * This CrontabBean extraInfo I mean the parameters given :-)
    */
   public String[] extraInfo;
   public Object connectionContext = null;
 
 
   /**
-   *  Default void constuctor.
+   * Default void constuctor.
    */
-  public CrontabBean() { }
+  public CrontabBean() {
+  }
 
 
   /**
-   *  This CrontabBean Id setter
+   * This CrontabBean Id setter
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -88,9 +88,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean timeMillis setter
+   * This CrontabBean timeMillis setter
    *
-   *@param  timeMillis  Time in Milliseconds from 1970
+   * @param timeMillis Time in Milliseconds from 1970
    */
   public void setTime(long timeMillis) {
     this.timeMillis = timeMillis;
@@ -98,9 +98,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean className setter
+   * This CrontabBean className setter
    *
-   *@param  className  the name of the class
+   * @param className the name of the class
    */
   public void setClassName(String className) {
     this.className = className;
@@ -108,9 +108,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean methodName setter
+   * This CrontabBean methodName setter
    *
-   *@param  methodName  The name of the given Method
+   * @param methodName The name of the given Method
    */
   public void setMethodName(String methodName) {
     this.methodName = methodName;
@@ -118,9 +118,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean extraInfo setter
+   * This CrontabBean extraInfo setter
    *
-   *@param  extraInfo  the parameters given to the class
+   * @param extraInfo the parameters given to the class
    */
   public void setExtraInfo(String[] extraInfo) {
     this.extraInfo = extraInfo;
@@ -129,9 +129,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean calendar setter
+   * This CrontabBean calendar setter
    *
-   *@param  cal  the given calendar
+   * @param cal the given calendar
    */
   public void setCalendar(Calendar cal) {
     this.cal = cal;
@@ -139,9 +139,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  Sets the connectionContext attribute of the CrontabBean object
+   * Sets the connectionContext attribute of the CrontabBean object
    *
-   *@param  tmp  The new connectionContext value
+   * @param tmp The new connectionContext value
    */
   public void setConnectionContext(Object tmp) {
     this.connectionContext = tmp;
@@ -149,9 +149,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean id getter
+   * This CrontabBean id getter
    *
-   *@return    id the bean id
+   * @return id the bean id
    */
   public int getId() {
     return id;
@@ -159,9 +159,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean timeMillis getter
+   * This CrontabBean timeMillis getter
    *
-   *@return    timeMillis the bean timeMillis
+   * @return timeMillis the bean timeMillis
    */
   public long getTime() {
     return timeMillis;
@@ -169,9 +169,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean calendar getter
+   * This CrontabBean calendar getter
    *
-   *@return    cal the beans calendar
+   * @return cal the beans calendar
    */
   public Calendar getCalendar() {
     return cal;
@@ -179,9 +179,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean className getter
+   * This CrontabBean className getter
    *
-   *@return    className the beans className
+   * @return className the beans className
    */
   public String getClassName() {
     return className;
@@ -189,9 +189,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean methodName getter
+   * This CrontabBean methodName getter
    *
-   *@return    methodName the beans methodName
+   * @return methodName the beans methodName
    */
   public String getMethodName() {
     return methodName;
@@ -199,9 +199,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This CrontabBean extraInfo getter
+   * This CrontabBean extraInfo getter
    *
-   *@return    extraInfo the beans parameters
+   * @return extraInfo the beans parameters
    */
   public String[] getExtraInfo() {
     return extraInfo;
@@ -209,9 +209,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  Gets the connectionContext attribute of the CrontabBean object
+   * Gets the connectionContext attribute of the CrontabBean object
    *
-   *@return    The connectionContext value
+   * @return The connectionContext value
    */
   public Object getConnectionContext() {
     return connectionContext;
@@ -219,9 +219,9 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This Method returns this Bean in a String
+   * This Method returns this Bean in a String
    *
-   *@return    String that represents this bean
+   * @return String that represents this bean
    */
   public String toString() {
     final StringBuffer sb = new StringBuffer();
@@ -230,8 +230,9 @@ public class CrontabBean implements Serializable {
     sb.append("\n [ MethodName : " + methodName + " ]");
     if (bextraInfo) {
       for (int i = 0; i < extraInfo.length; i++) {
-        sb.append("\n [ Parameter " + i + " : " + extraInfo[i]
-             + " ]");
+        sb.append(
+            "\n [ Parameter " + i + " : " + extraInfo[i]
+            + " ]");
       }
     }
     sb.append("\n [ Calendar: " + cal + " ]");
@@ -242,10 +243,10 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This Method returns this Bean in a xml format This method is here to make
-   *  easier integration with web-apps and other systems
+   * This Method returns this Bean in a xml format This method is here to make
+   * easier integration with web-apps and other systems
    *
-   *@return    String that represents this bean in xml
+   * @return String that represents this bean in xml
    */
   public String toXML() {
     StringWriter stringWriter = new StringWriter();
@@ -256,10 +257,10 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  This Method writes this Bean in the given PrintWriter. Can pick this from
-   *  a servlet Context or a HttpResponse
+   * This Method writes this Bean in the given PrintWriter. Can pick this from
+   * a servlet Context or a HttpResponse
    *
-   *@param  pw  PrintWriter where the xml eban will be written
+   * @param pw PrintWriter where the xml eban will be written
    */
   public void toXML(PrintWriter pw) {
     pw.println("<crontabentry>");
@@ -279,10 +280,10 @@ public class CrontabBean implements Serializable {
 
 
   /**
-   *  Helps to do the castings in a more simple way.
+   * Helps to do the castings in a more simple way.
    *
-   *@param  obj  Object to cast to CrontabEntryBean
-   *@return      The resulting array of CrontabEntryBean
+   * @param obj Object to cast to CrontabEntryBean
+   * @return The resulting array of CrontabEntryBean
    */
   public static CrontabBean[] toArray(Object[] obj) {
     CrontabBean[] ceb = new CrontabBean[obj.length];

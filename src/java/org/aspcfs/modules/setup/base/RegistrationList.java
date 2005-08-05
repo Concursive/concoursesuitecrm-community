@@ -15,28 +15,31 @@
  */
 package org.aspcfs.modules.setup.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.*;
 
 /**
- *  Used for retrieving Registration items from the database
+ * Used for retrieving Registration items from the database
  *
- *@author     matt rajkowski
- *@created    November 21, 2003
- *@version    $Id: RegistrationList.java,v 1.2 2003/11/21 22:05:54 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: RegistrationList.java,v 1.2 2003/11/21 22:05:54 mrajkowski
+ *          Exp $
+ * @created November 21, 2003
  */
 public class RegistrationList extends ArrayList {
 
   /**
-   *  Retrieves a specific entry from the database
+   * Retrieves a specific entry from the database
    *
-   *@param  db                Description of the Parameter
-   *@param  email             Description of the Parameter
-   *@param  profile           Description of the Parameter
-   *@param  enabled           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param email   Description of the Parameter
+   * @param profile Description of the Parameter
+   * @param enabled Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static Registration locate(Connection db, String email, String profile, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

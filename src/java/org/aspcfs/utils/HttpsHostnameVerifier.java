@@ -15,25 +15,26 @@
  */
 package org.aspcfs.utils;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 
 /**
- *  This is a replacement hostname verifier that accepts ANYTHING. This was
- *  created to allow self-signed X509 certificates to work.
+ * This is a replacement hostname verifier that accepts ANYTHING. This was
+ * created to allow self-signed X509 certificates to work.
  *
- *@author     matt rajkowski
- *@created    August 12, 2003
- *@version    $Id: HttpsHostnameVerifier.java,v 1.2 2003/09/08 20:55:10
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: HttpsHostnameVerifier.java,v 1.2 2003/09/08 20:55:10
+ *          mrajkowski Exp $
+ * @created August 12, 2003
  */
 public class HttpsHostnameVerifier implements HostnameVerifier {
 
   /**
-   *  Verifies certificate for Java 1.4 and up
+   * Verifies certificate for Java 1.4 and up
    *
-   *@param  hostname  Description of the Parameter
-   *@param  session   Description of the Parameter
-   *@return           Description of the Return Value
+   * @param hostname Description of the Parameter
+   * @param session  Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean verify(String hostname, SSLSession session) {
     //accept any name

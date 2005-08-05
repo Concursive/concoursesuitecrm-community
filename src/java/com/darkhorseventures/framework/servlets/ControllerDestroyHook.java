@@ -15,34 +15,31 @@
  */
 package com.darkhorseventures.framework.servlets;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
 
 /**
- *  Description of the Interface
+ * Description of the Interface
  *
- *@author     mrajkowski
- *@created    July 30, 2001
- *@version    $Id: ControllerDestroyHook.java,v 1.1.1.1 2002/01/14 19:49:29
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: ControllerDestroyHook.java,v 1.1.1.1 2002/01/14 19:49:29
+ *          mrajkowski Exp $
+ * @created July 30, 2001
  */
 public interface ControllerDestroyHook {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  config  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since
+   * @param config Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeControllerDestroyInit(ServletConfig config);
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
-   *@since
+   * @return Description of the Returned Value
    */
   public String executeControllerDestroy();
 }

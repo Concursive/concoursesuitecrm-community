@@ -25,12 +25,12 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 
 /**
- *  Represents an issue category (forum) in iTeam
+ * Represents an issue category (forum) in iTeam
  *
- *@author     mrajkowski
- *@created    January 15, 2003
- *@version    $Id: IssueCategory.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: IssueCategory.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created January 15, 2003
  */
 public class IssueCategory extends GenericBean {
   //base properties
@@ -54,18 +54,19 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Constructor for the IssueCategory object
+   * Constructor for the IssueCategory object
    */
-  public IssueCategory() { }
+  public IssueCategory() {
+  }
 
 
   /**
-   *  Constructor for the IssueCategory object
+   * Constructor for the IssueCategory object
    *
-   *@param  db                Description of the Parameter
-   *@param  categoryId        Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param categoryId Description of the Parameter
+   * @param projectId  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public IssueCategory(Connection db, int categoryId, int projectId) throws SQLException {
     if (categoryId == -1) {
@@ -91,10 +92,10 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Constructor for the IssueCategory object
+   * Constructor for the IssueCategory object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public IssueCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -102,9 +103,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the IssueCategory object
+   * Sets the id attribute of the IssueCategory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -112,9 +113,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the IssueCategory object
+   * Sets the id attribute of the IssueCategory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -122,9 +123,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the IssueCategory object
+   * Sets the projectId attribute of the IssueCategory object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -132,9 +133,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the IssueCategory object
+   * Sets the projectId attribute of the IssueCategory object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -142,9 +143,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the subject attribute of the IssueCategory object
+   * Sets the subject attribute of the IssueCategory object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -152,9 +153,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the IssueCategory object
+   * Sets the description attribute of the IssueCategory object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -162,9 +163,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the IssueCategory object
+   * Sets the enabled attribute of the IssueCategory object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -172,9 +173,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the IssueCategory object
+   * Sets the enabled attribute of the IssueCategory object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -182,9 +183,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the IssueCategory object
+   * Sets the entered attribute of the IssueCategory object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -192,9 +193,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the IssueCategory object
+   * Sets the entered attribute of the IssueCategory object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -202,9 +203,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the IssueCategory object
+   * Sets the enteredBy attribute of the IssueCategory object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -212,9 +213,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the IssueCategory object
+   * Sets the enteredBy attribute of the IssueCategory object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -222,9 +223,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the IssueCategory object
+   * Sets the modified attribute of the IssueCategory object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -232,9 +233,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the IssueCategory object
+   * Sets the modified attribute of the IssueCategory object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -242,9 +243,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the IssueCategory object
+   * Sets the modifiedBy attribute of the IssueCategory object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -252,9 +253,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the IssueCategory object
+   * Sets the modifiedBy attribute of the IssueCategory object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -262,9 +263,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the topicsCount attribute of the IssueCategory object
+   * Sets the topicsCount attribute of the IssueCategory object
    *
-   *@param  tmp  The new topicsCount value
+   * @param tmp The new topicsCount value
    */
   public void setTopicsCount(int tmp) {
     this.topicsCount = tmp;
@@ -272,9 +273,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the topicsCount attribute of the IssueCategory object
+   * Sets the topicsCount attribute of the IssueCategory object
    *
-   *@param  tmp  The new topicsCount value
+   * @param tmp The new topicsCount value
    */
   public void setTopicsCount(String tmp) {
     this.topicsCount = Integer.parseInt(tmp);
@@ -282,9 +283,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the postsCount attribute of the IssueCategory object
+   * Sets the postsCount attribute of the IssueCategory object
    *
-   *@param  tmp  The new postsCount value
+   * @param tmp The new postsCount value
    */
   public void setPostsCount(int tmp) {
     this.postsCount = tmp;
@@ -292,9 +293,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the postsCount attribute of the IssueCategory object
+   * Sets the postsCount attribute of the IssueCategory object
    *
-   *@param  tmp  The new postsCount value
+   * @param tmp The new postsCount value
    */
   public void setPostsCount(String tmp) {
     this.postsCount = Integer.parseInt(tmp);
@@ -302,9 +303,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastPostDate attribute of the IssueCategory object
+   * Sets the lastPostDate attribute of the IssueCategory object
    *
-   *@param  tmp  The new lastPostDate value
+   * @param tmp The new lastPostDate value
    */
   public void setLastPostDate(java.sql.Timestamp tmp) {
     this.lastPostDate = tmp;
@@ -312,9 +313,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastPostDate attribute of the IssueCategory object
+   * Sets the lastPostDate attribute of the IssueCategory object
    *
-   *@param  tmp  The new lastPostDate value
+   * @param tmp The new lastPostDate value
    */
   public void setLastPostDate(String tmp) {
     this.lastPostDate = DatabaseUtils.parseTimestamp(tmp);
@@ -322,9 +323,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastPostBy attribute of the IssueCategory object
+   * Sets the lastPostBy attribute of the IssueCategory object
    *
-   *@param  tmp  The new lastPostBy value
+   * @param tmp The new lastPostBy value
    */
   public void setLastPostBy(int tmp) {
     this.lastPostBy = tmp;
@@ -332,9 +333,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastPostBy attribute of the IssueCategory object
+   * Sets the lastPostBy attribute of the IssueCategory object
    *
-   *@param  tmp  The new lastPostBy value
+   * @param tmp The new lastPostBy value
    */
   public void setLastPostBy(String tmp) {
     this.lastPostBy = Integer.parseInt(tmp);
@@ -342,9 +343,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Sets the project attribute of the IssueCategory object
+   * Sets the project attribute of the IssueCategory object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -352,9 +353,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the IssueCategory object
+   * Gets the id attribute of the IssueCategory object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -362,9 +363,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the IssueCategory object
+   * Gets the projectId attribute of the IssueCategory object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -372,9 +373,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the subject attribute of the IssueCategory object
+   * Gets the subject attribute of the IssueCategory object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -382,9 +383,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the IssueCategory object
+   * Gets the description attribute of the IssueCategory object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -392,9 +393,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the IssueCategory object
+   * Gets the enabled attribute of the IssueCategory object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -402,9 +403,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the IssueCategory object
+   * Gets the entered attribute of the IssueCategory object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -412,9 +413,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the IssueCategory object
+   * Gets the enteredBy attribute of the IssueCategory object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -422,9 +423,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the IssueCategory object
+   * Gets the modified attribute of the IssueCategory object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -432,9 +433,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the IssueCategory object
+   * Gets the modifiedBy attribute of the IssueCategory object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -442,9 +443,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the topicsCount attribute of the IssueCategory object
+   * Gets the topicsCount attribute of the IssueCategory object
    *
-   *@return    The topicsCount value
+   * @return The topicsCount value
    */
   public int getTopicsCount() {
     return topicsCount;
@@ -452,9 +453,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the postsCount attribute of the IssueCategory object
+   * Gets the postsCount attribute of the IssueCategory object
    *
-   *@return    The postsCount value
+   * @return The postsCount value
    */
   public int getPostsCount() {
     return postsCount;
@@ -462,9 +463,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastPostDate attribute of the IssueCategory object
+   * Gets the lastPostDate attribute of the IssueCategory object
    *
-   *@return    The lastPostDate value
+   * @return The lastPostDate value
    */
   public java.sql.Timestamp getLastPostDate() {
     return lastPostDate;
@@ -472,9 +473,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastPostBy attribute of the IssueCategory object
+   * Gets the lastPostBy attribute of the IssueCategory object
    *
-   *@return    The lastPostBy value
+   * @return The lastPostBy value
    */
   public int getLastPostBy() {
     return lastPostBy;
@@ -482,9 +483,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the project attribute of the IssueCategory object
+   * Gets the project attribute of the IssueCategory object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -503,10 +504,10 @@ public class IssueCategory extends GenericBean {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("category_id");
@@ -527,9 +528,9 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastIssueDateString attribute of the IssueCategory object
+   * Gets the lastIssueDateString attribute of the IssueCategory object
    *
-   *@return    The lastIssueDateString value
+   * @return The lastIssueDateString value
    */
   public String getLastPostDateString() {
     String tmp = "";
@@ -542,14 +543,15 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastIssueDateTimeString attribute of the IssueCategory object
+   * Gets the lastIssueDateTimeString attribute of the IssueCategory object
    *
-   *@return    The lastIssueDateTimeString value
+   * @return The lastIssueDateTimeString value
    */
   public String getLastPostDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastPostDate);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          lastPostDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -557,17 +559,21 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_issue_cate_categ_id_seq");
     sql.append(
         "INSERT INTO project_issues_categories " +
         "(project_id, subject, description, enabled, ");
+    if (id > -1) {
+      sql.append("category_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -578,6 +584,9 @@ public class IssueCategory extends GenericBean {
         "enteredBy, modifiedBy, " +
         "topics_count, posts_count, last_post_date, last_post_by, allow_files) ");
     sql.append("VALUES (?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -591,6 +600,9 @@ public class IssueCategory extends GenericBean {
     pst.setString(++i, subject);
     pst.setString(++i, description);
     pst.setBoolean(++i, enabled);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -606,17 +618,17 @@ public class IssueCategory extends GenericBean {
     pst.setBoolean(++i, allowFileAttachments);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_issue_cate_categ_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "project_issue_cate_categ_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
@@ -644,10 +656,10 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
     boolean commit = db.getAutoCommit();

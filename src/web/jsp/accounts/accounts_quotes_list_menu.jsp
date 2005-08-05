@@ -23,13 +23,14 @@
   var thisVersionId = -1;
   var menu_init = false;
   var modifiable = 'true';
+  var trashed = 'false';
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, quoteId, versionId, modi) {
+  function displayMenu(loc, id, orgId, quoteId, versionId, modi, trashed) {
     thisOrgId = orgId;
     thisQuoteId = quoteId;
     thisVersionId = versionId;
     this.modifiable = modi;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuQuote", "down", 0, 0, 170, getHeight("menuQuoteTable"));
@@ -37,11 +38,22 @@
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
 
-  function updateMenu() {
+  function updateMenu(trashed) {
     if(modifiable == 'true'){
       showSpan('menuModify');
     }else{
       hideSpan('menuModify');
+    }
+    if (trashed == 'true'){
+      hideSpan('menuModify');
+      hideSpan('menuDelete');
+      hideSpan('menuClone');
+      hideSpan('menuAddVersion');
+    } else {
+      showSpan('menuModify');
+      showSpan('menuDelete');
+      showSpan('menuClone');
+      showSpan('menuAddVersion');
     }
   }
   //Menu link functions
@@ -115,7 +127,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-quotes-add">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="clone();">
+      <tr id="menuClone" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="clone();">
         <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -125,7 +137,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-quotes-add">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addVersion();">
+      <tr id="menuAddVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addVersion();">
         <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -135,7 +147,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-quotes-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteQuote();">
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteQuote();">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

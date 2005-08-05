@@ -15,26 +15,25 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.HtmlSelectHours;
-import org.aspcfs.utils.web.HtmlSelectHours24;
-import org.aspcfs.utils.web.HtmlSelectMinutesFives;
-import org.aspcfs.utils.web.HtmlSelectAMPM;
-import org.aspcfs.utils.web.HtmlSelectTimeZone;
+import org.aspcfs.utils.web.*;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import org.aspcfs.modules.login.beans.UserBean;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 2, 2003
- *@version    $Id: HtmlSelectTime.java,v 1.1.4.1 2004/03/19 21:00:49 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HtmlSelectTime.java,v 1.1.4.1 2004/03/19 21:00:49 rvasista
+ *          Exp $
+ * @created July 2, 2003
  */
 public class HtmlSelectTime extends TagSupport {
 
@@ -46,9 +45,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the baseName attribute of the HtmlSelectTime object
+   * Sets the baseName attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new baseName value
+   * @param tmp The new baseName value
    */
   public void setBaseName(String tmp) {
     this.baseName = tmp;
@@ -56,9 +55,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the HtmlSelectTime object
+   * Sets the value attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.setValue(DatabaseUtils.parseTimestamp(tmp));
@@ -66,9 +65,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the HtmlSelectTime object
+   * Sets the value attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(java.sql.Timestamp tmp) {
     value = tmp;
@@ -76,9 +75,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the timeZone attribute of the HtmlSelectTime object
+   * Sets the timeZone attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new timeZone value
+   * @param tmp The new timeZone value
    */
   public void setTimeZone(String tmp) {
     timeZone = tmp;
@@ -86,9 +85,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the hidden attribute of the HtmlSelectTime object
+   * Sets the hidden attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new hidden value
+   * @param tmp The new hidden value
    */
   public void setHidden(boolean tmp) {
     this.hidden = tmp;
@@ -96,9 +95,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the hidden attribute of the HtmlSelectTime object
+   * Sets the hidden attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new hidden value
+   * @param tmp The new hidden value
    */
   public void setHidden(String tmp) {
     this.hidden = DatabaseUtils.parseBoolean(tmp);
@@ -106,9 +105,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the showTimeZone attribute of the HtmlSelectTime object
+   * Sets the showTimeZone attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new showTimeZone value
+   * @param tmp The new showTimeZone value
    */
   public void setShowTimeZone(boolean tmp) {
     this.showTimeZone = tmp;
@@ -116,9 +115,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Sets the showTimeZone attribute of the HtmlSelectTime object
+   * Sets the showTimeZone attribute of the HtmlSelectTime object
    *
-   *@param  tmp  The new showTimeZone value
+   * @param tmp The new showTimeZone value
    */
   public void setShowTimeZone(String tmp) {
     this.showTimeZone = DatabaseUtils.parseBoolean(tmp);
@@ -126,16 +125,17 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
       Locale locale = Locale.getDefault();
       // Retrieve the user's locale from their session
-      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
+          "User");
       if (thisUser != null) {
         locale = thisUser.getUserRecord().getLocale();
       }
@@ -176,16 +176,22 @@ public class HtmlSelectTime extends TagSupport {
         if (is24Hour) {
           // Show 24 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectHours24.getSelect(baseName + "Hour", (hour < 10 ? String.valueOf("0" + hour) : String.valueOf(hour))).toString());
+              HtmlSelectHours24.getSelect(
+                  baseName + "Hour", (hour < 10 ? String.valueOf("0" + hour) : String.valueOf(
+                      hour))).toString());
         } else {
           // Show 12 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectHours.getSelect(baseName + "Hour", (hour < 10 ? String.valueOf("0" + hour) : String.valueOf(hour))).toString());
+              HtmlSelectHours.getSelect(
+                  baseName + "Hour", (hour < 10 ? String.valueOf("0" + hour) : String.valueOf(
+                      hour))).toString());
         }
         this.pageContext.getOut().write(":");
         this.pageContext.getOut().write(
-            HtmlSelectMinutesFives.getSelect(baseName + "Minute",
-            (minute < 10 ? String.valueOf("0" + minute) : String.valueOf(minute))).toString());
+            HtmlSelectMinutesFives.getSelect(
+                baseName + "Minute",
+                (minute < 10 ? String.valueOf("0" + minute) : String.valueOf(
+                    minute))).toString());
         if (is24Hour) {
           // Do not show AM/PM
         } else {
@@ -199,15 +205,18 @@ public class HtmlSelectTime extends TagSupport {
         }
       } else {
         this.pageContext.getOut().write(
-            "<input type=\"hidden\" name=\"" + baseName + "Hour" + "\" value=\"" + String.valueOf(hour) + "\" />");
+            "<input type=\"hidden\" name=\"" + baseName + "Hour" + "\" value=\"" + String.valueOf(
+                hour) + "\" />");
         this.pageContext.getOut().write(
-            "<input type=\"hidden\" name=\"" + baseName + "Minute" + "\" value=\"" + String.valueOf(minute) + "\" />");
+            "<input type=\"hidden\" name=\"" + baseName + "Minute" + "\" value=\"" + String.valueOf(
+                minute) + "\" />");
         this.pageContext.getOut().write(
-            "<input type=\"hidden\" name=\"" + baseName + "AMPM" + "\" value=\"" + String.valueOf(AMPM) + "\" />");
+            "<input type=\"hidden\" name=\"" + baseName + "AMPM" + "\" value=\"" + String.valueOf(
+                AMPM) + "\" />");
       }
-
       if (showTimeZone) {
-        this.pageContext.getOut().write(HtmlSelectTimeZone.getSelect(baseName + "TimeZone", timeZone).getHtml());
+        this.pageContext.getOut().write(
+            HtmlSelectTimeZone.getSelect(baseName + "TimeZone", timeZone).getHtml());
       }
     } catch (Exception e) {
       throw new JspException("HtmlSelectTime Error: " + e.getMessage());
@@ -217,9 +226,9 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

@@ -15,33 +15,35 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  Provides a list of items that have editable categories for the specified
- *  module
+ * Provides a list of items that have editable categories for the specified
+ * module
  *
- *@author     matt rajkowski
- *@created    February 3, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created February 3, 2004
  */
 public class CategoryEditorList extends ArrayList {
   protected int moduleId = -1;
 
 
   /**
-   *  Constructor for the CategoryEditorList object
+   * Constructor for the CategoryEditorList object
    */
-  public CategoryEditorList() { }
+  public CategoryEditorList() {
+  }
 
 
   /**
-   *  Sets the moduleId attribute of the CategoryEditorList object
+   * Sets the moduleId attribute of the CategoryEditorList object
    *
-   *@param  moduleId  The new moduleId value
+   * @param moduleId The new moduleId value
    */
   public void setModuleId(int moduleId) {
     this.moduleId = moduleId;
@@ -49,9 +51,9 @@ public class CategoryEditorList extends ArrayList {
 
 
   /**
-   *  Sets the moduleId attribute of the CategoryEditorList object
+   * Sets the moduleId attribute of the CategoryEditorList object
    *
-   *@param  moduleId  The new moduleId value
+   * @param moduleId The new moduleId value
    */
   public void setModuleId(String moduleId) {
     this.moduleId = Integer.parseInt(moduleId);
@@ -59,9 +61,9 @@ public class CategoryEditorList extends ArrayList {
 
 
   /**
-   *  Gets the moduleId attribute of the CategoryEditorList object
+   * Gets the moduleId attribute of the CategoryEditorList object
    *
-   *@return    The moduleId value
+   * @return The moduleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -69,10 +71,10 @@ public class CategoryEditorList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -81,7 +83,7 @@ public class CategoryEditorList extends ArrayList {
         "SELECT * " +
         "FROM category_editor_lookup " +
         "WHERE module_id = ? " +
-        "ORDER BY level ");
+        "ORDER BY \"level\" ");
     pst.setInt(1, moduleId);
     rs = pst.executeQuery();
     while (rs.next()) {

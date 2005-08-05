@@ -15,16 +15,19 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
-import java.util.ArrayList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 18, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created October 18, 2002
  */
 public class Item {
   private int id = -1;
@@ -34,16 +37,17 @@ public class Item {
 
 
   /**
-   *  Constructor for the Item object
+   * Constructor for the Item object
    */
-  public Item() { }
+  public Item() {
+  }
 
 
   /**
-   *  Constructor for the Item object
+   * Constructor for the Item object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Item(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -51,9 +55,9 @@ public class Item {
 
 
   /**
-   *  Gets the id attribute of the Item object
+   * Gets the id attribute of the Item object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -61,9 +65,9 @@ public class Item {
 
 
   /**
-   *  Gets the description attribute of the Item object
+   * Gets the description attribute of the Item object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -71,9 +75,9 @@ public class Item {
 
 
   /**
-   *  Sets the id attribute of the Item object
+   * Sets the id attribute of the Item object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -81,9 +85,9 @@ public class Item {
 
 
   /**
-   *  Sets the id attribute of the Item object
+   * Sets the id attribute of the Item object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -91,9 +95,9 @@ public class Item {
 
 
   /**
-   *  Sets the description attribute of the Item object
+   * Sets the description attribute of the Item object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -101,20 +105,19 @@ public class Item {
 
 
   /**
-   *  Sets the questionId attribute of the Item object
+   * Sets the questionId attribute of the Item object
    *
-   *@param  tmp  The new questionId value
+   * @param tmp The new questionId value
    */
   public void setQuestionId(int tmp) {
     this.questionId = tmp;
   }
 
 
-
   /**
-   *  Sets the type attribute of the Item object
+   * Sets the type attribute of the Item object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -122,9 +125,9 @@ public class Item {
 
 
   /**
-   *  Gets the questionId attribute of the Item object
+   * Gets the questionId attribute of the Item object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return questionId;
@@ -132,9 +135,9 @@ public class Item {
 
 
   /**
-   *  Gets the type attribute of the Item object
+   * Gets the type attribute of the Item object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -142,9 +145,9 @@ public class Item {
 
 
   /**
-   *  Sets the questionId attribute of the Item object
+   * Sets the questionId attribute of the Item object
    *
-   *@param  tmp  The new questionId value
+   * @param tmp The new questionId value
    */
   public void setQuestionId(String tmp) {
     this.questionId = Integer.parseInt(tmp);
@@ -152,9 +155,9 @@ public class Item {
 
 
   /**
-   *  Sets the type attribute of the Item object
+   * Sets the type attribute of the Item object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -162,27 +165,30 @@ public class Item {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  qid               Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param qid Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int qid) throws SQLException {
     try {
       db.setAutoCommit(false);
+      id = DatabaseUtils.getNextSeq(db, "survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO survey_items " +
-          "(question_id, type, description ) " +
-          "VALUES (?, ?, ?) ");
+          "(" + (id > -1 ? "item_id, " : "") + "question_id, type, description ) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, qid);
       pst.setInt(++i, this.getType());
       pst.setString(++i, this.getDescription());
       pst.execute();
       pst.close();
-
-      this.setId(DatabaseUtils.getCurrVal(db, "survey_items_item_id_seq"));
+      setId(DatabaseUtils.getCurrVal(db, "survey_items_item_id_seq", id));
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -194,12 +200,12 @@ public class Item {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  qId               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param qId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, int qId) throws SQLException {
     int count = 0;
@@ -226,10 +232,10 @@ public class Item {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("item_id");

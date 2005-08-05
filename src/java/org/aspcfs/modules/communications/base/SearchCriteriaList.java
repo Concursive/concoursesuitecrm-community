@@ -31,16 +31,16 @@ import java.util.LinkedHashMap;
 import java.util.StringTokenizer;
 
 /**
- *  SearchCriteriaList contains the definitions for querying a ContactList. For
- *  example, "Contacts with a 23456 zip code" <p>
+ * SearchCriteriaList contains the definitions for querying a ContactList. For
+ * example, "Contacts with a 23456 zip code" <p>
+ * <p/>
+ * Contains a group of criteria groups, that each contain criteria elements. A
+ * group is a unique field that can have multiple criteria.
  *
- *  Contains a group of criteria groups, that each contain criteria elements. A
- *  group is a unique field that can have multiple criteria.
- *
- *@author     Wesley_S_Gillette
- *@created    November 9, 2001
- *@version    $Id: SearchCriteriaList.java,v 1.4 2001/12/11 22:21:17 mrajkowski
- *      Exp $
+ * @author Wesley_S_Gillette
+ * @version $Id: SearchCriteriaList.java,v 1.4 2001/12/11 22:21:17 mrajkowski
+ *          Exp $
+ * @created November 9, 2001
  */
 public class SearchCriteriaList extends HashMap {
 
@@ -67,19 +67,19 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Constructor for the SearchCriteriaList object
+   * Constructor for the SearchCriteriaList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public SearchCriteriaList() { }
+  public SearchCriteriaList() {
+  }
 
 
   /**
-   *  Constructor for the SearchCriteriaList object
+   * Constructor for the SearchCriteriaList object
    *
-   *@param  rs                data resultset from query
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param rs data resultset from query
+   * @throws SQLException SQL Exception
    */
   public SearchCriteriaList(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -87,12 +87,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Constructor for the SearchCriteriaList object
+   * Constructor for the SearchCriteriaList object
    *
-   *@param  db                db connection
-   *@param  id                unique id of this SCL
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param db db connection
+   * @param id unique id of this SCL
+   * @throws SQLException SQL Exception
    */
   public SearchCriteriaList(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -100,11 +99,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Constructor for the SearchCriteriaList object
+   * Constructor for the SearchCriteriaList object
    *
-   *@param  db                db connection
-   *@param  id                unique id of this SCL
-   *@exception  SQLException  SQL Exception
+   * @param db db connection
+   * @param id unique id of this SCL
+   * @throws SQLException SQL Exception
    */
   public SearchCriteriaList(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -112,19 +111,20 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Constructor for the SearchCriteriaList object, takes in a string of values
-   *  delimited by a "^", each element is delimited by a "|", and stores the
-   *  constructed group.
+   * Constructor for the SearchCriteriaList object, takes in a string of values
+   * delimited by a "^", each element is delimited by a "|", and stores the
+   * constructed group.
    *
-   *@param  searchCriteriaText  delimited String to be parsed
-   *@since                      1.1
+   * @param searchCriteriaText delimited String to be parsed
+   * @since 1.1
    */
   public SearchCriteriaList(String searchCriteriaText) {
     SearchCriteriaGroup thisGroup = null;
     StringTokenizer st = new StringTokenizer(searchCriteriaText, "^");
     while (st.hasMoreTokens()) {
       String tmpCriteria = (String) st.nextToken();
-      SearchCriteriaElement thisElement = new SearchCriteriaElement(tmpCriteria);
+      SearchCriteriaElement thisElement = new SearchCriteriaElement(
+          tmpCriteria);
       Integer thisKey = new Integer(thisElement.getFieldId());
 
       if (thisKey.intValue() != Constants.CAMPAIGN_CONTACT_ID) {
@@ -144,9 +144,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the OnlyContactIds attribute of the SearchCriteriaList object
+   * Sets the OnlyContactIds attribute of the SearchCriteriaList object
    *
-   *@param  onlyContactIds  The new OnlyContactIds value
+   * @param onlyContactIds The new OnlyContactIds value
    */
   public void setOnlyContactIds(boolean onlyContactIds) {
     this.onlyContactIds = onlyContactIds;
@@ -154,10 +154,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Errors attribute of the SearchCriteriaList object
+   * Sets the Errors attribute of the SearchCriteriaList object
    *
-   *@param  errors  The new Errors value
-   *@since
+   * @param errors The new Errors value
    */
   public void setErrors(HashMap errors) {
     this.errors = errors;
@@ -165,10 +164,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Modified attribute of the SearchCriteriaList object
+   * Sets the Modified attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new Modified value
-   *@since
+   * @param tmp The new Modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -176,10 +174,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Entered attribute of the SearchCriteriaList object
+   * Sets the Entered attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new Entered value
-   *@since
+   * @param tmp The new Entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -187,10 +184,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the SearchCriteriaList object
+   * Sets the ModifiedBy attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -198,10 +194,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the EnteredBy attribute of the SearchCriteriaList object
+   * Sets the EnteredBy attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -209,10 +204,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the SaveCriteria attribute of the SearchCriteriaList object
+   * Sets the SaveCriteria attribute of the SearchCriteriaList object
    *
-   *@param  saveCriteria  The new SaveCriteria value
-   *@since
+   * @param saveCriteria The new SaveCriteria value
    */
   public void setSaveCriteria(String saveCriteria) {
     this.saveCriteria = saveCriteria;
@@ -220,10 +214,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Owner attribute of the SearchCriteriaList object
+   * Sets the Owner attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new Owner value
-   *@since
+   * @param tmp The new Owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -231,9 +224,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the HtmlSelectIdName attribute of the SearchCriteriaList object
+   * Sets the HtmlSelectIdName attribute of the SearchCriteriaList object
    *
-   *@param  htmlSelectIdName  The new HtmlSelectIdName value
+   * @param htmlSelectIdName The new HtmlSelectIdName value
    */
   public void setHtmlSelectIdName(String htmlSelectIdName) {
     this.htmlSelectIdName = htmlSelectIdName;
@@ -241,10 +234,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the OwnerIdRange attribute of the SearchCriteriaList object
+   * Sets the OwnerIdRange attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new OwnerIdRange value
-   *@since
+   * @param tmp The new OwnerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -252,10 +244,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the SearchCriteriaList object
+   * Sets the ModifiedBy attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -263,10 +254,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the EnteredBy attribute of the SearchCriteriaList object
+   * Sets the EnteredBy attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -274,9 +264,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the entered attribute of the Ticket object
+   * Sets the entered attribute of the Ticket object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -284,9 +274,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the modified attribute of the Ticket object
+   * Sets the modified attribute of the Ticket object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -294,10 +284,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Owner attribute of the SearchCriteriaList object
+   * Sets the Owner attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new Owner value
-   *@since
+   * @param tmp The new Owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -305,10 +294,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Id attribute of the SearchCriteriaList object
+   * Sets the Id attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -316,9 +304,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the Id attribute of the SearchCriteriaList object
+   * Sets the Id attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -326,10 +314,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the GroupName attribute of the SearchCriteriaList object
+   * Sets the GroupName attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new GroupName value
-   *@since
+   * @param tmp The new GroupName value
    */
   public void setGroupName(String tmp) {
     this.groupName = tmp;
@@ -337,9 +324,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the contactSource attribute of the SearchCriteriaList object
+   * Sets the contactSource attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new contactSource value
+   * @param tmp The new contactSource value
    */
   public void setContactSource(int tmp) {
     this.contactSource = tmp;
@@ -347,9 +334,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the contactSource attribute of the SearchCriteriaList object
+   * Sets the contactSource attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new contactSource value
+   * @param tmp The new contactSource value
    */
   public void setContactSource(String tmp) {
     this.contactSource = Integer.parseInt(tmp);
@@ -357,9 +344,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the warnings attribute of the SearchCriteriaList object
+   * Sets the warnings attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new warnings value
+   * @param tmp The new warnings value
    */
   public void setWarnings(HashMap tmp) {
     this.warnings = tmp;
@@ -367,9 +354,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the inactiveCount attribute of the SearchCriteriaList object
+   * Sets the inactiveCount attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new inactiveCount value
+   * @param tmp The new inactiveCount value
    */
   public void setInactiveCount(int tmp) {
     this.inactiveCount = tmp;
@@ -377,9 +364,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Sets the inactiveCount attribute of the SearchCriteriaList object
+   * Sets the inactiveCount attribute of the SearchCriteriaList object
    *
-   *@param  tmp  The new inactiveCount value
+   * @param tmp The new inactiveCount value
    */
   public void setInactiveCount(String tmp) {
     this.inactiveCount = Integer.parseInt(tmp);
@@ -387,9 +374,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the inactiveCount attribute of the SearchCriteriaList object
+   * Gets the inactiveCount attribute of the SearchCriteriaList object
    *
-   *@return    The inactiveCount value
+   * @return The inactiveCount value
    */
   public int getInactiveCount() {
     return inactiveCount;
@@ -397,9 +384,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the warnings attribute of the SearchCriteriaList object
+   * Gets the warnings attribute of the SearchCriteriaList object
    *
-   *@return    The warnings value
+   * @return The warnings value
    */
   public HashMap getWarnings() {
     return warnings;
@@ -407,9 +394,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the OnlyContactIds attribute of the SearchCriteriaList object
+   * Gets the OnlyContactIds attribute of the SearchCriteriaList object
    *
-   *@return    The OnlyContactIds value
+   * @return The OnlyContactIds value
    */
   public boolean getOnlyContactIds() {
     return onlyContactIds;
@@ -417,9 +404,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the HtmlSelectIdName attribute of the SearchCriteriaList object
+   * Gets the HtmlSelectIdName attribute of the SearchCriteriaList object
    *
-   *@return    The HtmlSelectIdName value
+   * @return The HtmlSelectIdName value
    */
   public String getHtmlSelectIdName() {
     return htmlSelectIdName;
@@ -427,9 +414,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the Modified attribute of the SearchCriteriaList object
+   * Gets the Modified attribute of the SearchCriteriaList object
    *
-   *@return    The Modified value
+   * @return The Modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -437,10 +424,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the Errors attribute of the SearchCriteriaList object
+   * Gets the Errors attribute of the SearchCriteriaList object
    *
-   *@return    The Errors value
-   *@since
+   * @return The Errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -448,10 +434,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the SaveCriteria attribute of the SearchCriteriaList object
+   * Gets the SaveCriteria attribute of the SearchCriteriaList object
    *
-   *@return    The SaveCriteria value
-   *@since
+   * @return The SaveCriteria value
    */
   public String getSaveCriteria() {
     return saveCriteria;
@@ -459,10 +444,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the SearchCriteriaList object
+   * Gets the ModifiedBy attribute of the SearchCriteriaList object
    *
-   *@return    The ModifiedBy value
-   *@since
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -470,10 +454,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the EnteredBy attribute of the SearchCriteriaList object
+   * Gets the EnteredBy attribute of the SearchCriteriaList object
    *
-   *@return    The EnteredBy value
-   *@since
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -481,10 +464,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the Entered attribute of the SearchCriteriaList object
+   * Gets the Entered attribute of the SearchCriteriaList object
    *
-   *@return    The Entered value
-   *@since
+   * @return The Entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -492,10 +474,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the EnteredString attribute of the SearchCriteriaList object
+   * Gets the EnteredString attribute of the SearchCriteriaList object
    *
-   *@return    The EnteredString value
-   *@since
+   * @return The EnteredString value
    */
   public String getEnteredString() {
     try {
@@ -507,14 +488,14 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the EnteredDateTimeString attribute of the SearchCriteriaList object
+   * Gets the EnteredDateTimeString attribute of the SearchCriteriaList object
    *
-   *@return    The EnteredDateTimeString value
-   *@since
+   * @return The EnteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -522,10 +503,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the ModifiedString attribute of the SearchCriteriaList object
+   * Gets the ModifiedString attribute of the SearchCriteriaList object
    *
-   *@return    The ModifiedString value
-   *@since
+   * @return The ModifiedString value
    */
   public String getModifiedString() {
     try {
@@ -537,14 +517,14 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the ModifiedDateTimeString attribute of the SearchCriteriaList object
+   * Gets the ModifiedDateTimeString attribute of the SearchCriteriaList object
    *
-   *@return    The ModifiedDateTimeString value
-   *@since
+   * @return The ModifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -552,10 +532,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the Owner attribute of the SearchCriteriaList object
+   * Gets the Owner attribute of the SearchCriteriaList object
    *
-   *@return    The Owner value
-   *@since
+   * @return The Owner value
    */
   public int getOwner() {
     return owner;
@@ -563,10 +542,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the Id attribute of the SearchCriteriaList object
+   * Gets the Id attribute of the SearchCriteriaList object
    *
-   *@return    The Id value
-   *@since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -574,10 +552,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the GroupName attribute of the SearchCriteriaList object
+   * Gets the GroupName attribute of the SearchCriteriaList object
    *
-   *@return    The GroupName value
-   *@since
+   * @return The GroupName value
    */
   public String getGroupName() {
     return groupName;
@@ -585,9 +562,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the contactSource attribute of the SearchCriteriaList object
+   * Gets the contactSource attribute of the SearchCriteriaList object
    *
-   *@return    The contactSource value
+   * @return The contactSource value
    */
   public int getContactSource() {
     return contactSource;
@@ -595,13 +572,12 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Builds the HtmlSelect version of the SearchCriteriaList. The elements of
-   *  the resulting HtmlSelect outline the criteria that is contained within
-   *  this SearchCriteriaList
+   * Builds the HtmlSelect version of the SearchCriteriaList. The elements of
+   * the resulting HtmlSelect outline the criteria that is contained within
+   * this SearchCriteriaList
    *
-   *@param  selectName  Desired name of the resulting HtmlSelect
-   *@return             The HtmlSelect value
-   *@since
+   * @param selectName Desired name of the resulting HtmlSelect
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     HtmlSelect selectList = new HtmlSelect();
@@ -622,9 +598,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Gets the criteriaTextArray attribute of the SearchCriteriaList object
+   * Gets the criteriaTextArray attribute of the SearchCriteriaList object
    *
-   *@return    The criteriaTextArray value
+   * @return The criteriaTextArray value
    */
   public LinkedHashMap getCriteriaTextArray() {
     String fromString = "";
@@ -664,10 +640,13 @@ public class SearchCriteriaList extends HashMap {
 
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + fromString;
-        } else if (thisGroup.getGroupField().getDescription().equals("Account Type") && thisElt.getAccountTypeName() != null) {
+        } else if (thisGroup.getGroupField().getDescription().equals(
+            "Account Type") && thisElt.getAccountTypeName() != null) {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getAccountTypeName() + fromString;
-        } else if (thisGroup.getGroupField().getDescription().equals("Contact ID") && thisElt.getContactNameLast() != null) {
-          valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(thisElt.getContactNameLast(), thisElt.getContactNameFirst());
+        } else if (thisGroup.getGroupField().getDescription().equals(
+            "Contact ID") && thisElt.getContactNameLast() != null) {
+          valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(
+              thisElt.getContactNameLast(), thisElt.getContactNameFirst());
         } else {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
         }
@@ -680,11 +659,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Populate this object by querying its record in the database
+   * Populate this object by querying its record in the database
    *
-   *@param  db                db connection
-   *@param  id                unique id
-   *@exception  SQLException  SQL exception
+   * @param db db connection
+   * @param id unique id
+   * @throws SQLException SQL exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -707,11 +686,10 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Build all the groups, elements, etc. associated with this SCL.
+   * Build all the groups, elements, etc. associated with this SCL.
    *
-   *@param  db                db connection
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param db db connection
+   * @throws SQLException SQL Exception
    */
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -744,10 +722,10 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRelatedResources(Connection db) throws SQLException {
     //The groups
@@ -766,13 +744,12 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Delete all of this object's associated SearchCriteriaElements from the
-   *  database
+   * Delete all of this object's associated SearchCriteriaElements from the
+   * database
    *
-   *@param  db                db connection
-   *@param  listId            Description of the Parameter
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param db     db connection
+   * @param listId Description of the Parameter
+   * @throws SQLException SQL Exception
    */
   public void clearElements(int listId, Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -784,12 +761,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Insert this SCL into the database
+   * Insert this SCL into the database
    *
-   *@param  db                db connection
-   *@return                   true if successful, false otherwise
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param db db connection
+   * @return true if successful, false otherwise
+   * @throws SQLException SQL Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -798,8 +774,12 @@ public class SearchCriteriaList extends HashMap {
       if ((doCommit = db.getAutoCommit()) == true) {
         db.setAutoCommit(false);
       }
+      id = DatabaseUtils.getNextSeq(db, "saved_criterialist_id_seq");
       sql.append(
           "INSERT INTO saved_criterialist ( owner, name, contact_source, ");
+      if (id > -1) {
+        sql.append("id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -808,6 +788,9 @@ public class SearchCriteriaList extends HashMap {
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?,");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -820,6 +803,9 @@ public class SearchCriteriaList extends HashMap {
       pst.setInt(++i, this.getOwner());
       pst.setString(++i, this.getGroupName());
       DatabaseUtils.setInt(pst, ++i, this.getContactSource());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -830,7 +816,7 @@ public class SearchCriteriaList extends HashMap {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "saved_criterialist_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "saved_criterialist_id_seq", id);
       insertGroups(db);
       if (doCommit) {
         db.commit();
@@ -850,12 +836,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Update this object's record in the database
+   * Update this object's record in the database
    *
-   *@param  db                db connection
-   *@return                   int, how many records were successfully updated
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param db db connection
+   * @return int, how many records were successfully updated
+   * @throws SQLException SQL Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -874,26 +859,29 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Update this object's record in the database
+   * Update this object's record in the database
    *
-   *@param  db                db connection
-   *@param  override          true to update no matter what the last modified
-   *      date is, false to check whether or not someone has updated this record
-   *      first
-   *@return                   int, how many records were successfully updated
-   *@exception  SQLException  SQL Exception
-   *@since
+   * @param db       db connection
+   * @param override true to update no matter what the last modified
+   *                 date is, false to check whether or not someone has updated this record
+   *                 first
+   * @return int, how many records were successfully updated
+   * @throws SQLException SQL Exception
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
+    // NOTE: Delete and Insert need to occur before update or else transaction
+    // failure in daffodildb
+    deleteGroups(db);
+    insertGroups(db);
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append(
-        "UPDATE saved_criterialist SET ");
+    sql.append("UPDATE saved_criterialist SET ");
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-    sql.append("name = ?, contact_source = ?, owner = ? " +
+    sql.append(
+        "name = ?, contact_source = ?, owner = ? " +
         "WHERE id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -903,17 +891,14 @@ public class SearchCriteriaList extends HashMap {
     pst.setInt(++i, id);
     resultCount = pst.executeUpdate();
     pst.close();
-    deleteGroups(db);
-    insertGroups(db);
     return resultCount;
   }
 
 
   /**
-   *  Check to see if there have been any errors associated with this object
+   * Check to see if there have been any errors associated with this object
    *
-   *@return    true if has errors, false if not
-   *@since
+   * @return true if has errors, false if not
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
@@ -921,9 +906,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasWarnings() {
     return (warnings.size() > 0);
@@ -931,11 +916,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Finds out what objects depend on this SCL (if any)
+   * Finds out what objects depend on this SCL (if any)
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -964,12 +949,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Deletes the SCL from the database
+   * Deletes the SCL from the database
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean commit = true;
@@ -1019,9 +1003,12 @@ public class SearchCriteriaList extends HashMap {
             "WHERE id = " + this.getId() + " " +
             "AND enabled = " + DatabaseUtils.getTrue(db));
       } else {
-        st.executeUpdate("DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
-        st.executeUpdate("DELETE FROM campaign_list_groups WHERE group_id = " + this.getId());
-        st.executeUpdate("DELETE FROM saved_criterialist WHERE id = " + this.getId());
+        st.executeUpdate(
+            "DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
+        st.executeUpdate(
+            "DELETE FROM campaign_list_groups WHERE group_id = " + this.getId());
+        st.executeUpdate(
+            "DELETE FROM saved_criterialist WHERE id = " + this.getId());
       }
       st.close();
       if (commit) {
@@ -1042,12 +1029,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Inserts the groups that make up this SearchCriteriaList
+   * Inserts the groups that make up this SearchCriteriaList
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected boolean insertGroups(Connection db) throws SQLException {
     Iterator i = this.keySet().iterator();
@@ -1064,12 +1050,11 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Deletes the groups that comprise this SearchCriteriaList
+   * Deletes the groups that comprise this SearchCriteriaList
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected boolean deleteGroups(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1083,11 +1068,10 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Populates SearchCriteriaList object based on the ResultSet
+   * Populates SearchCriteriaList object based on the ResultSet
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //saved_criterialist table

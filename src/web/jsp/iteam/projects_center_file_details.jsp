@@ -77,11 +77,13 @@
         <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         <a href="javascript:popURL('ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&view=true', 'Content', 640,480, 1, 1);"><dhv:label name="accounts.accounts_documents_list_menu.ViewFileContents">View File Contents</dhv:label></a><br />
       </zeroio:permission>
-      <zeroio:permission name="project-documents-files-delete">
-        <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        <a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&folderId=<%= FileItem.getFolderId() %>');"><dhv:label name="project.deleteVersion">Delete Version</dhv:label></a><br />
-      </zeroio:permission>
-      &nbsp;
+      <dhv:evaluate if="<%= !Project.isTrashed() %>" >
+        <zeroio:permission name="project-documents-files-delete">
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          <a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&folderId=<%= FileItem.getFolderId() %>');"><dhv:label name="project.deleteVersion">Delete Version</dhv:label></a><br />
+        </zeroio:permission>
+      </dhv:evaluate>
+       &nbsp;
     </td>
     <td width="100%">
       <%= thisVersion.getImageTag() %><%= thisVersion.getClientFilename() %>

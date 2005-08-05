@@ -108,7 +108,7 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">colspan="3" </dhv:permission><dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" none="true">colspan="2" </dhv:permission>width="100%" nowrap>
-        <strong><%= thisGroup.getName() %></strong>
+        <strong><%= StringUtils.toHtml(thisGroup.getName()) %></strong>
       </th>
       <th align="center">
         <strong><dhv:label name="product.enabled">Enabled</dhv:label></strong>
@@ -136,7 +136,7 @@
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" all="true">|</dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-delete">
-          <a href="javascript:confirmDeleteField('AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Del">Del</dhv:label></a>
+          <a href="javascript:confirmDeleteField('AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %><%= thisField.getType() != -1?"&type="+thisField.getType():"" %>&auto-populate=true');"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Del">Del</dhv:label></a>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete">|</dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
@@ -146,7 +146,7 @@
       </td>
       </dhv:permission>
       <td width="100%" nowrap>
-        <%= thisField.getName() %><font color="red"><%= thisField.getRequired()?"*":"" %></font>
+        <%= StringUtils.toHtml(thisField.getName()) %><font color="red"><%= thisField.getRequired()?"*":"" %></font>
       </td>
       <td width="30%" nowrap>
         <%= thisField.getTypeString() %>

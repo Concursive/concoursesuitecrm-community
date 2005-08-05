@@ -15,17 +15,17 @@
 package org.jcrontab.data;
 
 /**
- *  Exception thrown when a No crontab Entry is Found
+ * Exception thrown when a No crontab Entry is Found
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public class DataNotFoundException extends Exception {
 
   /**
-   *  Creates a new Data Not Found Exceptin
+   * Creates a new Data Not Found Exceptin
    */
   public DataNotFoundException() {
     super();
@@ -33,9 +33,9 @@ public class DataNotFoundException extends Exception {
 
 
   /**
-   *  Creates a new Data Not Found Exception given a message string
+   * Creates a new Data Not Found Exception given a message string
    *
-   *@param  str  Message string associated to the exception
+   * @param str Message string associated to the exception
    */
   public DataNotFoundException(String str) {
     super(str);

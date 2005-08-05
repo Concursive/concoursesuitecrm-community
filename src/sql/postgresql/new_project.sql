@@ -140,7 +140,8 @@ CREATE TABLE projects (
   calendar_enabled BOOLEAN NOT NULL DEFAULT true,
   calendar_label VARCHAR(50) NULL,
   accounts_enabled BOOLEAN NOT NULL DEFAULT true,
-  accounts_label VARCHAR(50) NULL
+  accounts_label VARCHAR(50) NULL,
+  trashed_date TIMESTAMP(3)
 );
 
 CREATE INDEX "projects_idx"

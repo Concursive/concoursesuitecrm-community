@@ -64,9 +64,12 @@
   <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
       <% int i = 0; %>
       <dhv:evaluate if="<%= !isPopup(request) %>">
-        <dhv:permission name="accounts-accounts-contacts-calls-add">
-        <a href="AccountContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a><br />
-        <br /></dhv:permission>
+        <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+          <dhv:permission name="accounts-accounts-contacts-calls-add">
+            <a href="AccountContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a><br />
+            <br />
+          </dhv:permission>
+        </dhv:evaluate>
       </dhv:evaluate>
     <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
       <%-- Pending list --%>
@@ -101,8 +104,11 @@
         <tr class="row<%= rowid %>">
           <td <%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap>
             <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-             <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= ContactDetails.getId() %>', '<%= thisCall.getId() %>', 'pending');"
-             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+            <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+              <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= ContactDetails.getId() %>', '<%= thisCall.getId() %>', 'pending','<%= thisCall.isTrashed()%>');"
+              onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">&nbsp;</dhv:evaluate>
           </td>
           <td valign="top" nowrap>
             <% if(!User.getTimeZone().equals(thisCall.getAlertDateTimeZone())){%>
@@ -181,8 +187,11 @@
         <dhv:evaluate if="<%= !isPopup(request) %>">
           <td <%= AccountContactCompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap>
              <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-             <a href="javascript:displayMenu('select<%= i %>','menuCall','<%= ContactDetails.getId() %>','<%= thisCall.getId() %>','<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : "" %>');"
-             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+            <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+               <a href="javascript:displayMenu('select<%= i %>','menuCall','<%= ContactDetails.getId() %>','<%= thisCall.getId() %>','<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : "" %>','<%= thisCall.isTrashed()%>');"
+               onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">&nbsp;</dhv:evaluate>
           </td>
           </dhv:evaluate>
           <td valign="top" nowrap>

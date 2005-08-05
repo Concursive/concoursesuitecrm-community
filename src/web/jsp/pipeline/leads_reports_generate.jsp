@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
@@ -108,8 +108,8 @@
     </td>
     <td colspan="4">
       <select name="sort">
-      <option value="x.description"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></option>
-      <option value="x.opp_id"><dhv:label name="pipeline.opportunityId">Opportunity ID</dhv:label></option>
+      <option value="oc.description"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></option>
+      <option value="oc.id"><dhv:label name="pipeline.opportunityId">Opportunity ID</dhv:label></option>
       <option value="oc.lowvalue"><dhv:label name="pipeline.lowAmount">Low Amount</dhv:label></option>
       <option value="oc.guessvalue"><dhv:label name="pipeline.bestGuessAmount">Best Guess Amount</dhv:label></option>
       <option value="oc.highvalue"><dhv:label name="pipeline.highAmount">High Amount</dhv:label></option>
@@ -118,8 +118,8 @@
       <option value="oc.terms"><dhv:label name="pipeline.terms">Terms</dhv:label></option>
       <option value="oc.alertdate"><dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label></option>
       <option value="oc.commission"><dhv:label name="reports.pipeline.commission">Commission</dhv:label></option>
-      <option value="x.entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></option>
-      <option value="x.modified"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></option>
+      <option value="oc.entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></option>
+      <option value="oc.modified"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></option>
       </select>
     </td>
   </tr>

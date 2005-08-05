@@ -22,7 +22,8 @@
   the user is logged in or not, depending on browser, version, and os.
 --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.login.beans.UserBean" %>
+<%@ page import="org.aspcfs.modules.login.beans.UserBean,
+                 java.io.File" %>
 <%@ page import="org.aspcfs.utils.web.ClientType" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
@@ -56,7 +57,9 @@
 <%-- Use the user's language since they are logged in --%>
 <dhv:evaluate if="<%= User.getUserRecord() != null %>">
   <dhv:evaluate if="<%= !"en_US".equals(User.getUserRecord().getLanguage()) %>">
-    <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
+    <dhv:evaluate if="<%= new File(request.getRealPath("/") + "javascript/languages/dictionary_" +  User.getUserRecord().getLanguage() + ".js").exists() %>">
+      <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
+    </dhv:evaluate>
   </dhv:evaluate>
   <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
 </dhv:evaluate>

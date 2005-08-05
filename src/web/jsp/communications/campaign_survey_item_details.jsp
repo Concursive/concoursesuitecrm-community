@@ -26,7 +26,7 @@
 <tr>
 <td>
 <a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>"><dhv:label name="campaign.itemList">Item List</dhv:label></a> >
-Item Details
+<dhv:label name="product.itemDetails">Item Details</dhv:label>
 </td>
 </tr>
 </table>
@@ -34,7 +34,7 @@ Item Details
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr class="containerHeader">
   <th colspan="2" valign="center">
-    <dhv:label name="campaign.item.colon" param="<%= toHtml(ItemDetails.getItem().getDescription()) %>"><strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %></dhv:label>
+    <dhv:label name="campaign.item.colon" param="<%= "description="+toHtml(ItemDetails.getItem().getDescription()) %>"><strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %></dhv:label>
   </th>
 </tr>
 <tr>

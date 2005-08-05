@@ -29,37 +29,33 @@
  */
 package org.aspcfs.modules.troubletickets.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.accounts.base.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.actions.ProjectManagementFileFolders;
+import com.zeroio.iteam.base.FileFolder;
+import com.zeroio.iteam.base.FileFolderHierarchy;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
-import com.zeroio.iteam.actions.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    July 28, 2004
- * @version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created July 28, 2004
  */
 public final class AccountTicketsDocumentsFolders extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
@@ -88,10 +84,10 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Exception errorMessage = null;
@@ -139,10 +135,10 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -177,10 +173,10 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -212,10 +208,10 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     //Parameters
@@ -244,14 +240,15 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     //Parameters
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("id");
     Connection db = null;
     try {
@@ -266,7 +263,8 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
         thisHierarchy.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
         thisHierarchy.setLinkItemId(ticketId);
         thisHierarchy.build(db, thisFolder.getId());
-        if (thisHierarchy.getHierarchy().hasFolder(Integer.parseInt(newFolderId))) {
+        if (thisHierarchy.getHierarchy().hasFolder(
+            Integer.parseInt(newFolderId))) {
           thisFolder.buildSubFolders(db);
           Iterator iterator = (Iterator) thisFolder.getSubFolders().iterator();
           while (iterator.hasNext()) {
@@ -296,20 +294,21 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Add Ticket object
+   * Add Ticket object
    *
-   *@param  context           The feature to be added to the Ticket attribute
-   *@param  db                The feature to be added to the Ticket attribute
-   *@param  ticketId          The feature to be added to the Ticket attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context  The feature to be added to the Ticket attribute
+   * @param db       The feature to be added to the Ticket attribute
+   * @param ticketId The feature to be added to the Ticket attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
     context.getRequest().setAttribute("tId", ticketId);
     Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
     context.getRequest().setAttribute("TicketDetails", thisTicket);
     //also add the organization
-    context.getRequest().setAttribute("OrgDetails", new Organization(db, thisTicket.getOrgId()));
+    context.getRequest().setAttribute(
+        "OrgDetails", new Organization(db, thisTicket.getOrgId()));
     return thisTicket.getId();
   }
 }

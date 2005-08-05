@@ -15,27 +15,27 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
-import java.util.StringTokenizer;
-import java.util.Locale;
-import java.text.NumberFormat;
 import javax.servlet.ServletContext;
+import java.io.*;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 /**
- *  Helper methods for dealing with file operations
+ * Helper methods for dealing with file operations
  *
- *@author     matt rajkowski
- *@created    August 25, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created August 25, 2003
  */
 public class FileUtils {
 
   /**
-   *  Copies the specified source file to the destination file
+   * Copies the specified source file to the destination file
    *
-   *@param  sourceFile       Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@return                  Description of the Return Value
+   * @param sourceFile      Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean copyFile(File sourceFile, File destinationFile) {
     return copyFile(sourceFile, destinationFile, true);
@@ -43,30 +43,63 @@ public class FileUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sourceFile       Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@param  overwrite        Description of the Parameter
-   *@return                  Description of the Return Value
+   * @param sourceFile      Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @param overwrite       Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean copyFile(File sourceFile, File destinationFile, boolean overwrite) {
+    String fs = System.getProperty("file.separator");
+    int wildcardPos = sourceFile.getName().indexOf("*");
+    if (wildcardPos > 0) {
+      if (!sourceFile.getParentFile().exists()) {
+        System.out.println(
+            "FileUtils-> Source directory does not exist: " + sourceFile.getParentFile());
+        return false;
+      }
+      File[] fileNames = sourceFile.getParentFile().listFiles();
+      int count = fileNames.length;
+      if (count > 0) {
+        String part1 = sourceFile.getName().substring(0, wildcardPos);
+        String part2 = null;
+        if (wildcardPos < sourceFile.getName().length()) {
+          part2 = sourceFile.getName().substring(wildcardPos + 1);
+        }
+        for (int i = 0; i < count; i++) {
+          File thisFile = fileNames[i];
+          if (thisFile.getName().startsWith(part1) &&
+              (part2 == null || (part2 != null && thisFile.getName().endsWith(
+                  part2)))) {
+            copyFile(fileNames[i], destinationFile, overwrite);
+          }
+        }
+      } else {
+        System.out.println(
+            "FileUtils-> No parent files found in: " + sourceFile.getParentFile());
+      }
+      return true;
+    }
     //Check to see if source exists
     if (!sourceFile.exists()) {
+      System.out.println("FileUtils-> Source file not found: " + sourceFile);
       return false;
     }
     //If destination is a directory then set it as a file
-    String fs = System.getProperty("file.separator");
     if (destinationFile.isDirectory()) {
-      destinationFile = new File(destinationFile.getPath() + fs + sourceFile.getName());
+      destinationFile = new File(
+          destinationFile.getPath() + fs + sourceFile.getName());
     }
     //Check to see if source and destination file are the same
     if (sourceFile.equals(destinationFile)) {
+      System.out.println("FileUtils-> Source and destination are the same");
       return false;
     }
     //Skip if overwrite is false
     if (!overwrite) {
       if (destinationFile.exists()) {
+        System.out.println("FileUtils-> Destination already exists");
         return true;
       }
     }
@@ -80,6 +113,10 @@ public class FileUtils {
       int read = -1;
       while ((read = source.read(buffer)) != -1) {
         destination.write(buffer, 0, read);
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "FileUtils-> Copied: " + sourceFile + " to " + destinationFile);
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -103,21 +140,22 @@ public class FileUtils {
 
 
   /**
-   *  Description of the Method
+   * Copies a file from servlet context stream to a file
    *
-   *@param  context          Description of the Parameter
-   *@param  filename         Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@param  overwrite        Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param context         Description of the Parameter
+   * @param filename        Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @param overwrite       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   public static boolean copyFile(ServletContext context, String filename, File destinationFile, boolean overwrite) throws IOException {
     //If destination is a directory then set it as a file
     String fs = System.getProperty("file.separator");
     if (destinationFile.isDirectory()) {
       File sourceFile = new File(filename);
-      destinationFile = new File(destinationFile.getPath() + fs + sourceFile.getName());
+      destinationFile = new File(
+          destinationFile.getPath() + fs + sourceFile.getName());
     }
     //Skip if overwrite is false
     if (!overwrite) {
@@ -151,10 +189,10 @@ public class FileUtils {
 
 
   /**
-   *  Gets the bytes free on the system for the specified directory
+   * Gets the bytes free on the system for the specified directory
    *
-   *@param  dir  Description of the Parameter
-   *@return      The freeBytes value
+   * @param dir Description of the Parameter
+   * @return The freeBytes value
    */
   public static long getFreeBytes(String dir) {
     long free = -1;
@@ -177,8 +215,7 @@ public class FileUtils {
       int blockSize = 1024;
       process = Runtime.getRuntime().exec(command);
       BufferedReader in =
-          new BufferedReader(
-          new InputStreamReader(process.getInputStream()));
+          new BufferedReader(new InputStreamReader(process.getInputStream()));
       while ((thisLine = in.readLine()) != null) {
         line = thisLine;
         // Using df, the block size must be incorporated
@@ -223,14 +260,14 @@ public class FileUtils {
 
 
   /**
-   *  Deletes all files and subdirectories under dir. Returns true if all
-   *  deletions were successful. If a deletion fails, the method stops
-   *  attempting to delete and returns false.<p>
+   * Deletes all files and subdirectories under dir. Returns true if all
+   * deletions were successful. If a deletion fails, the method stops
+   * attempting to delete and returns false.<p>
+   * <p/>
+   * re: Java Developers Almanac 1.4
    *
-   *  re: Java Developers Almanac 1.4
-   *
-   *@param  dir  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param dir Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean deleteDirectory(File dir) {
     if (dir.isDirectory()) {
@@ -248,10 +285,10 @@ public class FileUtils {
 
 
   /**
-   *  Checks to see if the file specified exists
+   * Checks to see if the file specified exists
    *
-   *@param  fullPath  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param fullPath Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean fileExists(String fullPath) {
     File thisFile = new File(fullPath);
@@ -260,11 +297,11 @@ public class FileUtils {
 
 
   /**
-   *  Gets the relativeSize attribute of the FileUtils class
+   * Gets the relativeSize attribute of the FileUtils class
    *
-   *@param  size    Description of the Parameter
-   *@param  locale  Description of the Parameter
-   *@return         The relativeSize value
+   * @param size   Description of the Parameter
+   * @param locale Description of the Parameter
+   * @return The relativeSize value
    */
   public static String getRelativeSize(float size, Locale locale) {
     if (size == -1) {

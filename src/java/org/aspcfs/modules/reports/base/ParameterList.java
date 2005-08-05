@@ -18,7 +18,6 @@ package org.aspcfs.modules.reports.base;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperReport;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.UserUtils;
@@ -32,12 +31,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- *  A collection of Parameter objects.
+ * A collection of Parameter objects.
  *
- *@author     matt rajkowski
- *@created    September 15, 2003
- *@version    $Id: ParameterList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ParameterList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
+ *          Exp $
+ * @created September 15, 2003
  */
 public class ParameterList extends ArrayList {
 
@@ -48,15 +47,16 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Constructor for the ParameterList object
+   * Constructor for the ParameterList object
    */
-  public ParameterList() { }
+  public ParameterList() {
+  }
 
 
   /**
-   *  Sets the criteriaId attribute of the ParameterList object
+   * Sets the criteriaId attribute of the ParameterList object
    *
-   *@param  tmp  The new criteriaId value
+   * @param tmp The new criteriaId value
    */
   public void setCriteriaId(int tmp) {
     this.criteriaId = tmp;
@@ -64,9 +64,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Sets the criteriaId attribute of the ParameterList object
+   * Sets the criteriaId attribute of the ParameterList object
    *
-   *@param  tmp  The new criteriaId value
+   * @param tmp The new criteriaId value
    */
   public void setCriteriaId(String tmp) {
     this.criteriaId = Integer.parseInt(tmp);
@@ -74,9 +74,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Sets the systemStatus attribute of the ParameterList object
+   * Sets the systemStatus attribute of the ParameterList object
    *
-   *@param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -84,9 +84,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Gets the systemStatus attribute of the ParameterList object
+   * Gets the systemStatus attribute of the ParameterList object
    *
-   *@return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -94,9 +94,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Gets the criteriaId attribute of the ParameterList object
+   * Gets the criteriaId attribute of the ParameterList object
    *
-   *@return    The criteriaId value
+   * @return The criteriaId value
    */
   public int getCriteriaId() {
     return criteriaId;
@@ -104,9 +104,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Sets the errors attribute of the ParameterList object
+   * Sets the errors attribute of the ParameterList object
    *
-   *@param  tmp  The new errors value
+   * @param tmp The new errors value
    */
   public void setErrors(HashMap tmp) {
     this.errors = tmp;
@@ -114,9 +114,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Gets the errors attribute of the ParameterList object
+   * Gets the errors attribute of the ParameterList object
    *
-   *@return    The errors value
+   * @return The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -124,9 +124,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
@@ -134,9 +134,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Initially loads the parameters from the JasperReport
+   * Initially loads the parameters from the JasperReport
    *
-   *@param  report  The new parameters value
+   * @param report The new parameters value
    */
   public void setParameters(JasperReport report) {
     JRParameter[] params = report.getParameters();
@@ -152,11 +152,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Takes the user input and expands the data into the corresponding jasper
-   *  parameters
+   * Takes the user input and expands the data into the corresponding jasper
+   * parameters
    *
-   *@param  request  The new parameters value
-   *@return          Description of the Return Value
+   * @param request The new parameters value
+   * @return Description of the Return Value
    */
   public boolean setParameters(HttpServletRequest request) {
     Timestamp startDate = null;
@@ -175,7 +175,8 @@ public class ParameterList extends ArrayList {
           } else if (param.getValue().equals("hierarchy")) {
             addParam("userid_range", UserUtils.getUserIdRange(request));
           } else {
-            addParam("userid_range", String.valueOf(UserUtils.getUserId(request)));
+            addParam(
+                "userid_range", String.valueOf(UserUtils.getUserId(request)));
           }
         }
         //Lookup lists will result in -1, > -1
@@ -187,7 +188,8 @@ public class ParameterList extends ArrayList {
             if (!"-1".equals(param.getValue())) {
               //New case, replace query param with another param and parse
               Template where = new Template(whereParam.getDescription());
-              where.addParseElement("$P{" + param.getName() + "}", param.getValue());
+              where.addParseElement(
+                  "$P{" + param.getName() + "}", param.getValue());
               addParam(whereParam.getName(), where.getParsedText());
             } else {
               addParam(whereParam.getName(), " ");
@@ -218,7 +220,8 @@ public class ParameterList extends ArrayList {
           addParam(param.getName() + "_min", st.nextToken());
           addParam(param.getName() + "_max", st.nextToken());
           //Clean up the name for output on the report
-          param.setValue(HtmlSelectProbabilityRange.getValueFromId(param.getValue()));
+          param.setValue(
+              HtmlSelectProbabilityRange.getValueFromId(param.getValue()));
         }
         //Integer orgid lookup
         if (param.getName().startsWith("orgid")) {
@@ -227,7 +230,8 @@ public class ParameterList extends ArrayList {
             if (!"-1".equals(param.getValue())) {
               //New case, replace query param with another param and parse
               Template where = new Template(whereParam.getDescription());
-              where.addParseElement("$P{" + param.getName() + "}", param.getValue());
+              where.addParseElement(
+                  "$P{" + param.getName() + "}", param.getValue());
               addParam(whereParam.getName(), where.getParsedText());
             } else {
               addParam(whereParam.getName(), " ");
@@ -237,7 +241,9 @@ public class ParameterList extends ArrayList {
         }
         try {
           if (param.getName().startsWith("date_")) {
-            Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(request));
+            Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(
+                TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(
+                    request));
             SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
                 DateFormat.SHORT, Locale.getDefault());
             String date = formatter.format(tmpTimestamp);
@@ -251,22 +257,28 @@ public class ParameterList extends ArrayList {
           }
         } catch (Exception e) {
           if (systemStatus != null) {
-            errors.put(param.getName()+ "Error", systemStatus.getLabel("object.validation.invalidInput"));
+            errors.put(
+                param.getName() + "Error", systemStatus.getLabel(
+                    "object.validation.invalidInput"));
           } else {
             errors.put(param.getName() + "Error", "no input or invalid date");
           }
         }
       }
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ParameterList-> " + param.getName() + "=" + param.getValue());
+        System.out.println(
+            "ParameterList-> " + param.getName() + "=" + param.getValue());
       }
     }
     if (startDate != null && endDate != null) {
       if (startDate.after(endDate)) {
         if (systemStatus != null) {
-          errors.put("date_startError", systemStatus.getLabel("object.validation.firstDateNotAfterSecondDate"));
+          errors.put(
+              "date_startError", systemStatus.getLabel(
+                  "object.validation.firstDateNotAfterSecondDate"));
         } else {
-          errors.put("date_startError", "The first date can not be after second date.");
+          errors.put(
+              "date_startError", "The first date can not be after second date.");
         }
       }
     }
@@ -282,9 +294,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Updates the parameters with values from previously saved Criteria
+   * Updates the parameters with values from previously saved Criteria
    *
-   *@param  criteria  The new parameters value
+   * @param criteria The new parameters value
    */
   public void setParameters(Criteria criteria) {
     Iterator i = criteria.getParameters().iterator();
@@ -296,11 +308,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Builds a list of Parameter objects based on the filter properties of this
-   *  list object.
+   * Builds a list of Parameter objects based on the filter properties of this
+   * list object.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -344,20 +356,14 @@ public class ParameterList extends ArrayList {
         "p.* " +
         "FROM report_criteria_parameter p " +
         "WHERE parameter_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Parameter thisParameter = new Parameter(rs);
       this.add(thisParameter);
     }
@@ -367,9 +373,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Defines additional parameters to be added to the query
+   * Defines additional parameters to be added to the query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -382,11 +388,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Populates the additional parameters that have been added to the query
+   * Populates the additional parameters that have been added to the query
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -398,10 +404,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Inserts all of the parameters contained in this object to the database
+   * Inserts all of the parameters contained in this object to the database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -414,11 +420,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Updates all of the parameters contained in this object against the
-   *  database
+   * Updates all of the parameters contained in this object against the
+   * database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db) throws SQLException {
     //Delete all parameters already saved for this criteriaId
@@ -434,16 +440,15 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Deletes all of the parameters contained in this object from the database
+   * Deletes all of the parameters contained in this object from the database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM report_criteria_parameter " +
-        "WHERE criteria_id = ? "
-        );
+        "WHERE criteria_id = ? ");
     pst.setInt(1, criteriaId);
     pst.execute();
     pst.close();
@@ -451,11 +456,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Param attribute of the ParameterList object
+   * Adds a feature to the Param attribute of the ParameterList object
    *
-   *@param  param  The feature to be added to the Param attribute
-   *@param  value  The feature to be added to the Param attribute
-   *@return        Description of the Return Value
+   * @param param The feature to be added to the Param attribute
+   * @param value The feature to be added to the Param attribute
+   * @return Description of the Return Value
    */
   public boolean addParam(String param, String value) {
     Iterator i = this.iterator();
@@ -471,9 +476,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Gets the displayValues attribute of the ParameterList object
+   * Gets the displayValues attribute of the ParameterList object
    *
-   *@return    The displayValues value
+   * @return The displayValues value
    */
   public String getDisplayValues() {
     StringBuffer sb = new StringBuffer();
@@ -484,7 +489,8 @@ public class ParameterList extends ArrayList {
         if (sb.length() > 0) {
           sb.append(", ");
         }
-        sb.append(thisParameter.getDescription() + "=" + thisParameter.getValue());
+        sb.append(
+            thisParameter.getDescription() + "=" + thisParameter.getValue());
       }
     }
     return sb.toString();
@@ -492,10 +498,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Gets the classValue attribute of the ParameterList object
+   * Gets the classValue attribute of the ParameterList object
    *
-   *@param  param  Description of the Parameter
-   *@return        The valueClass value
+   * @param param Description of the Parameter
+   * @return The valueClass value
    */
   public java.lang.Class getValueClass(String param) {
     Iterator i = this.iterator();
@@ -510,10 +516,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   *  Gets the parameter attribute of the ParameterList object
+   * Gets the parameter attribute of the ParameterList object
    *
-   *@param  param  Description of the Parameter
-   *@return        The parameter value
+   * @param param Description of the Parameter
+   * @return The parameter value
    */
   public Parameter getParameter(String param) {
     Iterator i = this.iterator();

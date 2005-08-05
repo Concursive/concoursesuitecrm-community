@@ -23,20 +23,20 @@
   var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, callId, view) {
+  function displayMenu(loc, id, contactId, callId, view, trashed) {
     thisContactId = contactId;
     thisCallId = callId;
     thisView = view;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Update menu for this Contact based on permissions
-  function updateMenu(){
+  function updateMenu(trashed){
     if(thisView == 'pending'){
       showSpan('menuComplete');
       showSpan('menuCancel');
@@ -52,8 +52,19 @@
         hideSpan('menuModify');
        }
       }
+    if (trashed == 'true'){
+      hideSpan('menuModify');
+      hideSpan('menuComplete');
+      hideSpan('menuCancel');
+      hideSpan('menuReschedule');
+    } else {
+      showSpan('menuModify');
+      showSpan('menuComplete');
+      showSpan('menuCancel');
+      showSpan('menuReschedule');
     }
-  
+  }
+
   //Menu link functions
   function details() {
     var url = 'AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId;
@@ -62,7 +73,7 @@
     }
     window.location.href=url;
   }
-  
+
   function complete() {
     var url = 'AccountContactsCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
     if(thisView == 'pending'){
@@ -70,7 +81,7 @@
     }
     window.location.href=url;
   }
-  
+
   function modify() {
     var url = 'AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
     if(thisView == 'pending'){
@@ -78,7 +89,7 @@
     }
     window.location.href=url;
   }
-  
+
   function forward() {
     var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list&forwardType=<%= Constants.TASKS %>';
     if(thisView == 'pending'){
@@ -115,16 +126,6 @@
         </th>
         <td width="100%">
           <dhv:label name="accounts.accounts_calls_list_menu.CompleteActivity">Complete Activity</dhv:label>
-        </td>
-      </tr>
-      </dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit">
-      <tr id="menuReschedule" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
-        <th>
-          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </th>
-        <td width="100%">
-          <dhv:label name="accounts.accounts_calls_list_menu.ModifyActivity">Modify Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>

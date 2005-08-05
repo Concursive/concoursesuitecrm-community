@@ -1,14 +1,15 @@
 package org.aspcfs.apps.transfer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  A record to be created by a DataReader and saved by a DataWriter, contains
- *  DataField objects.
+ * A record to be created by a DataReader and saved by a DataWriter, contains
+ * DataField objects.
  *
- *@author     matt rajkowski
- *@created    September 3, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 3, 2002
  */
 public class DataRecord extends ArrayList {
 
@@ -24,9 +25,9 @@ public class DataRecord extends ArrayList {
   protected boolean shareKey = false;
 
   /**
-   *  Gets the name attribute of the DataRecord object
+   * Gets the name attribute of the DataRecord object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return this.name;
@@ -34,9 +35,9 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Sets the name attribute of the DataRecord object
+   * Sets the name attribute of the DataRecord object
    *
-   *@param  name  The new name value
+   * @param name The new name value
    */
   public void setName(String name) {
     this.name = name;
@@ -44,9 +45,9 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Sets the action attribute of the DataRecord object
+   * Sets the action attribute of the DataRecord object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(String tmp) {
     this.action = tmp;
@@ -54,9 +55,9 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Gets the action attribute of the DataRecord object
+   * Gets the action attribute of the DataRecord object
    *
-   *@return    The action value
+   * @return The action value
    */
   public String getAction() {
     return action;
@@ -71,10 +72,10 @@ public class DataRecord extends ArrayList {
   }
 
   /**
-   *  Adds a feature to the Field attribute of the DataRecord object
+   * Adds a feature to the Field attribute of the DataRecord object
    *
-   *@param  thisName   The feature to be added to the Field attribute
-   *@param  thisValue  The feature to be added to the Field attribute
+   * @param thisName  The feature to be added to the Field attribute
+   * @param thisValue The feature to be added to the Field attribute
    */
   public void addField(String thisName, String thisValue) {
     this.add(new DataField(thisName, thisValue));
@@ -82,10 +83,10 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Field attribute of the DataRecord object
+   * Adds a feature to the Field attribute of the DataRecord object
    *
-   *@param  thisName   The feature to be added to the Field attribute
-   *@param  thisValue  The feature to be added to the Field attribute
+   * @param thisName  The feature to be added to the Field attribute
+   * @param thisValue The feature to be added to the Field attribute
    */
   public void addField(String thisName, int thisValue) {
     this.addField(thisName, String.valueOf(thisValue));
@@ -93,10 +94,10 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Field attribute of the DataRecord object
+   * Adds a feature to the Field attribute of the DataRecord object
    *
-   *@param  thisName   The feature to be added to the Field attribute
-   *@param  thisValue  The feature to be added to the Field attribute
+   * @param thisName  The feature to be added to the Field attribute
+   * @param thisValue The feature to be added to the Field attribute
    */
   public void addField(String thisName, double thisValue) {
     this.addField(thisName, String.valueOf(thisValue));
@@ -104,27 +105,29 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Field attribute of the DataRecord object
+   * Adds a feature to the Field attribute of the DataRecord object
    *
-   *@param  thisName         The feature to be added to the Field attribute
-   *@param  thisValue        The feature to be added to the Field attribute
-   *@param  thisLookupValue  The feature to be added to the Field attribute
-   *@param  thisAlias        The feature to be added to the Field attribute
+   * @param thisName        The feature to be added to the Field attribute
+   * @param thisValue       The feature to be added to the Field attribute
+   * @param thisLookupValue The feature to be added to the Field attribute
+   * @param thisAlias       The feature to be added to the Field attribute
    */
   public void addField(String thisName, String thisValue, String thisLookupValue, String thisAlias) {
     this.add(new DataField(thisName, thisValue, thisLookupValue, thisAlias));
   }
-  
+
   public void addField(String thisName, int thisValue, String thisLookupValue, String thisAlias) {
-    this.add(new DataField(thisName, String.valueOf(thisValue), thisLookupValue, thisAlias));
+    this.add(
+        new DataField(
+            thisName, String.valueOf(thisValue), thisLookupValue, thisAlias));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  fieldName  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param fieldName Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean removeField(String fieldName) {
     Iterator fields = this.iterator();
@@ -140,10 +143,10 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Gets the value attribute of the DataRecord object
+   * Gets the value attribute of the DataRecord object
    *
-   *@param  fieldName  Description of the Parameter
-   *@return            The value value
+   * @param fieldName Description of the Parameter
+   * @return The value value
    */
   public String getValue(String fieldName) {
     Iterator fields = this.iterator();
@@ -158,10 +161,10 @@ public class DataRecord extends ArrayList {
 
 
   /**
-   *  Gets the intValue attribute of the DataRecord object
+   * Gets the intValue attribute of the DataRecord object
    *
-   *@param  fieldName  Description of the Parameter
-   *@return            The intValue value
+   * @param fieldName Description of the Parameter
+   * @return The intValue value
    */
   public int getIntValue(String fieldName) {
     String value = this.getValue(fieldName);

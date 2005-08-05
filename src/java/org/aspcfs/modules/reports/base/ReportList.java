@@ -15,19 +15,22 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
- *  A collection of Report objects
+ * A collection of Report objects
  *
- *@author     matt rajkowski
- *@created    September 15, 2003
- *@version    $Id: ReportList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ReportList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski Exp
+ *          $
+ * @created September 15, 2003
  */
 public class ReportList extends ArrayList {
 
@@ -37,15 +40,16 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Constructor for the CategoryList object
+   * Constructor for the CategoryList object
    */
-  public ReportList() { }
+  public ReportList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ReportList object
+   * Sets the pagedListInfo attribute of the ReportList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -53,9 +57,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ReportList object
+   * Gets the pagedListInfo attribute of the ReportList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -63,9 +67,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the ReportList object
+   * Sets the categoryId attribute of the ReportList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -73,9 +77,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the ReportList object
+   * Sets the categoryId attribute of the ReportList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -83,9 +87,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the ReportList object
+   * Gets the categoryId attribute of the ReportList object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -93,9 +97,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the ReportList object
+   * Gets the enabled attribute of the ReportList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -103,9 +107,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ReportList object
+   * Sets the enabled attribute of the ReportList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -113,9 +117,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ReportList object
+   * Sets the enabled attribute of the ReportList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -123,11 +127,11 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Builds a list of report objects from the database based on the properties
-   *  that have been set in this object
+   * Builds a list of report objects from the database based on the properties
+   * that have been set in this object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -172,20 +176,14 @@ public class ReportList extends ArrayList {
         "FROM report r " +
         "LEFT JOIN permission p ON (r.permission_id = p.permission_id) " +
         "WHERE report_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Report thisReport = new Report(rs);
       this.add(thisReport);
     }
@@ -195,9 +193,9 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Defines additional parameters for the query
+   * Defines additional parameters for the query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -213,12 +211,11 @@ public class ReportList extends ArrayList {
 
 
   /**
-   *  Sets the additional parameters for the query
+   * Sets the additional parameters for the query
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

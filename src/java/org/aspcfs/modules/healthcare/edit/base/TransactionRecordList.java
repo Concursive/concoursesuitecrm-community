@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.healthcare.edit.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.healthcare.edit.base.TransactionRecord;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.Vector;
 
 /**
- *  A list of EDIT TransactionRecords
+ * A list of EDIT TransactionRecords
  *
- *@author     chris
- *@created    February 6, 2003
- *@version    $Id: TransactionRecordList.java,v 1.3 2003/03/21 22:30:51
- *      mrajkowski Exp $
+ * @author chris
+ * @version $Id: TransactionRecordList.java,v 1.3 2003/03/21 22:30:51
+ *          mrajkowski Exp $
+ * @created February 6, 2003
  */
 public class TransactionRecordList extends Vector {
   private PagedListInfo pagedListInfo = null;
@@ -37,15 +38,16 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Constructor for the TransactionRecordList object
+   * Constructor for the TransactionRecordList object
    */
-  public TransactionRecordList() { }
+  public TransactionRecordList() {
+  }
 
 
   /**
-   *  Gets the performed attribute of the TransactionRecordList object
+   * Gets the performed attribute of the TransactionRecordList object
    *
-   *@return    The performed value
+   * @return The performed value
    */
   public java.sql.Date getPerformed() {
     return performed;
@@ -53,9 +55,9 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Sets the performed attribute of the TransactionRecordList object
+   * Sets the performed attribute of the TransactionRecordList object
    *
-   *@param  performed  The new performed value
+   * @param performed The new performed value
    */
   public void setPerformed(java.sql.Date performed) {
     this.performed = performed;
@@ -63,9 +65,9 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the TransactionRecordList object
+   * Gets the pagedListInfo attribute of the TransactionRecordList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -73,9 +75,9 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TransactionRecordList object
+   * Sets the pagedListInfo attribute of the TransactionRecordList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -83,14 +85,15 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Gets the performedString attribute of the TransactionRecordList object
+   * Gets the performedString attribute of the TransactionRecordList object
    *
-   *@return    The performedString value
+   * @return The performedString value
    */
   public String getPerformedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(performed);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          performed);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -98,18 +101,15 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Build a list of TransactionRecords from the database
+   * Build a list of TransactionRecords from the database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
-        break;
-      }
       TransactionRecord thisTransaction = this.getObject(rs);
       this.add(thisTransaction);
     }
@@ -121,11 +121,11 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Return a TransactionRecord from a resultset
+   * Return a TransactionRecord from a resultset
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public TransactionRecord getObject(ResultSet rs) throws SQLException {
     TransactionRecord thisTransaction = new TransactionRecord(rs);
@@ -134,12 +134,12 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Query this list directly from the database, and build it
+   * Query this list directly from the database, and build it
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -170,7 +170,8 @@ public class TransactionRecordList extends Vector {
         "bt.* " +
         "FROM billing_transaction bt " +
         "WHERE bt.id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
@@ -182,10 +183,10 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Create the Filter that limits the records returned based on specified
-   *  parameters
+   * Create the Filter that limits the records returned based on specified
+   * parameters
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -198,12 +199,12 @@ public class TransactionRecordList extends Vector {
 
 
   /**
-   *  Prepare the Filter that limits the records returned based on specified
-   *  parameters
+   * Prepare the Filter that limits the records returned based on specified
+   * parameters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -15,19 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.io.Serializable;
-import java.util.*;
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
+import org.w3c.dom.Element;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a date/time pattern for executing a specified business process
+ * Represents a date/time pattern for executing a specified business process
  *
- *@author     matt rajkowski
- *@created    June 23, 2003
- *@version    $Id: ScheduledEvent.java,v 1.1 2003/06/24 15:17:30 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ScheduledEvent.java,v 1.1 2003/06/24 15:17:30 mrajkowski Exp
+ *          $
+ * @created June 23, 2003
  */
 public class ScheduledEvent implements Serializable {
 
@@ -47,16 +51,35 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Constructor for the ScheduledEvent object
+   * Constructor for the ScheduledEvent object
    */
-  public ScheduledEvent() { }
+  public ScheduledEvent() {
+  }
 
 
   /**
-   *  Constructor for the ScheduledEvent object
+   * Constructor for the ScheduledEvent object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param actionElement Description of the Parameter
+   */
+  public ScheduledEvent(Element actionElement) {
+    this.setSecond((String) actionElement.getAttribute("second"));
+    this.setMinute((String) actionElement.getAttribute("minute"));
+    this.setHour((String) actionElement.getAttribute("hour"));
+    this.setDayOfMonth((String) actionElement.getAttribute("dayOfMonth"));
+    this.setMonth((String) actionElement.getAttribute("month"));
+    this.setDayOfWeek((String) actionElement.getAttribute("dayOfWeek"));
+    this.setYear((String) actionElement.getAttribute("year"));
+    this.setTask((String) actionElement.getAttribute("process"));
+    this.setEnabled((String) actionElement.getAttribute("enabled"));
+  }
+
+
+  /**
+   * Constructor for the ScheduledEvent object
+   *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ScheduledEvent(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -64,9 +87,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the id attribute of the ScheduledEvent object
+   * Sets the id attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -74,9 +97,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the id attribute of the ScheduledEvent object
+   * Sets the id attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -84,9 +107,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the second attribute of the ScheduledEvent object
+   * Sets the second attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new second value
+   * @param tmp The new second value
    */
   public void setSecond(String tmp) {
     this.second = tmp;
@@ -94,9 +117,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the minute attribute of the ScheduledEvent object
+   * Sets the minute attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new minute value
+   * @param tmp The new minute value
    */
   public void setMinute(String tmp) {
     this.minute = tmp;
@@ -104,9 +127,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the hour attribute of the ScheduledEvent object
+   * Sets the hour attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new hour value
+   * @param tmp The new hour value
    */
   public void setHour(String tmp) {
     this.hour = tmp;
@@ -114,9 +137,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the dayOfMonth attribute of the ScheduledEvent object
+   * Sets the dayOfMonth attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new dayOfMonth value
+   * @param tmp The new dayOfMonth value
    */
   public void setDayOfMonth(String tmp) {
     this.dayOfMonth = tmp;
@@ -124,9 +147,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the month attribute of the ScheduledEvent object
+   * Sets the month attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new month value
+   * @param tmp The new month value
    */
   public void setMonth(String tmp) {
     this.month = tmp;
@@ -134,9 +157,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the dayOfWeek attribute of the ScheduledEvent object
+   * Sets the dayOfWeek attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new dayOfWeek value
+   * @param tmp The new dayOfWeek value
    */
   public void setDayOfWeek(String tmp) {
     this.dayOfWeek = tmp;
@@ -144,9 +167,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the year attribute of the ScheduledEvent object
+   * Sets the year attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(String tmp) {
     this.year = tmp;
@@ -154,9 +177,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the task attribute of the ScheduledEvent object
+   * Sets the task attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new task value
+   * @param tmp The new task value
    */
   public void setTask(String tmp) {
     this.task = tmp;
@@ -164,9 +187,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the extraInfo attribute of the ScheduledEvent object
+   * Sets the extraInfo attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new extraInfo value
+   * @param tmp The new extraInfo value
    */
   public void setExtraInfo(String tmp) {
     this.extraInfo = tmp;
@@ -174,9 +197,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the enabled attribute of the ScheduledEvent object
+   * Sets the enabled attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -184,9 +207,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the enabled attribute of the ScheduledEvent object
+   * Sets the enabled attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -194,9 +217,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the processId attribute of the ScheduledEvent object
+   * Sets the processId attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(int tmp) {
     this.processId = tmp;
@@ -204,9 +227,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Sets the processId attribute of the ScheduledEvent object
+   * Sets the processId attribute of the ScheduledEvent object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(String tmp) {
     this.processId = Integer.parseInt(tmp);
@@ -214,9 +237,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the id attribute of the ScheduledEvent object
+   * Gets the id attribute of the ScheduledEvent object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -224,9 +247,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the second attribute of the ScheduledEvent object
+   * Gets the second attribute of the ScheduledEvent object
    *
-   *@return    The second value
+   * @return The second value
    */
   public String getSecond() {
     return second;
@@ -234,9 +257,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the minute attribute of the ScheduledEvent object
+   * Gets the minute attribute of the ScheduledEvent object
    *
-   *@return    The minute value
+   * @return The minute value
    */
   public String getMinute() {
     return minute;
@@ -244,9 +267,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the hour attribute of the ScheduledEvent object
+   * Gets the hour attribute of the ScheduledEvent object
    *
-   *@return    The hour value
+   * @return The hour value
    */
   public String getHour() {
     return hour;
@@ -254,9 +277,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the dayOfMonth attribute of the ScheduledEvent object
+   * Gets the dayOfMonth attribute of the ScheduledEvent object
    *
-   *@return    The dayOfMonth value
+   * @return The dayOfMonth value
    */
   public String getDayOfMonth() {
     return dayOfMonth;
@@ -264,9 +287,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the month attribute of the ScheduledEvent object
+   * Gets the month attribute of the ScheduledEvent object
    *
-   *@return    The month value
+   * @return The month value
    */
   public String getMonth() {
     return month;
@@ -274,9 +297,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the dayOfWeek attribute of the ScheduledEvent object
+   * Gets the dayOfWeek attribute of the ScheduledEvent object
    *
-   *@return    The dayOfWeek value
+   * @return The dayOfWeek value
    */
   public String getDayOfWeek() {
     return dayOfWeek;
@@ -284,9 +307,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the year attribute of the ScheduledEvent object
+   * Gets the year attribute of the ScheduledEvent object
    *
-   *@return    The year value
+   * @return The year value
    */
   public String getYear() {
     return year;
@@ -294,9 +317,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the task attribute of the ScheduledEvent object
+   * Gets the task attribute of the ScheduledEvent object
    *
-   *@return    The task value
+   * @return The task value
    */
   public String getTask() {
     return task;
@@ -304,9 +327,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the extraInfo attribute of the ScheduledEvent object
+   * Gets the extraInfo attribute of the ScheduledEvent object
    *
-   *@return    The extraInfo value
+   * @return The extraInfo value
    */
   public String getExtraInfo() {
     return extraInfo;
@@ -314,9 +337,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the enabled attribute of the ScheduledEvent object
+   * Gets the enabled attribute of the ScheduledEvent object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -324,9 +347,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Gets the processId attribute of the ScheduledEvent object
+   * Gets the processId attribute of the ScheduledEvent object
    *
-   *@return    The processId value
+   * @return The processId value
    */
   public int getProcessId() {
     return processId;
@@ -334,10 +357,40 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Populates a record from a database result set
+   * Gets the entered attribute of the ScheduledEvent object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @return The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   * Sets the entered attribute of the ScheduledEvent object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   * Sets the entered attribute of the ScheduledEvent object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Populates a record from a database result set
+   *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("event_id");
@@ -357,9 +410,9 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Generates a text explainable version of the scheduled event
+   * Generates a text explainable version of the scheduled event
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     StringBuffer sb = new StringBuffer();
@@ -367,19 +420,24 @@ public class ScheduledEvent implements Serializable {
     if (!minute.equals("*")) {
       if (minute.indexOf("*/") > -1) {
         String minuteRepeat = minute.substring(minute.indexOf("*/") + 2);
-        appendNext(sb, "Every " + ("1".equals(minuteRepeat) ? "" : minuteRepeat + " ") + "minute" + ("1".equals(minuteRepeat) ? "" : "s"));
+        appendNext(
+            sb, "Every " + ("1".equals(minuteRepeat) ? "" : minuteRepeat + " ") + "minute" + ("1".equals(
+                minuteRepeat) ? "" : "s"));
       }
     }
     //Hour repeats
     if (!hour.equals("*")) {
       if (hour.indexOf("*/") > -1) {
         String hourRepeat = hour.substring(hour.indexOf("*/") + 2);
-        appendNext(sb, "Every " + ("1".equals(hourRepeat) ? "" : hourRepeat + " ") + "hour" + ("1".equals(hourRepeat) ? "" : "s"));
+        appendNext(
+            sb, "Every " + ("1".equals(hourRepeat) ? "" : hourRepeat + " ") + "hour" + ("1".equals(
+                hourRepeat) ? "" : "s"));
       }
       if (hour.indexOf("-") > -1) {
         String leftRange = hour.substring(0, hour.indexOf("-"));
         String rightRange = hour.substring(hour.indexOf("-") + 1);
-        appendNext(sb, to12Hr(leftRange, null) + " - " + to12Hr(rightRange, null));
+        appendNext(
+            sb, to12Hr(leftRange, null) + " - " + to12Hr(rightRange, null));
       }
     }
     //Actual Time
@@ -398,7 +456,8 @@ public class ScheduledEvent implements Serializable {
     int actualDayOfMonth = StringUtils.parseInt(dayOfMonth, -1);
     int actualYear = StringUtils.parseInt(year, -1);
     if (actualmonth > -1 && actualDayOfMonth > -1 && actualYear > -1) {
-      appendNext(sb, "on " + actualmonth + "/" + actualDayOfMonth + "/" + actualYear);
+      appendNext(
+          sb, "on " + actualmonth + "/" + actualDayOfMonth + "/" + actualYear);
     }
 
     return sb.toString();
@@ -406,10 +465,10 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Appends text to the output with a separator
+   * Appends text to the output with a separator
    *
-   *@param  sb    Description of the Parameter
-   *@param  text  Description of the Parameter
+   * @param sb   Description of the Parameter
+   * @param text Description of the Parameter
    */
   private static void appendNext(StringBuffer sb, String text) {
     if (sb.length() > 0) {
@@ -420,11 +479,11 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Converts an hour and a minute to 12hr format using AM/PM
+   * Converts an hour and a minute to 12hr format using AM/PM
    *
-   *@param  hourValue    Description of the Parameter
-   *@param  minuteValue  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param hourValue   Description of the Parameter
+   * @param minuteValue Description of the Parameter
+   * @return Description of the Return Value
    */
   private static String to12Hr(String hourValue, String minuteValue) {
     StringBuffer sb = new StringBuffer();
@@ -464,20 +523,289 @@ public class ScheduledEvent implements Serializable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
-  void delete(Connection db) throws SQLException {
+  public boolean insert(Connection db) throws SQLException {
+    boolean result = false;
+    if (this.getId() != -1) {
+      return (this.update(db) == 1);
+    }
+    id = DatabaseUtils.getNextSeq(db, "business_process_e_event_id_seq");
+    StringBuffer sql = new StringBuffer(
+        "INSERT INTO business_process_events( ");
+    if (id > -1) {
+      sql.append("event_id, ");
+    }
+    if (this.getSecond() != null && !"".equals(this.getSecond())) {
+      sql.append("\"second\", ");
+    }
+    if (this.getMinute() != null && !"".equals(this.getMinute())) {
+      sql.append("\"minute\", ");
+    }
+    if (this.getHour() != null && !"".equals(this.getHour())) {
+      sql.append("\"hour\", ");
+    }
+    if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
+      sql.append("dayofmonth, ");
+    }
+    if (this.getMonth() != null && !"".equals(this.getMonth())) {
+      sql.append("\"month\", ");
+    }
+    if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
+      sql.append("\"dayofweek\", ");
+    }
+    if (this.getYear() != null && !"".equals(this.getYear())) {
+      sql.append("\"year\", ");
+    }
+    if (this.getTask() != null && !"".equals(this.getTask())) {
+      sql.append("task, ");
+    }
+    if (this.getExtraInfo() != null && !"".equals(this.getExtraInfo())) {
+      sql.append("extrainfo, ");
+    }
+    if (this.getEnabled()) {
+      sql.append("enabled, ");
+    }
+    if (this.getEntered() != null) {
+      sql.append("entered, ");
+    }
+    sql.append("process_id) VALUES( ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
+    if (this.getSecond() != null && !"".equals(this.getSecond())) {
+      sql.append("?, ");
+    }
+    if (this.getMinute() != null && !"".equals(this.getMinute())) {
+      sql.append("?, ");
+    }
+    if (this.getHour() != null && !"".equals(this.getHour())) {
+      sql.append("?, ");
+    }
+    if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
+      sql.append("?, ");
+    }
+    if (this.getMonth() != null && !"".equals(this.getMonth())) {
+      sql.append("?, ");
+    }
+    if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
+      sql.append("?, ");
+    }
+    if (this.getYear() != null && !"".equals(this.getYear())) {
+      sql.append("?, ");
+    }
+    if (this.getTask() != null && !"".equals(this.getTask())) {
+      sql.append("?, ");
+    }
+    if (this.getExtraInfo() != null && !"".equals(this.getExtraInfo())) {
+      sql.append("?, ");
+    }
+    if (this.getEnabled()) {
+      sql.append("?, ");
+    }
+    if (this.getEntered() != null) {
+      sql.append("?, ");
+    }
+    sql.append("?) ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    if (this.getSecond() != null && !"".equals(this.getSecond())) {
+      pst.setString(++i, getSecond());
+    }
+    if (this.getMinute() != null && !"".equals(this.getMinute())) {
+      pst.setString(++i, this.getMinute());
+    }
+    if (this.getHour() != null && !"".equals(this.getHour())) {
+      pst.setString(++i, this.getHour());
+    }
+    if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
+      pst.setString(++i, this.getDayOfMonth());
+    }
+    if (this.getMonth() != null && !"".equals(this.getMonth())) {
+      pst.setString(++i, this.getMonth());
+    }
+    if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
+      pst.setString(++i, this.getDayOfWeek());
+    }
+    if (this.getYear() != null && !"".equals(this.getYear())) {
+      pst.setString(++i, this.getYear());
+    }
+    if (this.getTask() != null && !"".equals(this.getTask())) {
+      pst.setString(++i, this.getTask());
+    }
+    if (this.getExtraInfo() != null && !"".equals(this.getExtraInfo())) {
+      pst.setString(++i, this.getExtraInfo());
+    }
+    if (this.getEnabled()) {
+      pst.setBoolean(++i, this.getEnabled());
+    }
+    if (this.getEntered() != null) {
+      DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
+    }
+    pst.setInt(++i, this.getProcessId());
+    result = pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "business_process_e_event_id_seq", id);
+    return result;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public int update(Connection db) throws SQLException {
+    int result = -1;
+    if (this.getId() != -1) {
+      return result;
+    }
+    StringBuffer sql = new StringBuffer("UPDATE business_process_events SET ");
+    if (this.getSecond() != null && !"".equals(this.getSecond())) {
+      sql.append("\"second\" = ?, ");
+    }
+    if (this.getMinute() != null && !"".equals(this.getMinute())) {
+      sql.append("\"minute\" = ?, ");
+    }
+    if (this.getHour() != null && !"".equals(this.getHour())) {
+      sql.append("\"hour\" = ?, ");
+    }
+    if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
+      sql.append("dayofmonth = ?, ");
+    }
+    if (this.getMonth() != null && !"".equals(this.getMonth())) {
+      sql.append("\"month\" = ?, ");
+    }
+    if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
+      sql.append("\"dayofweek\" = ?, ");
+    }
+    if (this.getYear() != null && !"".equals(this.getYear())) {
+      sql.append("\"year\" = ?, ");
+    }
+    if (this.getTask() != null && !"".equals(this.getTask())) {
+      sql.append("task = ?, ");
+    }
+    if (this.getExtraInfo() != null && !"".equals(this.getExtraInfo())) {
+      sql.append("extrainfo = ?, ");
+    }
+    if (this.getEnabled()) {
+      sql.append("enabled = ?, ");
+    }
+    sql.append("WHERE process_id = ? ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    if (this.getSecond() != null && !"".equals(this.getSecond())) {
+      pst.setString(++i, getSecond());
+    }
+    if (this.getMinute() != null && !"".equals(this.getMinute())) {
+      pst.setString(++i, this.getMinute());
+    }
+    if (this.getHour() != null && !"".equals(this.getHour())) {
+      pst.setString(++i, this.getHour());
+    }
+    if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
+      pst.setString(++i, this.getDayOfMonth());
+    }
+    if (this.getMonth() != null && !"".equals(this.getMonth())) {
+      pst.setString(++i, this.getMonth());
+    }
+    if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
+      pst.setString(++i, this.getDayOfWeek());
+    }
+    if (this.getYear() != null && !"".equals(this.getYear())) {
+      pst.setString(++i, this.getYear());
+    }
+    if (this.getTask() != null && !"".equals(this.getTask())) {
+      pst.setString(++i, this.getTask());
+    }
+    if (this.getExtraInfo() != null && !"".equals(this.getExtraInfo())) {
+      pst.setString(++i, this.getExtraInfo());
+    }
+    if (this.getEnabled()) {
+      pst.setBoolean(++i, this.getEnabled());
+    }
+    pst.setInt(++i, this.getProcessId());
+    result = pst.executeUpdate();
+    pst.close();
+    return result;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM business_process_events " +
-        "WHERE id = ? ");
-
-    pst.setInt(1, this.id);
+        "WHERE event_id = ? ");
+    pst.setInt(1, this.getId());
     pst.execute();
-
     pst.close();
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param processList Description of the Parameter
+   */
+  public void buildResources(BusinessProcessList processList) {
+    //Build the business process by the task name
+    BusinessProcess process = (BusinessProcess) processList.get(
+        this.getTask());
+    if (process != null) {
+      //add the event to the list of events.
+      if (process.getEvents() == null) {
+        process.setEvents(new ScheduledEventList());
+      }
+      process.getEvents().add(this);
+    }
+  }
+
+
+  public boolean isDuplicate(ScheduledEvent event) {
+    int resultCount = 0;
+    if (!this.getTask().equals(event.getTask())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getSecond().equals(event.getSecond())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getMinute().equals(event.getMinute())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getHour().equals(event.getHour())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getDayOfMonth().equals(
+        event.getDayOfMonth())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getMonth().equals(event.getMonth())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getDayOfWeek().equals(
+        event.getDayOfWeek())) {
+      resultCount++;
+    }
+    if ((resultCount == 0) && !this.getYear().equals(event.getYear())) {
+      resultCount++;
+    }
+    return (resultCount == 0);
   }
 }
 

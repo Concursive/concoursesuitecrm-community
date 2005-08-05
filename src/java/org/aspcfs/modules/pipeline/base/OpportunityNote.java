@@ -15,21 +15,23 @@
  */
 package org.aspcfs.modules.pipeline.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Note;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: OpportunityNote.java,v 1.4 2003/03/07 14:41:52 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: OpportunityNote.java,v 1.4 2003/03/07 14:41:52 mrajkowski Exp
+ *          $
+ * @created January 14, 2003
  */
 public class OpportunityNote extends Note {
 
   /**
-   *  Constructor for the OpportunityNote object
+   * Constructor for the OpportunityNote object
    */
   public OpportunityNote() {
     isContact = false;
@@ -38,10 +40,10 @@ public class OpportunityNote extends Note {
 
 
   /**
-   *  Constructor for the OpportunityNote object
+   * Constructor for the OpportunityNote object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OpportunityNote(ResultSet rs) throws SQLException {
     isContact = false;
@@ -51,11 +53,11 @@ public class OpportunityNote extends Note {
 
 
   /**
-   *  Constructor for the OpportunityNote object
+   * Constructor for the OpportunityNote object
    *
-   *@param  db                Description of the Parameter
-   *@param  noteId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param noteId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OpportunityNote(Connection db, String noteId) throws SQLException {
     isContact = false;
@@ -85,15 +87,14 @@ public class OpportunityNote extends Note {
 
 
   /**
-   *  Determines what to do if this record is marked for INSERT, UPDATE, or
-   *  DELETE
+   * Determines what to do if this record is marked for INSERT, UPDATE, or
+   * DELETE
    *
-   *@param  db                Description of Parameter
-   *@param  enteredBy         Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@param  oppHeaderId       Description of the Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db          Description of Parameter
+   * @param enteredBy   Description of Parameter
+   * @param modifiedBy  Description of Parameter
+   * @param oppHeaderId Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public void process(Connection db, int oppHeaderId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
@@ -109,14 +110,15 @@ public class OpportunityNote extends Note {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@param  oppHeaderId       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param enteredBy   Description of the Parameter
+   * @param oppHeaderId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int oppHeaderId, int enteredBy) throws SQLException {
+    // TODO: This table does not yet exist
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO note " +
         "(org_id, contact_id, opp_id, subject, body, enteredby, modifiedby) " +
@@ -132,17 +134,16 @@ public class OpportunityNote extends Note {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-    this.setId(DatabaseUtils.getCurrVal(db, "note_id_seq"));
+    this.setId(DatabaseUtils.getCurrVal(db, "note_id_seq", -1));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
 
   public void update(Connection db, int modifiedBy) throws SQLException {
@@ -161,11 +162,10 @@ public class OpportunityNote extends Note {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

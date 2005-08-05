@@ -25,7 +25,7 @@
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td><dhv:label name="admin.installedLicenseLimits.text" param="<%= "appsize="+APP_SIZE %>">The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label>
     <ul>
-      <dhv:label name="errors.toAddNewUser.points" param="li=<li>|sli=</li>|urlStart=<a href=\"http://www.centriccrm.com\" target=\"_blank\">|urlEnd=</a>"><li>Either disable a user that is not using the system so an additional user can be added, or</li><li>Purchase a license that increases the maximum number of users</li><li>For more information see <a href="http://www.centriccrm.com" target="_blank">www.centriccrm.com</a></li></dhv:label>
+      <dhv:label name="errors.toAddNewUser.points" param="<%= "li=<li>|sli=</li>|urlStart=<a href=\"http://www.centriccrm.com\" target=\"_blank\">|urlEnd=</a>" %>"><li>Either disable a user that is not using the system so an additional user can be added, or</li><li>Purchase a license that increases the maximum number of users</li><li>For more information see <a href="http://www.centriccrm.com" target="_blank">www.centriccrm.com</a></li></dhv:label>
     </ul>
   </td></tr>
 </table>

@@ -397,6 +397,16 @@
       <name>form</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>externalJScript</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>externalText</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>

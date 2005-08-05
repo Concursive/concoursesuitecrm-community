@@ -29,19 +29,19 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.Connection;
 
 /**
- *  Action class for managing Roles
+ * Action class for managing Roles
  *
- *@author     mrajkowski
- *@created    September 19, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created September 19, 2001
  */
 public final class Roles extends CFSModule {
 
   /**
-   *  Default action, calls list roles
+   * Default action, calls list roles
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListRoles(context);
@@ -49,10 +49,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to list roles
+   * Action to list roles
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListRoles(ActionContext context) {
     if (!hasPermission(context, "admin-roles-view")) {
@@ -91,10 +91,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to view role details
+   * Action to view role details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRoleDetails(ActionContext context) {
 
@@ -140,10 +140,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to process updating a role based on html form
+   * Action to process updating a role based on html form
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateRole(ActionContext context) {
     if (!(hasPermission(context, "admin-roles-edit"))) {
@@ -184,10 +184,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to generate delete dialog box for user
+   * Action to generate delete dialog box for user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -209,14 +209,18 @@ public final class Roles extends CFSModule {
       thisRole = new Role(db, id);
       DependencyList dependencies = thisRole.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
       } else {
-        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.roleUserHeader"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        htmlDialog.setHeader(
+            systemStatus.getLabel("confirmdelete.roleUserHeader"));
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
 
     } catch (Exception e) {
@@ -235,10 +239,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to generate a role insert form
+   * Action to generate a role insert form
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertRoleForm(ActionContext context) {
 
@@ -270,10 +274,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to insert a role, based on html form entered by user
+   * Action to insert a role, based on html form entered by user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertRole(ActionContext context) {
     if (!(hasPermission(context, "admin-roles-add"))) {
@@ -287,7 +291,7 @@ public final class Roles extends CFSModule {
     thisRole.setEnteredBy(getUserId(context));
     thisRole.setModifiedBy(getUserId(context));
     thisRole.setRoleType(0);
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -317,10 +321,10 @@ public final class Roles extends CFSModule {
 
 
   /**
-   *  Action to delete a specific role
+   * Action to delete a specific role
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteRole(ActionContext context) {
     if (!(hasPermission(context, "admin-roles-delete"))) {
@@ -340,11 +344,15 @@ public final class Roles extends CFSModule {
       boolean usersPresent = thisRole.buildUserCount(db, true);
       SystemStatus systemStatus = this.getSystemStatus(context);
       if (usersPresent) {
-        thisRole.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.activeUsersAssignedToRole"));
+        thisRole.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.activeUsersAssignedToRole"));
       } else {
         recordDeleted = thisRole.delete(db);
         if (!recordDeleted) {
-          thisRole.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.roleDeletion"));
+          thisRole.getErrors().put(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.roleDeletion"));
         }
       }
     } catch (Exception e) {
@@ -355,11 +363,13 @@ public final class Roles extends CFSModule {
     }
     addModuleBean(context, "Roles", "Delete a Role");
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "Roles.do?command=ListRoles");
+      context.getRequest().setAttribute(
+          "refreshUrl", "Roles.do?command=ListRoles");
       return ("DeleteOK");
     } else {
       processErrors(context, thisRole.getErrors());
-      context.getRequest().setAttribute("refreshUrl", "Roles.do?command=ListRoles");
+      context.getRequest().setAttribute(
+          "refreshUrl", "Roles.do?command=ListRoles");
       return ("DeleteOK");
     }
   }

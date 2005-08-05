@@ -51,7 +51,8 @@ CREATE TABLE task (
   owner INTEGER REFERENCES access(user_id),
   completedate DATETIME,
   category_id INTEGER REFERENCES lookup_task_category,
-  duedate_timezone VARCHAR(255)
+  duedate_timezone VARCHAR(255),
+  trashed_date DATETIME
 );
 
 CREATE TABLE tasklink_contact (

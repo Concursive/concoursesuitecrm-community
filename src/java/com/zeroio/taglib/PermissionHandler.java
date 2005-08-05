@@ -15,25 +15,25 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.modules.base.Constants;
+import com.darkhorseventures.database.ConnectionElement;
 import com.zeroio.iteam.base.Project;
 import com.zeroio.iteam.base.TeamMember;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.LookupList;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.sql.Connection;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
-import com.darkhorseventures.database.*;
-import java.sql.*;
-import org.aspcfs.controller.SystemStatus;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    August 13, 2003
- *@version    $Id: PermissionHandler.java,v 1.1.2.2 2004/04/08 14:55:53 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: PermissionHandler.java,v 1.1.2.2 2004/04/08 14:55:53 rvasista
+ *          Exp $
+ * @created August 13, 2003
  */
 public class PermissionHandler extends TagSupport {
 
@@ -42,9 +42,9 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Sets the permission attribute of the PermissionHandler object
+   * Sets the permission attribute of the PermissionHandler object
    *
-   *@param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setName(String tmp) {
     this.permission = tmp;
@@ -52,9 +52,9 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Sets the if attribute of the PermissionHandler object
+   * Sets the if attribute of the PermissionHandler object
    *
-   *@param  tmp  The new if value
+   * @param tmp The new if value
    */
   public void setIf(String tmp) {
     this.includeIf = tmp;
@@ -62,21 +62,24 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
       //Get team and project info
-      TeamMember thisMember = (TeamMember) pageContext.getRequest().getAttribute("currentMember");
-      Project thisProject = (Project) pageContext.getRequest().getAttribute("Project");
+      TeamMember thisMember = (TeamMember) pageContext.getRequest().getAttribute(
+          "currentMember");
+      Project thisProject = (Project) pageContext.getRequest().getAttribute(
+          "Project");
       if (thisMember == null || thisProject == null) {
         return SKIP_BODY;
       }
       //Return the status of the permission
-      if (thisMember.getRoleId() == TeamMember.PROJECT_LEAD && "all".equals(includeIf)) {
+      if (thisMember.getRoleId() == TeamMember.PROJECT_LEAD && "all".equals(
+          includeIf)) {
         return EVAL_BODY_INCLUDE;
       }
       boolean doCheck = true;
@@ -125,22 +128,25 @@ public class PermissionHandler extends TagSupport {
 
 
   /**
-   *  Gets the roleId attribute of the PermissionHandler object
+   * Gets the roleId attribute of the PermissionHandler object
    *
-   *@param  userlevel  Description of the Parameter
-   *@return            The roleId value
+   * @param userlevel Description of the Parameter
+   * @return The roleId value
    */
   protected int getRoleId(int userlevel) {
-    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+        "ConnectionElement");
     if (ce != null) {
-      Hashtable systemStatus = (Hashtable) pageContext.getServletContext().getAttribute("SystemStatus");
+      Hashtable systemStatus = (Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus");
       if (systemStatus != null) {
         SystemStatus thisSystem = (SystemStatus) systemStatus.get(ce.getUrl());
         if (thisSystem != null) {
           // NOTE: Lookup list must already exist in system status, which it does at system startup
           Connection db = null;
           try {
-            LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
+            LookupList roleList = thisSystem.getLookupList(
+                db, "lookup_project_role");
             if (roleList != null) {
               return roleList.getLevelFromId(userlevel);
             }

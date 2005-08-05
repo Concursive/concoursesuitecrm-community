@@ -47,6 +47,17 @@
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
   <%@ include file="ticket_header_include.jsp" %>
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+        <%
+          String documentLink = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId()+"&column=subject";
+          String documentModule = "HelpDesk";
+        %>
+        <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentLink %>"/>
+      </td>
+    </tr>
+  </table><br />
   <dhv:formMessage showSpace="false"/>
   <%@ include file="documents_modify_include.jsp" %>
   <br>

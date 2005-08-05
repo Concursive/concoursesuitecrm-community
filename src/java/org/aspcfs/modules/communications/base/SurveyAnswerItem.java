@@ -15,17 +15,21 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import javax.servlet.http.*;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    November 1, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created November 1, 2002
  */
 public class SurveyAnswerItem {
   private int id = -1;
@@ -38,16 +42,17 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Constructor for the SurveyAnswerItem object
+   * Constructor for the SurveyAnswerItem object
    */
-  public SurveyAnswerItem() { }
+  public SurveyAnswerItem() {
+  }
 
 
   /**
-   *  Constructor for the SurveyAnswerItem object
+   * Constructor for the SurveyAnswerItem object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SurveyAnswerItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -55,10 +60,10 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of the Parameter
-   *@param  parseItem  Description of the Parameter
+   * @param request   Description of the Parameter
+   * @param parseItem Description of the Parameter
    */
   public void buildRecord(HttpServletRequest request, String parseItem) {
     if (request.getParameter(parseItem + "id") != null) {
@@ -68,9 +73,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the id attribute of the SurveyAnswerItem object
+   * Sets the id attribute of the SurveyAnswerItem object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -78,9 +83,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the answerId attribute of the SurveyAnswerItem object
+   * Sets the answerId attribute of the SurveyAnswerItem object
    *
-   *@param  answerId  The new answerId value
+   * @param answerId The new answerId value
    */
   public void setAnswerId(int answerId) {
     this.answerId = answerId;
@@ -88,9 +93,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the comments attribute of the SurveyAnswerItem object
+   * Sets the comments attribute of the SurveyAnswerItem object
    *
-   *@param  comments  The new comments value
+   * @param comments The new comments value
    */
   public void setComments(String comments) {
     this.comments = comments;
@@ -98,9 +103,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the item attribute of the SurveyAnswerItem object
+   * Sets the item attribute of the SurveyAnswerItem object
    *
-   *@param  item  The new item value
+   * @param item The new item value
    */
   public void setItem(ActiveSurveyQuestionItem item) {
     this.item = item;
@@ -108,9 +113,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the entered attribute of the ActiveSurveyAnswerItem object
+   * Sets the entered attribute of the ActiveSurveyAnswerItem object
    *
-   *@param  entered  The new entered value
+   * @param entered The new entered value
    */
   public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
@@ -118,9 +123,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the recipient attribute of the ActiveSurveyAnswerItem object
+   * Sets the recipient attribute of the ActiveSurveyAnswerItem object
    *
-   *@param  recipient  The new recipient value
+   * @param recipient The new recipient value
    */
   public void setRecipient(Contact recipient) {
     this.recipient = recipient;
@@ -128,9 +133,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Sets the contactId attribute of the SurveyAnswerItem object
+   * Sets the contactId attribute of the SurveyAnswerItem object
    *
-   *@param  contactId  The new contactId value
+   * @param contactId The new contactId value
    */
   public void setContactId(int contactId) {
     this.contactId = contactId;
@@ -138,9 +143,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the contactId attribute of the SurveyAnswerItem object
+   * Gets the contactId attribute of the SurveyAnswerItem object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -148,9 +153,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the recipient attribute of the ActiveSurveyAnswerItem object
+   * Gets the recipient attribute of the ActiveSurveyAnswerItem object
    *
-   *@return    The recipient value
+   * @return The recipient value
    */
   public Contact getRecipient() {
     return recipient;
@@ -158,9 +163,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the entered attribute of the ActiveSurveyAnswerItem object
+   * Gets the entered attribute of the ActiveSurveyAnswerItem object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -168,9 +173,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the item attribute of the SurveyAnswerItem object
+   * Gets the item attribute of the SurveyAnswerItem object
    *
-   *@return    The item value
+   * @return The item value
    */
   public ActiveSurveyQuestionItem getItem() {
     return item;
@@ -178,9 +183,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the comments attribute of the SurveyAnswerItem object
+   * Gets the comments attribute of the SurveyAnswerItem object
    *
-   *@return    The comments value
+   * @return The comments value
    */
   public String getComments() {
     return comments;
@@ -188,9 +193,9 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the answerId attribute of the SurveyAnswerItem object
+   * Gets the answerId attribute of the SurveyAnswerItem object
    *
-   *@return    The answerId value
+   * @return The answerId value
    */
   public int getAnswerId() {
     return answerId;
@@ -198,20 +203,19 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Gets the id attribute of the SurveyAnswerItem object
+   * Gets the id attribute of the SurveyAnswerItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
   }
 
 
-
   /**
-   *  Sets the id attribute of the SurveyAnswerItem object
+   * Sets the id attribute of the SurveyAnswerItem object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -219,10 +223,10 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildItemDetails(Connection db) throws SQLException {
     if (id < 1) {
@@ -233,10 +237,10 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildContactDetails(Connection db) throws SQLException {
     if (contactId == -1) {
@@ -247,10 +251,10 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("item_id"));
@@ -260,10 +264,10 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildDetailedRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("item_id"));
@@ -275,11 +279,11 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Constructor for the SurveyAnswer object
+   * Constructor for the SurveyAnswer object
    *
-   *@param  db                Description of the Parameter
-   *@param  passedId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param passedId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SurveyAnswerItem(Connection db, int passedId) throws SQLException {
     if (passedId < 1) {
@@ -288,7 +292,8 @@ public class SurveyAnswerItem {
 
     PreparedStatement pst = null;
     ResultSet rs = null;
-    pst = db.prepareStatement("SELECT * " +
+    pst = db.prepareStatement(
+        "SELECT * " +
         "FROM active_survey_answer_items s " +
         "WHERE answer_id = ? ");
     pst.setInt(1, passedId);
@@ -305,13 +310,13 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisAnswerId      Description of the Parameter
-   *@param  questionId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param thisAnswerId Description of the Parameter
+   * @param questionId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, int thisAnswerId, int questionId) throws SQLException {
     if (thisAnswerId == -1) {
@@ -319,12 +324,17 @@ public class SurveyAnswerItem {
     }
     try {
       db.setAutoCommit(false);
+      int seqId = DatabaseUtils.getNextSeq(
+          db, "active_survey_answer_ite_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey_answer_items " +
-          "(item_id, answer_id, comments) " +
+          "(" + (seqId > -1 ? "id, " : "") + "item_id, answer_id, comments) " +
           "VALUES " +
-          "(?, ?, ?) ");
+          "(" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
       int i = 0;
+      if (seqId > -1) {
+        pst.setInt(++i, seqId);
+      }
       pst.setInt(++i, this.getId());
       pst.setInt(++i, thisAnswerId);
       pst.setString(++i, comments);
@@ -343,12 +353,12 @@ public class SurveyAnswerItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  questionId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param questionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int updateSurveyAverage(Connection db, int questionId) throws SQLException {
     if (questionId == -1) {

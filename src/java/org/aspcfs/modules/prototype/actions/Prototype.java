@@ -15,31 +15,29 @@
  */
 package org.aspcfs.modules.prototype.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.text.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
+import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 15, 2003
  */
 public final class Prototype extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     String module = context.getRequest().getParameter("module");
@@ -68,11 +66,11 @@ public final class Prototype extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Contact attribute of the Prototype object
+   * Adds a feature to the Contact attribute of the Prototype object
    *
-   *@param  context           The feature to be added to the Contact attribute
-   *@param  db                The feature to be added to the Contact attribute
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the Contact attribute
+   * @param db      The feature to be added to the Contact attribute
+   * @throws SQLException Description of the Exception
    */
   private void addContact(ActionContext context, Connection db) throws SQLException {
     String contactId = (String) context.getRequest().getParameter("contactId");
@@ -87,13 +85,13 @@ public final class Prototype extends CFSModule {
 
 
   /**
-   *  Adds a feature to the HtmlSelectElements attribute of the Prototype object
+   * Adds a feature to the HtmlSelectElements attribute of the Prototype object
    *
-   *@param  context           The feature to be added to the HtmlSelectElements
-   *      attribute
-   *@param  db                The feature to be added to the HtmlSelectElements
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the HtmlSelectElements
+   *                attribute
+   * @param db      The feature to be added to the HtmlSelectElements
+   *                attribute
+   * @throws SQLException Description of the Exception
    */
   private void addHtmlSelectElements(ActionContext context, Connection db) throws SQLException {
     HtmlSelect relationshipTypeSelect = new HtmlSelect();
@@ -122,10 +120,12 @@ public final class Prototype extends CFSModule {
     relationshipTypeSelect.addItem("Owner of");
     relationshipTypeSelect.addItem("Spouse of");
     relationshipTypeSelect.addItem("Team member of");
-    context.getRequest().setAttribute("relationshipTypeSelect", relationshipTypeSelect);
+    context.getRequest().setAttribute(
+        "relationshipTypeSelect", relationshipTypeSelect);
 
     HtmlSelect objectSelect = new HtmlSelect();
-    objectSelect.addItem("--None--");
+    objectSelect.addItem(
+        this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
     objectSelect.addItem("Accounts");
     objectSelect.addItem("Contacts");
     objectSelect.addItem("Ideas");
@@ -135,7 +135,8 @@ public final class Prototype extends CFSModule {
     context.getRequest().setAttribute("objectSelect", objectSelect);
 
     HtmlSelect objectSubSelect = new HtmlSelect();
-    objectSubSelect.addItem("--None--");
+    objectSubSelect.addItem(
+        this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
     objectSubSelect.addItem("My Open Opportunities");
     objectSubSelect.addItem("All Open Opportunities");
     objectSubSelect.addItem("My Closed Opportunities");
@@ -143,7 +144,8 @@ public final class Prototype extends CFSModule {
     context.getRequest().setAttribute("objectSubSelect", objectSubSelect);
 
     HtmlSelect howDirectSelect = new HtmlSelect();
-    howDirectSelect.addItem("--None--");
+    howDirectSelect.addItem(
+        this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
     howDirectSelect.addItem("1 Hop");
     howDirectSelect.addItem("2 Hops");
     howDirectSelect.addItem("3 Hops");
@@ -164,13 +166,13 @@ public final class Prototype extends CFSModule {
 
 
   /**
-   *  Adds a feature to the OpportunityList attribute of the Prototype object
+   * Adds a feature to the OpportunityList attribute of the Prototype object
    *
-   *@param  context           The feature to be added to the OpportunityList
-   *      attribute
-   *@param  db                The feature to be added to the OpportunityList
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the OpportunityList
+   *                attribute
+   * @param db      The feature to be added to the OpportunityList
+   *                attribute
+   * @throws SQLException Description of the Exception
    */
   private void addOpportunityList(ActionContext context, Connection db) throws SQLException {
     OpportunityList thisList = new OpportunityList();

@@ -15,16 +15,20 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 6, 2004
- *@version    $Id: FileFolderHierarchy.java,v 1.3 2004/08/05 20:37:42 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: FileFolderHierarchy.java,v 1.3 2004/08/05 20:37:42 mrajkowski
+ *          Exp $
+ * @created July 6, 2004
  */
 public class FileFolderHierarchy {
 
@@ -34,9 +38,9 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Sets the linkModuleId attribute of the FileFolderHierarchy object
+   * Sets the linkModuleId attribute of the FileFolderHierarchy object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -44,9 +48,9 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Sets the linkItemId attribute of the FileFolderHierarchy object
+   * Sets the linkItemId attribute of the FileFolderHierarchy object
    *
-   *@param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -54,9 +58,9 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Sets the hierarchy attribute of the FileFolderHierarchy object
+   * Sets the hierarchy attribute of the FileFolderHierarchy object
    *
-   *@param  tmp  The new hierarchy value
+   * @param tmp The new hierarchy value
    */
   public void setHierarchy(FileFolderList tmp) {
     this.hierarchy = tmp;
@@ -64,9 +68,9 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Gets the linkModuleId attribute of the FileFolderHierarchy object
+   * Gets the linkModuleId attribute of the FileFolderHierarchy object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -74,9 +78,9 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Gets the linkItemId attribute of the FileFolderHierarchy object
+   * Gets the linkItemId attribute of the FileFolderHierarchy object
    *
-   *@return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -84,9 +88,9 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Gets the hierarchy attribute of the FileFolderHierarchy object
+   * Gets the hierarchy attribute of the FileFolderHierarchy object
    *
-   *@return    The hierarchy value
+   * @return The hierarchy value
    */
   public FileFolderList getHierarchy() {
     return hierarchy;
@@ -94,10 +98,10 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(Connection db) throws SQLException {
     if (linkModuleId == -1 || linkItemId == -1) {
@@ -114,11 +118,11 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  parentId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param parentId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(Connection db, int parentId) throws SQLException {
     if (linkModuleId == -1 || linkItemId == -1) {
@@ -135,13 +139,13 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@param  parentId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @param parentId     Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deleteFolderHierarchy(Connection db, String baseFilePath, int parentId) throws SQLException {
 
@@ -154,7 +158,7 @@ public class FileFolderHierarchy {
     pst.setInt(++i, parentId);
     rs = pst.executeQuery();
 
-    FileItemList fileItemList = new FileItemList(); 
+    FileItemList fileItemList = new FileItemList();
     while (rs.next()) {
       FileItem tmpFileItem = new FileItem();
       tmpFileItem.setId(rs.getInt("item_id"));
@@ -164,10 +168,10 @@ public class FileFolderHierarchy {
     }
     rs.close();
     pst.close();
-    
+
     Iterator itr = fileItemList.iterator();
-    while (itr.hasNext()){
-      FileItem tmpFileItem = (FileItem)itr.next();
+    while (itr.hasNext()) {
+      FileItem tmpFileItem = (FileItem) itr.next();
       tmpFileItem.delete(db, baseFilePath);
     }
 
@@ -192,16 +196,16 @@ public class FileFolderHierarchy {
     }
     rs.close();
     pst.close();
-    
+
     itr = list.iterator();
-    while (itr.hasNext()){
-      int folderId = ((Integer)itr.next()).intValue();
+    while (itr.hasNext()) {
+      int folderId = ((Integer) itr.next()).intValue();
       this.deleteFolderHierarchy(db, baseFilePath, folderId);
       FileFolder fileFolder = new FileFolder();
       fileFolder.setId(parentId);
       fileFolder.deleteBlankFolder(db);
     }
-    
+
     FileFolder fileFolder = new FileFolder();
     fileFolder.setId(parentId);
     fileFolder.deleteBlankFolder(db);
@@ -214,11 +218,11 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  folderList        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param folderList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildItems(Connection db, FileFolderList folderList) throws SQLException {
     Iterator i = folderList.iterator();
@@ -234,12 +238,12 @@ public class FileFolderHierarchy {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  folderList        Description of the Parameter
-   *@param  level             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param folderList Description of the Parameter
+   * @param level      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildItems(Connection db, FileFolderList folderList, int level) throws SQLException {
     Iterator i = (Iterator) folderList.iterator();

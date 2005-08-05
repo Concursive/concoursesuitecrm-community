@@ -9,13 +9,13 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
- *  Begins the process of migrating data from a DataReader to a DataWriter.
- *  Transfer is responsible for loading configuration data, instantiating
- *  objects, and executing and monitoring the data import process.
+ * Begins the process of migrating data from a DataReader to a DataWriter.
+ * Transfer is responsible for loading configuration data, instantiating
+ * objects, and executing and monitoring the data import process.
  *
- *@author     matt rajkowski
- *@created    September 3, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 3, 2002
  */
 public class Transfer {
 
@@ -23,10 +23,10 @@ public class Transfer {
 
 
   /**
-   *  Application to execute the reader and writer specified by the supplied
-   *  config file
+   * Application to execute the reader and writer specified by the supplied
+   * config file
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void main(String args[]) {
     if (args.length == 0) {
@@ -40,10 +40,10 @@ public class Transfer {
 
 
   /**
-   *  This method can be executed by another class because it does not call
-   *  System.exit()
+   * This method can be executed by another class because it does not call
+   * System.exit()
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void doTask(String args[]) {
     if (args.length == 0) {
@@ -57,11 +57,11 @@ public class Transfer {
 
 
   /**
-   *  Executes a data import based on the given XML configuration file. Each
-   *  data import consists of a Reader and Writer (ImportHandlers), plus system
-   *  specific configuration.
+   * Executes a data import based on the given XML configuration file. Each
+   * data import consists of a Reader and Writer (ImportHandlers), plus system
+   * specific configuration.
    *
-   *@param  configParam  Description of the Parameter
+   * @param configParam Description of the Parameter
    */
   public void execute(String configParam) {
     logger.info("Reading configuration file: " + configParam + "...");
@@ -70,10 +70,14 @@ public class Transfer {
       XMLUtils xml = new XMLUtils(configFile);
 
       //Provide info about the config
-      logger.info("Description: " + XMLUtils.getNodeText(XMLUtils.getFirstElement(xml.getDocumentElement(), "description")).trim());
+      logger.info(
+          "Description: " + XMLUtils.getNodeText(
+              XMLUtils.getFirstElement(
+                  xml.getDocumentElement(), "description")).trim());
 
       try {
-        String debug = XMLUtils.getNodeText(XMLUtils.getFirstElement(xml.getDocumentElement(), "debug"));
+        String debug = XMLUtils.getNodeText(
+            XMLUtils.getFirstElement(xml.getDocumentElement(), "debug"));
         if (debug != null) {
           System.setProperty("DEBUG", debug);
         }
@@ -81,8 +85,10 @@ public class Transfer {
       }
 
       //Make sure the config has valid entries
-      String readerClass = (String) XMLUtils.getFirstElement(xml.getDocumentElement(), "reader").getAttribute("class");
-      String writerClass = (String) XMLUtils.getFirstElement(xml.getDocumentElement(), "writer").getAttribute("class");
+      String readerClass = (String) XMLUtils.getFirstElement(
+          xml.getDocumentElement(), "reader").getAttribute("class");
+      String writerClass = (String) XMLUtils.getFirstElement(
+          xml.getDocumentElement(), "writer").getAttribute("class");
 
       logger.info("Reader: " + readerClass);
       logger.info("Writer: " + writerClass);
@@ -92,7 +98,9 @@ public class Transfer {
 
         //Instantiate the reader
         Object reader = Class.forName(readerClass).newInstance();
-        HashMap invalidReaderProperties = XMLUtils.populateObject(reader, XMLUtils.getFirstElement(xml.getDocumentElement(), "reader"));
+        HashMap invalidReaderProperties = XMLUtils.populateObject(
+            reader, XMLUtils.getFirstElement(
+                xml.getDocumentElement(), "reader"));
         displayItems(invalidReaderProperties, "Invalid Reader Property");
         if (!validateHandler(reader)) {
           logger.info("Reader has not been configured");
@@ -100,7 +108,9 @@ public class Transfer {
 
           //Instantiate the writer
           Object writer = Class.forName(writerClass).newInstance();
-          HashMap invalidWriterProperties = XMLUtils.populateObject(writer, XMLUtils.getFirstElement(xml.getDocumentElement(), "writer"));
+          HashMap invalidWriterProperties = XMLUtils.populateObject(
+              writer, XMLUtils.getFirstElement(
+                  xml.getDocumentElement(), "writer"));
           displayItems(invalidWriterProperties, "Invalid Writer Property");
           if (!validateHandler(writer)) {
             logger.info("Writer has not been configured");
@@ -111,7 +121,8 @@ public class Transfer {
           }
         }
       } else {
-        logger.info("A Reader and Writer need to be specified in the configuration file");
+        logger.info(
+            "A Reader and Writer need to be specified in the configuration file");
       }
     } catch (Exception e) {
       logger.info("Error: " + e.toString());
@@ -120,10 +131,10 @@ public class Transfer {
 
 
   /**
-   *  Processes the list of invalid settings for the given ImportHandler.
+   * Processes the list of invalid settings for the given ImportHandler.
    *
-   *@param  itemList     Description of the Parameter
-   *@param  displayText  Description of the Parameter
+   * @param itemList    Description of the Parameter
+   * @param displayText Description of the Parameter
    */
   private void displayItems(HashMap itemList, String displayText) {
     if (itemList.size() > 0) {
@@ -139,12 +150,12 @@ public class Transfer {
 
 
   /**
-   *  Returns whether the ImportHandler has been successfully configured before
-   *  use. A simple check to make sure all of the required settings have been
-   *  set.
+   * Returns whether the ImportHandler has been successfully configured before
+   * use. A simple check to make sure all of the required settings have been
+   * set.
    *
-   *@param  handler  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param handler Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean validateHandler(Object handler) {
     return (((DataImportHandler) handler).isConfigured());

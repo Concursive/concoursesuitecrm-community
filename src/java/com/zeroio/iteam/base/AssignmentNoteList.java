@@ -1,6 +1,5 @@
 package com.zeroio.iteam.base;
 
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -26,7 +25,8 @@ public class AssignmentNoteList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
 
   public static void delete(Connection db, int assignmentId) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("DELETE FROM project_assignments_status " +
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM project_assignments_status " +
         "WHERE assignment_id = ? ");
     pst.setInt(1, assignmentId);
     pst.execute();
@@ -35,7 +35,8 @@ public class AssignmentNoteList extends ArrayList {
 
   public static void queryNoteCount(Connection db, Assignment thisAssignment) throws SQLException {
     int count = 0;
-    PreparedStatement pst = db.prepareStatement("SELECT count(*) AS rec_count " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS rec_count " +
         "FROM project_assignments_status " +
         "WHERE assignment_id = ? ");
     pst.setInt(1, thisAssignment.getId());
@@ -81,7 +82,8 @@ public class AssignmentNoteList extends ArrayList {
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -107,20 +109,14 @@ public class AssignmentNoteList extends ArrayList {
         "* " +
         "FROM project_assignments_status s " +
         "WHERE s.status_id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       AssignmentNote assignmentNote = new AssignmentNote(rs);
       this.add(assignmentNote);
     }

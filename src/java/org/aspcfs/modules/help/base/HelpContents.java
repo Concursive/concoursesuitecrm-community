@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.help.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created January 14, 2003
  */
 public class HelpContents extends ArrayList {
   private boolean buildFeatures = false;
@@ -39,15 +40,16 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Constructor for the HelpContents object
+   * Constructor for the HelpContents object
    */
-  public HelpContents() { }
+  public HelpContents() {
+  }
 
 
   /**
-   *  Sets the module attribute of the HelpContents object
+   * Sets the module attribute of the HelpContents object
    *
-   *@param  module  The new module value
+   * @param module The new module value
    */
   public void setModule(String module) {
     this.module = module;
@@ -55,9 +57,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Sets the section attribute of the HelpContents object
+   * Sets the section attribute of the HelpContents object
    *
-   *@param  section  The new section value
+   * @param section The new section value
    */
   public void setSection(String section) {
     this.section = section;
@@ -65,9 +67,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the HelpContents object
+   * Sets the pagedListInfo attribute of the HelpContents object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -75,9 +77,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Sets the subSection attribute of the HelpContents object
+   * Sets the subSection attribute of the HelpContents object
    *
-   *@param  subSection  The new subSection value
+   * @param subSection The new subSection value
    */
   public void setSubSection(String subSection) {
     this.subSection = subSection;
@@ -85,9 +87,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Gets the subSection attribute of the HelpContents object
+   * Gets the subSection attribute of the HelpContents object
    *
-   *@return    The subSection value
+   * @return The subSection value
    */
   public String getSubSection() {
     return subSection;
@@ -95,9 +97,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the HelpContents object
+   * Gets the pagedListInfo attribute of the HelpContents object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -105,9 +107,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Gets the module attribute of the HelpContents object
+   * Gets the module attribute of the HelpContents object
    *
-   *@return    The module value
+   * @return The module value
    */
   public String getModule() {
     return module;
@@ -115,9 +117,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Gets the section attribute of the HelpContents object
+   * Gets the section attribute of the HelpContents object
    *
-   *@return    The section value
+   * @return The section value
    */
   public String getSection() {
     return section;
@@ -125,9 +127,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Sets the buildFeatures attribute of the HelpContents object
+   * Sets the buildFeatures attribute of the HelpContents object
    *
-   *@param  buildFeatures  The new buildFeatures value
+   * @param buildFeatures The new buildFeatures value
    */
   public void setBuildFeatures(boolean buildFeatures) {
     this.buildFeatures = buildFeatures;
@@ -135,9 +137,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Gets the buildFeatures attribute of the HelpContents object
+   * Gets the buildFeatures attribute of the HelpContents object
    *
-   *@return    The buildFeatures value
+   * @return The buildFeatures value
    */
   public boolean getBuildFeatures() {
     return buildFeatures;
@@ -145,10 +147,10 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -184,7 +186,8 @@ public class HelpContents extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
           "AND hc.description < ? ");
       items = prepareFilter(pst);
@@ -199,7 +202,7 @@ public class HelpContents extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("hc.module", "");
+    pagedListInfo.setDefaultSort("hc.\"module\"", "");
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records
@@ -209,22 +212,15 @@ public class HelpContents extends ArrayList {
         "FROM help_contents hc " +
         "WHERE hc.help_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       HelpItem thisItem = new HelpItem(rs);
       this.add(thisItem);
     }
@@ -242,9 +238,9 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -252,11 +248,11 @@ public class HelpContents extends ArrayList {
     }
 
     if (module != null) {
-      sqlFilter.append("AND hc.module = ? ");
+      sqlFilter.append("AND hc.\"module\" = ? ");
     }
 
     if (section != null) {
-      sqlFilter.append("AND hc.section = ? ");
+      sqlFilter.append("AND hc.\"section\" = ? ");
     }
 
     if (subSection != null) {
@@ -266,11 +262,11 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -15,20 +15,19 @@
  */
 package org.aspcfs.utils;
 
-import java.net.*;
-import java.io.*;
 import javax.net.ssl.*;
-import java.security.*;
-import javax.security.cert.X509Certificate;
+import java.io.*;
+import java.security.KeyStore;
+import java.security.SecureRandom;
 
 /**
- *  Wrapper for a secure request and response to an SSL Server. Either p2p can
- *  be used by supplying a keystore with private and server keys, or the key can
- *  be retrieved from the server if it is signed by a trusted authority.
+ * Wrapper for a secure request and response to an SSL Server. Either p2p can
+ * be used by supplying a keystore with private and server keys, or the key can
+ * be retrieved from the server if it is signed by a trusted authority.
  *
- *@author     Matt Rajkowski
- *@created    March 15, 2002
- *@version    $Id$
+ * @author Matt Rajkowski
+ * @version $Id$
+ * @created March 15, 2002
  */
 public class SSLMessage {
 
@@ -42,15 +41,16 @@ public class SSLMessage {
 
 
   /**
-   *  Constructor for the SSLMessage object
+   * Constructor for the SSLMessage object
    */
-  public SSLMessage() { }
+  public SSLMessage() {
+  }
 
 
   /**
-   *  Sets the url attribute of the SSLMessage object
+   * Sets the url attribute of the SSLMessage object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     url = tmp;
@@ -58,9 +58,9 @@ public class SSLMessage {
 
 
   /**
-   *  Sets the port attribute of the SSLMessage object
+   * Sets the port attribute of the SSLMessage object
    *
-   *@param  tmp  The new port value
+   * @param tmp The new port value
    */
   public void setPort(int tmp) {
     port = tmp;
@@ -68,10 +68,10 @@ public class SSLMessage {
 
 
   /**
-   *  When using peer2peer encryption, the local private key is used to identify
-   *  and encrypt data for the server.
+   * When using peer2peer encryption, the local private key is used to identify
+   * and encrypt data for the server.
    *
-   *@param  tmp  The new keystoreAlias value
+   * @param tmp The new keystoreAlias value
    */
   public void setKeystoreAlias(String tmp) {
     keystoreAlias = tmp;
@@ -79,9 +79,9 @@ public class SSLMessage {
 
 
   /**
-   *  Sets the keystoreLocation attribute of the SSLMessage object
+   * Sets the keystoreLocation attribute of the SSLMessage object
    *
-   *@param  tmp  The new keystoreLocation value
+   * @param tmp The new keystoreLocation value
    */
   public void setKeystoreLocation(String tmp) {
     this.keystoreLocation = tmp;
@@ -89,9 +89,9 @@ public class SSLMessage {
 
 
   /**
-   *  Sets the keystorePassword attribute of the SSLMessage object
+   * Sets the keystorePassword attribute of the SSLMessage object
    *
-   *@param  tmp  The new keystorePassword value
+   * @param tmp The new keystorePassword value
    */
   public void setKeystorePassword(String tmp) {
     this.keystorePassword = tmp;
@@ -99,9 +99,9 @@ public class SSLMessage {
 
 
   /**
-   *  Sets the message attribute of the SSLMessage object
+   * Sets the message attribute of the SSLMessage object
    *
-   *@param  tmp  The new message value
+   * @param tmp The new message value
    */
   public void setMessage(String tmp) {
     message = tmp;
@@ -109,9 +109,9 @@ public class SSLMessage {
 
 
   /**
-   *  Gets the keystoreLocation attribute of the SSLMessage object
+   * Gets the keystoreLocation attribute of the SSLMessage object
    *
-   *@return    The keystoreLocation value
+   * @return The keystoreLocation value
    */
   public String getKeystoreLocation() {
     return keystoreLocation;
@@ -119,9 +119,9 @@ public class SSLMessage {
 
 
   /**
-   *  Gets the keystorePassword attribute of the SSLMessage object
+   * Gets the keystorePassword attribute of the SSLMessage object
    *
-   *@return    The keystorePassword value
+   * @return The keystorePassword value
    */
   public String getKeystorePassword() {
     return keystorePassword;
@@ -129,9 +129,9 @@ public class SSLMessage {
 
 
   /**
-   *  Gets the response attribute of the SSLMessage object
+   * Gets the response attribute of the SSLMessage object
    *
-   *@return    The response value
+   * @return The response value
    */
   public String getResponse() {
     return response.toString();
@@ -139,19 +139,19 @@ public class SSLMessage {
 
 
   /**
-   *  Sends a message to an SSL Server and receives a response if there is one.
-   *  <p>
+   * Sends a message to an SSL Server and receives a response if there is one.
+   * <p/>
+   * <p/>
+   * This method will instantiate the connection, send data, receive data, and
+   * close the connection. If the server doesn't respond, then a timeout will
+   * occur, closing the connection.<p>
+   * <p/>
+   * This method will only connect to servers that have a trusted certificate
+   * -- either signed by a trusted authority or a certificate that has been
+   * stored locally in the keystore and trusted.
    *
-   *  This method will instantiate the connection, send data, receive data, and
-   *  close the connection. If the server doesn't respond, then a timeout will
-   *  occur, closing the connection.<p>
-   *
-   *  This method will only connect to servers that have a trusted certificate
-   *  -- either signed by a trusted authority or a certificate that has been
-   *  stored locally in the keystore and trusted.
-   *
-   *@return                0=OK, 1=Fatal Error
-   *@exception  Exception  Description of Exception
+   * @return 0=OK, 1=Fatal Error
+   * @throws Exception Description of Exception
    */
   public int send() throws Exception {
 
@@ -167,7 +167,8 @@ public class SSLMessage {
         //System.setProperty("java.protocol.handler.pkgs",
         //    "com.sun.net.ssl.internal.www.protocol");
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("SSLMessage-> Keystore: " + keystoreLocation + ":" + keystorePassword);
+          System.out.println(
+              "SSLMessage-> Keystore: " + keystoreLocation + ":" + keystorePassword);
         }
 
         char[] passphrase = keystorePassword.toCharArray();
@@ -175,16 +176,19 @@ public class SSLMessage {
         keyStore.load(new FileInputStream(keystoreLocation), passphrase);
 
         if (keyStore.containsAlias(keystoreAlias) == false) {
-          System.out.println("Cannot locate identity: local private key not found.");
+          System.out.println(
+              "Cannot locate identity: local private key not found.");
         }
 
         //Holds this peer's private key
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
+            "SunX509");
         keyManagerFactory.init(keyStore, passphrase);
         KeyManager[] arKeyManager = keyManagerFactory.getKeyManagers();
 
         //Holds other peers' certificates
-        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+            "SunX509");
         trustManagerFactory.init(keyStore);
         TrustManager[] arTrustManager = trustManagerFactory.getTrustManagers();
 
@@ -229,7 +233,8 @@ public class SSLMessage {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("SSLMessage-> Receiving Data");
       }
-      BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      BufferedReader in = new BufferedReader(
+          new InputStreamReader(socket.getInputStream()));
       String inputLine;
       while ((inputLine = in.readLine()) != null) {
         appendResponseLine(inputLine);
@@ -249,9 +254,9 @@ public class SSLMessage {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  in  Description of Parameter
+   * @param in Description of Parameter
    */
   private void appendResponseLine(String in) {
     if (response == null) {

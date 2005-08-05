@@ -15,21 +15,21 @@
  */
 package org.aspcfs.modules.healthcare.edit.apps;
 
-import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
 
 /**
- *  Application to test HTTP posting transaction
+ * Application to test HTTP posting transaction
  *
- *@author     matt rajkowski
- *@created    March 24, 2003
- *@version    $Id: HttpPostTransaction.java,v 1.1 2003/03/24 19:00:50 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HttpPostTransaction.java,v 1.1 2003/03/24 19:00:50 mrajkowski
+ *          Exp $
+ * @created March 24, 2003
  */
 public class HttpPostTransaction {
 
   /**
-   *@param  args  the command line arguments
+   * @param args the command line arguments
    */
   public static void main(String args[]) {
     if (args.length == 0) {

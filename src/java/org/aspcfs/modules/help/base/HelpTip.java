@@ -15,19 +15,20 @@
  */
 package org.aspcfs.modules.help.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
-import java.util.*;
-import java.text.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a Help Tip on a page
+ * Represents a Help Tip on a page
  *
- *@author     akhi_m
- *@created    July 9, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created July 9, 2003
  */
 public class HelpTip extends GenericBean {
   //static variables
@@ -45,18 +46,18 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpTip object
+   * Constructor for the HelpTip object
    */
-  public HelpTip() { }
-
+  public HelpTip() {
+  }
 
 
   /**
-   *  Constructor for the HelpTip object
+   * Constructor for the HelpTip object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpTip(Connection db, int thisId) throws SQLException {
     if (thisId == -1) {
@@ -82,10 +83,10 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpTip object
+   * Constructor for the HelpTip object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpTip(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -93,9 +94,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpTip object
+   * Sets the id attribute of the HelpTip object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -103,9 +104,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpTip object
+   * Sets the id attribute of the HelpTip object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -113,9 +114,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpTip object
+   * Sets the linkHelpId attribute of the HelpTip object
    *
-   *@param  tmp  The new linkHelpId value
+   * @param tmp The new linkHelpId value
    */
   public void setLinkHelpId(int tmp) {
     this.linkHelpId = tmp;
@@ -123,9 +124,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpTip object
+   * Sets the linkHelpId attribute of the HelpTip object
    *
-   *@param  tmp  The new linkHelpId value
+   * @param tmp The new linkHelpId value
    */
   public void setLinkHelpId(String tmp) {
     this.linkHelpId = Integer.parseInt(tmp);
@@ -133,9 +134,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the HelpTip object
+   * Sets the description attribute of the HelpTip object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -143,9 +144,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpTip object
+   * Sets the enteredBy attribute of the HelpTip object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -153,9 +154,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpTip object
+   * Sets the enteredBy attribute of the HelpTip object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -163,9 +164,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpTip object
+   * Sets the entered attribute of the HelpTip object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -173,9 +174,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpTip object
+   * Sets the entered attribute of the HelpTip object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -183,9 +184,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpTip object
+   * Sets the modifiedBy attribute of the HelpTip object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -193,9 +194,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpTip object
+   * Sets the modifiedBy attribute of the HelpTip object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -203,9 +204,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpTip object
+   * Sets the modified attribute of the HelpTip object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -213,9 +214,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpTip object
+   * Sets the modified attribute of the HelpTip object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -223,9 +224,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the HelpTip object
+   * Sets the enabled attribute of the HelpTip object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -233,9 +234,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the HelpTip object
+   * Sets the enabled attribute of the HelpTip object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -243,9 +244,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the HelpTip object
+   * Gets the id attribute of the HelpTip object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -253,9 +254,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the linkHelpId attribute of the HelpTip object
+   * Gets the linkHelpId attribute of the HelpTip object
    *
-   *@return    The linkHelpId value
+   * @return The linkHelpId value
    */
   public int getLinkHelpId() {
     return linkHelpId;
@@ -263,9 +264,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the HelpTip object
+   * Gets the description attribute of the HelpTip object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -273,9 +274,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the HelpTip object
+   * Gets the enteredBy attribute of the HelpTip object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -283,9 +284,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the HelpTip object
+   * Gets the entered attribute of the HelpTip object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -293,9 +294,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the HelpTip object
+   * Gets the modifiedBy attribute of the HelpTip object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -303,9 +304,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the HelpTip object
+   * Gets the modified attribute of the HelpTip object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -313,9 +314,9 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the HelpTip object
+   * Gets the enabled attribute of the HelpTip object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -323,28 +324,25 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Insert a Help Tip
+   * Insert a Help Tip
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
       int i = 0;
+      id = DatabaseUtils.getNextSeq(db, "help_tips_tip_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO help_tips " +
-          "(link_help_id, description, enteredby, modifiedby, enabled ) " +
-          "VALUES (?, ?, ?, ?, ?) "
-          );
-      pst.setInt(++i, this.getLinkHelpId());
-      pst.setString(++i, this.getDescription());
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
-      pst.setBoolean(++i, this.getEnabled());
-      pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "help_tips_tip_id_seq");
+          "(" + (id > -1 ? "tip_id, " : "") + "link_help_id, description, enteredby, modifiedby, enabled ) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
+      id = DatabaseUtils.getCurrVal(db, "help_tips_tip_id_seq", id);
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -358,21 +356,18 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Update a Help Tip
+   * Update a Help Tip
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
-    String sql = null;
-    ResultSet rs = null;
     PreparedStatement pst = null;
     int count = 0;
     if (id == -1) {
       throw new SQLException("Tip ID not specified");
     }
-
     try {
       db.setAutoCommit(false);
       HelpTip previousTip = new HelpTip(db, id);
@@ -380,8 +375,7 @@ public class HelpTip extends GenericBean {
       pst = db.prepareStatement(
           "UPDATE help_tips " +
           "SET modifiedby = ?, description = ?, enabled = ? " +
-          "WHERE tip_id = ? AND modified = ? "
-          );
+          "WHERE tip_id = ? AND modified = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       pst.setBoolean(++i, this.getEnabled());
@@ -401,11 +395,11 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Delete a Help Tip
+   * Delete a Help Tip
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -431,10 +425,10 @@ public class HelpTip extends GenericBean {
 
 
   /**
-   *  Build the record from the database result
+   * Build the record from the database result
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("tip_id");

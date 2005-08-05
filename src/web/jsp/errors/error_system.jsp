@@ -16,7 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
-<%@page import="java.io.*"%>
+<%@page import="java.io.*, org.aspcfs.modules.base.Constants"%>
 <img src="images/error.gif" border="0" align="absmiddle"/>
 <font color='red'><dhv:label name="errors.anErrorHasOccured">An Error Has Occurred</dhv:label></font>
 <hr color="#BFBFBB" noshade>
@@ -32,13 +32,17 @@
     errorMessage = (String)errorObject;
   } else if (errorObject instanceof java.lang.Exception) {
     Exception e = (Exception)errorObject;
-    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    e.printStackTrace(new PrintStream(outStream));
-    errorMessage = outStream.toString();
+    if (!e.getMessage().equals(Constants.NOT_FOUND_ERROR)){
+      ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+      e.printStackTrace(new PrintStream(outStream));
+      errorMessage = outStream.toString();
+    } else{
+      errorMessage = "This Object does not exist or has been deleted";
+    }
   }
   if (!errorMessage.equals("")) {
 %>
-<dhv:label name="errors.actualErrorIs.colon" param="<%= "errorMessage="+errorMessage %>">The actual error is:<br /><br /><%= errorMessage %><br><br><%= errorMessage %></dhv:label>
+<dhv:label name="errors.actualErrorIs.colon" param="<%= "errorMessage="+errorMessage %>">The actual error is:<br /><br /><%= errorMessage %></dhv:label>
 <%
   } else {
 %>

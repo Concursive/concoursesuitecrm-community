@@ -21,7 +21,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <a href="MyCFSInbox.do?command=Inbox&return=1"><dhv:label name="Mailbox">Mailbox</dhv:label></a> >
 <% if("-1".equals(request.getParameter("noteId"))){ %>
 <a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage&sendUrl='+escape('MyCFSInbox.do?command=SendMessage')+'&return='+escape('MyCFSInbox.do?command=Inbox');"><dhv:label name="actionList.newMessage">New Message</dhv:label></a><br>

@@ -15,18 +15,20 @@
  */
 package com.zeroio.iteam.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    February 25, 2003
- *@version    $Id: AssignmentFolderList.java,v 1.1 2003/02/26 05:41:38 matt Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: AssignmentFolderList.java,v 1.1 2003/02/26 05:41:38 matt Exp
+ *          $
+ * @created February 25, 2003
  */
 public class AssignmentFolderList extends ArrayList {
 
@@ -35,15 +37,16 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Constructor for the AssignmentFolderList object
+   * Constructor for the AssignmentFolderList object
    */
-  public AssignmentFolderList() { }
+  public AssignmentFolderList() {
+  }
 
 
   /**
-   *  Sets the requirementId attribute of the AssignmentFolderList object
+   * Sets the requirementId attribute of the AssignmentFolderList object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(int tmp) {
     requirementId = tmp;
@@ -51,9 +54,9 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Gets the requirementId attribute of the AssignmentFolderList object
+   * Gets the requirementId attribute of the AssignmentFolderList object
    *
-   *@return    The requirementId value
+   * @return The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
@@ -61,9 +64,9 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Sets the parentId attribute of the AssignmentFolderList object
+   * Sets the parentId attribute of the AssignmentFolderList object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     parentId = tmp;
@@ -71,9 +74,9 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Gets the parentId attribute of the AssignmentFolderList object
+   * Gets the parentId attribute of the AssignmentFolderList object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -81,10 +84,10 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -116,10 +119,10 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator folders = this.iterator();
@@ -131,11 +134,11 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  requirementId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param requirementId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int requirementId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -148,10 +151,10 @@ public class AssignmentFolderList extends ArrayList {
 
 
   /**
-   *  Gets the assignmentFolder attribute of the AssignmentFolderList object
+   * Gets the assignmentFolder attribute of the AssignmentFolderList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The assignmentFolder value
+   * @param id Description of the Parameter
+   * @return The assignmentFolder value
    */
   public AssignmentFolder getAssignmentFolder(int id) {
     Iterator i = this.iterator();

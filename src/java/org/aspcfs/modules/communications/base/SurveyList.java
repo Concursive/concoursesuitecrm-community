@@ -15,21 +15,25 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Contains a list of Survey objects. The list can be built by setting
- *  parameters and then calling buildList
+ * Contains a list of Survey objects. The list can be built by setting
+ * parameters and then calling buildList
  *
- *@author     chris price
- *@created    August 7, 2002
- *@version    $Id$
+ * @author chris price
+ * @version $Id$
+ * @created August 7, 2002
  */
 public class SurveyList extends Vector {
 
@@ -43,17 +47,18 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Constructor for the SurveyList object
+   * Constructor for the SurveyList object
    */
-  public SurveyList() { }
+  public SurveyList() {
+  }
 
 
   /**
-   *  Queries the database and adds Survey objects to this collection based on
-   *  any specified parameters.
+   * Queries the database and adds Survey objects to this collection based on
+   * any specified parameters.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -88,9 +93,10 @@ public class SurveyList extends Vector {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(s.name) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(s.name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -120,22 +126,15 @@ public class SurveyList extends Vector {
         "FROM survey s " +
         "WHERE s.survey_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Survey thisSurvey = new Survey(rs);
       this.addElement(thisSurvey);
     }
@@ -147,9 +146,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the SurveyList object
+   * Gets the pagedListInfo attribute of the SurveyList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -157,9 +156,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the itemLength attribute of the SurveyList object
+   * Gets the itemLength attribute of the SurveyList object
    *
-   *@return    The itemLength value
+   * @return The itemLength value
    */
   public int getItemLength() {
     return itemLength;
@@ -167,9 +166,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the type attribute of the SurveyList object
+   * Gets the type attribute of the SurveyList object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -177,9 +176,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the enabled attribute of the SurveyList object
+   * Gets the enabled attribute of the SurveyList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -187,9 +186,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the enabled attribute of the SurveyList object
+   * Sets the enabled attribute of the SurveyList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -197,9 +196,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the SurveyList object
+   * Sets the pagedListInfo attribute of the SurveyList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -207,9 +206,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the itemLength attribute of the SurveyList object
+   * Sets the itemLength attribute of the SurveyList object
    *
-   *@param  tmp  The new itemLength value
+   * @param tmp The new itemLength value
    */
   public void setItemLength(int tmp) {
     this.itemLength = tmp;
@@ -217,9 +216,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the type attribute of the SurveyList object
+   * Sets the type attribute of the SurveyList object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -227,9 +226,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the enteredBy attribute of the SurveyList object
+   * Sets the enteredBy attribute of the SurveyList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -237,9 +236,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the enteredByIdRange attribute of the SurveyList object
+   * Sets the enteredByIdRange attribute of the SurveyList object
    *
-   *@param  tmp  The new enteredByIdRange value
+   * @param tmp The new enteredByIdRange value
    */
   public void setEnteredByIdRange(String tmp) {
     this.enteredByIdRange = tmp;
@@ -247,9 +246,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the enteredBy attribute of the SurveyList object
+   * Gets the enteredBy attribute of the SurveyList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -257,9 +256,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the enteredByIdRange attribute of the SurveyList object
+   * Gets the enteredByIdRange attribute of the SurveyList object
    *
-   *@return    The enteredByIdRange value
+   * @return The enteredByIdRange value
    */
   public String getEnteredByIdRange() {
     return enteredByIdRange;
@@ -267,9 +266,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the enteredBy attribute of the SurveyList object
+   * Sets the enteredBy attribute of the SurveyList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -277,9 +276,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the jsEvent attribute of the SurveyList object
+   * Gets the jsEvent attribute of the SurveyList object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -287,9 +286,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the jsEvent attribute of the SurveyList object
+   * Sets the jsEvent attribute of the SurveyList object
    *
-   *@param  jsEvent  The new jsEvent value
+   * @param jsEvent The new jsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -297,9 +296,9 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Appends any list filters that were specified to the SQL statement
+   * Appends any list filters that were specified to the SQL statement
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -319,11 +318,11 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Sets the PreparedStatement parameters that were added in createFilter
+   * Sets the PreparedStatement parameters that were added in createFilter
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -344,11 +343,11 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Gets the htmlSelect attribute of the SurveyList object
+   * Gets the htmlSelect attribute of the SurveyList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect surveyListSelect = new HtmlSelect();
@@ -365,10 +364,10 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Adds a feature to the Item attribute of the SurveyList object
+   * Adds a feature to the Item attribute of the SurveyList object
    *
-   *@param  key   The feature to be added to the Item attribute
-   *@param  name  The feature to be added to the Item attribute
+   * @param key  The feature to be added to the Item attribute
+   * @param name The feature to be added to the Item attribute
    */
   public void addItem(int key, String name) {
     Survey thisSurvey = new Survey();
@@ -383,11 +382,11 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Checks to see if the specified surveyId is in this collection of Survey
-   *  objects
+   * Checks to see if the specified surveyId is in this collection of Survey
+   * objects
    *
-   *@param  surveyId  Survey ID to look for
-   *@return           Returns true if found, else false
+   * @param surveyId Survey ID to look for
+   * @return Returns true if found, else false
    */
   public boolean hasId(int surveyId) {
     Iterator i = this.iterator();

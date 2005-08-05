@@ -15,27 +15,23 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.DateUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.sql.*;
+import java.text.DateFormat;
 
 /**
- *  Represents an HTML message than can be emailed, faxed, or printed. Messages
- *  are intended to be used with Campaigns.
+ * Represents an HTML message than can be emailed, faxed, or printed. Messages
+ * are intended to be used with Campaigns.
  *
- *@author     Wesley_S_Gillette
- *@created    November 13, 2001
- *@version    $Id$
+ * @author Wesley_S_Gillette
+ * @version $Id$
+ * @created November 13, 2001
  */
 public class Message extends GenericBean {
 
@@ -59,11 +55,11 @@ public class Message extends GenericBean {
   private int inactiveCount = -1;
 
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String tableName = "message";
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
@@ -72,16 +68,17 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Constructor for the Message object
+   * Constructor for the Message object
    */
-  public Message() { }
+  public Message() {
+  }
 
 
   /**
-   *  Constructor for the Message object
+   * Constructor for the Message object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Message(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -89,11 +86,11 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Constructor for the Message object
+   * Constructor for the Message object
    *
-   *@param  db                Description of Parameter
-   *@param  messageId         Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db        Description of Parameter
+   * @param messageId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Message(Connection db, String messageId) throws SQLException {
     queryRecord(db, Integer.parseInt(messageId));
@@ -101,11 +98,11 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Constructor for the Message object
+   * Constructor for the Message object
    *
-   *@param  db                Description of Parameter
-   *@param  messageId         Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db        Description of Parameter
+   * @param messageId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Message(Connection db, int messageId) throws SQLException {
     queryRecord(db, messageId);
@@ -113,11 +110,11 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  messageId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param messageId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int messageId) throws SQLException {
     if (messageId == -1) {
@@ -142,11 +139,10 @@ public class Message extends GenericBean {
   }
 
 
-
   /**
-   *  Sets the id attribute of the Message object
+   * Sets the id attribute of the Message object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -154,9 +150,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Message object
+   * Sets the id attribute of the Message object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
@@ -164,9 +160,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Message object
+   * Sets the name attribute of the Message object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -174,9 +170,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the accessType attribute of the Message object
+   * Sets the accessType attribute of the Message object
    *
-   *@param  accessType  The new accessType value
+   * @param accessType The new accessType value
    */
   public void setAccessType(int accessType) {
     this.accessType = accessType;
@@ -184,9 +180,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the accessType attribute of the Message object
+   * Sets the accessType attribute of the Message object
    *
-   *@param  accessType  The new accessType value
+   * @param accessType The new accessType value
    */
   public void setAccessType(String accessType) {
     this.accessType = Integer.parseInt(accessType);
@@ -194,9 +190,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the disableNameValidation attribute of the Message object
+   * Sets the disableNameValidation attribute of the Message object
    *
-   *@param  tmp  The new disableNameValidation value
+   * @param tmp The new disableNameValidation value
    */
   public void setDisableNameValidation(boolean tmp) {
     this.disableNameValidation = tmp;
@@ -204,9 +200,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the disableNameValidation attribute of the Message object
+   * Sets the disableNameValidation attribute of the Message object
    *
-   *@param  tmp  The new disableNameValidation value
+   * @param tmp The new disableNameValidation value
    */
   public void setDisableNameValidation(String tmp) {
     this.disableNameValidation = DatabaseUtils.parseBoolean(tmp);
@@ -214,9 +210,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the inactiveCount attribute of the Message object
+   * Sets the inactiveCount attribute of the Message object
    *
-   *@param  tmp  The new inactiveCount value
+   * @param tmp The new inactiveCount value
    */
   public void setInactiveCount(int tmp) {
     this.inactiveCount = tmp;
@@ -224,9 +220,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the inactiveCount attribute of the Message object
+   * Sets the inactiveCount attribute of the Message object
    *
-   *@param  tmp  The new inactiveCount value
+   * @param tmp The new inactiveCount value
    */
   public void setInactiveCount(String tmp) {
     this.inactiveCount = Integer.parseInt(tmp);
@@ -234,9 +230,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the inactiveCount attribute of the Message object
+   * Gets the inactiveCount attribute of the Message object
    *
-   *@return    The inactiveCount value
+   * @return The inactiveCount value
    */
   public int getInactiveCount() {
     return inactiveCount;
@@ -244,9 +240,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the disableNameValidation attribute of the Message object
+   * Gets the disableNameValidation attribute of the Message object
    *
-   *@return    The disableNameValidation value
+   * @return The disableNameValidation value
    */
   public boolean getDisableNameValidation() {
     return disableNameValidation;
@@ -254,9 +250,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the accessType attribute of the Message object
+   * Gets the accessType attribute of the Message object
    *
-   *@return    The accessType value
+   * @return The accessType value
    */
   public int getAccessType() {
     return accessType;
@@ -264,9 +260,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the accessTypeString attribute of the Message object
+   * Gets the accessTypeString attribute of the Message object
    *
-   *@return    The accessTypeString value
+   * @return The accessTypeString value
    */
   public String getAccessTypeString() {
     return String.valueOf(accessType);
@@ -274,9 +270,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the tableName attribute of the Message object
+   * Gets the tableName attribute of the Message object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -284,9 +280,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the uniqueField attribute of the Message object
+   * Gets the uniqueField attribute of the Message object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -294,9 +290,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the lastAnchor attribute of the Message object
+   * Gets the lastAnchor attribute of the Message object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -304,9 +300,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the nextAnchor attribute of the Message object
+   * Gets the nextAnchor attribute of the Message object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -314,9 +310,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the syncType attribute of the Message object
+   * Gets the syncType attribute of the Message object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -324,9 +320,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the lastAnchor attribute of the Message object
+   * Sets the lastAnchor attribute of the Message object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -334,9 +330,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the nextAnchor attribute of the Message object
+   * Sets the nextAnchor attribute of the Message object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -344,9 +340,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the syncType attribute of the Message object
+   * Sets the syncType attribute of the Message object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -354,9 +350,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Message object
+   * Sets the description attribute of the Message object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -364,9 +360,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the Message object
+   * Sets the templateId attribute of the Message object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(int tmp) {
     this.templateId = tmp;
@@ -374,9 +370,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the Message object
+   * Sets the templateId attribute of the Message object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(String tmp) {
     this.setTemplateId(Integer.parseInt(tmp));
@@ -384,9 +380,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the messageSubject attribute of the Message object
+   * Sets the messageSubject attribute of the Message object
    *
-   *@param  tmp  The new messageSubject value
+   * @param tmp The new messageSubject value
    */
   public void setMessageSubject(String tmp) {
     this.messageSubject = tmp;
@@ -394,10 +390,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the text attribute of the Message object
+   * Sets the text attribute of the Message object
    *
-   *@param  tmp  The new text value
-   *@since
+   * @param tmp The new text value
    */
   public void setMessageText(String tmp) {
     this.messageText = tmp;
@@ -405,9 +400,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Message object
+   * Gets the modified attribute of the Message object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -415,9 +410,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the replyTo attribute of the Message object
+   * Sets the replyTo attribute of the Message object
    *
-   *@param  tmp  The new replyTo value
+   * @param tmp The new replyTo value
    */
   public void setReplyTo(String tmp) {
     this.replyTo = tmp;
@@ -425,9 +420,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the url attribute of the Message object
+   * Sets the url attribute of the Message object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -435,9 +430,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the image attribute of the Message object
+   * Sets the image attribute of the Message object
    *
-   *@param  tmp  The new image value
+   * @param tmp The new image value
    */
   public void setImage(String tmp) {
     this.image = tmp;
@@ -445,9 +440,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Message object
+   * Sets the modified attribute of the Message object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -455,9 +450,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Message object
+   * Sets the entered attribute of the Message object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -465,9 +460,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Message object
+   * Sets the modified attribute of the Message object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -475,9 +470,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Message object
+   * Sets the entered attribute of the Message object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -485,9 +480,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Message object
+   * Sets the enteredBy attribute of the Message object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -495,9 +490,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Message object
+   * Sets the enteredBy attribute of the Message object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -505,9 +500,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Message object
+   * Sets the modifiedBy attribute of the Message object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -515,9 +510,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Message object
+   * Sets the modifiedBy attribute of the Message object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -525,9 +520,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Message object
+   * Sets the enabled attribute of the Message object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     enabled = DatabaseUtils.parseBoolean(tmp);
@@ -535,9 +530,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the formatLineFeeds attribute of the Message object
+   * Sets the formatLineFeeds attribute of the Message object
    *
-   *@param  tmp  The new formatLineFeeds value
+   * @param tmp The new formatLineFeeds value
    */
   public void setFormatLineFeeds(boolean tmp) {
     this.formatLineFeeds = tmp;
@@ -545,20 +540,19 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Sets the formatLineFeeds attribute of the Message object
+   * Sets the formatLineFeeds attribute of the Message object
    *
-   *@param  tmp  The new formatLineFeeds value
+   * @param tmp The new formatLineFeeds value
    */
   public void setFormatLineFeeds(String tmp) {
     this.formatLineFeeds = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Gets the id attribute of the Message object
+   * Gets the id attribute of the Message object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -566,9 +560,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the Message object
+   * Gets the name attribute of the Message object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -576,9 +570,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Message object
+   * Gets the description attribute of the Message object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -586,9 +580,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the templateId attribute of the Message object
+   * Gets the templateId attribute of the Message object
    *
-   *@return    The templateId value
+   * @return The templateId value
    */
   public int getTemplateId() {
     return templateId;
@@ -596,9 +590,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the messageSubject attribute of the Message object
+   * Gets the messageSubject attribute of the Message object
    *
-   *@return    The messageSubject value
+   * @return The messageSubject value
    */
   public String getMessageSubject() {
     return messageSubject;
@@ -606,9 +600,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the text attribute of the Message object
+   * Gets the text attribute of the Message object
    *
-   *@return    The text value
+   * @return The text value
    */
   public String getMessageText() {
     return messageText;
@@ -616,9 +610,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the replyTo attribute of the Message object
+   * Gets the replyTo attribute of the Message object
    *
-   *@return    The replyTo value
+   * @return The replyTo value
    */
   public String getReplyTo() {
     return replyTo;
@@ -626,9 +620,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the url attribute of the Message object
+   * Gets the url attribute of the Message object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -636,9 +630,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the image attribute of the Message object
+   * Gets the image attribute of the Message object
    *
-   *@return    The image value
+   * @return The image value
    */
   public String getImage() {
     return image;
@@ -646,9 +640,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Message object
+   * Gets the entered attribute of the Message object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -656,9 +650,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Message object
+   * Gets the enteredString attribute of the Message object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -670,13 +664,14 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the Message object
+   * Gets the enteredDateTimeString attribute of the Message object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -684,9 +679,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Message object
+   * Gets the modifiedString attribute of the Message object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     try {
@@ -698,13 +693,14 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the Message object
+   * Gets the modifiedDateTimeString attribute of the Message object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -712,9 +708,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Message object
+   * Gets the enteredBy attribute of the Message object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -722,10 +718,10 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Returns the owner for the message(for a message owner is the person who
-   *  entered the message)
+   * Returns the owner for the message(for a message owner is the person who
+   * entered the message)
    *
-   *@return    The ownerString value
+   * @return The ownerString value
    */
   public String getOwnerString() {
     return String.valueOf(enteredBy);
@@ -733,9 +729,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Message object
+   * Gets the modifiedBy attribute of the Message object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -743,9 +739,9 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Message object
+   * Gets the enabled attribute of the Message object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -753,22 +749,21 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Gets the formatLineFeeds attribute of the Message object
+   * Gets the formatLineFeeds attribute of the Message object
    *
-   *@return    The formatLineFeeds value
+   * @return The formatLineFeeds value
    */
   public boolean getFormatLineFeeds() {
     return formatLineFeeds;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
 
@@ -776,9 +771,13 @@ public class Message extends GenericBean {
 
     try {
       db.setAutoCommit(false);
+      id = DatabaseUtils.getNextSeq(db, "message_id_seq");
       sql.append(
-          "INSERT INTO MESSAGE " +
+          "INSERT INTO \"message\" " +
           "(name, access_type, ");
+      if (id > -1) {
+        sql.append("id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -787,6 +786,9 @@ public class Message extends GenericBean {
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ");
+      if (id > -1) {
+        sql.append("?,");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -799,7 +801,9 @@ public class Message extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getAccessType());
-
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -812,7 +816,7 @@ public class Message extends GenericBean {
       pst.execute();
       pst.close();
 
-      id = DatabaseUtils.getCurrVal(db, "message_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "message_id_seq", id);
 
       this.update(db, true);
       db.commit();
@@ -830,11 +834,11 @@ public class Message extends GenericBean {
   // end insert
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -853,12 +857,11 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean commit = true;
@@ -910,11 +913,11 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
@@ -955,13 +958,12 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  override          Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db       Description of Parameter
+   * @param override Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -983,7 +985,8 @@ public class Message extends GenericBean {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
 
-    sql.append("modifiedby = ? " +
+    sql.append(
+        "modifiedby = ? " +
         "WHERE id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -1016,10 +1019,10 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //message table

@@ -16,57 +16,77 @@
 package org.aspcfs.modules.pipeline.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.pipeline.beans.*;
-import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.pipeline.base.OpportunityComponent;
+import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 27, 2003
- *@version    $Id: OpportunityForm.java,v 1.5 2003/08/25 15:13:06 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: OpportunityForm.java,v 1.5 2003/08/25 15:13:06 mrajkowski Exp
+ *          $
+ * @created June 27, 2003
  */
 public final class OpportunityForm extends CFSModule {
 
   /**
-   *  Prepares supporting form data required for any Opportunity object.
+   * Prepares supporting form data required for any Opportunity object.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Connection db = null;
     OpportunityComponent thisComponent = null;
     //Get opportunity object from the request (bean is not accessible here)
-    OpportunityBean thisOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
+    OpportunityBean thisOpp = (OpportunityBean) context.getRequest().getAttribute(
+        "OppDetails");
     if (thisOpp == null) {
-      thisComponent = (OpportunityComponent) context.getRequest().getAttribute("ComponentDetails");
+      thisComponent = (OpportunityComponent) context.getRequest().getAttribute(
+          "ComponentDetails");
     }
+    SystemStatus thisSystem = this.getSystemStatus(context);
     //Business type list
     HtmlSelect busTypeSelect = new HtmlSelect();
     busTypeSelect.setSelectName("type");
-    busTypeSelect.addItem("N", "New");
-    busTypeSelect.addItem("E", "Existing");
+    busTypeSelect.addItem(
+        "N", thisSystem.getLabel("pipeline.businessType.new")); //New
+    busTypeSelect.addItem(
+        "E", thisSystem.getLabel("pipeline.businessType.existing")); //Existing
     busTypeSelect.build();
     context.getRequest().setAttribute("BusTypeList", busTypeSelect);
     //Opporunity units list
     HtmlSelect unitSelect = new HtmlSelect();
     unitSelect.setSelectName("units");
-    unitSelect.addItem("M", "Months");
+    unitSelect.addItem("M", thisSystem.getLabel("pipeline.units.months")); //Months
     unitSelect.build();
     context.getRequest().setAttribute("UnitTypeList", unitSelect);
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

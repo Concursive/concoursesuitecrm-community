@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow>
+  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  that executes the WorkflowManager when a ticket is updated or inserted,
+  the corresponding process is activated -->
+  <hooks>
+    <hook class="org.aspcfs.modules.troubletickets.base.Ticket" module="8">
+      <actions>
+        <action type="update" process="dhv.ticket.insert" enabled="true"/>
+        <action type="insert" process="dhv.ticket.insert" enabled="true"/>
+      </actions>
+    </hook>
+  </hooks>
+
+  <schedules>
+    <schedule>
+      <events>
+        <event process="dhv.report.ticketList.overdue" second="0" minute="*/10" hour="8-18" dayOfMonth="*" month="*" dayOfWeek="*" year="*" extraInfo="" businessDays="true" enabled="false"/>
+      </events>
+    </schedule>
+  </schedules>
+
+  <processes>
+    <process name="dhv.ticket.insert" description="Ticket change notification" startId="2" type="OBJECT_EVENT" module="8">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="2" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed"/>
+        <component id="3" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
+        <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
+            <parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedId}</parameter>
+<parameter name="notification.body"><![CDATA[The following ticket in Centric CRM has been closed:
+
+--- Ticket Details ---
+
+Ticket # ${this.paddedId}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Comment: ${this.comment}
+
+Closed by: ${ticketModifiedByContact.nameFirstLast}
+
+Solution: ${this.solution}
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+          <parameters>
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
+            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedId}</parameter>
+            <parameter name="notification.body"><![CDATA[The following ticket in Centric CRM has been assigned to you:
+
+--- Ticket Details ---
+
+Ticket # ${this.paddedId}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Assigned By: ${ticketModifiedByContact.nameFirstLast}
+Comment: ${this.comment}
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="2" if="true" class="org.aspcfs.modules.troubletickets.components.SendTicketSurvey" enabled="false"/>
+      </components>
+    </process>
+    
+    <!-- Example of a Scheduled Event -->
+    <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="8">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.GenerateTicketList" enabled="true">
+          <parameters>
+            <parameter name="ticketList.onlyOpen" value="true"/>
+            <parameter name="ticketList.onlyAssigned" value="true" enabled="false"/>
+            <parameter name="ticketList.onlyUnassigned" value="true" enabled="true"/>
+            <parameter name="ticketList.minutesOlderThan" value="10" enabled="true"/>
+            <parameter name="ticketList.lastAnchor" value="${process.lastAnchor}" enabled="true"/>
+            <parameter name="ticketList.nextAnchor" value="${process.nextAnchor}" enabled="true"/>
+          </parameters>
+        </component>
+        <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.SendTicketListReport" enabled="true">
+          <parameters>
+            <!--
+            <parameter name="notification.to" value="support@darkhorseventures.com" enabled="false"/>
+            -->
+            <parameter name="notification.users.to" value="${this.enteredBy}"/>
+            <parameter name="notification.contacts.to" value="${this.contactId}" enabled="false"/>
+            <!-- not implemented
+            <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
+            -->
+            <parameter name="notification.subject">Centric CRM Unassigned Ticket Report (${objects.size})</parameter>
+            <parameter name="notification.body"><![CDATA[** This is an automated message **
+
+The following tickets in Centric CRM are unassigned and need attention:
+
+]]></parameter>
+            <parameter name="report.ticket.content"><![CDATA[----- Ticket Details -----
+Ticket # ${this.paddedId}
+Created: ${this.enteredString}
+Organization: ${ticketOrganization.name}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Last Modified By: ${ticketModifiedByContact.nameFirstLast}
+Comment: ${this.comment}
+
+
+]]></parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+  </processes>
+</workflow>

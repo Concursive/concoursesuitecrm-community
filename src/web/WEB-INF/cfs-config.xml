@@ -392,7 +392,7 @@
   <action name="MyCFS" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="quoteBean" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
     <forward name="HomeOK" resource="/mycfs/mycfs.jsp" layout="nav"/>
-    <forward name="CalendarOK" resource="/calendar.jsp"/>
+    <forward name="CalendarOK" resource="/calendar.jsp" layout="style"/>
     <forward name="CalendarDetailsOK" resource="/calendar_details.jsp" layout="style"/>
     <forward name="DeleteOK" resource="/MyCFS.do?command=Headline"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -683,6 +683,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ListOppsOK" resource="/contacts/companydirectory_listopps.jsp" layout="nav"/>
+    <forward name="ContactDisabledError" resource="/Leads.do?command=DetailsOpp"/>
     <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
     <forward name="PrepareAddOppOK" resource="/contacts/companydirectory_addopp.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
@@ -771,6 +772,16 @@
     <forward name="DeleteContactFailedListOK" resource="/ExternalContactsImports.do?command=ViewResults" layout="nav"/>
     <forward name="DeleteContactFailedDetailsOK" resource="/contacts/companydirectory_importcontact_details.jsp" layout="nav"/>
   </action>
+  <action name="ExternalContactsMessages" class="org.aspcfs.modules.contacts.actions.ExternalContacts">
+    <bean name="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
+    <forward name="PrepareMessageOK" resource="/CampaignManager.do?command=MessageJSList&amp;actionSource=ExternalContactsMessages"/>
+    <forward name="MessageJSListOK" resource="/contacts/companydirectory_send_message_form.jsp" layout="nav"/>
+    <forward name="SendMessageOK" resource="/contacts/companydirectory_message_confirmation.jsp" layout="nav"/>
+    <forward name="PrepareMessagePopupOK" resource="/CampaignManager.do?command=MessageJSList&amp;actionSource=ExternalContactsMessages"/>
+    <forward name="MessageJSListPopupOK" resource="/contacts/companydirectory_send_message_form.jsp" layout="style"/>
+    <forward name="SendMessagePopupOK" resource="/contacts/companydirectory_message_confirmation.jsp" layout="style"/>
+  </action>
+
 
   <!-- Leads / Sales Module -->
   <action name="Sales" class="org.aspcfs.modules.contacts.actions.Sales">
@@ -788,6 +799,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ReassignOK" resource="/coming-soon.jsp" layout="nav"/>
     <forward name="CheckAssignStatusOK" resource="/contacts/sales_reassign_lead.jsp" layout="style"/>
+    <forward name="ContactListOK" resource="/contacts/sales_contact_list.jsp" layout="style"/>
   </action>
 
   <action name="SalesImports" class="org.aspcfs.modules.contacts.actions.SalesImports">
@@ -961,6 +973,17 @@
     <forward name="SaveNotesOK" resource="/pipeline/leads_quotes_notes.jsp" layout="nav"/>
     <forward name="ViewHistoryOK" resource="/pipeline/leads_quotes_history.jsp" layout="nav"/>
   </action>
+  <action name="LeadsFolders" class="org.aspcfs.modules.pipeline.actions.LeadsFolders">
+  	<bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
+  	<forward name="FolderListOK" resource="/pipeline/leads_opp_folder_list.jsp" layout="nav"/>
+  	<forward name="FieldsOK" resource="/pipeline/leads_opp_fields.jsp" layout="nav"/>
+  	<forward name="FieldsEmptyOK" resource="/pipeline/leads_opp_nofields.jsp" layout="nav"/>
+  	<forward name="FieldRecordListOK" resource="/pipeline/leads_opp_fields_list.jsp" layout="nav"/>
+  	<forward name="AddFolderRecordOK" resource="/pipeline/leads_opp_fields_add.jsp" layout="nav"/>
+  	<forward name="ModifyFieldsOK" resource="/pipeline/leads_opp_fields_modify.jsp" layout="nav"/>
+  	<forward name="UpdateFieldsOK" resource="/pipeline/leads_opp_fields.jsp" layout="nav"/>
+  	 <forward name="DeleteFieldsOK" resource="/LeadsFolders.do?command=Fields"/>
+  </action>
 
   <!-- End Pipeline Management Module -->
   
@@ -974,6 +997,7 @@
     <forward name="PopupModifyOK" resource="/accounts/accounts_modify.jsp" layout="style"/>
     <forward name="DashboardOK" resource="/accounts/accounts_dashboard.jsp" layout="nav"/>
     <forward name="ListOK" resource="/accounts/accounts_list.jsp" layout="nav"/>
+    <forward name="AssetDetailsOK" resource="/AccountsAssets.do?command=View"/>
     <forward name="ViewTicketsOK" resource="/accounts/accounts_tickets_list.jsp" layout="nav"/>
     <forward name="SearchOK" resource="/accounts/accounts_search.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts/accounts_details.jsp" layout="nav"/>
@@ -1028,6 +1052,15 @@
     <forward name="DeleteCommunicationsPreferenceOK" resource="/Contacts.do?command=ViewMessages" />
     <forward name="MoveToAccountOK" resource="/accounts/accounts_contacts_moveform.jsp" layout="style"/>
     <forward name="MoveContactOK" resource="/products/product_set_opener.jsp" layout="style"/>
+  </action>
+  <action name="AccountContactsMessages" class="org.aspcfs.modules.accounts.actions.Contacts">
+    <bean name="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
+    <forward name="CreateMessageOK" resource="/ExternalContactsMessages.do?command=PrepareMessage&amp;actionSource=AccountContactsMessages"/>
+    <forward name="PrepareMessageOK" resource="/CampaignManager.do?command=MessageJSList&amp;actionSource=AccountContactsMessages"/>
+    <forward name="MessageJSListOK" resource="/accounts/accounts_contacts_send_message_form.jsp" layout="nav"/>
+    <forward name="SendMessageOK" resource="/ExternalContactsMessages.do?command=SendMessage&amp;actionSource=AccountContactsMessages"/>
+    <forward name="SendMessageAccountContactsMessagesOK" resource="/accounts/accounts_contacts_message_confirmation.jsp" layout="nav"/>
+    <forward name="SendMessageAccountContactsMessagesERROR" resource="/AccountContactsMessages.do?command=PrepareMessage"/>
   </action>
   <action name="ContactForm" class="org.aspcfs.modules.contacts.actions.ContactForm">
     <forward name="PrepareAddOK" resource="noresource"/>
@@ -1138,6 +1171,31 @@
     <forward name="SaveOK" resource="/AccountRelationships.do?command=View"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/AccountRelationships.do?command=View"/>
+  </action>
+
+  <!-- Account History -->
+  <action name="AccountsHistory" class="org.aspcfs.modules.accounts.actions.AccountsHistory">
+    <bean name="OrganizationHistory" class="org.aspcfs.modules.accounts.base.OrganizationHistory" scope="request"/>
+    <forward name="ListOK" resource="/accounts/accounts_history.jsp" layout="nav"/>
+    <forward name="AddNoteOK" resource="/accounts/accounts_history_add_note_form.jsp" layout="style"/>
+    <forward name="SaveNoteOK" resource="/reopen_opener_id.jsp" layout="style" />
+  </action>
+
+  <!-- Account Contacts History -->
+  <action name="AccountContactsHistory" class="org.aspcfs.modules.accounts.actions.AccountContactsHistory">
+    <bean name="ContactHistory" class="org.aspcfs.modules.contacts.base.ContactHistory" scope="request"/>
+    <forward name="ListOK" resource="/accounts/accounts_contacts_history.jsp" layout="nav"/>
+    <forward name="AddNoteOK" resource="/contacts/companydirectory_history_add_note_form.jsp" layout="style"/>
+    <forward name="SaveNoteOK" resource="/reopen_opener_id.jsp" layout="style" />
+  </action>
+
+  <!-- Contacts History -->
+  <action name="ExternalContactsHistory" class="org.aspcfs.modules.contacts.actions.ExternalContactsHistory">
+    <bean name="ContactHistory" class="org.aspcfs.modules.contacts.base.ContactHistory" scope="request"/>
+    <forward name="ListOK" resource="/contacts/companydirectory_history.jsp" layout="nav"/>
+    <forward name="ListPopupOK" resource="/contacts/companydirectory_history.jsp" layout="style"/>
+    <forward name="AddNoteOK" resource="/contacts/companydirectory_history_add_note_form.jsp" layout="style"/>
+    <forward name="SaveNoteOK" resource="/reopen_opener_id.jsp" layout="style" />
   </action>
 
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
@@ -1359,6 +1417,8 @@
     <forward name="AddressResponseDetailsOK" resource="/communications/campaign_address_response_details.jsp" layout="style"/>
     <forward name="BroadcastAuthenticationFormOK" resource="/communications/campaign_broadcast_authenticate.jsp" layout="style"/>
     <forward name="BroadcastCampaignOK" resource="/communications/campaign_broadcast_authenticate.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteActiveCampaignOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerGroup" class="org.aspcfs.modules.communications.actions.CampaignManagerGroup">
     <bean name="SearchForm" class="org.aspcfs.modules.communications.beans.SearchFormBean" scope="request"/>
@@ -1825,11 +1885,13 @@
     <bean name="Organization" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 		<forward name="GlobalParamsOK" resource="/admin/admin_global_params.jsp" layout="nav"/>
     <forward name="ModifyError" resource="/AdminConfig.do?command=ListGlobalParams"/>
+    <forward name="ImportERROR" resource="/admin/admin_modify_workflow.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/AdminConfig.do?command=ListGlobalParams"/>
 		<forward name="ModifyCompanyInfoOK" resource="/admin/admin_modify_companyinfo.jsp" layout="nav"/>
 		<forward name="ModifyCompanyInfoERROR" resource="/AdminConfig.do?command=Modify&amp;param=COMPANYINFO"/>
     <forward name="ModifyTimeoutOK" resource="/admin/admin_modify_timeout.jsp" layout="nav"/>
     <forward name="ModifyEmailOK" resource="/admin/admin_modify_email.jsp" layout="nav"/>
+    <forward name="ModifyWorkflowOK" resource="/admin/admin_modify_workflow.jsp" layout="nav"/>
     <forward name="ModifyEmailAddressOK" resource="/admin/admin_modify_emailaddress.jsp" layout="nav"/>
     <forward name="ModifyFaxOK" resource="/admin/admin_modify_fax.jsp" layout="nav"/>
     <forward name="ModifyUrlOK" resource="/admin/admin_modify_url.jsp" layout="nav"/>

@@ -15,24 +15,21 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.quotes.base.*;
+import org.aspcfs.modules.quotes.base.QuoteProductOption;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
 
 /**
- *  This represents a Product Option of a particular product associated with a
- *  particular Order
+ * This represents a Product Option of a particular product associated with a
+ * particular Order
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id: OrderProductOption.java,v 1.2 2004/05/04 15:52:27 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: OrderProductOption.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *          Exp $
+ * @created March 18, 2004
  */
 public class OrderProductOption extends GenericBean {
   private int id = -1;
@@ -56,9 +53,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the OrderProductOption object
+   * Sets the id attribute of the OrderProductOption object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -66,9 +63,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the OrderProductOption object
+   * Sets the id attribute of the OrderProductOption object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -76,9 +73,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the itemId attribute of the OrderProductOption object
+   * Sets the itemId attribute of the OrderProductOption object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -86,9 +83,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the itemId attribute of the OrderProductOption object
+   * Sets the itemId attribute of the OrderProductOption object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -96,9 +93,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the productOptionId attribute of the OrderProductOption object
+   * Sets the productOptionId attribute of the OrderProductOption object
    *
-   *@param  tmp  The new productOptionId value
+   * @param tmp The new productOptionId value
    */
   public void setProductOptionId(int tmp) {
     this.productOptionId = tmp;
@@ -106,9 +103,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the productOptionId attribute of the OrderProductOption object
+   * Sets the productOptionId attribute of the OrderProductOption object
    *
-   *@param  tmp  The new productOptionId value
+   * @param tmp The new productOptionId value
    */
   public void setProductOptionId(String tmp) {
     this.productOptionId = Integer.parseInt(tmp);
@@ -116,9 +113,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the quantity attribute of the OrderProductOption object
+   * Sets the quantity attribute of the OrderProductOption object
    *
-   *@param  tmp  The new quantity value
+   * @param tmp The new quantity value
    */
   public void setQuantity(int tmp) {
     this.quantity = tmp;
@@ -126,9 +123,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the quantity attribute of the OrderProductOption object
+   * Sets the quantity attribute of the OrderProductOption object
    *
-   *@param  tmp  The new quantity value
+   * @param tmp The new quantity value
    */
   public void setQuantity(String tmp) {
     this.quantity = Integer.parseInt(tmp);
@@ -136,9 +133,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the OrderProductOption object
+   * Sets the priceCurrency attribute of the OrderProductOption object
    *
-   *@param  tmp  The new priceCurrency value
+   * @param tmp The new priceCurrency value
    */
   public void setPriceCurrency(int tmp) {
     this.priceCurrency = tmp;
@@ -146,9 +143,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the OrderProductOption object
+   * Sets the priceCurrency attribute of the OrderProductOption object
    *
-   *@param  tmp  The new priceCurrency value
+   * @param tmp The new priceCurrency value
    */
   public void setPriceCurrency(String tmp) {
     this.priceCurrency = Integer.parseInt(tmp);
@@ -156,9 +153,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the priceAmount attribute of the OrderProductOption object
+   * Sets the priceAmount attribute of the OrderProductOption object
    *
-   *@param  tmp  The new priceAmount value
+   * @param tmp The new priceAmount value
    */
   public void setPriceAmount(double tmp) {
     this.priceAmount = tmp;
@@ -166,9 +163,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the priceAmount attribute of the OrderProductOption object
+   * Sets the priceAmount attribute of the OrderProductOption object
    *
-   *@param  tmp  The new priceAmount value
+   * @param tmp The new priceAmount value
    */
   public void setPriceAmount(String tmp) {
     this.priceAmount = Double.parseDouble(tmp);
@@ -176,9 +173,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrency attribute of the OrderProductOption object
+   * Sets the recurringCurrency attribute of the OrderProductOption object
    *
-   *@param  tmp  The new recurringCurrency value
+   * @param tmp The new recurringCurrency value
    */
   public void setRecurringCurrency(int tmp) {
     this.recurringCurrency = tmp;
@@ -186,9 +183,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrency attribute of the OrderProductOption object
+   * Sets the recurringCurrency attribute of the OrderProductOption object
    *
-   *@param  tmp  The new recurringCurrency value
+   * @param tmp The new recurringCurrency value
    */
   public void setRecurringCurrency(String tmp) {
     this.recurringCurrency = Integer.parseInt(tmp);
@@ -196,9 +193,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the recurringAmount attribute of the OrderProductOption object
+   * Sets the recurringAmount attribute of the OrderProductOption object
    *
-   *@param  tmp  The new recurringAmount value
+   * @param tmp The new recurringAmount value
    */
   public void setRecurringAmount(double tmp) {
     this.recurringAmount = tmp;
@@ -206,9 +203,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the recurringAmount attribute of the OrderProductOption object
+   * Sets the recurringAmount attribute of the OrderProductOption object
    *
-   *@param  tmp  The new recurringAmount value
+   * @param tmp The new recurringAmount value
    */
   public void setRecurringAmount(String tmp) {
     this.recurringAmount = Double.parseDouble(tmp);
@@ -216,9 +213,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the recurringType attribute of the OrderProductOption object
+   * Sets the recurringType attribute of the OrderProductOption object
    *
-   *@param  tmp  The new recurringType value
+   * @param tmp The new recurringType value
    */
   public void setRecurringType(int tmp) {
     this.recurringType = tmp;
@@ -226,9 +223,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the recurringType attribute of the OrderProductOption object
+   * Sets the recurringType attribute of the OrderProductOption object
    *
-   *@param  tmp  The new recurringType value
+   * @param tmp The new recurringType value
    */
   public void setRecurringType(String tmp) {
     this.recurringType = Integer.parseInt(tmp);
@@ -236,9 +233,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the extendedPrice attribute of the OrderProductOption object
+   * Sets the extendedPrice attribute of the OrderProductOption object
    *
-   *@param  tmp  The new extendedPrice value
+   * @param tmp The new extendedPrice value
    */
   public void setExtendedPrice(double tmp) {
     this.extendedPrice = tmp;
@@ -246,9 +243,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the extendedPrice attribute of the OrderProductOption object
+   * Sets the extendedPrice attribute of the OrderProductOption object
    *
-   *@param  tmp  The new extendedPrice value
+   * @param tmp The new extendedPrice value
    */
   public void setExtendedPrice(String tmp) {
     this.extendedPrice = Double.parseDouble(tmp);
@@ -256,9 +253,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the totalPrice attribute of the OrderProductOption object
+   * Sets the totalPrice attribute of the OrderProductOption object
    *
-   *@param  tmp  The new totalPrice value
+   * @param tmp The new totalPrice value
    */
   public void setTotalPrice(double tmp) {
     this.totalPrice = tmp;
@@ -266,9 +263,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the totalPrice attribute of the OrderProductOption object
+   * Sets the totalPrice attribute of the OrderProductOption object
    *
-   *@param  tmp  The new totalPrice value
+   * @param tmp The new totalPrice value
    */
   public void setTotalPrice(String tmp) {
     this.totalPrice = Double.parseDouble(tmp);
@@ -276,9 +273,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the OrderProductOption object
+   * Sets the statusId attribute of the OrderProductOption object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -286,20 +283,19 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the OrderProductOption object
+   * Sets the statusId attribute of the OrderProductOption object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
   }
 
 
-
   /**
-   *  Sets the booleanValue attribute of the OrderProductOption object
+   * Sets the booleanValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new booleanValue value
+   * @param tmp The new booleanValue value
    */
   public void setBooleanValue(boolean tmp) {
     this.booleanValue = tmp;
@@ -307,9 +303,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the booleanValue attribute of the OrderProductOption object
+   * Sets the booleanValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new booleanValue value
+   * @param tmp The new booleanValue value
    */
   public void setBooleanValue(String tmp) {
     this.booleanValue = DatabaseUtils.parseBoolean(tmp);
@@ -317,9 +313,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the floatValue attribute of the OrderProductOption object
+   * Sets the floatValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new floatValue value
+   * @param tmp The new floatValue value
    */
   public void setFloatValue(double tmp) {
     this.floatValue = tmp;
@@ -327,9 +323,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the timestampValue attribute of the OrderProductOption object
+   * Sets the timestampValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new timestampValue value
+   * @param tmp The new timestampValue value
    */
   public void setTimestampValue(Timestamp tmp) {
     this.timestampValue = tmp;
@@ -337,9 +333,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the timestampValue attribute of the OrderProductOption object
+   * Sets the timestampValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new timestampValue value
+   * @param tmp The new timestampValue value
    */
   public void setTimestampValue(String tmp) {
     this.timestampValue = DatabaseUtils.parseTimestamp(tmp);
@@ -347,9 +343,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the integerValue attribute of the OrderProductOption object
+   * Sets the integerValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new integerValue value
+   * @param tmp The new integerValue value
    */
   public void setIntegerValue(int tmp) {
     this.integerValue = tmp;
@@ -357,9 +353,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the integerValue attribute of the OrderProductOption object
+   * Sets the integerValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new integerValue value
+   * @param tmp The new integerValue value
    */
   public void setIntegerValue(String tmp) {
     this.integerValue = Integer.parseInt(tmp);
@@ -367,9 +363,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Sets the textValue attribute of the OrderProductOption object
+   * Sets the textValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new textValue value
+   * @param tmp The new textValue value
    */
   public void setTextValue(String tmp) {
     this.textValue = tmp;
@@ -377,9 +373,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the booleanValue attribute of the OrderProductOption object
+   * Gets the booleanValue attribute of the OrderProductOption object
    *
-   *@return    The booleanValue value
+   * @return The booleanValue value
    */
   public boolean getBooleanValue() {
     return booleanValue;
@@ -387,9 +383,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the floatValue attribute of the OrderProductOption object
+   * Gets the floatValue attribute of the OrderProductOption object
    *
-   *@return    The floatValue value
+   * @return The floatValue value
    */
   public double getFloatValue() {
     return floatValue;
@@ -397,9 +393,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the timestampValue attribute of the OrderProductOption object
+   * Gets the timestampValue attribute of the OrderProductOption object
    *
-   *@return    The timestampValue value
+   * @return The timestampValue value
    */
   public Timestamp getTimestampValue() {
     return timestampValue;
@@ -407,9 +403,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the integerValue attribute of the OrderProductOption object
+   * Gets the integerValue attribute of the OrderProductOption object
    *
-   *@return    The integerValue value
+   * @return The integerValue value
    */
   public int getIntegerValue() {
     return integerValue;
@@ -417,9 +413,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the textValue attribute of the OrderProductOption object
+   * Gets the textValue attribute of the OrderProductOption object
    *
-   *@return    The textValue value
+   * @return The textValue value
    */
   public String getTextValue() {
     return textValue;
@@ -427,9 +423,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the OrderProductOption object
+   * Gets the id attribute of the OrderProductOption object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -437,9 +433,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the itemId attribute of the OrderProductOption object
+   * Gets the itemId attribute of the OrderProductOption object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -447,9 +443,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the productOptionId attribute of the OrderProductOption object
+   * Gets the productOptionId attribute of the OrderProductOption object
    *
-   *@return    The productOptionId value
+   * @return The productOptionId value
    */
   public int getProductOptionId() {
     return productOptionId;
@@ -457,9 +453,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the quantity attribute of the OrderProductOption object
+   * Gets the quantity attribute of the OrderProductOption object
    *
-   *@return    The quantity value
+   * @return The quantity value
    */
   public int getQuantity() {
     return quantity;
@@ -467,9 +463,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the priceCurrency attribute of the OrderProductOption object
+   * Gets the priceCurrency attribute of the OrderProductOption object
    *
-   *@return    The priceCurrency value
+   * @return The priceCurrency value
    */
   public int getPriceCurrency() {
     return priceCurrency;
@@ -477,9 +473,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the priceAmount attribute of the OrderProductOption object
+   * Gets the priceAmount attribute of the OrderProductOption object
    *
-   *@return    The priceAmount value
+   * @return The priceAmount value
    */
   public double getPriceAmount() {
     return priceAmount;
@@ -487,9 +483,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the recurringCurrency attribute of the OrderProductOption object
+   * Gets the recurringCurrency attribute of the OrderProductOption object
    *
-   *@return    The recurringCurrency value
+   * @return The recurringCurrency value
    */
   public int getRecurringCurrency() {
     return recurringCurrency;
@@ -497,9 +493,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the recurringAmount attribute of the OrderProductOption object
+   * Gets the recurringAmount attribute of the OrderProductOption object
    *
-   *@return    The recurringAmount value
+   * @return The recurringAmount value
    */
   public double getRecurringAmount() {
     return recurringAmount;
@@ -507,9 +503,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the recurringType attribute of the OrderProductOption object
+   * Gets the recurringType attribute of the OrderProductOption object
    *
-   *@return    The recurringType value
+   * @return The recurringType value
    */
   public int getRecurringType() {
     return recurringType;
@@ -517,9 +513,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the extendedPrice attribute of the OrderProductOption object
+   * Gets the extendedPrice attribute of the OrderProductOption object
    *
-   *@return    The extendedPrice value
+   * @return The extendedPrice value
    */
   public double getExtendedPrice() {
     return extendedPrice;
@@ -527,9 +523,9 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the totalPrice attribute of the OrderProductOption object
+   * Gets the totalPrice attribute of the OrderProductOption object
    *
-   *@return    The totalPrice value
+   * @return The totalPrice value
    */
   public double getTotalPrice() {
     return totalPrice;
@@ -537,28 +533,28 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the OrderProductOption object
+   * Gets the statusId attribute of the OrderProductOption object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
   }
 
 
-
   /**
-   *  Constructor for the OrderProductOption object
+   * Constructor for the OrderProductOption object
    */
-  public OrderProductOption() { }
+  public OrderProductOption() {
+  }
 
 
   /**
-   *  Constructor for the OrderProductOption object
+   * Constructor for the OrderProductOption object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrderProductOption(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -566,10 +562,10 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Constructor for the OrderProductOption object
+   * Constructor for the OrderProductOption object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrderProductOption(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -577,7 +573,7 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void determineTotal() {
     // determine the total
@@ -586,11 +582,11 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (this.id == -1) {
@@ -613,8 +609,7 @@ public class OrderProductOption extends GenericBean {
         " ON ( opt.order_product_option_id = intr.order_product_option_id ) " +
         " LEFT JOIN order_product_option_text txt " +
         " ON ( opt.order_product_option_id = txt.order_product_option_id ) " +
-        " WHERE opt.order_product_option_id = ? "
-        );
+        " WHERE opt.order_product_option_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -629,10 +624,10 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // order_product_options table
@@ -659,11 +654,11 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -676,15 +671,19 @@ public class OrderProductOption extends GenericBean {
     }
     determineTotal();
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(
+        db, "order_product_options_order_product_option_id_seq");
     sql.append(
-        " INSERT INTO order_product_options(item_id, product_option_id, " +
+        " INSERT INTO order_product_options(" + (id > -1 ? "order_product_option_id, " : "") + "item_id, product_option_id, " +
         "   quantity, price_currency, price_amount, recurring_currency, " +
-        "   recurring_amount, recurring_type, extended_price, total_price, status_id) "
-        );
-
-    sql.append(" VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-    int i = 0;
+        "   recurring_amount, recurring_type, extended_price, total_price, status_id) ");
+    sql.append(
+        " VALUES(" + (id > -1 ? "?, " : "") + "?, ?,?, ?, ?, ?, ?, ?, ?, ?, ? )");
     PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, this.getItemId());
     pst.setInt(++i, this.getProductOptionId());
     DatabaseUtils.setInt(pst, ++i, this.getQuantity());
@@ -696,66 +695,61 @@ public class OrderProductOption extends GenericBean {
     DatabaseUtils.setDouble(pst, ++i, this.getExtendedPrice());
     DatabaseUtils.setDouble(pst, ++i, this.getTotalPrice());
     DatabaseUtils.setInt(pst, ++i, this.getStatusId());
-
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "order_product_options_order_product_option_id_seq");
-    
-    if( this.getBooleanValue() != false ){
+    id = DatabaseUtils.getCurrVal(
+        db, "order_product_options_order_product_option_id_seq", id);
+
+    if (this.getBooleanValue() != false) {
       sql = new StringBuffer("");
       sql.append(
-        " INSERT INTO order_product_option_boolean ( order_product_option_id, value ) "+
-        " VALUES ( ? , ? ) "
-      );
+          " INSERT INTO order_product_option_boolean ( order_product_option_id, value ) " +
+          " VALUES ( ? , ? ) ");
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, id);
       pst.setBoolean(2, this.getBooleanValue());
       pst.execute();
       pst.close();
     }
-    if(((int) this.getFloatValue()) > 0){
+    if (((int) this.getFloatValue()) > 0) {
       sql = new StringBuffer("");
       sql.append(
-        " INSERT INTO order_product_option_float ( order_product_option_id, value )"+
-        " VALUES ( ? , ? ) "
-      );
+          " INSERT INTO order_product_option_float ( order_product_option_id, value )" +
+          " VALUES ( ? , ? ) ");
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, id);
       pst.setDouble(2, this.getFloatValue());
       pst.execute();
       pst.close();
     }
-    
-    if( this.getTimestampValue() != null ){
+
+    if (this.getTimestampValue() != null) {
       sql = new StringBuffer("");
       sql.append(
-        " INSERT INTO order_product_option_timestamp ( order_product_option_id, value )"+
-        " VALUES ( ? , ? ) "
-      );
+          " INSERT INTO order_product_option_timestamp ( order_product_option_id, value )" +
+          " VALUES ( ? , ? ) ");
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, id);
       pst.setTimestamp(2, this.getTimestampValue());
       pst.execute();
       pst.close();
     }
-    if( this.getIntegerValue() > -1) {
+    if (this.getIntegerValue() > -1) {
       sql = new StringBuffer("");
       sql.append(
-        " INSERT INTO order_product_option_integer ( order_product_option_id, value )"+
-        " VALUES ( ? , ? ) "
-      );
+          " INSERT INTO order_product_option_integer ( order_product_option_id, value )" +
+          " VALUES ( ? , ? ) ");
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, id);
       DatabaseUtils.setInt(pst, 2, this.getIntegerValue());
       pst.execute();
       pst.close();
     }
-    if( this.getTextValue() != null ){
+    if (this.getTextValue() != null) {
       sql = new StringBuffer("");
       sql.append(
-        " INSERT INTO order_product_option_text ( order_product_option_id, value )"+
-        " VALUES ( ? , ? ) "
-      );
+          " INSERT INTO order_product_option_text ( order_product_option_id, value )" +
+          " VALUES ( ? , ? ) ");
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, id);
       pst.setString(2, this.getTextValue());
@@ -768,11 +762,11 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -785,32 +779,38 @@ public class OrderProductOption extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
-      pst = db.prepareStatement(" DELETE FROM order_product_option_boolean WHERE order_product_option_id = ? ");
+      pst = db.prepareStatement(
+          " DELETE FROM order_product_option_boolean WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      pst = db.prepareStatement(" DELETE FROM order_product_option_float WHERE order_product_option_id = ? ");
+      pst = db.prepareStatement(
+          " DELETE FROM order_product_option_float WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      pst = db.prepareStatement(" DELETE FROM order_product_option_timestamp WHERE order_product_option_id = ? ");
+      pst = db.prepareStatement(
+          " DELETE FROM order_product_option_timestamp WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      pst = db.prepareStatement(" DELETE FROM order_product_option_integer WHERE order_product_option_id = ? ");
+      pst = db.prepareStatement(
+          " DELETE FROM order_product_option_integer WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      pst = db.prepareStatement(" DELETE FROM order_product_option_text WHERE order_product_option_id = ? ");
+      pst = db.prepareStatement(
+          " DELETE FROM order_product_option_text WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      pst = db.prepareStatement(" DELETE FROM order_product_options WHERE order_product_option_id = ? ");
+      pst = db.prepareStatement(
+          " DELETE FROM order_product_options WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -833,11 +833,11 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -846,7 +846,8 @@ public class OrderProductOption extends GenericBean {
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append(" UPDATE order_product_options " +
+    sql.append(
+        " UPDATE order_product_options " +
         " SET quantity = ?, " +
         "     price_currency = ?, " +
         "     price_amount = ?, " +
@@ -876,74 +877,69 @@ public class OrderProductOption extends GenericBean {
 
     sql = new StringBuffer("");
     sql.append(
-      " UPDATE order_product_option_boolean "+
-      " SET value = ? " +
-      " WHERE order_product_option_id = ? "
-    );
+        " UPDATE order_product_option_boolean " +
+        " SET value = ? " +
+        " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(1, this.getBooleanValue());
     DatabaseUtils.setInt(pst, 2, this.getId());
     int result1Count = pst.executeUpdate();
     pst.close();
-    
+
     sql = new StringBuffer("");
     sql.append(
-      " UPDATE order_product_option_float "+
-      " SET value = ? " +
-      " WHERE order_product_option_id = ? "
-    );
+        " UPDATE order_product_option_float " +
+        " SET value = ? " +
+        " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setDouble(1, this.getFloatValue());
     DatabaseUtils.setInt(pst, 2, this.getId());
     result1Count = pst.executeUpdate();
     pst.close();
-    
+
     sql = new StringBuffer("");
     sql.append(
-      " UPDATE order_product_option_timestamp "+
-      " SET value = ? " +
-      " WHERE order_product_option_id = ? "
-    );
+        " UPDATE order_product_option_timestamp " +
+        " SET value = ? " +
+        " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setTimestamp(1, this.getTimestampValue());
     DatabaseUtils.setInt(pst, 2, this.getId());
     result1Count = pst.executeUpdate();
     pst.close();
-    
+
     sql = new StringBuffer("");
     sql.append(
-      " UPDATE order_product_option_integer "+
-      " SET value = ? " +
-      " WHERE order_product_option_id = ? "
-    );
+        " UPDATE order_product_option_integer " +
+        " SET value = ? " +
+        " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, 1, this.getIntegerValue());
     DatabaseUtils.setInt(pst, 2, this.getId());
     result1Count = pst.executeUpdate();
     pst.close();
-    
+
     sql = new StringBuffer("");
     sql.append(
-      " UPDATE order_product_option_text "+
-      " SET value = ? " +
-      " WHERE order_product_option_id = ? "
-    );
+        " UPDATE order_product_option_text " +
+        " SET value = ? " +
+        " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setString(1, this.getTextValue());
     DatabaseUtils.setInt(pst, 2, this.getId());
     result1Count = pst.executeUpdate();
     pst.close();
-    
+
     return resultCount;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -961,11 +957,11 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the OrderProductOption object
+   * Gets the valid attribute of the OrderProductOption object
    *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The valid value
+   * @throws SQLException Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
     return true;
@@ -973,12 +969,12 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean createOptionFromQuoteProductOption(Connection db, int id) throws SQLException {
     PreparedStatement pst = null;

@@ -15,20 +15,20 @@
  */
 package com.zeroio.utils;
 
-import java.io.*;
-import java.util.*;
-import org.apache.poi.hpsf.*;
-import org.apache.poi.poifs.eventfilesystem.*;
-import org.apache.poi.util.HexDump;
+import org.apache.poi.hpsf.PropertySet;
+import org.apache.poi.poifs.eventfilesystem.POIFSReaderEvent;
+import org.apache.poi.poifs.eventfilesystem.POIFSReaderListener;
 import org.apache.poi.util.LittleEndian;
 
+import java.io.ByteArrayOutputStream;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 17, 2004
- *@version    $Id: ContentPOIFSReaderListener.java,v 1.1 2004/06/21 02:31:19
- *      matt Exp $
+ * @author matt rajkowski
+ * @version $Id: ContentPOIFSReaderListener.java,v 1.1 2004/06/21 02:31:19
+ *          matt Exp $
+ * @created June 17, 2004
  */
 public class ContentPOIFSReaderListener implements POIFSReaderListener {
 
@@ -36,9 +36,9 @@ public class ContentPOIFSReaderListener implements POIFSReaderListener {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  event  Description of the Parameter
+   * @param event Description of the Parameter
    */
   public void processPOIFSReaderEvent(POIFSReaderEvent event) {
     PropertySet ps = null;
@@ -63,9 +63,9 @@ public class ContentPOIFSReaderListener implements POIFSReaderListener {
 
 
   /**
-   *  Gets the contents attribute of the ContentPOIFSReaderListener object
+   * Gets the contents attribute of the ContentPOIFSReaderListener object
    *
-   *@return    The contents value
+   * @return The contents value
    */
   public String getContents() {
     byte[] bytes = out.toByteArray();

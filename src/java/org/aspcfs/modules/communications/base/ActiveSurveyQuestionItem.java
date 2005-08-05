@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
-import java.util.ArrayList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Item for an Active Survey Question.
+ * Item for an Active Survey Question.
  *
- *@author     akhi_m
- *@created    November 1, 2002
- *@version    $Id: ActiveSurveyQuestionItem.java,v 1.4 2003/01/14 16:11:34
- *      akhi_m Exp $
+ * @author akhi_m
+ * @version $Id: ActiveSurveyQuestionItem.java,v 1.4 2003/01/14 16:11:34
+ *          akhi_m Exp $
+ * @created November 1, 2002
  */
 public class ActiveSurveyQuestionItem {
   private int id = -1;
@@ -36,15 +39,16 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestionItem object
+   * Constructor for the ActiveSurveyQuestionItem object
    */
-  public ActiveSurveyQuestionItem() { }
+  public ActiveSurveyQuestionItem() {
+  }
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestionItem object
+   * Constructor for the ActiveSurveyQuestionItem object
    *
-   *@param  thisItem  Description of the Parameter
+   * @param thisItem Description of the Parameter
    */
   public ActiveSurveyQuestionItem(Item thisItem) {
     this.id = thisItem.getId();
@@ -55,11 +59,11 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestionItem object
+   * Constructor for the ActiveSurveyQuestionItem object
    *
-   *@param  db                Description of the Parameter
-   *@param  itemId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param itemId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestionItem(Connection db, int itemId) throws SQLException {
     if (itemId == -1) {
@@ -82,10 +86,10 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Constructor for the ActiveSurveyQuestionItem object
+   * Constructor for the ActiveSurveyQuestionItem object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestionItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -93,9 +97,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Gets the id attribute of the ActiveSurveyQuestionItem object
+   * Gets the id attribute of the ActiveSurveyQuestionItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -103,9 +107,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Gets the description attribute of the ActiveSurveyQuestionItem object
+   * Gets the description attribute of the ActiveSurveyQuestionItem object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -113,9 +117,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurveyQuestionItem object
+   * Sets the id attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -123,9 +127,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurveyQuestionItem object
+   * Sets the id attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -133,9 +137,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the description attribute of the ActiveSurveyQuestionItem object
+   * Sets the description attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -143,20 +147,19 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the questionId attribute of the ActiveSurveyQuestionItem object
+   * Sets the questionId attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new questionId value
+   * @param tmp The new questionId value
    */
   public void setQuestionId(int tmp) {
     this.questionId = tmp;
   }
 
 
-
   /**
-   *  Sets the type attribute of the ActiveSurveyQuestionItem object
+   * Sets the type attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -164,9 +167,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the totalResponse attribute of the ActiveSurveyQuestionItem object
+   * Sets the totalResponse attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  totalResponse  The new totalResponse value
+   * @param totalResponse The new totalResponse value
    */
   public void setTotalResponse(int totalResponse) {
     this.totalResponse = totalResponse;
@@ -174,9 +177,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Gets the totalResponse attribute of the ActiveSurveyQuestionItem object
+   * Gets the totalResponse attribute of the ActiveSurveyQuestionItem object
    *
-   *@return    The totalResponse value
+   * @return The totalResponse value
    */
   public int getTotalResponse() {
     return totalResponse;
@@ -184,9 +187,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Gets the questionId attribute of the ActiveSurveyQuestionItem object
+   * Gets the questionId attribute of the ActiveSurveyQuestionItem object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return questionId;
@@ -194,9 +197,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Gets the type attribute of the ActiveSurveyQuestionItem object
+   * Gets the type attribute of the ActiveSurveyQuestionItem object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -204,9 +207,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the questionId attribute of the ActiveSurveyQuestionItem object
+   * Sets the questionId attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new questionId value
+   * @param tmp The new questionId value
    */
   public void setQuestionId(String tmp) {
     this.questionId = Integer.parseInt(tmp);
@@ -214,9 +217,9 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Sets the type attribute of the ActiveSurveyQuestionItem object
+   * Sets the type attribute of the ActiveSurveyQuestionItem object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -224,33 +227,42 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Insert an item
+   * Insert an item
    *
-   *@param  db                Description of the Parameter
-   *@param  qid               Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param qid Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int qid) throws SQLException {
     try {
       db.setAutoCommit(false);
+      int i = 0;
+      id = DatabaseUtils.getNextSeq(db, "active_survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey_items " +
-          "(question_id, type, description ) " +
-          "VALUES (?, ?, ?) ");
-      int i = 0;
+          "(" + (id > -1 ? "item_id, " : "") + "question_id, type, description ) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, qid);
       pst.setInt(++i, this.getType());
       pst.setString(++i, this.getDescription());
       pst.execute();
       pst.close();
-      this.setId(DatabaseUtils.getCurrVal(db, "active_survey_items_item_id_seq"));
-
+      this.setId(
+          DatabaseUtils.getCurrVal(db, "active_survey_items_item_id_seq", id));
       //populate the active_survey_answer_avg table with 0 count for items
       i = 0;
+      int seqId = DatabaseUtils.getNextSeq(
+          db, "active_survey_answer_avg_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO active_survey_answer_avg " +
-          "(question_id, item_id, total ) " +
-          "VALUES (?, ?, ?) ");
+          "(" + (seqId > -1 ? "id, " : "") + "question_id, item_id, total ) " +
+          "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
+      if (seqId > -1) {
+        pst.setInt(++i, seqId);
+      }
       pst.setInt(++i, qid);
       pst.setInt(++i, this.getId());
       pst.setInt(++i, 0);
@@ -267,12 +279,12 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Update an item
+   * Update an item
    *
-   *@param  db                Description of the Parameter
-   *@param  qId               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param qId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, int qId) throws SQLException {
     int count = 0;
@@ -299,10 +311,10 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
-   *  Build Item record
+   * Build Item record
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("item_id");

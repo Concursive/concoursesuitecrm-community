@@ -26,14 +26,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  List of Action Lists
+ * List of Action Lists
  *
- * @author     akhi_m
- * @created    April 18, 2003
- * @version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created April 18, 2003
  */
 public class ActionLists extends ArrayList {
-
   private PagedListInfo pagedListInfo = null;
   private int linkModuleId = -1;
   private int owner = -1;
@@ -43,9 +42,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ActionLists object
+   * Sets the linkModuleId attribute of the ActionLists object
    *
-   * @param  linkModuleId  The new linkModuleId value
+   * @param linkModuleId The new linkModuleId value
    */
   public void setLinkModuleId(int linkModuleId) {
     this.linkModuleId = linkModuleId;
@@ -53,9 +52,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the ActionLists object
+   * Sets the owner attribute of the ActionLists object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -63,9 +62,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionLists object
+   * Sets the pagedListInfo attribute of the ActionLists object
    *
-   * @param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -73,9 +72,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Sets the buildDetails attribute of the ActionLists object
+   * Sets the buildDetails attribute of the ActionLists object
    *
-   * @param  buildDetails  The new buildDetails value
+   * @param buildDetails The new buildDetails value
    */
   public void setBuildDetails(boolean buildDetails) {
     this.buildDetails = buildDetails;
@@ -83,9 +82,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Sets the completeOnly attribute of the ActionLists object
+   * Sets the completeOnly attribute of the ActionLists object
    *
-   * @param  completeOnly  The new completeOnly value
+   * @param completeOnly The new completeOnly value
    */
   public void setCompleteOnly(boolean completeOnly) {
     this.completeOnly = completeOnly;
@@ -93,9 +92,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Sets the inProgressOnly attribute of the ActionLists object
+   * Sets the inProgressOnly attribute of the ActionLists object
    *
-   * @param  inProgressOnly  The new inProgressOnly value
+   * @param inProgressOnly The new inProgressOnly value
    */
   public void setInProgressOnly(boolean inProgressOnly) {
     this.inProgressOnly = inProgressOnly;
@@ -103,9 +102,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Gets the completeOnly attribute of the ActionLists object
+   * Gets the completeOnly attribute of the ActionLists object
    *
-   * @return    The completeOnly value
+   * @return The completeOnly value
    */
   public boolean getCompleteOnly() {
     return completeOnly;
@@ -113,9 +112,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Gets the inProgressOnly attribute of the ActionLists object
+   * Gets the inProgressOnly attribute of the ActionLists object
    *
-   * @return    The inProgressOnly value
+   * @return The inProgressOnly value
    */
   public boolean getInProgressOnly() {
     return inProgressOnly;
@@ -123,9 +122,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Gets the buildDetails attribute of the ActionLists object
+   * Gets the buildDetails attribute of the ActionLists object
    *
-   * @return    The buildDetails value
+   * @return The buildDetails value
    */
   public boolean getBuildDetails() {
     return buildDetails;
@@ -133,9 +132,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ActionLists object
+   * Gets the pagedListInfo attribute of the ActionLists object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -143,9 +142,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Gets the linkModuleId attribute of the ActionLists object
+   * Gets the linkModuleId attribute of the ActionLists object
    *
-   * @return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -153,9 +152,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the ActionLists object
+   * Gets the owner attribute of the ActionLists object
    *
-   * @return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -163,10 +162,10 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -202,9 +201,10 @@ public class ActionLists extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
-          "AND lower(al.description) < ? ");
+          "AND " + DatabaseUtils.toLowerCase(db) + "(al.description) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -227,22 +227,15 @@ public class ActionLists extends ArrayList {
         "FROM action_list al " +
         "WHERE al.action_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ActionList thisList = new ActionList(rs);
       this.add(thisList);
     }
@@ -260,9 +253,9 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -283,11 +276,11 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -302,12 +295,12 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -323,13 +316,13 @@ public class ActionLists extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
     int total = 0;

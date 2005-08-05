@@ -41,6 +41,24 @@
     <param name="global.notUpdateMessage">
       <value><![CDATA[<b>This record could not be updated because someone else updated it first.</b><p> You can hit the back button to review the changes that could not be committed, but you must reload the record and make the changes again.]]></value>
     </param>
+    <param name="global.trashed">
+      <value><![CDATA[Trashed]]></value>
+    </param>
+    <param name="login.msg.licenseError">
+      <value><![CDATA[Access denied: License error]]></value>
+    </param>
+    <param name="login.msg.licenseNotFound">
+      <value><![CDATA[Access denied: License not found]]></value>
+    </param>
+    <param name="login.msg.licenseNotUptoDate">
+      <value><![CDATA[Access denied: License is not up-to-date]]></value>
+    </param>
+    <param name="login.msg.invalidLoginInfo">
+      <value><![CDATA[Access denied: Invalid login information]]></value>
+    </param>
+    <param name="login.msg.accountExpired">
+      <value><![CDATA[Access denied: Account Expired.]]></value>
+    </param>
     <param name="calendar.Today">
       <value><![CDATA[Today]]></value>
     </param>
@@ -239,6 +257,18 @@
     <param name="accounts.accounts_add.LastName">
       <value><![CDATA[Last Name]]></value>
     </param>
+    <param name="accounts.accounts_add.additionalNames">
+      <value><![CDATA[Additional Names]]></value>
+    </param>
+    <param name="accounts.accounts_add.nickname">
+      <value><![CDATA[Nickname]]></value>
+    </param>
+    <param name="accounts.accounts_add.dateOfBirth">
+      <value><![CDATA[Date of Birth]]></value>
+    </param>
+    <param name="accounts.accounts_add.Role">
+      <value><![CDATA[Role]]></value>
+    </param>
     <param name="accounts.accounts_add.LastName.colon">
       <value><![CDATA[Last Name:]]></value>
     </param>
@@ -287,6 +317,30 @@
     <param name="accounts.account.types">
       <value><![CDATA[Account Type(s)]]></value>
     </param>
+    <param name="accounts.accountSource">
+      <value><![CDATA[Account Source]]></value>
+    </param>
+    <param name="accounts.accountStatus">
+      <value><![CDATA[Account Status]]></value>
+    </param>
+    <param name="accounts.assets.contractDefault">
+      <value><![CDATA[-- Contract Default --]]></value>
+    </param>
+    <param name="accounts.allAssets">
+      <value><![CDATA[All Assets]]></value>
+    </param>
+    <param name="accounts.assetsUnderContract">
+      <value><![CDATA[Assets under Contract]]></value>
+    </param>
+    <param name="accounts.assets.category.undetermined">
+      <value><![CDATA[Undetermined]]></value>
+    </param>
+    <param name="accounts.servicecontracts.noAdjustment">
+      <value><![CDATA[No Adjustment]]></value>
+    </param>
+    <param name="accounts.allTypes">
+      <value><![CDATA[All Types]]></value>
+    </param>
     <param name="accounts.accounts.with.folders">
       <value><![CDATA[Accounts w/Folders]]></value>
     </param>
@@ -313,6 +367,9 @@
     </param>
     <param name="communications.campaign.BuildGroups">
       <value><![CDATA[Build Groups]]></value>
+    </param>
+    <param name="communications.campaign.addContactGroup">
+      <value><![CDATA[Add a Contact Group]]></value>
     </param>
     <param name="accounts.accounts_relationships_view.AddARelationship">
       <value><![CDATA[Add a  Relationship]]></value>
@@ -383,6 +440,15 @@
     <param name="admin.receivedFrom">
       <value><![CDATA[received from]]></value>
     </param>
+    <param name="admin.manageUsers">
+      <value><![CDATA[Manage Users]]></value>
+    </param>
+    <param name="admin.manageRoles">
+      <value><![CDATA[Manage Roles]]></value>
+    </param>
+    <param name="admin.Usage">
+      <value><![CDATA[Usage]]></value>
+    </param>
     <param name="accounts.accounts_documents_list_menu.RenameFolder">
       <value><![CDATA[Rename Folder]]></value>
     </param>
@@ -394,6 +460,12 @@
     </param>
     <param name="tickets.tickets">
       <value><![CDATA[Tickets]]></value>
+    </param>
+    <param name="tickets.other">
+      <value><![CDATA[Other Tickets in My Department]]></value>
+    </param>
+    <param name="tickets.all">
+      <value><![CDATA[All Tickets]]></value>
     </param>
     <param name="tickets.projectTickets">
       <value><![CDATA[Project Tickets]]></value>
@@ -467,8 +539,14 @@
     <param name="tickets.symbol.number">
       <value><![CDATA[Ticket #${number}]]></value>
     </param>
+    <param name="projecttickets.symbol.number">
+      <value><![CDATA[Project Ticket #${number}]]></value>
+    </param>
     <param name="global.button.save">
       <value><![CDATA[Save]]></value>
+    </param>
+    <param name="button.downloadVcard">
+      <value><![CDATA[Download vCard]]></value>
     </param>
     <param name="communications.campaign.CampaignBuilderAllowsToSelect">
       <value><![CDATA[The Campaign Builder allows you to select groups of contacts that you would like to send a message to, as well as schedule a delivery date. Additional options are available.]]></value>
@@ -526,6 +604,9 @@
     </param>
     <param name="accounts.accounts_add.EmailAddresses">
       <value><![CDATA[Email Addresses]]></value>
+    </param>
+    <param name="accounts.emailAddresses.error">
+      <value><![CDATA[Email addresses error]]></value>
     </param>
     <param name="accounts.accounts_opportunities_addoppcomponent.AddComponent">
       <value><![CDATA[Add Component]]></value>
@@ -689,6 +770,69 @@
     <param name="communications.campaign.AssembleDynamicDistributionGroups">
       <value><![CDATA[Assemble dynamic distribution groups.]]></value>
     </param>
+    <param name="dynamicForm.question">
+      <value><![CDATA[Question]]></value>
+    </param>
+    <param name="dynamicForm.name">
+      <value><![CDATA[Name]]></value>
+    </param>
+    <param name="dynamicForm.description">
+      <value><![CDATA[Description]]></value>
+    </param>
+    <param name="dynamicForm.type">
+      <value><![CDATA[Type]]></value>
+    </param>
+    <param name="dynamicForm.required">
+      <value><![CDATA[Required]]></value>
+    </param>
+    <param name="dynamicForm.numberOfItems">
+      <value><![CDATA[Number of Items]]></value>
+    </param>
+    <param name="dynamicForm.enteredBy">
+      <value><![CDATA[Entered By]]></value>
+    </param>
+    <param name="dynamicForm.date">
+      <value><![CDATA[Date]]></value>
+    </param>
+    <param name="dynamicForm.lastModifiedBy">
+      <value><![CDATA[Number of Items]]></value>
+    </param>
+    <param name="dynamicForm.survey.introductionText">
+      <value><![CDATA[Introduction Text]]></value>
+    </param>
+    <param name="dynamicForm.survey.modified">
+      <value><![CDATA[Modified]]></value>
+    </param>
+    <param name="dynamicForm.survey.introductionTextDisplay">
+      <value><![CDATA[This is the text the user sees first when they click on the link to take a survey://lt;br//gt;]]></value>
+    </param>
+    <param name="dynamicForm.survey.thankYouText">
+      <value><![CDATA[Thank YouText]]></value>
+    </param>
+    <param name="dynamicForm.survey.thankYouTextDisplay">
+      <value><![CDATA[This is the text the user sees after they have submitted a survey://lt;br//gt;]]></value>
+    </param>
+    <param name="dynamicForm.survey.addAQuestion">
+      <value><![CDATA[Add a Question]]></value>
+    </param>
+    <param name="dynamicForm.survey.action">
+      <value><![CDATA[Action]]></value>
+    </param>
+    <param name="dynamicForm.survey.questionType">
+      <value><![CDATA[Question Type]]></value>
+    </param>
+    <param name="dynamicForm.survey.editItems">
+      <value><![CDATA[Edit Items]]></value>
+    </param>
+    <param name="dynamicForm.surveydetails.surveyIntroductionText">
+      <value><![CDATA[Survey Introduction Text]]></value>
+    </param>
+    <param name="dynamicForm.surveypreview.backToDetails">
+      <value><![CDATA[Back to Details]]></value>
+    </param>
+    <param name="dynamicForm.surveypreview.surveyPreview">
+      <value><![CDATA[Survey Preview]]></value>
+    </param>
     <param name="accounts.accounts_documents_list_menu.DeleteFolderMoveContents">
       <value><![CDATA[Delete Folder and Move contents to current folder]]></value>
     </param>
@@ -818,11 +962,32 @@
     <param name="accounts.portalAccessDisabled">
       <value><![CDATA[Portal access has been disabled for this account contact.]]></value>
     </param>
+    <param name="admin.disabledManager.text">
+      <value><![CDATA[The selected manager is a disabled user. Please select a different manager for this user.]]></value>
+    </param>
     <param name="accounts.Assets">
       <value><![CDATA[Assets]]></value>
     </param>
     <param name="accounts.accounts_add.AddressLine2">
       <value><![CDATA[Address Line 2]]></value>
+    </param>
+    <param name="accounts.accounts_add.TextMessageAddresses">
+      <value><![CDATA[Text Message Addresses]]></value>
+    </param>
+    <param name="accounts.accounts_add.TextMessageAddress">
+      <value><![CDATA[Text Message Address]]></value>
+    </param>
+    <param name="contacts.NoTextMessageAddresses">
+      <value><![CDATA[No text message addresses entered]]></value>
+    </param>
+    <param name="accounts.accounts_add.InstantMessageAddresses">
+      <value><![CDATA[Instant Message Addresses]]></value>
+    </param>
+    <param name="accounts.accounts_add.InstantMessageAddress">
+      <value><![CDATA[IM Address]]></value>
+    </param>
+    <param name="contacts.NoInstantMessageAddresses">
+      <value><![CDATA[No instant message addresses entered]]></value>
     </param>
     <param name="communications.campaign.AddCampaign">
       <value><![CDATA[Add Campaign]]></value>
@@ -887,6 +1052,9 @@
     <param name="accounts.accounts_add.Email">
       <value><![CDATA[Email]]></value>
     </param>
+    <param name="accounts.accounts_add.EmailOrMessages">
+      <value><![CDATA[Email/Messages]]></value>
+    </param>
     <param name="accounts.accounts_contacts_calls_details_include.Subject">
       <value><![CDATA[Subject]]></value>
     </param>
@@ -910,6 +1078,9 @@
     </param>
     <param name="accounts.my.accounts">
       <value><![CDATA[My Accounts]]></value>
+    </param>
+    <param name="accounts.disabledAccounts">
+      <value><![CDATA[Disabled Accounts]]></value>
     </param>
     <param name="accounts.accounts_documents_upload_version.NewVersion">
       <value><![CDATA[New Version]]></value>
@@ -971,14 +1142,32 @@
     <param name="accounts.accounts_contacts_calls_list.CompletedCanceledActivities">
       <value><![CDATA[Completed/Canceled Activities]]></value>
     </param>
+    <param name="accounts.active.accounts">
+      <value><![CDATA[Active Accounts]]></value>
+    </param>
     <param name="accounts.disabled.accounts">
       <value><![CDATA[Inactive Accounts]]></value>
+    </param>
+    <param name="accounts.any">
+      <value><![CDATA[Any]]></value>
     </param>
     <param name="contacts.name">
       <value><![CDATA[Name]]></value>
     </param>
+    <param name="contacts.myProjects">
+      <value><![CDATA[My Projects]]></value>
+    </param>
     <param name="contacts.nameAndCompany">
       <value><![CDATA[Name / Company]]></value>
+    </param>
+    <param name="contacts.typeList.allContactTypes">
+      <value><![CDATA[All Contact Types]]></value>
+    </param>
+    <param name="contacts.typeList.contactTypes">
+      <value><![CDATA[Contact Types]]></value>
+    </param>
+    <param name="contacts.typeList.accountContactTypes">
+      <value><![CDATA[Account Contact Types]]></value>
     </param>
     <param name="accounts.accounts_contacts_validateimport.First5linesImportfile">
       <value><![CDATA[First 5 lines of the import file]]></value>
@@ -1196,6 +1385,9 @@
     <param name="accounts.accountasset_include.SerialNumber">
       <value><![CDATA[Serial Number]]></value>
     </param>
+    <param name="accounts.assetSerial.number.symbol">
+      <value><![CDATA[Asset Serial #]]></value>
+    </param>
     <param name="accounts.accounts_add.StateProvince">
       <value><![CDATA[State/Province]]></value>
     </param>
@@ -1302,7 +1494,7 @@
       <value><![CDATA[Primary Information]]></value>
     </param>
     <param name="accounts.accounts_documents_upload.LargeFilesUpload">
-      <value><![CDATA[Large files may take a while to upload.]]></value>
+      <value><![CDATA[Large files may take awhile to upload.]]></value>
     </param>
     <param name="global.button.ViewResults">
       <value><![CDATA[View Results]]></value>
@@ -1351,6 +1543,9 @@
     </param>
     <param name="accounts.accounts_revenue_add.Amount">
       <value><![CDATA[Amount]]></value>
+    </param>
+    <param name="accounts.accounts_revenue_add.Guess">
+      <value><![CDATA[Guess]]></value>
     </param>
     <param name="accounts.accounts_relationships_view.RelatedToAccount">
       <value><![CDATA[Related to Account]]></value>
@@ -1869,6 +2064,9 @@
     <param name="documents.details.deleteDocumentStore">
       <value><![CDATA[Delete Document Store]]></value>
     </param>
+    <param name="documents.details.restoreDocumentStore">
+      <value><![CDATA[Restore Document Store]]></value>
+    </param>
     <param name="documents.details.modifyDocumentStore">
       <value><![CDATA[Modify Document Store]]></value>
     </param>
@@ -1990,6 +2188,9 @@
       </value>
     </param>
     <!-- Sales Translations -->
+    <param name="sales.continueToNextLead.text">
+      <value><![CDATA[Continue to next lead after assigning, trashing or skipping lead]]></value>
+    </param>
     <param name="sales.foundDuplicateLastName">
       <value><![CDATA[Duplicate last name found]]></value>
     </param>
@@ -2129,6 +2330,54 @@
     <param name="quotes.emailAddress">
       <value><![CDATA[Email Address]]></value>
     </param>
+    <param name="quotes.showVersions">
+      <value><![CDATA[Show Versions]]></value>
+    </param>
+    <param name="quotes.quotelog.deliverySetTo.text">
+      <value><![CDATA[Delivery set to ${name}]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteCreated">
+      <value><![CDATA[Quote Created]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteClosed">
+      <value><![CDATA[Quote closed]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteClosedWithDifferentStatus">
+      <value><![CDATA[Quote closed with a different status]]></value>
+    </param>
+    <param name="quotes.quotelog.grandTotalChangedFrom.text">
+      <value><![CDATA[Grand total value of the Quote changed from ${previousValue} to ${currentValue}]]></value>
+    </param>
+    <param name="quotes.quotelog.deliveryChangedFrom.text">
+      <value><![CDATA[Delivery changed from ${previousName} to ${currentName}]]></value>
+    </param>
+    <param name="quotes.quotelog.typeChangedFrom.text">
+      <value><![CDATA[Type changed from ${previousName} to ${currentName}]]></value>
+    </param>
+    <param name="quotes.quotelog.termsChangedFrom.text">
+      <value><![CDATA[Terms changed from ${previousName} to ${currentName}]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteIssuedToCustomer">
+      <value><![CDATA[Quote issued to the Customer]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteModifiedAndReIssued">
+      <value><![CDATA[Quote modified and re-issued]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteStatusChangedFrom.text">
+      <value><![CDATA[Status changed from ${previousName} to ${currentName}]]></value>
+    </param>
+    <param name="quotes.quotelog.quoteSourceChangedFrom.text">
+      <value><![CDATA[Source changed from ${previousName} to ${currentName}]]></value>
+    </param>
+    <param name="quotes.quotelog.grandTotalValue.text">
+      <value><![CDATA[Grand total value of the Quote is ${grandTotalValue}]]></value>
+    </param>
+    <param name="quotes.quotelog.statusIs.text">
+      <value><![CDATA[Status is ${name}]]></value>
+    </param>
+    <param name="quotes.quotelog.sourceIs.text">
+      <value><![CDATA[The Source is ${name}]]></value>
+    </param>
     <param name="quotes.phoneNumber">
       <value><![CDATA[Phone Number]]></value>
     </param>
@@ -2207,7 +2456,7 @@
     <param name="quotes.itemName">
       <value><![CDATA[Item Name]]></value>
     </param>
-		<param name="quotes.quotation">
+    <param name="quotes.quotation">
       <value><![CDATA[QUOTATION]]></value>
     </param>
     <param name="quotes.expires">
@@ -2251,6 +2500,9 @@
     </param>
     <param name="button.remove">
       <value><![CDATA[Remove]]></value>
+    </param>
+    <param name="button.attach">
+      <value><![CDATA[Attach]]></value>
     </param>
     <param name="button.sort">
       <value><![CDATA[Sort]]></value>
@@ -2432,6 +2684,9 @@
     <param name="quotes.all">
       <value><![CDATA[All]]></value>
     </param>
+    <param name="sales.allLeads">
+      <value><![CDATA[All Leads]]></value>
+    </param>
     <param name="sales.allOpenLeads">
       <value><![CDATA[All Open Leads]]></value>
     </param>
@@ -2477,8 +2732,20 @@
     <param name="quotes.versionList">
       <value><![CDATA[Version List]]></value>
     </param>
+    <param name="accounts.history.applyFilters">
+      <value><![CDATA[Apply Filters]]></value>
+    </param>
     <param name="pipeline.pipeline">
       <value><![CDATA[Pipeline]]></value>
+    </param>
+    <param name="pipeline.environment">
+      <value><![CDATA[Environment]]></value>
+    </param>
+    <param name="pipeline.competitors">
+      <value><![CDATA[Competitors]]></value>
+    </param>
+    <param name="pipeline.compellingEvent">
+      <value><![CDATA[Compelling Event]]></value>
     </param>
     <param name="trails.admin">
       <value><![CDATA[Admin]]></value>
@@ -2580,7 +2847,7 @@
       <value><![CDATA[Attach a file]]></value>
     </param>
     <param name="product.largeFileUploadStatement">
-      <value><![CDATA[* Large files may take a while to upload.${break}Wait for file completion message when upload is complete.]]></value>
+      <value><![CDATA[* Large files may take awhile to upload.${break}Wait for file completion message when upload is complete.]]></value>
     </param>
     <param name="product.productDetails">
       <value><![CDATA[Product Details]]></value>
@@ -3062,6 +3329,9 @@
     <param name="button.reset">
       <value><![CDATA[Reset]]></value>
     </param>
+    <param name="button.refresh">
+      <value><![CDATA[Refresh]]></value>
+    </param>
     <param name="contacts.addRemove">
       <value><![CDATA[Add/Remove Contacts]]></value>
     </param>
@@ -3070,6 +3340,9 @@
     </param>
     <param name="contact.searchText">
       <value><![CDATA[Search Text]]></value>
+    </param>
+    <param name="projects.projectPlanCanBeImported.text">
+      <value><![CDATA[A project plan can be imported from either a Microsoft Excel spreadsheet or from an Omni Outliner template.]]></value>
     </param>
     <param name="projects.projectCenter">
       <value><![CDATA[Project Center]]></value>
@@ -3152,6 +3425,12 @@
     <param name="project.addActivityLog">
       <value><![CDATA[Add Activity Log]]></value>
     </param>
+    <param name="project.notesForThisActivity">
+      <value><![CDATA[The following notes have been entered for this activity:]]></value>
+    </param>
+    <param name="project.notesForActivity">
+      <value><![CDATA[The following notes have been entered for the assignment "${assignmentRole}"]]></value>
+    </param>
     <param name="project.addOutline">
       <value><![CDATA[Add Outline]]></value>
     </param>
@@ -3196,6 +3475,9 @@
     </param>
     <param name="project.deleteProject">
       <value><![CDATA[Delete Project]]></value>
+    </param>
+    <param name="project.restoreProject">
+      <value><![CDATA[Restore Project]]></value>
     </param>
     <param name="project.projectClosedOn">
       <value><![CDATA[This project was closed on ${time}]]></value>
@@ -3635,6 +3917,30 @@ while a Guest has very limited functionality.]]></value>
     <param name="project.discussion">
       <value><![CDATA[Discussion]]></value>
     </param>
+    <param name="project.documents">
+      <value><![CDATA[Documents]]></value>
+    </param>
+    <param name="project.tickets">
+      <value><![CDATA[Tickets]]></value>
+    </param>
+    <param name="project.accounts">
+      <value><![CDATA[Accounts]]></value>
+    </param>
+    <param name="project.team">
+      <value><![CDATA[Team]]></value>
+    </param>
+    <param name="project.permissions">
+      <value><![CDATA[Permissions]]></value>
+    </param>
+    <param name="project.details">
+      <value><![CDATA[Details]]></value>
+    </param>
+    <param name="project.setup">
+      <value><![CDATA[Setup]]></value>
+    </param>
+    <param name="project.activities">
+      <value><![CDATA[Activities]]></value>
+    </param>
     <param name="project.plan">
       <value><![CDATA[Plan]]></value>
     </param>
@@ -3761,6 +4067,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="button.edit">
       <value><![CDATA[Edit]]></value>
+    </param>
+    <param name="button.del">
+      <value><![CDATA[Del]]></value>
     </param>
     <param name="project.tickets.noLogEntries">
       <value><![CDATA[No Log Entries.]]></value>
@@ -3984,13 +4293,22 @@ while a Guest has very limited functionality.]]></value>
       <value><![CDATA[Move to Old Account]]></value>
     </param>
     <param name="account.contact.doesNotHavePortalAccess">
-      <value><![CDATA[does not have portal access]]></value>
+      <value><![CDATA[${contactName} does not have portal access]]></value>
+    </param>
+    <param name="account.contact.hasDisabledUserAccount">
+      <value><![CDATA[${contactName} has a disabled user account]]></value>
+    </param>
+    <param name="account.contact.hasUserAccount">
+      <value><![CDATA[${contactName} has user account]]></value>
     </param>
     <param name="account.contact.grantPortalAccess">
       <value><![CDATA[Grant Portal Access]]></value>
     </param>
     <param name="account.opportunities.associateWith">
       <value><![CDATA[Associate With]]></value>
+    </param>
+    <param name="account.opportunities.associatedWith">
+      <value><![CDATA[Associated With]]></value>
     </param>
     <param name="account.account.colon">
       <value><![CDATA[Account:]]></value>
@@ -4102,9 +4420,6 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="quotes.quotedBy">
       <value><![CDATA[Quoted By]]></value>
-    </param>
-    <param name="quotes.itemDescription">
-      <value><![CDATA[Item Description]]></value>
     </param>
     <param name="account.sc.addServiceContract">
       <value><![CDATA[Add Service Contract]]></value>
@@ -4265,6 +4580,9 @@ while a Guest has very limited functionality.]]></value>
     <param name="account.emails.colon">
       <value><![CDATA[Email(s):]]></value>
     </param>
+    <param name="account.emails">
+      <value><![CDATA[Email(s)]]></value>
+    </param>
     <param name="account.phones.colon">
       <value><![CDATA[Phone(s):]]></value>
     </param>
@@ -4337,6 +4655,9 @@ while a Guest has very limited functionality.]]></value>
     <param name="actionList.newMessage">
       <value><![CDATA[New Message]]></value>
     </param>
+    <param name="contacts.messageConfirmation">
+      <value><![CDATA[Message Confirmation]]></value>
+    </param>
     <param name="button.sendMessage">
       <value><![CDATA[Send Message]]></value>
     </param>
@@ -4391,6 +4712,9 @@ while a Guest has very limited functionality.]]></value>
     <param name="actionList.allContacts">
       <value><![CDATA[All Contacts]]></value>
     </param>
+    <param name="actionList.allAccountContacts">
+      <value><![CDATA[All Account Contacts]]></value>
+    </param>
     <param name="actionList.noActionContactsFound">
       <value><![CDATA[No Action Contacts found in this view.]]></value>
     </param>
@@ -4408,6 +4732,24 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="admin.configuration">
       <value><![CDATA[Configuration]]></value>
+    </param>
+    <param name="admin.config.numberOfEvents.text">
+      <value><![CDATA[${eventNumber} Object Events]]></value>
+    </param>
+    <param name="admin.config.numberOfProcesses.text">
+      <value><![CDATA[${processNumber} Business Processes]]></value>
+    </param>
+    <param name="admin.config.businessProcessManagement">
+      <value><![CDATA[Business Process Management]]></value>
+    </param>
+    <param name="admin.config.workflow">
+      <value><![CDATA[Workflow]]></value>
+    </param>
+    <param name="admin.config.submitWorkflowFile">
+      <value><![CDATA[Submit Workflow File]]></value>
+    </param>
+    <param name="admin.config.deleteEventsAndProcesses.text">
+      <value><![CDATA[Delete existing events and business processes]]></value>
     </param>
     <param name="admin.globalParameters">
       <value><![CDATA[Global Parameters and Server Configuration]]></value>
@@ -4664,6 +5006,9 @@ while a Guest has very limited functionality.]]></value>
     <param name="admin.installedLicenseLimits.text">
       <value><![CDATA[The installed license limits this system to ${appsize} active users.]]></value>
     </param>
+    <param name="admin.users.pleaseSelect">
+      <value><![CDATA[-- Please Select --]]></value>
+    </param>
     <param name="admin.addNewUser">
       <value><![CDATA[Add New User]]></value>
     </param>
@@ -4827,7 +5172,7 @@ reflect those changes.]]></value>
       <value><![CDATA[Server URL]]></value>
     </param>
     <param name="admin.serverURL.example">
-      <value><![CDATA[(ex: www.yourcompany.com ${contextPath} or crm.yourcompany.com)]]></value>
+      <value><![CDATA[(ex: www.yourcompany.com${contextPath} or centric.yourcompany.com)]]></value>
     </param>
     <param name="admin.editCategories">
       <value><![CDATA[Edit Categories]]></value>
@@ -4907,6 +5252,48 @@ reflect those changes.]]></value>
     <param name="admin.usageFor">
       <value><![CDATA[Usage for ${startDate} - ${endDate}]]></value>
     </param>
+    <param name="admin.usage.usersEnabled.text">
+      <value><![CDATA[${number} enabled users]]></value>
+    </param>
+    <param name="admin.usage.userEnabled.text">
+      <value><![CDATA[1 enabled user]]></value>
+    </param>
+    <param name="admin.usage.filesStoredDocumentLibraryWithSize.text">
+      <value><![CDATA[${number} files stored in the document library using ${size} bytes of storage]]></value>
+    </param>
+    <param name="admin.usage.oneFileStoredDocumentLibraryWithSize.text">
+      <value><![CDATA[1 file stored in the document library using ${size} bytes of storage]]></value>
+    </param>
+    <param name="admin.usage.login.text">
+      <value><![CDATA[1 login]]></value>
+    </param>
+    <param name="admin.usage.logins.text">
+      <value><![CDATA[${number} logins]]></value>
+    </param>
+    <param name="admin.usage.fileUploadedBandwidth.text">
+      <value><![CDATA[1 file uploaded, using ${size} bytes of bandwidth]]></value>
+    </param>
+    <param name="admin.usage.filesUploadedBandwidth.text">
+      <value><![CDATA[${number} files uploaded, using ${size} bytes of bandwidth]]></value>
+    </param>
+    <param name="admin.usage.filesDownloadedBandwidth.text">
+      <value><![CDATA[${number} files downloaded, using ${size} bytes of bandwidth]]></value>
+    </param>
+    <param name="admin.usage.fileDownloadedBandwidth.text">
+      <value><![CDATA[1 file downloaded, using ${size} bytes of bandwidth]]></value>
+    </param>
+    <param name="admin.usage.communicationManagerEmails.text">
+      <value><![CDATA[${number} emails sent, consisting of ${size} bytes]]></value>
+    </param>
+    <param name="admin.usage.communicationManagerOneEmail">
+      <value><![CDATA[1 email sent, consisting of ${size} bytes]]></value>
+    </param>
+    <param name="admin.usage.oneFaxSent.text">
+      <value><![CDATA[1 fax sent, consisting of ${size} bytes]]></value>
+    </param>
+    <param name="admin.usage.faxsSent.text">
+      <value><![CDATA[${number} faxs sent, consisting of ${size} bytes]]></value>
+    </param>
     <param name="admin.applicationVersion.colon">
       <value><![CDATA[Application Version:]]></value>
     </param>
@@ -4982,6 +5369,54 @@ reflect those changes.]]></value>
     <param name="admin.noLoginHistory">
       <value><![CDATA[No login history found.]]></value>
     </param>
+    <param name="accounts.accountHistory.noHistoryFound">
+      <value><![CDATA[No history found.]]></value>
+    </param>
+    <param name="accounts.accountHistory.account">
+      <value><![CDATA[Account]]></value>
+    </param>
+    <param name="accounts.accountHistory.contact">
+      <value><![CDATA[Contact]]></value>
+    </param>
+    <param name="accounts.accountHistory.activity">
+      <value><![CDATA[Activity]]></value>
+    </param>
+    <param name="accounts.accountHistory.completeActivity">
+      <value><![CDATA[Complete Activity]]></value>
+    </param>
+    <param name="accounts.accountHistory.cancelledActivity">
+      <value><![CDATA[Cancelled Activity]]></value>
+    </param>
+    <param name="accounts.accountHistory.opportunity">
+      <value><![CDATA[Opportunity]]></value>
+    </param>
+    <param name="accounts.accountHistory.quote">
+      <value><![CDATA[Quote]]></value>
+    </param>
+    <param name="accounts.accountHistory.project">
+      <value><![CDATA[Project]]></value>
+    </param>
+    <param name="accounts.accountHistory.serviceContract">
+      <value><![CDATA[Service Contract]]></value>
+    </param>
+    <param name="accounts.accountHistory.asset">
+      <value><![CDATA[Asset]]></value>
+    </param>
+    <param name="accounts.accountHistory.ticket">
+      <value><![CDATA[Ticket]]></value>
+    </param>
+    <param name="accounts.accountHistory.document">
+      <value><![CDATA[Document]]></value>
+    </param>
+    <param name="accounts.accountHistory.relationship">
+      <value><![CDATA[Relationship]]></value>
+    </param>
+    <param name="accounts.accountHistory.note">
+      <value><![CDATA[Note]]></value>
+    </param>
+    <param name="accounts.accountHistory.addANote">
+      <value><![CDATA[Add a Note]]></value>
+    </param>
     <param name="admin.modifyUser">
       <value><![CDATA[Modify User]]></value>
     </param>
@@ -5048,11 +5483,17 @@ reflect those changes.]]></value>
     <param name="admin.systemResponseOK">
       <value><![CDATA[System response: OK]]></value>
     </param>
+    <param name="campaign.communicationsManager">
+      <value><![CDATA[Communications Manager]]></value>
+    </param>
     <param name="campaign.campaignList">
       <value><![CDATA[Campaign List]]></value>
     </param>
     <param name="campaign.addCampaign">
       <value><![CDATA[Add a Campaign]]></value>
+    </param>
+    <param name="campaign.attachments">
+      <value><![CDATA[Attachments]]></value>
     </param>
     <param name="campaign.beginNaming.text">
       <value><![CDATA[Begin by naming the campaign]]></value>
@@ -5104,6 +5545,12 @@ reflect those changes.]]></value>
     </param>
     <param name="campaign.survey">
       <value><![CDATA[Survey]]></value>
+    </param>
+    <param name="campaign.survey.doesNotExist">
+      <value><![CDATA[Survey has not exist (or has been deleted)]]></value>
+    </param>
+    <param name="campaign.addressRequest.doesNotExist">
+      <value><![CDATA[Contact Information Request has been aborted.]]></value>
     </param>
     <param name="campaign.viewingNotSupported.text">
       <value><![CDATA[Viewing not supported by this browser]]></value>
@@ -5300,6 +5747,9 @@ reflect those changes.]]></value>
     <param name="campaign.allInstantCampaigns">
       <value><![CDATA[All Instant Campaigns]]></value>
     </param>
+    <param name="campaign.allTrashedCampaigns">
+      <value><![CDATA[All Trashed Campaigns]]></value>
+    </param>
     <param name="campaign.numberOfRecipients.symbol">
       <value><![CDATA[# Recipients]]></value>
     </param>
@@ -5316,7 +5766,7 @@ reflect those changes.]]></value>
       <value><![CDATA[Export to Excel]]></value>
     </param>
     <param name="campaign.scheduledToRunOn">
-      <value><![CDATA[Scheduled to run on]]></value>
+      <value><![CDATA[Scheduled to run on ${time}]]></value>
     </param>
     <param name="campaign.addADocument">
       <value><![CDATA[Add a Document]]></value>
@@ -5483,6 +5933,9 @@ reflect those changes.]]></value>
     <param name="campaign.surveyQuestions">
       <value><![CDATA[Survey Questions]]></value>
     </param>
+    <param name="campaign.surveyQuestion">
+      <value><![CDATA[Survey Question]]></value>
+    </param>
     <param name="campaign.comments">
       <value><![CDATA[Comments]]></value>
     </param>
@@ -5641,6 +6094,12 @@ reflect those changes.]]></value>
     </param>
     <param name="contact.contactCategory">
       <value><![CDATA[Contact Category]]></value>
+    </param>
+    <param name="contact.allDepartments">
+      <value><![CDATA[All Departments]]></value>
+    </param>
+    <param name="contact.allProjects">
+      <value><![CDATA[All Departments]]></value>
     </param>
     <param name="contact.permanentlyAssociateWithAccount.colon">
       <value><![CDATA[Permanently associate with Account:]]></value>
@@ -5852,6 +6311,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.product.activePriceNotFound">
       <value><![CDATA[Product will be enabled without an active price]]></value>
     </param>
+    <param name="object.validation.unacceptableImageFileFormat">
+      <value><![CDATA[Please upload an acceptable image file format.]]></value>
+    </param>
     <param name="errors.noErrorMessageFromAction">
       <value><![CDATA[An error message was not provided by this action.]]></value>
     </param>
@@ -6029,8 +6491,8 @@ You do not have the permissions to perform this action.]]></value>
     <param name="calendar.changeMyPassword">
       <value><![CDATA[Change my password]]></value>
     </param>
-    <param name="calendar.activateWebFolderAccess">
-      <value><![CDATA[Activate Web Folder Access]]></value>
+    <param name="calendar.accessWebFolders">
+      <value><![CDATA[Accessing Web Folders]]></value>
     </param>
     <param name="calendar.userToReassignDataFrom.colon">
       <value><![CDATA[User to re-assign data from:]]></value>
@@ -6082,8 +6544,7 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="calendar.webdavFolder.text">
       <value><![CDATA[A web folder allows you to access documents and data in Centric CRM as if they
-      were available on a network file share.  Once web folder access has been activated,
-      create a shared volume or folder to the following URL:]]></value>
+      were available on a network file share.  Create a shared volume or folder to the following URL:]]></value>
     </param>
     <param name="pipeline.viewpoint.colon">
       <value><![CDATA[<b>Viewpoint: </b><b class="highlight">${username}</b>]]></value>
@@ -6138,6 +6599,15 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="pipeline.lowAmount">
       <value><![CDATA[Low Amount]]></value>
+    </param>
+    <param name="pipeline.businessType.new">
+      <value><![CDATA[New]]></value>
+    </param>
+    <param name="pipeline.businessType.existing">
+      <value><![CDATA[Existing]]></value>
+    </param>
+    <param name="pipeline.units.months">
+      <value><![CDATA[Months]]></value>
     </param>
     <param name="pipeline.bestGuessAmount">
       <value><![CDATA[Best Guess Amount]]></value>
@@ -6249,6 +6719,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="reports.queue">
       <value><![CDATA[Queue]]></value>
+    </param>
+    <param name="reports.refresh">
+      <value><![CDATA[Refresh]]></value>
     </param>
     <param name="reports.criteriaList">
       <value><![CDATA[Criteria List]]></value>
@@ -6921,6 +7394,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="setup.requestNewLicense.text">
       <value><![CDATA[Request a <b>new</b> license for this installation<br />]]></value>
     </param>
+    <param name="setup.restoreBackup">
+      <value><![CDATA[Restore an existing backup]]></value>
+    </param>
     <param name="setup.continueSetupFromPreviousSession.text">
       <value><![CDATA[Continue setup from a previously started session]]></value>
     </param>
@@ -7188,6 +7664,12 @@ You do not have the permissions to perform this action.]]></value>
     <param name="quotes.emailMeACopy.bcc.brackets">
       <value><![CDATA[Email me a copy (BCC)]]></value>
     </param>
+    <param name="quotes.bcc">
+      <value><![CDATA[BCC]]></value>
+    </param>
+    <param name="quotes.cc">
+      <value><![CDATA[CC]]></value>
+    </param>
     <param name="quotes.attachment">
       <value><![CDATA[Attachment]]></value>
     </param>
@@ -7218,6 +7700,10 @@ You do not have the permissions to perform this action.]]></value>
     <param name="admin.logos">
       <value><![CDATA[Logos]]></value>
     </param>
+    <param name="admin.logos.uploadNote.text">
+      <value><![CDATA[NOTE: The logo file being uploaded should be in one of the following formats. *.gif *.jpg *.jpeg *.tiff *.png *.bmp *.wmf]]></value>
+    </param>
+
     <param name="admin.uploadLogo">
       <value><![CDATA[Upload Logo]]></value>
     </param>
@@ -7246,10 +7732,10 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Mark as Default]]></value>
     </param>
     <param name="admin.contact.abbreviation">
-      <value><![CDATA[C]]></value>
+      <value><![CDATA[Contact]]></value>
     </param>
     <param name="admin.employee.abbreviation">
-      <value><![CDATA[E]]></value>
+      <value><![CDATA[Employee]]></value>
     </param>
     <param name="task.home.abbreviation">
       <value><![CDATA[${number} (H)]]></value>
@@ -7330,6 +7816,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.duplicateViewpointUserCanNotBeInserted">
       <value><![CDATA[A duplicate viewpoint can not be created]]></value>
     </param>
+    <param name="object.validation.workflowUploadError">
+      <value><![CDATA[Error occured while uploading the custom workflow.]]></value>
+    </param>
     <param name="object.validation.ownViewpointNotAllowed">
       <value><![CDATA[A viewpoint can not be created for the selected contact]]></value>
     </param>
@@ -7405,11 +7894,17 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.incorrectNumberFormat">
       <value><![CDATA[Number must be in a proper number format]]></value>
     </param>
+    <param name="object.validation.invalidEmailAddress">
+      <value><![CDATA[Email Address must be in a proper format]]></value>
+    </param>
     <param name="object.validation.incorrectWholeNumberFormat">
       <value><![CDATA[Number must be a proper whole number]]></value>
     </param>
     <param name="object.validation.incorrectFileName">
       <value><![CDATA[The file could not be sent by your computer, make sure the file exists]]></value>
+    </param>
+    <param name="object.validation.incorrectFileNameSpecified">
+      <value><![CDATA[The file could not be sent by your computer, make sure the file exists and is in the requested format]]></value>
     </param>
     <param name="object.validation.contact.lastCompanyRequired">
       <value><![CDATA[Either company or last name is required]]></value>
@@ -7773,14 +8268,32 @@ You do not have the permissions to perform this action.]]></value>
     <param name="myitems.assignedTickets">
       <value><![CDATA[Assigned Tickets]]></value>
     </param>
+    <param name="myitems.assignedProjectTickets">
+      <value><![CDATA[Assigned Project Tickets]]></value>
+    </param>
     <param name="myitems.unassignedTickets">
       <value><![CDATA[Unassigned Tickets]]></value>
     </param>
     <param name="myitems.inbox">
       <value><![CDATA[Inbox]]></value>
     </param>
+    <param name="myitems.inbox.new">
+      <value><![CDATA[new]]></value>
+    </param>
     <param name="myitems.tasks">
       <value><![CDATA[Tasks]]></value>
+    </param>
+    <param name="myitems.tasks.incomplete">
+      <value><![CDATA[incomplete]]></value>
+    </param>
+    <param name="myitems.mailbox">
+      <value><![CDATA[Mailbox]]></value>
+    </param>
+    <param name="myitems.settings">
+      <value><![CDATA[Settings]]></value>
+    </param>
+    <param name="myitems.Re-assignments">
+      <value><![CDATA[Re-assignments]]></value>
     </param>
     <param name="myitems.noRecentItems">
       <value><![CDATA[No recent items]]></value>
@@ -7814,10 +8327,10 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Department changed from ${ticketLogList.previousDepartmentName} to ${ticketLogList.currentDepartmentName}]]></value>
     </param>
     <param name="ticketloglist.priorityChanged">
-      <value><![CDATA[Department changed from ${ticketLogList.previousPriorityName} to ${ticketLogList.currentPriorityName}]]></value>
+      <value><![CDATA[Priority changed from ${ticketLogList.previousPriorityName} to ${ticketLogList.currentPriorityName}]]></value>
     </param>
     <param name="ticketloglist.severityChanged">
-      <value><![CDATA[Department changed from ${ticketLogList.previousSeverityName} to ${ticketLogList.currentSeverityName}]]></value>
+      <value><![CDATA[Severity changed from ${ticketLogList.previousSeverityName} to ${ticketLogList.currentSeverityName}]]></value>
     </param>
     <param name="ticketloglist.ticketClosed">
       <value><![CDATA[Ticket Closed]]></value>
@@ -7866,7 +8379,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[This role cannot be deleted because at least one user is assigned to it.]]></value>
     </param>
     <param name="confirmdelete.contactIndividualAccountHeader">
-      <value><![CDATA[This contact cannot be deleted because it is also an individual account.]]></value>
+      <value><![CDATA[This contact is also an individual account.]]></value>
     </param>
     <param name="confirmdelete.contactUserAccountHeader">
       <value><![CDATA[This contact cannot be deleted because it is associated with a User account.]]></value>
@@ -7881,7 +8394,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[This survey cannot be deleted because at least one campaign is using it.]]></value>
     </param>
     <param name="confirmdelete.employeeUserAccountHeader">
-      <value><![CDATA[This employee cannot be deleted because it is associated with a user account.]]></value>
+      <value><![CDATA[This employee is associated with a user account.]]></value>
     </param>
     <param name="confirmdelete.contactOpportunitiesHeader">
       <value><![CDATA[Please reassign or delete any opportunities associated with this contact first.]]></value>
@@ -7907,6 +8420,18 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="button.delete">
       <value><![CDATA[Delete]]></value>
+    </param>
+    <param name="button.forceDelete">
+      <value><![CDATA[Force Delete]]></value>
+    </param>
+    <param name="button.trash">
+      <value><![CDATA[Trash]]></value>
+    </param>
+    <param name="button.forceTrash">
+      <value><![CDATA[Force Trash]]></value>
+    </param>
+    <param name="button.restore">
+      <value><![CDATA[Restore]]></value>
     </param>
     <param name="button.cancel">
       <value><![CDATA[Cancel]]></value>
@@ -7950,6 +8475,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="button.saveAndNew">
       <value><![CDATA[Save & New]]></value>
     </param>
+    <param name="button.saveAndAdd">
+      <value><![CDATA[Save & Add]]></value>
+    </param>
     <param name="button.disableOnly">
       <value><![CDATA[Disable Only]]></value>
     </param>
@@ -7986,10 +8514,25 @@ You do not have the permissions to perform this action.]]></value>
     <param name="button.insert">
       <value><![CDATA[Insert]]></value>
     </param>
-
+    <!-- User -->
+    <param name="user.userCanNotReportToSelf">
+      <value><![CDATA[User cannot report to self]]></value>
+    </param>
+    <param name="user.canNotCreateCircularHierarchy.text">
+      <value><![CDATA[Cannot create a circular hierarchy, review current hierarchy:]]></value>
+    </param>
+    <param name="user.lessThan.withSpaces.symbol">
+      <value><![CDATA[ < ]]></value>
+    </param>
     <!-- Dependencies -->
     <param name="dependency.contacts">
       <value><![CDATA[Contacts]]></value>
+    </param>
+    <param name="dependency.contact.history">
+      <value><![CDATA[Contact History]]></value>
+    </param>
+    <param name="dependency.organization.history">
+      <value><![CDATA[Account History]]></value>
     </param>
     <param name="dependency.revenue">
       <value><![CDATA[Revenue]]></value>
@@ -8053,6 +8596,12 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="dependency.quotes">
       <value><![CDATA[Quotes]]></value>
+    </param>
+    <param name="dependency.quotesWithVersions">
+      <value><![CDATA[Quotes & Versions of Quotes]]></value>
+    </param>
+    <param name="dependency.quotenotes">
+      <value><![CDATA[Notes]]></value>
     </param>
     <param name="dependency.relationships">
       <value><![CDATA[Relationships]]></value>
@@ -8120,6 +8669,12 @@ You do not have the permissions to perform this action.]]></value>
     <param name="dependency.numberOfProductsAssociatedWithThisQuote">
       <value><![CDATA[Number of products associated with this Quote]]></value>
     </param>
+    <param name="dependency.survey">
+      <value><![CDATA[Survey]]></value>
+    </param>
+    <param name="dependency.addressRequest">
+      <value><![CDATA[Contact Information Request]]></value>
+    </param>
     <param name="dependency.projects">
       <value><![CDATA[Projects]]></value>
     </param>
@@ -8159,7 +8714,7 @@ You do not have the permissions to perform this action.]]></value>
     <param name="mail.body.emailContactWithBody">
       <value><![CDATA[
       The following message was sent to your Centric CRM inbox by ${thisRecord.contact.nameFirstLast}.
-      This copy has been sent to your email account at the request of the sender.<br /><br />--- Original Message ---<br /><br />" 
+      This copy has been sent to your email account at the request of the sender.<br /><br />--- Original Message ---<br /><br />
       ${thisNote.body}
     ]]></value>
     </param>
@@ -8321,6 +8876,9 @@ You do not have the permissions to perform this action.]]></value>
     ]]></value>
     </param>
     <!-- Paged List Info -->
+    <param name="pagedListInfo.pagedListStatus.Records">
+      <value><![CDATA[Records]]></value>
+    </param>
     <param name="pagedListInfo.pagedListControlHandler.notAbbreviation">
       <value><![CDATA[
       Page ${pagedListInfo.numericalPageEntry} of ${pagedListInfo.numberOfPages}, Items per page: ${pagedListInfo.itemsPerPageEntry} 
@@ -8348,9 +8906,15 @@ You do not have the permissions to perform this action.]]></value>
     </param><!-- Example: No items to display -->
     <param name="pagedListInfo.pagedListStatus.endOfList">
       <value><![CDATA[End of List]]></value>
-	</param>
+    </param>
     <param name="pagedListInfo.showMore">
       <value><![CDATA[Show More]]></value>
+    </param>
+    <param name="pagedListInfo.showForm">
+      <value><![CDATA[Show Form]]></value>
+    </param>
+    <param name="pagedListInfo.filters">
+      <value><![CDATA[Filters]]></value>
     </param>
     <param name="pagedListInfo.returnToOverview">
       <value><![CDATA[Return to Overview]]></value>
@@ -8413,7 +8977,53 @@ You do not have the permissions to perform this action.]]></value>
     <param name="reports.owner">
       <value><![CDATA[Owner]]></value>
     </param>
-		<!-- Accounts Module -->
+    <!-- Report parameter description translations -->
+    <param name="reports.parameter.endDateFrom">
+      <value><![CDATA[End Date From]]></value>
+    </param>
+    <param name="reports.parameter.endDateTo">
+      <value><![CDATA[End Date To]]></value>
+    </param>
+    <param name="reports.parameter.addDateFrom">
+      <value><![CDATA[Add Date From]]></value>
+    </param>
+    <param name="reports.parameter.addDateTo">
+      <value><![CDATA[Add Date To]]></value>
+    </param>
+		<param name="reports.parameter.fromDate">
+      <value><![CDATA[From Date]]></value>
+    </param>
+    <param name="reports.parameter.toDate">
+      <value><![CDATA[To Date]]></value>
+    </param>
+    <param name="reports.parameter.closeDateBegin">
+      <value><![CDATA[Close Date Begin]]></value>
+    </param>
+    <param name="reports.parameter.closeDateEnd">
+      <value><![CDATA[Close Date End]]></value>
+    </param>
+    <param name="reports.parameter.beginDate">
+      <value><![CDATA[Begin Date]]></value>
+    </param>
+    <param name="reports.parameter.endDate">
+      <value><![CDATA[End Date]]></value>
+    </param>
+    <param name="reports.parameter.dueDateFrom">
+      <value><![CDATA[Due Date From]]></value>
+    </param>
+    <param name="reports.parameter.dueDateTo">
+      <value><![CDATA[Due Date To]]></value>
+    </param>
+    <param name="reports.parameter.completed">
+      <value><![CDATA[Completed?]]></value>
+    </param>
+    <param name="reports.parameter.enteredDateTo">
+      <value><![CDATA[Entered Date To]]></value>
+    </param>
+    <param name="reports.parameter.enteredDateFrom">
+      <value><![CDATA[Entered Date From]]></value>
+    </param>
+    <!-- Accounts Module -->
     <param name="reports.accounts.name">
       <value><![CDATA[Name]]></value>
     </param>
@@ -9332,9 +9942,6 @@ You do not have the permissions to perform this action.]]></value>
     <param name="reports.quotes.quote.quotation">
       <value><![CDATA[QUOTATION]]></value>
     </param>
-    <param name="reports.quotes.quote.">
-      <value><![CDATA[]]></value>
-    </param>
     <param name="reports.quotes.quote.date">
       <value><![CDATA[DATE]]></value>
     </param>
@@ -9395,6 +10002,10 @@ You do not have the permissions to perform this action.]]></value>
 		<param name="My Home Page">
       <page_title><![CDATA[My Home Page]]></page_title>
       <menu_title><![CDATA[My<br />Home Page]]></menu_title>
+		</param>
+    <param name="Leads">
+      <page_title><![CDATA[Leads]]></page_title>
+      <menu_title><![CDATA[Leads]]></menu_title>
 		</param>
 		<param name="Employees">
 			<page_title><![CDATA[Employees]]></page_title>
@@ -9514,7 +10125,7 @@ You do not have the permissions to perform this action.]]></value>
     <param name="Users">
       <value><![CDATA[Users]]></value>
 		</param>
-    <param name="ROles">
+    <param name="Roles">
       <value><![CDATA[Roles]]></value>
 		</param>
     <param name="Modules">
@@ -9641,6 +10252,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="opportunities.quotes.long_html">
       <value>Quotes</value>
+    </param>
+    <param name="opportunities.folders.long_html">
+      <value>Folders</value>
     </param>
     <!-- Communications -->
     <param name="communications.details.long_html">

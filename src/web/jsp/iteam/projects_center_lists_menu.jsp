@@ -22,14 +22,27 @@
   var thisListId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, listId) {
+  function displayMenu(loc, id, listId, trashed) {
     thisListId = listId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuListItem", "down", 0, 0, 170, getHeight("menuListItemTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuMove');
+      hideSpan('menuModify');
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuMove');
+      showSpan('menuModify');
+      showSpan('menuDelete');
+    }
+  }
+
   //Menu link functions
   function viewItem() {
     popURL('ProjectManagementLists.do?command=Details&pid=<%= Project.getId() %>&cid=<%= category.getId() %>&id=' + thisListId + '&popup=true','List_Details','650','375','yes','yes');
@@ -48,7 +61,7 @@
 <div id="menuListItemContainer" class="menu">
   <div id="menuListItemContent">
     <table id="menuListItemTable" class="pulldown" width="170" cellspacing="0">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuView" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="viewItem()">
         <th valign="top">
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -58,7 +71,7 @@
         </td>
       </tr>
     <zeroio:permission name="project-lists-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="editItem()">
         <th valign="top">
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -69,7 +82,7 @@
       </tr>
     </zeroio:permission>
     <zeroio:permission name="project-lists-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuMove" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveItem()">
         <th valign="top">
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -80,7 +93,7 @@
       </tr>
     </zeroio:permission>
     <zeroio:permission name="project-lists-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteItem()">
         <th valign="top">
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>

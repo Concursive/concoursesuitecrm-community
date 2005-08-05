@@ -15,20 +15,20 @@
 package org.jcrontab.data;
 
 /**
- *  This interface says which methods a HoliDaysSource should have in order to
- *  be compatible with the HoliDaysFactory
+ * This interface says which methods a HoliDaysSource should have in order to
+ * be compatible with the HoliDaysFactory
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public interface HoliDaySource {
   /**
-   *  Gets all the HoliDays from the DataSource
+   * Gets all the HoliDays from the DataSource
    *
-   *@return             HoliDays[]
-   *@throws  Exception
+   * @return HoliDays[]
+   * @throws Exception
    */
   HoliDay[] findAll() throws Exception;
 }

@@ -30,19 +30,19 @@ import java.sql.Connection;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    August 15, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created August 15, 2002
  */
 public final class MyTasks extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
@@ -53,16 +53,17 @@ public final class MyTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListTasks(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("PermissionError");
     }
-    PagedListInfo taskListInfo = this.getPagedListInfo(context, "TaskListInfo");
+    PagedListInfo taskListInfo = this.getPagedListInfo(
+        context, "TaskListInfo");
     taskListInfo.setLink("MyTasks.do?command=ListTasks");
     Connection db = null;
     TaskList taskList = new TaskList();
@@ -101,10 +102,10 @@ public final class MyTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-tasks-add"))) {
@@ -116,10 +117,10 @@ public final class MyTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "myhomepage-tasks-view")) {
@@ -138,7 +139,8 @@ public final class MyTasks extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (hasAuthority(context, thisTask.getOwner()) || hasAuthority(context, thisTask.getEnteredBy())) {
+    if (hasAuthority(context, thisTask.getOwner()) || hasAuthority(
+        context, thisTask.getEnteredBy())) {
       return getReturn(context, "TaskDetails");
     }
     return ("PermissionError");
@@ -146,10 +148,10 @@ public final class MyTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -199,10 +201,10 @@ public final class MyTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Connection db = null;
@@ -224,6 +226,10 @@ public final class MyTasks extends CFSModule {
       if (isValid) {
         inserted = newTask.insert(db);
       }
+      if (inserted) {
+        Task bufferTask = new Task(db, newTask.getId());
+        processInsertHook(context, bufferTask);
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -239,10 +245,10 @@ public final class MyTasks extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     Connection db = null;
@@ -255,6 +261,7 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       Task thisTask = (Task) context.getFormBean();
+      Task previousTask = new Task(db, thisTask.getId());
       thisTask.setModifiedBy(getUserId(context));
       Task oldTask = new Task(db, Integer.parseInt(id));
       if (!hasAuthority(context, oldTask.getOwner())) {
@@ -264,6 +271,9 @@ public final class MyTasks extends CFSModule {
       if (isValid) {
         count = thisTask.update(db);
       }
+      if (count == 1) {
+        this.processUpdateHook(context, previousTask, thisTask);
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -272,16 +282,16 @@ public final class MyTasks extends CFSModule {
     }
     if (count == -1 || !isValid) {
       return executeCommandModify(context);
-    }    
+    }
     return getReturn(context, "InsertTask");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Connection db = null;
@@ -306,15 +316,19 @@ public final class MyTasks extends CFSModule {
       DependencyList dependencies = thisTask.processDependencies(db);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
 
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header2"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -327,12 +341,11 @@ public final class MyTasks extends CFSModule {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
@@ -363,16 +376,17 @@ public final class MyTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Task", thisTask);
-    context.getRequest().setAttribute("refreshUrl", "MyTasks.do?command=ListTasks");
+    context.getRequest().setAttribute(
+        "refreshUrl", "MyTasks.do?command=ListTasks");
     return ("DeleteOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProcessImage(ActionContext context) {
     Connection db = null;
@@ -395,6 +409,7 @@ public final class MyTasks extends CFSModule {
       int status = Integer.parseInt(st.nextToken());
       db = this.getConnection(context);
       Task thisTask = new Task(db, taskId);
+      Task previousTask = new Task(db, taskId);
       if (!hasAuthority(context, thisTask.getOwner())) {
         return ("PermissionError");
       }
@@ -409,9 +424,12 @@ public final class MyTasks extends CFSModule {
       isValid = this.validateObject(context, db, thisTask);
       if (isValid) {
         count = thisTask.update(db);
-      } 
+      }
+      if (count == 1) {
+        this.processUpdateHook(context, previousTask, thisTask);
+      }
       if (from != null && "list".equals(from)) {
-        context.getRequest().setAttribute("image", "images/"+fileName);
+        context.getRequest().setAttribute("image", "images/" + fileName);
       } else {
         if (count != -1) {
           String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
@@ -421,13 +439,15 @@ public final class MyTasks extends CFSModule {
           if (fileDownload.fileExists()) {
             fileDownload.sendFile(context, "image/" + imageType);
           } else {
-            System.err.println("Image-> Trying to send a file that does not exist");
+            System.err.println(
+                "Image-> Trying to send a file that does not exist");
           }
         }
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
-      System.out.println("MyTasks-> ProcessImage : Download canceled or connection lost");
+      System.out.println(
+          "MyTasks-> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

@@ -40,11 +40,13 @@
     </td>
   </tr>
 </table>
-<br>
-<zeroio:permission name="project-discussion-forums-add">
-<img border="0" src="images/icons/stock_new-callouts2-16.gif" align="absmiddle">
-<a href="ProjectManagementIssueCategories.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newForum">New Forum</dhv:label></a><br>
-</zeroio:permission>
+<br />
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-discussion-forums-add">
+    <img border="0" src="images/icons/stock_new-callouts2-16.gif" align="absmiddle">
+    <a href="ProjectManagementIssueCategories.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newForum">New Forum</dhv:label></a><br>
+  </zeroio:permission>
+</dhv:evaluate>
 <dhv:pagedListStatus label="Forums" title="<%= showError(request, "actionError") %>" object="projectIssueCategoryInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -73,7 +75,7 @@
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisCategory.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisCategory.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>

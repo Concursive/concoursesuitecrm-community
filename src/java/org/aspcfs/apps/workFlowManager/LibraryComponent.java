@@ -15,20 +15,21 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.Constants;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  A LibraryComponent is a categorized business process component that can be
- *  added to a business process
+ * A LibraryComponent is a categorized business process component that can be
+ * added to a business process
  *
- *@author     matt rajkowski
- *@created    June 6, 2003
- *@version    $Id: LibraryComponent.java,v 1.1.2.2 2003/06/12 20:50:35
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: LibraryComponent.java,v 1.1.2.2 2003/06/12 20:50:35
+ *          mrajkowski Exp $
+ * @created June 6, 2003
  */
 public class LibraryComponent {
 
@@ -41,16 +42,17 @@ public class LibraryComponent {
 
 
   /**
-   *  Constructor for the LibraryComponent object
+   * Constructor for the LibraryComponent object
    */
-  public LibraryComponent() { }
+  public LibraryComponent() {
+  }
 
 
   /**
-   *  Constructor for the LibraryComponent object
+   * Constructor for the LibraryComponent object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public LibraryComponent(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -58,9 +60,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the id attribute of the LibraryComponent object
+   * Sets the id attribute of the LibraryComponent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -68,9 +70,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the id attribute of the LibraryComponent object
+   * Sets the id attribute of the LibraryComponent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -78,9 +80,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the name attribute of the LibraryComponent object
+   * Sets the name attribute of the LibraryComponent object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -88,9 +90,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the typeId attribute of the LibraryComponent object
+   * Sets the typeId attribute of the LibraryComponent object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -98,9 +100,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the typeId attribute of the LibraryComponent object
+   * Sets the typeId attribute of the LibraryComponent object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -108,9 +110,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the className attribute of the LibraryComponent object
+   * Sets the className attribute of the LibraryComponent object
    *
-   *@param  tmp  The new className value
+   * @param tmp The new className value
    */
   public void setClassName(String tmp) {
     this.className = tmp;
@@ -118,9 +120,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the description attribute of the LibraryComponent object
+   * Sets the description attribute of the LibraryComponent object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -128,9 +130,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the enabled attribute of the LibraryComponent object
+   * Sets the enabled attribute of the LibraryComponent object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -138,9 +140,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Sets the enabled attribute of the LibraryComponent object
+   * Sets the enabled attribute of the LibraryComponent object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -148,9 +150,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Gets the id attribute of the LibraryComponent object
+   * Gets the id attribute of the LibraryComponent object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -158,9 +160,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Gets the name attribute of the LibraryComponent object
+   * Gets the name attribute of the LibraryComponent object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -168,9 +170,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Gets the typeId attribute of the LibraryComponent object
+   * Gets the typeId attribute of the LibraryComponent object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -178,9 +180,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Gets the className attribute of the LibraryComponent object
+   * Gets the className attribute of the LibraryComponent object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;
@@ -188,9 +190,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Gets the description attribute of the LibraryComponent object
+   * Gets the description attribute of the LibraryComponent object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -198,9 +200,9 @@ public class LibraryComponent {
 
 
   /**
-   *  Gets the enabled attribute of the LibraryComponent object
+   * Gets the enabled attribute of the LibraryComponent object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -208,10 +210,10 @@ public class LibraryComponent {
 
 
   /**
-   *  Populates this object from a database recordset
+   * Populates this object from a database recordset
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("component_id");
@@ -224,10 +226,10 @@ public class LibraryComponent {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     PreparedStatement pst;
@@ -246,12 +248,16 @@ public class LibraryComponent {
     pst.close();
     //Only insert if there is no duplicate
     if (id == -1) {
+      id = DatabaseUtils.getNextSeq(db, "business_process_com_lb_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO business_process_component_library " +
-          "(component_name, type_id, class_name, description, enabled) " +
+          "(" + (id > -1 ? "component_id, " : "") + "component_name, type_id, class_name, description, enabled) " +
           "VALUES " +
-          "(?, ?, ?, ?, ?)");
+          "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?)");
       int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setString(++i, name);
       pst.setInt(++i, typeId);
       pst.setString(++i, className);
@@ -259,7 +265,7 @@ public class LibraryComponent {
       pst.setBoolean(++i, enabled);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "business_process_com_lb_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "business_process_com_lb_id_seq", id);
     }
   }
 }

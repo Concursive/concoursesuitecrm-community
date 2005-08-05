@@ -15,7 +15,6 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
@@ -35,24 +34,23 @@ import org.aspcfs.utils.Template;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
- *  Action class to view, add, edit, disable and enable a portal user
+ * Action class to view, add, edit, disable and enable a portal user
  *
- *@author     kbhoopal
- *@created    April 7, 2004
- *@version    $Id: ContactsPortal.java,v 1.1.2.2 2004/04/12 14:18:21 kbhoopal
- *      Exp $
+ * @author kbhoopal
+ * @version $Id: ContactsPortal.java,v 1.1.2.2 2004/04/12 14:18:21 kbhoopal
+ *          Exp $
+ * @created April 7, 2004
  */
 public final class ContactsPortal extends CFSModule {
 
   /**
-   *  Prepares the view page to display portal user information
+   * Prepares the view page to display portal user information
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "portal-user-view")) {
@@ -84,10 +82,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Prepares the add page to add a portal user
+   * Prepares the add page to add a portal user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "portal-user-add")) {
@@ -115,10 +113,12 @@ public final class ContactsPortal extends CFSModule {
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
       roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
-      roleList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+      roleList.setEmptyHtmlSelectRecord(
+          systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("roleList", roleList);
 
-      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord(
+          systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -132,10 +132,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Saves portal user information and mails the information to the portal user
+   * Saves portal user information and mails the information to the portal user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "portal-user-add")) {
@@ -165,10 +165,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Prepares the modify page to modify portal user information
+   * Prepares the modify page to modify portal user information
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "portal-user-edit")) {
@@ -192,7 +192,8 @@ public final class ContactsPortal extends CFSModule {
         return ("ContactPortalError");
       }
 
-      thisPortalUser = (User) context.getRequest().getAttribute("portalUserDetails");
+      thisPortalUser = (User) context.getRequest().getAttribute(
+          "portalUserDetails");
       if (thisPortalUser == null) {
         thisPortalUser = new User();
         thisPortalUser.buildRecord(db, thisContact.getUserId());
@@ -201,10 +202,12 @@ public final class ContactsPortal extends CFSModule {
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
       roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
-      roleList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+      roleList.setEmptyHtmlSelectRecord(
+          systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("roleList", roleList);
 
-      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord(
+          systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ContactDetails", thisContact);
       context.getRequest().setAttribute("portalUserDetails", thisPortalUser);
     } catch (Exception e) {
@@ -219,10 +222,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Saves portal user information and mails the information to the portal user
+   * Saves portal user information and mails the information to the portal user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "portal-user-edit")) {
@@ -256,10 +259,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Deletes a portal user //NOT USED
+   * Deletes a portal user //NOT USED
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "portal-user-delete")) {
@@ -282,10 +285,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Disables a portal user and sends mail to the user
+   * Disables a portal user and sends mail to the user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDisable(ActionContext context) {
     if (!hasPermission(context, "portal-user-delete")) {
@@ -298,7 +301,7 @@ public final class ContactsPortal extends CFSModule {
     boolean recordCount = false;
     try {
       db = this.getConnection(context);
-      SystemStatus systemStatus = this.getSystemStatus(context);     
+      SystemStatus systemStatus = this.getSystemStatus(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
       setOrganization(context, db, thisContact.getOrgId());
@@ -311,23 +314,30 @@ public final class ContactsPortal extends CFSModule {
       }
 
       thisUser = new User(db, context.getRequest().getParameter("userId"));
-      recordCount = thisUser.delete(db);
+      recordCount = thisUser.disable(db);
 
       if (recordCount) {
         ContactEmailAddress emailAddress = getAddressToEmail(thisContact);
 
         SMTPMessage mail = new SMTPMessage();
-        mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
-        mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
+        mail.setHost(
+            ApplicationPrefs.getPref(
+                context.getServletContext(), "MAILSERVER"));
+        mail.setFrom(
+            ApplicationPrefs.getPref(
+                context.getServletContext(), "EMAILADDRESS"));
         mail.setType("text/html");
         mail.setTo(emailAddress.getEmail());
-        mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
+        mail.setSubject(
+            systemStatus.getLabel("mail.subject.loginInformation"));
         mail.setBody(systemStatus.getLabel("mail.body.accountDisabled"));
         if (mail.send() == 2) {
           System.err.println(mail.getErrorMsg());
         }
       } else {
-        thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotDisabled"));
+        thisUser.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.userNotDisabled"));
         processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
@@ -342,10 +352,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Enables a portal user sends mail to the user
+   * Enables a portal user sends mail to the user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEnable(ActionContext context) {
     if (!hasPermission(context, "portal-user-edit")) {
@@ -376,17 +386,24 @@ public final class ContactsPortal extends CFSModule {
         ContactEmailAddress emailAddress = getAddressToEmail(thisContact);
 
         SMTPMessage mail = new SMTPMessage();
-        mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
-        mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
+        mail.setHost(
+            ApplicationPrefs.getPref(
+                context.getServletContext(), "MAILSERVER"));
+        mail.setFrom(
+            ApplicationPrefs.getPref(
+                context.getServletContext(), "EMAILADDRESS"));
         mail.setType("text/html");
         mail.setTo(emailAddress.getEmail());
-        mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
+        mail.setSubject(
+            systemStatus.getLabel("mail.subject.loginInformation"));
         mail.setBody(systemStatus.getLabel("mail.body.accountEnabled"));
         if (mail.send() == 2) {
           System.err.println(mail.getErrorMsg());
         }
       } else {
-        thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotEnabled"));
+        thisUser.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.userNotEnabled"));
         processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
@@ -401,12 +418,12 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Sets the organization attribute of the ContactsPortal object
+   * Sets the organization attribute of the ContactsPortal object
    *
-   *@param  context           The new organization value
-   *@param  db                The new organization value
-   *@param  tmpOrgId          The new organization value
-   *@exception  SQLException  Description of the Exception
+   * @param context  The new organization value
+   * @param db       The new organization value
+   * @param tmpOrgId The new organization value
+   * @throws SQLException Description of the Exception
    */
   private void setOrganization(ActionContext context, Connection db, int tmpOrgId) throws SQLException {
     Organization thisOrganization = null;
@@ -416,10 +433,10 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Gets the addressToEmail attribute of the ContactsPortal object
+   * Gets the addressToEmail attribute of the ContactsPortal object
    *
-   *@param  thisContact  Description of the Parameter
-   *@return              The addressToEmail value
+   * @param thisContact Description of the Parameter
+   * @return The addressToEmail value
    */
   private ContactEmailAddress getAddressToEmail(Contact thisContact) {
     ContactEmailAddressList emailList = thisContact.getEmailAddressList();
@@ -437,14 +454,14 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Inserts portal user information and mails the portal login information to
-   *  the user
+   * Inserts portal user information and mails the portal login information to
+   * the user
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  thisContact       Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  Exception     Description of the Exception
+   * @param context     Description of the Parameter
+   * @param db          Description of the Parameter
+   * @param thisContact Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   private boolean insertUser(ActionContext context, Connection db, Contact thisContact) throws Exception {
 
@@ -456,23 +473,26 @@ public final class ContactsPortal extends CFSModule {
     String username = thisContact.getNameLast().toLowerCase();
     int n = User.getNumberOfSimilarUsernames(db, username);
     newUser.setUsername(username + String.valueOf(n + 1));
-    String password = thisContact.getNameLast().toLowerCase() + String.valueOf(StringUtils.rand(1, 9999));
+    String password = thisContact.getNameLast().toLowerCase() + String.valueOf(
+        StringUtils.rand(1, 9999));
     newUser.setPassword1(password);
     newUser.setPassword2(password);
 
-    newUser.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("expires"), "expires");
+    newUser.setTimeZoneForDateFields(
+        context.getRequest(), context.getRequest().getParameter("expires"), "expires");
     newUser.setEnteredBy(getUserId(context));
     newUser.setModifiedBy(getUserId(context));
     newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
     newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
     newUser.setLanguage(getPref(context, "SYSTEM.LANGUAGE"));
-    recordInserted = newUser.insert(db,context);
+    recordInserted = newUser.insert(db, context);
     SystemStatus systemStatus = this.getSystemStatus(context);
- 
+
     if (recordInserted) {
       //subsequently use this email address to email the user
       //of the portal access information
-      int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
+      int emailAddressId = Integer.parseInt(
+          context.getRequest().getParameter("emailAddressId"));
       ContactEmailAddress emailAddress = null;
       if (emailAddressId != -1) {
         emailAddress = new ContactEmailAddress(db, emailAddressId);
@@ -484,12 +504,16 @@ public final class ContactsPortal extends CFSModule {
       updateSystemHierarchyCheck(db, context);
       //send email
       SMTPMessage mail = new SMTPMessage();
-      mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
-      mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
+      mail.setHost(
+          ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
+      mail.setFrom(
+          ApplicationPrefs.getPref(
+              context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(emailAddress.getEmail());
       mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
-      String message = systemStatus.getLabel("mail.body.userAccountCreationMessage");
+      String message = systemStatus.getLabel(
+          "mail.body.userAccountCreationMessage");
       if (message != null) {
         HashMap map = new HashMap();
         map.put("${user.username}", newUser.getUsername());
@@ -517,15 +541,15 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Updates portal user information and mails the portal login information to
-   *  the user
+   * Updates portal user information and mails the portal login information to
+   * the user
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  thisContact       Description of the Parameter
-   *@param  thisUser          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  Exception     Description of the Exception
+   * @param context     Description of the Parameter
+   * @param db          Description of the Parameter
+   * @param thisContact Description of the Parameter
+   * @param thisUser    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   private int updateUser(ActionContext context, Connection db, Contact thisContact, User thisUser) throws Exception {
 
@@ -533,14 +557,14 @@ public final class ContactsPortal extends CFSModule {
     boolean expirationDateChanged = false;
     boolean newPassword = false;
     User newUser = new User();
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(((ConnectionElement) context.getSession().getAttribute("ConnectionElement")).getUrl());
+    SystemStatus systemStatus = this.getSystemStatus(context);
 
     //has the portal role been changed?
-    int newRoleId = Integer.parseInt((String) context.getRequest().getParameter("roleId"));
+    int newRoleId = Integer.parseInt(
+        (String) context.getRequest().getParameter("roleId"));
     if (thisUser.getRoleId() != newRoleId) {
       roleChanged = true;
       newUser.setRoleId(newRoleId);
-      System.out.println("New role");
     } else {
       newUser.setRoleId(thisUser.getRoleId());
     }
@@ -549,11 +573,13 @@ public final class ContactsPortal extends CFSModule {
     String tmpExpires = context.getRequest().getParameter("expires");
     if ((thisUser.getExpires() == null) && (!"".equals(tmpExpires))) {
       expirationDateChanged = true;
-      newUser.setTimeZoneForDateFields(context.getRequest(), tmpExpires, "expires");
+      newUser.setTimeZoneForDateFields(
+          context.getRequest(), tmpExpires, "expires");
     } else if ((thisUser.getExpires() != null) && ("".equals(tmpExpires))) {
       expirationDateChanged = true;
     } else if ((thisUser.getExpires() != null) && (!"".equals(tmpExpires))) {
-      newUser.setTimeZoneForDateFields(context.getRequest(), tmpExpires, "expires");
+      newUser.setTimeZoneForDateFields(
+          context.getRequest(), tmpExpires, "expires");
       if (!thisUser.getExpires().equals(newUser.getExpires())) {
         expirationDateChanged = true;
       }
@@ -561,9 +587,11 @@ public final class ContactsPortal extends CFSModule {
 
     //has password been generated?
     String password = null;
-    if (DatabaseUtils.parseBoolean(context.getRequest().getParameter("autoGenerate"))) {
+    if (DatabaseUtils.parseBoolean(
+        context.getRequest().getParameter("autoGenerate"))) {
       newPassword = true;
-      password = thisContact.getNameLast().toLowerCase() + String.valueOf(StringUtils.rand(1, 9999));
+      password = thisContact.getNameLast().toLowerCase() + String.valueOf(
+          StringUtils.rand(1, 9999));
       newUser.setPassword1(password);
       newUser.setPassword2(password);
     }
@@ -575,7 +603,8 @@ public final class ContactsPortal extends CFSModule {
     newUser.setModifiedBy(getUserId(context));
     newUser.setModified(context.getRequest().getParameter("modified"));
     newUser.setUsername(thisUser.getUsername());
-    newUser.setId(Integer.parseInt(context.getRequest().getParameter("userId")));
+    newUser.setId(
+        Integer.parseInt(context.getRequest().getParameter("userId")));
     int resultCount = -1;
     resultCount = newUser.updatePortalUser(db);
 
@@ -584,7 +613,8 @@ public final class ContactsPortal extends CFSModule {
 
       //subsequently use this email address to email the user
       //of the portal access information
-      int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
+      int emailAddressId = Integer.parseInt(
+          context.getRequest().getParameter("emailAddressId"));
       ContactEmailAddress emailAddress = null;
       if (emailAddressId != -1) {
         emailAddress = new ContactEmailAddress(db, emailAddressId);
@@ -596,23 +626,29 @@ public final class ContactsPortal extends CFSModule {
 
       //send email
       SMTPMessage mail = new SMTPMessage();
-      mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
-      mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
+      mail.setHost(
+          ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
+      mail.setFrom(
+          ApplicationPrefs.getPref(
+              context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(emailAddress.getEmail());
       String mailBody = "";
       mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
-      mailBody = mailBody + systemStatus.getLabel("mail.body.loginInformationChanged");
+      mailBody = mailBody + systemStatus.getLabel(
+          "mail.body.loginInformationChanged");
       if (roleChanged) {
-        mailBody = mailBody + systemStatus.getLabel("mail.body.accountLoginUpdated");
+        mailBody = mailBody + systemStatus.getLabel(
+            "mail.body.accountLoginUpdated");
       }
       if (expirationDateChanged) {
         if ("".equals(tmpExpires.trim())) {
-          mailBody = mailBody + systemStatus.getLabel("mail.body.expirationRemoved");
+          mailBody = mailBody + systemStatus.getLabel(
+              "mail.body.expirationRemoved");
         } else {
           String message = systemStatus.getLabel("mail.body.accountExpiresOn");
           HashMap map = new HashMap();
-          map.put("${expiration}", tmpExpires );
+          map.put("${expiration}", tmpExpires);
           Template template = new Template(message);
           template.setParseElements(map);
           mailBody = mailBody + template.getParsedText();
@@ -621,7 +657,7 @@ public final class ContactsPortal extends CFSModule {
       if (newPassword) {
         String message = systemStatus.getLabel("mail.body.newPasswordIs");
         HashMap map = new HashMap();
-        map.put("${password}", password );
+        map.put("${password}", password);
         Template template = new Template(message);
         template.setParseElements(map);
         mailBody = mailBody + template.getParsedText();

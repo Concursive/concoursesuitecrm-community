@@ -15,22 +15,22 @@
  */
 package com.zeroio.webdav.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.Constants;
-
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    November 3, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created November 3, 2004
  */
 public class WebdavModuleList extends HashMap {
   // Permission Category is enabled by default
@@ -44,9 +44,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the buildContext attribute of the WebdavModuleList object
+   * Sets the buildContext attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new buildContext value
+   * @param tmp The new buildContext value
    */
   public void setBuildContext(boolean tmp) {
     this.buildContext = tmp;
@@ -54,9 +54,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the buildContext attribute of the WebdavModuleList object
+   * Sets the buildContext attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new buildContext value
+   * @param tmp The new buildContext value
    */
   public void setBuildContext(String tmp) {
     this.buildContext = DatabaseUtils.parseBoolean(tmp);
@@ -64,9 +64,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Gets the buildContext attribute of the WebdavModuleList object
+   * Gets the buildContext attribute of the WebdavModuleList object
    *
-   *@return    The buildContext value
+   * @return The buildContext value
    */
   public boolean getBuildContext() {
     return buildContext;
@@ -74,9 +74,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the WebdavModuleList object
+   * Sets the fileLibraryPath attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -84,9 +84,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Gets the fileLibraryPath attribute of the WebdavModuleList object
+   * Gets the fileLibraryPath attribute of the WebdavModuleList object
    *
-   *@return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -94,9 +94,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the enabled attribute of the WebdavModuleList object
+   * Sets the enabled attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -104,9 +104,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the enabled attribute of the WebdavModuleList object
+   * Sets the enabled attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -114,9 +114,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the categoryId attribute of the WebdavModuleList object
+   * Sets the categoryId attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -124,9 +124,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the categoryId attribute of the WebdavModuleList object
+   * Sets the categoryId attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -134,9 +134,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Sets the displayName attribute of the WebdavModuleList object
+   * Sets the displayName attribute of the WebdavModuleList object
    *
-   *@param  tmp  The new displayName value
+   * @param tmp The new displayName value
    */
   public void setDisplayName(String tmp) {
     this.displayName = tmp;
@@ -144,9 +144,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Gets the enabled attribute of the WebdavModuleList object
+   * Gets the enabled attribute of the WebdavModuleList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -154,9 +154,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Gets the categoryId attribute of the WebdavModuleList object
+   * Gets the categoryId attribute of the WebdavModuleList object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -164,27 +164,27 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Gets the displayName attribute of the WebdavModuleList object
+   * Gets the displayName attribute of the WebdavModuleList object
    *
-   *@return    The displayName value
+   * @return The displayName value
    */
   public String getDisplayName() {
     return displayName;
   }
 
 
-
   /**
-   *  Constructor for the WebdavModuleList object
+   * Constructor for the WebdavModuleList object
    */
-  public WebdavModuleList() { }
+  public WebdavModuleList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
@@ -197,7 +197,8 @@ public class WebdavModuleList extends HashMap {
         "WHERE w.id > 0 ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY id ");
-    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -205,7 +206,8 @@ public class WebdavModuleList extends HashMap {
       // set the fileLibraryPath for documents
       thisModule.setFileLibraryPath(fileLibraryPath);
       this.put(thisModule.getDisplayName(), thisModule);
-      System.out.println("WebdavModuleList-> Adding " + thisModule.getDisplayName() + " to List");
+      System.out.println(
+          "WebdavModuleList-> Adding " + thisModule.getDisplayName() + " to List");
     }
     rs.close();
     pst.close();
@@ -221,9 +223,9 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -243,11 +245,11 @@ public class WebdavModuleList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

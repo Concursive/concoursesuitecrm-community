@@ -17,6 +17,7 @@ package org.aspcfs.modules.accounts.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.EmailAddressList;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -25,12 +26,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Contains a list of email addresses... currently used to build the list from
- *  the database with any of the parameters to limit the results.
+ * Contains a list of email addresses... currently used to build the list from
+ * the database with any of the parameters to limit the results.
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class OrganizationEmailAddressList extends EmailAddressList {
 
@@ -42,21 +43,23 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Constructor for the OrganizationEmailAddressList object
+   * Constructor for the OrganizationEmailAddressList object
    */
-  public OrganizationEmailAddressList() { }
+  public OrganizationEmailAddressList() {
+  }
 
 
   /**
-   *  Constructor for the OrganizationEmailAddressList object
+   * Constructor for the OrganizationEmailAddressList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public OrganizationEmailAddressList(HttpServletRequest request) {
     int i = 0;
     int primaryEmail = -1;
     if (request.getParameter("primaryEmail") != null) {
-      primaryEmail = Integer.parseInt((String) request.getParameter("primaryEmail"));
+      primaryEmail = Integer.parseInt(
+          (String) request.getParameter("primaryEmail"));
     }
     while (request.getParameter("email" + (++i) + "type") != null) {
       OrganizationEmailAddress thisEmailAddress = new OrganizationEmailAddress();
@@ -72,9 +75,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the tableName attribute of the OrganizationEmailAddressList object
+   * Gets the tableName attribute of the OrganizationEmailAddressList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -82,9 +85,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the uniqueField attribute of the OrganizationEmailAddressList object
+   * Gets the uniqueField attribute of the OrganizationEmailAddressList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -92,9 +95,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the OrganizationEmailAddressList object
+   * Gets the lastAnchor attribute of the OrganizationEmailAddressList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -102,9 +105,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the OrganizationEmailAddressList object
+   * Gets the nextAnchor attribute of the OrganizationEmailAddressList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -112,9 +115,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the syncType attribute of the OrganizationEmailAddressList object
+   * Gets the syncType attribute of the OrganizationEmailAddressList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -122,9 +125,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the OrganizationEmailAddressList object
+   * Sets the lastAnchor attribute of the OrganizationEmailAddressList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -132,9 +135,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the OrganizationEmailAddressList object
+   * Sets the nextAnchor attribute of the OrganizationEmailAddressList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -142,9 +145,9 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the syncType attribute of the OrganizationEmailAddressList object
+   * Sets the syncType attribute of the OrganizationEmailAddressList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -152,10 +155,10 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -169,12 +172,14 @@ public class OrganizationEmailAddressList extends EmailAddressList {
     StringBuffer sqlOrder = new StringBuffer();
 
     //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
+    sqlSelect.append(
+        "SELECT * " +
         "FROM organization_emailaddress e, lookup_orgemail_types l " +
         "WHERE e.emailaddress_type = l.code ");
 
     //Need to build a base SQL statement for counting records
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
         "FROM organization_emailaddress e, lookup_orgemail_types l " +
         "WHERE e.emailaddress_type = l.code ");
 
@@ -182,7 +187,8 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -195,9 +201,10 @@ public class OrganizationEmailAddressList extends EmailAddressList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(email) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(email) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -210,9 +217,12 @@ public class OrganizationEmailAddressList extends EmailAddressList {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", email ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals(
+          "")) {
+        sqlOrder.append(
+            "ORDER BY " + pagedListInfo.getColumnToSortBy() + ", email ");
+        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals(
+            "")) {
           sqlOrder.append(pagedListInfo.getSortOrder() + " ");
         }
       } else {
@@ -227,11 +237,13 @@ public class OrganizationEmailAddressList extends EmailAddressList {
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      OrganizationEmailAddress thisEmailAddress = new OrganizationEmailAddress(rs);
+      OrganizationEmailAddress thisEmailAddress = new OrganizationEmailAddress(
+          rs);
       this.addElement(thisEmailAddress);
     }
     rs.close();

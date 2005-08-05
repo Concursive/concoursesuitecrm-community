@@ -15,18 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a key=value pair preference that will be used for a
- *  BusinessProcess.
+ * Represents a key=value pair preference that will be used for a
+ * BusinessProcess.
  *
- *@author     matt rajkowski
- *@created    June 6, 2003
- *@version    $Id: ProcessParameter.java,v 1.2 2003/06/19 20:50:05 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ProcessParameter.java,v 1.2 2003/06/19 20:50:05 mrajkowski
+ *          Exp $
+ * @created June 6, 2003
  */
 public class ProcessParameter {
 
@@ -38,16 +43,17 @@ public class ProcessParameter {
 
 
   /**
-   *  Constructor for the ProcessParameter object
+   * Constructor for the ProcessParameter object
    */
-  public ProcessParameter() { }
+  public ProcessParameter() {
+  }
 
 
   /**
-   *  Constructor for the ProcessParameter object
+   * Constructor for the ProcessParameter object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProcessParameter(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -55,9 +61,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Constructor for the ProcessParameter object
+   * Constructor for the ProcessParameter object
    *
-   *@param  parameterElement  Description of the Parameter
+   * @param parameterElement Description of the Parameter
    */
   public ProcessParameter(Element parameterElement) {
     this.setName((String) parameterElement.getAttribute("name"));
@@ -74,9 +80,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the id attribute of the ProcessParameter object
+   * Sets the id attribute of the ProcessParameter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -84,9 +90,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the id attribute of the ProcessParameter object
+   * Sets the id attribute of the ProcessParameter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -94,9 +100,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the processId attribute of the ProcessParameter object
+   * Sets the processId attribute of the ProcessParameter object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(int tmp) {
     this.processId = tmp;
@@ -104,9 +110,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the processId attribute of the ProcessParameter object
+   * Sets the processId attribute of the ProcessParameter object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(String tmp) {
     this.processId = Integer.parseInt(tmp);
@@ -114,9 +120,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the name attribute of the ComponentParameter object
+   * Sets the name attribute of the ComponentParameter object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -124,9 +130,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the value attribute of the ComponentParameter object
+   * Sets the value attribute of the ComponentParameter object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -134,9 +140,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameter object
+   * Sets the enabled attribute of the ComponentParameter object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -144,19 +150,20 @@ public class ProcessParameter {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameter object
+   * Sets the enabled attribute of the ComponentParameter object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
-    this.enabled = (DatabaseUtils.parseBoolean(tmp) || tmp == null || "".equals(tmp));
+    this.enabled = (DatabaseUtils.parseBoolean(tmp) || tmp == null || "".equals(
+        tmp));
   }
 
 
   /**
-   *  Gets the id attribute of the ProcessParameter object
+   * Gets the id attribute of the ProcessParameter object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -164,9 +171,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Gets the processId attribute of the ProcessParameter object
+   * Gets the processId attribute of the ProcessParameter object
    *
-   *@return    The processId value
+   * @return The processId value
    */
   public int getProcessId() {
     return processId;
@@ -174,9 +181,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Gets the name attribute of the ComponentParameter object
+   * Gets the name attribute of the ComponentParameter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -184,9 +191,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Gets the value attribute of the ComponentParameter object
+   * Gets the value attribute of the ComponentParameter object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -194,9 +201,9 @@ public class ProcessParameter {
 
 
   /**
-   *  Gets the enabled attribute of the ComponentParameter object
+   * Gets the enabled attribute of the ComponentParameter object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -204,10 +211,10 @@ public class ProcessParameter {
 
 
   /**
-   *  Populates this object from a database record
+   * Populates this object from a database record
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -219,39 +226,42 @@ public class ProcessParameter {
 
 
   /**
-   *  Inserts this object into a database
+   * Inserts this object into a database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "business_process_param_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO business_process_parameter " +
-        "(process_id, param_name, param_value, enabled) " +
+        "(" + (id > -1 ? "id, " : "") + "process_id, param_name, param_value, enabled) " +
         "VALUES " +
-        "(?, ?, ?, ?)");
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, processId);
     pst.setString(++i, name);
     pst.setString(++i, value);
     pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "business_process_param_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "business_process_param_id_seq", id);
   }
 
 
   /**
-   *  Deletes this object into a database
+   * Deletes this object into a database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM business_process_parameter " +
         "WHERE id = ? ");
-
     pst.setInt(1, this.id);
     pst.execute();
 

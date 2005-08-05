@@ -16,12 +16,12 @@
 package com.zeroio.utils;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 19, 2004
- *@version    $Id: HighlightElement.java,v 1.2 2004/07/21 19:00:46 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HighlightElement.java,v 1.2 2004/07/21 19:00:46 mrajkowski
+ *          Exp $
+ * @created June 19, 2004
  */
 public class HighlightElement {
 
@@ -32,18 +32,19 @@ public class HighlightElement {
 
 
   /**
-   *  Constructor for the HighlightElement object
+   * Constructor for the HighlightElement object
    */
-  public HighlightElement() { }
+  public HighlightElement() {
+  }
 
 
   /**
-   *  Constructor for the HighlightElement object
+   * Constructor for the HighlightElement object
    *
-   *@param  bw  Description of the Parameter
-   *@param  ew  Description of the Parameter
-   *@param  s   Description of the Parameter
-   *@param  e   Description of the Parameter
+   * @param bw Description of the Parameter
+   * @param ew Description of the Parameter
+   * @param s  Description of the Parameter
+   * @param e  Description of the Parameter
    */
   public HighlightElement(int bw, int s, int e, int ew) {
     beginWord = bw;
@@ -55,9 +56,9 @@ public class HighlightElement {
 
 
   /**
-   *  Gets the beginWord attribute of the HighlightElement object
+   * Gets the beginWord attribute of the HighlightElement object
    *
-   *@return    The beginWord value
+   * @return The beginWord value
    */
   public int getBeginWord() {
     return beginWord;
@@ -65,9 +66,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the beginWord attribute of the HighlightElement object
+   * Sets the beginWord attribute of the HighlightElement object
    *
-   *@param  tmp  The new beginWord value
+   * @param tmp The new beginWord value
    */
   public void setBeginWord(int tmp) {
     this.beginWord = tmp;
@@ -75,9 +76,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the beginWord attribute of the HighlightElement object
+   * Sets the beginWord attribute of the HighlightElement object
    *
-   *@param  tmp  The new beginWord value
+   * @param tmp The new beginWord value
    */
   public void setBeginWord(String tmp) {
     this.beginWord = Integer.parseInt(tmp);
@@ -85,9 +86,9 @@ public class HighlightElement {
 
 
   /**
-   *  Gets the endWord attribute of the HighlightElement object
+   * Gets the endWord attribute of the HighlightElement object
    *
-   *@return    The endWord value
+   * @return The endWord value
    */
   public int getEndWord() {
     return endWord;
@@ -95,9 +96,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the endWord attribute of the HighlightElement object
+   * Sets the endWord attribute of the HighlightElement object
    *
-   *@param  tmp  The new endWord value
+   * @param tmp The new endWord value
    */
   public void setEndWord(int tmp) {
     this.endWord = tmp;
@@ -105,9 +106,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the endWord attribute of the HighlightElement object
+   * Sets the endWord attribute of the HighlightElement object
    *
-   *@param  tmp  The new endWord value
+   * @param tmp The new endWord value
    */
   public void setEndWord(String tmp) {
     this.endWord = Integer.parseInt(tmp);
@@ -115,9 +116,9 @@ public class HighlightElement {
 
 
   /**
-   *  Gets the start attribute of the HighlightElement object
+   * Gets the start attribute of the HighlightElement object
    *
-   *@return    The start value
+   * @return The start value
    */
   public int getStart() {
     return start;
@@ -125,9 +126,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the start attribute of the HighlightElement object
+   * Sets the start attribute of the HighlightElement object
    *
-   *@param  tmp  The new start value
+   * @param tmp The new start value
    */
   public void setStart(int tmp) {
     this.start = tmp;
@@ -135,9 +136,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the start attribute of the HighlightElement object
+   * Sets the start attribute of the HighlightElement object
    *
-   *@param  tmp  The new start value
+   * @param tmp The new start value
    */
   public void setStart(String tmp) {
     this.start = Integer.parseInt(tmp);
@@ -145,9 +146,9 @@ public class HighlightElement {
 
 
   /**
-   *  Gets the end attribute of the HighlightElement object
+   * Gets the end attribute of the HighlightElement object
    *
-   *@return    The end value
+   * @return The end value
    */
   public int getEnd() {
     return end;
@@ -155,9 +156,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the end attribute of the HighlightElement object
+   * Sets the end attribute of the HighlightElement object
    *
-   *@param  tmp  The new end value
+   * @param tmp The new end value
    */
   public void setEnd(int tmp) {
     this.end = tmp;
@@ -165,9 +166,9 @@ public class HighlightElement {
 
 
   /**
-   *  Sets the end attribute of the HighlightElement object
+   * Sets the end attribute of the HighlightElement object
    *
-   *@param  tmp  The new end value
+   * @param tmp The new end value
    */
   public void setEnd(String tmp) {
     this.end = Integer.parseInt(tmp);

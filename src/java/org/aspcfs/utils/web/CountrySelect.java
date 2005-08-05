@@ -15,32 +15,54 @@
  */
 package org.aspcfs.utils.web;
 
-
+import org.aspcfs.controller.SystemStatus;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class CountrySelect extends HtmlSelect {
 
   /**
-   *  Constructor for the CountrySelect object
+   * Constructor for the CountrySelect object
    */
   public CountrySelect() {
     this.addItem(-1, "--None--");
     this.setDefaultValue("UNITED STATES");
     addCountries();
   }
-  
+
+
+  /**
+   * Constructor for the CountrySelect object
+   *
+   * @param thisSystem Description of the Parameter
+   */
+  public CountrySelect(SystemStatus thisSystem) {
+    this.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+    this.setDefaultValue("UNITED STATES");
+    addCountries();
+  }
+
+
+  /**
+   * Constructor for the CountrySelect object
+   *
+   * @param emptyItem Description of the Parameter
+   */
   public CountrySelect(String emptyItem) {
     this.addItem(-1, emptyItem);
     this.setDefaultValue(-1);
     addCountries();
   }
 
+
+  /**
+   * Adds a feature to the Countries attribute of the CountrySelect object
+   */
   private void addCountries() {
     this.addItem("AFGHANISTAN", "AFGHANISTAN");
     this.addItem("ALBANIA", "ALBANIA");

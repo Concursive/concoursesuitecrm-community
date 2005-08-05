@@ -16,12 +16,12 @@
 package org.aspcfs.modules.products.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.products.base.ProductCatalogList;
 import org.aspcfs.modules.products.base.ProductCategory;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -31,34 +31,38 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    August 31, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created August 31, 2004
  */
 public final class ProductCategoryProducts extends CFSModule {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     Connection db = null;
     ProductCategory category = null;
     ProductCatalogList catalogList = null;
-    PagedListInfo catalogListInfo = this.getPagedListInfo(context, "ProductCatalogListInfo");
+    PagedListInfo catalogListInfo = this.getPagedListInfo(
+        context, "ProductCatalogListInfo");
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
       category = new ProductCategory(db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
-      catalogListInfo.setLink("ProductCategoryProducts.do?command=List&moduleId=" + moduleId + "&categoryId=" + categoryId);
+      catalogListInfo.setLink(
+          "ProductCategoryProducts.do?command=List&moduleId=" + moduleId + "&categoryId=" + categoryId);
 
       catalogList = new ProductCatalogList();
       catalogList.setPagedListInfo(catalogListInfo);
@@ -81,10 +85,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Connection db = null;
@@ -92,8 +96,10 @@ public final class ProductCategoryProducts extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
       category = new ProductCategory(db, Integer.parseInt(categoryId));
@@ -109,10 +115,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandOptionSource(ActionContext context) {
     Connection db = null;
@@ -133,7 +139,8 @@ public final class ProductCategoryProducts extends CFSModule {
               ProductCatalog thisCatalog = (ProductCatalog) i.next();
               selectedElements.put(new Integer(thisCatalog.getId()), "");
             }
-            context.getSession().setAttribute("selectedElements", selectedElements);
+            context.getSession().setAttribute(
+                "selectedElements", selectedElements);
           }
           return (executeCommandProductList(context));
         } else {
@@ -151,39 +158,47 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProductList(ActionContext context) {
     Connection db = null;
-    PagedListInfo catalogListInfo = this.getPagedListInfo(context, "ProductCatalogListInfo");
+    PagedListInfo catalogListInfo = this.getPagedListInfo(
+        context, "ProductCatalogListInfo");
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
 
       HashMap selectedList = new HashMap();
-      HashMap finalElementList = (HashMap) context.getSession().getAttribute("finalElements");
+      HashMap finalElementList = (HashMap) context.getSession().getAttribute(
+          "finalElements");
       if (context.getRequest().getParameter("previousSelection") != null) {
-        StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
+        StringTokenizer st = new StringTokenizer(
+            context.getRequest().getParameter("previousSelection"), "|");
         while (st.hasMoreTokens()) {
           selectedList.put(new Integer(st.nextToken()), "");
         }
       } else {
         // get the selected list from the session
-        selectedList = (HashMap) context.getSession().getAttribute("selectedElements");
+        selectedList = (HashMap) context.getSession().getAttribute(
+            "selectedElements");
       }
       int rowCount = 1;
       while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
         int elementId = 0;
-        elementId = Integer.parseInt(context.getRequest().getParameter("hiddenelementid" + rowCount));
+        elementId = Integer.parseInt(
+            context.getRequest().getParameter("hiddenelementid" + rowCount));
         if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
           if (selectedList.get(new Integer(elementId)) == null) {
             selectedList.put(new Integer(elementId), "");
@@ -194,7 +209,8 @@ public final class ProductCategoryProducts extends CFSModule {
         rowCount++;
       }
       if (context.getRequest().getParameter("finalsubmit") != null) {
-        if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase("true")) {
+        if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase(
+            "true")) {
           finalElementList = (HashMap) selectedList.clone();
           System.out.println("finalElements : " + finalElementList);
           context.getSession().setAttribute("finalElements", finalElementList);
@@ -203,7 +219,8 @@ public final class ProductCategoryProducts extends CFSModule {
       }
       // build the option list
       ProductCatalogList catalogList = new ProductCatalogList();
-      catalogListInfo.setLink("ProductCategoryProducts.do?command=ProductList&moduleId=" + moduleId + "&categoryId=" + categoryId);
+      catalogListInfo.setLink(
+          "ProductCategoryProducts.do?command=ProductList&moduleId=" + moduleId + "&categoryId=" + categoryId);
       catalogList.setPagedListInfo(catalogListInfo);
       catalogList.buildList(db);
       context.getRequest().setAttribute("ProductList", catalogList);
@@ -220,10 +237,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddProduct(ActionContext context) {
     Connection db = null;
@@ -231,28 +248,36 @@ public final class ProductCategoryProducts extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
       category = new ProductCategory(db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_product_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_product_type");
       typeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogTypeList", typeSelect);
 
-      LookupList formatSelect = systemStatus.getLookupList(db, "lookup_product_format");
+      LookupList formatSelect = systemStatus.getLookupList(
+          db, "lookup_product_format");
       formatSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogFormatList", formatSelect);
 
-      LookupList shippingSelect = systemStatus.getLookupList(db, "lookup_product_shipping");
-      shippingSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      LookupList shippingSelect = systemStatus.getLookupList(
+          db, "lookup_product_shipping");
+      shippingSelect.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogShippingList", shippingSelect);
 
-      LookupList shipTimeSelect = systemStatus.getLookupList(db, "lookup_product_ship_time");
-      shipTimeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      LookupList shipTimeSelect = systemStatus.getLookupList(
+          db, "lookup_product_ship_time");
+      shipTimeSelect.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogShipTimeList", shipTimeSelect);
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -265,21 +290,24 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddCategoryMappings(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
 
       // remove the existing list of options for this product
@@ -289,7 +317,8 @@ public final class ProductCategoryProducts extends CFSModule {
 
       // add new product option mappings
       ProductCatalogList newList = new ProductCatalogList();
-      String finalElements = context.getRequest().getParameter("finalElements");
+      String finalElements = context.getRequest().getParameter(
+          "finalElements");
       if (finalElements != null) {
         StringTokenizer st = new StringTokenizer(finalElements, ",");
         while (st.hasMoreTokens()) {
@@ -312,10 +341,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Connection db = null;
@@ -330,10 +359,13 @@ public final class ProductCategoryProducts extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int categoryId = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      int categoryId = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       category = new ProductCategory(db, categoryId);
       context.getRequest().setAttribute("ProductCategory", category);
       isValid = this.validateObject(context, db, newCatalog);
@@ -360,10 +392,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     Connection db = null;
@@ -372,8 +404,10 @@ public final class ProductCategoryProducts extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
       category = new ProductCategory(db, Integer.parseInt(categoryId));
@@ -394,10 +428,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Connection db = null;
@@ -408,31 +442,41 @@ public final class ProductCategoryProducts extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int categoryId = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      int categoryId = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       category = new ProductCategory(db, categoryId);
       context.getRequest().setAttribute("ProductCategory", category);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_product_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_product_type");
       typeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogTypeList", typeSelect);
 
-      LookupList formatSelect = systemStatus.getLookupList(db, "lookup_product_format");
+      LookupList formatSelect = systemStatus.getLookupList(
+          db, "lookup_product_format");
       formatSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogFormatList", formatSelect);
 
-      LookupList shippingSelect = systemStatus.getLookupList(db, "lookup_product_shipping");
-      shippingSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      LookupList shippingSelect = systemStatus.getLookupList(
+          db, "lookup_product_shipping");
+      shippingSelect.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogShippingList", shippingSelect);
 
-      LookupList shipTimeSelect = systemStatus.getLookupList(db, "lookup_product_ship_time");
-      shipTimeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      LookupList shipTimeSelect = systemStatus.getLookupList(
+          db, "lookup_product_ship_time");
+      shipTimeSelect.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CatalogShipTimeList", shipTimeSelect);
 
-      int catalogId = Integer.parseInt(context.getRequest().getParameter("catalogId"));
+      int catalogId = Integer.parseInt(
+          context.getRequest().getParameter("catalogId"));
       catalog = new ProductCatalog(db, catalogId);
       context.getRequest().setAttribute("ProductCatalog", catalog);
     } catch (Exception e) {
@@ -452,10 +496,10 @@ public final class ProductCategoryProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     Connection db = null;
@@ -468,11 +512,14 @@ public final class ProductCategoryProducts extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
       isValid = this.validateObject(context, db, catalog);
       if (isValid) {

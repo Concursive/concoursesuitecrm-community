@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.contacts.base.Contact" %>
@@ -87,8 +87,8 @@
       <%= UserListInfo.getSortIcon("a.username") %>
     </th>
     <th nowrap>
-      <b><a href="Users.do?command=ListUsers&column=role"><dhv:label name="project.role">Role</dhv:label></a></b>
-      <%= UserListInfo.getSortIcon("role") %>
+      <b><a href="Users.do?command=ListUsers&column=r.role"><dhv:label name="project.role">Role</dhv:label></a></b>
+      <%= UserListInfo.getSortIcon("r.role") %>
     </th>
     <th nowrap>
       <b><dhv:label name="admin.reportsTo">Reports To</dhv:label></b>
@@ -110,7 +110,7 @@
           <% int status = thisUser.getEnabled() ? 1 : 0; %>
           <dhv:permission name="admin-users-edit" none="true"><% status = -1; %></dhv:permission>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('select<%= count %>','menuUser', '<%= thisUser.getId() %>','<%= status %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuUser');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuUser', '<%= thisUser.getId() %>','<%= status %>','<%= !thisContact.getEnabled() || thisContact.isTrashed() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuUser');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td width="60%">
           <a href="Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>

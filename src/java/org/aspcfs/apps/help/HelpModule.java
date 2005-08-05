@@ -14,24 +14,26 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.apps.help;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.database.*;
+
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.XMLUtils;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    November 26, 2003
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created November 26, 2003
  */
 public class HelpModule {
 
@@ -50,7 +52,7 @@ public class HelpModule {
 
 
   /**
-   *  Constructor for the HelpModule object
+   * Constructor for the HelpModule object
    */
   public HelpModule() {
 
@@ -60,10 +62,10 @@ public class HelpModule {
 
 
   /**
-   *  Constructor for the HelpModule object
+   * Constructor for the HelpModule object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpModule(ResultSet rs) throws SQLException {
 
@@ -73,9 +75,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the id attribute of the HelpModule object
+   * Sets the id attribute of the HelpModule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -83,9 +85,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the id attribute of the HelpModule object
+   * Sets the id attribute of the HelpModule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -93,9 +95,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the category attribute of the HelpModule object
+   * Sets the category attribute of the HelpModule object
    *
-   *@param  tmp  The new category value
+   * @param tmp The new category value
    */
   public void setCategory(String tmp) {
     this.category = tmp;
@@ -103,9 +105,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the categoryId attribute of the HelpModule object
+   * Sets the categoryId attribute of the HelpModule object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -113,9 +115,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the categoryId attribute of the HelpModule object
+   * Sets the categoryId attribute of the HelpModule object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -123,9 +125,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the briefDescription attribute of the HelpModule object
+   * Sets the briefDescription attribute of the HelpModule object
    *
-   *@param  tmp  The new briefDescription value
+   * @param tmp The new briefDescription value
    */
   public void setBriefDescription(String tmp) {
     this.briefDescription = tmp;
@@ -133,9 +135,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the detailDescription attribute of the HelpModule object
+   * Sets the detailDescription attribute of the HelpModule object
    *
-   *@param  tmp  The new detailDescription value
+   * @param tmp The new detailDescription value
    */
   public void setDetailDescription(String tmp) {
     this.detailDescription = tmp;
@@ -143,9 +145,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the pageId attribute of the HelpModule object
+   * Sets the pageId attribute of the HelpModule object
    *
-   *@param  tmp  The new pageId value
+   * @param tmp The new pageId value
    */
   public void setPageId(int tmp) {
     this.pageId = tmp;
@@ -153,9 +155,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the pageId attribute of the HelpModule object
+   * Sets the pageId attribute of the HelpModule object
    *
-   *@param  tmp  The new pageId value
+   * @param tmp The new pageId value
    */
   public void setPageId(String tmp) {
     this.pageId = Integer.parseInt(tmp);
@@ -163,9 +165,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the contentLevel attribute of the HelpModule object
+   * Sets the contentLevel attribute of the HelpModule object
    *
-   *@param  tmp  The new contentLevel value
+   * @param tmp The new contentLevel value
    */
   public void setContentLevel(int tmp) {
     this.contentLevel = tmp;
@@ -173,9 +175,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the contentLevel attribute of the HelpModule object
+   * Sets the contentLevel attribute of the HelpModule object
    *
-   *@param  tmp  The new contentLevel value
+   * @param tmp The new contentLevel value
    */
   public void setContentLevel(String tmp) {
     this.contentLevel = Integer.parseInt(tmp);
@@ -183,9 +185,9 @@ public class HelpModule {
 
 
   /**
-   *  Sets the helpContents attribute of the HelpModule object
+   * Sets the helpContents attribute of the HelpModule object
    *
-   *@param  tmp  The new helpContents value
+   * @param tmp The new helpContents value
    */
   public void setHelpContents(ArrayList tmp) {
     this.helpContents = tmp;
@@ -193,9 +195,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the id attribute of the HelpModule object
+   * Gets the id attribute of the HelpModule object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -203,9 +205,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the category attribute of the HelpModule object
+   * Gets the category attribute of the HelpModule object
    *
-   *@return    The category value
+   * @return The category value
    */
   public String getCategory() {
     return category;
@@ -213,9 +215,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the categoryId attribute of the HelpModule object
+   * Gets the categoryId attribute of the HelpModule object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -223,9 +225,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the briefDescription attribute of the HelpModule object
+   * Gets the briefDescription attribute of the HelpModule object
    *
-   *@return    The briefDescription value
+   * @return The briefDescription value
    */
   public String getBriefDescription() {
     return briefDescription;
@@ -233,9 +235,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the detailDescription attribute of the HelpModule object
+   * Gets the detailDescription attribute of the HelpModule object
    *
-   *@return    The detailDescription value
+   * @return The detailDescription value
    */
   public String getDetailDescription() {
     return detailDescription;
@@ -243,9 +245,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the helpContents attribute of the HelpModule object
+   * Gets the helpContents attribute of the HelpModule object
    *
-   *@return    The helpContents value
+   * @return The helpContents value
    */
   public ArrayList getHelpContents() {
     return helpContents;
@@ -253,9 +255,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the insert attribute of the HelpContent object
+   * Gets the insert attribute of the HelpContent object
    *
-   *@return    The insert value
+   * @return The insert value
    */
   public boolean getInsert() {
     return insert;
@@ -263,9 +265,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the pageId attribute of the HelpModule object
+   * Gets the pageId attribute of the HelpModule object
    *
-   *@return    The pageId value
+   * @return The pageId value
    */
   public int getPageId() {
     return pageId;
@@ -273,9 +275,9 @@ public class HelpModule {
 
 
   /**
-   *  Gets the contentLevel attribute of the HelpModule object
+   * Gets the contentLevel attribute of the HelpModule object
    *
-   *@return    The contentLevel value
+   * @return The contentLevel value
    */
   public int getContentLevel() {
     return contentLevel;
@@ -283,44 +285,45 @@ public class HelpModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
-
     id = rs.getInt("catId");
     category = rs.getString("category");
     categoryId = rs.getInt("catId");
     briefDescription = rs.getString("module_brief_description");
     detailDescription = rs.getString("module_detail_description");
-
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertModule(Connection db) throws SQLException {
 
     insert = true;
+    id = DatabaseUtils.getNextSeq(db, "help_module_module_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_module " +
-        "(category_id, module_brief_description, module_detail_description) " +
-        "VALUES (?, ?, ?) ");
+        "(" + (id > -1 ? "module_id, " : "") + "category_id, module_brief_description, module_detail_description) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, categoryId);
     pst.setString(++i, briefDescription);
     pst.setString(++i, detailDescription);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "help_module_module_id_seq");
     pst.close();
-
+    id = DatabaseUtils.getCurrVal(db, "help_module_module_id_seq", id);
     Iterator itr = helpContents.iterator();
     while (itr.hasNext()) {
       HelpContent tmpHelpContent = (HelpContent) itr.next();
@@ -331,22 +334,21 @@ public class HelpModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildHelpContents(Connection db) throws SQLException {
     System.out.println("Building Help Contents for:" + category);
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT help_id, module, section, subsection, title, description, content_id, parent, contentlevel, contentorder " +
+        "SELECT help_id, \"module\", \"section\", subsection, title, description, content_id, parent, contentlevel, contentorder " +
         "FROM help_contents hc, help_tableof_contents htc, help_tableofcontentitem_links hi " +
         "WHERE hc.category_id= ? " +
         "AND htc.content_id = hi.global_link_id " +
         "AND hi.linkto_content_id = hc.help_id " +
         "ORDER BY contentorder ASC ");
-
     pst.setInt(1, this.categoryId);
     ResultSet rs = pst.executeQuery();
 
@@ -400,15 +402,15 @@ public class HelpModule {
 
 
   /**
-   *  Include Help Contents that are not linked to the Table of Contents
+   * Include Help Contents that are not linked to the Table of Contents
    *
-   *@param  db                Description of the Parameter
-   *@return                   the list of helpContents not included in the TOC
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return the list of helpContents not included in the TOC
+   * @throws SQLException Description of the Exception
    */
   private ArrayList buildNonTocHelpContents(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT help_id, module, section, subsection, title, description " +
+        "SELECT help_id, \"module\", \"section\", subsection, title, description " +
         "FROM help_contents hc " +
         "WHERE hc.category_id=? ");
 
@@ -451,11 +453,11 @@ public class HelpModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmpHelpItem  Description of the Parameter
-   *@param  items        Description of the Parameter
-   *@return              Description of the Return Value
+   * @param tmpHelpItem Description of the Parameter
+   * @param items       Description of the Parameter
+   * @return Description of the Return Value
    */
   private ArrayList fetchChildren(HelpContent tmpHelpItem, ArrayList items) {
     Iterator itr = items.iterator();
@@ -473,10 +475,10 @@ public class HelpModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  d  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param d Description of the Parameter
+   * @return Description of the Return Value
    */
   public Node buildXML(Document d) {
     Element module = d.createElement("module");
@@ -487,10 +489,12 @@ public class HelpModule {
     Node detailDescription = d.createElement("detailDescription");
 
     if (getBriefDescription() != null) {
-      briefDescription.appendChild(d.createTextNode(XMLUtils.toXMLValue(getBriefDescription())));
+      briefDescription.appendChild(
+          d.createTextNode(XMLUtils.toXMLValue(getBriefDescription())));
     }
     if (getDetailDescription() != null) {
-      detailDescription.appendChild(d.createTextNode(XMLUtils.toXMLValue(getDetailDescription())));
+      detailDescription.appendChild(
+          d.createTextNode(XMLUtils.toXMLValue(getDetailDescription())));
     }
     module.appendChild(briefDescription);
     module.appendChild(detailDescription);

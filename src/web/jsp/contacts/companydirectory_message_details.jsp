@@ -26,7 +26,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.Messages">Messages</dhv:label></a> >
@@ -59,6 +59,26 @@
         <%=toHtml(Campaign.getReplyTo())%>
       </td>
     </tr>
+    <dhv:evaluate if="<%= Campaign.getBcc() != null && !"".equals(Campaign.getCc()) %>">
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="quotes.cc">CC</dhv:label>
+        </td>
+        <td>
+          <%=toHtml(Campaign.getCc())%>
+        </td>
+      </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= Campaign.getBcc() != null && !"".equals(Campaign.getBcc()) %>">
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="quotes.bcc">BCC</dhv:label>
+        </td>
+        <td>
+          <%=toHtml(Campaign.getBcc())%>
+        </td>
+      </tr>
+    </dhv:evaluate>
     <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="accounts.accounts_contacts_messages_details.MessageName">Message Name</dhv:label>

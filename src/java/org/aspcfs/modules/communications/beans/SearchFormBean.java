@@ -15,18 +15,16 @@
  */
 package org.aspcfs.modules.communications.beans;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.communications.base.SearchCriteriaList;
-import java.util.*;
-import java.sql.*;
 
 /**
- *  A bean for populating search criteria from a web form
+ * A bean for populating search criteria from a web form
  *
- *@author     Wesley S. Gillette
- *@created    November 7, 2001
- *@version    $Id: SearchFormBean.java,v 1.1 2001/11/13 20:36:35 mrajkowski Exp
- *      $
+ * @author Wesley S. Gillette
+ * @version $Id: SearchFormBean.java,v 1.1 2001/11/13 20:36:35 mrajkowski Exp
+ *          $
+ * @created November 7, 2001
  */
 public class SearchFormBean extends GenericBean {
 
@@ -39,18 +37,19 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Constructor for the SearchForm object
+   * Constructor for the SearchForm object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public SearchFormBean() { }
+  public SearchFormBean() {
+  }
 
 
   /**
-   *  Sets the searchCriteriaText attribute of the SearchForm object
+   * Sets the searchCriteriaText attribute of the SearchForm object
    *
-   *@param  tmp  The new SearchCriteriaText value
-   *@since       1.1
+   * @param tmp The new SearchCriteriaText value
+   * @since 1.1
    */
   public void setSearchCriteriaText(String tmp) {
     this.searchCriteriaText = tmp;
@@ -59,10 +58,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the SearchFormBean object
+   * Sets the Id attribute of the SearchFormBean object
    *
-   *@param  id  The new Id value
-   *@since
+   * @param id The new Id value
    */
   public void setId(int id) {
     this.id = id;
@@ -70,10 +68,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the SearchFormBean object
+   * Sets the Id attribute of the SearchFormBean object
    *
-   *@param  id  The new Id value
-   *@since
+   * @param id The new Id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -81,9 +78,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Sets the groupName attribute of the SearchFormBean object
+   * Sets the groupName attribute of the SearchFormBean object
    *
-   *@param  tmp  The new groupName value
+   * @param tmp The new groupName value
    */
   public void setGroupName(String tmp) {
     this.groupName = tmp;
@@ -91,9 +88,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Sets the contactSource attribute of the SearchFormBean object
+   * Sets the contactSource attribute of the SearchFormBean object
    *
-   *@param  tmp  The new contactSource value
+   * @param tmp The new contactSource value
    */
   public void setContactSource(String tmp) {
     this.contactSource = Integer.parseInt(tmp);
@@ -101,9 +98,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the SearchFormBean object
+   * Sets the owner attribute of the SearchFormBean object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -111,9 +108,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the SearchFormBean object
+   * Sets the owner attribute of the SearchFormBean object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -121,10 +118,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the SearchFormBean object
+   * Gets the Id attribute of the SearchFormBean object
    *
-   *@return    The Id value
-   *@since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -132,10 +128,10 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Gets the searchCriteriaText attribute of the SearchForm object
+   * Gets the searchCriteriaText attribute of the SearchForm object
    *
-   *@return    The searchCriteriaText value
-   *@since     1.1
+   * @return The searchCriteriaText value
+   * @since 1.1
    */
   public String getSearchCriteriaText() {
     return searchCriteriaText;
@@ -143,10 +139,10 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Gets the SearchCriteriaList attribute of the SearchForm object
+   * Gets the SearchCriteriaList attribute of the SearchForm object
    *
-   *@return    The SearchCriteriaList value
-   *@since     1.1
+   * @return The SearchCriteriaList value
+   * @since 1.1
    */
   public SearchCriteriaList getSearchCriteriaList() {
     return searchCriteriaList;
@@ -154,9 +150,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Gets the groupName attribute of the SearchFormBean object
+   * Gets the groupName attribute of the SearchFormBean object
    *
-   *@return    The groupName value
+   * @return The groupName value
    */
   public String getGroupName() {
     return groupName;
@@ -164,9 +160,9 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Gets the contactSource attribute of the SearchFormBean object
+   * Gets the contactSource attribute of the SearchFormBean object
    *
-   *@return    The contactSource value
+   * @return The contactSource value
    */
   public int getContactSource() {
     return contactSource;
@@ -174,20 +170,19 @@ public class SearchFormBean extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the SearchFormBean object
+   * Gets the owner attribute of the SearchFormBean object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@since    1.1
+   * @since 1.1
    */
   protected void parseText() {
     searchCriteriaList = new SearchCriteriaList(searchCriteriaText);

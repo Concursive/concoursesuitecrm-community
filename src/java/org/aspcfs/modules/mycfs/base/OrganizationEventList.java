@@ -15,28 +15,30 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    October 24, 2003
- *@version    $Id: OrganizationEventList.java,v 1.2 2004/08/04 20:01:56
- *      mrajkowski Exp $
+ * @author Mathur
+ * @version $Id: OrganizationEventList.java,v 1.2 2004/08/04 20:01:56
+ *          mrajkowski Exp $
+ * @created October 24, 2003
  */
 public class OrganizationEventList {
+  public final static int ACCOUNT_EVENT_ALERT = 1;
+  public final static int ACCOUNT_CONTRACT_ALERT = 2;
+
   OrganizationList alertOrgs = new OrganizationList();
   OrganizationList contractEndOrgs = new OrganizationList();
   int size = 0;
 
 
   /**
-   *  Sets the alertOrgs attribute of the OrganizationEventList object
+   * Sets the alertOrgs attribute of the OrganizationEventList object
    *
-   *@param  alertOrgs  The new alertOrgs value
+   * @param alertOrgs The new alertOrgs value
    */
   public void setAlertOrgs(OrganizationList alertOrgs) {
     this.alertOrgs = alertOrgs;
@@ -44,9 +46,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Sets the contractEndOrgs attribute of the OrganizationEventList object
+   * Sets the contractEndOrgs attribute of the OrganizationEventList object
    *
-   *@param  contractEndOrgs  The new contractEndOrgs value
+   * @param contractEndOrgs The new contractEndOrgs value
    */
   public void setContractEndOrgs(OrganizationList contractEndOrgs) {
     this.contractEndOrgs = contractEndOrgs;
@@ -54,9 +56,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Gets the alertOrgs attribute of the OrganizationEventList object
+   * Gets the alertOrgs attribute of the OrganizationEventList object
    *
-   *@return    The alertOrgs value
+   * @return The alertOrgs value
    */
   public OrganizationList getAlertOrgs() {
     return alertOrgs;
@@ -64,9 +66,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Gets the contractEndOrgs attribute of the OrganizationEventList object
+   * Gets the contractEndOrgs attribute of the OrganizationEventList object
    *
-   *@return    The contractEndOrgs value
+   * @return The contractEndOrgs value
    */
   public OrganizationList getContractEndOrgs() {
     return contractEndOrgs;
@@ -74,9 +76,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Sets the size attribute of the OrganizationEventList object
+   * Sets the size attribute of the OrganizationEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(int size) {
     this.size = size;
@@ -84,9 +86,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Sets the size attribute of the OrganizationEventList object
+   * Sets the size attribute of the OrganizationEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
@@ -94,9 +96,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Gets the size attribute of the OrganizationEventList object
+   * Gets the size attribute of the OrganizationEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -104,9 +106,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the OrganizationEventList object
+   * Gets the sizeString attribute of the OrganizationEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);
@@ -114,9 +116,9 @@ public class OrganizationEventList {
 
 
   /**
-   *  Adds a call to the list depending on the status of the Organization
+   * Adds a call to the list depending on the status of the Organization
    *
-   *@param  thisOrg  The feature to be added to the Event attribute
+   * @param thisOrg The feature to be added to the Event attribute
    */
   public void addEvent(Organization thisOrg) {
     if (thisOrg != null) {

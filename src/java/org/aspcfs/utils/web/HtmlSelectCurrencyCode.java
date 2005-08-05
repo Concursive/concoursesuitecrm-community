@@ -15,32 +15,31 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
 import java.text.NumberFormat;
 
 /**
- *  Presents an HTML currency selection based on allowed Java currencies
+ * Presents an HTML currency selection based on allowed Java currencies
  *
- *@author     matt rajkowski
- *@created    March 17, 2004
- *@version    $Id: HtmlSelectCurrencyCode.java,v 1.2 2004/03/19 04:56:17 matt
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HtmlSelectCurrencyCode.java,v 1.2 2004/03/19 04:56:17 matt
+ *          Exp $
+ * @created March 17, 2004
  */
 public class HtmlSelectCurrencyCode {
 
   /**
-   *  Constructor for the HtmlSelectCurrencyCode object
+   * Constructor for the HtmlSelectCurrencyCode object
    */
-  public HtmlSelectCurrencyCode() { }
+  public HtmlSelectCurrencyCode() {
+  }
 
 
   /**
-   *  Gets the select attribute of the HtmlSelectCurrencyCode class
+   * Gets the select attribute of the HtmlSelectCurrencyCode class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, String defaultValue) {
     if (defaultValue == null) {
@@ -50,14 +49,20 @@ public class HtmlSelectCurrencyCode {
     select.setSelectName(name);
     select.setDefaultValue(defaultValue);
     // TODO: Sort these items
+    select.addItem("ARS");
     select.addItem("AUD");
     //select.addItem("ATS");
     //select.addItem("BHD");
     //select.addItem("BEF");
+    select.addItem("BRL");
     select.addItem("CAD");
+    select.addItem("CLP");
+    select.addItem("CNY");
+    select.addItem("COP");
     //select.addItem("XPF");
     //select.addItem("CYP");
     //select.addItem("DKK");
+    select.addItem("ESP");
     select.addItem("EUR");
     //select.addItem("FIM");
     //select.addItem("FRF");
@@ -68,17 +73,21 @@ public class HtmlSelectCurrencyCode {
     //select.addItem("IEP");
     //select.addItem("ITL");
     select.addItem("GBP");
+    select.addItem("HUF");
     select.addItem("JPY");
     //select.addItem("KES");
     //select.addItem("KWD");
+    select.addItem("LTL");
     //select.addItem("MTL");
+    select.addItem("MXP");
     //select.addItem("NLG");
     //select.addItem("NZD");
     //select.addItem("NOK");
     //select.addItem("PGK");
     //select.addItem("PKR");
     //select.addItem("PHP");
-    //select.addItem("PTE");
+    select.addItem("PEN");
+    select.addItem("PTE");
     //select.addItem("SAR");
     //select.addItem("SGD");
     //select.addItem("ESP");
@@ -88,7 +97,10 @@ public class HtmlSelectCurrencyCode {
     //select.addItem("CHF");
     //select.addItem("THB");
     //select.addItem("AED");
+    select.addItem("SIT");
+    select.addItem("THB");
     select.addItem("USD");
+    select.addItem("VEB");
     //select.addItem("WST");
     if (!select.hasKey(defaultValue)) {
       select.addItem(defaultValue);

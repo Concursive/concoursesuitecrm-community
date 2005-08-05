@@ -15,23 +15,25 @@
  */
 package com.zeroio.utils;
 
-import java.util.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.Query;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.store.Directory;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- *  Utilities to break of a search string
+ * Utilities to break of a search string
  *
- *@author     matt rajkowski
- *@created    June 11, 2004
- *@version    $Id: SearchUtils.java,v 1.3.26.1 2004/12/06 19:09:07 kbhoopal Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: SearchUtils.java,v 1.3.26.1 2004/12/06 19:09:07 kbhoopal Exp
+ *          $
+ * @created June 11, 2004
  */
 public class SearchUtils {
 
@@ -41,18 +43,19 @@ public class SearchUtils {
 
 
   /**
-   *  Extracts the keywords into tokens, and then either concats them with AND
-   *  if all words are required, or leaves the tokens alone
+   * Extracts the keywords into tokens, and then either concats them with AND
+   * if all words are required, or leaves the tokens alone
    *
-   *@param  searchText  Description of the Parameter
-   *@param  allWords    Description of the Parameter
-   *@return             Description of the Return Value
+   * @param searchText Description of the Parameter
+   * @param allWords   Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String parseSearchText(String searchText, boolean allWords) {
     StringBuffer sb = new StringBuffer();
     boolean returnTokens = true;
     String currentDelims = WHITESPACE_AND_QUOTES;
-    StringTokenizer parser = new StringTokenizer(searchText, currentDelims, returnTokens);
+    StringTokenizer parser = new StringTokenizer(
+        searchText, currentDelims, returnTokens);
     String token = null;
     boolean spacer = false;
     while (parser.hasMoreTokens()) {
@@ -60,7 +63,8 @@ public class SearchUtils {
       if (!isDoubleQuote(token)) {
         if (hasText(token)) {
           String gotToken = token.trim().toLowerCase();
-          if ("and".equals(gotToken) || "or".equals(gotToken) || "not".equals(gotToken)) {
+          if ("and".equals(gotToken) || "or".equals(gotToken) || "not".equals(
+              gotToken)) {
             if (sb.length() > 0) {
               sb.append(" ");
             }
@@ -97,24 +101,26 @@ public class SearchUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  searchText  Description of the Parameter
-   *@return             Description of the Return Value
+   * @param searchText Description of the Parameter
+   * @return Description of the Return Value
    */
   public static ArrayList parseSearchTerms(String searchText) {
     ArrayList terms = new ArrayList();
     StringBuffer sb = new StringBuffer();
     boolean returnTokens = true;
     String currentDelims = WHITESPACE_AND_QUOTES;
-    StringTokenizer parser = new StringTokenizer(searchText, currentDelims, returnTokens);
+    StringTokenizer parser = new StringTokenizer(
+        searchText, currentDelims, returnTokens);
     String token = null;
     while (parser.hasMoreTokens()) {
       token = parser.nextToken(currentDelims);
       if (!isDoubleQuote(token)) {
         if (hasText(token)) {
           String gotToken = token.trim().toLowerCase();
-          if ("and".equals(gotToken) || "or".equals(gotToken) || "not".equals(gotToken)) {
+          if ("and".equals(gotToken) || "or".equals(gotToken) || "not".equals(
+              gotToken)) {
 
           } else {
             if (sb.length() > 0) {
@@ -134,17 +140,19 @@ public class SearchUtils {
 
 
   /**
-   *  Gets the sharedSearcher attribute of the SearchUtils class
+   * Gets the sharedSearcher attribute of the SearchUtils class
    *
-   *@param  context        Description of the Parameter
-   *@param  index          Description of the Parameter
-   *@return                The sharedSearcher value
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @param index   Description of the Parameter
+   * @return The sharedSearcher value
+   * @throws Exception Description of the Exception
    */
   public static synchronized IndexSearcher getSharedSearcher(ActionContext context, Directory index) throws Exception {
-    IndexSearcher searcher = (IndexSearcher) context.getServletContext().getAttribute("indexSearcher");
+    IndexSearcher searcher = (IndexSearcher) context.getServletContext().getAttribute(
+        "indexSearcher");
     if (searcher == null) {
-      searcher = (IndexSearcher) context.getServletContext().getAttribute("indexSearcher");
+      searcher = (IndexSearcher) context.getServletContext().getAttribute(
+          "indexSearcher");
       if (searcher == null) {
         searcher = new IndexSearcher(index);
         context.getServletContext().setAttribute("indexSearcher", searcher);
@@ -155,17 +163,18 @@ public class SearchUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context         Description of the Parameter
-   *@param  queryString     Description of the Parameter
-   *@param  searcher        Description of the Parameter
-   *@param  searchBeanInfo  Description of the Parameter
-   *@exception  Exception   Description of the Exception
+   * @param context        Description of the Parameter
+   * @param queryString    Description of the Parameter
+   * @param searcher       Description of the Parameter
+   * @param searchBeanInfo Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public static void buildSearchResults(ActionContext context, String queryString, IndexSearcher searcher, PagedListInfo searchBeanInfo) throws Exception {
     long start = System.currentTimeMillis();
-    Query query = QueryParser.parse(queryString, "contents", new StandardAnalyzer());
+    Query query = QueryParser.parse(
+        queryString, "contents", new StandardAnalyzer());
     Hits hits = searcher.search(query);
     //Sort sort = new Sort("type");
     //Hits hits = searcher.search(query, sort);
@@ -186,10 +195,10 @@ public class SearchUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  text  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param text Description of the Parameter
+   * @return Description of the Return Value
    */
   private static boolean hasText(String text) {
     return (text != null && !text.trim().equals(""));
@@ -197,10 +206,10 @@ public class SearchUtils {
 
 
   /**
-   *  Gets the doubleQuote attribute of the SearchUtils object
+   * Gets the doubleQuote attribute of the SearchUtils object
    *
-   *@param  text  Description of the Parameter
-   *@return       The doubleQuote value
+   * @param text Description of the Parameter
+   * @return The doubleQuote value
    */
   private static boolean isDoubleQuote(String text) {
     return text.equals(DOUBLE_QUOTE);
@@ -208,10 +217,10 @@ public class SearchUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  delims  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param delims Description of the Parameter
+   * @return Description of the Return Value
    */
   private static String flipDelimiters(String delims) {
     String result = null;

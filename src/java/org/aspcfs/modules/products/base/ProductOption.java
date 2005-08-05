@@ -16,20 +16,21 @@
 package org.aspcfs.modules.products.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    March 19, 2004
- *@version    $Id: ProductOption.java,v 1.4.12.2 2004/11/12 19:55:25 mrajkowski
- *      Exp $
+ * @author partha
+ * @version $Id: ProductOption.java,v 1.4.12.2 2004/11/12 19:55:25 mrajkowski
+ *          Exp $
+ * @created March 19, 2004
  */
 public class ProductOption extends GenericBean {
   private int id = -1;
@@ -63,9 +64,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the priceAdjust attribute of the ProductOption object
+   * Gets the priceAdjust attribute of the ProductOption object
    *
-   *@return    The priceAdjust value
+   * @return The priceAdjust value
    */
   public double getPriceAdjust() {
     return priceAdjust;
@@ -73,9 +74,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the priceAdjust attribute of the ProductOption object
+   * Sets the priceAdjust attribute of the ProductOption object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(double tmp) {
     this.priceAdjust = tmp;
@@ -83,9 +84,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the priceAdjust attribute of the ProductOption object
+   * Sets the priceAdjust attribute of the ProductOption object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(String tmp) {
     this.priceAdjust = Double.parseDouble(tmp);
@@ -93,9 +94,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the html attribute of the ProductOption object
+   * Gets the html attribute of the ProductOption object
    *
-   *@return    The html value
+   * @return The html value
    */
   public String getHtml() {
     return html;
@@ -103,9 +104,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the html attribute of the ProductOption object
+   * Sets the html attribute of the ProductOption object
    *
-   *@param  tmp  The new html value
+   * @param tmp The new html value
    */
   public void setHtml(String tmp) {
     this.html = tmp;
@@ -113,9 +114,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the buildConfigDetails attribute of the ProductOption object
+   * Gets the buildConfigDetails attribute of the ProductOption object
    *
-   *@return    The buildConfigDetails value
+   * @return The buildConfigDetails value
    */
   public boolean getBuildConfigDetails() {
     return buildConfigDetails;
@@ -123,9 +124,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the buildConfigDetails attribute of the ProductOption object
+   * Sets the buildConfigDetails attribute of the ProductOption object
    *
-   *@param  tmp  The new buildConfigDetails value
+   * @param tmp The new buildConfigDetails value
    */
   public void setBuildConfigDetails(boolean tmp) {
     this.buildConfigDetails = tmp;
@@ -133,9 +134,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the buildConfigDetails attribute of the ProductOption object
+   * Sets the buildConfigDetails attribute of the ProductOption object
    *
-   *@param  tmp  The new buildConfigDetails value
+   * @param tmp The new buildConfigDetails value
    */
   public void setBuildConfigDetails(String tmp) {
     this.buildConfigDetails = DatabaseUtils.parseBoolean(tmp);
@@ -143,9 +144,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the label attribute of the ProductOption object
+   * Gets the label attribute of the ProductOption object
    *
-   *@return    The label value
+   * @return The label value
    */
   public String getLabel() {
     return label;
@@ -153,9 +154,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the label attribute of the ProductOption object
+   * Sets the label attribute of the ProductOption object
    *
-   *@param  tmp  The new label value
+   * @param tmp The new label value
    */
   public void setLabel(String tmp) {
     this.label = tmp;
@@ -163,9 +164,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the hasMultiplier attribute of the ProductOption object
+   * Sets the hasMultiplier attribute of the ProductOption object
    *
-   *@param  tmp  The new hasMultiplier value
+   * @param tmp The new hasMultiplier value
    */
   public void setHasMultiplier(boolean tmp) {
     this.hasMultiplier = tmp;
@@ -173,9 +174,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the hasMultiplier attribute of the ProductOption object
+   * Sets the hasMultiplier attribute of the ProductOption object
    *
-   *@param  tmp  The new hasMultiplier value
+   * @param tmp The new hasMultiplier value
    */
   public void setHasMultiplier(String tmp) {
     this.hasMultiplier = DatabaseUtils.parseBoolean(tmp);
@@ -183,9 +184,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the hasRange attribute of the ProductOption object
+   * Sets the hasRange attribute of the ProductOption object
    *
-   *@param  tmp  The new hasRange value
+   * @param tmp The new hasRange value
    */
   public void setHasRange(boolean tmp) {
     this.hasRange = tmp;
@@ -193,9 +194,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the hasRange attribute of the ProductOption object
+   * Sets the hasRange attribute of the ProductOption object
    *
-   *@param  tmp  The new hasRange value
+   * @param tmp The new hasRange value
    */
   public void setHasRange(String tmp) {
     this.hasRange = DatabaseUtils.parseBoolean(tmp);
@@ -203,9 +204,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the hasMultiplier attribute of the ProductOption object
+   * Gets the hasMultiplier attribute of the ProductOption object
    *
-   *@return    The hasMultiplier value
+   * @return The hasMultiplier value
    */
   public boolean getHasMultiplier() {
     return hasMultiplier;
@@ -213,9 +214,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the hasRange attribute of the ProductOption object
+   * Gets the hasRange attribute of the ProductOption object
    *
-   *@return    The hasRange value
+   * @return The hasRange value
    */
   public boolean getHasRange() {
     return hasRange;
@@ -223,9 +224,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the ProductOption object
+   * Sets the productId attribute of the ProductOption object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -233,9 +234,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the ProductOption object
+   * Sets the productId attribute of the ProductOption object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -243,9 +244,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the productId attribute of the ProductOption object
+   * Gets the productId attribute of the ProductOption object
    *
-   *@return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -253,9 +254,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProductOption object
+   * Sets the id attribute of the ProductOption object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -263,9 +264,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProductOption object
+   * Sets the id attribute of the ProductOption object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -273,9 +274,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the ProductOption object
+   * Sets the name attribute of the ProductOption object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -283,9 +284,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the configuratorId attribute of the ProductOption object
+   * Sets the configuratorId attribute of the ProductOption object
    *
-   *@param  tmp  The new configuratorId value
+   * @param tmp The new configuratorId value
    */
   public void setConfiguratorId(int tmp) {
     this.configuratorId = tmp;
@@ -293,9 +294,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the configuratorId attribute of the ProductOption object
+   * Sets the configuratorId attribute of the ProductOption object
    *
-   *@param  tmp  The new configuratorId value
+   * @param tmp The new configuratorId value
    */
   public void setConfiguratorId(String tmp) {
     this.configuratorId = Integer.parseInt(tmp);
@@ -303,9 +304,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the ProductOption object
+   * Sets the parentId attribute of the ProductOption object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -313,9 +314,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the ProductOption object
+   * Sets the parentId attribute of the ProductOption object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -323,9 +324,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the shortDescription attribute of the ProductOption object
+   * Sets the shortDescription attribute of the ProductOption object
    *
-   *@param  tmp  The new shortDescription value
+   * @param tmp The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -333,9 +334,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the longDescription attribute of the ProductOption object
+   * Sets the longDescription attribute of the ProductOption object
    *
-   *@param  tmp  The new longDescription value
+   * @param tmp The new longDescription value
    */
   public void setLongDescription(String tmp) {
     this.longDescription = tmp;
@@ -343,9 +344,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the allowCustomerConfigure attribute of the ProductOption object
+   * Sets the allowCustomerConfigure attribute of the ProductOption object
    *
-   *@param  tmp  The new allowCustomerConfigure value
+   * @param tmp The new allowCustomerConfigure value
    */
   public void setAllowCustomerConfigure(boolean tmp) {
     this.allowCustomerConfigure = tmp;
@@ -353,9 +354,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the allowCustomerConfigure attribute of the ProductOption object
+   * Sets the allowCustomerConfigure attribute of the ProductOption object
    *
-   *@param  tmp  The new allowCustomerConfigure value
+   * @param tmp The new allowCustomerConfigure value
    */
   public void setAllowCustomerConfigure(String tmp) {
     this.allowCustomerConfigure = DatabaseUtils.parseBoolean(tmp);
@@ -363,9 +364,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the allowUserConfigure attribute of the ProductOption object
+   * Sets the allowUserConfigure attribute of the ProductOption object
    *
-   *@param  tmp  The new allowUserConfigure value
+   * @param tmp The new allowUserConfigure value
    */
   public void setAllowUserConfigure(boolean tmp) {
     this.allowUserConfigure = tmp;
@@ -373,9 +374,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the allowUserConfigure attribute of the ProductOption object
+   * Sets the allowUserConfigure attribute of the ProductOption object
    *
-   *@param  tmp  The new allowUserConfigure value
+   * @param tmp The new allowUserConfigure value
    */
   public void setAllowUserConfigure(String tmp) {
     this.allowUserConfigure = DatabaseUtils.parseBoolean(tmp);
@@ -383,9 +384,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the required attribute of the ProductOption object
+   * Sets the required attribute of the ProductOption object
    *
-   *@param  tmp  The new required value
+   * @param tmp The new required value
    */
   public void setRequired(boolean tmp) {
     this.required = tmp;
@@ -393,9 +394,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the required attribute of the ProductOption object
+   * Sets the required attribute of the ProductOption object
    *
-   *@param  tmp  The new required value
+   * @param tmp The new required value
    */
   public void setRequired(String tmp) {
     this.required = DatabaseUtils.parseBoolean(tmp);
@@ -403,9 +404,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ProductOption object
+   * Sets the enabled attribute of the ProductOption object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -413,9 +414,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ProductOption object
+   * Sets the enabled attribute of the ProductOption object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -423,9 +424,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the ProductOption object
+   * Sets the startDate attribute of the ProductOption object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(Timestamp tmp) {
     this.startDate = tmp;
@@ -433,9 +434,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the ProductOption object
+   * Sets the startDate attribute of the ProductOption object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -443,9 +444,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the endDate attribute of the ProductOption object
+   * Sets the endDate attribute of the ProductOption object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(Timestamp tmp) {
     this.endDate = tmp;
@@ -453,9 +454,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the endDate attribute of the ProductOption object
+   * Sets the endDate attribute of the ProductOption object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(String tmp) {
     this.endDate = DatabaseUtils.parseTimestamp(tmp);
@@ -463,9 +464,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the configuratorName attribute of the ProductOption object
+   * Sets the configuratorName attribute of the ProductOption object
    *
-   *@param  tmp  The new configuratorName value
+   * @param tmp The new configuratorName value
    */
   public void setConfiguratorName(String tmp) {
     this.configuratorName = tmp;
@@ -473,9 +474,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the resultType attribute of the ProductOption object
+   * Sets the resultType attribute of the ProductOption object
    *
-   *@param  tmp  The new resultType value
+   * @param tmp The new resultType value
    */
   public void setResultType(int tmp) {
     this.resultType = tmp;
@@ -483,9 +484,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the resultType attribute of the ProductOption object
+   * Sets the resultType attribute of the ProductOption object
    *
-   *@param  tmp  The new resultType value
+   * @param tmp The new resultType value
    */
   public void setResultType(String tmp) {
     this.resultType = Integer.parseInt(tmp);
@@ -493,9 +494,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the parentName attribute of the ProductOption object
+   * Sets the parentName attribute of the ProductOption object
    *
-   *@param  tmp  The new parentName value
+   * @param tmp The new parentName value
    */
   public void setParentName(String tmp) {
     this.parentName = tmp;
@@ -503,9 +504,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the buildOptionValues attribute of the ProductOption object
+   * Sets the buildOptionValues attribute of the ProductOption object
    *
-   *@param  tmp  The new buildOptionValues value
+   * @param tmp The new buildOptionValues value
    */
   public void setBuildOptionValues(boolean tmp) {
     this.buildOptionValues = tmp;
@@ -513,9 +514,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the buildOptionValues attribute of the ProductOption object
+   * Sets the buildOptionValues attribute of the ProductOption object
    *
-   *@param  tmp  The new buildOptionValues value
+   * @param tmp The new buildOptionValues value
    */
   public void setBuildOptionValues(String tmp) {
     this.buildOptionValues = DatabaseUtils.parseBoolean(tmp);
@@ -523,9 +524,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the optionValuesList attribute of the ProductOption object
+   * Sets the optionValuesList attribute of the ProductOption object
    *
-   *@param  tmp  The new optionValuesList value
+   * @param tmp The new optionValuesList value
    */
   public void setOptionValuesList(ProductOptionValuesList tmp) {
     this.optionValuesList = tmp;
@@ -533,9 +534,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ProductOption object
+   * Gets the id attribute of the ProductOption object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -543,9 +544,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the ProductOption object
+   * Gets the name attribute of the ProductOption object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -553,9 +554,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the configuratorId attribute of the ProductOption object
+   * Gets the configuratorId attribute of the ProductOption object
    *
-   *@return    The configuratorId value
+   * @return The configuratorId value
    */
   public int getConfiguratorId() {
     return configuratorId;
@@ -563,9 +564,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the parentId attribute of the ProductOption object
+   * Gets the parentId attribute of the ProductOption object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -573,9 +574,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the shortDescription attribute of the ProductOption object
+   * Gets the shortDescription attribute of the ProductOption object
    *
-   *@return    The shortDescription value
+   * @return The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -583,9 +584,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the longDescription attribute of the ProductOption object
+   * Gets the longDescription attribute of the ProductOption object
    *
-   *@return    The longDescription value
+   * @return The longDescription value
    */
   public String getLongDescription() {
     return longDescription;
@@ -593,9 +594,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the allowCustomerConfigure attribute of the ProductOption object
+   * Gets the allowCustomerConfigure attribute of the ProductOption object
    *
-   *@return    The allowCustomerConfigure value
+   * @return The allowCustomerConfigure value
    */
   public boolean getAllowCustomerConfigure() {
     return allowCustomerConfigure;
@@ -603,9 +604,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the allowUserConfigure attribute of the ProductOption object
+   * Gets the allowUserConfigure attribute of the ProductOption object
    *
-   *@return    The allowUserConfigure value
+   * @return The allowUserConfigure value
    */
   public boolean getAllowUserConfigure() {
     return allowUserConfigure;
@@ -613,9 +614,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the required attribute of the ProductOption object
+   * Gets the required attribute of the ProductOption object
    *
-   *@return    The required value
+   * @return The required value
    */
   public boolean getRequired() {
     return required;
@@ -623,9 +624,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the ProductOption object
+   * Gets the enabled attribute of the ProductOption object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -633,9 +634,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the startDate attribute of the ProductOption object
+   * Gets the startDate attribute of the ProductOption object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public Timestamp getStartDate() {
     return startDate;
@@ -643,9 +644,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the endDate attribute of the ProductOption object
+   * Gets the endDate attribute of the ProductOption object
    *
-   *@return    The endDate value
+   * @return The endDate value
    */
   public Timestamp getEndDate() {
     return endDate;
@@ -653,9 +654,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the configuratorName attribute of the ProductOption object
+   * Gets the configuratorName attribute of the ProductOption object
    *
-   *@return    The configuratorName value
+   * @return The configuratorName value
    */
   public String getConfiguratorName() {
     return configuratorName;
@@ -663,9 +664,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the resultType attribute of the ProductOption object
+   * Gets the resultType attribute of the ProductOption object
    *
-   *@return    The resultType value
+   * @return The resultType value
    */
   public int getResultType() {
     return resultType;
@@ -673,9 +674,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the parentName attribute of the ProductOption object
+   * Gets the parentName attribute of the ProductOption object
    *
-   *@return    The parentName value
+   * @return The parentName value
    */
   public String getParentName() {
     return parentName;
@@ -683,9 +684,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the buildOptionValues attribute of the ProductOption object
+   * Gets the buildOptionValues attribute of the ProductOption object
    *
-   *@return    The buildOptionValues value
+   * @return The buildOptionValues value
    */
   public boolean getBuildOptionValues() {
     return buildOptionValues;
@@ -693,9 +694,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the optionValuesList attribute of the ProductOption object
+   * Gets the optionValuesList attribute of the ProductOption object
    *
-   *@return    The optionValuesList value
+   * @return The optionValuesList value
    */
   public ProductOptionValuesList getOptionValuesList() {
     return optionValuesList;
@@ -703,17 +704,18 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Constructor for the ProductOption object
+   * Constructor for the ProductOption object
    */
-  public ProductOption() { }
+  public ProductOption() {
+  }
 
 
   /**
-   *  Constructor for the ProductOption object
+   * Constructor for the ProductOption object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProductOption(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -721,10 +723,10 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Constructor for the ProductOption object
+   * Constructor for the ProductOption object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProductOption(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -732,11 +734,11 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -751,8 +753,7 @@ public class ProductOption extends GenericBean {
         "FROM product_option AS popt " +
         "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
         "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
-        "WHERE popt.option_id = ? "
-        );
+        "WHERE popt.option_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -773,12 +774,11 @@ public class ProductOption extends GenericBean {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildConfigDetails(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -786,7 +786,8 @@ public class ProductOption extends GenericBean {
     }
     // load the configurator
     OptionConfigurator configurator =
-        (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, this.getConfiguratorId());
+        (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+            db, this.getConfiguratorId());
     // query the properties
     configurator.queryProperties(db, this.getId(), false);
     this.setConfiguratorName(configurator.getName());
@@ -797,10 +798,10 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildOptionValues(Connection db) throws SQLException {
     optionValuesList = new ProductOptionValuesList();
@@ -810,10 +811,10 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     // product_option table
@@ -840,11 +841,11 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean result = false;
@@ -876,23 +877,28 @@ public class ProductOption extends GenericBean {
       pst.close();
 
       //delete the option properties
-      pst = db.prepareStatement("DELETE FROM product_option_text WHERE product_option_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM product_option_text WHERE product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      pst = db.prepareStatement("DELETE FROM product_option_integer WHERE product_option_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM product_option_integer WHERE product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      pst = db.prepareStatement("DELETE FROM product_option_float WHERE product_option_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM product_option_float WHERE product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      pst = db.prepareStatement("DELETE FROM product_option_timestamp WHERE product_option_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM product_option_timestamp WHERE product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      pst = db.prepareStatement("DELETE FROM product_option_boolean WHERE product_option_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM product_option_boolean WHERE product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -924,9 +930,9 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneParams attribute of the ProductOption class
+   * Gets the timeZoneParams attribute of the ProductOption class
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -937,11 +943,11 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -953,13 +959,17 @@ public class ProductOption extends GenericBean {
       }
       // insert the product option
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "product_option_option_id_seq");
       sql.append(
-          "INSERT INTO product_option( option_name, configurator_id, " +
+          "INSERT INTO product_option(" + (id > -1 ? "option_id, " : "") + "option_name, configurator_id, " +
           "parent_id, short_description, long_description, allow_customer_configure, " +
           "allow_user_configure, required, start_date, end_date, enabled, has_range, has_multiplier ) " +
-          "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
-      int i = 0;
+          "VALUES(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ? ) ");
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setString(++i, this.getName());
       DatabaseUtils.setInt(pst, ++i, this.getConfiguratorId());
       DatabaseUtils.setInt(pst, ++i, this.getParentId());
@@ -975,18 +985,22 @@ public class ProductOption extends GenericBean {
       pst.setBoolean(++i, this.getHasMultiplier());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "product_option_option_id_seq");
-
+      id = DatabaseUtils.getCurrVal(db, "product_option_option_id_seq", id);
       if (this.productId != -1) {
+        int seqId = DatabaseUtils.getNextSeq(
+            db, "product_option_map_product_option_id_seq");
         pst = db.prepareStatement(
-            "INSERT INTO product_option_map(option_id, product_id) " +
-            "VALUES (?, ? )");
-        pst.setInt(1, this.id);
-        pst.setInt(2, this.productId);
+            "INSERT INTO product_option_map (" + (seqId > -1 ? "product_option_id, " : "") + "option_id, product_id) " +
+            "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ? )");
+        i = 0;
+        if (seqId > -1) {
+          pst.setInt(++i, seqId);
+        }
+        pst.setInt(++i, this.id);
+        pst.setInt(++i, this.productId);
         pst.execute();
         pst.close();
       }
-
       if (commit) {
         db.commit();
       }
@@ -1006,11 +1020,11 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertClone(Connection db) throws SQLException {
     boolean result = false;
@@ -1022,7 +1036,8 @@ public class ProductOption extends GenericBean {
       }
       //insert the option and its properties
       OptionConfigurator configurator =
-          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, this.getConfiguratorId());
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+              db, this.getConfiguratorId());
       //option to be cloned has an optionId of the source option.
       configurator.queryProperties(db, this.getId(), false);
       configurator.saveProperties(db, this);
@@ -1046,11 +1061,11 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1065,8 +1080,7 @@ public class ProductOption extends GenericBean {
         "short_description = ?, long_description = ?, " +
         "allow_customer_configure = ?, allow_user_configure = ?, " +
         "required = ?, start_date = ?, end_date = ?, enabled = ?, has_range = ?, has_multiplier = ? " +
-        "WHERE option_id = ? "
-        );
+        "WHERE option_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -1091,16 +1105,17 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the ProductOption object
+   * Gets the valid attribute of the ProductOption object
    *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The valid value
+   * @throws SQLException Description of the Exception
    */
   public boolean isValid(Connection db) throws SQLException {
     if (startDate != null && endDate != null) {
       if (startDate.after(endDate)) {
-        errors.put("startDateError", "Start Date cannot be after Expiration Date");
+        errors.put(
+            "startDateError", "Start Date cannot be after Expiration Date");
       }
     }
     if (hasErrors()) {
@@ -1112,12 +1127,12 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Catalog attribute of the ProductOption object
+   * Adds a feature to the Catalog attribute of the ProductOption object
    *
-   *@param  db                The feature to be added to the Catalog attribute
-   *@param  productId         The feature to be added to the Catalog attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        The feature to be added to the Catalog attribute
+   * @param productId The feature to be added to the Catalog attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int addProductMapping(Connection db, int productId) throws SQLException {
     int result = -1;
@@ -1125,10 +1140,14 @@ public class ProductOption extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Invalid option id");
     }
+    int seqId = DatabaseUtils.getNextSeq(
+        db, "product_option_map_product_option_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        " INSERT INTO product_option_map( product_id, option_id) " +
-        " VALUES (?, ? ); "
-        );
+        "INSERT INTO product_option_map (" + (seqId > -1 ? "product_option_id, " : "") + "product_id, option_id) " +
+        "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ? ); ");
+    if (seqId > -1) {
+      pst.setInt(++i, seqId);
+    }
     pst.setInt(++i, productId);
     pst.setInt(++i, this.getId());
     result = pst.executeUpdate();
@@ -1138,12 +1157,12 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  productId         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param productId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean removeProductMapping(Connection db, int productId) throws SQLException {
     boolean result = false;
@@ -1164,20 +1183,19 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optName           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param optName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean lookupId(Connection db, String optName) throws SQLException {
     boolean result = false;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as counter " +
         "FROM product_option " +
-        "WHERE short_description = ? "
-        );
+        "WHERE short_description = ? ");
     pst.setString(1, optName);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1193,12 +1211,12 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int getNextRangeMin(Connection db, int optionId) throws SQLException {
     int nextMin = -1;
@@ -1222,12 +1240,12 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Gets the productOptionId attribute of the ProductOption object
+   * Gets the productOptionId attribute of the ProductOption object
    *
-   *@param  db                Description of the Parameter
-   *@param  productId         Description of the Parameter
-   *@return                   The productOptionId value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param productId Description of the Parameter
+   * @return The productOptionId value
+   * @throws SQLException Description of the Exception
    */
   public int getProductOptionId(Connection db, int productId) throws SQLException {
     if (this.getId() == -1) {
@@ -1252,11 +1270,11 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {

@@ -27,28 +27,29 @@ import java.io.File;
 import java.util.Iterator;
 
 /**
- *  Represents importer for Contacts
+ * Represents importer for Contacts
  *
- *@author
- *@created
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public class ContactInformationFormatter {
 
   /**
-   *  Constructor for the ContactInformationFormatter object
+   * Constructor for the ContactInformationFormatter object
    */
-  public ContactInformationFormatter() { }
+  public ContactInformationFormatter() {
+  }
 
 
   /**
-   *  Gets the contactInformation attribute of the ContactInformationFormatter
-   *  class
+   * Gets the contactInformation attribute of the ContactInformationFormatter
+   * class
    *
-   *@param  contact        Description of the Parameter
-   *@param  propertyFile   Description of the Parameter
-   *@return                The contactInformation value
-   *@exception  Exception  Description of the Exception
+   * @param contact      Description of the Parameter
+   * @param propertyFile Description of the Parameter
+   * @return The contactInformation value
+   * @throws Exception Description of the Exception
    */
   public static String getContactInformation(Contact contact, String propertyFile) throws Exception {
     File configFile = new File(propertyFile);
@@ -61,7 +62,10 @@ public class ContactInformationFormatter {
     ContactAddressList tmpContactAddressList = contact.getAddressList();
 
     Template template = new Template();
-    template.setText(XMLUtils.getNodeText(XMLUtils.getElement(mappings, "map", "id", "contactInformation.details")));
+    template.setText(
+        XMLUtils.getNodeText(
+            XMLUtils.getElement(
+                mappings, "map", "id", "contactInformation.details")));
 
     //Adding contact name
     template.addParseElement("${name}", contact.getNameFull());
@@ -74,13 +78,16 @@ public class ContactInformationFormatter {
     if (itr.hasNext()) {
       while (itr.hasNext()) {
         EmailAddress tmpEmailAddress = (EmailAddress) itr.next();
-        infoString.append("<b>" + tmpEmailAddress.getTypeName() + ":</b> " + tmpEmailAddress.getEmail() + "<br />");
+        infoString.append(
+            "<b>" + tmpEmailAddress.getTypeName() + ":</b> " + tmpEmailAddress.getEmail() + "<br />");
       }
       template.addParseElement("${emailAddresses}", infoString.toString());
-      template.addParseElement("${noEmailAddresses=" + noInformationString + "}", "");
+      template.addParseElement(
+          "${noEmailAddresses=" + noInformationString + "}", "");
     } else {
       template.addParseElement("${emailAddresses}", "");
-      template.addParseElement("${noEmailAddresses=" + noInformationString + "}", noInformationString);
+      template.addParseElement(
+          "${noEmailAddresses=" + noInformationString + "}", noInformationString);
     }
 
     //Adding text message addresses
@@ -90,13 +97,17 @@ public class ContactInformationFormatter {
     if (itr.hasNext()) {
       while (itr.hasNext()) {
         TextMessageAddress tmpTextMessageAddress = (TextMessageAddress) itr.next();
-        infoString.append("<b>" + tmpTextMessageAddress.getTypeName() + ":</b> " + tmpTextMessageAddress.getTextMessageAddress() + "<br />");
+        infoString.append(
+            "<b>" + tmpTextMessageAddress.getTypeName() + ":</b> " + tmpTextMessageAddress.getTextMessageAddress() + "<br />");
       }
-      template.addParseElement("${textMessageAddresses}", infoString.toString());
-      template.addParseElement("${noTextMessageAddresses=" + noInformationString + "}", "");
+      template.addParseElement(
+          "${textMessageAddresses}", infoString.toString());
+      template.addParseElement(
+          "${noTextMessageAddresses=" + noInformationString + "}", "");
     } else {
       template.addParseElement("${textMessageAddresses}", "");
-      template.addParseElement("${noTextMessageAddresses=" + noInformationString + "}", noInformationString);
+      template.addParseElement(
+          "${noTextMessageAddresses=" + noInformationString + "}", noInformationString);
     }
 
     //Adding phone numbers
@@ -106,13 +117,16 @@ public class ContactInformationFormatter {
     if (itr.hasNext()) {
       while (itr.hasNext()) {
         PhoneNumber tmpPhoneNumber = (PhoneNumber) itr.next();
-        infoString.append("<b>" + tmpPhoneNumber.getTypeName() + ":</b> " + tmpPhoneNumber.getPhoneNumber() + "<br />");
+        infoString.append(
+            "<b>" + tmpPhoneNumber.getTypeName() + ":</b> " + tmpPhoneNumber.getPhoneNumber() + "<br />");
       }
       template.addParseElement("${phoneNumbers}", infoString.toString());
-      template.addParseElement("${noPhoneNumbers=" + noInformationString + "}", "");
+      template.addParseElement(
+          "${noPhoneNumbers=" + noInformationString + "}", "");
     } else {
       template.addParseElement("${phoneNumbers}", "");
-      template.addParseElement("${noPhoneNumbers=" + noInformationString + "}", noInformationString);
+      template.addParseElement(
+          "${noPhoneNumbers=" + noInformationString + "}", noInformationString);
     }
 
     //Adding postal addresses
@@ -127,10 +141,12 @@ public class ContactInformationFormatter {
             tmpAddress.toString() + "<br /><br />");
       }
       template.addParseElement("${postalAddresses}", infoString.toString());
-      template.addParseElement("${noPostalAddresses=" + noInformationString + "}", "");
+      template.addParseElement(
+          "${noPostalAddresses=" + noInformationString + "}", "");
     } else {
       template.addParseElement("${postalAddresses}", "");
-      template.addParseElement("${noPostalAddresses=" + noInformationString + "}", noInformationString);
+      template.addParseElement(
+          "${noPostalAddresses=" + noInformationString + "}", noInformationString);
     }
     return template.getParsedText();
   }

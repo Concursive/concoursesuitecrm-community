@@ -27,7 +27,7 @@
   var thisMapId = -1;
   var thisIndent = -1;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, pId, rId, fId, aId, map, indent) {
+  function displayMenu(loc, id, pId, rId, fId, aId, map, indent, trashed) {
     thisProject = pId;
     thisRequirementId = rId;
     thisFolderId = fId;
@@ -40,8 +40,40 @@
       new ypSlideOutMenu("menuFolder", "down", 0, 0, 170, getHeight("menuFolderTable"));
       new ypSlideOutMenu("menuRequirement", "down", 0, 0, 170, getHeight("menuRequirementTable"));
     }
+    updateMenu(trashed);
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
+
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuActivityMoveActivity');
+      hideSpan('menuActivityAddActivityFolder');
+      hideSpan('menuActivityAddActivity');
+      hideSpan('menuActivityDeleteActivity');
+      hideSpan('menuFolderMoveFolder');
+      hideSpan('menuFolderAddActivityFolder');
+      hideSpan('menuFolderAddActivity');
+      hideSpan('menuFolderUpdateFolder');
+      hideSpan('menuFolderDeleteFolderAndShift');
+      hideSpan('menuRequirementViewOutline');
+      hideSpan('menuRequirementAddActivityFolder');
+      hideSpan('menuRequirementAddActivity');
+    } else {
+      showSpan('menuActivityMoveActivity');
+      showSpan('menuActivityAddActivityFolder');
+      showSpan('menuActivityAddActivity');
+      showSpan('menuActivityDeleteActivity');
+      showSpan('menuFolderMoveFolder');
+      showSpan('menuFolderAddActivityFolder');
+      showSpan('menuFolderAddActivity');
+      showSpan('menuFolderUpdateFolder');
+      showSpan('menuFolderDeleteFolderAndShift');
+      showSpan('menuRequirementViewOutline');
+      showSpan('menuRequirementAddActivityFolder');
+      showSpan('menuRequirementAddActivity');
+    }
+  }
+
   function viewOutline() {
     popURL('ProjectManagementRequirements.do?command=Details&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&popup=true','Outline_Details','650','375','yes','yes');
   }
@@ -88,7 +120,7 @@
   <div id="menuActivityContent">
     <table id="menuActivityTable" class="pulldown" width="170" cellspacing="0">
       <zeroio:permission name="project-plan-outline-modify">
-      <tr>
+      <tr id="menuActivityMoveActivity">
         <td valign="top" colspan="2" width="100%" nowrap>
           <a href="javascript:moveItemLeft()"><img alt="<dhv:label name='alt.unindent'>Unindent</dhv:label>" src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
           <a href="javascript:moveItemRight()"><img alt="<dhv:label name='alt.indent'>Indent</dhv:label>" src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
@@ -98,7 +130,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuActivityAddActivityFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addFolder()">
         <th>
           <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -109,7 +141,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuActivityAddActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addActivity()">
         <th>
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -120,7 +152,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-view,project-plan-outline-modify" if="any">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuActivityViewUpdateActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="updateActivity()">
         <th valign="top">
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -144,7 +176,7 @@
       </zeroio:permission>
 --%>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuActivityDeleteActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteActivity()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -162,7 +194,7 @@
   <div id="menuFolderContent">
     <table id="menuFolderTable" class="pulldown" width="170" cellspacing="0">
       <zeroio:permission name="project-plan-outline-modify">
-      <tr>
+      <tr id="menuFolderMoveFolder">
         <td valign="top" colspan="2" width="100%" nowrap>
           <a href="javascript:moveItemLeft()"><img alt="<dhv:label name='alt.unindent'>Unindent</dhv:label>" src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
           <a href="javascript:moveItemRight()"><img alt="<dhv:label name='alt.indent'>Indent</dhv:label>" src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
@@ -172,7 +204,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuFolderAddActivityFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addFolder()">
         <th>
           <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -183,7 +215,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuFolderAddActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addActivity()">
         <th>
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -194,7 +226,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuFolderUpdateFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="updateFolder()">
         <th valign="top">
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -218,7 +250,7 @@
       </zeroio:permission>
 --%>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuFolderDeleteFolderAndShift" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFolder()">
         <th valign="top">
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -236,7 +268,7 @@
   <div id="menuRequirementContent">
     <table id="menuRequirementTable" class="pulldown" width="170" cellspacing="0">
       <zeroio:permission name="project-plan-outline-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuRequirementViewOutline" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="viewOutline()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -247,7 +279,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuRequirementAddActivityFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addFolder()">
         <th>
           <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -258,7 +290,7 @@
       </tr>
       </zeroio:permission>
       <zeroio:permission name="project-plan-outline-modify">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuRequirementAddActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addActivity()">
         <th>
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>

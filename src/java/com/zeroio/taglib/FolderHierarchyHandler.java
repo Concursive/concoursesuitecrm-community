@@ -15,19 +15,20 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.LinkedHashMap;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     matt rajkowski
- * @created    April 20, 2003
- * @version    $Id: FolderHierarchyHandler.java,v 1.4 2003/09/04 03:49:45 matt
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: FolderHierarchyHandler.java,v 1.4 2003/09/04 03:49:45 matt
+ *          Exp $
+ * @created April 20, 2003
  */
 public class FolderHierarchyHandler extends TagSupport {
   private boolean showLastLink = false;
@@ -36,9 +37,9 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the showLastLink attribute of the FolderHierarchyHandler object
+   * Sets the showLastLink attribute of the FolderHierarchyHandler object
    *
-   * @param  tmp  The new showLastLink value
+   * @param tmp The new showLastLink value
    */
   public void setShowLastLink(String tmp) {
     this.showLastLink = DatabaseUtils.parseBoolean(tmp);
@@ -46,9 +47,9 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the showLastLink attribute of the FolderHierarchyHandler object
+   * Sets the showLastLink attribute of the FolderHierarchyHandler object
    *
-   * @param  tmp  The new showLastLink value
+   * @param tmp The new showLastLink value
    */
   public void setShowLastLink(boolean tmp) {
     this.showLastLink = tmp;
@@ -56,9 +57,9 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the module attribute of the FolderHierarchyHandler object
+   * Sets the module attribute of the FolderHierarchyHandler object
    *
-   * @param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(String tmp) {
     this.module = tmp;
@@ -66,9 +67,9 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Sets the link attribute of the FolderHierarchyHandler object
+   * Sets the link attribute of the FolderHierarchyHandler object
    *
-   * @param  tmp  The new link value
+   * @param tmp The new link value
    */
   public void setLink(String tmp) {
     this.link = tmp;
@@ -76,9 +77,9 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Gets the module attribute of the FolderHierarchyHandler object
+   * Gets the module attribute of the FolderHierarchyHandler object
    *
-   * @return    The module value
+   * @return The module value
    */
   public String getModule() {
     return module;
@@ -86,9 +87,9 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Gets the link attribute of the FolderHierarchyHandler object
+   * Gets the link attribute of the FolderHierarchyHandler object
    *
-   * @return    The link value
+   * @return The link value
    */
   public String getLink() {
     return link;
@@ -96,24 +97,28 @@ public class FolderHierarchyHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return                   Description of the Return Value
-   * @exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
       String projectId = (String) pageContext.getRequest().getParameter("pid");
       //Show the open folder image
-      this.pageContext.getOut().write("<img border=\"0\" src=\"images/icons/stock_home-16.gif\" align=\"absmiddle\"> ");
+      this.pageContext.getOut().write(
+          "<img border=\"0\" src=\"images/icons/stock_home-16.gif\" align=\"absmiddle\"> ");
       //Generate the folder path
-      LinkedHashMap folderLevels = (LinkedHashMap) pageContext.getRequest().getAttribute("folderLevels");
+      LinkedHashMap folderLevels = (LinkedHashMap) pageContext.getRequest().getAttribute(
+          "folderLevels");
       if (folderLevels == null) {
         if (showLastLink) {
           if (module == null || "".equals(module)) {
-            this.pageContext.getOut().write("<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + projectId + "&folderId=-1\">");
+            this.pageContext.getOut().write(
+                "<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + projectId + "&folderId=-1\">");
           } else {
-            this.pageContext.getOut().write("<a href=\""+ link + "&folderId=-1\">");
+            this.pageContext.getOut().write(
+                "<a href=\"" + link + "&folderId=-1\">");
           }
         }
         this.pageContext.getOut().write("Top Folder");
@@ -123,12 +128,15 @@ public class FolderHierarchyHandler extends TagSupport {
       } else {
         Object[] hierarchy = folderLevels.keySet().toArray();
         if (hierarchy.length > 0) {
-          String folderId = (String) pageContext.getRequest().getParameter("folderId");
+          String folderId = (String) pageContext.getRequest().getParameter(
+              "folderId");
           //Show a Home link
           if (module == null || "".equals(module)) {
-            this.pageContext.getOut().write("<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + projectId + "&folderId=-1\">");
+            this.pageContext.getOut().write(
+                "<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + projectId + "&folderId=-1\">");
           } else {
-            this.pageContext.getOut().write("<a href=\""+link+"&folderId=-1\">");
+            this.pageContext.getOut().write(
+                "<a href=\"" + link + "&folderId=-1\">");
           }
           this.pageContext.getOut().write("Top Folder");
           this.pageContext.getOut().write("</a>");
@@ -141,9 +149,13 @@ public class FolderHierarchyHandler extends TagSupport {
             String display = sa[1];
             if (i > 0 || showLastLink) {
               if (module == null || "".equals(module)) {
-                this.pageContext.getOut().write("<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_" + ("-1".equals(display) ? "Library" : "Gallery") + "&pid=" + projectId + "&folderId=" + thisId.intValue() + ("2".equals(display) ? "&details=true" : "") + "\">");
+                this.pageContext.getOut().write(
+                    "<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_" + ("-1".equals(
+                        display) ? "Library" : "Gallery") + "&pid=" + projectId + "&folderId=" + thisId.intValue() + ("2".equals(
+                            display) ? "&details=true" : "") + "\">");
               } else {
-                this.pageContext.getOut().write("<a href=\""+link+ "&folderId=" + thisId.intValue() + "\">");
+                this.pageContext.getOut().write(
+                    "<a href=\"" + link + "&folderId=" + thisId.intValue() + "\">");
               }
             }
             this.pageContext.getOut().write(StringUtils.toHtml(subject));
@@ -158,9 +170,11 @@ public class FolderHierarchyHandler extends TagSupport {
           //Show home link
           if (showLastLink) {
             if (module == null || "".equals(module)) {
-              this.pageContext.getOut().write("<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + projectId + "&folderId=-1\">");
+              this.pageContext.getOut().write(
+                  "<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + projectId + "&folderId=-1\">");
             } else {
-              this.pageContext.getOut().write("<a href=\""+ link + "&folderId=-1\">");
+              this.pageContext.getOut().write(
+                  "<a href=\"" + link + "&folderId=-1\">");
             }
           }
           this.pageContext.getOut().write("Top Folder");
@@ -170,16 +184,17 @@ public class FolderHierarchyHandler extends TagSupport {
         }
       }
     } catch (Exception e) {
-      throw new JspException("FolderHierarchyHandler Error: " + e.getMessage());
+      throw new JspException(
+          "FolderHierarchyHandler Error: " + e.getMessage());
     }
     return SKIP_BODY;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

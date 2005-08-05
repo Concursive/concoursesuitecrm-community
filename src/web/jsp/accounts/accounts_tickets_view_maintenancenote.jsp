@@ -48,23 +48,27 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="maintenancenotes" param="<%= "id=" + ticketDetails.getId() %>">
+  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
-    <dhv:permission name="accounts-accounts-tickets-maintenance-report-edit">
-      <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
-    </dhv:permission>
-    <dhv:permission name="accounts-accounts-tickets-maintenance-report-delete">
-      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
-    </dhv:permission>
+    <dhv:evaluate if="<%= !ticketDetails.isTrashed() %>" >
+      <dhv:permission name="accounts-accounts-tickets-maintenance-report-edit">
+        <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-maintenance-report-delete">
+        <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
+      </dhv:permission>
+    </dhv:evaluate>
       <br /><br />
     <%@ include file="../troubletickets/troubletickets_view_maintenancenote_include.jsp" %>
       <br />
-    <dhv:permission name="accounts-accounts-tickets-maintenance-report-edit">
-      <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
-    </dhv:permission>
-    <dhv:permission name="accounts-accounts-tickets-maintenance-report-delete">
-      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
-    </dhv:permission>
+    <dhv:evaluate if="<%= !ticketDetails.isTrashed() %>" >
+      <dhv:permission name="accounts-accounts-tickets-maintenance-report-edit">
+        <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-maintenance-report-delete">
+        <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
+      </dhv:permission>
+    </dhv:evaluate>
   </dhv:container>
 </dhv:container>
 </form>

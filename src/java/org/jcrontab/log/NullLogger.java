@@ -25,29 +25,36 @@
 package org.jcrontab.log;
 
 /**
- * This is the Null Logger basically is here to avoid logging, 
+ * This is the Null Logger basically is here to avoid logging,
  * usually this shouldn't be used
+ *
  * @author Israel Olalla
  * @version $Revision$
  */
 public class NullLogger implements Logger {
-	/**
-	 *	This method basically does nothing
-	 */
-	public void init(){}
-	/**
-	 *	This method basically does nothing
-	 */
-	public void info(String message){}
-	/**
-	 *	This method prints the trace of a Exception to 
-	 *	avoid losing the info
-	 */
-	public void error(String message, Throwable t) {
-		t.printStackTrace();
-	}
-	/**
-	 *	This method basically does nothing
-	 */
-	public void debug(String message){}
+  /**
+   * This method basically does nothing
+   */
+  public void init() {
+  }
+
+  /**
+   * This method basically does nothing
+   */
+  public void info(String message) {
+  }
+
+  /**
+   * This method prints the trace of a Exception to
+   * avoid losing the info
+   */
+  public void error(String message, Throwable t) {
+    t.printStackTrace();
+  }
+
+  /**
+   * This method basically does nothing
+   */
+  public void debug(String message) {
+  }
 }

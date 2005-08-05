@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Writes data using an HTTP connection and passing objects as XML to a
- *  web server.
+ * Writes data using an HTTP connection and passing objects as XML to a
+ * web server.
  *
- *@author     matt rajkowski
- *@created    September 3, 2002
- *@version    $Id: CFSHttpXMLWriter.java,v 1.6 2002/10/07 19:04:00 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: CFSHttpXMLWriter.java,v 1.6 2002/10/07 19:04:00 mrajkowski
+ *          Exp $
+ * @created September 3, 2002
  */
 public class CFSHttpXMLWriter implements DataWriter {
   private String url = null;
@@ -53,9 +53,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the url attribute of the CFSHttpXMLWriter object
+   * Sets the url attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     if (tmp != null && tmp.indexOf("ProcessPacket.do") == -1) {
@@ -67,9 +67,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the id attribute of the CFSHttpXMLWriter object
+   * Sets the id attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = tmp;
@@ -77,9 +77,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the code attribute of the CFSHttpXMLWriter object
+   * Sets the code attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new code value
+   * @param tmp The new code value
    */
   public void setCode(String tmp) {
     this.code = tmp;
@@ -87,9 +87,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the systemId attribute of the CFSHttpXMLWriter object
+   * Sets the systemId attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new systemId value
+   * @param tmp The new systemId value
    */
   public void setSystemId(int tmp) {
     this.systemId = tmp;
@@ -97,9 +97,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the systemId attribute of the CFSHttpXMLWriter object
+   * Sets the systemId attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new systemId value
+   * @param tmp The new systemId value
    */
   public void setSystemId(String tmp) {
     this.systemId = Integer.parseInt(tmp);
@@ -107,9 +107,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the clientId attribute of the CFSHttpXMLWriter object
+   * Sets the clientId attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new clientId value
+   * @param tmp The new clientId value
    */
   public void setClientId(int tmp) {
     this.clientId = tmp;
@@ -117,9 +117,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the clientId attribute of the CFSHttpXMLWriter object
+   * Sets the clientId attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new clientId value
+   * @param tmp The new clientId value
    */
   public void setClientId(String tmp) {
     this.clientId = Integer.parseInt(tmp);
@@ -127,9 +127,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the autoCommit attribute of the CFSHttpXMLWriter object
+   * Sets the autoCommit attribute of the CFSHttpXMLWriter object
    *
-   *@param  flag  The new autoCommit value
+   * @param flag The new autoCommit value
    */
   public void setAutoCommit(boolean flag) {
     autoCommit = flag;
@@ -140,9 +140,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the ignoreClientId attribute of the CFSHttpXMLWriter object
+   * Sets the ignoreClientId attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new ignoreClientId value
+   * @param tmp The new ignoreClientId value
    */
   public void setIgnoreClientId(boolean tmp) {
     this.ignoreClientId = tmp;
@@ -150,9 +150,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the ignoreClientId attribute of the CFSHttpXMLWriter object
+   * Sets the ignoreClientId attribute of the CFSHttpXMLWriter object
    *
-   *@param  tmp  The new ignoreClientId value
+   * @param tmp The new ignoreClientId value
    */
   public void setIgnoreClientId(String tmp) {
     this.ignoreClientId = "true".equals(tmp);
@@ -160,9 +160,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the ignoreClientId attribute of the CFSHttpXMLWriter object
+   * Gets the ignoreClientId attribute of the CFSHttpXMLWriter object
    *
-   *@return    The ignoreClientId value
+   * @return The ignoreClientId value
    */
   public boolean getIgnoreClientId() {
     return ignoreClientId;
@@ -170,9 +170,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the url attribute of the CFSHttpXMLWriter object
+   * Gets the url attribute of the CFSHttpXMLWriter object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -180,9 +180,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the id attribute of the CFSHttpXMLWriter object
+   * Gets the id attribute of the CFSHttpXMLWriter object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -190,9 +190,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the code attribute of the CFSHttpXMLWriter object
+   * Gets the code attribute of the CFSHttpXMLWriter object
    *
-   *@return    The code value
+   * @return The code value
    */
   public String getCode() {
     return code;
@@ -200,9 +200,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the systemId attribute of the CFSHttpXMLWriter object
+   * Gets the systemId attribute of the CFSHttpXMLWriter object
    *
-   *@return    The systemId value
+   * @return The systemId value
    */
   public int getSystemId() {
     return systemId;
@@ -210,9 +210,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the clientId attribute of the CFSHttpXMLWriter object
+   * Gets the clientId attribute of the CFSHttpXMLWriter object
    *
-   *@return    The clientId value
+   * @return The clientId value
    */
   public int getClientId() {
     return clientId;
@@ -220,9 +220,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the version attribute of the CFSHttpXMLWriter object
+   * Gets the version attribute of the CFSHttpXMLWriter object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -230,9 +230,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the name attribute of the CFSHttpXMLWriter object
+   * Gets the name attribute of the CFSHttpXMLWriter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Centric CRM Web XML Data Writer";
@@ -240,9 +240,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the description attribute of the CFSHttpXMLWriter object
+   * Gets the description attribute of the CFSHttpXMLWriter object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Writes data to Centric CRM using the XML HTTP Web API";
@@ -250,9 +250,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the lastResponse attribute of the CFSHttpXMLWriter object
+   * Gets the lastResponse attribute of the CFSHttpXMLWriter object
    *
-   *@return    The lastResponse value
+   * @return The lastResponse value
    */
   public String getLastResponse() {
     return lastResponse;
@@ -260,9 +260,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the configured attribute of the CFSHttpXMLWriter object
+   * Gets the configured attribute of the CFSHttpXMLWriter object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     if (url == null || id == null || code == null || systemId == -1) {
@@ -299,7 +299,8 @@ public class CFSHttpXMLWriter implements DataWriter {
     try {
       System.out.println("CFSHttpXMLWriter-> " + lastResponse);
       XMLUtils responseXML = new XMLUtils(lastResponse, true);
-      clientId = (Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id"))));
+      clientId = (Integer.parseInt(
+          XMLUtils.getNodeText(responseXML.getFirstElement("id"))));
       ignoreClientId = true;
       return clientId;
     } catch (Exception e) {
@@ -310,10 +311,10 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean save(DataRecord record) {
     transaction.add(record);
@@ -325,9 +326,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean commit() {
     try {
@@ -351,12 +352,14 @@ public class CFSHttpXMLWriter implements DataWriter {
       auth.appendChild(authCode);
 
       Element authSystemId = document.createElement("systemId");
-      authSystemId.appendChild(document.createTextNode(String.valueOf(systemId)));
+      authSystemId.appendChild(
+          document.createTextNode(String.valueOf(systemId)));
       auth.appendChild(authSystemId);
 
       if (clientId > -1) {
         Element authClientId = document.createElement("clientId");
-        authClientId.appendChild(document.createTextNode(String.valueOf(clientId)));
+        authClientId.appendChild(
+            document.createTextNode(String.valueOf(clientId)));
         auth.appendChild(authClientId);
       }
 
@@ -408,7 +411,8 @@ public class CFSHttpXMLWriter implements DataWriter {
             field.setAttribute("lookup", thisField.getValueLookup());
           }
           if (thisField.hasValue()) {
-            field.appendChild(document.createTextNode(thisField.getValue()));
+            field.appendChild(
+                document.createCDATASection(thisField.getValue()));
           }
           object.appendChild(field);
         }
@@ -426,9 +430,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean rollback() {
     transaction.clear();
@@ -437,10 +441,10 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Reads data from the writer source instead of saving
+   * Reads data from the writer source instead of saving
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean load(DataRecord record) {
     try {
@@ -464,12 +468,14 @@ public class CFSHttpXMLWriter implements DataWriter {
       auth.appendChild(authCode);
 
       Element authSystemId = document.createElement("systemId");
-      authSystemId.appendChild(document.createTextNode(String.valueOf(systemId)));
+      authSystemId.appendChild(
+          document.createTextNode(String.valueOf(systemId)));
       auth.appendChild(authSystemId);
 
       if (clientId > -1) {
         Element authClientId = document.createElement("clientId");
-        authClientId.appendChild(document.createTextNode(String.valueOf(clientId)));
+        authClientId.appendChild(
+            document.createTextNode(String.valueOf(clientId)));
         auth.appendChild(authClientId);
       }
 
@@ -524,9 +530,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean close() {
     return true;

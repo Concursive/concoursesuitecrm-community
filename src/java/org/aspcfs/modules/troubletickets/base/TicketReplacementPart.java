@@ -15,23 +15,22 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.troubletickets.base.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    January 29, 2004
- *@version    $Id: TicketReplacementPart.java,v 1.1.2.3 2004/02/03 13:51:33
- *      kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: TicketReplacementPart.java,v 1.1.2.3 2004/02/03 13:51:33
+ *          kbhoopal Exp $
+ * @created January 29, 2004
  */
 public class TicketReplacementPart extends GenericBean {
 
@@ -42,16 +41,17 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketReplacePart object
+   * Constructor for the TicketReplacePart object
    */
-  public TicketReplacementPart() { }
+  public TicketReplacementPart() {
+  }
 
 
   /**
-   *  Constructor for the TicketReplacementPart object
+   * Constructor for the TicketReplacementPart object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TicketReplacementPart(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -59,9 +59,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketReplacePart object
+   * Sets the id attribute of the TicketReplacePart object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -69,9 +69,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketReplacePart object
+   * Sets the id attribute of the TicketReplacePart object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -79,9 +79,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Sets the linkFormId attribute of the TicketReplacementPart object
+   * Sets the linkFormId attribute of the TicketReplacementPart object
    *
-   *@param  tmp  The new linkFormId value
+   * @param tmp The new linkFormId value
    */
   public void setLinkFormId(int tmp) {
     this.linkFormId = tmp;
@@ -89,9 +89,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Sets the linkFormId attribute of the TicketReplacementPart object
+   * Sets the linkFormId attribute of the TicketReplacementPart object
    *
-   *@param  tmp  The new linkFormId value
+   * @param tmp The new linkFormId value
    */
   public void setLinkFormId(String tmp) {
     this.linkFormId = Integer.parseInt(tmp);
@@ -99,9 +99,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Sets the partNumber attribute of the TicketReplacePart object
+   * Sets the partNumber attribute of the TicketReplacePart object
    *
-   *@param  tmp  The new partNumber value
+   * @param tmp The new partNumber value
    */
   public void setPartNumber(String tmp) {
     this.partNumber = tmp;
@@ -109,9 +109,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Sets the partDescription attribute of the TicketReplacePart object
+   * Sets the partDescription attribute of the TicketReplacePart object
    *
-   *@param  tmp  The new partDescription value
+   * @param tmp The new partDescription value
    */
   public void setPartDescription(String tmp) {
     this.partDescription = tmp;
@@ -119,9 +119,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the TicketReplacePart object
+   * Gets the id attribute of the TicketReplacePart object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -129,9 +129,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Gets the partNumber attribute of the TicketReplacePart object
+   * Gets the partNumber attribute of the TicketReplacePart object
    *
-   *@return    The partNumber value
+   * @return The partNumber value
    */
   public String getPartNumber() {
     return partNumber;
@@ -139,9 +139,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Gets the partDescription attribute of the TicketReplacePart object
+   * Gets the partDescription attribute of the TicketReplacePart object
    *
-   *@return    The partDescription value
+   * @return The partDescription value
    */
   public String getPartDescription() {
     return partDescription;
@@ -149,9 +149,9 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Gets the linkFormId attribute of the TicketReplacementPart object
+   * Gets the linkFormId attribute of the TicketReplacementPart object
    *
-   *@return    The linkFormId value
+   * @return The linkFormId value
    */
   public int getLinkFormId() {
     return linkFormId;
@@ -159,41 +159,45 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     PreparedStatement pst = null;
-
+    id = DatabaseUtils.getNextSeq(
+        db, "trouble_asset_replacement_replacement_id_seq");
     pst = db.prepareStatement(
         "INSERT INTO  trouble_asset_replacement " +
-        "(link_form_id, " +
+        "(" + (id > -1 ? "replacement_id, " : "") + "link_form_id, " +
         "part_number, " +
         "part_description) " +
-        "VALUES (?,?,?)");
-
+        "VALUES (" + (id > -1 ? "?, " : "") + "?,?,?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, linkFormId);
     pst.setString(++i, partNumber);
     pst.setString(++i, partDescription);
-
     pst.execute();
     pst.close();
-
+    id = DatabaseUtils.getCurrVal(
+        db, "trouble_asset_replacement_replacement_id_seq", id);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of the Parameter
-   *@param  parseItem  Description of the Parameter
+   * @param request   Description of the Parameter
+   * @param parseItem Description of the Parameter
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setPartNumber(request.getParameter("partNumber" + parseItem));
-    this.setPartDescription(request.getParameter("partDescription" + parseItem));
+    this.setPartDescription(
+        request.getParameter("partDescription" + parseItem));
     if (request.getParameter("part" + parseItem + "id") != null) {
       this.setId(request.getParameter("part" + parseItem + "id"));
     }
@@ -201,10 +205,10 @@ public class TicketReplacementPart extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("replacement_id");

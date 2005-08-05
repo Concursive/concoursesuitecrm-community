@@ -1,0 +1,12 @@
+/*
+ * This script is used by build.xml when installing a new database.
+ *
+ *@author     matt rajkowski
+ *@created    June 8, 2005
+ *@version    $Id$
+ */
+import java.sql.*;
+import java.io.File;
+import org.aspcfs.jcrontab.datasource.Event;
+
+print("Inserting default events...");

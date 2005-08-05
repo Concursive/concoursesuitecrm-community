@@ -15,15 +15,16 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  The SearchField represents information that is required for performing a
- *  search, and for building a form for allowing the user to build a search.
+ * The SearchField represents information that is required for performing a
+ * search, and for building a form for allowing the user to build a search.
  *
- *@author     Wesley S. Gillette
- *@created    November 1, 2001
- *@version    $Id$
+ * @author Wesley S. Gillette
+ * @version $Id$
+ * @created November 1, 2001
  */
 public class SearchField {
 
@@ -37,19 +38,20 @@ public class SearchField {
 
 
   /**
-   *  Constructor for the SearchField object
+   * Constructor for the SearchField object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public SearchField() { }
+  public SearchField() {
+  }
 
 
   /**
-   *  Constructor for the SearchField object
+   * Constructor for the SearchField object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public SearchField(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -57,10 +59,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the id attribute of the SearchField object
+   * Sets the id attribute of the SearchField object
    *
-   *@param  tmp  The new id value
-   *@since       1.1
+   * @param tmp The new id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -68,10 +70,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the fieldName attribute of the SearchField object
+   * Sets the fieldName attribute of the SearchField object
    *
-   *@param  tmp  The new fieldName value
-   *@since       1.1
+   * @param tmp The new fieldName value
+   * @since 1.1
    */
   public void setFieldName(String tmp) {
     this.fieldName = tmp;
@@ -79,10 +81,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the description attribute of the SearchField object
+   * Sets the description attribute of the SearchField object
    *
-   *@param  tmp  The new description value
-   *@since       1.1
+   * @param tmp The new description value
+   * @since 1.1
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -90,10 +92,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the searchable attribute of the SearchField object
+   * Sets the searchable attribute of the SearchField object
    *
-   *@param  tmp  The new searchable value
-   *@since       1.1
+   * @param tmp The new searchable value
+   * @since 1.1
    */
   public void setSearchable(boolean tmp) {
     this.searchable = tmp;
@@ -101,10 +103,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the fieldTypeId attribute of the SearchField object
+   * Sets the fieldTypeId attribute of the SearchField object
    *
-   *@param  tmp  The new fieldTypeId value
-   *@since       1.1
+   * @param tmp The new fieldTypeId value
+   * @since 1.1
    */
   public void setFieldTypeId(int tmp) {
     this.fieldTypeId = tmp;
@@ -112,10 +114,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the tableName attribute of the SearchField object
+   * Sets the tableName attribute of the SearchField object
    *
-   *@param  tmp  The new tableName value
-   *@since       1.1
+   * @param tmp The new tableName value
+   * @since 1.1
    */
   public void setTableName(String tmp) {
     this.tableName = tmp;
@@ -123,10 +125,10 @@ public class SearchField {
 
 
   /**
-   *  Sets the objectClass attribute of the SearchField object
+   * Sets the objectClass attribute of the SearchField object
    *
-   *@param  tmp  The new objectClass value
-   *@since       1.1
+   * @param tmp The new objectClass value
+   * @since 1.1
    */
   public void setObjectClass(String tmp) {
     this.objectClass = tmp;
@@ -134,10 +136,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the id attribute of the SearchField object
+   * Gets the id attribute of the SearchField object
    *
-   *@return    The id value
-   *@since     1.1
+   * @return The id value
+   * @since 1.1
    */
   public int getId() {
     return id;
@@ -145,10 +147,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the fieldName attribute of the SearchField object
+   * Gets the fieldName attribute of the SearchField object
    *
-   *@return    The fieldName value
-   *@since     1.1
+   * @return The fieldName value
+   * @since 1.1
    */
   public String getFieldName() {
     return fieldName;
@@ -156,10 +158,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the description attribute of the SearchField object
+   * Gets the description attribute of the SearchField object
    *
-   *@return    The description value
-   *@since     1.1
+   * @return The description value
+   * @since 1.1
    */
   public String getDescription() {
     return description;
@@ -167,10 +169,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the searchable attribute of the SearchField object
+   * Gets the searchable attribute of the SearchField object
    *
-   *@return    The searchable value
-   *@since     1.1
+   * @return The searchable value
+   * @since 1.1
    */
   public boolean getSearchable() {
     return searchable;
@@ -178,10 +180,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the fieldTypeId attribute of the SearchField object
+   * Gets the fieldTypeId attribute of the SearchField object
    *
-   *@return    The fieldTypeId value
-   *@since     1.1
+   * @return The fieldTypeId value
+   * @since 1.1
    */
   public int getFieldTypeId() {
     return fieldTypeId;
@@ -189,10 +191,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the tableName attribute of the SearchField object
+   * Gets the tableName attribute of the SearchField object
    *
-   *@return    The tableName value
-   *@since     1.1
+   * @return The tableName value
+   * @since 1.1
    */
   public String getTableName() {
     return tableName;
@@ -200,10 +202,10 @@ public class SearchField {
 
 
   /**
-   *  Gets the objectClass attribute of the SearchField object
+   * Gets the objectClass attribute of the SearchField object
    *
-   *@return    The objectClass value
-   *@since     1.1
+   * @return The objectClass value
+   * @since 1.1
    */
   public String getObjectClass() {
     return objectClass;
@@ -211,11 +213,11 @@ public class SearchField {
 
 
   /**
-   *  Populates this object from a result set
+   * Populates this object from a result set
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     //search_fields table

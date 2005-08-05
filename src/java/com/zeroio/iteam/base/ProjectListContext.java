@@ -1,21 +1,24 @@
 package com.zeroio.iteam.base;
 
 import javax.naming.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.NoSuchElementException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 17, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 17, 2004
  */
 public class ProjectListContext implements Context {
 
   /**
-   *  Constructor for the ProjectListContext object
+   * Constructor for the ProjectListContext object
    */
-  public ProjectListContext() { }
+  public ProjectListContext() {
+  }
 
 
   protected Hashtable myEnv;
@@ -24,22 +27,22 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Constructor for the ProjectListContext object
+   * Constructor for the ProjectListContext object
    *
-   *@param  inEnv  Description of the Parameter
+   * @param inEnv Description of the Parameter
    */
   ProjectListContext(Hashtable inEnv) {
     myEnv = (inEnv != null)
-         ? (Hashtable) (inEnv.clone())
-         : null;
+        ? (Hashtable) (inEnv.clone())
+        : null;
   }
 
 
   /**
-   *  Constructor for the ProjectListContext object
+   * Constructor for the ProjectListContext object
    *
-   *@param  inEnv     Description of the Parameter
-   *@param  bindings  Description of the Parameter
+   * @param inEnv    Description of the Parameter
+   * @param bindings Description of the Parameter
    */
   private ProjectListContext(Hashtable inEnv, Hashtable bindings) {
     this(inEnv);
@@ -48,9 +51,9 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   private ProjectListContext cloneCtx() {
     return new ProjectListContext(myEnv, bindings);
@@ -58,18 +61,19 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Utility method for processing composite/compound name.
+   * Utility method for processing composite/compound name.
    *
-   *@param  name                 The non-null composite or compound name to
-   *      process.
-   *@return                      The non-null string name in this namespace to
-   *      be processed.
-   *@exception  NamingException  Description of the Exception
+   * @param name The non-null composite or compound name to
+   *             process.
+   * @return The non-null string name in this namespace to
+   *         be processed.
+   * @throws NamingException Description of the Exception
    */
   protected String getMyComponents(Name name) throws NamingException {
     if (name instanceof CompositeName) {
       if (name.size() > 1) {
-        throw new InvalidNameException(name.toString() +
+        throw new InvalidNameException(
+            name.toString() +
             " has more components than namespace can handle");
       }
       return name.get(0);
@@ -81,11 +85,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Object lookup(String name) throws NamingException {
     return lookup(new CompositeName(name));
@@ -93,11 +97,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Object lookup(Name name) throws NamingException {
     if (name.isEmpty()) {
@@ -119,11 +123,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@param  obj                  Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @param obj  Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void bind(String name, Object obj) throws NamingException {
     bind(new CompositeName(name), obj);
@@ -131,11 +135,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@param  obj                  Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @param obj  Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void bind(Name name, Object obj) throws NamingException {
     if (name.isEmpty()) {
@@ -147,8 +151,7 @@ public class ProjectListContext implements Context {
 
     // Find object in internal hash table
     if (bindings.get(nm) != null) {
-      throw new NameAlreadyBoundException(
-          "Use rebind to override");
+      throw new NameAlreadyBoundException("Use rebind to override");
     }
 
     // Add object to internal hash table
@@ -157,11 +160,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@param  obj                  Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @param obj  Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void rebind(String name, Object obj) throws NamingException {
     rebind(new CompositeName(name), obj);
@@ -169,11 +172,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@param  obj                  Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @param obj  Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void rebind(Name name, Object obj) throws NamingException {
     if (name.isEmpty()) {
@@ -189,10 +192,10 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void unbind(String name) throws NamingException {
     unbind(new CompositeName(name));
@@ -200,10 +203,10 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void unbind(Name name) throws NamingException {
     if (name.isEmpty()) {
@@ -219,11 +222,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  oldname              Description of the Parameter
-   *@param  newname              Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param oldname Description of the Parameter
+   * @param newname Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void rename(String oldname, String newname) throws NamingException {
     rename(new CompositeName(oldname), new CompositeName(newname));
@@ -231,11 +234,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  oldname              Description of the Parameter
-   *@param  newname              Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param oldname Description of the Parameter
+   * @param newname Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void rename(Name oldname, Name newname) throws NamingException {
     if (oldname.isEmpty() || newname.isEmpty()) {
@@ -248,7 +251,8 @@ public class ProjectListContext implements Context {
 
     // Check if new name exists
     if (bindings.get(newnm) != null) {
-      throw new NameAlreadyBoundException(newname.toString() +
+      throw new NameAlreadyBoundException(
+          newname.toString() +
           " is already bound");
     }
 
@@ -263,11 +267,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public NamingEnumeration list(String name) throws NamingException {
     return list(new CompositeName(name));
@@ -275,11 +279,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public NamingEnumeration list(Name name) throws NamingException {
     if (name.isEmpty()) {
@@ -301,11 +305,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public NamingEnumeration listBindings(String name) throws NamingException {
     return listBindings(name);
@@ -313,11 +317,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public NamingEnumeration listBindings(Name name) throws NamingException {
     if (name.isEmpty()) {
@@ -339,10 +343,10 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void destroySubcontext(String name) throws NamingException {
     destroySubcontext(new CompositeName(name));
@@ -350,10 +354,10 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @throws NamingException Description of the Exception
    */
   public void destroySubcontext(Name name) throws NamingException {
     throw new OperationNotSupportedException(
@@ -362,11 +366,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Context createSubcontext(String name) throws NamingException {
     return createSubcontext(new CompositeName(name));
@@ -374,11 +378,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Context createSubcontext(Name name) throws NamingException {
     throw new OperationNotSupportedException(
@@ -387,11 +391,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Object lookupLink(String name) throws NamingException {
     return lookupLink(new CompositeName(name));
@@ -399,11 +403,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Object lookupLink(Name name) throws NamingException {
     // This flat context does not treat links specially
@@ -412,11 +416,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Gets the nameParser attribute of the ProjectListContext object
+   * Gets the nameParser attribute of the ProjectListContext object
    *
-   *@param  name                 Description of the Parameter
-   *@return                      The nameParser value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return The nameParser value
+   * @throws NamingException Description of the Exception
    */
   public NameParser getNameParser(String name) throws NamingException {
     return getNameParser(new CompositeName(name));
@@ -424,11 +428,11 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Gets the nameParser attribute of the ProjectListContext object
+   * Gets the nameParser attribute of the ProjectListContext object
    *
-   *@param  name                 Description of the Parameter
-   *@return                      The nameParser value
-   *@exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return The nameParser value
+   * @throws NamingException Description of the Exception
    */
   public NameParser getNameParser(Name name) throws NamingException {
     // Do lookup to verify name exists
@@ -441,31 +445,32 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@param  prefix               Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name   Description of the Parameter
+   * @param prefix Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public String composeName(String name, String prefix)
-       throws NamingException {
-    Name result = composeName(new CompositeName(name),
+      throws NamingException {
+    Name result = composeName(
+        new CompositeName(name),
         new CompositeName(prefix));
     return result.toString();
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name                 Description of the Parameter
-   *@param  prefix               Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param name   Description of the Parameter
+   * @param prefix Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Name composeName(Name name, Name prefix)
-       throws NamingException {
+      throws NamingException {
     Name result = (Name) (prefix.clone());
     result.addAll(name);
     return result;
@@ -473,18 +478,18 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Adds a feature to the ToEnvironment attribute of the ProjectListContext
-   *  object
+   * Adds a feature to the ToEnvironment attribute of the ProjectListContext
+   * object
    *
-   *@param  propName             The feature to be added to the ToEnvironment
-   *      attribute
-   *@param  propVal              The feature to be added to the ToEnvironment
-   *      attribute
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param propName The feature to be added to the ToEnvironment
+   *                 attribute
+   * @param propVal  The feature to be added to the ToEnvironment
+   *                 attribute
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Object addToEnvironment(String propName, Object propVal)
-       throws NamingException {
+      throws NamingException {
     if (myEnv == null) {
       myEnv = new Hashtable(5, 0.75f);
     }
@@ -493,14 +498,14 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  propName             Description of the Parameter
-   *@return                      Description of the Return Value
-   *@exception  NamingException  Description of the Exception
+   * @param propName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public Object removeFromEnvironment(String propName)
-       throws NamingException {
+      throws NamingException {
     if (myEnv == null) {
       return null;
     }
@@ -510,10 +515,10 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Gets the environment attribute of the ProjectListContext object
+   * Gets the environment attribute of the ProjectListContext object
    *
-   *@return                      The environment value
-   *@exception  NamingException  Description of the Exception
+   * @return The environment value
+   * @throws NamingException Description of the Exception
    */
   public Hashtable getEnvironment() throws NamingException {
     if (myEnv == null) {
@@ -526,10 +531,10 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Gets the nameInNamespace attribute of the ProjectListContext object
+   * Gets the nameInNamespace attribute of the ProjectListContext object
    *
-   *@return                      The nameInNamespace value
-   *@exception  NamingException  Description of the Exception
+   * @return The nameInNamespace value
+   * @throws NamingException Description of the Exception
    */
   public String getNameInNamespace() throws NamingException {
     return "";
@@ -537,9 +542,9 @@ public class ProjectListContext implements Context {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  NamingException  Description of the Exception
+   * @throws NamingException Description of the Exception
    */
   public void close() throws NamingException {
   }
@@ -547,20 +552,20 @@ public class ProjectListContext implements Context {
 
   // Class for enumerating name/class pairs
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     matt rajkowski
-   *@created    July 17, 2004
-   *@version    $Id$
+   * @author matt rajkowski
+   * @version $Id$
+   * @created July 17, 2004
    */
   class ListOfNames implements NamingEnumeration {
     protected Enumeration names;
 
 
     /**
-     *  Constructor for the ListOfNames object
+     * Constructor for the ListOfNames object
      *
-     *@param  names  Description of the Parameter
+     * @param names Description of the Parameter
      */
     ListOfNames(Enumeration names) {
       this.names = names;
@@ -568,9 +573,9 @@ public class ProjectListContext implements Context {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public boolean hasMoreElements() {
       try {
@@ -582,10 +587,10 @@ public class ProjectListContext implements Context {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@return                      Description of the Return Value
-     *@exception  NamingException  Description of the Exception
+     * @return Description of the Return Value
+     * @throws NamingException Description of the Exception
      */
     public boolean hasMore() throws NamingException {
       return names.hasMoreElements();
@@ -593,10 +598,10 @@ public class ProjectListContext implements Context {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@return                      Description of the Return Value
-     *@exception  NamingException  Description of the Exception
+     * @return Description of the Return Value
+     * @throws NamingException Description of the Exception
      */
     public Object next() throws NamingException {
       String name = (String) names.nextElement();
@@ -606,9 +611,9 @@ public class ProjectListContext implements Context {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public Object nextElement() {
       try {
@@ -620,7 +625,7 @@ public class ProjectListContext implements Context {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      */
     public void close() {
     }
@@ -629,18 +634,18 @@ public class ProjectListContext implements Context {
 
   // Class for enumerating bindings
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     matt rajkowski
-   *@created    July 17, 2004
-   *@version    $Id$
+   * @author matt rajkowski
+   * @version $Id$
+   * @created July 17, 2004
    */
   class ListOfBindings extends ListOfNames {
 
     /**
-     *  Constructor for the ListOfBindings object
+     * Constructor for the ListOfBindings object
      *
-     *@param  names  Description of the Parameter
+     * @param names Description of the Parameter
      */
     ListOfBindings(Enumeration names) {
       super(names);
@@ -648,10 +653,10 @@ public class ProjectListContext implements Context {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@return                      Description of the Return Value
-     *@exception  NamingException  Description of the Exception
+     * @return Description of the Return Value
+     * @throws NamingException Description of the Exception
      */
     public Object next() throws NamingException {
       String name = (String) names.nextElement();

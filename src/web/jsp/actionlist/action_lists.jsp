@@ -47,7 +47,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <dhv:label name="myitems.actionLists">Action Lists</dhv:label>
 </td>
 </tr>
@@ -57,7 +57,7 @@
 <a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('reset=true&filters=all|mycontacts|accountcontacts');"><dhv:label name="actionList.addAnActionList">Add an Action List</dhv:label></a><br>
 </dhv:permission>
 <br>
-<table width="100%" border="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <form name="listView" method="post" action="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">
     <td nowrap>
@@ -69,7 +69,7 @@
       <input type="hidden" name="viewUserId" id="viewUserId" value="<%= (viewUser != null && !"".equals(viewUser)? viewUser:""+User.getUserRecord().getId()) %>" />
       <% UserList childList = User.getUserRecord().getChildUsers();
         if (childList != null && childList.size() > 0) { %>
-        <input type="text" disabled="true" size="10" value="<dhv:username id="<%= ActionLists.getOwner() %>" lastFirst="true" />"/>
+        <input type="text" disabled="true" size="15" value="<dhv:username id="<%= ActionLists.getOwner() %>" lastFirst="true" />"/>
         [<a href="javascript:selectUser(this.form);"><dhv:label name="actionList.changeUser">Change User</dhv:label></a>]
         [<a href="javascript:resetUser(this.form);"><dhv:label name="actionList.resetUser">Reset User</dhv:label></a>]
         <%--

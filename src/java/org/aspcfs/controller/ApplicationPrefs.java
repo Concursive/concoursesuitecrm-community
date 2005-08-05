@@ -21,6 +21,7 @@ import org.aspcfs.utils.Dictionary;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.jcrontab.Crontab;
+import org.quartz.Scheduler;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -33,13 +34,13 @@ import java.util.Properties;
 import java.util.prefs.Preferences;
 
 /**
- *  Loads and saves the build.properties file for application settings; each
- *  application instance can have its own properties on the same server
+ * Loads and saves the build.properties file for application settings; each
+ * application instance can have its own properties on the same server
  *
- *@author     matt rajkowski
- *@created    August 27, 2003
- *@version    $Id: ApplicationPrefs.java,v 1.1.2.2 2003/08/28 21:03:45
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ApplicationPrefs.java,v 1.1.2.2 2003/08/28 21:03:45
+ *          mrajkowski Exp $
+ * @created August 27, 2003
  */
 public class ApplicationPrefs {
 
@@ -53,20 +54,22 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Constructor for the ApplicationPrefs object
+   * Constructor for the ApplicationPrefs object
    */
-  public ApplicationPrefs() { }
+  public ApplicationPrefs() {
+  }
 
 
   /**
-   *  Constructor for the ApplicationPrefs object
+   * Constructor for the ApplicationPrefs object
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public ApplicationPrefs(ServletContext context) {
     String dir = context.getRealPath("/");
     try {
-      Preferences prefs = Preferences.userNodeForPackage(org.aspcfs.modules.setup.utils.Prefs.class);
+      Preferences prefs = Preferences.userNodeForPackage(
+          org.aspcfs.modules.setup.utils.Prefs.class);
       // Check "dir" prefs first, based on the installed directory of this webapp
       String fileLibrary = prefs.get(dir, null);
       if (fileLibrary == null) {
@@ -86,9 +89,11 @@ public class ApplicationPrefs {
           }
         }
       }
-      context.setAttribute("SiteCode", prefs.get("cfs.gatekeeper.sitecode", "cfs"));
+      context.setAttribute(
+          "SiteCode", prefs.get("cfs.gatekeeper.sitecode", "cfs"));
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ApplicationPrefs-> Using file library at: " + fileLibrary);
+        System.out.println(
+            "ApplicationPrefs-> Using file library at: " + fileLibrary);
       }
       // Now load the default properties
       if (fileLibrary != null) {
@@ -105,9 +110,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Constructor for the ApplicationPrefs object
+   * Constructor for the ApplicationPrefs object
    *
-   *@param  filename  Description of the Parameter
+   * @param filename Description of the Parameter
    */
   public ApplicationPrefs(String filename) {
     load(filename);
@@ -115,9 +120,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Sets the filename attribute of the ApplicationPrefs object
+   * Sets the filename attribute of the ApplicationPrefs object
    *
-   *@param  tmp  The new filename value
+   * @param tmp The new filename value
    */
   public void setFilename(String tmp) {
     this.filename = tmp;
@@ -125,9 +130,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Gets the filename attribute of the ApplicationPrefs object
+   * Gets the filename attribute of the ApplicationPrefs object
    *
-   *@return    The filename value
+   * @return The filename value
    */
   public String getFilename() {
     return filename;
@@ -135,9 +140,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Gets the prefs attribute of the ApplicationPrefs object
+   * Gets the prefs attribute of the ApplicationPrefs object
    *
-   *@return    The prefs value
+   * @return The prefs value
    */
   public Map getPrefs() {
     return prefs;
@@ -145,9 +150,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Gets the localizationPrefs attribute of the ApplicationPrefs object
+   * Gets the localizationPrefs attribute of the ApplicationPrefs object
    *
-   *@return    The localizationPrefs value
+   * @return The localizationPrefs value
    */
   public Map getLocalizationPrefs() {
     return localizationPrefs;
@@ -155,9 +160,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  filename  Description of the Parameter
+   * @param filename Description of the Parameter
    */
   public void load(String filename) {
     if (System.getProperty("DEBUG") != null) {
@@ -193,10 +198,10 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  param  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param param Description of the Parameter
+   * @return Description of the Return Value
    */
   public String get(String param) {
     return (String) prefs.get(param);
@@ -204,10 +209,10 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  param  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param param Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean has(String param) {
     return (prefs.containsKey(param));
@@ -215,7 +220,7 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void clear() {
     prefs.clear();
@@ -223,10 +228,10 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  param  Description of the Parameter
-   *@param  value  Description of the Parameter
+   * @param param Description of the Parameter
+   * @param value Description of the Parameter
    */
   public void add(String param, String value) {
     if (param != null) {
@@ -240,9 +245,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean save() {
     if (filename != null) {
@@ -253,15 +258,16 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Saves the preferences to a file to be reloaded
+   * Saves the preferences to a file to be reloaded
    *
-   *@param  filename  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param filename Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean save(String filename) {
     try {
       BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-      out.write(GENERATED_MESSAGE + " on " + new java.util.Date() + " ###" + ls);
+      out.write(
+          GENERATED_MESSAGE + " on " + new java.util.Date() + " ###" + ls);
       add("VERSION", ApplicationVersion.VERSION);
       add("APP_VERSION", ApplicationVersion.APP_VERSION);
       add("DB_VERSION", ApplicationVersion.DB_VERSION);
@@ -284,10 +290,10 @@ public class ApplicationPrefs {
 
 
   /**
-   *  When preferences are loaded, some values are not easily accessible so they
-   *  are stored in the System context.
+   * When preferences are loaded, some values are not easily accessible so they
+   * are stored in the System context.
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void populateContext(ServletContext context) {
     //Configure debug mode
@@ -302,12 +308,14 @@ public class ApplicationPrefs {
     }
     //Verify the WEB-INF if set
     if (this.has("WEB-INF")) {
-      if (!this.get("WEB-INF").equals(context.getRealPath("/") + "WEB-INF" + fs)) {
+      if (!this.get("WEB-INF").equals(
+          context.getRealPath("/") + "WEB-INF" + fs)) {
         save();
       }
     }
     //Define the ConnectionPool, else defaults from the ContextListener will be used
-    ConnectionPool cp = (ConnectionPool) context.getAttribute("ConnectionPool");
+    ConnectionPool cp = (ConnectionPool) context.getAttribute(
+        "ConnectionPool");
     if (cp != null) {
       if (this.has("CONNECTION_POOL.DEBUG")) {
         cp.setDebug(this.get("CONNECTION_POOL.DEBUG"));
@@ -322,17 +330,21 @@ public class ApplicationPrefs {
         cp.setMaxConnections(this.get("CONNECTION_POOL.MAX_CONNECTIONS"));
       }
       if (this.has("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS")) {
-        cp.setMaxIdleTimeSeconds(this.get("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS"));
+        cp.setMaxIdleTimeSeconds(
+            this.get("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS"));
       }
       if (this.has("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS")) {
-        cp.setMaxDeadTimeSeconds(this.get("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS"));
+        cp.setMaxDeadTimeSeconds(
+            this.get("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS"));
       }
     }
     // Tell system if proxy is set
     if (this.has("PROXYSERVER") && "true".equals(this.get("PROXYSERVER"))) {
       System.getProperties().put("proxySet", "true");
-      System.getProperties().put("http.proxyHost", this.get("PROXYSERVER.HOST"));
-      System.getProperties().put("http.proxyPort", this.get("PROXYSERVER.PORT"));
+      System.getProperties().put(
+          "http.proxyHost", this.get("PROXYSERVER.HOST"));
+      System.getProperties().put(
+          "http.proxyPort", this.get("PROXYSERVER.PORT"));
     } else {
       System.getProperties().put("proxySet", "false");
     }
@@ -367,13 +379,16 @@ public class ApplicationPrefs {
     if (locale[0] != null) {
       System.setProperty("LANGUAGE", locale[0]);
     }
-    if (locale[1] != null) {
-      System.setProperty("COUNTRY", locale[1]);
+    if (locale.length > 1) {
+      if (locale[1] != null) {
+        System.setProperty("COUNTRY", locale[1]);
+      }
     }
     //Define whether the app requires SSL for browser clients
     addParameter(context, "ForceSSL", this.get("FORCESSL"), "false");
     //Define the developer's debug code
-    addParameter(context, "GlobalPWInfo", this.get("WEBSERVER.PASSWORD"), "#notspecified");
+    addParameter(
+        context, "GlobalPWInfo", this.get("WEBSERVER.PASSWORD"), "#notspecified");
     //Define the web server operation mode
     addParameter(context, "WEBSERVER.ASPMODE", this.get("WEBSERVER.ASPMODE"));
     //Define the mail server to be used
@@ -386,15 +401,23 @@ public class ApplicationPrefs {
       String edition = null;
       String crc = null;
       try {
-        File zlib = new File(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
-        File input = new File(this.get("FILELIBRARY") + "init" + fs + "input.txt");
+        File zlib = new File(
+            this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
+        File input = new File(
+            this.get("FILELIBRARY") + "init" + fs + "input.txt");
         if (zlib.exists() && input.exists()) {
           //If key and license exists, read in and parse
-          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
-          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(this.get("FILELIBRARY") + "init" + fs + "input.txt")));
+          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
+              this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
+          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
+              org.aspcfs.utils.PrivateString.decrypt(
+                  key, StringUtils.loadText(
+                      this.get("FILELIBRARY") + "init" + fs + "input.txt")));
           //The edition will be shown
-          edition = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("edition"));
-          crc = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+          edition = org.aspcfs.utils.XMLUtils.getNodeText(
+              xml.getFirstChild("edition"));
+          crc = org.aspcfs.utils.XMLUtils.getNodeText(
+              xml.getFirstChild("text2"));
           if (edition != null) {
             context.setAttribute("APP_TEXT", edition);
             if ("-1".equals(crc.substring(7))) {
@@ -404,7 +427,8 @@ public class ApplicationPrefs {
             }
           }
           //The licensed organization will be shown
-          String organization = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("company"));
+          String organization = org.aspcfs.utils.XMLUtils.getNodeText(
+              xml.getFirstChild("company"));
           if (organization != null) {
             context.setAttribute("APP_ORGANIZATION", organization);
           }
@@ -426,10 +450,12 @@ public class ApplicationPrefs {
     // END DHV CODE ONLY
 
     //initialize the import manager
-    ImportManager importManager = (ImportManager) context.getAttribute("ImportManager");
+    ImportManager importManager = (ImportManager) context.getAttribute(
+        "ImportManager");
     if (importManager == null) {
       if (this.has("IMPORT_QUEUE_MAX")) {
-        importManager = new ImportManager(cp, Integer.parseInt(this.get("IMPORT_QUEUE_MAX")));
+        importManager = new ImportManager(
+            cp, Integer.parseInt(this.get("IMPORT_QUEUE_MAX")));
         context.setAttribute("ImportManager", importManager);
       } else {
         importManager = new ImportManager(cp, 1);
@@ -445,22 +471,39 @@ public class ApplicationPrefs {
           System.out.println("ApplicationPrefs-> Starting CRON");
           crontab = Crontab.getInstance();
           Properties jcronProperties = new Properties();
-          jcronProperties.setProperty("org.jcrontab.Crontab.refreshFrequency", "3");
+          jcronProperties.setProperty(
+              "org.jcrontab.Crontab.refreshFrequency", "3");
           //Specify the cron items are in the gatekeeper database
-          jcronProperties.setProperty("org.jcrontab.data.datasource", "org.aspcfs.jcrontab.datasource.CFSDatasource");
-          jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.driver", this.get("GATEKEEPER.DRIVER"));
-          jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.url", this.get("GATEKEEPER.URL"));
-          jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.username", this.get("GATEKEEPER.USER"));
-          jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.password", this.get("GATEKEEPER.PASSWORD"));
-          jcronProperties.setProperty("org.jcrontab.path.DefaultFilePath", StringUtils.toString(this.get("FILELIBRARY")));
-          jcronProperties.setProperty("org.jcrontab.data.SystemLanguage", StringUtils.toString(this.get("SYSTEM.LANGUAGE")));
+          jcronProperties.setProperty(
+              "org.jcrontab.data.datasource", "org.aspcfs.jcrontab.datasource.CFSDatasource");
+          jcronProperties.setProperty(
+              "org.jcrontab.data.GenericSQLSource.driver", this.get(
+                  "GATEKEEPER.DRIVER"));
+          jcronProperties.setProperty(
+              "org.jcrontab.data.GenericSQLSource.url", this.get(
+                  "GATEKEEPER.URL"));
+          jcronProperties.setProperty(
+              "org.jcrontab.data.GenericSQLSource.username", this.get(
+                  "GATEKEEPER.USER"));
+          jcronProperties.setProperty(
+              "org.jcrontab.data.GenericSQLSource.password", this.get(
+                  "GATEKEEPER.PASSWORD"));
+          jcronProperties.setProperty(
+              "org.jcrontab.path.DefaultFilePath", StringUtils.toString(
+                  this.get("FILELIBRARY")));
+          jcronProperties.setProperty(
+              "org.jcrontab.data.SystemLanguage", StringUtils.toString(
+                  this.get("SYSTEM.LANGUAGE")));
           if (this.has("WEBSERVER.URL")) {
-            jcronProperties.setProperty("org.jcrontab.path.WebServerUrl", this.get("WEBSERVER.URL"));
+            jcronProperties.setProperty(
+                "org.jcrontab.path.WebServerUrl", this.get("WEBSERVER.URL"));
           } else {
-            jcronProperties.setProperty("org.jcrontab.path.WebServerUrl", "127.0.0.1");
+            jcronProperties.setProperty(
+                "org.jcrontab.path.WebServerUrl", "127.0.0.1");
           }
           //jcron logger -- TODO: implement a database logger
-          jcronProperties.setProperty("org.jcrontab.log.Logger", "org.jcrontab.log.DebugLogger");
+          jcronProperties.setProperty(
+              "org.jcrontab.log.Logger", "org.jcrontab.log.DebugLogger");
           crontab.setConnectionPool(cp);
           crontab.setServletContext(context);
           crontab.init(jcronProperties);
@@ -468,17 +511,38 @@ public class ApplicationPrefs {
         } catch (Exception e) {
           e.printStackTrace(System.err);
         }
+        // Scheduler -- to replace cron
+        Scheduler scheduler = (Scheduler) context.getAttribute("Scheduler");
+        if (scheduler != null) {
+          // Initialize
+          try {
+            scheduler.getContext().setAllowsTransientData(true);
+            scheduler.getContext().put(
+                "ConnectionPool", context.getAttribute("ConnectionPool"));
+            scheduler.getContext().put("ApplicationPrefs", this);
+            scheduler.getContext().put(
+                "SystemStatus", context.getAttribute("SystemStatus"));
+            scheduler.getContext().put(
+                "ApplicationPath", context.getRealPath("/"));
+            scheduler.start();
+            ScheduledJobs.addJobs(scheduler);
+          } catch (Exception e) {
+            e.printStackTrace(System.out);
+            System.out.println(
+                "ApplicationPrefs-> Scheduler Error: " + e.getMessage());
+          }
+        }
       }
     }
   }
 
 
   /**
-   *  Adds a feature to the Parameter attribute of the InitHook object
+   * Adds a feature to the Parameter attribute of the InitHook object
    *
-   *@param  context  The feature to be added to the Parameter attribute
-   *@param  param    The feature to be added to the Parameter attribute
-   *@param  value    The feature to be added to the Parameter attribute
+   * @param context The feature to be added to the Parameter attribute
+   * @param param   The feature to be added to the Parameter attribute
+   * @param value   The feature to be added to the Parameter attribute
    */
   private void addParameter(ServletContext context, String param, String value) {
     addParameter(context, param, value, null);
@@ -486,12 +550,12 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Adds a feature to the Parameter attribute of the InitHook object
+   * Adds a feature to the Parameter attribute of the InitHook object
    *
-   *@param  context       The feature to be added to the Parameter attribute
-   *@param  param         The feature to be added to the Parameter attribute
-   *@param  value         The feature to be added to the Parameter attribute
-   *@param  defaultValue  The feature to be added to the Parameter attribute
+   * @param context      The feature to be added to the Parameter attribute
+   * @param param        The feature to be added to the Parameter attribute
+   * @param value        The feature to be added to the Parameter attribute
+   * @param defaultValue The feature to be added to the Parameter attribute
    */
   private void addParameter(ServletContext context, String param, String value, String defaultValue) {
     if (value != null) {
@@ -507,14 +571,15 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Gets the pref attribute of the ApplicationPrefs class
+   * Gets the pref attribute of the ApplicationPrefs class
    *
-   *@param  context  Description of the Parameter
-   *@param  param    Description of the Parameter
-   *@return          The pref value
+   * @param context Description of the Parameter
+   * @param param   Description of the Parameter
+   * @return The pref value
    */
   public static String getPref(ServletContext context, String param) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute(
+        "applicationPrefs");
     if (prefs != null) {
       return prefs.get(param);
     } else {
@@ -524,15 +589,16 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Save a name/value pair to the Java Preferences store
+   * Save a name/value pair to the Java Preferences store
    *
-   *@param  name   Description of the Parameter
-   *@param  value  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param name  Description of the Parameter
+   * @param value Description of the Parameter
+   * @return Description of the Return Value
    */
   private static boolean savePref(String name, String value) {
     try {
-      Preferences prefs = Preferences.userNodeForPackage(org.aspcfs.modules.setup.utils.Prefs.class);
+      Preferences prefs = Preferences.userNodeForPackage(
+          org.aspcfs.modules.setup.utils.Prefs.class);
       prefs.put(name, value);
       prefs.flush();
       return true;
@@ -543,9 +609,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Shows all of the preferences that have been cached
+   * Shows all of the preferences that have been cached
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     StringBuffer sb = new StringBuffer();
@@ -560,9 +626,9 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Determines if this system is upgradeable (not an ASP)
+   * Determines if this system is upgradeable (not an ASP)
    *
-   *@return    The upgradeable value
+   * @return The upgradeable value
    */
   public boolean isUpgradeable() {
     if ("true".equals(this.get("WEBSERVER.ASPMODE"))) {
@@ -573,40 +639,42 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void loadLocalizationPrefs(ServletContext context) {
     localizationPrefs.clear();
     String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "languages" + fs;
     if (System.getProperty("DEBUG") != null) {
-			System.out.println("ApplicationPrefs-> Loading localization preferences");
-		}
-		try {
-				//Create a dictionary with the default language
-				Dictionary dictionary = new Dictionary(languagePath, "en_US");
-				String language = this.get("SYSTEM.LANGUAGE");
-				if (language != null) {
-					if (!"en_US".equals(language)) {
-						// Override the text with a selected language
-						dictionary.load(languagePath, language);
-					}
-				}
-				this.localizationPrefs = dictionary.getLocalizationPrefs();
-		} catch (Exception e) {
+      System.out.println(
+          "ApplicationPrefs-> Loading localization preferences");
+    }
+    try {
+      //Create a dictionary with the default language
+      Dictionary dictionary = new Dictionary(languagePath, "en_US");
+      String language = this.get("SYSTEM.LANGUAGE");
+      if (language != null) {
+        if (!"en_US".equals(language)) {
+          // Override the text with a selected language
+          dictionary.load(languagePath, language);
+        }
+      }
+      this.localizationPrefs = dictionary.getLocalizationPrefs();
+    } catch (Exception e) {
       e.printStackTrace(System.out);
-      System.out.println("ApplicationPrefs-> Preferences Error: " + e.getMessage());
+      System.out.println(
+          "ApplicationPrefs-> Preferences Error: " + e.getMessage());
     }
   }
 
 
   /**
-   *  Gets the label attribute of the ApplicationPrefs object
+   * Gets the label attribute of the ApplicationPrefs object
    *
-   *@param  section    Description of the Parameter
-   *@param  parameter  Description of the Parameter
-   *@return            The label value
+   * @param section   Description of the Parameter
+   * @param parameter Description of the Parameter
+   * @return The label value
    */
   public String getLabel(String section, String parameter) {
     return getValue(section, parameter, "value");
@@ -619,19 +687,20 @@ public class ApplicationPrefs {
 
 
   /**
-   *  Gets the value attribute of the ApplicationPrefs object
+   * Gets the value attribute of the ApplicationPrefs object
    *
-   *@param  parameter  Description of the Parameter
-   *@param  tagName    Description of the Parameter
-   *@param  section    Description of the Parameter
-   *@return            The value value
+   * @param parameter Description of the Parameter
+   * @param tagName   Description of the Parameter
+   * @param section   Description of the Parameter
+   * @return The value value
    */
   public String getValue(String section, String parameter, String tagName) {
     Map prefGroup = (Map) localizationPrefs.get(section);
     if (prefGroup != null) {
       Node param = (Node) prefGroup.get(parameter);
       if (param != null) {
-        return XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) param, tagName));
+        return XMLUtils.getNodeText(
+            XMLUtils.getFirstChild((Element) param, tagName));
       }
     }
     return null;

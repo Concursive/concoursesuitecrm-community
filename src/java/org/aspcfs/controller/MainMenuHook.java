@@ -15,30 +15,40 @@
  */
 package org.aspcfs.controller;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.servlets.ControllerMainMenuHook;
 import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
- *  When a template requiring navigation is requested, this class generates the
- *  HTML for the navigation. <p>
+ * When a template requiring navigation is requested, this class generates the
+ * HTML for the navigation. <p>
+ * <p/>
+ * - 3 types of menus are generated: a tabbed version, a graphic version, and a
+ * text version. Each is placed in the request for later retrieval.<br>
+ * - The configuration is stored in XML
  *
- *  - 3 types of menus are generated: a tabbed version, a graphic version, and a
- *  text version. Each is placed in the request for later retrieval.<br>
- *  - The configuration is stored in XML
- *
- *@author     mrajkowski
- *@created    July 12, 2001
- *@version    $Id: MainMenuHook.java,v 1.15.90.1 2004/08/05 21:23:18 ananth Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: MainMenuHook.java,v 1.15.90.1 2004/08/05 21:23:18 ananth Exp
+ *          $
+ * @created July 12, 2001
  */
 public class MainMenuHook implements ControllerMainMenuHook {
 
@@ -48,18 +58,20 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Called only once by the servlet controller during initialization,
-   *  processes the config parameters
+   * Called only once by the servlet controller during initialization,
+   * processes the config parameters
    *
-   *@param  config  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since          1.1
+   * @param config Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeControllerMainMenu(ServletConfig config) {
     context = config.getServletContext();
     menuItems = new ArrayList();
     if (config.getInitParameter("ModuleConfig") != null) {
-      file = new File(context.getRealPath("/WEB-INF/" + config.getInitParameter("ModuleConfig")));
+      file = new File(
+          context.getRealPath(
+              "/WEB-INF/" + config.getInitParameter("ModuleConfig")));
       load();
     }
     return ("");
@@ -67,7 +79,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void reload() {
     if (menuItems != null) {
@@ -78,9 +90,9 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Reads in the Menus to be used from the XML file
+   * Reads in the Menus to be used from the XML file
    *
-   *@since    1.1
+   * @since 1.1
    */
   public void load() {
     if (System.getProperty("DEBUG") != null) {
@@ -99,12 +111,12 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Generate the module specific information, including HTML page attributes,
-   *  the shared main menu, and submenus, based on permissions.
+   * Generate the module specific information, including HTML page attributes,
+   * the shared main menu, and submenus, based on permissions.
    *
-   *@param  request     Description of Parameter
-   *@param  actionPath  Description of Parameter
-   *@since              1.1
+   * @param request    Description of Parameter
+   * @param actionPath Description of Parameter
+   * @since 1.1
    */
   public void generateMenu(HttpServletRequest request, String actionPath) {
     UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
@@ -112,10 +124,12 @@ public class MainMenuHook implements ControllerMainMenuHook {
       return;
     }
     //Use the connection element and system status to access the cached permissions table
-    ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
+    ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute(
+        "ConnectionElement");
     SystemStatus systemStatus = null;
     if (ce != null) {
-      systemStatus = (SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(ce.getUrl());
+      systemStatus = (SystemStatus) ((Hashtable) context.getAttribute(
+          "SystemStatus")).get(ce.getUrl());
     }
     ModuleBean thisModule = (ModuleBean) request.getAttribute("ModuleBean");
     if (thisModule == null) {
@@ -134,18 +148,24 @@ public class MainMenuHook implements ControllerMainMenuHook {
     Iterator menuItemsList = menuItems.iterator();
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem) menuItemsList.next();
-      if ("".equals(thisMenu.getPermission()) || (systemStatus != null && systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission()))) {
+      if ("".equals(thisMenu.getPermission()) || (systemStatus != null && systemStatus.hasPermission(
+          thisUser.getUserId(), thisMenu.getPermission()))) {
         //Check if the system status has a preference for this menu
         String pageTitle = null;
         String shortHtml = null;
         String longHtml = null;
         if (systemStatus != null) {
-          pageTitle = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "page_title");
-          shortHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "menu_title");
-          longHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "page_title");
+          pageTitle = systemStatus.getMenuProperty(
+              thisMenu.getPageTitle(), "page_title");
+          shortHtml = systemStatus.getMenuProperty(
+              thisMenu.getPageTitle(), "menu_title");
+          longHtml = systemStatus.getMenuProperty(
+              thisMenu.getPageTitle(), "page_title");
         }
-        if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(thisModule.getMenuKey())) ||
-            (thisModule.getMenuKey() == null && thisMenu.hasActionName(actionPath))) {
+        if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(
+            thisModule.getMenuKey())) ||
+            (thisModule.getMenuKey() == null && thisMenu.hasActionName(
+                actionPath))) {
           //The user is on this link/module
           if (pageTitle != null) {
             thisModule.setName(pageTitle);
@@ -153,7 +173,8 @@ public class MainMenuHook implements ControllerMainMenuHook {
             thisModule.setName(thisMenu.getPageTitle());
           }
           //Set the on state of the menu
-          menuTops.append("<th class=\"mtab-ls\"><img border=\"0\" src=\"images/blank.gif\" /></th><th class=\"mtab-rs\"><img border=\"0\" src=\"images/blank.gif\" /></th>");
+          menuTops.append(
+              "<th class=\"mtab-ls\"><img border=\"0\" src=\"images/blank.gif\" /></th><th class=\"mtab-rs\"><img border=\"0\" src=\"images/blank.gif\" /></th>");
           menu.append("<th colspan=\"2\" class=\"menutabs-th\" nowrap>");
           menu.append("<a href=\"" + thisMenu.getLink() + "\">");
           if (shortHtml != null) {
@@ -163,11 +184,14 @@ public class MainMenuHook implements ControllerMainMenuHook {
           }
           menu.append("</a>");
           menu.append("</th>");
-          graphicMenu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
+          graphicMenu.append(
+              "<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
           if (longHtml != null) {
-            smallMenuList.add("<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + longHtml + "</a>");
+            smallMenuList.add(
+                "<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + longHtml + "</a>");
           } else {
-            smallMenuList.add("<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+            smallMenuList.add(
+                "<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
           }
           //Build the submenu
           Iterator j = thisMenu.getSubmenuItems().iterator();
@@ -183,11 +207,13 @@ public class MainMenuHook implements ControllerMainMenuHook {
           }
         } else {
           //The user is not on this link, set the off state of the menu
-          menuTops.append("<td class=\"mtab-l\"><img border=\"0\" src=\"images/blank.gif\" /></td><td class=\"mtab-r\"><img border=\"0\" src=\"images/blank.gif\" /></td>");
+          menuTops.append(
+              "<td class=\"mtab-l\"><img border=\"0\" src=\"images/blank.gif\" /></td><td class=\"mtab-r\"><img border=\"0\" src=\"images/blank.gif\" /></td>");
           menu.append("<td class=\"menutabs-td\" colspan=\"2\" nowrap");
           if (thisMenu.getShortHtmlRollover()) {
             menu.append(" class=\"menutabUnselectedLinkOff\"");
-            menu.append(" onmouseover=\"swapClass(this,'menutabUnselectedLinkOn')\" onmouseout=\"swapClass(this,'menutabUnselectedLinkOff')\"");
+            menu.append(
+                " onmouseover=\"swapClass(this,'menutabUnselectedLinkOn')\" onmouseout=\"swapClass(this,'menutabUnselectedLinkOff')\"");
           }
           menu.append(">");
           menu.append("<a href=\"" + thisMenu.getLink() + "\">");
@@ -202,9 +228,11 @@ public class MainMenuHook implements ControllerMainMenuHook {
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'");
           if (thisMenu.hasGraphicRollover()) {
             if (shortHtml != null) {
-              graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + shortHtml + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+              graphicMenu.append(
+                  " onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + shortHtml + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
             } else {
-              graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+              graphicMenu.append(
+                  " onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
             }
           }
           graphicMenu.append(">");
@@ -217,9 +245,11 @@ public class MainMenuHook implements ControllerMainMenuHook {
           graphicMenu.append(">");
           graphicMenu.append("</a>");
           if (pageTitle != null) {
-            smallMenuList.add("<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + pageTitle + "</a>");
+            smallMenuList.add(
+                "<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + pageTitle + "</a>");
           } else {
-            smallMenuList.add("<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+            smallMenuList.add(
+                "<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
           }
         }
         menuWidth += Integer.parseInt(thisMenu.getGraphicWidth());
@@ -254,17 +284,17 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Reads an XML file into a Document object with nodes
+   * Reads an XML file into a Document object with nodes
    *
-   *@return                                   Description of the Returned Value
-   *@exception  FactoryConfigurationError     Description of Exception
-   *@exception  ParserConfigurationException  Description of Exception
-   *@exception  SAXException                  Description of Exception
-   *@exception  IOException                   Description of Exception
-   *@since                                    1.17
+   * @return Description of the Returned Value
+   * @throws FactoryConfigurationError    Description of Exception
+   * @throws ParserConfigurationException Description of Exception
+   * @throws SAXException                 Description of Exception
+   * @throws IOException                  Description of Exception
+   * @since 1.17
    */
   private Document parseDocument()
-       throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
+      throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     Document document = builder.parse(file);
@@ -273,10 +303,10 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Takes the in-memory Document object and creates nodes of the module items
+   * Takes the in-memory Document object and creates nodes of the module items
    *
-   *@param  document  Description of Parameter
-   *@since            1.17
+   * @param document Description of Parameter
+   * @since 1.17
    */
   private void parseAllMenus(Document document) {
     //Process the menu tags
@@ -291,12 +321,12 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Once the in-memory document has split out the module items using
-   *  parseAllMenus(), each menu is processed for items and submenu items.
+   * Once the in-memory document has split out the module items using
+   * parseAllMenus(), each menu is processed for items and submenu items.
    *
-   *@param  e  Description of Parameter
-   *@return    Description of the Returned Value
-   *@since     1.17
+   * @param e Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.17
    */
   private MainMenuItem parseMenu(Element e) {
     MainMenuItem mainItem = new MainMenuItem();
@@ -359,7 +389,8 @@ public class MainMenuHook implements ControllerMainMenuHook {
             submenuItem.setGraphicHeight(submenuChild.getAttribute("height"));
             submenuItem.setGraphicOn(submenuChild.getAttribute("on"));
             submenuItem.setGraphicOff(submenuChild.getAttribute("off"));
-            submenuItem.setGraphicRollover(submenuChild.getAttribute("rollover"));
+            submenuItem.setGraphicRollover(
+                submenuChild.getAttribute("rollover"));
           }
         }
         submenuTable.add(submenuItem);
@@ -371,13 +402,14 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Adds a feature to the NormalClass attribute of the MainMenuHook class
+   * Adds a feature to the NormalClass attribute of the MainMenuHook class
    *
-   *@param  thisItem  The feature to be added to the NormalClass attribute
-   *@return           Description of the Return Value
+   * @param thisItem The feature to be added to the NormalClass attribute
+   * @return Description of the Return Value
    */
   private static String addNormalClass(MainMenuItem thisItem) {
-    if (thisItem.getClassNormal() != null && !"".equals(thisItem.getClassNormal())) {
+    if (thisItem.getClassNormal() != null && !"".equals(
+        thisItem.getClassNormal())) {
       return "class=\"" + thisItem.getClassNormal() + "\" ";
     }
     return "";
@@ -385,13 +417,14 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
 
   /**
-   *  Adds a feature to the SelectedClass attribute of the MainMenuHook class
+   * Adds a feature to the SelectedClass attribute of the MainMenuHook class
    *
-   *@param  thisItem  The feature to be added to the SelectedClass attribute
-   *@return           Description of the Return Value
+   * @param thisItem The feature to be added to the SelectedClass attribute
+   * @return Description of the Return Value
    */
   private static String addSelectedClass(MainMenuItem thisItem) {
-    if (thisItem.getClassSelected() != null && !"".equals(thisItem.getClassSelected())) {
+    if (thisItem.getClassSelected() != null && !"".equals(
+        thisItem.getClassSelected())) {
       return "class=\"" + thisItem.getClassSelected() + "\" ";
     }
     return "";

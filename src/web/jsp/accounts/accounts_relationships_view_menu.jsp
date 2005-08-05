@@ -23,7 +23,7 @@
   var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, relId) {
+  function displayMenu(loc, id, orgId, relId, trashed) {
     thisRelId = relId;
     thisOrgId = orgId;
     if (!menu_init) {

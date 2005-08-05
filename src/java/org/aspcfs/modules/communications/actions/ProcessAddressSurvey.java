@@ -16,13 +16,16 @@
 package org.aspcfs.modules.communications.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.communications.base.ActiveSurvey;
 import org.aspcfs.modules.communications.base.SurveyResponse;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.utils.PrivateString;
+import org.aspcfs.utils.web.CountrySelect;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.StateSelect;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -95,6 +98,15 @@ public final class ProcessAddressSurvey extends CFSModule {
       context.getRequest().setAttribute("ContactDetails", thisContact);
       context.getRequest().setAttribute("id", codedId);
       prepareFormElements(context, db);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Make the StateSelect and CountrySelect drop down menus available in the request. 
+      //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
+      StateSelect stateSelect = new StateSelect(systemStatus);
+      CountrySelect countrySelect = new CountrySelect(systemStatus);
+      context.getRequest().setAttribute("StateSelect", stateSelect);
+      context.getRequest().setAttribute("CountrySelect", countrySelect);
+      context.getRequest().setAttribute("systemStatus", systemStatus);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("NotFoundError");
@@ -170,7 +182,8 @@ public final class ProcessAddressSurvey extends CFSModule {
           thisResponse.insert(db);
           thisSurvey = new ActiveSurvey(db, addressNoChangeId);
         }
-        context.getRequest().setAttribute("ThankYouText", thisSurvey.getOutro());
+        context.getRequest().setAttribute(
+            "ThankYouText", thisSurvey.getOutro());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -196,11 +209,15 @@ public final class ProcessAddressSurvey extends CFSModule {
     LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
     context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
 
-    LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
-    context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
+    LookupList addressTypeList = new LookupList(
+        db, "lookup_contactaddress_types");
+    context.getRequest().setAttribute(
+        "ContactAddressTypeList", addressTypeList);
 
-    LookupList textMessageAddressTypeList = new LookupList(db, "lookup_textmessage_types");
-    context.getRequest().setAttribute("ContactTextMessageAddressTypeList", textMessageAddressTypeList);
+    LookupList textMessageAddressTypeList = new LookupList(
+        db, "lookup_textmessage_types");
+    context.getRequest().setAttribute(
+        "ContactTextMessageAddressTypeList", textMessageAddressTypeList);
   }
 }
 

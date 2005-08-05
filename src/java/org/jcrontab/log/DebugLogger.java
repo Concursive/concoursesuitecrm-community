@@ -17,23 +17,24 @@
 package org.jcrontab.log;
 
 /**
- *  Outputs the log to system.out
+ * Outputs the log to system.out
  *
- *@author     matt rajkowski
- *@created    February 3, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created February 3, 2003
  */
 public class DebugLogger implements Logger {
   /**
-   *  Description of the Method
+   * Description of the Method
    */
-  public void init() { }
+  public void init() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  message  Description of the Parameter
+   * @param message Description of the Parameter
    */
   public void info(String message) {
     System.out.println("JCrontab-> " + message);
@@ -41,10 +42,10 @@ public class DebugLogger implements Logger {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  message  Description of the Parameter
-   *@param  t        Description of the Parameter
+   * @param message Description of the Parameter
+   * @param t       Description of the Parameter
    */
   public void error(String message, Throwable t) {
     t.printStackTrace();
@@ -52,10 +53,11 @@ public class DebugLogger implements Logger {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  message  Description of the Parameter
+   * @param message Description of the Parameter
    */
-  public void debug(String message) { }
+  public void debug(String message) {
+  }
 }
 

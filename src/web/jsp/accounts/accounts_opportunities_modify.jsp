@@ -21,6 +21,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="contacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="hasQuotes" class="java.lang.String" scope="request" />
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
@@ -34,8 +35,18 @@
       return '<%= opportunityHeader.getId() %>';
     }
   }
+  
+  function checkForm(form) {
+    var type = form.type;
+    if (type[0].checked && type[0].value=='org') {
+      form.contactLink.value='-1';
+    } else if (type[1].checked && type[1].value=='contact') {
+      form.accountLink.value = '-1';
+    }
+    return true;
+  }
 </script>
-<form name="modifyOpp" action="Opportunities.do?command=Update&orgId=<%= OrgDetails.getId() %>&auto-populate=true" method="post">
+<form name="modifyOpp" action="Opportunities.do?command=Update&orgId=<%= OrgDetails.getId() %>&auto-populate=true" onSubmit="javascript:return checkForm(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -92,7 +103,7 @@
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
               <td>
-                <input type="radio" name="type" value="org"  onclick=<%= "\"javascript:document.forms['modifyOpp'].contactLink.value = '-1';\" " %><dhv:evaluate if="<%=opportunityHeader.getAccountLink() > -1 || "org".equals(request.getParameter("type")) %>">checked</dhv:evaluate>>
+                <input type="radio" name="type" value="org" <dhv:evaluate if="<%=opportunityHeader.getAccountLink() > -1 || "org".equals(request.getParameter("type")) %>">checked</dhv:evaluate>>
               </td>
               <td>
                 <dhv:label name="account.account.colon">Account:</dhv:label>&nbsp;
@@ -115,7 +126,7 @@
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
-            <input type="radio" name="type" value="contact" onclick=<%= "\"javascript:document.forms['modifyOpp'].accountLink.value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter("type"))%>">checked</dhv:evaluate>>
+            <input type="radio" name="type" value="contact" <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter("type"))%>">checked</dhv:evaluate>>
           </td>
           <td>
             <dhv:label name="account.contact.colon">Contact:</dhv:label>&nbsp;
@@ -131,7 +142,7 @@
           </td>
           <td>
             <input type="hidden" name="contactLink" id="contactLink" value="<%= opportunityHeader.getContactLink() %>">
-            &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','reset=true&filters=mycontacts|accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','reset=true&filters="+ ("true".equals(hasQuotes) ? "":"mycontacts|") +"accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>

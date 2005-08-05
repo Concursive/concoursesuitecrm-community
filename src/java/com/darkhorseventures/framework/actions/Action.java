@@ -15,17 +15,18 @@
  */
 package com.darkhorseventures.framework.actions;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- *  This class represents a single action
+ * This class represents a single action
  *
- *@author     Kevin Duffey
- *@created    June 1, 2001
- *@version    1.0
+ * @author Kevin Duffey
+ * @version 1.0
+ * @created June 1, 2001
  */
 public class Action
-     implements java.io.Serializable {
+    implements java.io.Serializable {
   private String actionName = "";
   private String actionClassName = "";
   private Map beans = new HashMap();
@@ -35,13 +36,12 @@ public class Action
 
 
   /**
-   *  Create an immutable ActionAction object for any given action class. This
-   *  can be used in a class manually coded, or read in from an XML
-   *  configuration file, or a Properties file.
+   * Create an immutable ActionAction object for any given action class. This
+   * can be used in a class manually coded, or read in from an XML
+   * configuration file, or a Properties file.
    *
-   *@param  aName       Description of Parameter
-   *@param  aClassName  Description of Parameter
-   *@since
+   * @param aName      Description of Parameter
+   * @param aClassName Description of Parameter
    */
   public Action(String aName, String aClassName) {
     try {
@@ -53,13 +53,12 @@ public class Action
 
 
   /**
-   *  Returns a <code>Beans</code> reference if found in the Map with the passed
-   *  in key name to look for.
+   * Returns a <code>Beans</code> reference if found in the Map with the passed
+   * in key name to look for.
    *
-   *@param  beanName  the key to look up for a <code>Beans</code> reference
-   *@return           Beans the found <code>Beans</code> reference or null if
-   *      not found
-   *@since
+   * @param beanName the key to look up for a <code>Beans</code> reference
+   * @return Beans the found <code>Beans</code> reference or null if
+   *         not found
    */
   public Beans getBean(String beanName) {
     return (Beans) beans.get(beanName);
@@ -67,13 +66,12 @@ public class Action
 
 
   /**
-   *  Returns a resource if the passed in resourceName is found in the resources
-   *  Map.
+   * Returns a resource if the passed in resourceName is found in the resources
+   * Map.
    *
-   *@param  resourceName  the name to look for in the resources Map
-   *@return               Resource the returned reference to a Resource, if
-   *      found, or null if not.
-   *@since
+   * @param resourceName the name to look for in the resources Map
+   * @return Resource the returned reference to a Resource, if
+   *         found, or null if not.
    */
   public Resource getResource(String resourceName) {
     return (Resource) resources.get(resourceName);
@@ -81,10 +79,9 @@ public class Action
 
 
   /**
-   *  Gets the Resources attribute of the Action object
+   * Gets the Resources attribute of the Action object
    *
-   *@return    The Resources value
-   *@since
+   * @return The Resources value
    */
   public Map getResources() {
     return resources;
@@ -92,10 +89,9 @@ public class Action
 
 
   /**
-   *  Gets the Beans attribute of the Action object
+   * Gets the Beans attribute of the Action object
    *
-   *@return    The Beans value
-   *@since
+   * @return The Beans value
    */
   public Map getBeans() {
     return beans;
@@ -103,10 +99,9 @@ public class Action
 
 
   /**
-   *  Gets the BeanCount attribute of the Action object
+   * Gets the BeanCount attribute of the Action object
    *
-   *@return    The BeanCount value
-   *@since
+   * @return The BeanCount value
    */
   public long getBeanCount() {
     return beans.size();
@@ -114,10 +109,9 @@ public class Action
 
 
   /**
-   *  Gets the ResourceCount attribute of the Action object
+   * Gets the ResourceCount attribute of the Action object
    *
-   *@return    The ResourceCount value
-   *@since
+   * @return The ResourceCount value
    */
   public long getResourceCount() {
     return resources.size();
@@ -125,23 +119,20 @@ public class Action
 
 
   /**
-   *  returns the name of this action
+   * returns the name of this action
    *
-   *@return    The ActionName value
-   *@since
+   * @return The ActionName value
    */
   public String getActionName() {
     return actionName;
   }
 
 
-
   /**
-   *  Returns the name of the action class. This should be a fully qualified
-   *  package name and class name
+   * Returns the name of the action class. This should be a fully qualified
+   * package name and class name
    *
-   *@return    The ActionClassName value
-   *@since
+   * @return The ActionClassName value
    */
   public String getActionClassName() {
     return actionClassName;
@@ -149,24 +140,21 @@ public class Action
 
 
   /**
-   *  Adds a feature to the Bean attribute of the Action object
+   * Adds a feature to the Bean attribute of the Action object
    *
-   *@param  key   The feature to be added to the Bean attribute
-   *@param  bean  The feature to be added to the Bean attribute
-   *@since
+   * @param key  The feature to be added to the Bean attribute
+   * @param bean The feature to be added to the Bean attribute
    */
   public void addBean(String key, Beans bean) {
     beans.put(key, bean);
   }
 
 
-
   /**
-   *  Adds a feature to the Resource attribute of the Action object
+   * Adds a feature to the Resource attribute of the Action object
    *
-   *@param  key       The feature to be added to the Resource attribute
-   *@param  resource  The feature to be added to the Resource attribute
-   *@since
+   * @param key      The feature to be added to the Resource attribute
+   * @param resource The feature to be added to the Resource attribute
    */
   public void addResource(String key, Resource resource) {
     resources.put(key, resource);

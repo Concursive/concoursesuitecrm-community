@@ -25,6 +25,7 @@
 <jsp:useBean id="report" class="org.aspcfs.modules.reports.base.Report" scope="request"/>
 <jsp:useBean id="criteria" class="org.aspcfs.modules.reports.base.Criteria" scope="request"/>
 <jsp:useBean id="parameterList" class="org.aspcfs.modules.reports.base.ParameterList" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -69,9 +70,9 @@
 %>
 <dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% ++count; %>
   <tr>
-    <td class="formLabel"><%= toHtml(parameter.getDisplayName()) %></td>
+    <td class="formLabel"><%= toHtml(parameter.getDisplayName(systemStatus)) %></td>
     <td>
-      <%= parameter.getHtml(request) %> <font color="red">*</font>
+      <%= parameter.getHtml(systemStatus, request) %> <font color="red">*</font>
       <%= showAttribute(request,parameter.getName() + "Error") %>
     </td>
   </tr>

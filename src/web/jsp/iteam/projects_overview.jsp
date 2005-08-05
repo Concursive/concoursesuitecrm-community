@@ -82,7 +82,7 @@
 
 <%-- Start news --%>
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
-<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="News" object="overviewNewsListInfo"/>
+<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="News" type="project.news" object="overviewNewsListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= newsList.isEmpty() %>">
     <tr>
@@ -125,7 +125,7 @@
 </dhv:evaluate>
 <%-- Start discussion topics --%>
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewNewsListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
-<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Discussion" object="overviewIssueListInfo"/>
+<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Discussion" type="project.discussion" object="overviewIssueListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= issueList.isEmpty() %>">
     <tr>
@@ -177,7 +177,7 @@
 </dhv:evaluate>
 <%-- Start documents --%>
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewNewsListInfo.getExpandedSelection() %>">
-<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Documents" object="overviewFileItemListListInfo"/>
+<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Documents" type="project.documents" object="overviewFileItemListListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= fileItemList.isEmpty() %>">
     <tr>
@@ -226,7 +226,7 @@
 <td valign="top">
 <%-- Start assignments --%>
 <dhv:evaluate if="<%= !overviewNewsListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
-<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Activities" object="overviewAssignmentListInfo"/>
+<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Activities" type="project.activities" object="overviewAssignmentListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= assignmentList.isEmpty() %>">
     <tr>
@@ -275,7 +275,7 @@
 
 <%-- Start tickets --%>
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewNewsListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
-<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Tickets" object="overviewTicketListInfo"/>
+<dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Tickets" type="project.tickets" object="overviewTicketListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= ticketList.isEmpty() %>">
     <tr>

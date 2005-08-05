@@ -21,15 +21,26 @@
   var thisCompId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, compId) {
+  function displayMenu(loc, id, compId, trashed) {
     thisCompId = compId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
     }
+    updateMenu(trashed);
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan("menuModifyOppComponent");
+      hideSpan("menuDeleteOppComponent");
+    } else {
+      showSpan("menuModifyOppComponent");
+      showSpan("menuDeleteOppComponent");
+    }
+  }
+
   //Menu link functions
   function details() {
     window.location.href = 'LeadsComponents.do?command=DetailsComponent&id=' + thisCompId + '<%= addLinkParams(request, "viewSource") %>';
@@ -58,7 +69,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuModifyOppComponent" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -68,7 +79,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOpp()">
+      <tr id="menuDeleteOppComponent" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOpp()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

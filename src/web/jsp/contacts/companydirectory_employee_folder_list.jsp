@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -24,7 +24,6 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
-<form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -61,7 +60,7 @@
     %>
     <tr class="containerBody">
       <td class="row<%= rowid %>">
-        <a href="CompanyDirectory.do?command=Fields&empid=<%= ContactDetails.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a>
+        <a href="CompanyDirectory.do?command=Fields&empid=<%= ContactDetails.getId() %>&catId=<%= thisCategory.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(thisCategory.getName()) %></a>
       </td>
       <td class="row<%= rowid %>">
         <%= thisCategory.getNumberOfRecords() %>
@@ -78,4 +77,3 @@
   </table>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
   </dhv:container>
-</form>

@@ -15,16 +15,22 @@
  */
 package org.aspcfs.apps.transfer.reader.mapreader;
 
-import org.aspcfs.utils.*;
-import java.util.*;
-import org.w3c.dom.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
- *  Represents a definition for a property of a map in XML
+ * Represents a definition for a property of a map in XML
  *
- *@author     Akhilesh Mathur
- *@created    April 5, 2004
- *@version    $id:exp$
+ * @author Akhilesh Mathur
+ * @version $id:exp$
+ * @created April 5, 2004
  */
 public class Property implements Cloneable {
 
@@ -44,15 +50,16 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Constructor for the Property object
+   * Constructor for the Property object
    */
-  public Property() { }
+  public Property() {
+  }
 
 
   /**
-   *  Constructor for the Property object
+   * Constructor for the Property object
    *
-   *@param  name  Description of the Parameter
+   * @param name Description of the Parameter
    */
   public Property(String name) {
     this.name = name;
@@ -60,9 +67,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the attributes of a property based on a XML node
+   * Sets the attributes of a property based on a XML node
    *
-   *@param  n  Description of the Parameter
+   * @param n Description of the Parameter
    */
   public Property(Node n) {
     //name
@@ -120,9 +127,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the name attribute of the Property object
+   * Sets the name attribute of the Property object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -130,9 +137,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the aliases attribute of the Property object
+   * Sets the aliases attribute of the Property object
    *
-   *@param  tmp  The new aliases value
+   * @param tmp The new aliases value
    */
   public void setAliases(ArrayList tmp) {
     this.aliases = tmp;
@@ -140,9 +147,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the defaultValue attribute of the Property object
+   * Sets the defaultValue attribute of the Property object
    *
-   *@param  tmp  The new defaultValue value
+   * @param tmp The new defaultValue value
    */
   public void setDefaultValue(String tmp) {
     this.defaultValue = tmp;
@@ -150,9 +157,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the required attribute of the Property object
+   * Sets the required attribute of the Property object
    *
-   *@param  tmp  The new required value
+   * @param tmp The new required value
    */
   public void setRequired(boolean tmp) {
     this.required = tmp;
@@ -160,9 +167,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the required attribute of the Property object
+   * Sets the required attribute of the Property object
    *
-   *@param  tmp  The new required value
+   * @param tmp The new required value
    */
   public void setRequired(String tmp) {
     this.required = DatabaseUtils.parseBoolean(tmp);
@@ -170,9 +177,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the multiple attribute of the Property object
+   * Sets the multiple attribute of the Property object
    *
-   *@param  tmp  The new multiple value
+   * @param tmp The new multiple value
    */
   public void setMultiple(boolean tmp) {
     this.multiple = tmp;
@@ -180,9 +187,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the multiple attribute of the Property object
+   * Sets the multiple attribute of the Property object
    *
-   *@param  tmp  The new multiple value
+   * @param tmp The new multiple value
    */
   public void setMultiple(String tmp) {
     this.multiple = DatabaseUtils.parseBoolean(tmp);
@@ -190,9 +197,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the mappedColumn attribute of the Property object
+   * Sets the mappedColumn attribute of the Property object
    *
-   *@param  tmp  The new mappedColumn value
+   * @param tmp The new mappedColumn value
    */
   public void setMappedColumn(int tmp) {
     this.mappedColumn = tmp;
@@ -200,9 +207,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the mappedColumn attribute of the Property object
+   * Sets the mappedColumn attribute of the Property object
    *
-   *@param  tmp  The new mappedColumn value
+   * @param tmp The new mappedColumn value
    */
   public void setMappedColumn(String tmp) {
     this.mappedColumn = Integer.parseInt(tmp);
@@ -210,9 +217,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the lookupTable attribute of the Property object
+   * Sets the lookupTable attribute of the Property object
    *
-   *@param  tmp  The new lookupTable value
+   * @param tmp The new lookupTable value
    */
   public void setLookupTable(String tmp) {
     this.lookupTable = tmp;
@@ -220,9 +227,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the delimiter attribute of the Property object
+   * Sets the delimiter attribute of the Property object
    *
-   *@param  tmp  The new delimiter value
+   * @param tmp The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -230,9 +237,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the displayName attribute of the Property object
+   * Sets the displayName attribute of the Property object
    *
-   *@param  tmp  The new displayName value
+   * @param tmp The new displayName value
    */
   public void setDisplayName(String tmp) {
     this.displayName = tmp;
@@ -240,9 +247,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the uniqueName attribute of the Property object
+   * Sets the uniqueName attribute of the Property object
    *
-   *@param  tmp  The new uniqueName value
+   * @param tmp The new uniqueName value
    */
   public void setUniqueName(String tmp) {
     this.uniqueName = tmp;
@@ -250,9 +257,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the isForPrompting attribute of the Property object
+   * Sets the isForPrompting attribute of the Property object
    *
-   *@param  tmp  The new isForPrompting value
+   * @param tmp The new isForPrompting value
    */
   public void setIsForPrompting(boolean tmp) {
     this.isForPrompting = tmp;
@@ -260,9 +267,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the isForPrompting attribute of the Property object
+   * Sets the isForPrompting attribute of the Property object
    *
-   *@param  tmp  The new isForPrompting value
+   * @param tmp The new isForPrompting value
    */
   public void setIsForPrompting(String tmp) {
     this.isForPrompting = DatabaseUtils.parseBoolean(tmp);
@@ -270,9 +277,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the groupId attribute of the Property object
+   * Sets the groupId attribute of the Property object
    *
-   *@param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -280,9 +287,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the groupId attribute of the Property object
+   * Sets the groupId attribute of the Property object
    *
-   *@param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -290,9 +297,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Sets the substitute attribute of the Property object
+   * Sets the substitute attribute of the Property object
    *
-   *@param  tmp  The new substitute value
+   * @param tmp The new substitute value
    */
   public void setSubstitute(String tmp) {
     this.substitute = tmp;
@@ -300,9 +307,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the substitute attribute of the Property object
+   * Gets the substitute attribute of the Property object
    *
-   *@return    The substitute value
+   * @return The substitute value
    */
   public String getSubstitute() {
     return substitute;
@@ -310,9 +317,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the groupId attribute of the Property object
+   * Gets the groupId attribute of the Property object
    *
-   *@return    The groupId value
+   * @return The groupId value
    */
   public int getGroupId() {
     return groupId;
@@ -320,9 +327,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the isForPrompting attribute of the Property object
+   * Gets the isForPrompting attribute of the Property object
    *
-   *@return    The isForPrompting value
+   * @return The isForPrompting value
    */
   public boolean getIsForPrompting() {
     return isForPrompting;
@@ -330,9 +337,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the uniqueName attribute of the Property object
+   * Gets the uniqueName attribute of the Property object
    *
-   *@return    The uniqueName value
+   * @return The uniqueName value
    */
   public String getUniqueName() {
     return uniqueName;
@@ -340,17 +347,18 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the dependency name of this property<br>
-   *  NOTE: Returns NULL if this is not a dependency property
+   * Gets the dependency name of this property<br>
+   * NOTE: Returns NULL if this is not a dependency property
    *
-   *@return    The dependencyName value
+   * @return The dependencyName value
    */
   public String getDependencyName() {
     if ("".equals(StringUtils.toString(uniqueName)) || uniqueName.indexOf(".") == -1) {
       return null;
     }
 
-    StringTokenizer tokens = new StringTokenizer(uniqueName
+    StringTokenizer tokens = new StringTokenizer(
+        uniqueName
         , ".");
     String tmp = tokens.nextToken();
     if (tokens.hasMoreTokens()) {
@@ -361,9 +369,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the displayName attribute of the Property object
+   * Gets the displayName attribute of the Property object
    *
-   *@return    The displayName value
+   * @return The displayName value
    */
   public String getDisplayName() {
     return displayName;
@@ -371,9 +379,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the delimiter attribute of the Property object
+   * Gets the delimiter attribute of the Property object
    *
-   *@return    The delimiter value
+   * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -381,9 +389,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the name attribute of the Property object
+   * Gets the name attribute of the Property object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -391,9 +399,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the aliases attribute of the Property object
+   * Gets the aliases attribute of the Property object
    *
-   *@return    The aliases value
+   * @return The aliases value
    */
   public ArrayList getAliases() {
     return aliases;
@@ -401,9 +409,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the defaultValue attribute of the Property object
+   * Gets the defaultValue attribute of the Property object
    *
-   *@return    The defaultValue value
+   * @return The defaultValue value
    */
   public String getDefaultValue() {
     return defaultValue;
@@ -411,9 +419,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the required attribute of the Property object
+   * Gets the required attribute of the Property object
    *
-   *@return    The required value
+   * @return The required value
    */
   public boolean getRequired() {
     return required;
@@ -421,9 +429,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the multiple attribute of the Property object
+   * Gets the multiple attribute of the Property object
    *
-   *@return    The multiple value
+   * @return The multiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -431,9 +439,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the mappedColumn attribute of the Property object
+   * Gets the mappedColumn attribute of the Property object
    *
-   *@return    The mappedColumn value
+   * @return The mappedColumn value
    */
   public int getMappedColumn() {
     return mappedColumn;
@@ -441,9 +449,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the lookupTable attribute of the Property object
+   * Gets the lookupTable attribute of the Property object
    *
-   *@return    The lookupTable value
+   * @return The lookupTable value
    */
   public String getLookupTable() {
     return lookupTable;
@@ -451,9 +459,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Gets the valid attribute of the Property object
+   * Gets the valid attribute of the Property object
    *
-   *@return    The valid value
+   * @return The valid value
    */
   public boolean isValid() {
     if ("".equals(StringUtils.toString(name))) {
@@ -464,10 +472,10 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Creates a clone of this property
+   * Creates a clone of this property
    *
-   *@return                                 Description of the Return Value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public Property duplicate() throws CloneNotSupportedException {
     return (Property) this.clone();
@@ -475,10 +483,10 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Checks to see if an alias exists for the parameter passed
+   * Checks to see if an alias exists for the parameter passed
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasAlias(String tmp) {
     if (aliases == null || tmp == null) {
@@ -499,9 +507,9 @@ public class Property implements Cloneable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     StringBuffer info = new StringBuffer();

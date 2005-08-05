@@ -162,7 +162,7 @@
         resultSelect.addAttribute("id", "resultId");
       %>
       <%= resultSelect.getHtml("resultId") %><font color="red">*</font><%= showAttribute(request, "resultError") %>
-      <input type="checkbox" name="hasFollowup" value="on" onClick="toggleSpan(this, 'nextActionSpan')" <%= CallDetails.getHasFollowup() ? " checked" : "" %> />
+      <input type="checkbox" name="hasFollowup" id="hasFollowup" value="on" onClick="toggleSpan(this, 'nextActionSpan')" <%= CallDetails.getHasFollowup() ? " checked" : "" %> />
       <dhv:label name="contacts.scheduleFollowUpActivity">Schedule follow-up activity?</dhv:label>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <% }else{ %>

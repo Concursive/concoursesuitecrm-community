@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
@@ -63,6 +64,14 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId(); %>
+      <zeroio:folderHierarchy module="Accounts" link="<%= documentLink %>" />
+    </td>
+  </tr>
+</table>
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

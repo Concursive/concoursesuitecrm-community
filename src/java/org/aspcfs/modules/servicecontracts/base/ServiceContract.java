@@ -15,28 +15,30 @@
  */
 package org.aspcfs.modules.servicecontracts.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.troubletickets.base.TicketList;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.assets.base.AssetList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.ContactHistory;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
- *  Service Contracts are contractual agreements with accounts (a.k.a.
- *  organizations) that specify the service model, start and end dates, hours
- *  and other information. An account can have number of service contracts
+ * Service Contracts are contractual agreements with accounts (a.k.a.
+ * organizations) that specify the service model, start and end dates, hours
+ * and other information. An account can have number of service contracts
  *
- *@author     kbhoopal
- *@created    December 31, 2003
- *@version    $Id: ServiceContract.java,v 1.1.2.2 2004/01/08 18:50:49 kbhoopal
- *      Exp $
+ * @author kbhoopal
+ * @version $Id: ServiceContract.java,v 1.1.2.2 2004/01/08 18:50:49 kbhoopal
+ *          Exp $
+ * @created December 31, 2003
  */
 public class ServiceContract extends GenericBean {
 
@@ -70,6 +72,7 @@ public class ServiceContract extends GenericBean {
   private String initialStartDateTimeZone = null;
   private String currentStartDateTimeZone = null;
   private String currentEndDateTimeZone = null;
+  private java.sql.Timestamp trashedDate = null;
   //special case as -1 is also valid
   private double adjustmentHours = 0;
   private int adjustmentReason = -1;
@@ -78,7 +81,7 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Constructor for the ServiceContract object
+   * Constructor for the ServiceContract object
    */
   public ServiceContract() {
     errors.clear();
@@ -86,38 +89,47 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Constructor for the ServiceContract object
+   * Constructor for the ServiceContract object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db   Description of the Parameter
+   * @param scId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public ServiceContract(Connection db, String id) throws SQLException {
-
+  public ServiceContract(Connection db, String scId) throws SQLException {
     errors.clear();
-    queryRecord(db, Integer.parseInt(id));
-
+    queryRecord(db, Integer.parseInt(scId));
   }
 
 
   /**
-   *  Constructor for the ServiceContract object
+   * Constructor for the ServiceContract object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db   Description of the Parameter
+   * @param scId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public ServiceContract(Connection db, int scId) throws SQLException {
+    errors.clear();
+    queryRecord(db, scId);
+  }
+
+
+  /**
+   * Constructor for the ServiceContract object
+   *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ServiceContract(ResultSet rs) throws SQLException {
-
     errors.clear();
     buildRecord(rs);
-
   }
 
 
   /**
-   *  Sets the id attribute of the ServiceContract object
+   * Sets the id attribute of the ServiceContract object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -125,9 +137,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ServiceContract object
+   * Sets the id attribute of the ServiceContract object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -135,9 +147,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the serviceContractNumber attribute of the ServiceContract object
+   * Sets the serviceContractNumber attribute of the ServiceContract object
    *
-   *@param  tmp  The new serviceContractNumber value
+   * @param tmp The new serviceContractNumber value
    */
   public void setServiceContractNumber(String tmp) {
     this.serviceContractNumber = tmp;
@@ -145,9 +157,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the ServiceContract object
+   * Sets the orgId attribute of the ServiceContract object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -155,9 +167,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the ServiceContract object
+   * Sets the orgId attribute of the ServiceContract object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -165,9 +177,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the contractValue attribute of the ServiceContract object
+   * Sets the contractValue attribute of the ServiceContract object
    *
-   *@param  tmp  The new contractValue value
+   * @param tmp The new contractValue value
    */
   public void setContractValue(double tmp) {
     this.contractValue = tmp;
@@ -175,9 +187,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the contractValue attribute of the ServiceContract object
+   * Sets the contractValue attribute of the ServiceContract object
    *
-   *@param  tmp  The new contractValue value
+   * @param tmp The new contractValue value
    */
   public void setContractValue(String tmp) {
     this.contractValue = Double.parseDouble(tmp);
@@ -185,9 +197,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the initialStartDate attribute of the ServiceContract object
+   * Sets the initialStartDate attribute of the ServiceContract object
    *
-   *@param  tmp  The new initialStartDate value
+   * @param tmp The new initialStartDate value
    */
   public void setInitialStartDate(java.sql.Timestamp tmp) {
     this.initialStartDate = tmp;
@@ -195,9 +207,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the initialStartDate attribute of the ServiceContract object
+   * Sets the initialStartDate attribute of the ServiceContract object
    *
-   *@param  tmp  The new initialStartDate value
+   * @param tmp The new initialStartDate value
    */
   public void setInitialStartDate(String tmp) {
     this.initialStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -205,9 +217,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the currentStartDate attribute of the ServiceContract object
+   * Sets the currentStartDate attribute of the ServiceContract object
    *
-   *@param  tmp  The new currentStartDate value
+   * @param tmp The new currentStartDate value
    */
   public void setCurrentStartDate(java.sql.Timestamp tmp) {
     this.currentStartDate = tmp;
@@ -215,9 +227,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the currentStartDate attribute of the ServiceContract object
+   * Sets the currentStartDate attribute of the ServiceContract object
    *
-   *@param  tmp  The new currentStartDate value
+   * @param tmp The new currentStartDate value
    */
   public void setCurrentStartDate(String tmp) {
     this.currentStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -225,9 +237,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the currentEndDate attribute of the ServiceContract object
+   * Sets the currentEndDate attribute of the ServiceContract object
    *
-   *@param  tmp  The new currentEndDate value
+   * @param tmp The new currentEndDate value
    */
   public void setCurrentEndDate(java.sql.Timestamp tmp) {
     this.currentEndDate = tmp;
@@ -235,9 +247,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the currentEndDate attribute of the ServiceContract object
+   * Sets the currentEndDate attribute of the ServiceContract object
    *
-   *@param  tmp  The new currentEndDate value
+   * @param tmp The new currentEndDate value
    */
   public void setCurrentEndDate(String tmp) {
     this.currentEndDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -245,9 +257,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the category attribute of the ServiceContract object
+   * Sets the category attribute of the ServiceContract object
    *
-   *@param  tmp  The new category value
+   * @param tmp The new category value
    */
   public void setCategory(int tmp) {
     this.category = tmp;
@@ -255,9 +267,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the category attribute of the ServiceContract object
+   * Sets the category attribute of the ServiceContract object
    *
-   *@param  tmp  The new category value
+   * @param tmp The new category value
    */
   public void setCategory(String tmp) {
     this.category = Integer.parseInt(tmp);
@@ -265,9 +277,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the ServiceContract object
+   * Sets the type attribute of the ServiceContract object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -275,9 +287,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the ServiceContract object
+   * Sets the type attribute of the ServiceContract object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -285,9 +297,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the ServiceContract object
+   * Sets the contactId attribute of the ServiceContract object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -295,9 +307,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the ServiceContract object
+   * Sets the contactId attribute of the ServiceContract object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -305,9 +317,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the ServiceContract object
+   * Sets the description attribute of the ServiceContract object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -315,9 +327,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the contractBillingNotes attribute of the ServiceContract object
+   * Sets the contractBillingNotes attribute of the ServiceContract object
    *
-   *@param  tmp  The new contractBillingNotes value
+   * @param tmp The new contractBillingNotes value
    */
   public void setContractBillingNotes(String tmp) {
     this.contractBillingNotes = tmp;
@@ -325,9 +337,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the totalHoursRemaining attribute of the ServiceContract object
+   * Sets the totalHoursRemaining attribute of the ServiceContract object
    *
-   *@param  tmp  The new totalHoursRemaining value
+   * @param tmp The new totalHoursRemaining value
    */
   public void setTotalHoursRemaining(double tmp) {
     this.totalHoursRemaining = tmp;
@@ -335,9 +347,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the totalHoursRemaining attribute of the ServiceContract object
+   * Sets the totalHoursRemaining attribute of the ServiceContract object
    *
-   *@param  tmp  The new totalHoursRemaining value
+   * @param tmp The new totalHoursRemaining value
    */
   public void setTotalHoursRemaining(String tmp) {
     this.totalHoursRemaining = Double.parseDouble(tmp);
@@ -345,9 +357,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the responseTime attribute of the ServiceContract object
+   * Sets the responseTime attribute of the ServiceContract object
    *
-   *@param  tmp  The new responseTime value
+   * @param tmp The new responseTime value
    */
   public void setResponseTime(int tmp) {
     this.responseTime = tmp;
@@ -355,9 +367,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the responseTime attribute of the ServiceContract object
+   * Sets the responseTime attribute of the ServiceContract object
    *
-   *@param  tmp  The new responseTime value
+   * @param tmp The new responseTime value
    */
   public void setResponseTime(String tmp) {
     this.responseTime = Integer.parseInt(tmp);
@@ -365,9 +377,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the telephoneResponseModel attribute of the ServiceContract object
+   * Sets the telephoneResponseModel attribute of the ServiceContract object
    *
-   *@param  tmp  The new telephoneResponseModel value
+   * @param tmp The new telephoneResponseModel value
    */
   public void setTelephoneResponseModel(int tmp) {
     this.telephoneResponseModel = tmp;
@@ -375,9 +387,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the telephoneResponseModel attribute of the ServiceContract object
+   * Sets the telephoneResponseModel attribute of the ServiceContract object
    *
-   *@param  tmp  The new telephoneResponseModel value
+   * @param tmp The new telephoneResponseModel value
    */
   public void setTelephoneResponseModel(String tmp) {
     this.telephoneResponseModel = Integer.parseInt(tmp);
@@ -385,9 +397,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the onsiteResponseModel attribute of the ServiceContract object
+   * Sets the onsiteResponseModel attribute of the ServiceContract object
    *
-   *@param  tmp  The new onsiteResponseModel value
+   * @param tmp The new onsiteResponseModel value
    */
   public void setOnsiteResponseModel(int tmp) {
     this.onsiteResponseModel = tmp;
@@ -395,9 +407,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the onsiteResponseModel attribute of the ServiceContract object
+   * Sets the onsiteResponseModel attribute of the ServiceContract object
    *
-   *@param  tmp  The new onsiteResponseModel value
+   * @param tmp The new onsiteResponseModel value
    */
   public void setOnsiteResponseModel(String tmp) {
     this.onsiteResponseModel = Integer.parseInt(tmp);
@@ -405,9 +417,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the emailResponseModel attribute of the ServiceContract object
+   * Sets the emailResponseModel attribute of the ServiceContract object
    *
-   *@param  tmp  The new emailResponseModel value
+   * @param tmp The new emailResponseModel value
    */
   public void setEmailResponseModel(int tmp) {
     this.emailResponseModel = tmp;
@@ -415,9 +427,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the emailResponseModel attribute of the ServiceContract object
+   * Sets the emailResponseModel attribute of the ServiceContract object
    *
-   *@param  tmp  The new emailResponseModel value
+   * @param tmp The new emailResponseModel value
    */
   public void setEmailResponseModel(String tmp) {
     this.emailResponseModel = Integer.parseInt(tmp);
@@ -425,9 +437,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ServiceContract object
+   * Sets the entered attribute of the ServiceContract object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -435,9 +447,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ServiceContract object
+   * Sets the entered attribute of the ServiceContract object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -445,9 +457,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ServiceContract object
+   * Sets the enteredBy attribute of the ServiceContract object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -455,9 +467,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ServiceContract object
+   * Sets the enteredBy attribute of the ServiceContract object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -465,9 +477,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ServiceContract object
+   * Sets the modified attribute of the ServiceContract object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -475,9 +487,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ServiceContract object
+   * Sets the modified attribute of the ServiceContract object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -485,9 +497,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ServiceContract object
+   * Sets the modifiedBy attribute of the ServiceContract object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -495,9 +507,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ServiceContract object
+   * Sets the modifiedBy attribute of the ServiceContract object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -505,9 +517,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ServiceContract object
+   * Sets the enabled attribute of the ServiceContract object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -515,9 +527,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ServiceContract object
+   * Sets the enabled attribute of the ServiceContract object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -525,9 +537,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the products attribute of the ServiceContract object
+   * Sets the products attribute of the ServiceContract object
    *
-   *@param  tmpProducts  The new products value
+   * @param tmpProducts The new products value
    */
   public void setProductList(ArrayList tmpProducts) {
     this.productList = tmpProducts;
@@ -535,9 +547,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the productList attribute of the ServiceContract object
+   * Sets the productList attribute of the ServiceContract object
    *
-   *@param  criteriaString  The new productList value
+   * @param criteriaString The new productList value
    */
   public void setProductList(String[] criteriaString) {
     if (criteriaString != null) {
@@ -545,16 +557,14 @@ public class ServiceContract extends GenericBean {
     } else {
       productList = new ArrayList();
     }
-
-    this.productList = productList;
   }
 
 
   /**
-   *  Sets the serviceContractProductList attribute of the ServiceContract
-   *  object
+   * Sets the serviceContractProductList attribute of the ServiceContract
+   * object
    *
-   *@param  tmp  The new serviceContractProductList value
+   * @param tmp The new serviceContractProductList value
    */
   public void setServiceContractProductList(ServiceContractProductList tmp) {
     this.serviceContractProductList = tmp;
@@ -562,9 +572,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Product attribute of the ServiceContract object
+   * Adds a feature to the Product attribute of the ServiceContract object
    *
-   *@param  productId  The feature to be added to the Product attribute
+   * @param productId The feature to be added to the Product attribute
    */
   public void addProduct(int productId) {
     if (productList == null) {
@@ -575,9 +585,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Type attribute of the ServiceContract object
+   * Adds a feature to the Type attribute of the ServiceContract object
    *
-   *@param  productId  The feature to be added to the Type attribute
+   * @param productId The feature to be added to the Type attribute
    */
   public void addType(String productId) {
     if (productList == null) {
@@ -588,9 +598,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the initialStartDateTimeZone attribute of the ServiceContract object
+   * Sets the initialStartDateTimeZone attribute of the ServiceContract object
    *
-   *@param  tmp  The new initialStartDateTimeZone value
+   * @param tmp The new initialStartDateTimeZone value
    */
   public void setInitialStartDateTimeZone(String tmp) {
     this.initialStartDateTimeZone = tmp;
@@ -598,9 +608,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the currentStartDateTimeZone attribute of the ServiceContract object
+   * Sets the currentStartDateTimeZone attribute of the ServiceContract object
    *
-   *@param  tmp  The new currentStartDateTimeZone value
+   * @param tmp The new currentStartDateTimeZone value
    */
   public void setCurrentStartDateTimeZone(String tmp) {
     this.currentStartDateTimeZone = tmp;
@@ -608,9 +618,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the currentEndDateTimeZone attribute of the ServiceContract object
+   * Sets the currentEndDateTimeZone attribute of the ServiceContract object
    *
-   *@param  tmp  The new currentEndDateTimeZone value
+   * @param tmp The new currentEndDateTimeZone value
    */
   public void setCurrentEndDateTimeZone(String tmp) {
     this.currentEndDateTimeZone = tmp;
@@ -618,9 +628,43 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the initialStartDateTimeZone attribute of the ServiceContract object
+   * Sets the trashedDate attribute of the ServiceContract object
    *
-   *@return    The initialStartDateTimeZone value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the ServiceContract object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the ServiceContract object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+  public boolean isTrashed() {
+    return (trashedDate != null);
+  }
+
+
+  /**
+   * Gets the initialStartDateTimeZone attribute of the ServiceContract object
+   *
+   * @return The initialStartDateTimeZone value
    */
   public String getInitialStartDateTimeZone() {
     return initialStartDateTimeZone;
@@ -628,9 +672,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the currentStartDateTimeZone attribute of the ServiceContract object
+   * Gets the currentStartDateTimeZone attribute of the ServiceContract object
    *
-   *@return    The currentStartDateTimeZone value
+   * @return The currentStartDateTimeZone value
    */
   public String getCurrentStartDateTimeZone() {
     return currentStartDateTimeZone;
@@ -638,9 +682,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the currentEndDateTimeZone attribute of the ServiceContract object
+   * Gets the currentEndDateTimeZone attribute of the ServiceContract object
    *
-   *@return    The currentEndDateTimeZone value
+   * @return The currentEndDateTimeZone value
    */
   public String getCurrentEndDateTimeZone() {
     return currentEndDateTimeZone;
@@ -648,9 +692,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the products attribute of the ServiceContract object
+   * Gets the products attribute of the ServiceContract object
    *
-   *@return    The products value
+   * @return The products value
    */
   public ArrayList getProductList() {
     return productList;
@@ -658,10 +702,10 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the serviceContractProductList attribute of the ServiceContract
-   *  object
+   * Gets the serviceContractProductList attribute of the ServiceContract
+   * object
    *
-   *@return    The serviceContractProductList value
+   * @return The serviceContractProductList value
    */
   public ServiceContractProductList getServiceContractProductList() {
     return serviceContractProductList;
@@ -669,9 +713,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the ServiceContract object
+   * Sets the override attribute of the ServiceContract object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(boolean tmp) {
     this.override = tmp;
@@ -679,9 +723,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the ServiceContract object
+   * Sets the override attribute of the ServiceContract object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(String tmp) {
     this.override = DatabaseUtils.parseBoolean(tmp);
@@ -689,9 +733,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the serviceModelNotes attribute of the ServiceContract object
+   * Sets the serviceModelNotes attribute of the ServiceContract object
    *
-   *@param  tmp  The new serviceModelNotes value
+   * @param tmp The new serviceModelNotes value
    */
   public void setServiceModelNotes(String tmp) {
     this.serviceModelNotes = tmp;
@@ -699,9 +743,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentHours attribute of the ServiceContract object
+   * Sets the adjustmentHours attribute of the ServiceContract object
    *
-   *@param  tmp  The new adjustmentHours value
+   * @param tmp The new adjustmentHours value
    */
   public void setAdjustmentHours(double tmp) {
     this.adjustmentHours = tmp;
@@ -709,9 +753,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentHours attribute of the ServiceContract object
+   * Sets the adjustmentHours attribute of the ServiceContract object
    *
-   *@param  tmp  The new adjustmentHours value
+   * @param tmp The new adjustmentHours value
    */
   public void setAdjustmentHours(String tmp) {
     this.adjustmentHours = Double.parseDouble(tmp);
@@ -719,9 +763,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentReason attribute of the ServiceContract object
+   * Sets the adjustmentReason attribute of the ServiceContract object
    *
-   *@param  tmp  The new adjustmentReason value
+   * @param tmp The new adjustmentReason value
    */
   public void setAdjustmentReason(int tmp) {
     this.adjustmentReason = tmp;
@@ -729,9 +773,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentReason attribute of the ServiceContract object
+   * Sets the adjustmentReason attribute of the ServiceContract object
    *
-   *@param  tmp  The new adjustmentReason value
+   * @param tmp The new adjustmentReason value
    */
   public void setAdjustmentReason(String tmp) {
     this.adjustmentReason = Integer.parseInt(tmp);
@@ -739,9 +783,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentNotes attribute of the ServiceContract object
+   * Sets the adjustmentNotes attribute of the ServiceContract object
    *
-   *@param  tmp  The new adjustmentNotes value
+   * @param tmp The new adjustmentNotes value
    */
   public void setAdjustmentNotes(String tmp) {
     this.adjustmentNotes = tmp;
@@ -749,9 +793,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the netHours attribute of the ServiceContract object
+   * Sets the netHours attribute of the ServiceContract object
    *
-   *@param  tmp  The new netHours value
+   * @param tmp The new netHours value
    */
   public void setNetHours(String tmp) {
     this.netHours = Double.parseDouble(tmp);
@@ -759,9 +803,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Sets the netHours attribute of the ServiceContract object
+   * Sets the netHours attribute of the ServiceContract object
    *
-   *@param  tmp  The new netHours value
+   * @param tmp The new netHours value
    */
   public void setNetHours(double tmp) {
     this.netHours = tmp;
@@ -769,9 +813,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ServiceContract object
+   * Gets the id attribute of the ServiceContract object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -779,9 +823,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the serviceContractNumber attribute of the ServiceContract object
+   * Gets the serviceContractNumber attribute of the ServiceContract object
    *
-   *@return    The serviceContractNumber value
+   * @return The serviceContractNumber value
    */
   public String getServiceContractNumber() {
     return serviceContractNumber;
@@ -789,9 +833,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the ServiceContract object
+   * Gets the orgId attribute of the ServiceContract object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -799,9 +843,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the contractValue attribute of the ServiceContract object
+   * Gets the contractValue attribute of the ServiceContract object
    *
-   *@return    The contractValue value
+   * @return The contractValue value
    */
   public double getContractValue() {
     return contractValue;
@@ -809,9 +853,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the initialStartDate attribute of the ServiceContract object
+   * Gets the initialStartDate attribute of the ServiceContract object
    *
-   *@return    The initialStartDate value
+   * @return The initialStartDate value
    */
   public java.sql.Timestamp getInitialStartDate() {
     return initialStartDate;
@@ -819,9 +863,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the initialStartDateString attribute of the ServiceContract object
+   * Gets the initialStartDateString attribute of the ServiceContract object
    *
-   *@return    The initialStartDateString value
+   * @return The initialStartDateString value
    */
   public String getInitialStartDateString() {
     String tmp = "";
@@ -834,9 +878,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the currentStartDate attribute of the ServiceContract object
+   * Gets the currentStartDate attribute of the ServiceContract object
    *
-   *@return    The currentStartDate value
+   * @return The currentStartDate value
    */
   public java.sql.Timestamp getCurrentStartDate() {
     return currentStartDate;
@@ -844,9 +888,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the currentStartDateString attribute of the ServiceContract object
+   * Gets the currentStartDateString attribute of the ServiceContract object
    *
-   *@return    The currentStartDateString value
+   * @return The currentStartDateString value
    */
   public String getCurrentStartDateString() {
     String tmp = "";
@@ -859,9 +903,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the currentEndDate attribute of the ServiceContract object
+   * Gets the currentEndDate attribute of the ServiceContract object
    *
-   *@return    The currentEndDate value
+   * @return The currentEndDate value
    */
   public java.sql.Timestamp getCurrentEndDate() {
     return currentEndDate;
@@ -869,9 +913,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the currentEndDateString attribute of the ServiceContract object
+   * Gets the currentEndDateString attribute of the ServiceContract object
    *
-   *@return    The currentEndDateString value
+   * @return The currentEndDateString value
    */
   public String getCurrentEndDateString() {
     String tmp = "";
@@ -884,9 +928,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the category attribute of the ServiceContract object
+   * Gets the category attribute of the ServiceContract object
    *
-   *@return    The category value
+   * @return The category value
    */
   public int getCategory() {
     return category;
@@ -894,9 +938,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the ServiceContract object
+   * Gets the type attribute of the ServiceContract object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -904,9 +948,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the contactId attribute of the ServiceContract object
+   * Gets the contactId attribute of the ServiceContract object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -914,9 +958,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the ServiceContract object
+   * Gets the description attribute of the ServiceContract object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -924,9 +968,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the contractBillingNotes attribute of the ServiceContract object
+   * Gets the contractBillingNotes attribute of the ServiceContract object
    *
-   *@return    The contractBillingNotes value
+   * @return The contractBillingNotes value
    */
   public String getContractBillingNotes() {
     return contractBillingNotes;
@@ -934,9 +978,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the totalHoursRemaining attribute of the ServiceContract object
+   * Gets the totalHoursRemaining attribute of the ServiceContract object
    *
-   *@return    The totalHoursRemaining value
+   * @return The totalHoursRemaining value
    */
   public double getTotalHoursRemaining() {
     return round(totalHoursRemaining, 2);
@@ -944,9 +988,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the responseTime attribute of the ServiceContract object
+   * Gets the responseTime attribute of the ServiceContract object
    *
-   *@return    The responseTime value
+   * @return The responseTime value
    */
   public int getResponseTime() {
     return responseTime;
@@ -954,9 +998,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the telephoneResponseModel attribute of the ServiceContract object
+   * Gets the telephoneResponseModel attribute of the ServiceContract object
    *
-   *@return    The telephoneResponseModel value
+   * @return The telephoneResponseModel value
    */
   public int getTelephoneResponseModel() {
     return telephoneResponseModel;
@@ -964,9 +1008,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the onsiteResponseModel attribute of the ServiceContract object
+   * Gets the onsiteResponseModel attribute of the ServiceContract object
    *
-   *@return    The onsiteResponseModel value
+   * @return The onsiteResponseModel value
    */
   public int getOnsiteResponseModel() {
     return onsiteResponseModel;
@@ -974,9 +1018,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the emailResponseModel attribute of the ServiceContract object
+   * Gets the emailResponseModel attribute of the ServiceContract object
    *
-   *@return    The emailResponseModel value
+   * @return The emailResponseModel value
    */
   public int getEmailResponseModel() {
     return emailResponseModel;
@@ -984,9 +1028,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ServiceContract object
+   * Gets the entered attribute of the ServiceContract object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -994,9 +1038,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the ServiceContract object
+   * Gets the enteredBy attribute of the ServiceContract object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1004,9 +1048,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the ServiceContract object
+   * Gets the modified attribute of the ServiceContract object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1014,9 +1058,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ServiceContract object
+   * Gets the modifiedBy attribute of the ServiceContract object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1024,9 +1068,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the ServiceContract object
+   * Gets the enabled attribute of the ServiceContract object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -1034,9 +1078,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the override attribute of the ServiceContract object
+   * Gets the override attribute of the ServiceContract object
    *
-   *@return    The override value
+   * @return The override value
    */
   public boolean getOverride() {
     return override;
@@ -1044,9 +1088,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the serviceModelNotes attribute of the ServiceContract object
+   * Gets the serviceModelNotes attribute of the ServiceContract object
    *
-   *@return    The serviceModelNotes value
+   * @return The serviceModelNotes value
    */
   public String getServiceModelNotes() {
     return serviceModelNotes;
@@ -1054,9 +1098,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the adjustmentHours attribute of the ServiceContract object
+   * Gets the adjustmentHours attribute of the ServiceContract object
    *
-   *@return    The adjustmentHours value
+   * @return The adjustmentHours value
    */
   public double getAdjustmentHours() {
     return adjustmentHours;
@@ -1064,9 +1108,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the adjustmentReason attribute of the ServiceContract object
+   * Gets the adjustmentReason attribute of the ServiceContract object
    *
-   *@return    The adjustmentReason value
+   * @return The adjustmentReason value
    */
   public int getAdjustmentReason() {
     return adjustmentReason;
@@ -1074,9 +1118,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the adjustmentHoursNotes attribute of the ServiceContract object
+   * Gets the adjustmentHoursNotes attribute of the ServiceContract object
    *
-   *@return    The adjustmentHoursNotes value
+   * @return The adjustmentHoursNotes value
    */
   public String getAdjustmentNotes() {
     return adjustmentNotes;
@@ -1084,9 +1128,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the netHours attribute of the ServiceContract object
+   * Gets the netHours attribute of the ServiceContract object
    *
-   *@return    The netHours value
+   * @return The netHours value
    */
   public double getNetHours() {
     return netHours;
@@ -1094,9 +1138,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive
+   * Gets the properties that are TimeZone sensitive
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -1108,9 +1152,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the ServiceContract class
+   * Gets the numberParams attribute of the ServiceContract class
    *
-   *@return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -1120,11 +1164,11 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -1153,10 +1197,12 @@ public class ServiceContract extends GenericBean {
         "telephone_service_model= ? , " +
         "onsite_service_model = ? , " +
         "email_service_model = ? , " +
-        "service_model_notes = ? ");
+        "service_model_notes = ? , " +
+        "trashed_date = ? ");
 
     if (!override) {
-      sql.append(" , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
+      sql.append(
+          " , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
     }
     sql.append("WHERE contract_id = ? ");
     if (!override) {
@@ -1189,6 +1235,7 @@ public class ServiceContract extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, onsiteResponseModel);
     DatabaseUtils.setInt(pst, ++i, emailResponseModel);
     pst.setString(++i, serviceModelNotes);
+    DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     if (!override) {
       pst.setInt(++i, modifiedBy);
     }
@@ -1207,12 +1254,12 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Inserts all the products (labor categories) associated with the service
-   *  contract
+   * Inserts all the products (labor categories) associated with the service
+   * contract
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertProductList(Connection db) throws SQLException {
     //Remove all products, add new list
@@ -1237,12 +1284,12 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Updates only the change in the hours remaining in the service contract
+   * Updates only the change in the hours remaining in the service contract
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpContractId     Description of the Parameter
-   *@param  tmpHoursChanged   Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param tmpContractId   Description of the Parameter
+   * @param tmpHoursChanged Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void updateHoursRemaining(Connection db, int tmpContractId, double tmpHoursChanged) throws SQLException {
     PreparedStatement pst = null;
@@ -1263,12 +1310,86 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Finds all dependencies of the service contract to inform the user before
-   *  the service contract is deleted
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    int resultCount = 0;
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    int count = 0;
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      sql.append(
+          "UPDATE service_contract " +
+          "SET trashed_date = ? , " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+          "modifiedby = ? " +
+          "WHERE contract_id = ? ");
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      if (toTrash) {
+        DatabaseUtils.setTimestamp(
+            pst, ++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+      }
+      DatabaseUtils.setInt(pst, ++i, tmpUserId);
+      pst.setInt(++i, this.id);
+      resultCount = pst.executeUpdate();
+      pst.close();
+      // Disable the account or the contact history for the service contract
+      ContactHistory.trash(
+          db, OrganizationHistory.SERVICE_CONTRACT, this.getId(), !toTrash);
+
+      AssetList assetList = new AssetList();
+      assetList.setServiceContractId(this.getId());
+      if (!toTrash) {
+        assetList.setIncludeOnlyTrashed(true);
+      }
+      assetList.buildList(db);
+      assetList.updateStatus(db, toTrash, tmpUserId);
+
+      TicketList ticketList = new TicketList();
+      ticketList.setServiceContractId(this.getId());
+      if (!toTrash) {
+        ticketList.setIncludeOnlyTrashed(true);
+      }
+      ticketList.buildList(db);
+      ticketList.updateStatus(db, toTrash, tmpUserId);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   * Finds all dependencies of the service contract to inform the user before
+   * the service contract is deleted
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -1276,13 +1397,17 @@ public class ServiceContract extends GenericBean {
 
       Dependency assetDependency = new Dependency();
       assetDependency.setName("assets");
-      assetDependency.setCount(AssetList.retrieveRecordCount(db, Constants.SERVICE_CONTRACTS, this.getId()));
+      assetDependency.setCount(
+          AssetList.retrieveRecordCount(
+              db, Constants.SERVICE_CONTRACTS, this.getId()));
       assetDependency.setCanDelete(true);
       dependencyList.add(assetDependency);
 
       Dependency ticDependency = new Dependency();
       ticDependency.setName("tickets");
-      ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.SERVICE_CONTRACTS, this.getId()));
+      ticDependency.setCount(
+          TicketList.retrieveRecordCount(
+              db, Constants.SERVICE_CONTRACTS, this.getId()));
       ticDependency.setCanDelete(true);
       dependencyList.add(ticDependency);
 
@@ -1294,16 +1419,16 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Seperate method to delete the dependencies and then the object. This
-   *  seperation allows service contract alone to be deleted when other objects
-   *  are deleted (for e.g., tickets)
+   * Seperate method to delete the dependencies and then the object. This
+   * seperation allows service contract alone to be deleted when other objects
+   * are deleted (for e.g., tickets)
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      File path of documents related to a ticket
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath File path of documents related to a ticket
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
-  public boolean deleteAll(Connection db, String baseFilePath) throws SQLException {
+  public boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Service Contract Id not specified.");
     }
@@ -1312,6 +1437,10 @@ public class ServiceContract extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
+      // Delete Contact History
+      ContactHistory.deleteObject(
+          db, OrganizationHistory.SERVICE_CONTRACT, this.getId());
+      
       //Service Contracts have  tickets, assets, hours history related  related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setServiceContractId(this.getId());
@@ -1319,15 +1448,52 @@ public class ServiceContract extends GenericBean {
       ticketList.delete(db, baseFilePath);
       ticketList = null;
 
-      // Delete after tickets
+      ticketList = new TicketList();
+      ticketList.setServiceContractId(this.getId());
+      ticketList.setIncludeOnlyTrashed(false);
+      ticketList.buildList(db);
+      ticketList.delete(db, baseFilePath);
+      ticketList = null;
+
+      // Delete assets
       AssetList assetList = new AssetList();
       assetList.setServiceContractId(this.getId());
       assetList.setAllAssets(false);
       assetList.buildList(db);
-      assetList.delete(db);
+      assetList.delete(db, baseFilePath);
       assetList = null;
 
-      delete(db);
+      assetList = new AssetList();
+      assetList.setServiceContractId(this.getId());
+      assetList.setIncludeOnlyTrashed(true);
+      assetList.setAllAssets(false);
+      assetList.buildList(db);
+      assetList.delete(db, baseFilePath);
+      assetList = null;
+
+      //Delete Service Contract Hours History
+      ServiceContractHoursList scHoursList = new ServiceContractHoursList();
+      scHoursList.setContractId(this.id);
+      scHoursList.buildList(db);
+      scHoursList.delete(db);
+      scHoursList = null;
+
+      //Delete Service Contract Products
+      ServiceContractProductList scProductList = new ServiceContractProductList();
+      scProductList.setContractId(this.id);
+      scProductList.buildList(db);
+      scProductList.delete(db);
+      scProductList = null;
+      // Delete Contact History
+      ContactHistory.deleteObject(
+          db, OrganizationHistory.SERVICE_CONTRACT, this.getId());
+
+      Statement st = db.createStatement();
+      st.executeUpdate(
+          "DELETE FROM service_contract " +
+          "WHERE contract_id = " + this.getId());
+      st.close();
+
       if (commit) {
         db.commit();
       }
@@ -1347,68 +1513,17 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Deletes this object from the database
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void delete(Connection db) throws SQLException {
-
-    if (this.getId() == -1) {
-      throw new SQLException("Service Contract Id not specified.");
-    }
-    boolean commit = db.getAutoCommit();
-    try {
-      if (commit) {
-        db.setAutoCommit(false);
-      }
-      //Delete Service Contract Hours History
-      ServiceContractHoursList scHoursList = new ServiceContractHoursList();
-      scHoursList.setContractId(this.id);
-      scHoursList.buildList(db);
-      scHoursList.delete(db);
-      scHoursList = null;
-  
-      //Delete Service Contract Products
-      ServiceContractProductList scProductList = new ServiceContractProductList();
-      scProductList.setContractId(this.id);
-      scProductList.buildList(db);
-      scProductList.delete(db);
-      scProductList = null;
-  
-      Statement st = db.createStatement();
-      st.executeUpdate("DELETE FROM service_contract WHERE contract_id = " + this.getId());
-      st.close();
-      if (commit) {
-        db.commit();
-      }
-    } catch (SQLException e) {
-      e.printStackTrace(System.out);
-      if (commit) {
-        db.rollback();
-      }
-      throw new SQLException(e.getMessage());
-    } finally {
-      if (commit) {
-        db.setAutoCommit(true);
-      }
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
-    pst = db.prepareStatement(
+    id = DatabaseUtils.getNextSeq(db, "service_contract_contract_id_seq");
+    PreparedStatement pst = db.prepareStatement(
         "INSERT INTO service_contract " +
-        "(contract_number , " +
+        "(" + (id > -1 ? "contract_id, " : "") + "contract_number , " +
         "account_id , " +
         "contract_value , " +
         "initial_start_date , " +
@@ -1429,9 +1544,13 @@ public class ServiceContract extends GenericBean {
         "email_service_model , " +
         "service_model_notes , " +
         "enteredby , " +
-        "modifiedby ) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "modifiedby , " +
+        "trashed_date ) " +
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
     DatabaseUtils.setDouble(pst, ++i, contractValue);
@@ -1458,28 +1577,28 @@ public class ServiceContract extends GenericBean {
     pst.setString(++i, serviceModelNotes);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
+    DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "service_contract_contract_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "service_contract_contract_id_seq", id);
     pst.close();
-
     //Inserts all the products (labor categories) associated with the service contract
     insertProductList(db);
-
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpContractId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param tmpContractId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int tmpContractId) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-    pst = db.prepareStatement(" SELECT * " +
+    pst = db.prepareStatement(
+        " SELECT * " +
         " FROM service_contract " +
         " WHERE contract_id = ? ");
     pst.setInt(1, tmpContractId);
@@ -1495,10 +1614,10 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildServiceContractProductList(Connection db) throws SQLException {
     serviceContractProductList = new ServiceContractProductList();
@@ -1508,10 +1627,10 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("contract_id");
@@ -1526,7 +1645,8 @@ public class ServiceContract extends GenericBean {
     description = rs.getString("description");
     contractBillingNotes = rs.getString("contract_billing_notes");
     responseTime = DatabaseUtils.getInt(rs, "response_time");
-    telephoneResponseModel = DatabaseUtils.getInt(rs, "telephone_service_model");
+    telephoneResponseModel = DatabaseUtils.getInt(
+        rs, "telephone_service_model");
     onsiteResponseModel = DatabaseUtils.getInt(rs, "onsite_service_model");
     emailResponseModel = DatabaseUtils.getInt(rs, "email_service_model");
     entered = rs.getTimestamp("entered");
@@ -1540,6 +1660,7 @@ public class ServiceContract extends GenericBean {
     initialStartDateTimeZone = rs.getString("initial_start_date_timezone");
     currentStartDateTimeZone = rs.getString("current_start_date_timezone");
     currentEndDateTimeZone = rs.getString("current_end_date_timezone");
+    trashedDate = rs.getTimestamp("trashed_date");
   }
 }
 

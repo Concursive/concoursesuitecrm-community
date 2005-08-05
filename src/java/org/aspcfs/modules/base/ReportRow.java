@@ -15,15 +15,15 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
- *  ReportRow is an object that defines the properties of a report row for a
- *  Report object.
+ * ReportRow is an object that defines the properties of a report row for a
+ * Report object.
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class ReportRow {
 
@@ -32,17 +32,18 @@ public class ReportRow {
 
 
   /**
-   *  Constructor for the ReportRow object
+   * Constructor for the ReportRow object
    */
-  public ReportRow() { }
+  public ReportRow() {
+  }
 
 
   //Set
   /**
-   *  Adds a feature to the Cell attribute of the ReportRow object
+   * Adds a feature to the Cell attribute of the ReportRow object
    *
-   *@param  tmp   The feature to be added to the Cell attribute
-   *@param  tmp2  The feature to be added to the Cell attribute
+   * @param tmp  The feature to be added to the Cell attribute
+   * @param tmp2 The feature to be added to the Cell attribute
    */
   public void addCell(String tmp, String tmp2) {
     ReportCell thisCell = new ReportCell();
@@ -53,9 +54,9 @@ public class ReportRow {
 
 
   /**
-   *  Adds a feature to the Cell attribute of the ReportRow object
+   * Adds a feature to the Cell attribute of the ReportRow object
    *
-   *@param  tmp  The feature to be added to the Cell attribute
+   * @param tmp The feature to be added to the Cell attribute
    */
   public void addCell(String tmp) {
     ReportCell thisCell = new ReportCell();
@@ -65,10 +66,10 @@ public class ReportRow {
 
 
   /**
-   *  Adds a feature to the Cell attribute of the ReportRow object
+   * Adds a feature to the Cell attribute of the ReportRow object
    *
-   *@param  tmp   The feature to be added to the Cell attribute
-   *@param  tmp2  The feature to be added to the Cell attribute
+   * @param tmp  The feature to be added to the Cell attribute
+   * @param tmp2 The feature to be added to the Cell attribute
    */
   public void addCell(int tmp, String tmp2) {
     ReportCell thisCell = new ReportCell();
@@ -79,9 +80,9 @@ public class ReportRow {
 
 
   /**
-   *  Adds a feature to the Cell attribute of the ReportRow object
+   * Adds a feature to the Cell attribute of the ReportRow object
    *
-   *@param  tmp  The feature to be added to the Cell attribute
+   * @param tmp The feature to be added to the Cell attribute
    */
   public void addCell(int tmp) {
     ReportCell thisCell = new ReportCell();
@@ -92,9 +93,9 @@ public class ReportRow {
 
   //Get
   /**
-   *  Gets the cells attribute of the ReportRow object
+   * Gets the cells attribute of the ReportRow object
    *
-   *@return    The cells value
+   * @return The cells value
    */
   public Vector getCells() {
     return this.cells;
@@ -102,10 +103,10 @@ public class ReportRow {
 
 
   /**
-   *  Gets the cell attribute of the ReportRow object
+   * Gets the cell attribute of the ReportRow object
    *
-   *@param  tmp  Description of the Parameter
-   *@return      The cell value
+   * @param tmp Description of the Parameter
+   * @return The cell value
    */
   public ReportCell getCell(int tmp) {
     return (ReportCell) this.cells.get(tmp);

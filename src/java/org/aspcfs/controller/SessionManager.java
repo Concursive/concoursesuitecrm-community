@@ -15,19 +15,19 @@
  */
 package org.aspcfs.controller;
 
-import java.util.HashMap;
-import javax.servlet.http.HttpSession;
 import com.darkhorseventures.framework.actions.ActionContext;
-import javax.servlet.*;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 
 /**
- *  Handles all sessions running on the web server
+ * Handles all sessions running on the web server
  *
- *@author     Mathur
- *@created    November 22, 2002
- *@version    $Id: SessionManager.java,v 1.1.2.1 2002/11/26 19:51:17 akhi_m Exp
- *      $
+ * @author Mathur
+ * @version $Id: SessionManager.java,v 1.1.2.1 2002/11/26 19:51:17 akhi_m Exp
+ *          $
+ * @created November 22, 2002
  */
 
 public class SessionManager {
@@ -38,15 +38,16 @@ public class SessionManager {
 
 
   /**
-   *  Constructor for the SessionManager object
+   * Constructor for the SessionManager object
    */
-  public SessionManager() { }
+  public SessionManager() {
+  }
 
 
   /**
-   *  Sets the sessions attribute of the SessionManager object
+   * Sets the sessions attribute of the SessionManager object
    *
-   *@param  sessions  The new sessions value
+   * @param sessions The new sessions value
    */
   public void setSessions(HashMap sessions) {
     this.sessions = sessions;
@@ -54,9 +55,9 @@ public class SessionManager {
 
 
   /**
-   *  Gets all sessions running on this web server
+   * Gets all sessions running on this web server
    *
-   *@return    The sessions value
+   * @return The sessions value
    */
   public HashMap getSessions() {
     return sessions;
@@ -64,10 +65,10 @@ public class SessionManager {
 
 
   /**
-   *  Adds a user to the HashMap in synch mode
+   * Adds a user to the HashMap in synch mode
    *
-   *@param  userId   The feature to be added to the User attribute
-   *@param  context  The feature to be added to the User attribute
+   * @param userId  The feature to be added to the User attribute
+   * @param context The feature to be added to the User attribute
    */
   public void addUser(ActionContext context, int userId) {
     this.addUser(context.getRequest(), userId);
@@ -75,11 +76,11 @@ public class SessionManager {
 
 
   /**
-   *  Adds a feature to the User attribute of the SessionManager object, for
-   *  classes that do not have access to an ActionContext, like the SecurityHook
+   * Adds a feature to the User attribute of the SessionManager object, for
+   * classes that do not have access to an ActionContext, like the SecurityHook
    *
-   *@param  request  The feature to be added to the User attribute
-   *@param  userId   The feature to be added to the User attribute
+   * @param request The feature to be added to the User attribute
+   * @param userId  The feature to be added to the User attribute
    */
   public void addUser(HttpServletRequest request, int userId) {
     HttpSession session = request.getSession();
@@ -91,18 +92,19 @@ public class SessionManager {
       synchUpdate(thisSession, userId, ADD);
     } else {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("SessionManager-> User " + userId + " already has a session");
+        System.out.println(
+            "SessionManager-> User " + userId + " already has a session");
       }
     }
   }
 
 
   /**
-   *  Adds/Removes an entry from HashMap in synch mode
+   * Adds/Removes an entry from HashMap in synch mode
    *
-   *@param  thisSession  Description of the Parameter
-   *@param  userId       Description of the Parameter
-   *@param  action       Description of the Parameter
+   * @param thisSession Description of the Parameter
+   * @param userId      Description of the Parameter
+   * @param action      Description of the Parameter
    */
   public void synchUpdate(UserSession thisSession, int userId, int action) {
     synchronized (this) {
@@ -122,9 +124,9 @@ public class SessionManager {
 
 
   /**
-   *  Remove a user from HashMap in synch mode
+   * Remove a user from HashMap in synch mode
    *
-   *@param  userId  Description of the Parameter
+   * @param userId Description of the Parameter
    */
   public void removeUser(int userId) {
     UserSession thisSession = (UserSession) sessions.get(new Integer(userId));
@@ -135,10 +137,10 @@ public class SessionManager {
 
 
   /**
-   *  checks to see if the user is logged in
+   * checks to see if the user is logged in
    *
-   *@param  userId  Description of the Parameter
-   *@return         The userLoggedIn value
+   * @param userId Description of the Parameter
+   * @return The userLoggedIn value
    */
   public boolean isUserLoggedIn(int userId) {
     return sessions.containsKey(new Integer(userId));
@@ -146,10 +148,10 @@ public class SessionManager {
 
 
   /**
-   *  Gets the userSession attribute of the SessionManager object
+   * Gets the userSession attribute of the SessionManager object
    *
-   *@param  userId  Description of the Parameter
-   *@return         The userSession value
+   * @param userId Description of the Parameter
+   * @return The userSession value
    */
   public UserSession getUserSession(int userId) {
     if (sessions.get(new Integer(userId)) != null) {
@@ -160,12 +162,12 @@ public class SessionManager {
 
 
   /**
-   *  Replace a user's session<br>
-   *  Is called when user logs from more than one machine
+   * Replace a user's session<br>
+   * Is called when user logs from more than one machine
    *
-   *@param  context  Description of the Parameter
-   *@param  userId   Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @param userId  Description of the Parameter
+   * @return Description of the Return Value
    */
   public UserSession replaceUserSession(ActionContext context, int userId) {
     removeUser(userId);
@@ -175,10 +177,10 @@ public class SessionManager {
 
 
   /**
-   *  Returns the number of active sessions<br>
-   *  NOTE: Not sure if expired sessions are removed
+   * Returns the number of active sessions<br>
+   * NOTE: Not sure if expired sessions are removed
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int size() {
     return sessions.size();

@@ -20,17 +20,17 @@ package com.isavvix.tools;
 import java.io.File;
 
 /**
- *  This class is used as a data structure by HttpMultiPartParser.
+ * This class is used as a data structure by HttpMultiPartParser.
  *
- *@author     Anil Hemrajani
- *@created    December 6, 2001
- *@version    $Id$
- *@see        com.isavvix.tools.HttpMultiPartParser
+ * @author Anil Hemrajani
+ * @version $Id$
+ * @created December 6, 2001
+ * @see com.isavvix.tools.HttpMultiPartParser
  */
 public class FileInfo {
   private String name = null,
-      clientFileName = null,
-      fileContentType = null;
+  clientFileName = null,
+  fileContentType = null;
   private byte[] fileContents = null;
   private File file = null;
   private StringBuffer sb = new StringBuffer(100);
@@ -40,10 +40,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the Name attribute of the FileInfo object
+   * Sets the Name attribute of the FileInfo object
    *
-   *@param  aName  The new Name value
-   *@since
+   * @param aName The new Name value
    */
   public void setName(String aName) {
     name = aName;
@@ -51,10 +50,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the ClientFileName attribute of the FileInfo object
+   * Sets the ClientFileName attribute of the FileInfo object
    *
-   *@param  aClientFileName  The new ClientFileName value
-   *@since
+   * @param aClientFileName The new ClientFileName value
    */
   public void setClientFileName(String aClientFileName) {
     clientFileName = aClientFileName;
@@ -62,10 +60,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the LocalFile attribute of the FileInfo object
+   * Sets the LocalFile attribute of the FileInfo object
    *
-   *@param  aFile  The new LocalFile value
-   *@since
+   * @param aFile The new LocalFile value
    */
   public void setLocalFile(File aFile) {
     file = aFile;
@@ -73,10 +70,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the FileContents attribute of the FileInfo object
+   * Sets the FileContents attribute of the FileInfo object
    *
-   *@param  aByteArray  The new FileContents value
-   *@since
+   * @param aByteArray The new FileContents value
    */
   public void setFileContents(byte[] aByteArray) {
     fileContents = new byte[aByteArray.length];
@@ -85,10 +81,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the FileContentType attribute of the FileInfo object
+   * Sets the FileContentType attribute of the FileInfo object
    *
-   *@param  aContentType  The new FileContentType value
-   *@since
+   * @param aContentType The new FileContentType value
    */
   public void setFileContentType(String aContentType) {
     fileContentType = aContentType;
@@ -96,10 +91,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the Version attribute of the FileInfo object
+   * Sets the Version attribute of the FileInfo object
    *
-   *@param  tmp  The new Version value
-   *@since
+   * @param tmp The new Version value
    */
   public void setVersion(double tmp) {
     this.version = tmp;
@@ -107,10 +101,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the Size attribute of the FileInfo object
+   * Sets the Size attribute of the FileInfo object
    *
-   *@param  tmp  The new Size value
-   *@since
+   * @param tmp The new Size value
    */
   public void setSize(int tmp) {
     this.size = tmp;
@@ -118,10 +111,9 @@ public class FileInfo {
 
 
   /**
-   *  Sets the ExtensionId attribute of the FileInfo object
+   * Sets the ExtensionId attribute of the FileInfo object
    *
-   *@param  tmp  The new ExtensionId value
-   *@since
+   * @param tmp The new ExtensionId value
    */
   public void setExtensionId(int tmp) {
     this.extensionId = tmp;
@@ -129,10 +121,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the Name attribute of the FileInfo object
+   * Gets the Name attribute of the FileInfo object
    *
-   *@return    The Name value
-   *@since
+   * @return The Name value
    */
   public String getName() {
     return name;
@@ -140,10 +131,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the ClientFileName attribute of the FileInfo object
+   * Gets the ClientFileName attribute of the FileInfo object
    *
-   *@return    The ClientFileName value
-   *@since
+   * @return The ClientFileName value
    */
   public String getClientFileName() {
     return clientFileName;
@@ -151,10 +141,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the Filename attribute of the FileInfo object
+   * Gets the Filename attribute of the FileInfo object
    *
-   *@return    The Filename value
-   *@since
+   * @return The Filename value
    */
   public String getFilename() {
     return file.getName();
@@ -162,9 +151,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the realFilename attribute of the FileInfo object
+   * Gets the realFilename attribute of the FileInfo object
    *
-   *@return    The realFilename value
+   * @return The realFilename value
    */
   public String getRealFilename() {
     int index = file.getName().lastIndexOf('^');
@@ -177,10 +166,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the LocalFile attribute of the FileInfo object
+   * Gets the LocalFile attribute of the FileInfo object
    *
-   *@return    The LocalFile value
-   *@since
+   * @return The LocalFile value
    */
   public File getLocalFile() {
     return file;
@@ -188,10 +176,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the FileContents attribute of the FileInfo object
+   * Gets the FileContents attribute of the FileInfo object
    *
-   *@return    The FileContents value
-   *@since
+   * @return The FileContents value
    */
   public byte[] getFileContents() {
     return fileContents;
@@ -199,10 +186,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the FileContentType attribute of the FileInfo object
+   * Gets the FileContentType attribute of the FileInfo object
    *
-   *@return    The FileContentType value
-   *@since
+   * @return The FileContentType value
    */
   public String getFileContentType() {
     return fileContentType;
@@ -210,10 +196,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the Version attribute of the FileInfo object
+   * Gets the Version attribute of the FileInfo object
    *
-   *@return    The Version value
-   *@since
+   * @return The Version value
    */
   public double getVersion() {
     return version;
@@ -221,10 +206,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the ExtensionId attribute of the FileInfo object
+   * Gets the ExtensionId attribute of the FileInfo object
    *
-   *@return    The ExtensionId value
-   *@since
+   * @return The ExtensionId value
    */
   public int getExtensionId() {
     return extensionId;
@@ -232,10 +216,9 @@ public class FileInfo {
 
 
   /**
-   *  Gets the Size attribute of the FileInfo object
+   * Gets the Size attribute of the FileInfo object
    *
-   *@return    The Size value
-   *@since
+   * @return The Size value
    */
   public int getSize() {
     return (size);
@@ -243,11 +226,10 @@ public class FileInfo {
 
 
   /**
-   *  Returns the file path without any trailing - and characters, which are
-   *  used to identify a unique upload
+   * Returns the file path without any trailing - and characters, which are
+   * used to identify a unique upload
    *
-   *@return    The OldLocalFilePath value
-   *@since
+   * @return The OldLocalFilePath value
    */
   public String getOldLocalFilePath() {
     int index = file.getPath().lastIndexOf('-');
@@ -260,17 +242,17 @@ public class FileInfo {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
-   *@since
+   * @return Description of the Returned Value
    */
   public String toString() {
     sb.setLength(0);
     sb.append("               name = " + name + "\n");
     sb.append("     clientFileName = " + clientFileName + "\n");
     if (file != null) {
-      sb.append("      File.toString = " + file +
+      sb.append(
+          "      File.toString = " + file +
           " (size=" + file.length() + ")\n");
     } else {
       sb.append("fileContents.length = " + fileContents.length + "\n");

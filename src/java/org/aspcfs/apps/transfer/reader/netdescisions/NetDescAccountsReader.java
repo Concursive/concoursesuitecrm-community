@@ -15,30 +15,31 @@
  */
 package org.aspcfs.apps.transfer.reader.netdescisions;
 
-import java.sql.*;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.apps.transfer.*;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import java.util.logging.*;
-import java.util.*;
-import java.io.*;
-
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.hssf.record.*;
-import org.apache.poi.hssf.model.*;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.*;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
+import org.aspcfs.modules.contacts.base.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 21, 2003
- *@version    $Id: NetDescAccountsReader.java,v 1.1.2.1 2003/01/22 23:10:49
- *      akhi_m Exp $
+ * @author Mathur
+ * @version $Id: NetDescAccountsReader.java,v 1.1.2.1 2003/01/22 23:10:49
+ *          akhi_m Exp $
+ * @created January 21, 2003
  */
 public class NetDescAccountsReader implements DataReader {
 
@@ -50,9 +51,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Sets the excelFile attribute of the NetDescAccountsReader object
+   * Sets the excelFile attribute of the NetDescAccountsReader object
    *
-   *@param  tmp  The new excelFile value
+   * @param tmp The new excelFile value
    */
   public void setExcelFile(String tmp) {
     this.excelFile = tmp;
@@ -60,9 +61,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Sets the ignoreRow1 attribute of the NetDescAccountsReader object
+   * Sets the ignoreRow1 attribute of the NetDescAccountsReader object
    *
-   *@param  tmp  The new ignoreRow1 value
+   * @param tmp The new ignoreRow1 value
    */
   public void setIgnoreRow1(boolean tmp) {
     this.ignoreRow1 = tmp;
@@ -70,9 +71,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Sets the propertyFile attribute of the NetDescAccountsReader object
+   * Sets the propertyFile attribute of the NetDescAccountsReader object
    *
-   *@param  tmp  The new propertyFile value
+   * @param tmp The new propertyFile value
    */
   public void setPropertyFile(String tmp) {
     this.propertyFile = tmp;
@@ -80,9 +81,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the excelFile attribute of the NetDescAccountsReader object
+   * Gets the excelFile attribute of the NetDescAccountsReader object
    *
-   *@return    The excelFile value
+   * @return The excelFile value
    */
   public String getExcelFile() {
     return excelFile;
@@ -90,9 +91,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the ignoreRow1 attribute of the NetDescAccountsReader object
+   * Gets the ignoreRow1 attribute of the NetDescAccountsReader object
    *
-   *@return    The ignoreRow1 value
+   * @return The ignoreRow1 value
    */
   public boolean getIgnoreRow1() {
     return ignoreRow1;
@@ -100,9 +101,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the NetDescAccountsReader object
+   * Gets the version attribute of the NetDescAccountsReader object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -110,9 +111,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the NetDescAccountsReader object
+   * Gets the name attribute of the NetDescAccountsReader object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Excel NetDescisions Accounts Transfer Reader";
@@ -120,9 +121,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the description attribute of the NetDescAccountsReader object
+   * Gets the description attribute of the NetDescAccountsReader object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Reads data from an Excel file formatted with Account Contacts data";
@@ -130,9 +131,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the propertyFile attribute of the NetDescAccountsReader object
+   * Gets the propertyFile attribute of the NetDescAccountsReader object
    *
-   *@return    The propertyFile value
+   * @return The propertyFile value
    */
   public String getPropertyFile() {
     return propertyFile;
@@ -140,9 +141,9 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the configured attribute of the NetDescAccountsReader object
+   * Gets the configured attribute of the NetDescAccountsReader object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     logger.info("Checking Reader Configuration");
@@ -165,14 +166,13 @@ public class NetDescAccountsReader implements DataReader {
   }
 
 
-
   /**
-   *  Processes the excel file & creates CFS mapping objects using
-   *  PropertyMapList.<br>
-   *  Also shoots of the CFSHttpXmlWriter to save the CFS objects
+   * Processes the excel file & creates CFS mapping objects using
+   * PropertyMapList.<br>
+   * Also shoots of the CFSHttpXmlWriter to save the CFS objects
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     this.writer = writer;
@@ -211,17 +211,22 @@ public class NetDescAccountsReader implements DataReader {
         if (row != null) {
           logger.info("ROW " + row.getRowNum());
           short firstCellNum = (short) row.getFirstCellNum();
-          logger.info("Processing Account " + getCellValue(row.getCell(firstCellNum)));
+          logger.info(
+              "Processing Account " + getCellValue(row.getCell(firstCellNum)));
 
           int orgId = r;
 
           //build the contact
-          logger.info("Adding Contact " + getCellValue(row.getCell((short) (firstCellNum + 2))));
+          logger.info(
+              "Adding Contact " + getCellValue(
+                  row.getCell((short) (firstCellNum + 2))));
           Contact cfsContact = null;
-          if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 2))))) {
+          if (!"".equals(
+              getCellValue(row.getCell((short) (firstCellNum + 2))))) {
             cfsContact = new Contact();
             cfsContact.setId(r);
-            String contactInfo = getCellValue(row.getCell((short) (firstCellNum + 2)));
+            String contactInfo = getCellValue(
+                row.getCell((short) (firstCellNum + 2)));
             if (!"".equals(contactInfo)) {
               StringTokenizer st = new StringTokenizer(contactInfo, ",");
               if (st.countTokens() > 1) {
@@ -251,8 +256,10 @@ public class NetDescAccountsReader implements DataReader {
                 }
               }
             }
-            cfsContact.setTitle(getCellValue(row.getCell((short) (firstCellNum + 13))));
-            cfsContact.setNameSalutation(getCellValue(row.getCell((short) (firstCellNum + 12))));
+            cfsContact.setTitle(
+                getCellValue(row.getCell((short) (firstCellNum + 13))));
+            cfsContact.setNameSalutation(
+                getCellValue(row.getCell((short) (firstCellNum + 12))));
             cfsContact.setEnteredBy(userId);
             cfsContact.setOwner(userId);
             cfsContact.setModifiedBy(userId);
@@ -261,34 +268,46 @@ public class NetDescAccountsReader implements DataReader {
             //add the account name under contact
             cfsContact.setCompany(getCellValue(row.getCell(firstCellNum)));
           } else {
-            logger.info("INVALID RECORD : No Contact Name Associated with " + r);
+            logger.info(
+                "INVALID RECORD : No Contact Name Associated with " + r);
             //logs.write(String.valueOf(r) + " --" +  getCellValue(row.getCell(firstCellNum)) + "\n");
           }
 
           //build the Contact's Address
           ContactAddress cfsAddress = null;
 
-          if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 3))))) {
+          if (!"".equals(
+              getCellValue(row.getCell((short) (firstCellNum + 3))))) {
             logger.info("Adding Contact Address ");
             cfsAddress = new ContactAddress();
 
             //trim address line 1 depending on city
-            String addressLine1 = getCellValue(row.getCell((short) (firstCellNum + 3)));
-            String city = getCellValue(row.getCell((short) (firstCellNum + 4)));
-            if (addressLine1 != null && city != null && !"".equals(addressLine1) && !"".equals(city) && addressLine1.indexOf(city) != -1) {
+            String addressLine1 = getCellValue(
+                row.getCell((short) (firstCellNum + 3)));
+            String city = getCellValue(
+                row.getCell((short) (firstCellNum + 4)));
+            if (addressLine1 != null && city != null && !"".equals(
+                addressLine1) && !"".equals(city) && addressLine1.indexOf(
+                    city) != -1) {
               if (!"NA".equals(addressLine1) && !"NA".equals(city)) {
-                addressLine1 = addressLine1.substring(0, addressLine1.indexOf(city) - 1);
+                addressLine1 = addressLine1.substring(
+                    0, addressLine1.indexOf(city) - 1);
                 if (addressLine1.endsWith(",")) {
-                  addressLine1 = addressLine1.substring(0, addressLine1.length() - 1);
+                  addressLine1 = addressLine1.substring(
+                      0, addressLine1.length() - 1);
                 }
               }
             }
             cfsAddress.setStreetAddressLine1(addressLine1);
             cfsAddress.setType(1);
-            cfsAddress.setCity(getCellValue(row.getCell((short) (firstCellNum + 4))));
-            cfsAddress.setState(getCellValue(row.getCell((short) (firstCellNum + 5))).toUpperCase());
-            cfsAddress.setZip(getCellValue(row.getCell((short) (firstCellNum + 6))));
-            cfsAddress.setCountry(getCellValue(row.getCell((short) (firstCellNum + 7))));
+            cfsAddress.setCity(
+                getCellValue(row.getCell((short) (firstCellNum + 4))));
+            cfsAddress.setState(
+                getCellValue(row.getCell((short) (firstCellNum + 5))).toUpperCase());
+            cfsAddress.setZip(
+                getCellValue(row.getCell((short) (firstCellNum + 6))));
+            cfsAddress.setCountry(
+                getCellValue(row.getCell((short) (firstCellNum + 7))));
             cfsAddress.setContactId(r);
             cfsAddress.setEnteredBy(userId);
             cfsAddress.setModifiedBy(userId);
@@ -297,7 +316,8 @@ public class NetDescAccountsReader implements DataReader {
           //build Company's Phone Numbers
 
           ContactPhoneNumberList cfsContPhList = new ContactPhoneNumberList();
-          String NetDescComPN = getCellValue(row.getCell((short) (firstCellNum + 9)));
+          String NetDescComPN = getCellValue(
+              row.getCell((short) (firstCellNum + 9)));
           if (!"".equals(NetDescComPN)) {
             StringTokenizer st = new StringTokenizer(NetDescComPN, "/");
             while (st.hasMoreTokens()) {
@@ -313,7 +333,8 @@ public class NetDescAccountsReader implements DataReader {
 
           //build Contact's Phone Numbers
           logger.info("Contact Phone Numbers ");
-          String NetDescContPN = getCellValue(row.getCell((short) (firstCellNum + 8)));
+          String NetDescContPN = getCellValue(
+              row.getCell((short) (firstCellNum + 8)));
           if (!"".equals(NetDescContPN)) {
             StringTokenizer st = new StringTokenizer(NetDescContPN, "/");
             while (st.hasMoreTokens()) {
@@ -334,12 +355,14 @@ public class NetDescAccountsReader implements DataReader {
           }
           //build Contact's Fax Number
           ContactPhoneNumber cfsFaxPhNumber = null;
-          if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 10))))) {
+          if (!"".equals(
+              getCellValue(row.getCell((short) (firstCellNum + 10))))) {
             cfsFaxPhNumber = new ContactPhoneNumber();
             cfsFaxPhNumber.setType(3);
             cfsFaxPhNumber.setEnteredBy(userId);
             cfsFaxPhNumber.setModifiedBy(userId);
-            String number = getCellValue(row.getCell((short) (firstCellNum + 10)));
+            String number = getCellValue(
+                row.getCell((short) (firstCellNum + 10)));
             logger.info("Fax -- " + number);
             cfsFaxPhNumber.setNumber(number);
             cfsFaxPhNumber.setContactId(r);
@@ -349,12 +372,14 @@ public class NetDescAccountsReader implements DataReader {
           //build Contact's Mobile Number
 
           ContactPhoneNumber cfsMobilePhNumber = null;
-          if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 11))))) {
+          if (!"".equals(
+              getCellValue(row.getCell((short) (firstCellNum + 11))))) {
             cfsMobilePhNumber = new ContactPhoneNumber();
             cfsMobilePhNumber.setType(7);
             cfsMobilePhNumber.setEnteredBy(userId);
             cfsMobilePhNumber.setModifiedBy(userId);
-            String number = getCellValue(row.getCell((short) (firstCellNum + 11)));
+            String number = getCellValue(
+                row.getCell((short) (firstCellNum + 11)));
             logger.info("Mobile -- " + number);
             cfsMobilePhNumber.setNumber(number);
             cfsMobilePhNumber.setContactId(r);
@@ -362,12 +387,16 @@ public class NetDescAccountsReader implements DataReader {
           }
 
           //build Contact's Email Addresse's
-          logger.info("EmailAddress -- " + getCellValue(row.getCell((short) (firstCellNum + 15))));
+          logger.info(
+              "EmailAddress -- " + getCellValue(
+                  row.getCell((short) (firstCellNum + 15))));
           ContactEmailAddress cfsEmailAddress = null;
-          if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 15))))) {
+          if (!"".equals(
+              getCellValue(row.getCell((short) (firstCellNum + 15))))) {
             cfsEmailAddress = new ContactEmailAddress();
             cfsEmailAddress.setType(1);
-            cfsEmailAddress.setEmail(getCellValue(row.getCell((short) (firstCellNum + 15))));
+            cfsEmailAddress.setEmail(
+                getCellValue(row.getCell((short) (firstCellNum + 15))));
             cfsEmailAddress.setContactId(r);
             cfsEmailAddress.setEnteredBy(userId);
             cfsEmailAddress.setModifiedBy(userId);
@@ -377,14 +406,16 @@ public class NetDescAccountsReader implements DataReader {
 
           //Save Contact Info inlcuding address, phone numbers only if contact exists.
           if (cfsContact != null) {
-            DataRecord contRecord = mappings.createDataRecord(cfsContact, "insert");
+            DataRecord contRecord = mappings.createDataRecord(
+                cfsContact, "insert");
             if (!writer.save(contRecord)) {
               processOK = false;
             }
 
             //Save Contact Address
             if (cfsAddress != null) {
-              DataRecord addRecord = mappings.createDataRecord(cfsAddress, "insert");
+              DataRecord addRecord = mappings.createDataRecord(
+                  cfsAddress, "insert");
               if (!writer.save(addRecord)) {
                 processOK = false;
               }
@@ -397,7 +428,8 @@ public class NetDescAccountsReader implements DataReader {
 
             //Save Contact EmailAddress
             if (cfsEmailAddress != null) {
-              DataRecord emailRecord = mappings.createDataRecord(cfsEmailAddress, "insert");
+              DataRecord emailRecord = mappings.createDataRecord(
+                  cfsEmailAddress, "insert");
               if (!writer.save(emailRecord)) {
                 processOK = false;
               }
@@ -418,29 +450,29 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
-   *  Gets the Excel cell value depending on the Type of the cell.
+   * Gets the Excel cell value depending on the Type of the cell.
    *
-   *@param  cell  Description of the Parameter
-   *@return       The cellValue value
+   * @param cell Description of the Parameter
+   * @return The cellValue value
    */
   private String getCellValue(HSSFCell cell) {
     String value = null;
     switch (cell.getCellType()) {
-        case HSSFCell.CELL_TYPE_BLANK:
-          value = "";
-          break;
-        case HSSFCell.CELL_TYPE_BOOLEAN:
-          value = Boolean.toString(cell.getBooleanCellValue());
-          break;
-        case HSSFCell.CELL_TYPE_NUMERIC:
-          value = Double.toString(cell.getNumericCellValue()).trim();
-          break;
-        case HSSFCell.CELL_TYPE_STRING:
-          value = cell.getStringCellValue().trim();
-          break;
-        default:
-          value = "";
-          break;
+      case HSSFCell.CELL_TYPE_BLANK:
+        value = "";
+        break;
+      case HSSFCell.CELL_TYPE_BOOLEAN:
+        value = Boolean.toString(cell.getBooleanCellValue());
+        break;
+      case HSSFCell.CELL_TYPE_NUMERIC:
+        value = Double.toString(cell.getNumericCellValue()).trim();
+        break;
+      case HSSFCell.CELL_TYPE_STRING:
+        value = cell.getStringCellValue().trim();
+        break;
+      default:
+        value = "";
+        break;
     }
     return value;
   }

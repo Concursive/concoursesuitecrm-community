@@ -15,21 +15,18 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
 import com.zeroio.iteam.base.*;
-import org.aspcfs.apps.transfer.*;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
-import com.zeroio.iteam.base.*;
-import java.util.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class ImportProjects implements CFSDatabaseReaderImportModule {
 
@@ -38,13 +35,13 @@ public class ImportProjects implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -53,23 +50,28 @@ public class ImportProjects implements CFSDatabaseReaderImportModule {
     writer.setAutoCommit(true);
 
     logger.info("ImportBaseData-> Inserting Project Lookups");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "lookupProjectActivity");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupProjectActivity");
     if (!processOK) {
       return false;
     }
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "lookupProjectIssues");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupProjectIssues");
     if (!processOK) {
       return false;
     }
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "lookupProjectLoe");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupProjectLoe");
     if (!processOK) {
       return false;
     }
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "lookupProjectPriority");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupProjectPriority");
     if (!processOK) {
       return false;
     }
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "lookupProjectStatus");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupProjectStatus");
     if (!processOK) {
       return false;
     }

@@ -45,12 +45,21 @@
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountstickets" selected="details" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
-       <% if (TicketDetails.getClosed() != null) { %>
-              <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"> </dhv:permission>
-        <%} else {%>
-              <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
-              <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
-        <%}%>
+       <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
+         <dhv:evaluate if="<%= TicketDetails.isClosed() %>" >
+            <dhv:permission name="accounts-accounts-tickets-edit">
+              <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();">
+            </dhv:permission>
+         </dhv:evaluate>
+         <dhv:evaluate if="<%= !TicketDetails.isClosed() %>" >
+            <dhv:permission name="accounts-accounts-tickets-edit">
+              <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();">
+             </dhv:permission>
+            <dhv:permission name="accounts-accounts-tickets-delete">
+              <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">
+            </dhv:permission>
+         </dhv:evaluate>
+       </dhv:evaluate>
         <%--
         <dhv:permission name="quotes-view">
           <dhv:evaluate if="<%= TicketDetails.getProductId() > 0 %>">
@@ -74,7 +83,12 @@
               <dhv:label name="contacts.name">Name</dhv:label>
             </td>
             <td>
-              <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
+              <dhv:permission name="accounts-accounts-contacts-view">
+                <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= TicketDetails.getContactId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><%= toHtml(TicketDetails.getThisContact().getNameFull()) %></a>
+              </dhv:permission>
+              <dhv:permission name="accounts-accounts-contacts-view" none="true">
+                <%= toHtml(TicketDetails.getThisContact().getNameFull()) %>
+              </dhv:permission>
             </td>
           </tr>
           <tr class="containerBody">
@@ -379,12 +393,21 @@
         </table>
         &nbsp;
         <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br /></dhv:permission>
-        <% if (TicketDetails.getClosed() != null) { %>
-              <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
-        <%} else {%>
-              <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
-              <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=TicketDetails.getOrgId()%>&id=<%=TicketDetails.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
-        <%}%>
+       <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
+         <dhv:evaluate if="<%= TicketDetails.isClosed() %>" >
+            <dhv:permission name="accounts-accounts-tickets-edit">
+              <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();">
+            </dhv:permission>
+         </dhv:evaluate>
+         <dhv:evaluate if="<%= !TicketDetails.isClosed() %>" >
+            <dhv:permission name="accounts-accounts-tickets-edit">
+              <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();">
+            </dhv:permission>
+            <dhv:permission name="accounts-accounts-tickets-delete">
+              <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=TicketDetails.getOrgId()%>&id=<%=TicketDetails.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');">
+            </dhv:permission>
+         </dhv:evaluate>
+       </dhv:evaluate>
         <%--
         <dhv:permission name="quotes-view">
           <dhv:evaluate if="<%= TicketDetails.getProductId() > 0 %>">

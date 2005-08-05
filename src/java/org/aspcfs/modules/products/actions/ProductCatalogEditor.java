@@ -15,32 +15,31 @@
  */
 package org.aspcfs.modules.products.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.ArrayList;
-
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.admin.base.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.products.base.ProductCatalogList;
+import org.aspcfs.modules.products.base.ProductCategory;
+import org.aspcfs.modules.products.base.ProductCategoryList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    August 3, 2004
- *@version    $Id: ProductCatalogEditor.java,v 1.1.4.1 2004/10/18 19:56:27
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: ProductCatalogEditor.java,v 1.1.4.1 2004/10/18 19:56:27
+ *          mrajkowski Exp $
+ * @created August 3, 2004
  */
 public final class ProductCatalogEditor extends CFSModule {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return "DefaultOK";
@@ -48,18 +47,20 @@ public final class ProductCatalogEditor extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandOptions(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
@@ -72,10 +73,10 @@ public final class ProductCatalogEditor extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     Connection db = null;
@@ -83,18 +84,23 @@ public final class ProductCatalogEditor extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("permissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "permissionCategory", permissionCategory);
 
       ProductCategoryList categoryList = new ProductCategoryList();
       ProductCatalogList productList = new ProductCatalogList();
-      
+      PagedListInfo productListInfo = this.getPagedListInfo(
+          context, "productListInfo");
+
       String categoryId = context.getRequest().getParameter("categoryId");
-      
-      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(categoryId) != -1) {
+
+      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
+          categoryId) != -1) {
         categoryList.setParentId(Integer.parseInt(categoryId));
         productList.setCategoryId(Integer.parseInt(categoryId));
-        
+
         thisCategory = new ProductCategory(db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("parentCategory", thisCategory);
         // Category Trails
@@ -105,9 +111,15 @@ public final class ProductCatalogEditor extends CFSModule {
         productList.setHasCategories(Constants.FALSE);
       }
       categoryList.buildList(db);
-      
+
       productList.setBuildActivePrice(true);
+      productList.setPagedListInfo(productListInfo);
+      String trashed = context.getRequest().getParameter("trashed");
+      if ("true".equals(trashed)) {
+        productList.setIncludeOnlyTrashed(true);
+      }
       productList.buildList(db);
+      context.getRequest().setAttribute("trashed", trashed);
       context.getRequest().setAttribute("categoryList", categoryList);
       context.getRequest().setAttribute("productList", productList);
     } catch (Exception e) {

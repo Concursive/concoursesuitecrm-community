@@ -85,7 +85,7 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong><%= thisGroup.getName() %></strong>
+        <strong><%= StringUtils.toHtml(thisGroup.getName()) %></strong>
       </th>
     </tr>
   <%

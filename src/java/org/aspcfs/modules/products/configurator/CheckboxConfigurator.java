@@ -23,12 +23,12 @@ import java.sql.SQLException;
 
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 24, 2004
- *@version    $Id: CheckboxConfigurator.java,v 1.1.4.1 2004/10/18 19:56:27
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: CheckboxConfigurator.java,v 1.1.4.1 2004/10/18 19:56:27
+ *          mrajkowski Exp $
+ * @created September 24, 2004
  */
 public class CheckboxConfigurator extends Configurator implements OptionConfigurator {
   //properties
@@ -41,9 +41,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Gets the priceAdjust attribute of the CheckboxConfigurator object
+   * Gets the priceAdjust attribute of the CheckboxConfigurator object
    *
-   *@return    The priceAdjust value
+   * @return The priceAdjust value
    */
   public double getPriceAdjust() {
     return priceAdjust;
@@ -51,9 +51,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Sets the priceAdjust attribute of the CheckboxConfigurator object
+   * Sets the priceAdjust attribute of the CheckboxConfigurator object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(double tmp) {
     this.priceAdjust = tmp;
@@ -61,9 +61,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Sets the priceAdjust attribute of the CheckboxConfigurator object
+   * Sets the priceAdjust attribute of the CheckboxConfigurator object
    *
-   *@param  tmp  The new priceAdjust value
+   * @param tmp The new priceAdjust value
    */
   public void setPriceAdjust(String tmp) {
     this.priceAdjust = Double.parseDouble(tmp);
@@ -71,9 +71,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Gets the label attribute of the CheckboxConfigurator object
+   * Gets the label attribute of the CheckboxConfigurator object
    *
-   *@return    The label value
+   * @return The label value
    */
   public String getLabel() {
     return label;
@@ -81,9 +81,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Sets the label attribute of the CheckboxConfigurator object
+   * Sets the label attribute of the CheckboxConfigurator object
    *
-   *@param  tmp  The new label value
+   * @param tmp The new label value
    */
   public void setLabel(String tmp) {
     this.label = tmp;
@@ -91,7 +91,7 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Constructor for the CheckboxConfigurator object
+   * Constructor for the CheckboxConfigurator object
    */
   public CheckboxConfigurator() {
     // set the name
@@ -121,9 +121,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean arePropertiesConfigured() {
     if (label != null && !label.trim().equals("")) {
@@ -135,25 +135,26 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Sets the properties attribute of the CheckboxConfigurator object
+   * Sets the properties attribute of the CheckboxConfigurator object
    *
-   *@param  request  The new properties value
+   * @param request The new properties value
    */
   public void setProperties(HttpServletRequest request) {
     propertyList.setOptionProperties(request);
     //set the text
     label = propertyList.getOptionProperty("text_label").getValue();
-    priceAdjust = Double.parseDouble(propertyList.getOptionProperty("double_priceadjust").getValue());
+    priceAdjust = Double.parseDouble(
+        propertyList.getOptionProperty("double_priceadjust").getValue());
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean saveProperties(Connection db, ProductOption option) throws SQLException {
     boolean result = false;
@@ -181,12 +182,12 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateProperties(Connection db, ProductOption option) throws SQLException {
     boolean result = false;
@@ -214,12 +215,12 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  doClean           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param doClean  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryProperties(Connection db, int optionId, boolean doClean) throws SQLException {
     if (optionId == -1) {
@@ -230,34 +231,38 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
     propertyList.setOptionProperty("text_label", label);
     // populate the priceAdjust value
     priceAdjust = getDouble(db, optionId, PRICE_ADJUST);
-    propertyList.setOptionProperty("double_priceadjust", String.valueOf(priceAdjust));
+    propertyList.setOptionProperty(
+        "double_priceadjust", String.valueOf(priceAdjust));
     built = true;
     this.optionId = optionId;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param request Description of the Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void prepareContext(HttpServletRequest request, Connection db) throws SQLException { }
+  public void prepareContext(HttpServletRequest request, Connection db) throws SQLException {
+  }
 
 
   /**
-   *  Gets the html attribute of the CheckboxConfigurator object
+   * Gets the html attribute of the CheckboxConfigurator object
    *
-   *@return    The html value
+   * @return The html value
    */
   public String getHtml() {
     StringBuffer sb = new StringBuffer();
-    sb.append("<table class=\"empty\" cellspacing=\"4\" cellpadding=\"2\" width=\"100%\">");
+    sb.append(
+        "<table class=\"empty\" cellspacing=\"4\" cellpadding=\"2\" width=\"100%\">");
     sb.append("	<tr>");
     sb.append("		<td width=\"100\" align=\"left\" nowrap>");
     sb.append("		" + label + "</td>");
-    sb.append("		<td><input type=\"checkbox\" name=\"chk" + optionId + "\" value=\"true\" /></td>");
+    sb.append(
+        "		<td><input type=\"checkbox\" name=\"chk" + optionId + "\" value=\"true\" /></td>");
     sb.append(" </tr>");
     sb.append("</table>");
     return sb.toString();
@@ -265,9 +270,9 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Gets the quoteHtml attribute of the CheckboxConfigurator object
+   * Gets the quoteHtml attribute of the CheckboxConfigurator object
    *
-   *@return    The quoteHtml value
+   * @return The quoteHtml value
    */
   public String getQuoteHtml() {
     StringBuffer sb = new StringBuffer();
@@ -275,9 +280,11 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
     sb.append("	<tr>");
     sb.append("		<td width=\"100\" nowrap>");
     sb.append("		" + label + "</td>");
-    sb.append("		<td><input type=\"checkbox\" name=\"chk" + optionId + "\" value=\"true\" checked disabled></td>");
+    sb.append(
+        "		<td><input type=\"checkbox\" name=\"chk" + optionId + "\" value=\"true\" checked disabled></td>");
     sb.append("		<td width=\"25%\">" + "<input type=\"text\" size=\"8\"");
-    sb.append("            name=\"price" + optionId + "\" value=\"" + quotePriceAdjust + "\"/>");
+    sb.append(
+        "            name=\"price" + optionId + "\" value=\"" + quotePriceAdjust + "\"/>");
     sb.append("   </td>");
     sb.append(" </tr>");
     sb.append("</table>");
@@ -286,10 +293,10 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean validateUserInput(HttpServletRequest request) {
     boolean isValid = true;
@@ -303,7 +310,8 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
     }
     try {
       if (request.getParameter("price" + optionId) != null) {
-          double price = Double.parseDouble(request.getParameter("price" + optionId));
+        double price = Double.parseDouble(
+            request.getParameter("price" + optionId));
       }
     } catch (Exception e) {
       isValid = false;
@@ -313,10 +321,10 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasUserInput(HttpServletRequest request) {
     boolean hasInput = false;
@@ -337,14 +345,15 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public double computePriceAdjust(HttpServletRequest request) {
     if (request.getParameter("price" + optionId) != null) {
-      double price = Double.parseDouble(request.getParameter("price" + optionId));
+      double price = Double.parseDouble(
+          request.getParameter("price" + optionId));
       return (price);
     }
     return priceAdjust;
@@ -352,23 +361,25 @@ public class CheckboxConfigurator extends Configurator implements OptionConfigur
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  request               Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param request              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveQuoteOption(Connection db, int quoteProductOptionId, HttpServletRequest request) throws SQLException {
     //save the product option price adjust value for this quote product option
     saveQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST, priceAdjust);
   }
-  
+
   public void updateQuoteOption(Connection db, int quoteProductOptionId, HttpServletRequest request) throws SQLException {
     //update the product option price adjust value for this quote product option
-     if (request.getParameter("price" + optionId) != null) {
+    if (request.getParameter("price" + optionId) != null) {
       String input = request.getParameter("price" + optionId);
-      updateQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST, Double.parseDouble(input));
+      updateQuoteDouble(
+          db, quoteProductOptionId, QUOTE_PRICE_ADJUST, Double.parseDouble(
+              input));
     }
   }
 }

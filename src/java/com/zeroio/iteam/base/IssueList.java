@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 23, 2001
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 23, 2001
  */
 public class IssueList extends ArrayList {
   //filters
@@ -48,15 +48,16 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Constructor for the IssueList object
+   * Constructor for the IssueList object
    */
-  public IssueList() { }
+  public IssueList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the IssueList object
+   * Sets the pagedListInfo attribute of the IssueList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -64,9 +65,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the IssueList object
+   * Sets the emptyHtmlSelectRecord attribute of the IssueList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -74,9 +75,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the lastIssues attribute of the IssueList object
+   * Sets the lastIssues attribute of the IssueList object
    *
-   *@param  tmp  The new lastIssues value
+   * @param tmp The new lastIssues value
    */
   public void setLastIssues(int tmp) {
     this.lastIssues = tmp;
@@ -84,9 +85,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the IssueList object
+   * Sets the projectId attribute of the IssueList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -94,9 +95,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the project attribute of the IssueList object
+   * Sets the project attribute of the IssueList object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -104,9 +105,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the IssueList object
+   * Sets the categoryId attribute of the IssueList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -114,9 +115,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the forUser attribute of the IssueList object
+   * Sets the forUser attribute of the IssueList object
    *
-   *@param  tmp  The new forUser value
+   * @param tmp The new forUser value
    */
   public void setForUser(int tmp) {
     this.forUser = tmp;
@@ -124,9 +125,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the forUser attribute of the IssueList object
+   * Sets the forUser attribute of the IssueList object
    *
-   *@param  tmp  The new forUser value
+   * @param tmp The new forUser value
    */
   public void setForUser(String tmp) {
     this.forUser = Integer.parseInt(tmp);
@@ -134,9 +135,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the IssueList object
+   * Sets the alertRangeStart attribute of the IssueList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
@@ -144,9 +145,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the IssueList object
+   * Sets the alertRangeStart attribute of the IssueList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
@@ -154,9 +155,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the IssueList object
+   * Sets the alertRangeEnd attribute of the IssueList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -164,9 +165,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the IssueList object
+   * Sets the alertRangeEnd attribute of the IssueList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
@@ -174,10 +175,10 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the IssueList object
+   * Gets the htmlSelect attribute of the IssueList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -185,11 +186,11 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the IssueList object
+   * Gets the htmlSelect attribute of the IssueList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect listSelect = new HtmlSelect();
@@ -208,9 +209,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the project attribute of the IssueList object
+   * Gets the project attribute of the IssueList object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -218,9 +219,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the IssueList object
+   * Gets the pagedListInfo attribute of the IssueList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -228,9 +229,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeStart attribute of the IssueList object
+   * Gets the alertRangeStart attribute of the IssueList object
    *
-   *@return    The alertRangeStart value
+   * @return The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -238,9 +239,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeEnd attribute of the IssueList object
+   * Gets the alertRangeEnd attribute of the IssueList object
    *
-   *@return    The alertRangeEnd value
+   * @return The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -248,9 +249,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Gets the forUser attribute of the IssueList object
+   * Gets the forUser attribute of the IssueList object
    *
-   *@return    The forUser value
+   * @return The forUser value
    */
   public int getForUser() {
     return forUser;
@@ -258,10 +259,10 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -293,9 +294,10 @@ public class IssueList extends ArrayList {
     pst.close();
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
-          "AND lower(subject) < ? ");
+          "AND " + DatabaseUtils.toLowerCase(db) + "(subject) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -315,20 +317,14 @@ public class IssueList extends ArrayList {
         "i.* " +
         "FROM project_issues i " +
         "WHERE i.issue_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Issue thisIssue = new Issue(rs);
       thisIssue.setProject(project);
       this.add(thisIssue);
@@ -339,9 +335,9 @@ public class IssueList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -360,18 +356,19 @@ public class IssueList extends ArrayList {
       sqlFilter.append("AND i.last_reply_date < ? ");
     }
     if (forUser > -1) {
-      sqlFilter.append("AND (i.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+      sqlFilter.append(
+          "AND (i.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           "AND status IS NULL) OR i.project_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

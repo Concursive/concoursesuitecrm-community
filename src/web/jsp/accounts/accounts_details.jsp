@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
@@ -40,19 +40,24 @@
 </table>
 <%-- End Trails --%>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
-<dhv:evaluate if="<%= OrgDetails.getEnabled() %>">
-  <dhv:permission name="accounts-accounts-edit">
-    <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';">
-  </dhv:permission>
+<dhv:evaluate if="<%=OrgDetails.isTrashed()%>">
+    <dhv:permission name="accounts-accounts-edit">
+      <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Restore&orgId=<%= OrgDetails.getOrgId() %>';">
+    </dhv:permission>
 </dhv:evaluate>
-<dhv:evaluate if="<%= !(OrgDetails.getEnabled()) %>">
-  <dhv:permission name="accounts-accounts-edit">
-    <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
-  </dhv:permission>
+<dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
+  <dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
+    <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
+    <dhv:permission name="accounts-accounts-edit">
+      <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
+    </dhv:permission>
+  </dhv:evaluate>
+  <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -436,15 +441,22 @@
   </tr>
 </table>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
-<dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
-  <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
+<dhv:evaluate if="<%=OrgDetails.isTrashed()%>">
+    <dhv:permission name="accounts-accounts-edit">
+      <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Restore&orgId=<%= OrgDetails.getOrgId() %>';">
+    </dhv:permission>
 </dhv:evaluate>
-<dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
-  <dhv:permission name="accounts-accounts-edit">
-    <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
-  </dhv:permission>
+<dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
+  <dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
+    <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
+    <dhv:permission name="accounts-accounts-edit">
+      <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
+    </dhv:permission>
+  </dhv:evaluate>
+  <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </dhv:container>
 <% if (request.getParameter("return") != null) { %>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">

@@ -15,23 +15,23 @@
  */
 package org.aspcfs.controller;
 
-import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.database.ConnectionElement;
-import java.util.Vector;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import java.lang.reflect.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.ObjectUtils;
+import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.modules.base.Import;
+import org.aspcfs.utils.ObjectUtils;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Facilitates managing imports
+ * Facilitates managing imports
  *
- *@author     Mathur
- *@created    April 26, 2004
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created April 26, 2004
  */
 public class ImportManager {
   private Vector available = new Vector();
@@ -41,15 +41,16 @@ public class ImportManager {
 
 
   /**
-   *  Constructor for the ImportManager object
+   * Constructor for the ImportManager object
    */
-  public ImportManager() { }
+  public ImportManager() {
+  }
 
 
   /**
-   *  Constructor for the ImportManager object
+   * Constructor for the ImportManager object
    *
-   *@param  connectionPool  Description of the Parameter
+   * @param connectionPool Description of the Parameter
    */
   public ImportManager(ConnectionPool connectionPool) {
     this.connectionPool = connectionPool;
@@ -57,10 +58,10 @@ public class ImportManager {
 
 
   /**
-   *  Constructor for the ImportManager object
+   * Constructor for the ImportManager object
    *
-   *@param  connectionPool  Description of the Parameter
-   *@param  maxItems        Description of the Parameter
+   * @param connectionPool Description of the Parameter
+   * @param maxItems       Description of the Parameter
    */
   public ImportManager(ConnectionPool connectionPool, int maxItems) {
     this.connectionPool = connectionPool;
@@ -69,9 +70,9 @@ public class ImportManager {
 
 
   /**
-   *  Sets the available attribute of the DemoManager object
+   * Sets the available attribute of the DemoManager object
    *
-   *@param  tmp  The new available value
+   * @param tmp The new available value
    */
   public void setAvailable(Vector tmp) {
     this.available = tmp;
@@ -79,9 +80,9 @@ public class ImportManager {
 
 
   /**
-   *  Sets the busy attribute of the DemoManager object
+   * Sets the busy attribute of the DemoManager object
    *
-   *@param  tmp  The new busy value
+   * @param tmp The new busy value
    */
   public void setBusy(Vector tmp) {
     this.busy = tmp;
@@ -89,9 +90,9 @@ public class ImportManager {
 
 
   /**
-   *  Sets the maxItems attribute of the DemoManager object
+   * Sets the maxItems attribute of the DemoManager object
    *
-   *@param  tmp  The new maxItems value
+   * @param tmp The new maxItems value
    */
   public void setMaxItems(int tmp) {
     this.maxItems = tmp;
@@ -99,9 +100,9 @@ public class ImportManager {
 
 
   /**
-   *  Sets the maxItems attribute of the DemoManager object
+   * Sets the maxItems attribute of the DemoManager object
    *
-   *@param  tmp  The new maxItems value
+   * @param tmp The new maxItems value
    */
   public void setMaxItems(String tmp) {
     this.maxItems = Integer.parseInt(tmp);
@@ -109,9 +110,9 @@ public class ImportManager {
 
 
   /**
-   *  Sets the connectionPool attribute of the DemoManager object
+   * Sets the connectionPool attribute of the DemoManager object
    *
-   *@param  tmp  The new connectionPool value
+   * @param tmp The new connectionPool value
    */
   public void setConnectionPool(ConnectionPool tmp) {
     this.connectionPool = tmp;
@@ -119,9 +120,9 @@ public class ImportManager {
 
 
   /**
-   *  Gets the available attribute of the DemoManager object
+   * Gets the available attribute of the DemoManager object
    *
-   *@return    The available value
+   * @return The available value
    */
   public Vector getAvailable() {
     return available;
@@ -129,9 +130,9 @@ public class ImportManager {
 
 
   /**
-   *  Gets the busy attribute of the DemoManager object
+   * Gets the busy attribute of the DemoManager object
    *
-   *@return    The busy value
+   * @return The busy value
    */
   public Vector getBusy() {
     return busy;
@@ -139,9 +140,9 @@ public class ImportManager {
 
 
   /**
-   *  Gets the maxItems attribute of the DemoManager object
+   * Gets the maxItems attribute of the DemoManager object
    *
-   *@return    The maxItems value
+   * @return The maxItems value
    */
   public int getMaxItems() {
     return maxItems;
@@ -149,9 +150,9 @@ public class ImportManager {
 
 
   /**
-   *  Gets the connectionPool attribute of the DemoManager object
+   * Gets the connectionPool attribute of the DemoManager object
    *
-   *@return    The connectionPool value
+   * @return The connectionPool value
    */
   public ConnectionPool getConnectionPool() {
     return connectionPool;
@@ -159,10 +160,10 @@ public class ImportManager {
 
 
   /**
-   *  Gets the running attribute of the ImportManager object
+   * Gets the running attribute of the ImportManager object
    *
-   *@param  importId  Description of the Parameter
-   *@return           The running value
+   * @param importId Description of the Parameter
+   * @return The running value
    */
   public boolean isRunning(int importId) {
     return getImport(importId) != null ? true : false;
@@ -170,10 +171,10 @@ public class ImportManager {
 
 
   /**
-   *  Add an import to the queue for processing
+   * Add an import to the queue for processing
    *
-   *@param  thisImport  Description of the Parameter
-   *@return             Description of the Return Value
+   * @param thisImport Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean add(Object thisImport) {
     //add import if not already in queue/running
@@ -188,15 +189,16 @@ public class ImportManager {
 
 
   /**
-   *  Process the import
+   * Process the import
    *
-   *@param  thisImport  Description of the Parameter
-   *@param  status      Description of the Parameter
+   * @param thisImport Description of the Parameter
+   * @param status     Description of the Parameter
    */
   public synchronized void process(Object thisImport, int status) {
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ImportManager -> Processing Import \"" + ((Import) thisImport).getName() + "\"");
+        System.out.println(
+            "ImportManager -> Processing Import \"" + ((Import) thisImport).getName() + "\"");
       }
       //check thread limit
       if (busy.size() < maxItems) {
@@ -204,8 +206,9 @@ public class ImportManager {
         ObjectUtils.setParam(thisImport, "manager", this);
 
         //start the import
-        Method method = thisImport.getClass().getMethod("start", null);
-        method.invoke(thisImport, null);
+        Method method = thisImport.getClass().getMethod(
+            "start", (java.lang.Class[]) null);
+        method.invoke(thisImport, (java.lang.Object[]) null);
 
         //change status to running
         ((Import) thisImport).setStatusId(Import.RUNNING);
@@ -232,11 +235,11 @@ public class ImportManager {
 
 
   /**
-   *  Get a database connection from the pool
+   * Get a database connection from the pool
    *
-   *@param  ce                Description of the Parameter
-   *@return                   The connection value
-   *@exception  SQLException  Description of the Exception
+   * @param ce Description of the Parameter
+   * @return The connection value
+   * @throws SQLException Description of the Exception
    */
   public Connection getConnection(ConnectionElement ce) throws SQLException {
     if (ce != null) {
@@ -252,9 +255,9 @@ public class ImportManager {
 
 
   /**
-   *  Free the database connection
+   * Free the database connection
    *
-   *@param  db  Description of the Parameter
+   * @param db Description of the Parameter
    */
   public void free(Connection db) {
     if (db != null) {
@@ -264,13 +267,14 @@ public class ImportManager {
 
 
   /**
-   *  Free this import and process the next one in queue
+   * Free this import and process the next one in queue
    *
-   *@param  thisImport  Description of the Parameter
+   * @param thisImport Description of the Parameter
    */
   public void free(Object thisImport) {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("ImportManager -> Completed Import " + ((Import) thisImport).getId());
+      System.out.println(
+          "ImportManager -> Completed Import " + ((Import) thisImport).getId());
     }
     if (thisImport != null) {
       busy.remove(thisImport);
@@ -282,7 +286,7 @@ public class ImportManager {
 
 
   /**
-   *  Processes the next available import in queue, if any
+   * Processes the next available import in queue, if any
    */
   public void processNextImport() {
     //check if there are any more imports to process
@@ -294,10 +298,10 @@ public class ImportManager {
 
 
   /**
-   *  Cancel the import with specified id
+   * Cancel the import with specified id
    *
-   *@param  importId  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param importId Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean cancel(int importId) {
     Object importClass = getImport(importId);
@@ -310,8 +314,9 @@ public class ImportManager {
             available.remove(importClass);
             processNextImport();
           } else {
-            Method method = importClass.getClass().getMethod("cancel", null);
-            method.invoke(importClass, null);
+            Method method = importClass.getClass().getMethod(
+                "cancel", (java.lang.Class[]) null);
+            method.invoke(importClass, (java.lang.Object[]) null);
           }
         }
         return true;
@@ -324,11 +329,11 @@ public class ImportManager {
 
 
   /**
-   *  Retrieves the import, if one exists, from the list of running/queued
-   *  imports
+   * Retrieves the import, if one exists, from the list of running/queued
+   * imports
    *
-   *@param  importId  Description of the Parameter
-   *@return           The import value
+   * @param importId Description of the Parameter
+   * @return The import value
    */
   public Object getImport(int importId) {
     Object thisImport = null;

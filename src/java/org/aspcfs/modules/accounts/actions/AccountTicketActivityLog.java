@@ -33,19 +33,19 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  Action class to view, add, edit, delete and list activity log
+ * Action class to view, add, edit, delete and list activity log
  *
- *@author     kbhoopal
- *@created    March 17, 2004
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created March 17, 2004
  */
 public final class AccountTicketActivityLog extends CFSModule {
 
   /**
-   *  Lists activity log
+   * Lists activity log
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-view")) {
@@ -67,7 +67,8 @@ public final class AccountTicketActivityLog extends CFSModule {
       // Build activity list
       TicketActivityLogList thisList = new TicketActivityLogList();
       PagedListInfo tmListInfo = this.getPagedListInfo(context, "TMListInfo");
-      tmListInfo.setLink("AccountTicketActivityLog.do?command=List&id=" + thisTicket.getId());
+      tmListInfo.setLink(
+          "AccountTicketActivityLog.do?command=List&id=" + thisTicket.getId());
       thisList.setPagedListInfo(tmListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
@@ -83,10 +84,10 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Prepares the add page to add an activity
+   * Prepares the add page to add an activity
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-add")) {
@@ -104,16 +105,19 @@ public final class AccountTicketActivityLog extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Load form elements
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
 
       context.getRequest().setAttribute("ticketDetails", thisTicket);
-      TicketActivityLog thisMaintenance = (TicketActivityLog) context.getRequest().getAttribute("activityDetails");
+      TicketActivityLog thisMaintenance = (TicketActivityLog) context.getRequest().getAttribute(
+          "activityDetails");
       if (thisMaintenance != null) {
         if (thisMaintenance.getEnteredBy() == -1) {
           // Load the activity log elements
           thisMaintenance = new TicketActivityLog();
-          context.getRequest().setAttribute("activityDetails", thisMaintenance);
+          context.getRequest().setAttribute(
+              "activityDetails", thisMaintenance);
         }
       }
       return ("AddOK");
@@ -127,10 +131,10 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Prepares the modify page to modify an activity
+   * Prepares the modify page to modify an activity
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-edit")) {
@@ -152,9 +156,12 @@ public final class AccountTicketActivityLog extends CFSModule {
         loadOrganizaton(context, db, thisTicket);
         // Load onsite model list
         LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-        onsiteModelList.addItem(-1, "-- None --");
+        onsiteModelList.addItem(
+            -1, this.getSystemStatus(context).getLabel(
+                "calendar.none.4dashes"));
         context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-        context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
+        context.getRequest().setAttribute(
+            "return", context.getRequest().getParameter("return"));
         // Load the activity log elements
         TicketActivityLog thisMaintenance = new TicketActivityLog();
         thisMaintenance.queryRecord(db, Integer.parseInt(formId));
@@ -171,10 +178,10 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Saves the activity
+   * Saves the activity
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-add")) {
@@ -196,30 +203,51 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setEnteredBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      thisMaintenance.setTravelTowardsServiceContract((String) context.getRequest().getParameter("travelTowardsServiceContract"));
-      thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
-      thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
-      thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
-      thisMaintenance.setAlertDateTimeZone((String) context.getRequest().getParameter("alertDateTimeZone"));
-      thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
-      thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
-      thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
-      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
+      thisMaintenance.setTravelTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "travelTowardsServiceContract"));
+      thisMaintenance.setLaborTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "laborTowardsServiceContract"));
+      thisMaintenance.setPhoneResponseTime(
+          (String) context.getRequest().getParameter("phoneResponseTime"));
+      thisMaintenance.setEngineerResponseTime(
+          (String) context.getRequest().getParameter("engineerResponseTime"));
+      thisMaintenance.setAlertDateTimeZone(
+          (String) context.getRequest().getParameter("alertDateTimeZone"));
+      thisMaintenance.setTimeZoneForDateFields(
+          context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
+      thisMaintenance.setFollowUpRequired(
+          (String) context.getRequest().getParameter("followUpRequired"));
+      thisMaintenance.setFollowUpDescription(
+          (String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(
+          context.getRequest().getParameter("onlyWarnings"));
       //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       isValid = this.validateObject(context, db, thisMaintenance);
-      for (int i=1; (context.getRequest().getParameter("activityDate" + i) != null) || (context.getRequest().getParameter("descriptionOfService" + i) != null);i++) {
-        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals("")) || !(context.getRequest().getParameter("descriptionOfService" + i).trim().equals(""))) {
+      for (int i = 1; (context.getRequest().getParameter("activityDate" + i) != null) || (context.getRequest().getParameter(
+          "descriptionOfService" + i) != null); i++) {
+        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(
+            "")) || !(context.getRequest().getParameter(
+                "descriptionOfService" + i).trim().equals(""))) {
           TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
           HashMap map = new HashMap();
-          map.put("descriptionOfService", context.getRequest().getParameter("descriptionOfService" + i));
-          map.put("activityDateTimeZone", context.getRequest().getParameter("activityDate" + i + "TimeZone"));
-          map.put("activityDate", context.getRequest().getParameter("activityDate" + i));
+          map.put(
+              "descriptionOfService", context.getRequest().getParameter(
+                  "descriptionOfService" + i));
+          map.put(
+              "activityDateTimeZone", context.getRequest().getParameter(
+                  "activityDate" + i + "TimeZone"));
+          map.put(
+              "activityDate", context.getRequest().getParameter(
+                  "activityDate" + i));
           map.put("request", context.getRequest());
-          map.put("parseItem", ""+i);
-          isValid = this.validateObject(context, db, thisPerDayDescription, map) && isValid;
+          map.put("parseItem", "" + i);
+          isValid = this.validateObject(
+              context, db, thisPerDayDescription, map) && isValid;
         }
       }
       if (isValid) {
@@ -243,10 +271,10 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Updates an activity log
+   * Updates an activity log
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-edit")) {
@@ -268,15 +296,26 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setId(Integer.parseInt(formId));
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      thisMaintenance.setTravelTowardsServiceContract((String) context.getRequest().getParameter("travelTowardsServiceContract"));
-      thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
-      thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
-      thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
-      thisMaintenance.setAlertDateTimeZone((String) context.getRequest().getParameter("alertDateTimeZone"));
-      thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
-      thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
-      thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
-      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
+      thisMaintenance.setTravelTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "travelTowardsServiceContract"));
+      thisMaintenance.setLaborTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "laborTowardsServiceContract"));
+      thisMaintenance.setPhoneResponseTime(
+          (String) context.getRequest().getParameter("phoneResponseTime"));
+      thisMaintenance.setEngineerResponseTime(
+          (String) context.getRequest().getParameter("engineerResponseTime"));
+      thisMaintenance.setAlertDateTimeZone(
+          (String) context.getRequest().getParameter("alertDateTimeZone"));
+      thisMaintenance.setTimeZoneForDateFields(
+          context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
+      thisMaintenance.setFollowUpRequired(
+          (String) context.getRequest().getParameter("followUpRequired"));
+      thisMaintenance.setFollowUpDescription(
+          (String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(
+          context.getRequest().getParameter("onlyWarnings"));
       //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
@@ -284,16 +323,24 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       isValid = this.validateObject(context, db, thisMaintenance);
-      for (int i=1;context.getRequest().getParameter("activityDate" + i) != null;i++) {
-        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(""))) {
+      for (int i = 1; context.getRequest().getParameter("activityDate" + i) != null; i++) {
+        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(
+            ""))) {
           TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
           HashMap map = new HashMap();
-          map.put("descriptionOfService", context.getRequest().getParameter("descriptionOfService" + i));
-          map.put("activityDateTimeZone", context.getRequest().getParameter("activityDate" + i + "TimeZone"));
-          map.put("activityDate", context.getRequest().getParameter("activityDate" + i));
+          map.put(
+              "descriptionOfService", context.getRequest().getParameter(
+                  "descriptionOfService" + i));
+          map.put(
+              "activityDateTimeZone", context.getRequest().getParameter(
+                  "activityDate" + i + "TimeZone"));
+          map.put(
+              "activityDate", context.getRequest().getParameter(
+                  "activityDate" + i));
           map.put("request", context.getRequest());
-          map.put("parseItem", ""+i);
-          isValid = this.validateObject(context, db, thisPerDayDescription, map) && isValid;
+          map.put("parseItem", "" + i);
+          isValid = this.validateObject(
+              context, db, thisPerDayDescription, map) && isValid;
         }
       }
       if (isValid) {
@@ -320,10 +367,10 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Prepares the view page of the activity log
+   * Prepares the view page of the activity log
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-view")) {
@@ -347,7 +394,8 @@ public final class AccountTicketActivityLog extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Load the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       // Activity Log items
       TicketActivityLog thisMaintenance = new TicketActivityLog();
@@ -363,15 +411,15 @@ public final class AccountTicketActivityLog extends CFSModule {
   }
 
 
-
   /**
-   *  Confirms a request for deleting an activity log
+   * Confirms a request for deleting an activity log
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-activity-log-delete")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-activity-log-delete")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -393,10 +441,13 @@ public final class AccountTicketActivityLog extends CFSModule {
       dependencies = thisMaintenance.processDependencies();
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.formHeader"));
-      htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -409,13 +460,14 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Deletes an activity log
+   * Deletes an activity log
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-activity-log-delete")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-activity-log-delete")) {
       return ("PermissionError");
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -424,7 +476,8 @@ public final class AccountTicketActivityLog extends CFSModule {
     Connection db = null;
     // Process the parameters
     String ticketId = context.getRequest().getParameter("id");
-    int formId = Integer.parseInt((String) context.getRequest().getParameter("formId"));
+    int formId = Integer.parseInt(
+        (String) context.getRequest().getParameter("formId"));
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
@@ -437,31 +490,36 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.noteDeletion"));
-      context.getRequest().setAttribute("refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "actionError", systemStatus.getLabel(
+              "object.validation.actionError.noteDeletion"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId);
       return ("DeleteError");
     } finally {
       this.freeConnection(context, db);
     }
     // The record was deleted
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "AccountTicketActivityLog.do?command=List&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountTicketActivityLog.do?command=List&id=" + ticketId);
       return getReturn(context, "Delete");
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
-    context.getRequest().setAttribute("refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
     return getReturn(context, "Delete");
   }
 
 
   /**
-   *  loads organization details to display in at the top of the page
+   * loads organization details to display in at the top of the page
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  ticket            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param ticket  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void loadOrganizaton(ActionContext context, Connection db, Ticket ticket) throws SQLException {
     //Load the organization

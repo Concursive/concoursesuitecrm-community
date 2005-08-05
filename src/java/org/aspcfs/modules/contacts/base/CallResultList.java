@@ -15,20 +15,24 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Represents a call result
+ * Represents a call result
  *
- *@author     matt rajkowski
- *@created    September 22, 2003
- *@version    $Id: CallResultList.java,v 1.2 2004/08/04 20:01:56 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: CallResultList.java,v 1.2 2004/08/04 20:01:56 mrajkowski Exp
+ *          $
+ * @created September 22, 2003
  */
 public class CallResultList extends ArrayList {
 
@@ -38,9 +42,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the CallResultList object
+   * Sets the pagedListInfo attribute of the CallResultList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -48,9 +52,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Sets the enabledOnly attribute of the CallResultList object
+   * Sets the enabledOnly attribute of the CallResultList object
    *
-   *@param  tmp  The new enabledOnly value
+   * @param tmp The new enabledOnly value
    */
   public void setEnabledOnly(boolean tmp) {
     this.enabledOnly = tmp;
@@ -58,9 +62,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Sets the enabledOnly attribute of the CallResultList object
+   * Sets the enabledOnly attribute of the CallResultList object
    *
-   *@param  tmp  The new enabledOnly value
+   * @param tmp The new enabledOnly value
    */
   public void setEnabledOnly(String tmp) {
     this.enabledOnly = DatabaseUtils.parseBoolean(tmp);
@@ -68,9 +72,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Sets the canceledOnly attribute of the CallResultList object
+   * Sets the canceledOnly attribute of the CallResultList object
    *
-   *@param  canceledOnly  The new canceledOnly value
+   * @param canceledOnly The new canceledOnly value
    */
   public void setCanceledOnly(boolean canceledOnly) {
     this.canceledOnly = canceledOnly;
@@ -78,9 +82,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the canceledOnly attribute of the CallResultList object
+   * Gets the canceledOnly attribute of the CallResultList object
    *
-   *@return    The canceledOnly value
+   * @return The canceledOnly value
    */
   public boolean getCanceledOnly() {
     return canceledOnly;
@@ -88,9 +92,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the CallResultList object
+   * Gets the pagedListInfo attribute of the CallResultList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -98,9 +102,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the enabledOnly attribute of the CallResultList object
+   * Gets the enabledOnly attribute of the CallResultList object
    *
-   *@return    The enabledOnly value
+   * @return The enabledOnly value
    */
   public boolean getEnabledOnly() {
     return enabledOnly;
@@ -108,16 +112,17 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Constructor for the CallResultList object
+   * Constructor for the CallResultList object
    */
-  public CallResultList() { }
+  public CallResultList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -145,10 +150,10 @@ public class CallResultList extends ArrayList {
       rs.close();
       pst.close();
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("r.level, r.description", null);
+      pagedListInfo.setDefaultSort("r.\"level\", r.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY r.level, r.description ");
+      sqlOrder.append("ORDER BY r.\"level\", r.description ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -161,20 +166,14 @@ public class CallResultList extends ArrayList {
         "r.* " +
         "FROM lookup_call_result r " +
         "WHERE result_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       CallResult thisResult = new CallResult(rs);
       this.add(thisResult);
     }
@@ -184,9 +183,9 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -203,11 +202,11 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -222,10 +221,10 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the lookupList attribute of the CallResultList object
+   * Gets the lookupList attribute of the CallResultList object
    *
-   *@param  defaultKey  Description of the Parameter
-   *@return             The lookupList value
+   * @param defaultKey Description of the Parameter
+   * @return The lookupList value
    */
   public LookupList getLookupList(int defaultKey) {
     LookupList select = new LookupList();
@@ -238,7 +237,8 @@ public class CallResultList extends ArrayList {
       if (thisResult.getEnabled()) {
         select.appendItem(thisResult.getId(), thisResult.getDescription());
       } else if (thisResult.getId() == defaultKey) {
-        select.appendItem(thisResult.getId(), thisResult.getDescription() + " (X)");
+        select.appendItem(
+            thisResult.getId(), thisResult.getDescription() + " (X)");
       }
     }
     return select;
@@ -246,10 +246,10 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the canceledLookupList attribute of the CallResultList object
+   * Gets the canceledLookupList attribute of the CallResultList object
    *
-   *@param  defaultKey  Description of the Parameter
-   *@return             The canceledLookupList value
+   * @param defaultKey Description of the Parameter
+   * @return The canceledLookupList value
    */
   public LookupList getCanceledLookupList(int defaultKey) {
     LookupList select = new LookupList();
@@ -260,7 +260,8 @@ public class CallResultList extends ArrayList {
         if (thisResult.getEnabled()) {
           select.appendItem(thisResult.getId(), thisResult.getDescription());
         } else if (thisResult.getId() == defaultKey) {
-          select.appendItem(thisResult.getId(), thisResult.getDescription() + " (X)");
+          select.appendItem(
+              thisResult.getId(), thisResult.getDescription() + " (X)");
         }
       }
     }
@@ -269,10 +270,10 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the completedLookupList attribute of the CallResultList object
+   * Gets the completedLookupList attribute of the CallResultList object
    *
-   *@param  defaultKey  Description of the Parameter
-   *@return             The completedLookupList value
+   * @param defaultKey Description of the Parameter
+   * @return The completedLookupList value
    */
   public LookupList getCompletedLookupList(int defaultKey) {
     LookupList select = new LookupList();
@@ -283,7 +284,8 @@ public class CallResultList extends ArrayList {
         if (thisResult.getEnabled()) {
           select.appendItem(thisResult.getId(), thisResult.getDescription());
         } else if (thisResult.getId() == defaultKey) {
-          select.appendItem(thisResult.getId(), thisResult.getDescription() + " (X)");
+          select.appendItem(
+              thisResult.getId(), thisResult.getDescription() + " (X)");
         }
       }
     }
@@ -292,10 +294,10 @@ public class CallResultList extends ArrayList {
 
 
   /**
-   *  Gets the idFromValue attribute of the CallResultList object
+   * Gets the idFromValue attribute of the CallResultList object
    *
-   *@param  value  Description of the Parameter
-   *@return        The idFromValue value
+   * @param value Description of the Parameter
+   * @return The idFromValue value
    */
   public int getIdFromValue(String value) {
     Iterator i = this.iterator();

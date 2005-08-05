@@ -15,16 +15,21 @@
  */
 package org.aspcfs.modules.system.base;
 
-import java.sql.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Represents a gatekeeper Site entry
+ * Represents a gatekeeper Site entry
  *
- *@author     matt rajkowski
- *@created    May 13, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 13, 2003
  */
 public class Site extends GenericBean {
 
@@ -39,19 +44,21 @@ public class Site extends GenericBean {
   private String databaseDriver = null;
   private String accessCode = null;
   private boolean enabled = true;
+  private String language = null;
 
 
   /**
-   *  Constructor for the Site object
+   * Constructor for the Site object
    */
-  public Site() { }
+  public Site() {
+  }
 
 
   /**
-   *  Constructor for the Site object
+   * Constructor for the Site object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Site(ResultSet rs) throws SQLException {
     this.buildRecord(rs);
@@ -59,11 +66,11 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Constructor for the Site object, requires a Gatekeeper Connection
+   * Constructor for the Site object, requires a Gatekeeper Connection
    *
-   *@param  db                Description of the Parameter
-   *@param  siteId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param siteId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Site(Connection db, int siteId) throws SQLException {
     if (id == -1) {
@@ -87,9 +94,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Site object
+   * Sets the id attribute of the Site object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -97,9 +104,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Site object
+   * Sets the id attribute of the Site object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -107,9 +114,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the siteCode attribute of the Site object
+   * Sets the siteCode attribute of the Site object
    *
-   *@param  tmp  The new siteCode value
+   * @param tmp The new siteCode value
    */
   public void setSiteCode(String tmp) {
     this.siteCode = tmp;
@@ -117,9 +124,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the virtualHost attribute of the Site object
+   * Sets the virtualHost attribute of the Site object
    *
-   *@param  tmp  The new virtualHost value
+   * @param tmp The new virtualHost value
    */
   public void setVirtualHost(String tmp) {
     this.virtualHost = tmp;
@@ -127,9 +134,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databaseUrl attribute of the Site object
+   * Sets the databaseUrl attribute of the Site object
    *
-   *@param  tmp  The new databaseUrl value
+   * @param tmp The new databaseUrl value
    */
   public void setDatabaseUrl(String tmp) {
     this.databaseUrl = tmp;
@@ -137,9 +144,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databaseName attribute of the Site object
+   * Sets the databaseName attribute of the Site object
    *
-   *@param  tmp  The new databaseName value
+   * @param tmp The new databaseName value
    */
   public void setDatabaseName(String tmp) {
     this.databaseName = tmp;
@@ -147,9 +154,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databasePort attribute of the Site object
+   * Sets the databasePort attribute of the Site object
    *
-   *@param  tmp  The new databasePort value
+   * @param tmp The new databasePort value
    */
   public void setDatabasePort(int tmp) {
     this.databasePort = tmp;
@@ -157,9 +164,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databasePort attribute of the Site object
+   * Sets the databasePort attribute of the Site object
    *
-   *@param  tmp  The new databasePort value
+   * @param tmp The new databasePort value
    */
   public void setDatabasePort(String tmp) {
     this.databasePort = Integer.parseInt(tmp);
@@ -167,9 +174,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databaseUsername attribute of the Site object
+   * Sets the databaseUsername attribute of the Site object
    *
-   *@param  tmp  The new databaseUsername value
+   * @param tmp The new databaseUsername value
    */
   public void setDatabaseUsername(String tmp) {
     this.databaseUsername = tmp;
@@ -177,9 +184,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databasePassword attribute of the Site object
+   * Sets the databasePassword attribute of the Site object
    *
-   *@param  tmp  The new databasePassword value
+   * @param tmp The new databasePassword value
    */
   public void setDatabasePassword(String tmp) {
     this.databasePassword = tmp;
@@ -187,9 +194,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databaseDriver attribute of the Site object
+   * Sets the databaseDriver attribute of the Site object
    *
-   *@param  tmp  The new databaseDriver value
+   * @param tmp The new databaseDriver value
    */
   public void setDatabaseDriver(String tmp) {
     this.databaseDriver = tmp;
@@ -197,9 +204,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the accessCode attribute of the Site object
+   * Sets the accessCode attribute of the Site object
    *
-   *@param  tmp  The new accessCode value
+   * @param tmp The new accessCode value
    */
   public void setAccessCode(String tmp) {
     this.accessCode = tmp;
@@ -207,9 +214,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Site object
+   * Sets the enabled attribute of the Site object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -217,9 +224,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Site object
+   * Sets the enabled attribute of the Site object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -227,9 +234,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Site object
+   * Gets the id attribute of the Site object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -237,9 +244,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the siteCode attribute of the Site object
+   * Gets the siteCode attribute of the Site object
    *
-   *@return    The siteCode value
+   * @return The siteCode value
    */
   public String getSiteCode() {
     return siteCode;
@@ -247,9 +254,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the virtualHost attribute of the Site object
+   * Gets the virtualHost attribute of the Site object
    *
-   *@return    The virtualHost value
+   * @return The virtualHost value
    */
   public String getVirtualHost() {
     return virtualHost;
@@ -257,9 +264,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databaseUrl attribute of the Site object
+   * Gets the databaseUrl attribute of the Site object
    *
-   *@return    The databaseUrl value
+   * @return The databaseUrl value
    */
   public String getDatabaseUrl() {
     return databaseUrl;
@@ -267,9 +274,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databaseName attribute of the Site object
+   * Gets the databaseName attribute of the Site object
    *
-   *@return    The databaseName value
+   * @return The databaseName value
    */
   public String getDatabaseName() {
     return databaseName;
@@ -277,9 +284,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databasePort attribute of the Site object
+   * Gets the databasePort attribute of the Site object
    *
-   *@return    The databasePort value
+   * @return The databasePort value
    */
   public int getDatabasePort() {
     return databasePort;
@@ -287,9 +294,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databaseUsername attribute of the Site object
+   * Gets the databaseUsername attribute of the Site object
    *
-   *@return    The databaseUsername value
+   * @return The databaseUsername value
    */
   public String getDatabaseUsername() {
     return databaseUsername;
@@ -297,9 +304,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databasePassword attribute of the Site object
+   * Gets the databasePassword attribute of the Site object
    *
-   *@return    The databasePassword value
+   * @return The databasePassword value
    */
   public String getDatabasePassword() {
     return databasePassword;
@@ -307,9 +314,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databaseDriver attribute of the Site object
+   * Gets the databaseDriver attribute of the Site object
    *
-   *@return    The databaseDriver value
+   * @return The databaseDriver value
    */
   public String getDatabaseDriver() {
     return databaseDriver;
@@ -317,9 +324,9 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the accessCode attribute of the Site object
+   * Gets the accessCode attribute of the Site object
    *
-   *@return    The accessCode value
+   * @return The accessCode value
    */
   public String getAccessCode() {
     return accessCode;
@@ -327,20 +334,27 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Site object
+   * Gets the enabled attribute of the Site object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
   }
 
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String s) {
+    language = s;
+  }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     //sites table
@@ -355,6 +369,14 @@ public class Site extends GenericBean {
     databaseDriver = rs.getString("driver");
     accessCode = rs.getString("code");
     enabled = rs.getBoolean("enabled");
+    language = rs.getString("language");
+  }
+
+  public ConnectionElement getConnectionElement() {
+    ConnectionElement ce = new ConnectionElement(
+        databaseUrl, databaseUsername, databasePassword);
+    ce.setDriver(databaseDriver);
+    return ce;
   }
 
 }

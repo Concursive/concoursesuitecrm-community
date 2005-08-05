@@ -42,7 +42,7 @@ function reopenContact(id) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContacts.do?command=FolderList&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> > 
@@ -82,7 +82,7 @@ function reopenContact(id) {
     </tr>
   </table>
   <br>
-  <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+  <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !Category.getReadOnly()) %>">
     <dhv:permission name="contacts-external_contacts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
     <dhv:permission name="contacts-external_contacts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
     <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
@@ -97,7 +97,7 @@ function reopenContact(id) {
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= thisGroup.getName() %></strong>
+        <strong><%= StringUtils.toHtml(thisGroup.getName()) %></strong>
       </th>
     </tr>
   <%
@@ -154,7 +154,7 @@ function reopenContact(id) {
     </tr>
   </table>
   <br>
-  <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+  <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !Category.getReadOnly()) %>">
     <dhv:permission name="contacts-external_contacts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
     <dhv:permission name="contacts-external_contacts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
   </dhv:evaluate>

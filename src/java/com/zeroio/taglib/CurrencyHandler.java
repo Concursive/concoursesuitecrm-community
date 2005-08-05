@@ -15,20 +15,21 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
-import org.aspcfs.utils.StringUtils;
 
 /**
- *  This Class formats the specified amount with the specified currency
+ * This Class formats the specified amount with the specified currency
  *
- *@author     matt rajkowski
- *@created    March 17, 2004
- *@version    $Id: CurrencyHandler.java,v 1.2 2004/07/21 19:00:43 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: CurrencyHandler.java,v 1.2 2004/07/21 19:00:43 mrajkowski Exp
+ *          $
+ * @created March 17, 2004
  */
 public class CurrencyHandler extends TagSupport {
 
@@ -41,9 +42,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the CurrencyHandler object
+   * Sets the value attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(double tmp) {
     this.value = tmp;
@@ -51,9 +52,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Sets the code attribute of the CurrencyHandler object
+   * Sets the code attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new code value
+   * @param tmp The new code value
    */
   public void setCode(String tmp) {
     this.code = tmp;
@@ -61,9 +62,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Sets the default attribute of the CurrencyHandler object
+   * Sets the default attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new default value
+   * @param tmp The new default value
    */
   public void setDefault(String tmp) {
     this.defaultValue = tmp;
@@ -71,9 +72,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Sets the locale attribute of the CurrencyHandler object
+   * Sets the locale attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new locale value
+   * @param tmp The new locale value
    */
   public void setLocale(Locale tmp) {
     this.locale = tmp;
@@ -81,9 +82,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Sets the fractionDigits attribute of the CurrencyHandler object
+   * Sets the fractionDigits attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new fractionDigits value
+   * @param tmp The new fractionDigits value
    */
   public void setFractionDigits(boolean tmp) {
     this.fractionDigits = tmp;
@@ -91,9 +92,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Sets the truncate attribute of the CurrencyHandler object
+   * Sets the truncate attribute of the CurrencyHandler object
    *
-   *@param  tmp  The new truncate value
+   * @param tmp The new truncate value
    */
   public void setTruncate(boolean tmp) {
     this.truncate = tmp;
@@ -101,10 +102,10 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -120,7 +121,8 @@ public class CurrencyHandler extends TagSupport {
         if (!fractionDigits) {
           formatter.setMaximumFractionDigits(0);
         }
-        this.pageContext.getOut().write(StringUtils.toHtmlValue(formatter.format(value)));
+        this.pageContext.getOut().write(
+            StringUtils.toHtmlValue(formatter.format(value)));
       } else {
         //no date found, output default
         if (defaultValue != null) {
@@ -135,9 +137,9 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

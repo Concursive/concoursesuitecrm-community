@@ -29,24 +29,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    December 6, 2004
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created December 6, 2004
  */
 public class DocumentsSearchQuery {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context                  Description of the Parameter
-   *@param  search                   Description of the Parameter
-   *@param  db                       Description of the Parameter
-   *@param  userId                   Description of the Parameter
-   *@param  specificDocumentStoreId  Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  SQLException         Description of the Exception
+   * @param context                 Description of the Parameter
+   * @param search                  Description of the Parameter
+   * @param db                      Description of the Parameter
+   * @param userId                  Description of the Parameter
+   * @param specificDocumentStoreId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static String buildDocumentStoreSearchQuery(ActionContext context, DocumentsSearchBean search, Connection db, int userId, int specificDocumentStoreId) throws SQLException {
     // get the document stores for the user
@@ -66,7 +66,8 @@ public class DocumentsSearchQuery {
     while (rs.next()) {
       int documentStoreId = rs.getInt("document_store_id");
       int roleId = rs.getInt("userlevel");
-      documentStoreListForUser.put(new Integer(documentStoreId), new Integer(roleId));
+      documentStoreListForUser.put(
+          new Integer(documentStoreId), new Integer(roleId));
     }
     rs.close();
     pst.close();
@@ -75,7 +76,8 @@ public class DocumentsSearchQuery {
     // get the permissions for each document store
     // if role has access to the data, then add to query
     HashMap documentStoreListForGroup = new HashMap();
-    UserBean tmpUser = (UserBean) context.getRequest().getSession().getAttribute("User");
+    UserBean tmpUser = (UserBean) context.getRequest().getSession().getAttribute(
+        "User");
     //User tmpUser = getUser(context, userId);
     int tmpUserRoleId = tmpUser.getRoleId();
     pst = db.prepareStatement(
@@ -91,7 +93,8 @@ public class DocumentsSearchQuery {
     while (rs.next()) {
       int documentStoreId = rs.getInt("document_store_id");
       int roleId = rs.getInt("userlevel");
-      documentStoreListForGroup.put(new Integer(documentStoreId), new Integer(roleId));
+      documentStoreListForGroup.put(
+          new Integer(documentStoreId), new Integer(roleId));
     }
     rs.close();
     pst.close();
@@ -114,11 +117,14 @@ public class DocumentsSearchQuery {
       int documentStoreId = rs.getInt("document_store_id");
       int roleId = rs.getInt("userlevel");
       if (!documentStoreListForGroup.containsKey(new Integer(documentStoreId))) {
-        documentStoreListForGroup.put(new Integer(documentStoreId), new Integer(roleId));
+        documentStoreListForGroup.put(
+            new Integer(documentStoreId), new Integer(roleId));
       } else {
-        int tmpUserLevel = ((Integer) documentStoreListForGroup.get(new Integer(documentStoreId))).intValue();
+        int tmpUserLevel = ((Integer) documentStoreListForGroup.get(
+            new Integer(documentStoreId))).intValue();
         if (tmpUserLevel > roleId) {
-          documentStoreListForGroup.put(new Integer(documentStoreId), new Integer(roleId));
+          documentStoreListForGroup.put(
+              new Integer(documentStoreId), new Integer(roleId));
         }
       }
     }
@@ -168,12 +174,14 @@ public class DocumentsSearchQuery {
         if (documentStoreBuffer.length() > 0) {
           documentStoreBuffer.append(" OR ");
         }
-        documentStoreBuffer.append("(documentStoreId:" + documentStoreId.intValue() + " AND (" + permissionBuffer.toString() + ")) ");
+        documentStoreBuffer.append(
+            "(documentStoreId:" + documentStoreId.intValue() + " AND (" + permissionBuffer.toString() + ")) ");
       }
       // debuging
-      if (System.getProperty("DEBUG") != null){
+      if (System.getProperty("DEBUG") != null) {
         if (permissionBuffer.length() == 0) {
-          System.out.println("NO PERMISSIONS FOR DOCUMENT STORE: " + documentStoreId.intValue());
+          System.out.println(
+              "NO PERMISSIONS FOR DOCUMENT STORE: " + documentStoreId.intValue());
         }
       }
     }

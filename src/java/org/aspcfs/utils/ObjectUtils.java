@@ -15,27 +15,30 @@
  */
 package org.aspcfs.utils;
 
-import java.lang.reflect.*;
-import java.text.SimpleDateFormat;
-import java.sql.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.sql.Connection;
 
 /**
- *  Reflective utilities for working with objects
+ * Reflective utilities for working with objects
  *
- *@author     matt rajkowski
- *@created    June 13, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 13, 2002
  */
 public class ObjectUtils {
 
   /**
-   *  Sets the param attribute of the ObjectUtils class
+   * Sets the param attribute of the ObjectUtils class
    *
-   *@param  target  The new param value
-   *@param  param   The new param value
-   *@param  value   The new param value
-   *@return         Description of the Returned Value
+   * @param target The new param value
+   * @param param  The new param value
+   * @param value  The new param value
+   * @return Description of the Returned Value
    */
   public static boolean setParam(Object target, String param, Object value) {
     try {
@@ -54,12 +57,12 @@ public class ObjectUtils {
 
 
   /**
-   *  Sets the param attribute of the ObjectUtils class
+   * Sets the param attribute of the ObjectUtils class
    *
-   *@param  target  The new param value
-   *@param  param   The new param value
-   *@param  value   The new param value
-   *@return         Description of the Return Value
+   * @param target The new param value
+   * @param param  The new param value
+   * @param value  The new param value
+   * @return Description of the Return Value
    */
   public static boolean setParam(Object target, String param, double value) {
     try {
@@ -76,12 +79,12 @@ public class ObjectUtils {
 
 
   /**
-   *  Sets the param attribute of the ObjectUtils class
+   * Sets the param attribute of the ObjectUtils class
    *
-   *@param  target  The new param value
-   *@param  param   The new param value
-   *@param  value   The new param value
-   *@return         Description of the Return Value
+   * @param target The new param value
+   * @param param  The new param value
+   * @param value  The new param value
+   * @return Description of the Return Value
    */
   public static boolean setParam(Object target, String param, boolean value) {
     try {
@@ -98,11 +101,11 @@ public class ObjectUtils {
 
 
   /**
-   *  Gets the param attribute of the ObjectUtils class
+   * Gets the param attribute of the ObjectUtils class
    *
-   *@param  target  Description of Parameter
-   *@param  param   Description of Parameter
-   *@return         The param value
+   * @param target Description of Parameter
+   * @param param  Description of Parameter
+   * @return The param value
    */
   public static String getParam(Object target, String param) {
     try {
@@ -112,7 +115,8 @@ public class ObjectUtils {
       }
 
       if (dotPos > 0) {
-        Object innerObject = ObjectUtils.getObject(target, param.substring(0, dotPos));
+        Object innerObject = ObjectUtils.getObject(
+            target, param.substring(0, dotPos));
         return ObjectUtils.getParam(innerObject, param.substring(dotPos + 1));
       } else {
         param = param.substring(0, 1).toUpperCase() + param.substring(1);
@@ -120,20 +124,25 @@ public class ObjectUtils {
         if (param.indexOf("(") > -1) {
           if (param.indexOf("\"") > -1) {
             //treat as string
-            String value = param.substring(param.indexOf("\"") + 1, param.lastIndexOf("\""));
+            String value = param.substring(
+                param.indexOf("\"") + 1, param.lastIndexOf("\""));
             Class[] argTypes = new Class[]{String.class};
-            Method method = target.getClass().getMethod("get" + param, argTypes);
+            Method method = target.getClass().getMethod(
+                "get" + param, argTypes);
             result = method.invoke(target, new Object[]{value});
           } else {
             //treat as int
-            String value = param.substring(param.indexOf("(") + 1, param.indexOf(")"));
+            String value = param.substring(
+                param.indexOf("(") + 1, param.indexOf(")"));
             Class[] argTypes = new Class[]{int.class};
-            Method method = target.getClass().getMethod("get" + param, argTypes);
+            Method method = target.getClass().getMethod(
+                "get" + param, argTypes);
             result = method.invoke(target, new Object[]{value});
           }
         } else {
-          Method method = target.getClass().getMethod("get" + param, null);
-          result = method.invoke(target, null);
+          Method method = target.getClass().getMethod(
+              "get" + param, (java.lang.Class[]) null);
+          result = method.invoke(target, (java.lang.Object[]) null);
         }
         if (result == null) {
           return null;
@@ -150,12 +159,12 @@ public class ObjectUtils {
 
 
   /**
-   *  Invokes the specified method
+   * Invokes the specified method
    *
-   *@param  target      The new param value
-   *@param  value       The new param value
-   *@param  thisMethod  Description of the Parameter
-   *@return             Description of the Returned Value
+   * @param target     The new param value
+   * @param value      The new param value
+   * @param thisMethod Description of the Parameter
+   * @return Description of the Returned Value
    */
   public static boolean invokeMethod(Object target, String thisMethod, Object value) {
     try {
@@ -176,17 +185,18 @@ public class ObjectUtils {
 
 
   /**
-   *  Gets the object attribute of the ObjectUtils class
+   * Gets the object attribute of the ObjectUtils class
    *
-   *@param  target  Description of Parameter
-   *@param  param   Description of Parameter
-   *@return         The object value
+   * @param target Description of Parameter
+   * @param param  Description of Parameter
+   * @return The object value
    */
   public static Object getObject(Object target, String param) {
     try {
       param = param.substring(0, 1).toUpperCase() + param.substring(1);
-      Method method = target.getClass().getMethod("get" + param, null);
-      Object result = method.invoke(target, null);
+      Method method = target.getClass().getMethod(
+          "get" + param, (java.lang.Class[]) null);
+      Object result = method.invoke(target, (java.lang.Object[]) null);
       return result;
     } catch (Exception e) {
       return null;
@@ -195,10 +205,10 @@ public class ObjectUtils {
 
 
   /**
-   *  Constructs an object with a null constructor
+   * Constructs an object with a null constructor
    *
-   *@param  theClass  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param theClass Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Object constructObject(Class theClass) {
     try {
@@ -213,17 +223,18 @@ public class ObjectUtils {
 
 
   /**
-   *  Constructs a new object in which the object loads itself from a database
-   *  given a parameter
+   * Constructs a new object in which the object loads itself from a database
+   * given a parameter
    *
-   *@param  theClass   Description of the Parameter
-   *@param  parameter  Description of the Parameter
-   *@param  db         Description of the Parameter
-   *@return            Description of the Return Value
+   * @param theClass  Description of the Parameter
+   * @param parameter Description of the Parameter
+   * @param db        Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Object constructObject(Class theClass, Object parameter, Connection db) {
     try {
-      Class[] paramClass = new Class[]{parameter.getClass(), Class.forName("java.sql.Connection")};
+      Class[] paramClass = new Class[]{parameter.getClass(), Class.forName(
+          "java.sql.Connection")};
       Constructor constructor = theClass.getConstructor(paramClass);
       Object[] paramObject = new Object[]{parameter, db};
       return constructor.newInstance(paramObject);
@@ -234,13 +245,13 @@ public class ObjectUtils {
 
 
   /**
-   *  Constructs a new object in which the object loads itself from a database
-   *  given an id for the object
+   * Constructs a new object in which the object loads itself from a database
+   * given an id for the object
    *
-   *@param  theClass  Description of Parameter
-   *@param  db        Description of Parameter
-   *@param  objectId  Description of Parameter
-   *@return           Description of the Returned Value
+   * @param theClass Description of Parameter
+   * @param db       Description of Parameter
+   * @param objectId Description of Parameter
+   * @return Description of the Returned Value
    */
   public static Object constructObject(Class theClass, Connection db, int objectId) {
     try {
@@ -255,19 +266,20 @@ public class ObjectUtils {
 
 
   /**
-   *  Constructs a new object in which the object loads itself from a database
-   *  given an id for the object and a String typically used as a tableName for
-   *  a lookupElement object
+   * Constructs a new object in which the object loads itself from a database
+   * given an id for the object and a String typically used as a tableName for
+   * a lookupElement object
    *
-   *@param  theClass   Description of the Parameter
-   *@param  db         Description of the Parameter
-   *@param  objectId   Description of the Parameter
-   *@param  tableName  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param theClass  Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param objectId  Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Object constructObject(Class theClass, Connection db, int objectId, String tableName) {
     try {
-      Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), int.class, Class.forName("java.lang.String")};
+      Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), int.class, Class.forName(
+          "java.lang.String")};
       Constructor constructor = theClass.getConstructor(paramClass);
       Object[] paramObject = new Object[]{db, new Integer(objectId), tableName};
       return constructor.newInstance(paramObject);
@@ -278,22 +290,22 @@ public class ObjectUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  theClass     Description of the Parameter
-   *@param  db           Description of the Parameter
-   *@param  objectId     Description of the Parameter
-   *@param  tableName    Description of the Parameter
-   *@param  uniqueField  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param theClass    Description of the Parameter
+   * @param db          Description of the Parameter
+   * @param objectId    Description of the Parameter
+   * @param tableName   Description of the Parameter
+   * @param uniqueField Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Object constructObject(Class theClass, Connection db, int objectId, String tableName, String uniqueField) {
     try {
       Class[] paramClass = new Class[]{
-          Class.forName("java.sql.Connection"),
-          int.class,
-          Class.forName("java.lang.String"),
-          Class.forName("java.lang.String")};
+        Class.forName("java.sql.Connection"),
+        int.class,
+        Class.forName("java.lang.String"),
+        Class.forName("java.lang.String")};
       Constructor constructor = theClass.getConstructor(paramClass);
       Object[] paramObject = new Object[]{db, new Integer(objectId), tableName, uniqueField};
       return constructor.newInstance(paramObject);
@@ -307,11 +319,11 @@ public class ObjectUtils {
 
 
   /**
-   *  Serialize an object to a byte array
+   * Serialize an object to a byte array
    *
-   *@param  object         Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param object Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public static byte[] toByteArray(Object object) throws Exception {
     ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
@@ -325,11 +337,11 @@ public class ObjectUtils {
 
 
   /**
-   *  Reconstruct on object from a byte array
+   * Reconstruct on object from a byte array
    *
-   *@param  byteArray      Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param byteArray Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public static Object toObject(byte[] byteArray) throws Exception {
     ByteArrayInputStream byteIn = new ByteArrayInputStream(byteArray);

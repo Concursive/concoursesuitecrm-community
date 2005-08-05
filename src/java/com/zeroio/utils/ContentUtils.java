@@ -16,45 +16,39 @@
 package com.zeroio.utils;
 
 import com.zeroio.iteam.base.FileItem;
-import java.io.*;
-// Word
 import org.apache.poi.hdf.extractor.WordDocument;
-// Word 6
-import org.textmining.text.extraction.WordExtractor;
-// HTML
-import org.cyberneko.html.HTMLConfiguration;
-import org.cyberneko.html.filters.ElementRemover;
+import org.apache.poi.poifs.eventfilesystem.POIFSReader;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
-// PDF
+import org.aspcfs.utils.StringUtils;
+import org.cyberneko.html.HTMLConfiguration;
+import org.cyberneko.html.filters.ElementRemover;
 import org.pdfbox.pdfparser.PDFParser;
 import org.pdfbox.pdmodel.PDDocument;
 import org.pdfbox.util.PDFTextStripper;
-// PPT
-import org.apache.poi.poifs.eventfilesystem.*;
-// Text
-import org.aspcfs.utils.StringUtils;
-// RTF
+import org.textmining.text.extraction.WordExtractor;
+
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.rtf.RTFEditorKit;
-// SXW
-import java.util.zip.*;
+import java.io.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
- *  Class to extract text for various file formats as they become available
+ * Class to extract text for various file formats as they become available
  *
- *@author     matt rajkowski
- *@created    June 14, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 14, 2004
  */
 public class ContentUtils {
 
   /**
-   *  Gets the text attribute of the ContentUtils class
+   * Gets the text attribute of the ContentUtils class
    *
-   *@param  fileItem  Description of the Parameter
-   *@return           The text value
+   * @param fileItem Description of the Parameter
+   * @return The text value
    */
   public static String getText(FileItem fileItem) {
     // TODO: Content should have no returns, no whitespace except logical spaces
@@ -86,12 +80,14 @@ public class ContentUtils {
         org.cyberneko.html.filters.Writer writer =
             new org.cyberneko.html.filters.Writer(out, encoding);
         XMLDocumentFilter[] filters = {
-            remover,
-            writer,
-            };
+          remover,
+          writer,
+        };
         XMLParserConfiguration parser = new HTMLConfiguration();
-        parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
-        XMLInputSource source = new XMLInputSource(null, "file://" + filename, null);
+        parser.setProperty(
+            "http://cyberneko.org/html/properties/filters", filters);
+        XMLInputSource source = new XMLInputSource(
+            null, "file://" + filename, null);
         parser.parse(source);
         contents = StringUtils.fromHtmlValue(out.toString());
       } catch (Exception e) {
@@ -165,15 +161,20 @@ public class ContentUtils {
     }
     if (contents != null) {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ContentUtils-> ClientName: " + fileItem.getClientFilename());
-        System.out.println("ContentUtils-> Extension: " + fileItem.getExtension());
+        System.out.println(
+            "ContentUtils-> ClientName: " + fileItem.getClientFilename());
+        System.out.println(
+            "ContentUtils-> Extension: " + fileItem.getExtension());
         System.out.println("ContentUtils-> Name: " + fileItem.getFilename());
-        System.out.println("ContentUtils-> Directory: " + fileItem.getFullFilePath());
+        System.out.println(
+            "ContentUtils-> Directory: " + fileItem.getFullFilePath());
         System.out.println("ContentUtils-> Size: " + fileItem.getSize());
       }
-      System.out.println("*[ BEGIN ]*****************************************************");
+      System.out.println(
+          "*[ BEGIN ]*****************************************************");
       System.out.println(contents);
-      System.out.println("*[ END ]*******************************************************");
+      System.out.println(
+          "*[ END ]*******************************************************");
       return (StringUtils.replace(contents, "\r\n", " "));
     } else {
       return contents;
@@ -182,10 +183,10 @@ public class ContentUtils {
 
 
   /**
-   *  Format the content for search results page
+   * Format the content for search results page
    *
-   *@param  content  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param content Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toText(String content) {
     if (content == null) {
@@ -212,10 +213,10 @@ public class ContentUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  content  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param content Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String stripHTML(String content) {
     if (content == null) {
@@ -228,7 +229,8 @@ public class ContentUtils {
     content = StringUtils.replace(content, "</ul>", "</ul> ");
     content = StringUtils.replace(content, "</ol>", "</ol> ");
     try {
-      ByteArrayInputStream byteIn = new ByteArrayInputStream(content.getBytes());
+      ByteArrayInputStream byteIn = new ByteArrayInputStream(
+          content.getBytes());
       String encoding = "ISO-8859-1";
       ElementRemover remover = new ElementRemover();
       remover.removeElement("script");
@@ -236,12 +238,14 @@ public class ContentUtils {
       org.cyberneko.html.filters.Writer writer =
           new org.cyberneko.html.filters.Writer(out, encoding);
       XMLDocumentFilter[] filters = {
-          remover,
-          writer,
-          };
+        remover,
+        writer,
+      };
       XMLParserConfiguration parser = new HTMLConfiguration();
-      parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
-      XMLInputSource source = new XMLInputSource(null, null, null, byteIn, null);
+      parser.setProperty(
+          "http://cyberneko.org/html/properties/filters", filters);
+      XMLInputSource source = new XMLInputSource(
+          null, null, null, byteIn, null);
       parser.parse(source);
       return (StringUtils.fromHtmlValue(out.toString()));
     } catch (Exception e) {
@@ -252,10 +256,10 @@ public class ContentUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  content  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param content Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String stripXML(String content) {
     if (content == null) {

@@ -43,11 +43,13 @@
   </tr>
 </table>
 <br>
-<zeroio:permission name="project-plan-outline-add">
-<img border="0" src="images/icons/stock_new_bullet-16.gif" align="absmiddle">
-<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newOutline">New Outline</dhv:label></a><br>
-&nbsp;<br>
-</zeroio:permission>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-plan-outline-add">
+  <img border="0" src="images/icons/stock_new_bullet-16.gif" align="absmiddle">
+  <a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newOutline">New Outline</dhv:label></a><br>
+  &nbsp;<br>
+  </zeroio:permission>
+</dhv:evaluate>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="reqView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>">
@@ -92,7 +94,7 @@
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top" align="center" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisRequirement.getId() %>, <%= Project.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisRequirement.getId() %>, <%= Project.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>

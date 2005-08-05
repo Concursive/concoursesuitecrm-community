@@ -15,18 +15,23 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Builds a list of survey recipients who responded.
+ * Builds a list of survey recipients who responded.
  *
- *@author     Mathur
- *@created    February 4, 2003
- *@version    $Id: SurveyResponseList.java,v 1.5 2004/10/12 13:58:36 mrajkowski
- *      Exp $
+ * @author Mathur
+ * @version $Id: SurveyResponseList.java,v 1.5 2004/10/12 13:58:36 mrajkowski
+ *          Exp $
+ * @created February 4, 2003
  */
 public class SurveyResponseList extends ArrayList {
 
@@ -35,18 +40,20 @@ public class SurveyResponseList extends ArrayList {
   private int addressUpdated = -1;
 
   private boolean onlyNotUpdated = false;
+  private int contactId = -1;
 
 
   /**
-   *  Constructor for the SurveyResponseList object
+   * Constructor for the SurveyResponseList object
    */
-  public SurveyResponseList() { }
+  public SurveyResponseList() {
+  }
 
 
   /**
-   *  Gets the pagedListInfo attribute of the SurveyResponseList object
+   * Gets the pagedListInfo attribute of the SurveyResponseList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -54,9 +61,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the SurveyResponseList object
+   * Sets the pagedListInfo attribute of the SurveyResponseList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -64,9 +71,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Sets the surveyId attribute of the SurveyResponseList object
+   * Sets the surveyId attribute of the SurveyResponseList object
    *
-   *@param  surveyId  The new surveyId value
+   * @param surveyId The new surveyId value
    */
   public void setSurveyId(int surveyId) {
     this.surveyId = surveyId;
@@ -74,9 +81,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Sets the addressUpdated attribute of the SurveyResponseList object
+   * Sets the addressUpdated attribute of the SurveyResponseList object
    *
-   *@param  tmp  The new addressUpdated value
+   * @param tmp The new addressUpdated value
    */
   public void setAddressUpdated(int tmp) {
     this.addressUpdated = tmp;
@@ -84,9 +91,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Sets the addressUpdated attribute of the SurveyResponseList object
+   * Sets the addressUpdated attribute of the SurveyResponseList object
    *
-   *@param  tmp  The new addressUpdated value
+   * @param tmp The new addressUpdated value
    */
   public void setAddressUpdated(String tmp) {
     this.addressUpdated = Integer.parseInt(tmp);
@@ -94,9 +101,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Sets the onlyNotUpdated attribute of the SurveyResponseList object
+   * Sets the onlyNotUpdated attribute of the SurveyResponseList object
    *
-   *@param  tmp  The new onlyNotUpdated value
+   * @param tmp The new onlyNotUpdated value
    */
   public void setOnlyNotUpdated(boolean tmp) {
     this.onlyNotUpdated = tmp;
@@ -104,9 +111,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Sets the onlyNotUpdated attribute of the SurveyResponseList object
+   * Sets the onlyNotUpdated attribute of the SurveyResponseList object
    *
-   *@param  tmp  The new onlyNotUpdated value
+   * @param tmp The new onlyNotUpdated value
    */
   public void setOnlyNotUpdated(String tmp) {
     this.onlyNotUpdated = DatabaseUtils.parseBoolean(tmp);
@@ -114,9 +121,29 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Gets the surveyId attribute of the SurveyResponseList object
+   * Sets the contactId attribute of the SurveyResponseList object
    *
-   *@return    The surveyId value
+   * @param tmp The new contactId value
+   */
+  public void setContactId(int tmp) {
+    this.contactId = tmp;
+  }
+
+
+  /**
+   * Sets the contactId attribute of the SurveyResponseList object
+   *
+   * @param tmp The new contactId value
+   */
+  public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the surveyId attribute of the SurveyResponseList object
+   *
+   * @return The surveyId value
    */
   public int getSurveyId() {
     return surveyId;
@@ -124,9 +151,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Gets the addressUpdated attribute of the SurveyResponseList object
+   * Gets the addressUpdated attribute of the SurveyResponseList object
    *
-   *@return    The addressUpdated value
+   * @return The addressUpdated value
    */
   public int getAddressUpdated() {
     return addressUpdated;
@@ -134,9 +161,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Gets the onlyNotUpdated attribute of the SurveyResponseList object
+   * Gets the onlyNotUpdated attribute of the SurveyResponseList object
    *
-   *@return    The onlyNotUpdated value
+   * @return The onlyNotUpdated value
    */
   public boolean getOnlyNotUpdated() {
     return onlyNotUpdated;
@@ -144,10 +171,20 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Gets the contactId attribute of the SurveyResponseList object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @return The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -183,9 +220,10 @@ public class SurveyResponseList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(c.namelast) < ? ");
+            "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -216,22 +254,15 @@ public class SurveyResponseList extends ArrayList {
         "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
         "WHERE sr.active_survey_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       SurveyResponse thisResponse = new SurveyResponse(rs);
       this.add(thisResponse);
     }
@@ -247,9 +278,9 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -263,19 +294,24 @@ public class SurveyResponseList extends ArrayList {
     if (addressUpdated != -1) {
       sqlFilter.append("AND sr.address_updated = ? ");
     }
-    
-    if (this.onlyNotUpdated){
-      sqlFilter.append("AND sr.address_updated = ? AND sr.contact_id NOT IN (SELECT contact_id FROM active_survey_responses WHERE active_survey_id = ? AND address_updated = ?) ");
+
+    if (this.onlyNotUpdated) {
+      sqlFilter.append(
+          "AND sr.address_updated = ? AND sr.contact_id NOT IN (SELECT contact_id FROM active_survey_responses WHERE active_survey_id = ? AND address_updated = ?) ");
+    }
+
+    if (contactId != -1) {
+      sqlFilter.append("AND sr.contact_id = ? ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -286,12 +322,31 @@ public class SurveyResponseList extends ArrayList {
     if (addressUpdated != -1) {
       pst.setInt(++i, addressUpdated);
     }
-    if (this.onlyNotUpdated){
+    if (this.onlyNotUpdated) {
       pst.setInt(++i, SurveyResponse.ADDRESS_VALID);
       pst.setInt(++i, this.getSurveyId());
       pst.setInt(++i, SurveyResponse.ADDRESS_UPDATED);
     }
+    if (contactId != -1) {
+      pst.setInt(++i, this.getContactId());
+    }
     return i;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      SurveyResponse surveyResponse = (SurveyResponse) itr.next();
+      surveyResponse.delete(db);
+    }
+    return true;
   }
 
 }

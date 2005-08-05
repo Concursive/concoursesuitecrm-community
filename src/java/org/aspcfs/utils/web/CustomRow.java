@@ -15,28 +15,28 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
 import org.aspcfs.utils.ObjectUtils;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+
+import java.util.ArrayList;
 
 /**
- *  Builds a Html Column element ... opeionally builds html from XML input.
- *  usage : <row class="containerBody"> <br>
- *  Options : Can be used to build a list of similar row types given template of
- *  a row<br>
- *  usage : <row multiple="true" listName="questions" listId="id"> <br>
- *  multiple : specifies if the row is a rowList .. like a TaskList <br>
- *  listName : the name of method to be invoked on object used to populate the
- *  row id : attribute used to differentiate the rows. <br>
- *  <br>
- *  Note : Class attribute in the xml has to be defined as elementClass as class
- *  is a reserved word
+ * Builds a Html Column element ... opeionally builds html from XML input.
+ * usage : <row class="containerBody"> <br>
+ * Options : Can be used to build a list of similar row types given template of
+ * a row<br>
+ * usage : <row multiple="true" listName="questions" listId="id"> <br>
+ * multiple : specifies if the row is a rowList .. like a TaskList <br>
+ * listName : the name of method to be invoked on object used to populate the
+ * row id : attribute used to differentiate the rows. <br>
+ * <br>
+ * Note : Class attribute in the xml has to be defined as elementClass as class
+ * is a reserved word
  *
- *@author     akhi_m
- *@created    October 22, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created October 22, 2002
  */
 public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
@@ -62,17 +62,17 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
   private Object listObject = null;
 
 
-
   /**
-   *  Constructor for the CustomRow object
+   * Constructor for the CustomRow object
    */
-  public CustomRow() { }
+  public CustomRow() {
+  }
 
 
   /**
-   *  Constructor for the CustomRow object
+   * Constructor for the CustomRow object
    *
-   *@param  row  Description of the Parameter
+   * @param row Description of the Parameter
    */
   public CustomRow(Element row) {
     processXMLRow(row);
@@ -80,9 +80,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the multiple attribute of the CustomRow object
+   * Sets the multiple attribute of the CustomRow object
    *
-   *@param  multiple  The new multiple value
+   * @param multiple The new multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
@@ -90,9 +90,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the multiple attribute of the CustomRow object
+   * Sets the multiple attribute of the CustomRow object
    *
-   *@param  multiple  The new multiple value
+   * @param multiple The new multiple value
    */
   public void setMultiple(String multiple) {
     this.multiple = "true".equalsIgnoreCase(multiple);
@@ -100,9 +100,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the startTag attribute of the CustomRow object
+   * Sets the startTag attribute of the CustomRow object
    *
-   *@param  startTag  The new startTag value
+   * @param startTag The new startTag value
    */
   public void setStartTag(String startTag) {
     this.startTag = startTag;
@@ -110,9 +110,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the id attribute of the CustomRow object
+   * Sets the id attribute of the CustomRow object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = tmp;
@@ -120,9 +120,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the style attribute of the CustomRow object
+   * Sets the style attribute of the CustomRow object
    *
-   *@param  tmp  The new style value
+   * @param tmp The new style value
    */
   public void setStyle(String tmp) {
     this.style = tmp;
@@ -130,9 +130,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the title attribute of the CustomRow object
+   * Sets the title attribute of the CustomRow object
    *
-   *@param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -140,9 +140,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the elementClass attribute of the CustomRow object
+   * Sets the elementClass attribute of the CustomRow object
    *
-   *@param  tmp  The new elementClass value
+   * @param tmp The new elementClass value
    */
   public void setElementClass(String tmp) {
     this.elementClass = tmp;
@@ -150,9 +150,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the align attribute of the CustomRow object
+   * Sets the align attribute of the CustomRow object
    *
-   *@param  tmp  The new align value
+   * @param tmp The new align value
    */
   public void setAlign(String tmp) {
     this.align = tmp;
@@ -160,9 +160,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the valign attribute of the CustomRow object
+   * Sets the valign attribute of the CustomRow object
    *
-   *@param  tmp  The new valign value
+   * @param tmp The new valign value
    */
   public void setValign(String tmp) {
     this.valign = tmp;
@@ -170,9 +170,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the bgColor attribute of the CustomRow object
+   * Sets the bgColor attribute of the CustomRow object
    *
-   *@param  tmp  The new bgColor value
+   * @param tmp The new bgColor value
    */
   public void setBgColor(String tmp) {
     this.bgColor = tmp;
@@ -180,9 +180,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the type attribute of the CustomRow object
+   * Sets the type attribute of the CustomRow object
    *
-   *@param  type  The new type value
+   * @param type The new type value
    */
   public void setType(String type) {
     this.type = type;
@@ -190,9 +190,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the listName attribute of the CustomRow object
+   * Sets the listName attribute of the CustomRow object
    *
-   *@param  tmp  The new listName value
+   * @param tmp The new listName value
    */
   public void setListName(String tmp) {
     this.listName = tmp;
@@ -200,9 +200,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the listId attribute of the CustomRow object
+   * Sets the listId attribute of the CustomRow object
    *
-   *@param  tmp  The new listId value
+   * @param tmp The new listId value
    */
   public void setListId(String tmp) {
     this.listId = tmp;
@@ -210,9 +210,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the listObject attribute of the CustomRow object
+   * Sets the listObject attribute of the CustomRow object
    *
-   *@param  listObject  The new listObject value
+   * @param listObject The new listObject value
    */
   public void setListObject(Object listObject) {
     this.listObject = listObject;
@@ -220,9 +220,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the listObject attribute of the CustomRow object
+   * Gets the listObject attribute of the CustomRow object
    *
-   *@return    The listObject value
+   * @return The listObject value
    */
   public Object getListObject() {
     return listObject;
@@ -230,9 +230,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the listName attribute of the CustomRow object
+   * Gets the listName attribute of the CustomRow object
    *
-   *@return    The listName value
+   * @return The listName value
    */
   public String getListName() {
     return listName;
@@ -240,9 +240,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the listId attribute of the CustomRow object
+   * Gets the listId attribute of the CustomRow object
    *
-   *@return    The listId value
+   * @return The listId value
    */
   public String getListId() {
     return listId;
@@ -250,9 +250,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the type attribute of the CustomRow object
+   * Gets the type attribute of the CustomRow object
    *
-   *@return    The type value
+   * @return The type value
    */
   public String getType() {
     return type;
@@ -260,9 +260,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the align attribute of the CustomRow object
+   * Gets the align attribute of the CustomRow object
    *
-   *@return    The align value
+   * @return The align value
    */
   public String getAlign() {
     return align;
@@ -270,9 +270,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the valign attribute of the CustomRow object
+   * Gets the valign attribute of the CustomRow object
    *
-   *@return    The valign value
+   * @return The valign value
    */
   public String getValign() {
     return valign;
@@ -280,9 +280,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the bgColor attribute of the CustomRow object
+   * Gets the bgColor attribute of the CustomRow object
    *
-   *@return    The bgColor value
+   * @return The bgColor value
    */
   public String getBgColor() {
     return bgColor;
@@ -290,9 +290,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the id attribute of the CustomRow object
+   * Gets the id attribute of the CustomRow object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -300,9 +300,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the style attribute of the CustomRow object
+   * Gets the style attribute of the CustomRow object
    *
-   *@return    The style value
+   * @return The style value
    */
   public String getStyle() {
     return style;
@@ -310,9 +310,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the title attribute of the CustomRow object
+   * Gets the title attribute of the CustomRow object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -320,9 +320,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the elementClass attribute of the CustomRow object
+   * Gets the elementClass attribute of the CustomRow object
    *
-   *@return    The elementClass value
+   * @return The elementClass value
    */
   public String getElementClass() {
     return elementClass;
@@ -330,9 +330,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the startTag attribute of the CustomRow object
+   * Gets the startTag attribute of the CustomRow object
    *
-   *@return    The startTag value
+   * @return The startTag value
    */
   public String getStartTag() {
     return startTag;
@@ -340,9 +340,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the endTag attribute of the CustomRow object
+   * Gets the endTag attribute of the CustomRow object
    *
-   *@return    The endTag value
+   * @return The endTag value
    */
   public String getEndTag() {
     return endTag;
@@ -350,9 +350,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the multiple attribute of the CustomRow object
+   * Gets the multiple attribute of the CustomRow object
    *
-   *@return    The multiple value
+   * @return The multiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -360,24 +360,25 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the coreAttributes attribute of the CustomRow object
+   * Gets the coreAttributes attribute of the CustomRow object
    *
-   *@return    The coreAttributes value
+   * @return The coreAttributes value
    */
   public String getCoreAttributes() {
     StringBuffer tmpString = new StringBuffer();
     tmpString.append(id != null ? " id=\"" + id + "\" " : "");
     tmpString.append(title != null ? " title=\"" + title + "\" " : "");
     tmpString.append(style != null ? " style=\"" + style + "\" " : "");
-    tmpString.append(elementClass != null ? " class=\"" + elementClass + "\" " : "");
+    tmpString.append(
+        elementClass != null ? " class=\"" + elementClass + "\" " : "");
     return tmpString.toString();
   }
 
 
   /**
-   *  Gets the customAttributes attribute of the CustomRow object
+   * Gets the customAttributes attribute of the CustomRow object
    *
-   *@return    The customAttributes value
+   * @return The customAttributes value
    */
   public String getCustomAttributes() {
     StringBuffer tmpString = new StringBuffer();
@@ -389,27 +390,28 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  row  Description of the Parameter
+   * @param row Description of the Parameter
    */
   public void processXMLRow(Element row) {
     //process XML to fill object and call  buildRow
     NamedNodeMap nnm = row.getAttributes();
     if (nnm != null) {
       for (int i = 0; i < nnm.getLength(); i++) {
-        ObjectUtils.setParam(this, nnm.item(i).getNodeName().trim(), nnm.item(i).getNodeValue().trim());
+        ObjectUtils.setParam(
+            this, nnm.item(i).getNodeName().trim(), nnm.item(i).getNodeValue().trim());
       }
-      if (row.getAttribute("class") != null && !"".equals(row.getAttribute("class"))) {
+      if (row.getAttribute("class") != null && !"".equals(
+          row.getAttribute("class"))) {
         this.elementClass = row.getAttribute("class");
       }
     }
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void build() {
     startTag = "<TR " + this.getCoreAttributes() + this.getCustomAttributes() + ">";

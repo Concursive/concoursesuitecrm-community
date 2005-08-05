@@ -26,13 +26,13 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 /**
- *  A stand alone servlet that sends files. Currently it will stream an image
- *  file from a protected image library
+ * A stand alone servlet that sends files. Currently it will stream an image
+ * file from a protected image library
  *
- *@author     mrajkowski
- *@created    April 1, 2004
- *@version    $Id: ProcessFileItemImage.java,v 1.3 2004/08/04 20:01:57
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: ProcessFileItemImage.java,v 1.3 2004/08/04 20:01:57
+ *          mrajkowski Exp $
+ * @created April 1, 2004
  */
 public final class ProcessFileItemImage extends CFSModule {
 
@@ -40,32 +40,32 @@ public final class ProcessFileItemImage extends CFSModule {
 
 
   /**
-   *  Receives a request for a FileItem image and processes it.<br>
-   *  The user must have access to see the image in their session, then the
-   *  image is retrieved. Images are stored in the fileLibrary using the cryptic
-   *  datetime filename without an extension<p>
+   * Receives a request for a FileItem image and processes it.<br>
+   * The user must have access to see the image in their session, then the
+   * image is retrieved. Images are stored in the fileLibrary using the cryptic
+   * datetime filename without an extension<p>
+   * <p/>
+   * The url format should be in the following format:<br>
+   * <img src="http://ds21.darkhorseventures.com/ProcessFileItemImage.do?id=">
+   * <p/>
    *
-   *  The url format should be in the following format:<br>
-   *  <img src="http://ds21.darkhorseventures.com/ProcessFileItemImage.do?id=">
-   *  <p>
-   *
-   *
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     String id = (String) context.getRequest().getParameter("id");
     String path = (String) context.getRequest().getParameter("path");
     String version = (String) context.getRequest().getParameter("version");
-		String thumbnail = (String) context.getRequest().getParameter("thumbnail");
+    String thumbnail = (String) context.getRequest().getParameter("thumbnail");
     FileItem thisItem = null;
     // Lookup the file, start the download
     Connection db = null;
     try {
       // See if the id is in the user's session
-      ArrayList allowedImages = (ArrayList) context.getSession().getAttribute(PROCESS_FILE_ITEM_NAME);
-      if (allowedImages == null || !allowedImages.contains(id + (version != null ? "-" + version : "") + (thumbnail != null ? "TH" : ""))) {
+      ArrayList allowedImages = (ArrayList) context.getSession().getAttribute(
+          PROCESS_FILE_ITEM_NAME);
+      if (allowedImages == null || !allowedImages.contains(
+          id + (version != null ? "-" + version : "") + (thumbnail != null ? "TH" : ""))) {
         return ("-none-");
       }
       // Get a database connection using the virtual host context info
@@ -77,15 +77,18 @@ public final class ProcessFileItemImage extends CFSModule {
       String filePath = null;
       if (version != null) {
         fileItem.buildVersionList(db);
-        FileItemVersion thisVersion = fileItem.getVersion(Double.parseDouble(version));
-        filePath = this.getPath(context, path) + getDatePath(thisVersion.getModified()) + thisVersion.getFilename();
+        FileItemVersion thisVersion = fileItem.getVersion(
+            Double.parseDouble(version));
+        filePath = this.getPath(context, path) + getDatePath(
+            thisVersion.getModified()) + thisVersion.getFilename();
       } else {
-        filePath = this.getPath(context, path) + getDatePath(fileItem.getModified()) + fileItem.getFilename();
+        filePath = this.getPath(context, path) + getDatePath(
+            fileItem.getModified()) + fileItem.getFilename();
       }
       if (thumbnail != null) {
-				filePath += "TH";
-			}
-			// Finished with connection
+        filePath += "TH";
+      }
+      // Finished with connection
       this.freeConnection(context, db);
       db = null;
 
@@ -95,7 +98,8 @@ public final class ProcessFileItemImage extends CFSModule {
       if (fileDownload.fileExists()) {
         fileDownload.streamContent(context);
       } else {
-        System.err.println("Image-> Trying to send a file that does not exist: " + filePath + fileItem.getClientFilename());
+        System.err.println(
+            "Image-> Trying to send a file that does not exist: " + filePath + fileItem.getClientFilename());
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection

@@ -16,12 +16,12 @@
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 /**
- *  Represents a definition for extracting a property from an object for
- *  translating to XML
+ * Represents a definition for extracting a property from an object for
+ * translating to XML
  *
- *@author     matt rajkowski
- *@created    September 18, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 18, 2002
  */
 public class Property {
 
@@ -33,15 +33,16 @@ public class Property {
 
 
   /**
-   *  Constructor for the Property object
+   * Constructor for the Property object
    */
-  public Property() { }
+  public Property() {
+  }
 
 
   /**
-   *  Constructor for the Property object
+   * Constructor for the Property object
    *
-   *@param  name  Description of the Parameter
+   * @param name Description of the Parameter
    */
   public Property(String name) {
     this.name = name;
@@ -49,9 +50,9 @@ public class Property {
 
 
   /**
-   *  Sets the name attribute of the Property object
+   * Sets the name attribute of the Property object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -59,9 +60,9 @@ public class Property {
 
 
   /**
-   *  Sets the lookupValue attribute of the Property object
+   * Sets the lookupValue attribute of the Property object
    *
-   *@param  tmp  The new lookupValue value
+   * @param tmp The new lookupValue value
    */
   public void setLookupValue(String tmp) {
     this.lookupValue = tmp;
@@ -69,9 +70,9 @@ public class Property {
 
 
   /**
-   *  Sets the alias attribute of the Property object
+   * Sets the alias attribute of the Property object
    *
-   *@param  tmp  The new alias value
+   * @param tmp The new alias value
    */
   public void setAlias(String tmp) {
     this.alias = tmp;
@@ -79,9 +80,9 @@ public class Property {
 
 
   /**
-   *  Sets the field attribute of the Property object
+   * Sets the field attribute of the Property object
    *
-   *@param  tmp  The new field value
+   * @param tmp The new field value
    */
   public void setField(String tmp) {
     this.field = tmp;
@@ -89,9 +90,9 @@ public class Property {
 
 
   /**
-   *  Sets the value attribute of the Property object
+   * Sets the value attribute of the Property object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -99,9 +100,9 @@ public class Property {
 
 
   /**
-   *  Gets the name attribute of the Property object
+   * Gets the name attribute of the Property object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -109,9 +110,9 @@ public class Property {
 
 
   /**
-   *  Gets the lookupValue attribute of the Property object
+   * Gets the lookupValue attribute of the Property object
    *
-   *@return    The lookupValue value
+   * @return The lookupValue value
    */
   public String getLookupValue() {
     return lookupValue;
@@ -119,9 +120,9 @@ public class Property {
 
 
   /**
-   *  Gets the alias attribute of the Property object
+   * Gets the alias attribute of the Property object
    *
-   *@return    The alias value
+   * @return The alias value
    */
   public String getAlias() {
     return alias;
@@ -129,9 +130,9 @@ public class Property {
 
 
   /**
-   *  Gets the field attribute of the Property object
+   * Gets the field attribute of the Property object
    *
-   *@return    The field value
+   * @return The field value
    */
   public String getField() {
     return field;
@@ -139,9 +140,9 @@ public class Property {
 
 
   /**
-   *  Gets the value attribute of the Property object
+   * Gets the value attribute of the Property object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -149,9 +150,9 @@ public class Property {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasName() {
     return (name != null && !"".equals(name));
@@ -159,9 +160,9 @@ public class Property {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasLookupValue() {
     return (lookupValue != null && !"".equals(lookupValue));
@@ -169,9 +170,9 @@ public class Property {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasAlias() {
     return (alias != null && !"".equals(alias));
@@ -179,9 +180,9 @@ public class Property {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasField() {
     return (field != null && !"".equals(field));
@@ -189,9 +190,9 @@ public class Property {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasValue() {
     return (value != null);

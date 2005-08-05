@@ -15,25 +15,24 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.*;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.text.*;
 import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.modules.base.*;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    March 8, 2002
- *@version    $Id: OrganizationReport.java,v 1.8 2002/12/20 14:07:55 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: OrganizationReport.java,v 1.8 2002/12/20 14:07:55 mrajkowski
+ *          Exp $
+ * @created March 8, 2002
  */
 public class OrganizationReport extends OrganizationList {
   protected Report rep = new Report();
@@ -56,15 +55,16 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Constructor for the OrganizationReport object
+   * Constructor for the OrganizationReport object
    */
-  public OrganizationReport() { }
+  public OrganizationReport() {
+  }
 
 
   /**
-   *  Sets the rep attribute of the OrganizationReport object
+   * Sets the rep attribute of the OrganizationReport object
    *
-   *@param  tmp  The new rep value
+   * @param tmp The new rep value
    */
   public void setRep(Report tmp) {
     this.rep = tmp;
@@ -72,9 +72,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the delimiter attribute of the OrganizationReport object
+   * Sets the delimiter attribute of the OrganizationReport object
    *
-   *@param  tmp  The new delimiter value
+   * @param tmp The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -82,9 +82,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the header attribute of the OrganizationReport object
+   * Sets the header attribute of the OrganizationReport object
    *
-   *@param  tmp  The new header value
+   * @param tmp The new header value
    */
   public void setHeader(String tmp) {
     this.header = tmp;
@@ -92,9 +92,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the tdFormat attribute of the OrganizationReport object
+   * Sets the tdFormat attribute of the OrganizationReport object
    *
-   *@param  tmp  The new tdFormat value
+   * @param tmp The new tdFormat value
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
@@ -102,9 +102,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the rep attribute of the OrganizationReport object
+   * Gets the rep attribute of the OrganizationReport object
    *
-   *@return    The rep value
+   * @return The rep value
    */
   public Report getRep() {
     return rep;
@@ -112,9 +112,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the delimiter attribute of the OrganizationReport object
+   * Gets the delimiter attribute of the OrganizationReport object
    *
-   *@return    The delimiter value
+   * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -122,9 +122,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the header attribute of the OrganizationReport object
+   * Gets the header attribute of the OrganizationReport object
    *
-   *@return    The header value
+   * @return The header value
    */
   public String getHeader() {
     return header;
@@ -132,9 +132,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the tdFormat attribute of the OrganizationReport object
+   * Gets the tdFormat attribute of the OrganizationReport object
    *
-   *@return    The tdFormat value
+   * @return The tdFormat value
    */
   public String getTdFormat() {
     return tdFormat;
@@ -142,9 +142,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the filePath attribute of the OrganizationReport object
+   * Gets the filePath attribute of the OrganizationReport object
    *
-   *@return    The filePath value
+   * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -152,9 +152,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the thisItem attribute of the OrganizationReport object
+   * Gets the thisItem attribute of the OrganizationReport object
    *
-   *@return    The thisItem value
+   * @return The thisItem value
    */
   public FileItem getThisItem() {
     return thisItem;
@@ -162,9 +162,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the filePath attribute of the OrganizationReport object
+   * Sets the filePath attribute of the OrganizationReport object
    *
-   *@param  tmp  The new filePath value
+   * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -172,9 +172,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the thisItem attribute of the OrganizationReport object
+   * Sets the thisItem attribute of the OrganizationReport object
    *
-   *@param  tmp  The new thisItem value
+   * @param tmp The new thisItem value
    */
   public void setThisItem(FileItem tmp) {
     this.thisItem = tmp;
@@ -182,9 +182,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the subject attribute of the OrganizationReport object
+   * Gets the subject attribute of the OrganizationReport object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -192,9 +192,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the enteredBy attribute of the OrganizationReport object
+   * Gets the enteredBy attribute of the OrganizationReport object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -202,9 +202,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the OrganizationReport object
+   * Gets the modifiedBy attribute of the OrganizationReport object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -212,9 +212,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the subject attribute of the OrganizationReport object
+   * Sets the subject attribute of the OrganizationReport object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -222,9 +222,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the enteredBy attribute of the OrganizationReport object
+   * Sets the enteredBy attribute of the OrganizationReport object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -232,9 +232,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the OrganizationReport object
+   * Sets the modifiedBy attribute of the OrganizationReport object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -242,9 +242,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the folderId attribute of the OrganizationReport object
+   * Gets the folderId attribute of the OrganizationReport object
    *
-   *@return    The folderId value
+   * @return The folderId value
    */
   public int getFolderId() {
     return folderId;
@@ -252,9 +252,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the folderId attribute of the OrganizationReport object
+   * Sets the folderId attribute of the OrganizationReport object
    *
-   *@param  folderId  The new folderId value
+   * @param folderId The new folderId value
    */
   public void setFolderId(int folderId) {
     this.folderId = folderId;
@@ -262,9 +262,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the includeFolders attribute of the OrganizationReport object
+   * Sets the includeFolders attribute of the OrganizationReport object
    *
-   *@param  includeFolders  The new includeFolders value
+   * @param includeFolders The new includeFolders value
    */
   public void setIncludeFolders(boolean includeFolders) {
     this.includeFolders = includeFolders;
@@ -272,9 +272,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the includeFolders attribute of the OrganizationReport object
+   * Gets the includeFolders attribute of the OrganizationReport object
    *
-   *@return    The includeFolders value
+   * @return The includeFolders value
    */
   public boolean getIncludeFolders() {
     return includeFolders;
@@ -282,9 +282,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the criteria attribute of the OrganizationReport object
+   * Gets the criteria attribute of the OrganizationReport object
    *
-   *@return    The criteria value
+   * @return The criteria value
    */
   public ArrayList getCriteria() {
     return criteria;
@@ -292,9 +292,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the criteria attribute of the OrganizationReport object
+   * Sets the criteria attribute of the OrganizationReport object
    *
-   *@param  criteriaString  The new criteria value
+   * @param criteriaString The new criteria value
    */
   public void setCriteria(String[] criteriaString) {
     if (criteriaString != null) {
@@ -303,15 +303,13 @@ public class OrganizationReport extends OrganizationList {
     } else {
       criteria = new ArrayList();
     }
-
-    this.criteria = criteria;
   }
 
 
   /**
-   *  Gets the params attribute of the OrganizationReport object
+   * Gets the params attribute of the OrganizationReport object
    *
-   *@return    The params value
+   * @return The params value
    */
   public String[] getParams() {
     return params;
@@ -319,9 +317,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the params attribute of the OrganizationReport object
+   * Sets the params attribute of the OrganizationReport object
    *
-   *@param  params  The new params value
+   * @param params The new params value
    */
   public void setParams(String[] params) {
     this.params = params;
@@ -329,9 +327,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Gets the filenameToUse attribute of the OrganizationReport object
+   * Gets the filenameToUse attribute of the OrganizationReport object
    *
-   *@return    The filenameToUse value
+   * @return The filenameToUse value
    */
   public String getFilenameToUse() {
     return filenameToUse;
@@ -339,9 +337,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Sets the filenameToUse attribute of the OrganizationReport object
+   * Sets the filenameToUse attribute of the OrganizationReport object
    *
-   *@param  filenameToUse  The new filenameToUse value
+   * @param filenameToUse The new filenameToUse value
    */
   public void setFilenameToUse(String filenameToUse) {
     this.filenameToUse = filenameToUse;
@@ -349,7 +347,7 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildReportBaseInfo() {
     rep.setDelimitedCharacter(delimiter);
@@ -360,7 +358,7 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildReportHeaders() {
     Iterator y = criteria.iterator();
@@ -421,9 +419,9 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  passedReport  Description of the Parameter
+   * @param passedReport Description of the Parameter
    */
   public void buildReportHeaders(Report passedReport) {
     Iterator y = criteria.iterator();
@@ -473,10 +471,10 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReportData(Connection db) throws SQLException {
     this.buildList(db);
@@ -495,18 +493,18 @@ public class OrganizationReport extends OrganizationList {
       thisCat.buildResources(db);
 
       Iterator grp = thisCat.iterator();
-      
-      while(grp.hasNext()){
-      thisGroup = (CustomFieldGroup) grp.next();
-      thisGroup.buildResources(db);
 
-      Iterator fields = thisGroup.iterator();
-      if (fields.hasNext()) {
-        while (fields.hasNext()) {
-          CustomField thisField = (CustomField) fields.next();
-          rep.addColumn(thisField.getNameHtml());
+      while (grp.hasNext()) {
+        thisGroup = (CustomFieldGroup) grp.next();
+        thisGroup.buildResources(db);
+
+        Iterator fields = thisGroup.iterator();
+        if (fields.hasNext()) {
+          while (fields.hasNext()) {
+            CustomField thisField = (CustomField) fields.next();
+            rep.addColumn(thisField.getNameHtml());
+          }
         }
-      }
       }
     }
 
@@ -614,11 +612,11 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Adds a feature to the DataRow attribute of the OrganizationReport object
+   * Adds a feature to the DataRow attribute of the OrganizationReport object
    *
-   *@param  thisRow           The feature to be added to the DataRow attribute
-   *@param  thisOrg           The feature to be added to the DataRow attribute
-   *@exception  SQLException  Description of the Exception
+   * @param thisRow The feature to be added to the DataRow attribute
+   * @param thisOrg The feature to be added to the DataRow attribute
+   * @throws SQLException Description of the Exception
    */
   public void addDataRow(ReportRow thisRow, Organization thisOrg) throws SQLException {
     Iterator y = criteria.iterator();
@@ -669,10 +667,10 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReportFull(Connection db) throws SQLException {
     buildReportBaseInfo();
@@ -682,11 +680,11 @@ public class OrganizationReport extends OrganizationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

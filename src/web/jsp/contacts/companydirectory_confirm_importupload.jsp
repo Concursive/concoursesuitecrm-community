@@ -24,7 +24,7 @@
 <table class="trails" cellspacing="0">
 <tr>
   <td>
-    <a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
+    <a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
     <a href="ExternalContactsImports.do?command=View"><dhv:label name="contacts.companydirectory_confirm_importupload.Import">Import</dhv:label></a> >
     <a href="ExternalContactsImports.do?command=New"><dhv:label name="contacts.companydirectory_confirm_importupload.NewImport">New Import</dhv:label></a> >
     <dhv:label name="contacts.companydirectory_confirm_importupload.UploadComplete">Upload Complete</dhv:label>

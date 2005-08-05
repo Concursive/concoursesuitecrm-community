@@ -2,13 +2,13 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="org_adress"
+		 name="org_address_subreport"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
-		 pageWidth="125"
-		 pageHeight="70"
-		 columnWidth="125"
+		 pageWidth="147"
+		 pageHeight="63"
+		 columnWidth="147"
 		 columnSpacing="0"
 		 leftMargin="0"
 		 rightMargin="0"
@@ -17,7 +17,7 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="2" />
+	<property name="ireport.scriptlethandling" value="0" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
@@ -69,8 +69,8 @@ AND o_addr.org_id = $P{org_id}]]></queryString>
 						mode="Opaque"
 						x="0"
 						y="1"
-						width="123"
-						height="12"
+						width="140"
+						height="14"
 						forecolor="#3333FF"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -78,11 +78,11 @@ AND o_addr.org_id = $P{org_id}]]></queryString>
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
+						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{addr_type} != null && !$F{addr_type}.equals("")) ? $F{addr_type} + " address" : "")]]></textFieldExpression>
 				</textField>
@@ -90,9 +90,9 @@ AND o_addr.org_id = $P{org_id}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="13"
-						width="124"
-						height="18"
+						y="15"
+						width="140"
+						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -100,11 +100,11 @@ AND o_addr.org_id = $P{org_id}]]></queryString>
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
+						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$V{address}]]></textFieldExpression>
 				</textField>

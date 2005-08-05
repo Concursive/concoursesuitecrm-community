@@ -1,4 +1,4 @@
- /*
+/*
  *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
  *  rights reserved. This material cannot be distributed without written
  *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -32,19 +32,20 @@ import java.sql.Connection;
 import java.util.Iterator;
 
 /**
- *  Docuement Management module
+ * Docuement Management module
  *
- *@author
- *@created    November 6, 2001
- *@version    $Id$
+ * @author
+ * @version $Id: DocumentManagement.java,v 1.2 2005/04/13 20:04:34 mrajkowski
+ *          Exp $
+ * @created November 6, 2001
  */
 public final class DocumentManagement extends CFSModule {
 
   /**
-   *  Show the Document Store List by default
+   * Show the Document Store List by default
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     //return "DocumentsOK";
@@ -53,10 +54,10 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandEnterpriseView(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -67,8 +68,10 @@ public final class DocumentManagement extends CFSModule {
     }
     Connection db = null;
     DocumentStoreList documentStoreList = new DocumentStoreList();
-    PagedListInfo documentStoreListInfo = this.getPagedListInfo(context, "documentStoreListInfo");
-    documentStoreListInfo.setLink("DocumentManagement.do?command=EnterpriseView");
+    PagedListInfo documentStoreListInfo = this.getPagedListInfo(
+        context, "documentStoreListInfo");
+    documentStoreListInfo.setLink(
+        "DocumentManagement.do?command=EnterpriseView");
     if (documentStoreListInfo.getListView() == null) {
       //My Open Document Stores
       documentStoreListInfo.setListView("Open");
@@ -77,20 +80,23 @@ public final class DocumentManagement extends CFSModule {
       documentStoreList.setOpenDocumentStoresOnly(true);
     } else if (documentStoreListInfo.getListView().equals("Archived")) {
       documentStoreList.setClosedDocumentStoresOnly(true);
+    } else if (documentStoreListInfo.getListView().equals("Trashed")) {
+      documentStoreList.setIncludeOnlyTrashed(true);
     }
     try {
       db = getConnection(context);
       int tmpUserId = this.getUserId(context);
       User tmpUser = getUser(context, tmpUserId);
-      int tmpUserRoleId = tmpUser.getRoleId(); 
-      Contact tmpContact = new Contact (db,tmpUser.getContactId());
-      int tmpDepartmentId = tmpContact.getDepartment(); 
+      int tmpUserRoleId = tmpUser.getRoleId();
+      Contact tmpContact = new Contact(db, tmpUser.getContactId());
+      int tmpDepartmentId = tmpContact.getDepartment();
       documentStoreList.setDocumentStoresForUser(getUserId(context));
       documentStoreList.setUserRole(tmpUserRoleId);
       documentStoreList.setDepartmentId(tmpDepartmentId);
       documentStoreList.setPagedListInfo(documentStoreListInfo);
       documentStoreList.buildList(db);
-      context.getRequest().setAttribute("documentStoreList", documentStoreList);
+      context.getRequest().setAttribute(
+          "documentStoreList", documentStoreList);
       //cache permissions
       getDocumentStoreUserLevel(context, db, DocumentStoreTeamMember.GUEST);
     } catch (Exception errorMessage) {
@@ -104,11 +110,10 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandAddDocumentStore(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -117,10 +122,11 @@ public final class DocumentManagement extends CFSModule {
     if (!(hasPermission(context, "documents_documentstore-add"))) {
       return ("PermissionError");
     }
-    try{
+    try {
       DocumentStore thisDocumentStore = (DocumentStore) context.getFormBean();
       if (thisDocumentStore.getRequestDate() == null) {
-        thisDocumentStore.setRequestDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+        thisDocumentStore.setRequestDate(
+            DateUtils.roundUpToNextFive(System.currentTimeMillis()));
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
     } catch (Exception errorMessage) {
@@ -133,10 +139,10 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandInsertDocumentStore(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -154,10 +160,11 @@ public final class DocumentManagement extends CFSModule {
       thisDocumentStore.setEnteredBy(this.getUserId(context));
       thisDocumentStore.setModifiedBy(this.getUserId(context));
       isValid = this.validateObject(context, db, thisDocumentStore);
-      
+
       if (isValid) {
         thisDocumentStore.insert(db);
-        updateDocumentStoreCache(context, thisDocumentStore.getId(), thisDocumentStore.getTitle());
+        updateDocumentStoreCache(
+            context, thisDocumentStore.getId(), thisDocumentStore.getTitle());
         indexAddItem(context, thisDocumentStore);
 
         //Add the current user to the team TODO: Put in a transaction
@@ -165,12 +172,15 @@ public final class DocumentManagement extends CFSModule {
         thisMember.setDocumentStoreId(thisDocumentStore.getId());
         thisMember.setStatus(DocumentStoreTeamMember.STATUS_ADDED);
         thisMember.setItemId(this.getUserId(context));
-        thisMember.setUserLevel(getDocumentStoreUserLevel(context, db, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER));
+        thisMember.setUserLevel(
+            getDocumentStoreUserLevel(
+                context, db, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER));
         thisMember.setEnteredBy(this.getUserId(context));
         thisMember.setModifiedBy(this.getUserId(context));
         thisMember.insert(db, DocumentStoreTeamMemberList.USER);
         //Go to the document store
-        context.getRequest().setAttribute("documentStoreId", String.valueOf(thisDocumentStore.getId()));
+        context.getRequest().setAttribute(
+            "documentStoreId", String.valueOf(thisDocumentStore.getId()));
         return (executeCommandDefault(context));
       } else {
         return (executeCommandAddDocumentStore(context));
@@ -185,10 +195,10 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyDocumentStore(ActionContext context) {
     if (!(hasPermission(context, "documents_documentstore-edit"))) {
@@ -196,16 +206,20 @@ public final class DocumentManagement extends CFSModule {
     }
     Connection db = null;
     //Params
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     try {
       db = this.getConnection(context);
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-details-edit")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-details-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
-      context.getRequest().setAttribute("IncludeSection", ("modify_document_store").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("modify_document_store").toLowerCase());
       //Category List
       //LookupList categoryList = new LookupList(db, "lookup_document_store_category");
       //categoryList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
@@ -221,24 +235,28 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfigurePermissions(ActionContext context) {
     Connection db = null;
     //Params
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     try {
       db = this.getConnection(context);
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-setup-permissions")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-setup-permissions")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
-      context.getRequest().setAttribute("IncludeSection", ("setup_permissions").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("setup_permissions").toLowerCase());
       //Load the possible permission categories and permissions
       DocumentStorePermissionCategoryLookupList categories = new DocumentStorePermissionCategoryLookupList();
       categories.setIncludeEnabled(Constants.TRUE);
@@ -256,23 +274,27 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdatePermissions(ActionContext context) {
     Connection db = null;
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     try {
       db = this.getConnection(context);
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
       //Make sure user can modify permissions
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-setup-permissions")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-setup-permissions")) {
         return "PermissionError";
       }
-      DocumentStorePermissionList.updateDocumentStorePermissions(db, context.getRequest(), Integer.parseInt(documentStoreId));
+      DocumentStorePermissionList.updateDocumentStorePermissions(
+          db, context.getRequest(), Integer.parseInt(documentStoreId));
       return "UpdatePermissionsOK";
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -284,11 +306,10 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandUpdateDocumentStore(ActionContext context) {
     if (!(hasPermission(context, "documents_documentstore-edit"))) {
@@ -302,7 +323,8 @@ public final class DocumentManagement extends CFSModule {
     try {
       db = this.getConnection(context);
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-details-edit")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-details-edit")) {
         return "PermissionError";
       }
       thisDocumentStore.setModifiedBy(this.getUserId(context));
@@ -311,7 +333,8 @@ public final class DocumentManagement extends CFSModule {
         resultCount = thisDocumentStore.update(db);
       }
       if (resultCount == 1) {
-        updateDocumentStoreCache(context, thisDocumentStore.getId(), thisDocumentStore.getTitle());
+        updateDocumentStoreCache(
+            context, thisDocumentStore.getId(), thisDocumentStore.getTitle());
         indexAddItem(context, thisDocumentStore);
       }
     } catch (Exception errorMessage) {
@@ -323,10 +346,12 @@ public final class DocumentManagement extends CFSModule {
     //Results
     if (resultCount == -1 || !isValid) {
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
-      context.getRequest().setAttribute("IncludeSection", ("modify_document_store").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("modify_document_store").toLowerCase());
       return ("DocumentStoreCenterOK");
     } else if (resultCount == 1) {
-      context.getRequest().setAttribute("documentStoreId", "" + thisDocumentStore.getId());
+      context.getRequest().setAttribute(
+          "documentStoreId", "" + thisDocumentStore.getId());
       return ("UpdateDocumentStoreOK");
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
@@ -336,10 +361,10 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDocumentStoreCenter(ActionContext context) {
     if (!(hasPermission(context, "documents_documentstore-view"))) {
@@ -348,20 +373,25 @@ public final class DocumentManagement extends CFSModule {
     Connection db = null;
     DocumentStore thisDocumentStore = null;
     //Parameters
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     if (documentStoreId == null) {
-      documentStoreId = (String) context.getRequest().getAttribute("documentStoreId");
+      documentStoreId = (String) context.getRequest().getAttribute(
+          "documentStoreId");
     }
     String section = (String) context.getRequest().getParameter("section");
     //Determine the section to display
-    try{
+    try {
       db = getConnection(context);
-      thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
 
-      if (section == null || "".equals(section) || "File_Library".equals(section)) {
-        section = "File_Library" ;
-        if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-documents-view")) {
+      if (section == null || "".equals(section) || "File_Library".equals(
+          section)) {
+        section = "File_Library";
+        if (!hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-documents-view")) {
           return "PermissionError";
         }
         String folderId = context.getRequest().getParameter("folderId");
@@ -391,43 +421,59 @@ public final class DocumentManagement extends CFSModule {
         } else {
           files.setFolderId(Integer.parseInt(folderId));
         }
-        files.setLinkModuleId(Constants.DOCUMENTS_DOCUMENTS );
+        files.setLinkModuleId(Constants.DOCUMENTS_DOCUMENTS);
         files.setLinkItemId(thisDocumentStore.getId());
         files.buildList(db);
         thisDocumentStore.setFiles(files);
       } else if ("Team".equals(section)) {
-        if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-team-view")) {
+        if (!hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-team-view")) {
           return "PermissionError";
         }
         //Check the pagedList filter
-        PagedListInfo documentStoreUserTeamInfo = this.getPagedListInfo(context, "documentStoreUserTeamInfo");
-        documentStoreUserTeamInfo.setLink("DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
+        PagedListInfo documentStoreUserTeamInfo = this.getPagedListInfo(
+            context, "documentStoreUserTeamInfo");
+        documentStoreUserTeamInfo.setLink(
+            "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
         documentStoreUserTeamInfo.setItemsPerPage(0);
 
-        PagedListInfo documentStoreEmployeeTeamInfo = this.getPagedListInfo(context, "documentStoreEmployeeTeamInfo");
-        documentStoreEmployeeTeamInfo.setLink("DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
+        PagedListInfo documentStoreEmployeeTeamInfo = this.getPagedListInfo(
+            context, "documentStoreEmployeeTeamInfo");
+        documentStoreEmployeeTeamInfo.setLink(
+            "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
         documentStoreEmployeeTeamInfo.setItemsPerPage(0);
 
-        PagedListInfo documentStoreAccountContactTeamInfo = this.getPagedListInfo(context, "documentStoreAccountContactTeamInfo");
-        documentStoreAccountContactTeamInfo.setLink("DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
+        PagedListInfo documentStoreAccountContactTeamInfo = this.getPagedListInfo(
+            context, "documentStoreAccountContactTeamInfo");
+        documentStoreAccountContactTeamInfo.setLink(
+            "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
         documentStoreAccountContactTeamInfo.setItemsPerPage(0);
-        
-        PagedListInfo documentStoreRoleTeamInfo = this.getPagedListInfo(context, "documentStoreRoleTeamInfo");
-        documentStoreRoleTeamInfo.setLink("DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
+
+        PagedListInfo documentStoreRoleTeamInfo = this.getPagedListInfo(
+            context, "documentStoreRoleTeamInfo");
+        documentStoreRoleTeamInfo.setLink(
+            "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
         documentStoreRoleTeamInfo.setItemsPerPage(0);
 
-        PagedListInfo documentStoreDepartmentTeamInfo = this.getPagedListInfo(context, "documentStoreDepartmentTeamInfo");
-        documentStoreDepartmentTeamInfo.setLink("DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
+        PagedListInfo documentStoreDepartmentTeamInfo = this.getPagedListInfo(
+            context, "documentStoreDepartmentTeamInfo");
+        documentStoreDepartmentTeamInfo.setLink(
+            "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
         documentStoreDepartmentTeamInfo.setItemsPerPage(0);
-        
+
         //Generate the list
-        thisDocumentStore.getUserTeam().setPagedListInfo(documentStoreUserTeamInfo);
-        thisDocumentStore.getEmployeeTeam().setPagedListInfo(documentStoreEmployeeTeamInfo);
-        thisDocumentStore.getAccountContactTeam().setPagedListInfo(documentStoreAccountContactTeamInfo);
-        thisDocumentStore.getRoleTeam().setPagedListInfo(documentStoreRoleTeamInfo);
-        thisDocumentStore.getDepartmentTeam().setPagedListInfo(documentStoreDepartmentTeamInfo);
+        thisDocumentStore.getUserTeam().setPagedListInfo(
+            documentStoreUserTeamInfo);
+        thisDocumentStore.getEmployeeTeam().setPagedListInfo(
+            documentStoreEmployeeTeamInfo);
+        thisDocumentStore.getAccountContactTeam().setPagedListInfo(
+            documentStoreAccountContactTeamInfo);
+        thisDocumentStore.getRoleTeam().setPagedListInfo(
+            documentStoreRoleTeamInfo);
+        thisDocumentStore.getDepartmentTeam().setPagedListInfo(
+            documentStoreDepartmentTeamInfo);
         thisDocumentStore.buildTeamMemberList(db);
-        
+
         Iterator i = thisDocumentStore.getUserTeam().iterator();
         while (i.hasNext()) {
           DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) i.next();
@@ -465,23 +511,28 @@ public final class DocumentManagement extends CFSModule {
         while (i.hasNext()) {
           DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) i.next();
           LookupList departmentList = new LookupList(db, "lookup_department");
-          thisMember.setUser(departmentList.getValueFromId(thisMember.getItemId()));
+          thisMember.setUser(
+              departmentList.getValueFromId(thisMember.getItemId()));
         }
-        
+
       } else if ("Details".equals(section)) {
         //Just looking at the details
-        if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-details-view")) {
+        if (!hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-details-view")) {
           return "PermissionError";
         }
-      }else if ("Setup".equals(section)){
-        if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-setup-permissions")) {
+      } else if ("Setup".equals(section)) {
+        if (!hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-setup-permissions")) {
           return "PermissionError";
         }
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
-      context.getRequest().setAttribute("IncludeSection", section.toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", section.toLowerCase());
       //The user has access, so show that they accessed the Document Store
-      DocumentStoreTeamMember.updateLastAccessed(db, thisDocumentStore.getId(), getUserId(context));
+      DocumentStoreTeamMember.updateLastAccessed(
+          db, thisDocumentStore.getId(), getUserId(context));
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -493,26 +544,29 @@ public final class DocumentManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteDocumentStore(ActionContext context) {
     Connection db = null;
     //Params
-    String documentStoreId = (String) context.getRequest().getParameter("documentStoreId");
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
     try {
       db = this.getConnection(context);
-      DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-details-delete")) {
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-details-delete")) {
         return "PermissionError";
       }
-      thisDocumentStore.delete(db, this.getPath(context, "documents"));
+      thisDocumentStore.delete(db, getDbNamePath(context));
       updateDocumentStoreCache(context, thisDocumentStore.getId(), null);
 
-      //indexDeleteItem(context, thisDocumentStore);
+      indexDeleteItem(context, thisDocumentStore);
 
       return "DeleteDocumentStoreOK";
     } catch (Exception errorMessage) {
@@ -522,5 +576,75 @@ public final class DocumentManagement extends CFSModule {
       this.freeConnection(context, db);
     }
   }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandTrashDocumentStore(ActionContext context) {
+    Connection db = null;
+    //Params
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
+    try {
+      db = this.getConnection(context);
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
+      thisDocumentStore.buildPermissionList(db);
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-details-delete")) {
+        return "PermissionError";
+      }
+      thisDocumentStore.updateStatus(db, true, this.getUserId(context));
+      updateDocumentStoreCache(context, thisDocumentStore.getId(), null);
+      indexAddItem(context, thisDocumentStore);
+
+      return "DeleteDocumentStoreOK";
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandRestoreDocumentStore(ActionContext context) {
+    Connection db = null;
+    //Params
+    String documentStoreId = (String) context.getRequest().getParameter(
+        "documentStoreId");
+    try {
+      db = this.getConnection(context);
+      DocumentStore thisDocumentStore = new DocumentStore(
+          db, Integer.parseInt(documentStoreId));
+      thisDocumentStore.buildPermissionList(db);
+      if (!hasDocumentStoreAccess(
+          context, db, thisDocumentStore, "documentcenter-details-delete")) {
+        return "PermissionError";
+      }
+      thisDocumentStore.updateStatus(db, false, this.getUserId(context));
+      thisDocumentStore.setTrashedDate((java.sql.Timestamp) null);
+      updateDocumentStoreCache(context, thisDocumentStore.getId(), null);
+      indexAddItem(context, thisDocumentStore);
+
+      return "DeleteDocumentStoreOK";
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
 }
 

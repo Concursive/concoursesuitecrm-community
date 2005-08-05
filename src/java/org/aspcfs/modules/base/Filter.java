@@ -16,11 +16,11 @@
 package org.aspcfs.modules.base;
 
 /**
- *  Custom Contact Filter for the Contacts Popup
+ * Custom Contact Filter for the Contacts Popup
  *
- *@author     Mathur
- *@created    March 5, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created March 5, 2003
  */
 public class Filter {
   String value = null;
@@ -28,10 +28,10 @@ public class Filter {
 
 
   /**
-   *  Constructor for the Filter object
+   * Constructor for the Filter object
    *
-   *@param  value        Description of the Parameter
-   *@param  displayName  Description of the Parameter
+   * @param value       Description of the Parameter
+   * @param displayName Description of the Parameter
    */
   public Filter(String value, String displayName) {
     this.value = value;
@@ -40,9 +40,9 @@ public class Filter {
 
 
   /**
-   *  Sets the value attribute of the Filter object
+   * Sets the value attribute of the Filter object
    *
-   *@param  value  The new value value
+   * @param value The new value value
    */
   public void setValue(String value) {
     this.value = value;
@@ -50,9 +50,9 @@ public class Filter {
 
 
   /**
-   *  Sets the displayName attribute of the Filter object
+   * Sets the displayName attribute of the Filter object
    *
-   *@param  displayName  The new displayName value
+   * @param displayName The new displayName value
    */
   public void setDisplayName(String displayName) {
     this.displayName = displayName;
@@ -60,9 +60,9 @@ public class Filter {
 
 
   /**
-   *  Gets the value attribute of the Filter object
+   * Gets the value attribute of the Filter object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -70,9 +70,9 @@ public class Filter {
 
 
   /**
-   *  Gets the displayName attribute of the Filter object
+   * Gets the displayName attribute of the Filter object
    *
-   *@return    The displayName value
+   * @return The displayName value
    */
   public String getDisplayName() {
     return displayName;

@@ -28,12 +28,12 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 /**
- *  This class contains the price info for a Product Catalog.
+ * This class contains the price info for a Product Catalog.
  *
- *@author     partha
- *@created    March 19, 2004
- *@version    $Id: ProductCatalogPricing.java,v 1.1.2.2 2004/03/19 20:46:01
- *      partha Exp $
+ * @author partha
+ * @version $Id: ProductCatalogPricing.java,v 1.1.2.2 2004/03/19 20:46:01
+ *          partha Exp $
+ * @created March 19, 2004
  */
 public class ProductCatalogPricing extends GenericBean {
 
@@ -67,11 +67,10 @@ public class ProductCatalogPricing extends GenericBean {
   private String costCurrencyName = null;
 
 
-
   /**
-   *  Sets the enabled attribute of the ProductCatalogPricing object
+   * Sets the enabled attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -79,9 +78,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ProductCatalogPricing object
+   * Sets the enabled attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -89,9 +88,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the costCurrency attribute of the ProductCatalogPricing object
+   * Sets the costCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new costCurrency value
+   * @param tmp The new costCurrency value
    */
   public void setCostCurrency(int tmp) {
     this.costCurrency = tmp;
@@ -99,9 +98,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the costCurrency attribute of the ProductCatalogPricing object
+   * Sets the costCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new costCurrency value
+   * @param tmp The new costCurrency value
    */
   public void setCostCurrency(String tmp) {
     this.costCurrency = Integer.parseInt(tmp);
@@ -109,9 +108,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the costAmount attribute of the ProductCatalogPricing object
+   * Sets the costAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new costAmount value
+   * @param tmp The new costAmount value
    */
   public void setCostAmount(double tmp) {
     this.costAmount = tmp;
@@ -119,9 +118,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the costAmount attribute of the ProductOptionValues object
+   * Sets the costAmount attribute of the ProductOptionValues object
    *
-   *@param  tmp  The new costAmount value
+   * @param tmp The new costAmount value
    */
   public void setCostAmount(String tmp) {
     this.costAmount = Double.parseDouble(tmp);
@@ -129,9 +128,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the costCurrencyName attribute of the ProductCatalogPricing object
+   * Sets the costCurrencyName attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new costCurrencyName value
+   * @param tmp The new costCurrencyName value
    */
   public void setCostCurrencyName(String tmp) {
     this.costCurrencyName = tmp;
@@ -139,9 +138,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the costCurrencyName attribute of the ProductCatalogPricing object
+   * Gets the costCurrencyName attribute of the ProductCatalogPricing object
    *
-   *@return    The costCurrencyName value
+   * @return The costCurrencyName value
    */
   public String getCostCurrencyName() {
     return costCurrencyName;
@@ -149,9 +148,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the costCurrency attribute of the ProductCatalogPricing object
+   * Gets the costCurrency attribute of the ProductCatalogPricing object
    *
-   *@return    The costCurrency value
+   * @return The costCurrency value
    */
   public int getCostCurrency() {
     return costCurrency;
@@ -159,9 +158,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the costAmount attribute of the ProductCatalogPricing object
+   * Gets the costAmount attribute of the ProductCatalogPricing object
    *
-   *@return    The costAmount value
+   * @return The costAmount value
    */
   public double getCostAmount() {
     return costAmount;
@@ -169,9 +168,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the ProductCatalogPricing object
+   * Gets the enabled attribute of the ProductCatalogPricing object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -179,9 +178,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the taxName attribute of the ProductCatalogPricing object
+   * Sets the taxName attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new taxName value
+   * @param tmp The new taxName value
    */
   public void setTaxName(String tmp) {
     this.taxName = tmp;
@@ -189,9 +188,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the taxName attribute of the ProductCatalogPricing object
+   * Gets the taxName attribute of the ProductCatalogPricing object
    *
-   *@return    The taxName value
+   * @return The taxName value
    */
   public String getTaxName() {
     return taxName;
@@ -199,9 +198,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the msrpCurrencyName attribute of the ProductCatalogPricing object
+   * Sets the msrpCurrencyName attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new msrpCurrencyName value
+   * @param tmp The new msrpCurrencyName value
    */
   public void setMsrpCurrencyName(String tmp) {
     this.msrpCurrencyName = tmp;
@@ -209,9 +208,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrencyName attribute of the ProductCatalogPricing object
+   * Sets the priceCurrencyName attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new priceCurrencyName value
+   * @param tmp The new priceCurrencyName value
    */
   public void setPriceCurrencyName(String tmp) {
     this.priceCurrencyName = tmp;
@@ -219,10 +218,10 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrencyName attribute of the ProductCatalogPricing
-   *  object
+   * Sets the recurringCurrencyName attribute of the ProductCatalogPricing
+   * object
    *
-   *@param  tmp  The new recurringCurrencyName value
+   * @param tmp The new recurringCurrencyName value
    */
   public void setRecurringCurrencyName(String tmp) {
     this.recurringCurrencyName = tmp;
@@ -230,9 +229,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringTypeName attribute of the ProductCatalogPricing object
+   * Sets the recurringTypeName attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringTypeName value
+   * @param tmp The new recurringTypeName value
    */
   public void setRecurringTypeName(String tmp) {
     this.recurringTypeName = tmp;
@@ -240,9 +239,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the msrpCurrencyName attribute of the ProductCatalogPricing object
+   * Gets the msrpCurrencyName attribute of the ProductCatalogPricing object
    *
-   *@return    The msrpCurrencyName value
+   * @return The msrpCurrencyName value
    */
   public String getMsrpCurrencyName() {
     return msrpCurrencyName;
@@ -250,9 +249,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the priceCurrencyName attribute of the ProductCatalogPricing object
+   * Gets the priceCurrencyName attribute of the ProductCatalogPricing object
    *
-   *@return    The priceCurrencyName value
+   * @return The priceCurrencyName value
    */
   public String getPriceCurrencyName() {
     return priceCurrencyName;
@@ -260,10 +259,10 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the recurringCurrencyName attribute of the ProductCatalogPricing
-   *  object
+   * Gets the recurringCurrencyName attribute of the ProductCatalogPricing
+   * object
    *
-   *@return    The recurringCurrencyName value
+   * @return The recurringCurrencyName value
    */
   public String getRecurringCurrencyName() {
     return recurringCurrencyName;
@@ -271,9 +270,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the recurringTypeName attribute of the ProductCatalogPricing object
+   * Gets the recurringTypeName attribute of the ProductCatalogPricing object
    *
-   *@return    The recurringTypeName value
+   * @return The recurringTypeName value
    */
   public String getRecurringTypeName() {
     return recurringTypeName;
@@ -281,9 +280,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ProductCatalogPricing object
+   * Gets the id attribute of the ProductCatalogPricing object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -291,9 +290,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the productId attribute of the ProductCatalogPricing object
+   * Gets the productId attribute of the ProductCatalogPricing object
    *
-   *@return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -301,9 +300,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the taxId attribute of the ProductCatalogPricing object
+   * Gets the taxId attribute of the ProductCatalogPricing object
    *
-   *@return    The taxId value
+   * @return The taxId value
    */
   public int getTaxId() {
     return taxId;
@@ -311,9 +310,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the msrpCurrency attribute of the ProductCatalogPricing object
+   * Gets the msrpCurrency attribute of the ProductCatalogPricing object
    *
-   *@return    The msrpCurrency value
+   * @return The msrpCurrency value
    */
   public int getMsrpCurrency() {
     return msrpCurrency;
@@ -321,9 +320,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the msrpAmount attribute of the ProductCatalogPricing object
+   * Gets the msrpAmount attribute of the ProductCatalogPricing object
    *
-   *@return    The msrpAmount value
+   * @return The msrpAmount value
    */
   public double getMsrpAmount() {
     return msrpAmount;
@@ -331,9 +330,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the priceCurrency attribute of the ProductCatalogPricing object
+   * Gets the priceCurrency attribute of the ProductCatalogPricing object
    *
-   *@return    The priceCurrency value
+   * @return The priceCurrency value
    */
   public int getPriceCurrency() {
     return priceCurrency;
@@ -341,9 +340,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the priceAmount attribute of the ProductCatalogPricing object
+   * Gets the priceAmount attribute of the ProductCatalogPricing object
    *
-   *@return    The priceAmount value
+   * @return The priceAmount value
    */
   public double getPriceAmount() {
     return priceAmount;
@@ -351,9 +350,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the recurringCurrency attribute of the ProductCatalogPricing object
+   * Gets the recurringCurrency attribute of the ProductCatalogPricing object
    *
-   *@return    The recurringCurrency value
+   * @return The recurringCurrency value
    */
   public int getRecurringCurrency() {
     return recurringCurrency;
@@ -361,9 +360,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the recurringAmount attribute of the ProductCatalogPricing object
+   * Gets the recurringAmount attribute of the ProductCatalogPricing object
    *
-   *@return    The recurringAmount value
+   * @return The recurringAmount value
    */
   public double getRecurringAmount() {
     return recurringAmount;
@@ -371,9 +370,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the recurringType attribute of the ProductCatalogPricing object
+   * Gets the recurringType attribute of the ProductCatalogPricing object
    *
-   *@return    The recurringType value
+   * @return The recurringType value
    */
   public int getRecurringType() {
     return recurringType;
@@ -381,9 +380,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the ProductCatalogPricing object
+   * Gets the enteredBy attribute of the ProductCatalogPricing object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -391,9 +390,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ProductCatalogPricing object
+   * Gets the entered attribute of the ProductCatalogPricing object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -401,9 +400,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ProductCatalogPricing object
+   * Gets the modifiedBy attribute of the ProductCatalogPricing object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -411,9 +410,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the ProductCatalogPricing object
+   * Gets the modified attribute of the ProductCatalogPricing object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -421,9 +420,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the startDate attribute of the ProductCatalogPricing object
+   * Gets the startDate attribute of the ProductCatalogPricing object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public Timestamp getStartDate() {
     return startDate;
@@ -431,9 +430,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the expirationDate attribute of the ProductCatalogPricing object
+   * Gets the expirationDate attribute of the ProductCatalogPricing object
    *
-   *@return    The expirationDate value
+   * @return The expirationDate value
    */
   public Timestamp getExpirationDate() {
     return expirationDate;
@@ -441,9 +440,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the productName attribute of the ProductCatalogPricing object
+   * Gets the productName attribute of the ProductCatalogPricing object
    *
-   *@return    The productName value
+   * @return The productName value
    */
   public String getProductName() {
     return productName;
@@ -451,9 +450,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProductCatalogPricing object
+   * Sets the id attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -461,9 +460,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProductCatalogPricing object
+   * Sets the id attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -471,9 +470,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the ProductCatalogPricing object
+   * Sets the productId attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -481,9 +480,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the ProductCatalogPricing object
+   * Sets the productId attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -491,9 +490,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the taxId attribute of the ProductCatalogPricing object
+   * Sets the taxId attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new taxId value
+   * @param tmp The new taxId value
    */
   public void setTaxId(int tmp) {
     this.taxId = tmp;
@@ -501,9 +500,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the taxId attribute of the ProductCatalogPricing object
+   * Sets the taxId attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new taxId value
+   * @param tmp The new taxId value
    */
   public void setTaxId(String tmp) {
     this.taxId = Integer.parseInt(tmp);
@@ -511,9 +510,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the msrpCurrency attribute of the ProductCatalogPricing object
+   * Sets the msrpCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new msrpCurrency value
+   * @param tmp The new msrpCurrency value
    */
   public void setMsrpCurrency(int tmp) {
     this.msrpCurrency = tmp;
@@ -521,9 +520,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the msrpCurrency attribute of the ProductCatalogPricing object
+   * Sets the msrpCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new msrpCurrency value
+   * @param tmp The new msrpCurrency value
    */
   public void setMsrpCurrency(String tmp) {
     this.msrpCurrency = Integer.parseInt(tmp);
@@ -531,9 +530,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the msrpAmount attribute of the ProductCatalogPricing object
+   * Sets the msrpAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new msrpAmount value
+   * @param tmp The new msrpAmount value
    */
   public void setMsrpAmount(double tmp) {
     this.msrpAmount = tmp;
@@ -541,9 +540,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the msrpAmount attribute of the ProductCatalogPricing object
+   * Sets the msrpAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new msrpAmount value
+   * @param tmp The new msrpAmount value
    */
   public void setMsrpAmount(String tmp) {
     this.msrpAmount = Double.parseDouble(tmp);
@@ -551,9 +550,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the ProductCatalogPricing object
+   * Sets the priceCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new priceCurrency value
+   * @param tmp The new priceCurrency value
    */
   public void setPriceCurrency(int tmp) {
     this.priceCurrency = tmp;
@@ -561,9 +560,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the ProductCatalogPricing object
+   * Sets the priceCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new priceCurrency value
+   * @param tmp The new priceCurrency value
    */
   public void setPriceCurrency(String tmp) {
     this.priceCurrency = Integer.parseInt(tmp);
@@ -571,9 +570,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the priceAmount attribute of the ProductCatalogPricing object
+   * Sets the priceAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new priceAmount value
+   * @param tmp The new priceAmount value
    */
   public void setPriceAmount(double tmp) {
     this.priceAmount = tmp;
@@ -581,9 +580,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the priceAmount attribute of the ProductCatalogPricing object
+   * Sets the priceAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new priceAmount value
+   * @param tmp The new priceAmount value
    */
   public void setPriceAmount(String tmp) {
     this.priceAmount = Double.parseDouble(tmp);
@@ -591,9 +590,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrency attribute of the ProductCatalogPricing object
+   * Sets the recurringCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringCurrency value
+   * @param tmp The new recurringCurrency value
    */
   public void setRecurringCurrency(int tmp) {
     this.recurringCurrency = tmp;
@@ -601,9 +600,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrency attribute of the ProductCatalogPricing object
+   * Sets the recurringCurrency attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringCurrency value
+   * @param tmp The new recurringCurrency value
    */
   public void setRecurringCurrency(String tmp) {
     this.recurringCurrency = Integer.parseInt(tmp);
@@ -611,9 +610,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringAmount attribute of the ProductCatalogPricing object
+   * Sets the recurringAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringAmount value
+   * @param tmp The new recurringAmount value
    */
   public void setRecurringAmount(double tmp) {
     this.recurringAmount = tmp;
@@ -621,9 +620,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringAmount attribute of the ProductCatalogPricing object
+   * Sets the recurringAmount attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringAmount value
+   * @param tmp The new recurringAmount value
    */
   public void setRecurringAmount(String tmp) {
     this.recurringAmount = Double.parseDouble(tmp);
@@ -631,9 +630,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringType attribute of the ProductCatalogPricing object
+   * Sets the recurringType attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringType value
+   * @param tmp The new recurringType value
    */
   public void setRecurringType(int tmp) {
     this.recurringType = tmp;
@@ -641,9 +640,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the recurringType attribute of the ProductCatalogPricing object
+   * Sets the recurringType attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new recurringType value
+   * @param tmp The new recurringType value
    */
   public void setRecurringType(String tmp) {
     this.recurringType = Integer.parseInt(tmp);
@@ -651,9 +650,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ProductCatalogPricing object
+   * Sets the enteredBy attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -661,9 +660,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ProductCatalogPricing object
+   * Sets the enteredBy attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -671,9 +670,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ProductCatalogPricing object
+   * Sets the entered attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -681,9 +680,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ProductCatalogPricing object
+   * Sets the entered attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -691,9 +690,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ProductCatalogPricing object
+   * Sets the modifiedBy attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -701,9 +700,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ProductCatalogPricing object
+   * Sets the modifiedBy attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -711,9 +710,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ProductCatalogPricing object
+   * Sets the modified attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -721,9 +720,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ProductCatalogPricing object
+   * Sets the modified attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -731,9 +730,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the ProductCatalogPricing object
+   * Sets the startDate attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(Timestamp tmp) {
     this.startDate = tmp;
@@ -741,9 +740,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the ProductCatalogPricing object
+   * Sets the startDate attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -751,9 +750,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the ProductCatalogPricing object
+   * Sets the expirationDate attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
@@ -761,9 +760,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the ProductCatalogPricing object
+   * Sets the expirationDate attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(String tmp) {
     this.expirationDate = DatabaseUtils.parseTimestamp(tmp);
@@ -771,9 +770,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Sets the productName attribute of the ProductCatalogPricing object
+   * Sets the productName attribute of the ProductCatalogPricing object
    *
-   *@param  tmp  The new productName value
+   * @param tmp The new productName value
    */
   public void setProductName(String tmp) {
     this.productName = tmp;
@@ -781,17 +780,18 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Constructor for the ProductCatalogPricing object
+   * Constructor for the ProductCatalogPricing object
    */
-  public ProductCatalogPricing() { }
+  public ProductCatalogPricing() {
+  }
 
 
   /**
-   *  Constructor for the ProductCatalogPricing object
+   * Constructor for the ProductCatalogPricing object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProductCatalogPricing(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -799,10 +799,10 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Constructor for the ProductCatalogPricing object
+   * Constructor for the ProductCatalogPricing object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProductCatalogPricing(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -810,11 +810,11 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -853,10 +853,10 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("price_id"));
@@ -890,12 +890,12 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     boolean result = false;
@@ -930,8 +930,7 @@ public class ProductCatalogPricing extends GenericBean {
       //delete all records that contain price_id in the product_catalog_pricing table
       pst = db.prepareStatement(
           " DELETE from product_catalog_pricing " +
-          " WHERE price_id = ? "
-          );
+          " WHERE price_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
@@ -955,9 +954,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneParams attribute of the ProductCatalogPricing class
+   * Gets the timeZoneParams attribute of the ProductCatalogPricing class
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -968,11 +967,11 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     // check to see if the price being inserted is enabled.
@@ -987,12 +986,16 @@ public class ProductCatalogPricing extends GenericBean {
       }
       // insert the new price which is active
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(
+          db, "product_catalog_pricing_price_id_seq");
       sql.append(
-          " INSERT INTO product_catalog_pricing( " +
+          " INSERT INTO product_catalog_pricing (" +
           " product_id, tax_id, msrp_currency, msrp_amount, " +
           " price_currency , price_amount , recurring_currency , " +
-          " recurring_amount, recurring_type, enteredby, "
-          );
+          " recurring_amount, recurring_type, enteredby, ");
+      if (id > -1) {
+        sql.append("price_id, ");
+      }
       if (entered != null) {
         sql.append(" entered, ");
       }
@@ -1000,8 +1003,12 @@ public class ProductCatalogPricing extends GenericBean {
       if (modified != null) {
         sql.append(" modified, ");
       }
-      sql.append(" start_date, expiration_date, enabled, cost_currency, cost_amount) ");
+      sql.append(
+          " start_date, expiration_date, enabled, cost_currency, cost_amount) ");
       sql.append(" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append(" ?, ");
       }
@@ -1022,6 +1029,9 @@ public class ProductCatalogPricing extends GenericBean {
       pst.setDouble(++i, this.getRecurringAmount());
       DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
       DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, this.getEntered());
       }
@@ -1036,7 +1046,8 @@ public class ProductCatalogPricing extends GenericBean {
       pst.setDouble(++i, this.getCostAmount());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "product_catalog_pricing_price_id_seq");
+      id = DatabaseUtils.getCurrVal(
+          db, "product_catalog_pricing_price_id_seq", id);
       result = true;
       if (canCommit) {
         db.commit();
@@ -1057,11 +1068,11 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1075,7 +1086,8 @@ public class ProductCatalogPricing extends GenericBean {
         "product_id = ?, tax_id = ?, msrp_currency = ?, " +
         "msrp_amount = ?, price_currency = ?, price_amount = ?, " +
         "recurring_currency = ?, recurring_amount = ?, " +
-        "recurring_type = ?, modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+        "recurring_type = ?, modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(
+            db) + ", " +
         "start_date = ?, expiration_date = ?, enabled = ?, " +
         "cost_currency = ?, cost_amount = ? " +
         "WHERE price_id = ? ");
@@ -1104,11 +1116,11 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     // This method checks all the records of product_catalog_pricing with the current id
@@ -1144,8 +1156,7 @@ public class ProductCatalogPricing extends GenericBean {
           " pcp.product_id NOT IN ( " +
           " SELECT product_id " +
           " FROM product_catalog_pricing " +
-          " WHERE price_id <> ? ) "
-          );
+          " WHERE price_id <> ? ) ");
       pst.setInt(++i, this.getId());
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
@@ -1168,11 +1179,11 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int disableAllPrices(Connection db) throws SQLException {
     if (this.getProductId() == -1) {
@@ -1191,12 +1202,12 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  status            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param status Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updatePriceStatus(Connection db, boolean status) throws SQLException {
     if (this.getProductId() == -1) {
@@ -1244,10 +1255,10 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the priceValid attribute of the ProductCatalogPricing object
+   * Gets the priceValid attribute of the ProductCatalogPricing object
    *
-   *@return                   The priceValid value
-   *@exception  SQLException  Description of the Exception
+   * @return The priceValid value
+   * @throws SQLException Description of the Exception
    */
   public boolean isPriceValid() throws SQLException {
     if (this.id == -1) {
@@ -1269,9 +1280,9 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the ProductCatalogPricing class
+   * Gets the numberParams attribute of the ProductCatalogPricing class
    *
-   *@return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -1284,12 +1295,11 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the validPriceState attribute of the ProductCatalogPricing object
+   * Gets the validPriceState attribute of the ProductCatalogPricing object
    *
-   *@param  db                Description of the Parameter
-   *@param  status            Description of the Parameter
-   *@return                   The validPriceState value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The validPriceState value
+   * @throws SQLException Description of the Exception
    */
   public boolean isValidPriceState(Connection db) throws SQLException {
     // No Active prices exist. Check to see if this price is value
@@ -1306,22 +1316,18 @@ public class ProductCatalogPricing extends GenericBean {
       while (activePrices.hasNext()) {
         ProductCatalogPricing activePrice = (ProductCatalogPricing) activePrices.next();
         if (this.getStartDate() != null && this.getExpirationDate() != null) {
-//            System.out.println("Case1:: startDate is "+this.getStartDate().toString()+" and the exp date is "+ this.getExpirationDate().toString());
           if (!compatiblePriceBounds(db, activePrice)) {
             return false;
           }
         } else if (this.getStartDate() == null && this.getExpirationDate() != null) {
-//            System.out.println("Case2:: the exp date is "+ this.getExpirationDate().toString());
           if (!compatiblePriceExpirationBound(db, activePrice)) {
             return false;
           }
         } else if (this.getStartDate() != null && this.getExpirationDate() == null) {
-//            System.out.println("Case3:: startDate is "+this.getStartDate().toString());
           if (!compatiblePriceStartBound(db, activePrice)) {
             return false;
           }
         } else {
-//            System.out.println("Case4:: hence false");
           // Open bounded price can not be inserted when active prices already exist
           return false;
         }
@@ -1332,23 +1338,25 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Check price compatibility with a given ProductCatalogPricing when the
-   *  start and expiration dates of this are not null
+   * Check price compatibility with a given ProductCatalogPricing when the
+   * start and expiration dates of this are not null
    *
-   *@param  db                Description of the Parameter
-   *@param  price             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param price Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean compatiblePriceBounds(Connection db, ProductCatalogPricing price) throws SQLException {
 //    System.out.println("Compatible price bounds method..");
     if (price.getStartDate() != null && price.getExpirationDate() != null) {
 //      System.out.println("Trial 1:: active price exp date is "+price.getStartDate().toString()+" and current exp date is "+this.getStartDate().toString());
-      if (price.getStartDate().before(this.getStartDate()) && price.getExpirationDate().after(this.getStartDate())) {
+      if (price.getStartDate().before(this.getStartDate()) && price.getExpirationDate().after(
+          this.getStartDate())) {
         return false;
       }
 //      System.out.println("Trial 1:: active price exp date is "+price.getExpirationDate().toString()+" and current exp date is "+this.getExpirationDate().toString());
-      if (price.getStartDate().before(this.getExpirationDate()) && price.getExpirationDate().after(this.getExpirationDate())) {
+      if (price.getStartDate().before(this.getExpirationDate()) && price.getExpirationDate().after(
+          this.getExpirationDate())) {
         return false;
       }
     } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
@@ -1377,12 +1385,12 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Check price compatibility when the start date of the current price is null
+   * Check price compatibility when the start date of the current price is null
    *
-   *@param  db                Description of the Parameter
-   *@param  price             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param price Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean compatiblePriceExpirationBound(Connection db, ProductCatalogPricing price) throws SQLException {
     if (price.getStartDate() != null && price.getExpirationDate() != null) {
@@ -1407,13 +1415,13 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Check price compatibility when the expiration date of the current price is
-   *  null
+   * Check price compatibility when the expiration date of the current price is
+   * null
    *
-   *@param  db                Description of the Parameter
-   *@param  price             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param price Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean compatiblePriceStartBound(Connection db, ProductCatalogPricing price) throws SQLException {
     if (price.getStartDate() != null && price.getExpirationDate() != null) {

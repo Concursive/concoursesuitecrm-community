@@ -16,22 +16,19 @@
 package org.aspcfs.modules.quotes.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import java.text.DateFormat;
-import java.util.*;
-import java.sql.*;
+import org.aspcfs.utils.web.CalendarView;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    July 16, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created July 16, 2004
  */
 public class QuoteListScheduledActions extends QuoteList implements ScheduledActions {
 
@@ -41,15 +38,16 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Constructor for the QuoteListScheduledActions object
+   * Constructor for the QuoteListScheduledActions object
    */
-  public QuoteListScheduledActions() { }
+  public QuoteListScheduledActions() {
+  }
 
 
   /**
-   *  Sets the module attribute of the QuoteListScheduledActions object
+   * Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -57,9 +55,9 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Sets the context attribute of the QuoteListScheduledActions object
+   * Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -67,9 +65,9 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Sets the userId attribute of the QuoteListScheduledActions object
+   * Sets the userId attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -77,9 +75,9 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Sets the userId attribute of the QuoteListScheduledActions object
+   * Sets the userId attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -87,9 +85,9 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Gets the context attribute of the QuoteListScheduledActions object
+   * Gets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -97,9 +95,9 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Gets the module attribute of the QuoteListScheduledActions object
+   * Gets the module attribute of the QuoteListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -107,9 +105,9 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Gets the userId attribute of the QuoteListScheduledActions object
+   * Gets the userId attribute of the QuoteListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -117,11 +115,11 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
-   *  Constructor for the calendarActions object
+   * Constructor for the calendarActions object
    *
-   *@param  db                Description of the Parameter
-   *@param  companyCalendar   Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param companyCalendar Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
 
@@ -156,13 +154,12 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
     /*

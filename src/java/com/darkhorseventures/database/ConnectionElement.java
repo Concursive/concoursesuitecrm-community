@@ -18,19 +18,19 @@ package com.darkhorseventures.database;
 import java.io.Serializable;
 
 /**
- *  A Connection Element has three purposes (so far).<p>
+ * A Connection Element has three purposes (so far).<p>
+ * <p/>
+ * (1) The ConnectionPool associates each connection with a ConnectionElement
+ * object. This includes the connection string information, along with
+ * additional properties.<p>
+ * <p/>
+ * (2) This object can be stored in a User's session and then supplied to the
+ * ConnectionPool for getting the appropriate connection.
  *
- *  (1) The ConnectionPool associates each connection with a ConnectionElement
- *  object. This includes the connection string information, along with
- *  additional properties.<p>
- *
- *  (2) This object can be stored in a User's session and then supplied to the
- *  ConnectionPool for getting the appropriate connection.
- *
- *@author     mrajkowski
- *@created    July 10, 2001
- *@version    $Id: ConnectionElement.java,v 1.4 2002/11/14 20:49:27 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: ConnectionElement.java,v 1.4 2002/11/14 20:49:27 mrajkowski
+ *          Exp $
+ * @created July 10, 2001
  */
 public class ConnectionElement implements Cloneable, Serializable {
 
@@ -44,23 +44,24 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Constructor for the ConnectionElement object
+   * Constructor for the ConnectionElement object
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public ConnectionElement() { }
+  public ConnectionElement() {
+  }
 
 
   /**
-   *  Constructor for the ConnectionElement object
+   * Constructor for the ConnectionElement object
    *
-   *@param  thisUrl       Description of Parameter
-   *@param  thisUsername  Description of Parameter
-   *@param  thisPassword  Description of Parameter
-   *@since                1.0
+   * @param thisUrl      Description of Parameter
+   * @param thisUsername Description of Parameter
+   * @param thisPassword Description of Parameter
+   * @since 1.0
    */
   public ConnectionElement(String thisUrl, String thisUsername,
-      String thisPassword) {
+                           String thisPassword) {
     this.url = thisUrl;
     this.username = thisUsername;
     this.password = thisPassword;
@@ -68,10 +69,10 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the Url attribute of the ConnectionElement object
+   * Sets the Url attribute of the ConnectionElement object
    *
-   *@param  tmp  The new Url value
-   *@since       1.0
+   * @param tmp The new Url value
+   * @since 1.0
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -79,10 +80,10 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the Username attribute of the ConnectionElement object
+   * Sets the Username attribute of the ConnectionElement object
    *
-   *@param  tmp  The new Username value
-   *@since       1.0
+   * @param tmp The new Username value
+   * @since 1.0
    */
   public void setUsername(String tmp) {
     this.username = tmp;
@@ -90,10 +91,10 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the Password attribute of the ConnectionElement object
+   * Sets the Password attribute of the ConnectionElement object
    *
-   *@param  tmp  The new Password value
-   *@since       1.0
+   * @param tmp The new Password value
+   * @since 1.0
    */
   public void setPassword(String tmp) {
     this.password = tmp;
@@ -101,13 +102,13 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the AllowCloseOnIdle attribute of the ConnectionElement object. <p>
+   * Sets the AllowCloseOnIdle attribute of the ConnectionElement object. <p>
+   * <p/>
+   * Setting to false will prevent the Connection Pool from closing this
+   * connection when it appears to be broken.
    *
-   *  Setting to false will prevent the Connection Pool from closing this
-   *  connection when it appears to be broken.
-   *
-   *@param  tmp  The new AllowCloseOnIdle value
-   *@since       1.0
+   * @param tmp The new AllowCloseOnIdle value
+   * @since 1.0
    */
   public void setAllowCloseOnIdle(boolean tmp) {
     this.allowCloseOnIdle = tmp;
@@ -115,9 +116,9 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the dbName attribute of the ConnectionElement object
+   * Sets the dbName attribute of the ConnectionElement object
    *
-   *@param  tmp  The new dbName value
+   * @param tmp The new dbName value
    */
   public void setDbName(String tmp) {
     this.dbName = tmp;
@@ -125,9 +126,9 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the driver attribute of the ConnectionElement object
+   * Sets the driver attribute of the ConnectionElement object
    *
-   *@param  tmp  The new driver value
+   * @param tmp The new driver value
    */
   public void setDriver(String tmp) {
     this.driver = tmp;
@@ -135,9 +136,9 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Sets the activeDate attribute of the ConnectionElement object
+   * Sets the activeDate attribute of the ConnectionElement object
    *
-   *@param  tmp  The new activeDate value
+   * @param tmp The new activeDate value
    */
   public void setActiveDate(java.util.Date tmp) {
     this.activeDate = tmp;
@@ -145,12 +146,12 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the Url attribute of the ConnectionElement object. <p>
+   * Gets the Url attribute of the ConnectionElement object. <p>
+   * <p/>
+   * The format is "jdbc:postgresql://127.0.0.1:5432/databasename";
    *
-   *  The format is "jdbc:postgresql://127.0.0.1:5432/databasename";
-   *
-   *@return    The Url value
-   *@since     1.0
+   * @return The Url value
+   * @since 1.0
    */
   public String getUrl() {
     return url;
@@ -158,10 +159,10 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the Username attribute of the ConnectionElement object
+   * Gets the Username attribute of the ConnectionElement object
    *
-   *@return    The Username value
-   *@since     1.0
+   * @return The Username value
+   * @since 1.0
    */
   public String getUsername() {
     return username;
@@ -169,10 +170,10 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the Password attribute of the ConnectionElement object
+   * Gets the Password attribute of the ConnectionElement object
    *
-   *@return    The Password value
-   *@since     1.0
+   * @return The Password value
+   * @since 1.0
    */
   public String getPassword() {
     return password;
@@ -180,10 +181,10 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the ActiveDate attribute of the ConnectionElement object
+   * Gets the ActiveDate attribute of the ConnectionElement object
    *
-   *@return    The ActiveDate value
-   *@since     1.0
+   * @return The ActiveDate value
+   * @since 1.0
    */
   public java.util.Date getActiveDate() {
     return activeDate;
@@ -191,12 +192,12 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the AllowCloseOnIdle attribute of the ConnectionElement object, if
-   *  false then the connection will not be closed by the Connection Pool when
-   *  it appears this connection is broken.
+   * Gets the AllowCloseOnIdle attribute of the ConnectionElement object, if
+   * false then the connection will not be closed by the Connection Pool when
+   * it appears this connection is broken.
    *
-   *@return    The AllowCloseOnIdle value
-   *@since     1.0
+   * @return The AllowCloseOnIdle value
+   * @since 1.0
    */
   public boolean getAllowCloseOnIdle() {
     return allowCloseOnIdle;
@@ -204,9 +205,9 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the dbName attribute of the ConnectionElement object
+   * Gets the dbName attribute of the ConnectionElement object
    *
-   *@return    The dbName value
+   * @return The dbName value
    */
   public String getDbName() {
     return dbName;
@@ -214,9 +215,9 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Gets the driver attribute of the ConnectionElement object
+   * Gets the driver attribute of the ConnectionElement object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     return driver;
@@ -224,7 +225,7 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void renew() {
     activeDate = new java.util.Date();
@@ -232,9 +233,9 @@ public class ConnectionElement implements Cloneable, Serializable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public Object clone() {
     try {

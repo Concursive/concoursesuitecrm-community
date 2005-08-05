@@ -15,28 +15,20 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    August 6, 2004
- *@version    $Id: CommunicationsPreferenceList.java,v 1.2 2004/08/31 12:48:26
- *      mrajkowski Exp $
+ * @author partha
+ * @version $Id: CommunicationsPreferenceList.java,v 1.2 2004/08/31 12:48:26
+ *          mrajkowski Exp $
+ * @created August 6, 2004
  */
 public class CommunicationsPreferenceList extends ArrayList {
 
@@ -62,10 +54,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the pagedListInfo attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -73,9 +65,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the CommunicationsPreferenceList object
+   * Sets the id attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -83,9 +75,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the CommunicationsPreferenceList object
+   * Sets the id attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -93,9 +85,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the contactId attribute of the CommunicationsPreferenceList object
+   * Sets the contactId attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -103,9 +95,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the contactId attribute of the CommunicationsPreferenceList object
+   * Sets the contactId attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -113,9 +105,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the typeId attribute of the CommunicationsPreferenceList object
+   * Sets the typeId attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -123,9 +115,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the typeId attribute of the CommunicationsPreferenceList object
+   * Sets the typeId attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -133,9 +125,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the startDay attribute of the CommunicationsPreferenceList object
+   * Sets the startDay attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new startDay value
+   * @param tmp The new startDay value
    */
   public void setStartDay(int tmp) {
     this.startDay = tmp;
@@ -143,9 +135,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the startDay attribute of the CommunicationsPreferenceList object
+   * Sets the startDay attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new startDay value
+   * @param tmp The new startDay value
    */
   public void setStartDay(String tmp) {
     this.startDay = Integer.parseInt(tmp);
@@ -153,9 +145,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the endDay attribute of the CommunicationsPreferenceList object
+   * Sets the endDay attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new endDay value
+   * @param tmp The new endDay value
    */
   public void setEndDay(int tmp) {
     this.endDay = tmp;
@@ -163,9 +155,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the endDay attribute of the CommunicationsPreferenceList object
+   * Sets the endDay attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new endDay value
+   * @param tmp The new endDay value
    */
   public void setEndDay(String tmp) {
     this.endDay = Integer.parseInt(tmp);
@@ -173,10 +165,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the startTimeHour attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the startTimeHour attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new startTimeHour value
+   * @param tmp The new startTimeHour value
    */
   public void setStartTimeHour(int tmp) {
     this.startTimeHour = tmp;
@@ -184,10 +176,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the startTimeHour attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the startTimeHour attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new startTimeHour value
+   * @param tmp The new startTimeHour value
    */
   public void setStartTimeHour(String tmp) {
     this.startTimeHour = Integer.parseInt(tmp);
@@ -195,10 +187,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the startTimeMinute attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the startTimeMinute attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new startTimeMinute value
+   * @param tmp The new startTimeMinute value
    */
   public void setStartTimeMinute(int tmp) {
     this.startTimeMinute = tmp;
@@ -206,10 +198,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the startTimeMinute attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the startTimeMinute attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new startTimeMinute value
+   * @param tmp The new startTimeMinute value
    */
   public void setStartTimeMinute(String tmp) {
     this.startTimeMinute = Integer.parseInt(tmp);
@@ -217,9 +209,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the endTimeHour attribute of the CommunicationsPreferenceList object
+   * Sets the endTimeHour attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new endTimeHour value
+   * @param tmp The new endTimeHour value
    */
   public void setEndTimeHour(int tmp) {
     this.endTimeHour = tmp;
@@ -227,9 +219,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the endTimeHour attribute of the CommunicationsPreferenceList object
+   * Sets the endTimeHour attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new endTimeHour value
+   * @param tmp The new endTimeHour value
    */
   public void setEndTimeHour(String tmp) {
     this.endTimeHour = Integer.parseInt(tmp);
@@ -237,10 +229,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the endTimeMinute attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the endTimeMinute attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new endTimeMinute value
+   * @param tmp The new endTimeMinute value
    */
   public void setEndTimeMinute(int tmp) {
     this.endTimeMinute = tmp;
@@ -248,10 +240,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the endTimeMinute attribute of the CommunicationsPreferenceList
-   *  object
+   * Sets the endTimeMinute attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@param  tmp  The new endTimeMinute value
+   * @param tmp The new endTimeMinute value
    */
   public void setEndTimeMinute(String tmp) {
     this.endTimeMinute = Integer.parseInt(tmp);
@@ -259,9 +251,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the entered attribute of the CommunicationsPreferenceList object
+   * Sets the entered attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -269,9 +261,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the entered attribute of the CommunicationsPreferenceList object
+   * Sets the entered attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -279,9 +271,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the CommunicationsPreferenceList object
+   * Sets the enteredBy attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -289,9 +281,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the CommunicationsPreferenceList object
+   * Sets the enteredBy attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -299,9 +291,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the modified attribute of the CommunicationsPreferenceList object
+   * Sets the modified attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -309,9 +301,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the modified attribute of the CommunicationsPreferenceList object
+   * Sets the modified attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -319,9 +311,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the CommunicationsPreferenceList object
+   * Sets the modifiedBy attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -329,9 +321,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the CommunicationsPreferenceList object
+   * Sets the modifiedBy attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -339,9 +331,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the CommunicationsPreferenceList object
+   * Sets the enabled attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -349,9 +341,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the CommunicationsPreferenceList object
+   * Sets the enabled attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -359,9 +351,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the level attribute of the CommunicationsPreferenceList object
+   * Sets the level attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -369,9 +361,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the level attribute of the CommunicationsPreferenceList object
+   * Sets the level attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -379,9 +371,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Sets the timeZone attribute of the CommunicationsPreferenceList object
+   * Sets the timeZone attribute of the CommunicationsPreferenceList object
    *
-   *@param  tmp  The new timeZone value
+   * @param tmp The new timeZone value
    */
   public void setTimeZone(String tmp) {
     this.timeZone = tmp;
@@ -389,9 +381,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the timeZone attribute of the CommunicationsPreferenceList object
+   * Gets the timeZone attribute of the CommunicationsPreferenceList object
    *
-   *@return    The timeZone value
+   * @return The timeZone value
    */
   public String getTimeZone() {
     return timeZone;
@@ -399,9 +391,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the level attribute of the CommunicationsPreferenceList object
+   * Gets the level attribute of the CommunicationsPreferenceList object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -409,9 +401,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the CommunicationsPreferenceList object
+   * Gets the enabled attribute of the CommunicationsPreferenceList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -419,10 +411,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the CommunicationsPreferenceList
-   *  object
+   * Gets the pagedListInfo attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -430,9 +422,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the CommunicationsPreferenceList object
+   * Gets the id attribute of the CommunicationsPreferenceList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -440,9 +432,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the contactId attribute of the CommunicationsPreferenceList object
+   * Gets the contactId attribute of the CommunicationsPreferenceList object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -450,9 +442,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the typeId attribute of the CommunicationsPreferenceList object
+   * Gets the typeId attribute of the CommunicationsPreferenceList object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -460,9 +452,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the startDay attribute of the CommunicationsPreferenceList object
+   * Gets the startDay attribute of the CommunicationsPreferenceList object
    *
-   *@return    The startDay value
+   * @return The startDay value
    */
   public int getStartDay() {
     return startDay;
@@ -470,9 +462,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the endDay attribute of the CommunicationsPreferenceList object
+   * Gets the endDay attribute of the CommunicationsPreferenceList object
    *
-   *@return    The endDay value
+   * @return The endDay value
    */
   public int getEndDay() {
     return endDay;
@@ -480,10 +472,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the startTimeHour attribute of the CommunicationsPreferenceList
-   *  object
+   * Gets the startTimeHour attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@return    The startTimeHour value
+   * @return The startTimeHour value
    */
   public int getStartTimeHour() {
     return startTimeHour;
@@ -491,10 +483,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the startTimeMinute attribute of the CommunicationsPreferenceList
-   *  object
+   * Gets the startTimeMinute attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@return    The startTimeMinute value
+   * @return The startTimeMinute value
    */
   public int getStartTimeMinute() {
     return startTimeMinute;
@@ -502,9 +494,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the endTimeHour attribute of the CommunicationsPreferenceList object
+   * Gets the endTimeHour attribute of the CommunicationsPreferenceList object
    *
-   *@return    The endTimeHour value
+   * @return The endTimeHour value
    */
   public int getEndTimeHour() {
     return endTimeHour;
@@ -512,10 +504,10 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the endTimeMinute attribute of the CommunicationsPreferenceList
-   *  object
+   * Gets the endTimeMinute attribute of the CommunicationsPreferenceList
+   * object
    *
-   *@return    The endTimeMinute value
+   * @return The endTimeMinute value
    */
   public int getEndTimeMinute() {
     return endTimeMinute;
@@ -523,9 +515,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the entered attribute of the CommunicationsPreferenceList object
+   * Gets the entered attribute of the CommunicationsPreferenceList object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -533,9 +525,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the CommunicationsPreferenceList object
+   * Gets the enteredBy attribute of the CommunicationsPreferenceList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -543,9 +535,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the modified attribute of the CommunicationsPreferenceList object
+   * Gets the modified attribute of the CommunicationsPreferenceList object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -553,9 +545,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the CommunicationsPreferenceList object
+   * Gets the modifiedBy attribute of the CommunicationsPreferenceList object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -563,16 +555,17 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Constructor for the CommunicationsPreferenceList object
+   * Constructor for the CommunicationsPreferenceList object
    */
-  public CommunicationsPreferenceList() { }
+  public CommunicationsPreferenceList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -615,10 +608,10 @@ public class CommunicationsPreferenceList extends ArrayList {
         pst.close();
       }
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("cp.level", null);
+      pagedListInfo.setDefaultSort("cp.\"level\"", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY cp.level");
+      sqlOrder.append("ORDER BY cp.\"level\"");
     }
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -632,21 +625,16 @@ public class CommunicationsPreferenceList extends ArrayList {
         " LEFT JOIN contact ct ON (cp.contact_id = ct.contact_id) " +
         " WHERE cp.preference_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-      CommunicationsPreference thisPreference = new CommunicationsPreference(rs);
+      CommunicationsPreference thisPreference = new CommunicationsPreference(
+          rs);
       this.add(thisPreference);
     }
     rs.close();
@@ -655,9 +643,9 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -703,7 +691,7 @@ public class CommunicationsPreferenceList extends ArrayList {
       sqlFilter.append("AND cp.enabled = ? ");
     }
     if (level != -1) {
-      sqlFilter.append("AND cp.level = ? ");
+      sqlFilter.append("AND cp.\"level\" = ? ");
     }
     if (timeZone != null) {
       sqlFilter.append("AND cp.time_zone = ? ");
@@ -712,11 +700,11 @@ public class CommunicationsPreferenceList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

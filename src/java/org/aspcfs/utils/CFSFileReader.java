@@ -15,16 +15,20 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
-import java.util.*;
 import org.aspcfs.modules.base.Import;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
- *  Provides helper methods to read data from a text file in various formats
+ * Provides helper methods to read data from a text file in various formats
  *
- *@author     Mathur
- *@created    April 14, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created April 14, 2004
  */
 public class CFSFileReader {
   private String filePath = null;
@@ -35,11 +39,11 @@ public class CFSFileReader {
 
 
   /**
-   *  Constructor for the CFSFileReader object
+   * Constructor for the CFSFileReader object
    *
-   *@param  filePath                   Description of the Parameter
-   *@param  fileType                   Description of the Parameter
-   *@exception  FileNotFoundException  Description of the Exception
+   * @param filePath Description of the Parameter
+   * @param fileType Description of the Parameter
+   * @throws FileNotFoundException Description of the Exception
    */
   public CFSFileReader(String filePath, int fileType) throws FileNotFoundException {
     this.filePath = filePath;
@@ -49,9 +53,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Sets the filePath attribute of the CFSFileReader object
+   * Sets the filePath attribute of the CFSFileReader object
    *
-   *@param  tmp  The new filePath value
+   * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -59,9 +63,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Sets the fileType attribute of the CFSFileReader object
+   * Sets the fileType attribute of the CFSFileReader object
    *
-   *@param  tmp  The new fileType value
+   * @param tmp The new fileType value
    */
   public void setFileType(int tmp) {
     this.fileType = tmp;
@@ -69,9 +73,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Sets the fileType attribute of the CFSFileReader object
+   * Sets the fileType attribute of the CFSFileReader object
    *
-   *@param  tmp  The new fileType value
+   * @param tmp The new fileType value
    */
   public void setFileType(String tmp) {
     this.fileType = Integer.parseInt(tmp);
@@ -79,9 +83,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Sets the recordDelimiter attribute of the CFSFileReader object
+   * Sets the recordDelimiter attribute of the CFSFileReader object
    *
-   *@param  tmp  The new recordDelimiter value
+   * @param tmp The new recordDelimiter value
    */
   public void setRecordDelimiter(String tmp) {
     this.recordDelimiter = tmp;
@@ -89,9 +93,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Sets the columnDelimiter attribute of the CFSFileReader object
+   * Sets the columnDelimiter attribute of the CFSFileReader object
    *
-   *@param  tmp  The new columnDelimiter value
+   * @param tmp The new columnDelimiter value
    */
   public void setColumnDelimiter(String tmp) {
     this.columnDelimiter = tmp;
@@ -99,9 +103,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Gets the filePath attribute of the CFSFileReader object
+   * Gets the filePath attribute of the CFSFileReader object
    *
-   *@return    The filePath value
+   * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -109,9 +113,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Gets the fileType attribute of the CFSFileReader object
+   * Gets the fileType attribute of the CFSFileReader object
    *
-   *@return    The fileType value
+   * @return The fileType value
    */
   public int getFileType() {
     return fileType;
@@ -119,9 +123,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Gets the recordDelimiter attribute of the CFSFileReader object
+   * Gets the recordDelimiter attribute of the CFSFileReader object
    *
-   *@return    The recordDelimiter value
+   * @return The recordDelimiter value
    */
   public String getRecordDelimiter() {
     return recordDelimiter;
@@ -129,9 +133,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Gets the columnDelimiter attribute of the CFSFileReader object
+   * Gets the columnDelimiter attribute of the CFSFileReader object
    *
-   *@return    The columnDelimiter value
+   * @return The columnDelimiter value
    */
   public String getColumnDelimiter() {
     return columnDelimiter;
@@ -139,25 +143,25 @@ public class CFSFileReader {
 
 
   /**
-   *  Gets the next line in the file based on the type
+   * Gets the next line in the file based on the type
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public Record nextLine() {
     Record record = null;
     try {
       switch (fileType) {
-          case Import.EXCEL_CSV:
-            record = retrieveExcelCSVLine();
-            break;
-          case Import.CUSTOM:
-            record = retrieveCustomLine();
-            break;
-          case Import.ACT:
-            record = retrieveActLine();
-            break;
-          default:
-            break;
+        case Import.EXCEL_CSV:
+          record = retrieveExcelCSVLine();
+          break;
+        case Import.CUSTOM:
+          record = retrieveCustomLine();
+          break;
+        case Import.ACT:
+          record = retrieveActLine();
+          break;
+        default:
+          break;
       }
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
@@ -170,10 +174,10 @@ public class CFSFileReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  line  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param line Description of the Parameter
+   * @return Description of the Return Value
    */
   public ArrayList parseLine(String line) {
     return null;
@@ -181,10 +185,10 @@ public class CFSFileReader {
 
 
   /**
-   *  Retrieves line for a Excel/Outlook CSV file
+   * Retrieves line for a Excel/Outlook CSV file
    *
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   public Record retrieveExcelCSVLine() throws IOException {
     if (in == null) {
@@ -298,9 +302,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public Record retrieveCustomLine() {
     return null;
@@ -308,9 +312,9 @@ public class CFSFileReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public Record retrieveActLine() {
     return null;
@@ -318,28 +322,28 @@ public class CFSFileReader {
 
 
   /**
-   *  Pads the line with default column delimiters after the last column data in
-   *  the line
+   * Pads the line with default column delimiters after the last column data in
+   * the line
    *
-   *@param  line      Description of the Parameter
-   *@param  padCount  Number of columns to be padded
-   *@return           Description of the Return Value
+   * @param line     Description of the Parameter
+   * @param padCount Number of columns to be padded
+   * @return Description of the Return Value
    */
   public String padLine(String line, int padCount) {
     String paddedLine = line;
     try {
       switch (fileType) {
-          case Import.EXCEL_CSV:
-            paddedLine = padExcelCSVLine(line, padCount);
-            break;
-          case Import.CUSTOM:
-            paddedLine = padCustomLine(line, padCount);
-            break;
-          case Import.ACT:
-            paddedLine = padActLine(line, padCount);
-            break;
-          default:
-            break;
+        case Import.EXCEL_CSV:
+          paddedLine = padExcelCSVLine(line, padCount);
+          break;
+        case Import.CUSTOM:
+          paddedLine = padCustomLine(line, padCount);
+          break;
+        case Import.ACT:
+          paddedLine = padActLine(line, padCount);
+          break;
+        default:
+          break;
       }
     } catch (Exception e) {
       paddedLine = line;
@@ -349,11 +353,11 @@ public class CFSFileReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  line      Description of the Parameter
-   *@param  padCount  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param line     Description of the Parameter
+   * @param padCount Description of the Parameter
+   * @return Description of the Return Value
    */
   public String padExcelCSVLine(String line, int padCount) {
     for (int i = 0; i < padCount; i++) {
@@ -364,11 +368,11 @@ public class CFSFileReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  line      Description of the Parameter
-   *@param  padCount  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param line     Description of the Parameter
+   * @param padCount Description of the Parameter
+   * @return Description of the Return Value
    */
   public String padCustomLine(String line, int padCount) {
     //TODO: Implement padding based on delimiters
@@ -377,11 +381,11 @@ public class CFSFileReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  line      Description of the Parameter
-   *@param  padCount  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param line     Description of the Parameter
+   * @param padCount Description of the Parameter
+   * @return Description of the Return Value
    */
   public String padActLine(String line, int padCount) {
     //TODO: Implement padding based on delimiters
@@ -390,17 +394,18 @@ public class CFSFileReader {
 
 
   /**
-   *  Data Structure for holding a line in a string and arraylist
+   * Data Structure for holding a line in a string and arraylist
    *
-   *@author     Mathur
-   *@created    April 15, 2004
-   *@version    $id:exp$
+   * @author Mathur
+   * @version $id:exp$
+   * @created April 15, 2004
    */
   public static class Record {
     /**
-     *  Constructor for the record object
+     * Constructor for the record object
      */
-    public Record() { }
+    public Record() {
+    }
 
 
     public String line = "";

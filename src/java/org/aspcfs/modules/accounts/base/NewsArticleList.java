@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class NewsArticleList extends Vector {
 
@@ -45,15 +46,16 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Constructor for the NewsArticleList object
+   * Constructor for the NewsArticleList object
    */
-  public NewsArticleList() { }
+  public NewsArticleList() {
+  }
 
 
   /**
-   *  Sets the lastAnchor attribute of the NewsArticleList object
+   * Sets the lastAnchor attribute of the NewsArticleList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -61,9 +63,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the lastAnchor attribute of the NewsArticleList object
+   * Sets the lastAnchor attribute of the NewsArticleList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -71,9 +73,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the nextAnchor attribute of the NewsArticleList object
+   * Sets the nextAnchor attribute of the NewsArticleList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -81,9 +83,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the nextAnchor attribute of the NewsArticleList object
+   * Sets the nextAnchor attribute of the NewsArticleList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -91,9 +93,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the syncType attribute of the NewsArticleList object
+   * Sets the syncType attribute of the NewsArticleList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -101,9 +103,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the syncType attribute of the NewsArticleList object
+   * Sets the syncType attribute of the NewsArticleList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -111,9 +113,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the NewsArticleList object
+   * Sets the pagedListInfo attribute of the NewsArticleList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -121,9 +123,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Gets the minerOnly attribute of the NewsArticleList object
+   * Gets the minerOnly attribute of the NewsArticleList object
    *
-   *@return    The minerOnly value
+   * @return The minerOnly value
    */
   public boolean getMinerOnly() {
     return minerOnly;
@@ -131,9 +133,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Gets the enteredBy attribute of the NewsArticleList object
+   * Gets the enteredBy attribute of the NewsArticleList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -141,9 +143,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Gets the industryCode attribute of the NewsArticleList object
+   * Gets the industryCode attribute of the NewsArticleList object
    *
-   *@return    The industryCode value
+   * @return The industryCode value
    */
   public int getIndustryCode() {
     return industryCode;
@@ -151,9 +153,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the minerOnly attribute of the NewsArticleList object
+   * Sets the minerOnly attribute of the NewsArticleList object
    *
-   *@param  tmp  The new minerOnly value
+   * @param tmp The new minerOnly value
    */
   public void setMinerOnly(boolean tmp) {
     this.minerOnly = tmp;
@@ -161,9 +163,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the enteredBy attribute of the NewsArticleList object
+   * Sets the enteredBy attribute of the NewsArticleList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -171,9 +173,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the industryCode attribute of the NewsArticleList object
+   * Sets the industryCode attribute of the NewsArticleList object
    *
-   *@param  tmp  The new industryCode value
+   * @param tmp The new industryCode value
    */
   public void setIndustryCode(int tmp) {
     this.industryCode = tmp;
@@ -181,9 +183,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the enteredBy attribute of the NewsArticleList object
+   * Sets the enteredBy attribute of the NewsArticleList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -191,9 +193,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Sets the industryCode attribute of the NewsArticleList object
+   * Sets the industryCode attribute of the NewsArticleList object
    *
-   *@param  tmp  The new industryCode value
+   * @param tmp The new industryCode value
    */
   public void setIndustryCode(String tmp) {
     this.industryCode = Integer.parseInt(tmp);
@@ -201,10 +203,10 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -254,26 +256,19 @@ public class NewsArticleList extends Vector {
     }
     sqlSelect.append(
         "n.* " +
-    //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
+        //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
         "FROM news n " +
         "LEFT JOIN organization o ON (n.org_id = o.org_id) " +
         "WHERE o.org_id >= 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       NewsArticle thisArticle = new NewsArticle(rs);
       this.addElement(thisArticle);
     }
@@ -283,9 +278,9 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -307,11 +302,11 @@ public class NewsArticleList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -15,24 +15,24 @@
  */
 package org.aspcfs.modules.components;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ComponentInterface;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: QueryObjectJustInserted.java,v 1.2 2003/01/14 20:40:41 akhi_m
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: QueryObjectJustInserted.java,v 1.2 2003/01/14 20:40:41 akhi_m
+ *          Exp $
+ * @created January 14, 2003
  */
 public class QueryObjectJustInserted extends ObjectHookComponent implements ComponentInterface {
 
   /**
-   *  Gets the description attribute of the QueryObjectJustInserted object
+   * Gets the description attribute of the QueryObjectJustInserted object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Was the object just inserted?";
@@ -40,10 +40,10 @@ public class QueryObjectJustInserted extends ObjectHookComponent implements Comp
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     return ((Object) context.getThisObject() != null &&

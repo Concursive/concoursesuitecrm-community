@@ -15,20 +15,23 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
-import org.aspcfs.utils.StringUtils;
-import com.darkhorseventures.database.*;
+import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.HashMap;
+import java.util.Hashtable;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 21, 2004
- *@version    $Id: ProjectNameHandler.java,v 1.1.2.2 2004/04/08 14:55:53
- *      rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: ProjectNameHandler.java,v 1.1.2.2 2004/04/08 14:55:53
+ *          rvasista Exp $
+ * @created January 21, 2004
  */
 public class ProjectNameHandler extends TagSupport {
 
@@ -36,9 +39,9 @@ public class ProjectNameHandler extends TagSupport {
 
 
   /**
-   *  Sets the id attribute of the ProjectNameHandler object
+   * Sets the id attribute of the ProjectNameHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -46,9 +49,9 @@ public class ProjectNameHandler extends TagSupport {
 
 
   /**
-   *  Sets the id attribute of the ProjectNameHandler object
+   * Sets the id attribute of the ProjectNameHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.projectId = tmp;
@@ -56,25 +59,29 @@ public class ProjectNameHandler extends TagSupport {
 
 
   /**
-   *  Outputs the project name if found from the ProjectNameCache
+   * Outputs the project name if found from the ProjectNameCache
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce == null) {
         System.out.println("ProjectNameHandler-> ConnectionElement is null");
       }
       boolean output = false;
-      Hashtable systemStatus = (Hashtable) pageContext.getServletContext().getAttribute("SystemStatus");
+      Hashtable systemStatus = (Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus");
       if (systemStatus != null) {
         SystemStatus thisSystem = (SystemStatus) systemStatus.get(ce.getUrl());
         if (thisSystem != null) {
-          HashMap projectCache = (HashMap) thisSystem.getObject(Constants.SYSTEM_PROJECT_NAME_LIST);
+          HashMap projectCache = (HashMap) thisSystem.getObject(
+              Constants.SYSTEM_PROJECT_NAME_LIST);
           if (projectCache != null) {
-            String projectName = (String) projectCache.get(new Integer(projectId));
+            String projectName = (String) projectCache.get(
+                new Integer(projectId));
             if (projectName != null) {
               this.pageContext.getOut().write(StringUtils.toHtml(projectName));
               output = true;
@@ -93,9 +100,9 @@ public class ProjectNameHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

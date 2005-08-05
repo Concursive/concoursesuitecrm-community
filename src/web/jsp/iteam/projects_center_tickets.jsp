@@ -43,10 +43,12 @@
   </tr>
 </table>
 <br>
-<zeroio:permission name="project-tickets-add">
-<a href="ProjectManagementTickets.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newTicket">New Ticket</dhv:label></a><br>
-<br>
-</zeroio:permission>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-tickets-add">
+  <a href="ProjectManagementTickets.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newTicket">New Ticket</dhv:label></a><br>
+  <br />
+  </zeroio:permission>
+</dhv:evaluate>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="ticketView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>">
@@ -102,7 +104,7 @@
   Iterator i = ticketList.iterator();
   int count = 0;
   int rowid = 0;
-  int offset = (projectTicketsInfo.getCurrentOffset() - 1);
+  int offset = (projectTicketsInfo.getCurrentOffset() -1);
   while (i.hasNext()) {
     ++count;
     ++offset;
@@ -111,13 +113,13 @@
 %>    
   <tr class="row<%= rowid %>">
     <td width="8" valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>','menuItem',<%= thisTicket.getId() %>,<%= offset %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>','menuItem',<%= thisTicket.getId() %>,<%= offset %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td align="center" nowrap valign="top">
-      <a href="ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisTicket.getId() %>"><%= thisTicket.getPaddedProjectTicketCount() %></a>
+      <a href="ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisTicket.getId() %>&offset=<%= offset %>"><%= thisTicket.getPaddedProjectTicketCount() %></a>
     </td>
     <td align="center" nowrap valign="top">
 <% if (thisTicket.getClosed() == null) { %>

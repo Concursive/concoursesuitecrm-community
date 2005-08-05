@@ -15,17 +15,17 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- *  Takes a number of bytes as input and returns a shortened displayable
- *  value... in "K" or "M" depending on scale.
+ * Takes a number of bytes as input and returns a shortened displayable
+ * value... in "K" or "M" depending on scale.
  *
- *@author     matt rajkowski
- *@created    October 6, 2003
- *@version    $Id: FileSizeHandler.java,v 1.2 2003/10/10 12:42:48 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: FileSizeHandler.java,v 1.2 2003/10/10 12:42:48 mrajkowski Exp
+ *          $
+ * @created October 6, 2003
  */
 public class FileSizeHandler extends TagSupport {
 
@@ -33,9 +33,9 @@ public class FileSizeHandler extends TagSupport {
 
 
   /**
-   *  Sets the bytes attribute of the FileSizeHandler object
+   * Sets the bytes attribute of the FileSizeHandler object
    *
-   *@param  tmp  The new bytes value
+   * @param tmp The new bytes value
    */
   public void setBytes(long tmp) {
     this.bytes = tmp;
@@ -43,10 +43,10 @@ public class FileSizeHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -73,9 +73,9 @@ public class FileSizeHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

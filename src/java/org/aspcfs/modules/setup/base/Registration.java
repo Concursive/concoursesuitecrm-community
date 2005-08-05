@@ -15,16 +15,17 @@
  */
 package org.aspcfs.modules.setup.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.*;
+
 /**
- *  Bean to encapsulate the user's registration information
+ * Bean to encapsulate the user's registration information
  *
- *@author     mrajkowski
- *@created    November 20, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created November 20, 2003
  */
 public class Registration extends GenericBean {
   private int id = -1;
@@ -46,16 +47,17 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Constructor for the Registration object
+   * Constructor for the Registration object
    */
-  public Registration() { }
+  public Registration() {
+  }
 
 
   /**
-   *  Constructor for the Registration object
+   * Constructor for the Registration object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Registration(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -63,9 +65,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Registration object
+   * Sets the id attribute of the Registration object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -73,9 +75,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Registration object
+   * Sets the id attribute of the Registration object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -83,9 +85,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the keyFile attribute of the Registration object
+   * Sets the keyFile attribute of the Registration object
    *
-   *@param  tmp  The new keyFile value
+   * @param tmp The new keyFile value
    */
   public void setKeyFile(String tmp) {
     this.keyFile = tmp;
@@ -93,9 +95,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the Registration object
+   * Sets the nameFirst attribute of the Registration object
    *
-   *@param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -103,9 +105,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the Registration object
+   * Sets the nameLast attribute of the Registration object
    *
-   *@param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -113,9 +115,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the company attribute of the Registration object
+   * Sets the company attribute of the Registration object
    *
-   *@param  tmp  The new company value
+   * @param tmp The new company value
    */
   public void setCompany(String tmp) {
     this.company = tmp;
@@ -123,9 +125,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the email attribute of the Registration object
+   * Sets the email attribute of the Registration object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -133,9 +135,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the profile attribute of the Registration object
+   * Sets the profile attribute of the Registration object
    *
-   *@param  tmp  The new profile value
+   * @param tmp The new profile value
    */
   public void setProfile(String tmp) {
     this.profile = tmp;
@@ -143,9 +145,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the text attribute of the Registration object
+   * Sets the text attribute of the Registration object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -153,9 +155,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the text2 attribute of the Registration object
+   * Sets the text2 attribute of the Registration object
    *
-   *@param  tmp  The new text2 value
+   * @param tmp The new text2 value
    */
   public void setText2(String tmp) {
     this.text2 = tmp;
@@ -163,9 +165,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the os attribute of the Registration object
+   * Sets the os attribute of the Registration object
    *
-   *@param  tmp  The new os value
+   * @param tmp The new os value
    */
   public void setOs(String tmp) {
     this.os = tmp;
@@ -173,9 +175,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the java attribute of the Registration object
+   * Sets the java attribute of the Registration object
    *
-   *@param  tmp  The new java value
+   * @param tmp The new java value
    */
   public void setJava(String tmp) {
     this.java = tmp;
@@ -183,20 +185,19 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the webserver attribute of the Registration object
+   * Sets the webserver attribute of the Registration object
    *
-   *@param  tmp  The new webserver value
+   * @param tmp The new webserver value
    */
   public void setWebserver(String tmp) {
     this.webserver = tmp;
   }
 
 
-
   /**
-   *  Sets the ip attribute of the Registration object
+   * Sets the ip attribute of the Registration object
    *
-   *@param  tmp  The new ip value
+   * @param tmp The new ip value
    */
   public void setIp(String tmp) {
     this.ip = tmp;
@@ -204,9 +205,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Registration object
+   * Sets the enabled attribute of the Registration object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -214,9 +215,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Registration object
+   * Sets the enabled attribute of the Registration object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -224,9 +225,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Registration object
+   * Sets the entered attribute of the Registration object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -234,9 +235,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Registration object
+   * Sets the entered attribute of the Registration object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -244,9 +245,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Sets the edition attribute of the Registration object
+   * Sets the edition attribute of the Registration object
    *
-   *@param  tmp  The new edition value
+   * @param tmp The new edition value
    */
   public void setEdition(String tmp) {
     this.edition = tmp;
@@ -254,9 +255,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Registration object
+   * Gets the id attribute of the Registration object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -264,9 +265,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the keyFile attribute of the Registration object
+   * Gets the keyFile attribute of the Registration object
    *
-   *@return    The keyFile value
+   * @return The keyFile value
    */
   public String getKeyFile() {
     return keyFile;
@@ -274,9 +275,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the Registration object
+   * Gets the nameFirst attribute of the Registration object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -284,9 +285,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the Registration object
+   * Gets the nameLast attribute of the Registration object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -294,9 +295,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the company attribute of the Registration object
+   * Gets the company attribute of the Registration object
    *
-   *@return    The company value
+   * @return The company value
    */
   public String getCompany() {
     return company;
@@ -304,9 +305,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the email attribute of the Registration object
+   * Gets the email attribute of the Registration object
    *
-   *@return    The email value
+   * @return The email value
    */
   public String getEmail() {
     return email;
@@ -314,9 +315,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the profile attribute of the Registration object
+   * Gets the profile attribute of the Registration object
    *
-   *@return    The profile value
+   * @return The profile value
    */
   public String getProfile() {
     return profile;
@@ -324,9 +325,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the text attribute of the Registration object
+   * Gets the text attribute of the Registration object
    *
-   *@return    The text value
+   * @return The text value
    */
   public String getText() {
     return text;
@@ -334,9 +335,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the text2 attribute of the Registration object
+   * Gets the text2 attribute of the Registration object
    *
-   *@return    The text2 value
+   * @return The text2 value
    */
   public String getText2() {
     return text2;
@@ -344,9 +345,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the os attribute of the Registration object
+   * Gets the os attribute of the Registration object
    *
-   *@return    The os value
+   * @return The os value
    */
   public String getOs() {
     return os;
@@ -354,9 +355,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the java attribute of the Registration object
+   * Gets the java attribute of the Registration object
    *
-   *@return    The java value
+   * @return The java value
    */
   public String getJava() {
     return java;
@@ -364,9 +365,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the webserver attribute of the Registration object
+   * Gets the webserver attribute of the Registration object
    *
-   *@return    The webserver value
+   * @return The webserver value
    */
   public String getWebserver() {
     return webserver;
@@ -374,9 +375,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the ip attribute of the Registration object
+   * Gets the ip attribute of the Registration object
    *
-   *@return    The ip value
+   * @return The ip value
    */
   public String getIp() {
     return ip;
@@ -384,9 +385,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Registration object
+   * Gets the enabled attribute of the Registration object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -394,9 +395,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Registration object
+   * Gets the entered attribute of the Registration object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -404,9 +405,9 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Gets the edition attribute of the Registration object
+   * Gets the edition attribute of the Registration object
    *
-   *@return    The edition value
+   * @return The edition value
    */
   public String getEdition() {
     return edition;
@@ -414,10 +415,10 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     //registration table
@@ -441,18 +442,24 @@ public class Registration extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "registration_registration_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO registration (email, profile, name_first, name_last, " +
+        "INSERT INTO registration " +
+        "(" + (id > -1 ? "registration_id, " : "") + "email, profile, name_first, name_last, " + //TO DO [ table does not exists]
         "company, registration_text, os_version, java_version, webserver, " +
         "ip_address, edition, crc, " +
-        "key_file, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "key_file, enabled) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setString(++i, email);
     pst.setString(++i, profile);
     pst.setString(++i, nameFirst);
@@ -469,15 +476,15 @@ public class Registration extends GenericBean {
     pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "registration_registration_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "registration_registration_id_seq", id);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateEnabled(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

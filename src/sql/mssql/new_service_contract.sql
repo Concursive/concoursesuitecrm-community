@@ -96,7 +96,8 @@ CREATE TABLE service_contract (
   service_model_notes TEXT,
   initial_start_date_timezone VARCHAR(255),
   current_start_date_timezone VARCHAR(255),
-  current_end_date_timezone VARCHAR(255)
+  current_end_date_timezone VARCHAR(255),
+  trashed_date DATETIME
 );
 
 CREATE TABLE service_contract_hours (
@@ -140,7 +141,7 @@ CREATE TABLE asset_category_draft (
   enabled BIT DEFAULT 1
 );
 
-CREATE TABLE asset   (
+CREATE TABLE asset (
   asset_id INT IDENTITY PRIMARY KEY,
   account_id INT REFERENCES organization(org_id),
   contract_id INT REFERENCES service_contract(contract_id),
@@ -176,5 +177,6 @@ CREATE TABLE asset   (
   purchase_cost FLOAT,
   date_listed_timezone VARCHAR(255),
   expiration_date_timezone VARCHAR(255),
-  purchase_date_timezone VARCHAR(255)
+  purchase_date_timezone VARCHAR(255),
+  trashed_date DATETIME
 );

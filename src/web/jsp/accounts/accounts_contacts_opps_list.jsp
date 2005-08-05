@@ -62,7 +62,11 @@
 </dhv:evaluate>
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <dhv:permission name="accounts-accounts-contacts-opportunities-add"><a href="AccountContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=AccountContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+    <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
+      <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+        <dhv:permission name="accounts-accounts-contacts-opportunities-add"><a href="AccountContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=AccountContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+      </dhv:evaluate>
+    </dhv:evaluate>
     <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
     <center><dhv:pagedListAlphabeticalLinks object="AccountContactOppsPagedListInfo"/></center></dhv:include>
     <table width="100%" border="0">
@@ -113,7 +117,10 @@
           <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
             <%-- Use the unique id for opening the menu, and toggling the graphics --%>
             <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-            <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+          <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OrgDetails.isTrashed() %>">
+            <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>','<%= oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() || OrgDetails.isTrashed() %>">&nbsp;</dhv:evaluate>
           </td>
           <td width="100%" valign="top" class="row<%= rowid %>">
             <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">

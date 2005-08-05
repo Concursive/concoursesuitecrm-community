@@ -81,9 +81,11 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
-    <dhv:permission name="admin-sysconfig-products-add">
-      <a href="ProductCatalogOptions.do?command=Add&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>"><dhv:label name="product.addProductOption">Add Product Option</dhv:label></a>
-    </dhv:permission>
+      <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
+        <dhv:permission name="admin-sysconfig-products-add">
+          <a href="ProductCatalogOptions.do?command=Add&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>"><dhv:label name="product.addProductOption">Add Product Option</dhv:label></a>
+        </dhv:permission>
+      </dhv:evaluate>
     <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ProductCatalogOptionListInfo"/>
 		<% int columnCount = 0; %>
 		<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -121,7 +123,7 @@
 						<td width="8" valign="center" nowrap class="row<%= rowid %>">
 							<% int status = -1; %>
 							<% status = thisOption.getEnabled() ? 1 : 0; %>
-							<a href="javascript:displayMenu('select<%= i %>', 'menuOption', '<%= thisOption.getId() %>', '<%= thisOption.getConfiguratorId() %>', '<%= status %>');"
+							<a href="javascript:displayMenu('select<%= i %>', 'menuOption', '<%= thisOption.getId() %>', '<%= thisOption.getConfiguratorId() %>', '<%= status %>','<%= productCatalog.isTrashed() %>');"
 							onMouseOver="over(0, <%= i %>)" onMouseOut="out(0, <%= i %>); hideMenu('menuOption');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
 						</td>
 						<td class="row<%= rowid %>">

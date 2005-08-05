@@ -31,20 +31,20 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 15, 2003
- *@version    $Id: LeadsDocuments.java,v 1.17 2004/08/05 20:37:41 mrajkowski Exp
- *      $
+ * @author Mathur
+ * @version $Id: LeadsDocuments.java,v 1.17 2004/08/05 20:37:41 mrajkowski Exp
+ *          $
+ * @created January 15, 2003
  */
 public final class LeadsDocuments extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-view")) {
@@ -62,7 +62,8 @@ public final class LeadsDocuments extends CFSModule {
 
       //Build the folder list
       FileFolderList folders = new FileFolderList();
-      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(folderId)) {
+      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(
+          folderId)) {
         folders.setTopLevelOnly(true);
       } else {
         folders.setParentId(Integer.parseInt(folderId));
@@ -75,7 +76,8 @@ public final class LeadsDocuments extends CFSModule {
       folders.buildList(db);
 
       FileItemList documents = new FileItemList();
-      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(folderId)) {
+      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(
+          folderId)) {
         documents.setTopLevelOnly(true);
       } else {
         documents.setFolderId(Integer.parseInt(folderId));
@@ -101,10 +103,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -119,6 +121,9 @@ public final class LeadsDocuments extends CFSModule {
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
       }
+
+      //Build array of folder trails
+      ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -135,10 +140,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -192,9 +197,13 @@ public final class LeadsDocuments extends CFSModule {
         recordInserted = false;
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
-          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+          errors.put(
+              "subjectError", systemStatus.getLabel(
+                  "object.validation.required"));
         }
         processErrors(context, errors);
         context.getRequest().setAttribute("headerId", id);
@@ -213,10 +222,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -238,14 +247,19 @@ public final class LeadsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      FileItem thisFile = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       context.getRequest().setAttribute("FileItem", thisFile);
+
+      //Build array of folder trails
+      ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    addModuleBean(context, "View Opportunities", "Upload New Document Version");
+    addModuleBean(
+        context, "View Opportunities", "Upload New Document Version");
     if (errorMessage == null) {
       return ("AddVersionOK");
     } else {
@@ -256,10 +270,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -312,9 +326,13 @@ public final class LeadsDocuments extends CFSModule {
         recordInserted = false;
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
-          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+          errors.put(
+              "subjectError", systemStatus.getLabel(
+                  "object.validation.required"));
         }
         processErrors(context, errors);
       }
@@ -334,10 +352,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-view")) {
@@ -353,9 +371,11 @@ public final class LeadsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       thisItem.buildVersionList(db);
-      if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId) && !"".equals(folderId) && !" ".equals(folderId)) {
+      if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId) && !"".equals(
+          folderId) && !" ".equals(folderId)) {
         //Build array of folder trails
         ProjectManagementFileFolders.buildHierarchy(db, context);
       }
@@ -376,10 +396,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-view")) {
@@ -396,7 +416,8 @@ public final class LeadsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       opportunityId = addOpportunity(context, db);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -411,7 +432,8 @@ public final class LeadsDocuments extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "opportunities") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "opportunities") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -426,14 +448,19 @@ public final class LeadsDocuments extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       } else {
-        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        FileItemVersion itemToDownload = thisItem.getVersion(
+            Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "opportunities") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "opportunities") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -448,8 +475,11 @@ public final class LeadsDocuments extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -477,39 +507,48 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
       return ("PermissionError");
     }
     String itemId = (String) context.getRequest().getParameter("fid");
+    String folderId = context.getRequest().getParameter("folderId");
+    if (folderId != null) {
+      context.getRequest().setAttribute("folderId", folderId);
+    }
     Connection db = null;
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
+
+      //Build array of folder trails
+      ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    addModuleBean(context, "View Opportunities", "Modify Document Information");
+    addModuleBean(
+        context, "View Opportunities", "Modify Document Information");
     return ("ModifyOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
@@ -519,16 +558,18 @@ public final class LeadsDocuments extends CFSModule {
     boolean isValid = false;
     String itemId = (String) context.getRequest().getParameter("fid");
     String subject = (String) context.getRequest().getParameter("subject");
-    String filename = (String) context.getRequest().getParameter("clientFilename");
+    String filename = (String) context.getRequest().getParameter(
+        "clientFilename");
     Connection db = null;
     int opportunityId = -1;
     try {
       db = getConnection(context);
       opportunityId = addOpportunity(context, db);
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
-      isValid = this.validateObject(context,db, thisItem);
+      isValid = this.validateObject(context, db, thisItem);
       if (isValid) {
         recordInserted = thisItem.update(db);
       }
@@ -549,10 +590,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-delete")) {
@@ -564,8 +605,10 @@ public final class LeadsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
-      recordDeleted = thisItem.delete(db, this.getPath(context, "opportunities"));
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      recordDeleted = thisItem.delete(
+          db, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -582,17 +625,18 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Opportunity attribute of the LeadsDocuments object
+   * Adds a feature to the Opportunity attribute of the LeadsDocuments object
    *
-   *@param  context           The feature to be added to the Opportunity
-   *      attribute
-   *@param  db                The feature to be added to the Opportunity
-   *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the Opportunity
+   *                attribute
+   * @param db      The feature to be added to the Opportunity
+   *                attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addOpportunity(ActionContext context, Connection db) throws SQLException {
-    String opportunityId = (String) context.getRequest().getParameter("headerId");
+    String opportunityId = (String) context.getRequest().getParameter(
+        "headerId");
     if (opportunityId == null) {
       opportunityId = (String) context.getRequest().getAttribute("headerId");
     }
@@ -601,30 +645,31 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Opportunity attribute of the LeadsDocuments object
+   * Adds a feature to the Opportunity attribute of the LeadsDocuments object
    *
-   *@param  context           The feature to be added to the Opportunity
-   *      attribute
-   *@param  db                The feature to be added to the Opportunity
-   *      attribute
-   *@param  opportunityId     The feature to be added to the Opportunity
-   *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context       The feature to be added to the Opportunity
+   *                      attribute
+   * @param db            The feature to be added to the Opportunity
+   *                      attribute
+   * @param opportunityId The feature to be added to the Opportunity
+   *                      attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addOpportunity(ActionContext context, Connection db, String opportunityId) throws SQLException {
     context.getRequest().setAttribute("headerId", opportunityId);
-    OpportunityHeader thisOpportunity = new OpportunityHeader(db, opportunityId);
+    OpportunityHeader thisOpportunity = new OpportunityHeader(
+        db, opportunityId);
     context.getRequest().setAttribute("opportunityHeader", thisOpportunity);
     return thisOpportunity.getId();
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
@@ -637,7 +682,8 @@ public final class LeadsDocuments extends CFSModule {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
       //Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
       //Load the folders
@@ -657,10 +703,10 @@ public final class LeadsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
@@ -668,13 +714,15 @@ public final class LeadsDocuments extends CFSModule {
     }
     Connection db = null;
     //Parameters
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("fid");
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
       //Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
       thisItem.buildVersionList(db);
       thisItem.updateFolderId(db, Integer.parseInt(newFolderId));
       return "PopupCloseOK";

@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.quotes.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    March 24, 2004
- *@version    $Id: QuoteProductOptionList.java,v 1.2 2004/05/04 15:52:27
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: QuoteProductOptionList.java,v 1.2 2004/05/04 15:52:27
+ *          mrajkowski Exp $
+ * @created March 24, 2004
  */
 public class QuoteProductOptionList extends ArrayList {
   private int itemId = -1;
@@ -38,9 +40,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Gets the buildConfigDetails attribute of the QuoteProductOptionList object
+   * Gets the buildConfigDetails attribute of the QuoteProductOptionList object
    *
-   *@return    The buildConfigDetails value
+   * @return The buildConfigDetails value
    */
   public boolean getBuildConfigDetails() {
     return buildConfigDetails;
@@ -48,9 +50,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Sets the buildConfigDetails attribute of the QuoteProductOptionList object
+   * Sets the buildConfigDetails attribute of the QuoteProductOptionList object
    *
-   *@param  tmp  The new buildConfigDetails value
+   * @param tmp The new buildConfigDetails value
    */
   public void setBuildConfigDetails(boolean tmp) {
     this.buildConfigDetails = tmp;
@@ -58,20 +60,19 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Sets the buildConfigDetails attribute of the QuoteProductOptionList object
+   * Sets the buildConfigDetails attribute of the QuoteProductOptionList object
    *
-   *@param  tmp  The new buildConfigDetails value
+   * @param tmp The new buildConfigDetails value
    */
   public void setBuildConfigDetails(String tmp) {
     this.buildConfigDetails = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Sets the itemId attribute of the QuoteProductOptionList object
+   * Sets the itemId attribute of the QuoteProductOptionList object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -79,9 +80,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the QuoteProductOptionList object
+   * Sets the itemId attribute of the QuoteProductOptionList object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -89,9 +90,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the QuoteProductOptionList object
+   * Sets the statusId attribute of the QuoteProductOptionList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -99,9 +100,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the QuoteProductOptionList object
+   * Sets the statusId attribute of the QuoteProductOptionList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -109,9 +110,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Gets the itemId attribute of the QuoteProductOptionList object
+   * Gets the itemId attribute of the QuoteProductOptionList object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -119,9 +120,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Gets the statusId attribute of the QuoteProductOptionList object
+   * Gets the statusId attribute of the QuoteProductOptionList object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -129,16 +130,17 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Constructor for the QuoteProductOptionList object
+   * Constructor for the QuoteProductOptionList object
    */
-  public QuoteProductOptionList() { }
+  public QuoteProductOptionList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -153,7 +155,7 @@ public class QuoteProductOptionList extends ArrayList {
         "SELECT COUNT(*) AS recordcount " +
         "FROM quote_product_options opt " +
         "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
-        "LEFT JOIN quote_product_option_float float ON ( opt.quote_product_option_id = float.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float \"float\" ON ( opt.quote_product_option_id = \"float\".quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +
@@ -169,13 +171,13 @@ public class QuoteProductOptionList extends ArrayList {
     sqlSelect.append(
         "opt.*, " +
         "bool.value AS boolean_value, " +
-        "float.value AS float_value, intr.value AS integer_value, " +
+        "\"float\".value AS float_value, intr.value AS integer_value, " +
         "tst.value AS timestamp_value, txt.value AS text_value, " +
         "pom.option_id, po.configurator_id, " +
         "prod.product_id " +
         "FROM quote_product_options opt " +
         "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
-        "LEFT JOIN quote_product_option_float float ON ( opt.quote_product_option_id = float.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float \"float\" ON ( opt.quote_product_option_id = \"float\".quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +
@@ -184,7 +186,8 @@ public class QuoteProductOptionList extends ArrayList {
         "quote_product prod " +
         "WHERE opt.item_id = prod.item_id " +
         "AND opt.quote_product_option_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -204,9 +207,9 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -222,11 +225,11 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -242,10 +245,10 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -257,10 +260,10 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();

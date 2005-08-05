@@ -250,7 +250,8 @@ CREATE TABLE organization (
   import_id INT,
   status_id INT,
   alertdate_timezone VARCHAR(255),
-  contract_end_timezone VARCHAR(255)
+  contract_end_timezone VARCHAR(255),
+  trashed_date DATETIME
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -272,8 +273,6 @@ CREATE TABLE contact (
   birthdate DATETIME,
   notes TEXT,
   site INT,
-  imname VARCHAR(30),
-  imservice INT,
   locale INT,
   employee_id varchar(80),
   employmenttype INT,
@@ -299,7 +298,11 @@ CREATE TABLE contact (
   source INT REFERENCES lookup_contact_source(code),
   rating INT REFERENCES lookup_contact_rating(code),
   comments VARCHAR(255),
-  conversion_date DATETIME NULL
+  conversion_date DATETIME NULL,
+  additional_names VARCHAR(255),
+  nickname VARCHAR(80),
+  role VARCHAR(255),
+  trashed_date DATETIME
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
@@ -786,5 +789,6 @@ CREATE TABLE relationship (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
+  modifiedby INT NOT NULL,
+  trashed_date DATETIME
 );

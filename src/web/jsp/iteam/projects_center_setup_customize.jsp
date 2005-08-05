@@ -24,7 +24,55 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<form method="POST" name="inputForm" action="ProjectManagement.do?command=UpdateFeatures&auto-populate=true">
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
+<script language="JavaScript" type="text/javascript">
+  function checkForm(form) {
+    formTest = true;
+    message = "";
+    if (form.labelNews.value != "" && checkNullString(form.labelNews.value)) { 
+      message += label("label.news.required","- Check that  news label  is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelDiscussion.value != "" && checkNullString(form.labelDiscussion.value)) { 
+      message += label("label.discussion.required","- Check that discussion label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelDocuments.value != "" && checkNullString(form.labelDocuments.value)) { 
+      message += label("label.documents.required","- Check that documents label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelLists.value != "" && checkNullString(form.labelLists.value)) { 
+      message += label("label.lists.required","- Check that lists label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelPlan.value != "" && checkNullString(form.labelPlan.value)) { 
+      message += label("label.plan.required","- Check that plan label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelTickets.value != "" && checkNullString(form.labelTickets.value)) { 
+      message += label("label.tickets.required","- Check that tickets label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelAccounts.value != "" && checkNullString(form.labelAccounts.value)) { 
+      message += label("label.accounts.required","- Check that accounts label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelTeam.value != "" && checkNullString(form.labelTeam.value)) { 
+      message += label("label.team.required","- Check that team label is entered\r\n");
+      formTest = false;
+    }
+    if (form.labelDetails.value != "" && checkNullString(form.labelDetails.value)) { 
+      message += label("label.details.required","- Check that details label is entered\r\n");
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert(label("check.form","Form could not be saved, please check the following:\r\n\r\n") + message);
+      return false;
+    }
+    return true;
+  }
+</script>
+<form method="POST" name="inputForm" action="ProjectManagement.do?command=UpdateFeatures&auto-populate=true" onSubmit="return checkForm(this);">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>

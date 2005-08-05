@@ -31,23 +31,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id: TaskCategoryIndexer.java,v 1.2 2004/07/21 19:00:44 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: TaskCategoryIndexer.java,v 1.2 2004/07/21 19:00:44 mrajkowski
+ *          Exp $
+ * @created May 27, 2004
  */
 public class TaskCategoryIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -75,23 +75,30 @@ public class TaskCategoryIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  taskCategory     Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer       Description of the Parameter
+   * @param taskCategory Description of the Parameter
+   * @param modified     Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, TaskCategory taskCategory, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "listCategory"));
-    document.add(Field.Keyword("listCategoryKeyId", String.valueOf(taskCategory.getId())));
-    document.add(Field.Keyword("listCategoryId", String.valueOf(taskCategory.getId())));
-    document.add(Field.Keyword("projectId", String.valueOf(taskCategory.getLinkItemId())));
+    document.add(
+        Field.Keyword(
+            "listCategoryKeyId", String.valueOf(taskCategory.getId())));
+    document.add(
+        Field.Keyword("listCategoryId", String.valueOf(taskCategory.getId())));
+    document.add(
+        Field.Keyword(
+            "projectId", String.valueOf(taskCategory.getLinkItemId())));
     document.add(Field.Text("title", taskCategory.getDescription()));
-    document.add(Field.Text("contents",
-        taskCategory.getDescription()));
+    document.add(
+        Field.Text(
+            "contents",
+            taskCategory.getDescription()));
     /*
      *  if (modified) {
      *  document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
@@ -101,31 +108,34 @@ public class TaskCategoryIndexer implements Indexer {
      */
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
-      System.out.println("TaskCategoryIndexer-> Added: " + taskCategory.getId());
+      System.out.println(
+          "TaskCategoryIndexer-> Added: " + taskCategory.getId());
     }
   }
 
 
   /**
-   *  Gets the searchTerm attribute of the TaskCategoryIndexer class
+   * Gets the searchTerm attribute of the TaskCategoryIndexer class
    *
-   *@param  taskCategory  Description of the Parameter
-   *@return               The searchTerm value
+   * @param taskCategory Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(TaskCategory taskCategory) {
-    Term searchTerm = new Term("listCategoryKeyId", String.valueOf(taskCategory.getId()));
+    Term searchTerm = new Term(
+        "listCategoryKeyId", String.valueOf(taskCategory.getId()));
     return searchTerm;
   }
 
 
   /**
-   *  Gets the deleteTerm attribute of the TaskCategoryIndexer class
+   * Gets the deleteTerm attribute of the TaskCategoryIndexer class
    *
-   *@param  taskCategory  Description of the Parameter
-   *@return               The deleteTerm value
+   * @param taskCategory Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(TaskCategory taskCategory) {
-    Term searchTerm = new Term("listCategoryId", String.valueOf(taskCategory.getId()));
+    Term searchTerm = new Term(
+        "listCategoryId", String.valueOf(taskCategory.getId()));
     return searchTerm;
   }
 }

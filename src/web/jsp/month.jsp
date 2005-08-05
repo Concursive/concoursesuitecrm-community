@@ -12,6 +12,8 @@
 <%-- This jsp shows a calendar to the user and sends the selected date back
      to the calling form.
      NOTE: THIS JSP DOES NOT REQUIRE A USER TO BE LOGGED IN --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.TimeZone" %>
 <%@ page import="org.aspcfs.modules.mycfs.base.CalendarEvent" %>

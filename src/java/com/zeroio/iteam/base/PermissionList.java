@@ -16,6 +16,7 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -26,12 +27,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Represents a list of permissions for a project
+ * Represents a list of permissions for a project
  *
- *@author     matt rajkowski
- *@created    August 10, 2003
- *@version    $Id: PermissionList.java,v 1.1.2.2 2004/04/08 14:55:53 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: PermissionList.java,v 1.1.2.2 2004/04/08 14:55:53 rvasista
+ *          Exp $
+ * @created August 10, 2003
  */
 public class PermissionList extends HashMap {
 
@@ -39,15 +40,16 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Constructor for the PermissionList object
+   * Constructor for the PermissionList object
    */
-  public PermissionList() { }
+  public PermissionList() {
+  }
 
 
   /**
-   *  Sets the projectId attribute of the PermissionList object
+   * Sets the projectId attribute of the PermissionList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -55,10 +57,10 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -71,7 +73,8 @@ public class PermissionList extends HashMap {
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      this.put(rs.getString("permission"), new Integer(rs.getInt("userlevel")));
+      this.put(
+          rs.getString("permission"), new Integer(rs.getInt("userlevel")));
     }
     rs.close();
     pst.close();
@@ -79,9 +82,9 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -94,11 +97,11 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -110,11 +113,11 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  permissionName  Description of the Parameter
-   *@param  userLevel       Description of the Parameter
-   *@return                 Description of the Return Value
+   * @param permissionName Description of the Parameter
+   * @param userLevel      Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasPermission(String permissionName, int userLevel) {
     Integer value = (Integer) this.get(permissionName);
@@ -124,10 +127,10 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Gets the accessLevel attribute of the PermissionList object
+   * Gets the accessLevel attribute of the PermissionList object
    *
-   *@param  permissionName  Description of the Parameter
-   *@return                 The accessLevel value
+   * @param permissionName Description of the Parameter
+   * @return The accessLevel value
    */
   public int getAccessLevel(String permissionName) {
     Integer value = (Integer) this.get(permissionName);
@@ -140,12 +143,12 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  request           Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param request   Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void updateProjectPermissions(Connection db, HttpServletRequest request, int projectId) throws SQLException {
     //Look through the request and put the permissions in buckets
@@ -162,12 +165,20 @@ public class PermissionList extends HashMap {
       int count = 0;
       String permissionId = null;
       while ((permissionId = request.getParameter("perm" + (++count))) != null) {
+        int i = 0;
+        int seqId = DatabaseUtils.getNextSeq(db, "project_permissions_id_seq");
         pst = db.prepareStatement(
-            "INSERT INTO project_permissions (project_id, permission_id, userlevel) " +
-            "VALUES (?, ?, ?)");
-        pst.setInt(1, projectId);
-        pst.setInt(2, Integer.parseInt(permissionId));
-        pst.setInt(3, Integer.parseInt(request.getParameter("perm" + count + "level")));
+            "INSERT INTO project_permissions (" +
+            (seqId > -1 ? "id, " : "") + "project_id, permission_id, userlevel) " +
+            "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?)");
+        if (seqId > -1) {
+          pst.setInt(++i, seqId);
+        }
+        pst.setInt(++i, projectId);
+        pst.setInt(++i, Integer.parseInt(permissionId));
+        pst.setInt(
+            ++i, Integer.parseInt(
+                request.getParameter("perm" + count + "level")));
         pst.execute();
       }
       pst.close();
@@ -181,11 +192,11 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int projectId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -198,11 +209,11 @@ public class PermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void insertDefaultPermissions(Connection db, int projectId) throws SQLException {
     //Make sure no permissions exist, then insert
@@ -221,15 +232,21 @@ public class PermissionList extends HashMap {
       PermissionLookupList list = new PermissionLookupList();
       list.setIncludeEnabled(Constants.TRUE);
       list.buildList(db);
-      Iterator i = list.iterator();
-      while (i.hasNext()) {
-        PermissionLookup thisPermission = (PermissionLookup) i.next();
+      Iterator iterator = list.iterator();
+      while (iterator.hasNext()) {
+        PermissionLookup thisPermission = (PermissionLookup) iterator.next();
+        int i = 0;
+        int seqId = DatabaseUtils.getNextSeq(db, "project_permissions_id_seq");
         pst = db.prepareStatement(
             "INSERT INTO project_permissions " +
-            "(project_id, permission_id, userlevel) VALUES (?, ?, ?) ");
-        pst.setInt(1, projectId);
-        pst.setInt(2, thisPermission.getId());
-        pst.setInt(3, thisPermission.getDefaultRole());
+            "(" + (seqId > -1 ? "id, " : "") + "project_id, permission_id, userlevel) " +
+            "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
+        if (seqId > -1) {
+          pst.setInt(++i, seqId);
+        }
+        pst.setInt(++i, projectId);
+        pst.setInt(++i, thisPermission.getId());
+        pst.setInt(++i, thisPermission.getDefaultRole());
         pst.execute();
       }
       pst.close();

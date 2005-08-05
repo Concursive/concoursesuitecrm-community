@@ -15,23 +15,21 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.contacts.base.Contact;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.text.DateFormat;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    November 8, 2001
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created November 8, 2001
  */
 public class TicketLog extends GenericBean {
 
@@ -67,19 +65,19 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Constructor for the Ticket object, creates an empty Ticket
+   * Constructor for the Ticket object, creates an empty Ticket
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public TicketLog() { }
+  public TicketLog() {
+  }
 
 
   /**
-   *  Constructor for the Ticket object
+   * Constructor for the Ticket object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public TicketLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -87,12 +85,11 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  id                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public TicketLog(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -126,9 +123,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the priorityName attribute of the TicketLog object
+   * Sets the priorityName attribute of the TicketLog object
    *
-   *@param  priorityName  The new priorityName value
+   * @param priorityName The new priorityName value
    */
   public void setPriorityName(String priorityName) {
     this.priorityName = priorityName;
@@ -136,10 +133,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the TicketLog object
+   * Sets the Id attribute of the TicketLog object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -147,10 +143,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the TicketLog object
+   * Sets the Id attribute of the TicketLog object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -158,9 +153,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the TicketLog object
+   * Sets the entered attribute of the TicketLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -168,9 +163,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the TicketLog object
+   * Sets the modified attribute of the TicketLog object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -178,9 +173,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the TicketLog object
+   * Sets the entered attribute of the TicketLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -188,9 +183,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the TicketLog object
+   * Sets the modified attribute of the TicketLog object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -198,9 +193,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the assignedToName attribute of the TicketLog object
+   * Sets the assignedToName attribute of the TicketLog object
    *
-   *@param  assignedToName  The new assignedToName value
+   * @param assignedToName The new assignedToName value
    */
   public void setAssignedToName(String assignedToName) {
     this.assignedToName = assignedToName;
@@ -208,9 +203,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the severityName attribute of the TicketLog object
+   * Sets the severityName attribute of the TicketLog object
    *
-   *@param  severityName  The new severityName value
+   * @param severityName The new severityName value
    */
   public void setSeverityName(String severityName) {
     this.severityName = severityName;
@@ -218,10 +213,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the SystemMessage attribute of the TicketLog object
+   * Sets the SystemMessage attribute of the TicketLog object
    *
-   *@param  systemMessage  The new SystemMessage value
-   *@since
+   * @param systemMessage The new SystemMessage value
    */
   public void setSystemMessage(boolean systemMessage) {
     this.systemMessage = systemMessage;
@@ -229,10 +223,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the TicketId attribute of the TicketLog object
+   * Sets the TicketId attribute of the TicketLog object
    *
-   *@param  tmp  The new TicketId value
-   *@since
+   * @param tmp The new TicketId value
    */
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
@@ -240,10 +233,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the TicketId attribute of the TicketLog object
+   * Sets the TicketId attribute of the TicketLog object
    *
-   *@param  tmp  The new TicketId value
-   *@since
+   * @param tmp The new TicketId value
    */
   public void setTicketId(String tmp) {
     this.ticketId = Integer.parseInt(tmp);
@@ -251,10 +243,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentName attribute of the TicketLog object
+   * Sets the DepartmentName attribute of the TicketLog object
    *
-   *@param  departmentName  The new DepartmentName value
-   *@since
+   * @param departmentName The new DepartmentName value
    */
   public void setDepartmentName(String departmentName) {
     this.departmentName = departmentName;
@@ -262,10 +253,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the EntryText attribute of the TicketLog object
+   * Sets the EntryText attribute of the TicketLog object
    *
-   *@param  tmp  The new EntryText value
-   *@since
+   * @param tmp The new EntryText value
    */
   public void setEntryText(String tmp) {
     this.entryText = tmp;
@@ -273,10 +263,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the AssignedTo attribute of the TicketLog object
+   * Sets the AssignedTo attribute of the TicketLog object
    *
-   *@param  tmp  The new AssignedTo value
-   *@since
+   * @param tmp The new AssignedTo value
    */
   public void setAssignedTo(int tmp) {
     this.assignedTo = tmp;
@@ -284,9 +273,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the assignedTo attribute of the TicketLog object
+   * Sets the assignedTo attribute of the TicketLog object
    *
-   *@param  tmp  The new assignedTo value
+   * @param tmp The new assignedTo value
    */
   public void setAssignedTo(String tmp) {
     this.assignedTo = Integer.parseInt(tmp);
@@ -294,10 +283,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the AssignedTo attribute of the TicketLog object
+   * Sets the AssignedTo attribute of the TicketLog object
    *
-   *@param  tmp  The new AssignedTo value
-   *@since
+   * @param tmp The new AssignedTo value
    */
   public void s(String tmp) {
     this.assignedTo = Integer.parseInt(tmp);
@@ -305,10 +293,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the Closed attribute of the TicketLog object
+   * Sets the Closed attribute of the TicketLog object
    *
-   *@param  tmp  The new Closed value
-   *@since
+   * @param tmp The new Closed value
    */
   public void setClosed(boolean tmp) {
     this.closed = tmp;
@@ -316,10 +303,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the TicketLog object
+   * Sets the EnteredBy attribute of the TicketLog object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -327,9 +313,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the TicketLog object
+   * Sets the enteredBy attribute of the TicketLog object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -337,10 +323,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the TicketLog object
+   * Sets the ModifiedBy attribute of the TicketLog object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -348,9 +333,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TicketLog object
+   * Sets the modifiedBy attribute of the TicketLog object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -358,10 +343,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the PriorityCode attribute of the TicketLog object
+   * Sets the PriorityCode attribute of the TicketLog object
    *
-   *@param  tmp  The new PriorityCode value
-   *@since
+   * @param tmp The new PriorityCode value
    */
   public void setPriorityCode(int tmp) {
     this.priorityCode = tmp;
@@ -369,9 +353,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the priorityCode attribute of the TicketLog object
+   * Sets the priorityCode attribute of the TicketLog object
    *
-   *@param  tmp  The new priorityCode value
+   * @param tmp The new priorityCode value
    */
   public void setPriorityCode(String tmp) {
     this.priorityCode = Integer.parseInt(tmp);
@@ -379,10 +363,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the LevelCode attribute of the TicketLog object
+   * Sets the LevelCode attribute of the TicketLog object
    *
-   *@param  tmp  The new LevelCode value
-   *@since
+   * @param tmp The new LevelCode value
    */
   public void setLevelCode(int tmp) {
     this.levelCode = tmp;
@@ -390,9 +373,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the levelCode attribute of the TicketLog object
+   * Sets the levelCode attribute of the TicketLog object
    *
-   *@param  tmp  The new levelCode value
+   * @param tmp The new levelCode value
    */
   public void setLevelCode(String tmp) {
     this.levelCode = Integer.parseInt(tmp);
@@ -400,10 +383,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentCode attribute of the TicketLog object
+   * Sets the DepartmentCode attribute of the TicketLog object
    *
-   *@param  tmp  The new DepartmentCode value
-   *@since
+   * @param tmp The new DepartmentCode value
    */
   public void setDepartmentCode(int tmp) {
     this.departmentCode = tmp;
@@ -411,9 +393,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the departmentCode attribute of the TicketLog object
+   * Sets the departmentCode attribute of the TicketLog object
    *
-   *@param  tmp  The new departmentCode value
+   * @param tmp The new departmentCode value
    */
   public void setDepartmentCode(String tmp) {
     this.departmentCode = Integer.parseInt(tmp);
@@ -421,10 +403,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the CatCode attribute of the TicketLog object
+   * Sets the CatCode attribute of the TicketLog object
    *
-   *@param  tmp  The new CatCode value
-   *@since
+   * @param tmp The new CatCode value
    */
   public void setCatCode(int tmp) {
     this.catCode = tmp;
@@ -432,9 +413,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the catCode attribute of the TicketLog object
+   * Sets the catCode attribute of the TicketLog object
    *
-   *@param  tmp  The new catCode value
+   * @param tmp The new catCode value
    */
   public void setCatCode(String tmp) {
     this.catCode = Integer.parseInt(tmp);
@@ -442,10 +423,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the SeverityCode attribute of the TicketLog object
+   * Sets the SeverityCode attribute of the TicketLog object
    *
-   *@param  tmp  The new SeverityCode value
-   *@since
+   * @param tmp The new SeverityCode value
    */
   public void setSeverityCode(int tmp) {
     this.severityCode = tmp;
@@ -453,9 +433,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the severityCode attribute of the TicketLog object
+   * Sets the severityCode attribute of the TicketLog object
    *
-   *@param  tmp  The new severityCode value
+   * @param tmp The new severityCode value
    */
   public void setSeverityCode(String tmp) {
     this.severityCode = Integer.parseInt(tmp);
@@ -463,10 +443,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the EnteredByName attribute of the TicketLog object
+   * Sets the EnteredByName attribute of the TicketLog object
    *
-   *@param  tmp  The new EnteredByName value
-   *@since
+   * @param tmp The new EnteredByName value
    */
   public void setEnteredByName(String tmp) {
     this.enteredByName = tmp;
@@ -474,10 +453,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedByName attribute of the TicketLog object
+   * Sets the ModifiedByName attribute of the TicketLog object
    *
-   *@param  tmp  The new ModifiedByName value
-   *@since
+   * @param tmp The new ModifiedByName value
    */
   public void setModifiedByName(String tmp) {
     this.modifiedByName = tmp;
@@ -485,10 +463,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the CompanyName attribute of the TicketLog object
+   * Sets the CompanyName attribute of the TicketLog object
    *
-   *@param  tmp  The new CompanyName value
-   *@since
+   * @param tmp The new CompanyName value
    */
   public void setCompanyName(String tmp) {
     this.companyName = tmp;
@@ -496,10 +473,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Sets the CategoryName attribute of the TicketLog object
+   * Sets the CategoryName attribute of the TicketLog object
    *
-   *@param  tmp  The new CategoryName value
-   *@since
+   * @param tmp The new CategoryName value
    */
   public void setCategoryName(String tmp) {
     this.categoryName = tmp;
@@ -507,9 +483,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the priorityName attribute of the TicketLog object
+   * Gets the priorityName attribute of the TicketLog object
    *
-   *@return    The priorityName value
+   * @return The priorityName value
    */
   public String getPriorityName() {
     return priorityName;
@@ -517,9 +493,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the TicketLog object
+   * Gets the entered attribute of the TicketLog object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -527,9 +503,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the TicketLog object
+   * Gets the modified attribute of the TicketLog object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -537,14 +513,15 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the TicketLog object
+   * Gets the modifiedString attribute of the TicketLog object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -552,14 +529,15 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the TicketLog object
+   * Gets the enteredString attribute of the TicketLog object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -567,9 +545,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the assignedToName attribute of the TicketLog object
+   * Gets the assignedToName attribute of the TicketLog object
    *
-   *@return    The assignedToName value
+   * @return The assignedToName value
    */
   public String getAssignedToName() {
     return assignedToName;
@@ -577,9 +555,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the severityName attribute of the TicketLog object
+   * Gets the severityName attribute of the TicketLog object
    *
-   *@return    The severityName value
+   * @return The severityName value
    */
   public String getSeverityName() {
     return severityName;
@@ -587,10 +565,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the SystemMessage attribute of the TicketLog object
+   * Gets the SystemMessage attribute of the TicketLog object
    *
-   *@return    The SystemMessage value
-   *@since
+   * @return The SystemMessage value
    */
   public boolean getSystemMessage() {
     return systemMessage;
@@ -598,10 +575,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the DepartmentName attribute of the TicketLog object
+   * Gets the DepartmentName attribute of the TicketLog object
    *
-   *@return    The DepartmentName value
-   *@since
+   * @return The DepartmentName value
    */
   public String getDepartmentName() {
     return departmentName;
@@ -609,10 +585,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the TicketLog object
+   * Gets the Id attribute of the TicketLog object
    *
-   *@return    The Id value
-   *@since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -620,10 +595,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the TicketId attribute of the TicketLog object
+   * Gets the TicketId attribute of the TicketLog object
    *
-   *@return    The TicketId value
-   *@since
+   * @return The TicketId value
    */
   public int getTicketId() {
     return ticketId;
@@ -631,10 +605,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the EntryText attribute of the TicketLog object
+   * Gets the EntryText attribute of the TicketLog object
    *
-   *@return    The EntryText value
-   *@since
+   * @return The EntryText value
    */
   public String getEntryText() {
     return entryText;
@@ -642,10 +615,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the AssignedTo attribute of the TicketLog object
+   * Gets the AssignedTo attribute of the TicketLog object
    *
-   *@return    The AssignedTo value
-   *@since
+   * @return The AssignedTo value
    */
   public int getAssignedTo() {
     return assignedTo;
@@ -653,10 +625,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the Closed attribute of the TicketLog object
+   * Gets the Closed attribute of the TicketLog object
    *
-   *@return    The Closed value
-   *@since
+   * @return The Closed value
    */
   public boolean getClosed() {
     return closed;
@@ -664,10 +635,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the TicketLog object
+   * Gets the EnteredBy attribute of the TicketLog object
    *
-   *@return    The EnteredBy value
-   *@since
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -675,10 +645,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the TicketLog object
+   * Gets the ModifiedBy attribute of the TicketLog object
    *
-   *@return    The ModifiedBy value
-   *@since
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -686,10 +655,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the PriorityCode attribute of the TicketLog object
+   * Gets the PriorityCode attribute of the TicketLog object
    *
-   *@return    The PriorityCode value
-   *@since
+   * @return The PriorityCode value
    */
   public int getPriorityCode() {
     return priorityCode;
@@ -697,10 +665,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the LevelCode attribute of the TicketLog object
+   * Gets the LevelCode attribute of the TicketLog object
    *
-   *@return    The LevelCode value
-   *@since
+   * @return The LevelCode value
    */
   public int getLevelCode() {
     return levelCode;
@@ -708,10 +675,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the DepartmentCode attribute of the TicketLog object
+   * Gets the DepartmentCode attribute of the TicketLog object
    *
-   *@return    The DepartmentCode value
-   *@since
+   * @return The DepartmentCode value
    */
   public int getDepartmentCode() {
     return departmentCode;
@@ -719,10 +685,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the CatCode attribute of the TicketLog object
+   * Gets the CatCode attribute of the TicketLog object
    *
-   *@return    The CatCode value
-   *@since
+   * @return The CatCode value
    */
   public int getCatCode() {
     return catCode;
@@ -730,10 +695,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the SeverityCode attribute of the TicketLog object
+   * Gets the SeverityCode attribute of the TicketLog object
    *
-   *@return    The SeverityCode value
-   *@since
+   * @return The SeverityCode value
    */
   public int getSeverityCode() {
     return severityCode;
@@ -741,10 +705,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the EnteredByName attribute of the TicketLog object
+   * Gets the EnteredByName attribute of the TicketLog object
    *
-   *@return    The EnteredByName value
-   *@since
+   * @return The EnteredByName value
    */
   public String getEnteredByName() {
     return enteredByName;
@@ -752,10 +715,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedByName attribute of the TicketLog object
+   * Gets the ModifiedByName attribute of the TicketLog object
    *
-   *@return    The ModifiedByName value
-   *@since
+   * @return The ModifiedByName value
    */
   public String getModifiedByName() {
     return modifiedByName;
@@ -763,10 +725,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the CompanyName attribute of the TicketLog object
+   * Gets the CompanyName attribute of the TicketLog object
    *
-   *@return    The CompanyName value
-   *@since
+   * @return The CompanyName value
    */
   public String getCompanyName() {
     return companyName;
@@ -774,27 +735,25 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Gets the CategoryName attribute of the TicketLog object
+   * Gets the CategoryName attribute of the TicketLog object
    *
-   *@return    The CategoryName value
-   *@since
+   * @return The CategoryName value
    */
   public String getCategoryName() {
     return categoryName;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (ticketId == -1) {
-      throw new SQLException("Log Entry must be associated to a Ticket " + this.getId());
+      throw new SQLException(
+          "Log Entry must be associated to a Ticket " + this.getId());
     }
     StringBuffer sql = new StringBuffer();
     boolean doCommit = false;
@@ -802,8 +761,12 @@ public class TicketLog extends GenericBean {
       if ((doCommit = db.getAutoCommit()) == true) {
         db.setAutoCommit(false);
       }
+      id = DatabaseUtils.getNextSeq(db, "ticketlog_id_seq");
       sql.append(
           "INSERT INTO ticketlog (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
+      if (id > -1) {
+        sql.append("id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -812,6 +775,9 @@ public class TicketLog extends GenericBean {
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -833,6 +799,9 @@ public class TicketLog extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getTicketId());
       pst.setString(++i, this.getEntryText());
       pst.setBoolean(++i, this.getClosed());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -843,7 +812,7 @@ public class TicketLog extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "ticketlog_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "ticketlog_id_seq", id);
       this.update(db, true);
       if (doCommit) {
         db.commit();
@@ -863,14 +832,13 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  ticketId          Description of Parameter
-   *@param  enteredBy         Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param ticketId   Description of Parameter
+   * @param enteredBy  Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void process(Connection db, int ticketId, int enteredBy, int modifiedBy) throws SQLException {
     if (ticketId != -1) {
@@ -882,13 +850,12 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  override          Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db       Description of Parameter
+   * @param override Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -901,7 +868,8 @@ public class TicketLog extends GenericBean {
         "UPDATE ticketlog " +
         "SET assigned_to = ? ");
     if (override == false) {
-      sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+      sql.append(
+          ", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
     }
     sql.append("WHERE id = ? ");
     if (!override) {
@@ -921,12 +889,11 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -948,10 +915,9 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  source  Description of Parameter
-   *@since
+   * @param source Description of Parameter
    */
   public void createSysMsg(TicketLog source) {
     this.setEnteredBy(source.getModifiedBy());
@@ -973,11 +939,10 @@ public class TicketLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //ticketlog table
@@ -1024,20 +989,22 @@ public class TicketLog extends GenericBean {
     severityName = rs.getString("severityname");
 
     //contact table
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    assignedToName = Contact.getNameLastFirst(rs.getString("at_namelast"), rs.getString("at_namefirst"));
+    enteredByName = Contact.getNameLastFirst(
+        rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    assignedToName = Contact.getNameLastFirst(
+        rs.getString("at_namelast"), rs.getString("at_namefirst"));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of Parameter
-   *@since
+   * @param request Description of Parameter
    */
   protected void buildRecord(HttpServletRequest request) {
     this.setEntryText(request.getParameter("newticketlogentry"));
-    this.setDepartmentCode(Integer.parseInt(request.getParameter("departmentCode")));
+    this.setDepartmentCode(
+        Integer.parseInt(request.getParameter("departmentCode")));
     this.setTicketId(Integer.parseInt(request.getParameter("id")));
   }
 }

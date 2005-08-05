@@ -15,24 +15,26 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Contains a list of survey answers for a campaign
+ * Contains a list of survey answers for a campaign
  *
- *@author     chris price
- *@created    August 13, 2002
- *@version    $Id: SurveyAnswerList.java,v 1.4 2002/08/27 19:28:31 mrajkowski
- *      Exp $
+ * @author chris price
+ * @version $Id: SurveyAnswerList.java,v 1.4 2002/08/27 19:28:31 mrajkowski
+ *          Exp $
+ * @created August 13, 2002
  */
 public class SurveyAnswerList extends Vector {
 
@@ -47,17 +49,18 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Constructor for the SurveyAnswerList object
+   * Constructor for the SurveyAnswerList object
    */
-  public SurveyAnswerList() { }
+  public SurveyAnswerList() {
+  }
 
 
   /**
-   *  Constructor for the SurveyAnswerList object
+   * Constructor for the SurveyAnswerList object
    *
-   *@param  db                Description of the Parameter
-   *@param  questionId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param questionId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SurveyAnswerList(Connection db, int questionId) throws SQLException {
     this.questionId = questionId;
@@ -66,9 +69,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Constructor for the SurveyAnswerList object
+   * Constructor for the SurveyAnswerList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public SurveyAnswerList(HttpServletRequest request) {
     int i = 0;
@@ -84,9 +87,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Gets the questionId attribute of the SurveyAnswerList object
+   * Gets the questionId attribute of the SurveyAnswerList object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return questionId;
@@ -94,9 +97,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Sets the questionId attribute of the SurveyAnswerList object
+   * Sets the questionId attribute of the SurveyAnswerList object
    *
-   *@param  questionId  The new questionId value
+   * @param questionId The new questionId value
    */
   public void setQuestionId(int questionId) {
     this.questionId = questionId;
@@ -104,9 +107,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the SurveyAnswerList object
+   * Sets the pagedListInfo attribute of the SurveyAnswerList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -114,9 +117,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Sets the hasComments attribute of the SurveyAnswerList object
+   * Sets the hasComments attribute of the SurveyAnswerList object
    *
-   *@param  tmp  The new hasComments value
+   * @param tmp The new hasComments value
    */
   public void setHasComments(int tmp) {
     this.hasComments = tmp;
@@ -124,9 +127,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Set if Most recently entered survey answers are needed
+   * Set if Most recently entered survey answers are needed
    *
-   *@param  lastAnswers  The new lastAnswers value
+   * @param lastAnswers The new lastAnswers value
    */
   public void setLastAnswers(boolean lastAnswers) {
     this.lastAnswers = lastAnswers;
@@ -134,9 +137,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Sets the itemsPerPage attribute of the SurveyAnswerList object
+   * Sets the itemsPerPage attribute of the SurveyAnswerList object
    *
-   *@param  itemsPerPage  The new itemsPerPage value
+   * @param itemsPerPage The new itemsPerPage value
    */
   public void setItemsPerPage(int itemsPerPage) {
     this.itemsPerPage = itemsPerPage;
@@ -144,9 +147,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Contacts HashMap for storing Contact Id and Names
+   * Contacts HashMap for storing Contact Id and Names
    *
-   *@param  contacts  The new contacts value
+   * @param contacts The new contacts value
    */
   public void setContacts(HashMap contacts) {
     this.contacts = contacts;
@@ -154,9 +157,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Sets the responseId attribute of the SurveyAnswerList object
+   * Sets the responseId attribute of the SurveyAnswerList object
    *
-   *@param  responseId  The new responseId value
+   * @param responseId The new responseId value
    */
   public void setResponseId(int responseId) {
     this.responseId = responseId;
@@ -164,9 +167,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Sets the contactId attribute of the SurveyAnswerList object
+   * Sets the contactId attribute of the SurveyAnswerList object
    *
-   *@param  contactId  The new contactId value
+   * @param contactId The new contactId value
    */
   public void setContactId(int contactId) {
     this.contactId = contactId;
@@ -174,9 +177,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Gets the contactId attribute of the SurveyAnswerList object
+   * Gets the contactId attribute of the SurveyAnswerList object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -184,9 +187,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Gets the responseId attribute of the SurveyAnswerList object
+   * Gets the responseId attribute of the SurveyAnswerList object
    *
-   *@return    The responseId value
+   * @return The responseId value
    */
   public int getResponseId() {
     return responseId;
@@ -194,9 +197,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Gets the contacts HashMap
+   * Gets the contacts HashMap
    *
-   *@return    The contacts value
+   * @return The contacts value
    */
   public HashMap getContacts() {
     return contacts;
@@ -204,9 +207,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Gets the hasComments attribute of the SurveyAnswerList object
+   * Gets the hasComments attribute of the SurveyAnswerList object
    *
-   *@return    The hasComments value
+   * @return The hasComments value
    */
   public int getHasComments() {
     return hasComments;
@@ -214,10 +217,10 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -226,25 +229,18 @@ public class SurveyAnswerList extends Vector {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       SurveyAnswer thisAnswer = new SurveyAnswer(rs);
       this.add(thisAnswer);
       if (contacts == null) {
         contacts = new HashMap();
       }
-      String contactName = Contact.getNameLastFirst(rs.getString("lastname"), rs.getString("firstname"));
+      String contactName = Contact.getNameLastFirst(
+          rs.getString("lastname"), rs.getString("firstname"));
       contacts.put(new Integer(rs.getInt("contactid")), contactName);
     }
     rs.close();
-    if(pst != null){
+    if (pst != null) {
       pst.close();
     }
 
@@ -258,12 +254,12 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Returns SQL ResultSet after executing the query 
+   * Returns SQL ResultSet after executing the query
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
 
@@ -301,7 +297,8 @@ public class SurveyAnswerList extends Vector {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND sa.comments < ? ");
         items = prepareFilter(pst);
@@ -333,9 +330,9 @@ public class SurveyAnswerList extends Vector {
         "c.contact_id as contactid, sr.entered as entered " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
         "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
-        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
-        );
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     return rs;
@@ -343,9 +340,9 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -375,11 +372,11 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -401,12 +398,12 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  responseId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param responseId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, int responseId) throws SQLException {
     Iterator ans = this.iterator();

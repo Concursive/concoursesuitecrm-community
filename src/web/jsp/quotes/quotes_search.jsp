@@ -4,7 +4,7 @@
 <jsp:useBean id="quoteListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="sourceSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="statusSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="categorySelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<%--<jsp:useBean id="categorySelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/> --%>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkRadioButton.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
@@ -26,8 +26,8 @@
   
   
   function clearForm() {
+//    document.forms['searchQuote'].listFilter1.options.selectedIndex = 0;
     document.forms['searchQuote'].listFilter1.options.selectedIndex = 0;
-    document.forms['searchQuote'].listFilter2.options.selectedIndex = 0;
     document.forms['searchQuote'].searchcodeGroupId.value="";
     setSelectedRadio(document.forms['searchQuote'].searchcodeClosedOnly,'-1');
     setSelectedRadio(document.forms['searchQuote'].searchcodeSubmitAction,'-1');
@@ -68,7 +68,7 @@
       <dhv:label name="accounts.accounts_quotes_list.QuoteStatus">Quote Status</dhv:label>
     </td>
     <td>
-      <%= statusSelect.getHtmlSelect("listFilter2", quoteListInfo.getFilterKey("listFilter2")) %>
+      <%= statusSelect.getHtmlSelect("listFilter1", quoteListInfo.getFilterKey("listFilter1")) %>
     </td>
   </tr>
   <tr>
@@ -91,6 +91,7 @@
       <input type="radio" name="searchcodeSubmitAction" value="<%= Constants.TRUE %>" <%= (quoteListInfo.getSearchOptionValue("searchcodeSubmitAction").equals(""+Constants.TRUE)?"checked":"") %> /> <dhv:label name="quotes.submitted">Submitted</dhv:label> &nbsp;
     </td>
   </tr>
+<%--
   <tr>
     <td class="formLabel">
       <dhv:label name="products.productCategory">Product Category</dhv:label>
@@ -99,6 +100,7 @@
       <%= categorySelect.getHtml("listFilter1", quoteListInfo.getFilterKey("listFilter1")) %>
     </td>
   </tr>
+--%>
   <tr>
     <td class="formLabel">
       <dhv:label name="products.productName">Product Name</dhv:label>

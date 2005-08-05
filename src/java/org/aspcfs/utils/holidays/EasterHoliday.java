@@ -1,21 +1,21 @@
 package org.aspcfs.utils.holidays;
 
-import java.util.*;
+import java.util.GregorianCalendar;
 
 /**
- *  Calculates and returns Easter Day for specified year.
+ * Calculates and returns Easter Day for specified year.
  *
- *@author     Originally from Mark Lussier, AppVision <MLussier@best.com>
- *@created    November 17, 2004
- *@version    $Id$
+ * @author Originally from Mark Lussier, AppVision <MLussier@best.com>
+ * @version $Id$
+ * @created November 17, 2004
  */
 public class EasterHoliday {
 
   /**
-   *  Gets the calendar attribute of the EasterHoliday class
+   * Gets the calendar attribute of the EasterHoliday class
    *
-   *@param  year  Description of the Parameter
-   *@return       The calendar value
+   * @param year Description of the Parameter
+   * @return The calendar value
    */
   public final static GregorianCalendar getCalendar(int year) {
     int nMonth;
@@ -61,7 +61,8 @@ public class EasterHoliday {
       nDay = nMoon;
     }
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("EasterHoliday-> Date: " + nMonth + "/" + nDay + "/" + year);
+      System.out.println(
+          "EasterHoliday-> Date: " + nMonth + "/" + nDay + "/" + year);
     }
     return new GregorianCalendar(year, nMonth - 1, nDay);
   }

@@ -23,17 +23,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
- *  Builds a list of relationships $
+ * Builds a list of relationships $
  *
- * @author     Mathur
- * @created    August 11, 2004
- * @version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created August 11, 2004
  */
 public class RelationshipList extends LinkedHashMap {
   protected int typeId = -1;
@@ -41,18 +40,21 @@ public class RelationshipList extends LinkedHashMap {
   protected int objectIdMapsFrom = -1;
   protected boolean buildDualMappings = false;
   protected PagedListInfo pagedListInfo = null;
+  protected java.sql.Timestamp trashedDate = null;
+  protected boolean includeOnlyTrashed = false;
 
 
   /**
-   *  Constructor for the RelationshipList object
+   * Constructor for the RelationshipList object
    */
-  public RelationshipList() { }
+  public RelationshipList() {
+  }
 
 
   /**
-   *  Sets the typeId attribute of the RelationshipList object
+   * Sets the typeId attribute of the RelationshipList object
    *
-   * @param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -60,9 +62,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the typeId attribute of the RelationshipList object
+   * Sets the typeId attribute of the RelationshipList object
    *
-   * @param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -70,9 +72,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the RelationshipList object
+   * Sets the categoryIdMapsFrom attribute of the RelationshipList object
    *
-   * @param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(int tmp) {
     this.categoryIdMapsFrom = tmp;
@@ -80,9 +82,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the RelationshipList object
+   * Sets the categoryIdMapsFrom attribute of the RelationshipList object
    *
-   * @param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(String tmp) {
     this.categoryIdMapsFrom = Integer.parseInt(tmp);
@@ -90,9 +92,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the objectIdMapsFrom attribute of the RelationshipList object
+   * Sets the objectIdMapsFrom attribute of the RelationshipList object
    *
-   * @param  tmp  The new objectIdMapsFrom value
+   * @param tmp The new objectIdMapsFrom value
    */
   public void setObjectIdMapsFrom(int tmp) {
     this.objectIdMapsFrom = tmp;
@@ -100,9 +102,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the objectIdMapsFrom attribute of the RelationshipList object
+   * Sets the objectIdMapsFrom attribute of the RelationshipList object
    *
-   * @param  tmp  The new objectIdMapsFrom value
+   * @param tmp The new objectIdMapsFrom value
    */
   public void setObjectIdMapsFrom(String tmp) {
     this.objectIdMapsFrom = Integer.parseInt(tmp);
@@ -110,9 +112,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the buildDualMappings attribute of the RelationshipList object
+   * Sets the buildDualMappings attribute of the RelationshipList object
    *
-   * @param  tmp  The new buildDualMappings value
+   * @param tmp The new buildDualMappings value
    */
   public void setBuildDualMappings(boolean tmp) {
     this.buildDualMappings = tmp;
@@ -120,9 +122,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the buildDualMappings attribute of the RelationshipList object
+   * Sets the buildDualMappings attribute of the RelationshipList object
    *
-   * @param  tmp  The new buildDualMappings value
+   * @param tmp The new buildDualMappings value
    */
   public void setBuildDualMappings(String tmp) {
     this.buildDualMappings = DatabaseUtils.parseBoolean(tmp);
@@ -130,9 +132,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the RelationshipList object
+   * Sets the pagedListInfo attribute of the RelationshipList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -140,9 +142,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Gets the typeId attribute of the RelationshipList object
+   * Gets the typeId attribute of the RelationshipList object
    *
-   * @return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -150,9 +152,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Gets the categoryIdMapsFrom attribute of the RelationshipList object
+   * Gets the categoryIdMapsFrom attribute of the RelationshipList object
    *
-   * @return    The categoryIdMapsFrom value
+   * @return The categoryIdMapsFrom value
    */
   public int getCategoryIdMapsFrom() {
     return categoryIdMapsFrom;
@@ -160,9 +162,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Gets the objectIdMapsFrom attribute of the RelationshipList object
+   * Gets the objectIdMapsFrom attribute of the RelationshipList object
    *
-   * @return    The objectIdMapsFrom value
+   * @return The objectIdMapsFrom value
    */
   public int getObjectIdMapsFrom() {
     return objectIdMapsFrom;
@@ -170,9 +172,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Gets the buildDualMappings attribute of the RelationshipList object
+   * Gets the buildDualMappings attribute of the RelationshipList object
    *
-   * @return    The buildDualMappings value
+   * @return The buildDualMappings value
    */
   public boolean getBuildDualMappings() {
     return buildDualMappings;
@@ -180,20 +182,44 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the RelationshipList object
+   * Gets the pagedListInfo attribute of the RelationshipList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
 
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+  public boolean getIncludeOnlyTrashed() {
+    return includeOnlyTrashed;
+  }
+
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -222,7 +248,8 @@ public class RelationshipList extends LinkedHashMap {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND rt.reciprocal_name_1 > ? ");
         items = prepareFilter(pst);
@@ -249,24 +276,20 @@ public class RelationshipList extends LinkedHashMap {
     }
     sqlSelect.append(
         "r.relationship_id, r.type_id, r.object_id_maps_from, " +
-        "r.category_id_maps_from, r.object_id_maps_to, r.category_id_maps_to, " + "r.entered, r.enteredby, r.modified, r.modifiedby, " + "rt.reciprocal_name_1, rt.reciprocal_name_2 " +
+        "r.category_id_maps_from, r.object_id_maps_to, r.category_id_maps_to, " +
+        "r.entered, r.enteredby, r.modified, r.modifiedby, r.trashed_date, " +
+        "rt.reciprocal_name_1, rt.reciprocal_name_2 " +
         "FROM relationship r " +
         "LEFT JOIN lookup_relationship_types rt ON (rt.type_id = r.type_id) " +
         "WHERE relationship_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Relationship thisRelationship = new Relationship(rs);
       this.add(thisRelationship);
     }
@@ -301,9 +324,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -325,15 +348,22 @@ public class RelationshipList extends LinkedHashMap {
         sqlFilter.append("AND r.object_id_maps_from = ? ");
       }
     }
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND r.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND r.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND r.trashed_date IS NULL ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -355,14 +385,22 @@ public class RelationshipList extends LinkedHashMap {
         pst.setInt(++i, objectIdMapsFrom);
       }
     }
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
+    }
+
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  r  Description of the Parameter
+   * @param r Description of the Parameter
    */
   public void add(Relationship r) {
     ArrayList tmpList = null;
@@ -388,19 +426,19 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   * @author     Mathur
-   * @created    August 13, 2004
-   * @version    $id:exp$
+   * @author Mathur
+   * @version $id:exp$
+   * @created August 13, 2004
    */
   public class relationshipComparator implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @param  left   Description of the Parameter
-     * @param  right  Description of the Parameter
-     * @return        Description of the Return Value
+     * @param left  Description of the Parameter
+     * @param right Description of the Parameter
+     * @return Description of the Return Value
      */
     public int compare(Object left, Object right) {
       String a = new String(((Relationship) left).getMappedObjectLabel());
@@ -413,11 +451,11 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean result = false;
@@ -440,9 +478,9 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Gets the numberOfRelationships attribute of the RelationshipList object
+   * Gets the numberOfRelationships attribute of the RelationshipList object
    *
-   * @return    The numberOfRelationships value
+   * @return The numberOfRelationships value
    */
   public int getNumberOfRelationships() {
     int relationshipCounter = 0;
@@ -460,13 +498,13 @@ public class RelationshipList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db              Description of the Parameter
-   * @param  id              Description of the Parameter
-   * @param  categoryTypeId  Description of the Parameter
-   * @param  category        Description of the Parameter
-   * @return                 Description of the Return Value
+   * @param db             Description of the Parameter
+   * @param id             Description of the Parameter
+   * @param categoryTypeId Description of the Parameter
+   * @param category       Description of the Parameter
+   * @return Description of the Return Value
    */
   public int checkDuplicateRelationship(Connection db, int id, int categoryTypeId, int category) {
     int result = 0;
@@ -482,6 +520,19 @@ public class RelationshipList extends LinkedHashMap {
       }
     }
     return result;
+  }
+
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    Iterator iterator = (Iterator) this.keySet().iterator();
+    while (iterator.hasNext()) {
+      ArrayList tempList = (ArrayList) this.get((String) iterator.next());
+      Iterator tempIter = (Iterator) tempList.iterator();
+      while (tempIter.hasNext()) {
+        Relationship rel = (Relationship) tempIter.next();
+        rel.updateStatus(db, toTrash, tmpUserId);
+      }
+    }
+    return true;
   }
 }
 

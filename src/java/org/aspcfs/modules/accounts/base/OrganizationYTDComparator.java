@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.*;
+import java.util.Comparator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class OrganizationYTDComparator implements Comparator {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  left   Description of the Parameter
-   *@param  right  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param left  Description of the Parameter
+   * @param right Description of the Parameter
+   * @return Description of the Return Value
    */
   public int compare(Object left, Object right) {
     Double a = new Double(((Organization) left).getYTD());

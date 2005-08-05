@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ page import="org.aspcfs.modules.base.Constants" %>
 <%
   Ticket thisTicket = (Ticket)request.getAttribute("TicketDetails");
   if (thisTicket == null) {
@@ -35,9 +36,18 @@
   <tr>
       <td nowrap>
         <strong><dhv:label name="quotes.quotes.header.status">Status:</dhv:label></strong>
-  <% if (thisTicket.getClosed() == null){ %>
+  <% if (thisTicket.isTrashed()) { %>
+        <dhv:label name="global.trashed">Trashed</dhv:label>&nbsp;
+        <% if (thisTicket.getClosed() == null){ %>
+          (<dhv:label name="quotes.open">Open</dhv:label>)
+        <%} else{%>
+          (<font color="red">Closed on
+            <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+          </font>)
+        <%}%>
+  <% } else if (thisTicket.getClosed() == null){ %>
         <dhv:label name="quotes.open">Open</dhv:label>
-  <%}else{%>
+  <%} else{%>
         <font color="red">Closed on
         <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </font>

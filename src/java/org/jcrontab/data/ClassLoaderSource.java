@@ -15,16 +15,16 @@
 
 package org.jcrontab.data;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
- *  This class Is the implementation of DataSource to access Info in a
- *  FileSystem
+ * This class Is the implementation of DataSource to access Info in a
+ * FileSystem
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 public class ClassLoaderSource extends FileSource {
 
@@ -32,9 +32,9 @@ public class ClassLoaderSource extends FileSource {
 
 
   /**
-   *  Gets the instance attribute of the ClassLoaderSource object
+   * Gets the instance attribute of the ClassLoaderSource object
    *
-   *@return    The instance value
+   * @return The instance value
    */
   public synchronized DataSource getInstance() {
     if (instance == null) {
@@ -45,14 +45,15 @@ public class ClassLoaderSource extends FileSource {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name             Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected InputStream createCrontabStream(String name) throws IOException {
-    final InputStream input = ClassLoaderSource.class.getClassLoader().getResourceAsStream(name);
+    final InputStream input = ClassLoaderSource.class.getClassLoader().getResourceAsStream(
+        name);
     if (input == null) {
       throw new IOException("Resource " + name + " not found");
     }
@@ -61,10 +62,10 @@ public class ClassLoaderSource extends FileSource {
 
 
   /**
-   *  Gets the changed attribute of the ClassLoaderSource object
+   * Gets the changed attribute of the ClassLoaderSource object
    *
-   *@param  name  Description of the Parameter
-   *@return       The changed value
+   * @param name Description of the Parameter
+   * @return The changed value
    */
   protected boolean isChanged(String name) {
     final boolean rv = lastModified == 0L;

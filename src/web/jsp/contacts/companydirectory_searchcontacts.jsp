@@ -14,15 +14,17 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function clearForm() {
@@ -42,7 +44,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> > 
 <dhv:label name="contact.searchContacts">Search Contacts</dhv:label>
 </td>
 </tr>
@@ -99,7 +101,7 @@
       <dhv:label name="accounts.accounts_contacts_add.ContactType">Contact Type</dhv:label>
     </td>
     <td>
-      <%= ContactTypeList.getHtmlSelect("listFilter1", SearchContactsInfo.getFilterKey("listFilter1")) %>
+      <%= ContactTypeList.getHtmlSelect(systemStatus, "listFilter1", SearchContactsInfo.getFilterKey("listFilter1")) %>
     </td>
   </tr>
   <tr>
@@ -111,10 +113,19 @@
         <option <%= SearchContactsInfo.getOptionValue("my") %>><dhv:label name="contact.myContacts">My Contacts</dhv:label></option>
         <option <%= SearchContactsInfo.getOptionValue("all") %>><dhv:label name="actionList.allContacts">All Contacts</dhv:label></option>
         <option <%= SearchContactsInfo.getOptionValue("hierarchy") %>><dhv:label name="contact.controlledHierarchyContacts">Controlled-Hierarchy Contacts</dhv:label></option>
-        <option <%= SearchContactsInfo.getOptionValue("archived") %>><dhv:label name="contact.archivedContacts">Archived Contacts</dhv:label></option>
       </select>
     </td>
   </tr>
+  <%--
+  <tr>
+    <td class="formLabel">
+      <dhv:label name="global.trashed">Trashed</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="searchcodeIncludeOnlyTrashed" value="true" <%= "true".equals(SearchContactsInfo.getSearchOptionValue("searchcodeIncludeOnlyTrashed"))? "checked":""%> />
+    </td>
+	</tr>
+  --%>
 </table>
 <br>
 <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">

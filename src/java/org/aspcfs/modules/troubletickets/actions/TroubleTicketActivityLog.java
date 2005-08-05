@@ -31,20 +31,20 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    March 17, 2004
- *@version    $Id: TroubleTicketActivityLog.java,v 1.6 2004/09/01 15:30:26
- *      mrajkowski Exp $
+ * @author kbhoopal
+ * @version $Id: TroubleTicketActivityLog.java,v 1.6 2004/09/01 15:30:26
+ *          mrajkowski Exp $
+ * @created March 17, 2004
  */
 public final class TroubleTicketActivityLog extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-view")) {
@@ -60,7 +60,8 @@ public final class TroubleTicketActivityLog extends CFSModule {
       // Build activity list
       TicketActivityLogList thisList = new TicketActivityLogList();
       PagedListInfo tmListInfo = this.getPagedListInfo(context, "TMListInfo");
-      tmListInfo.setLink("TroubleTicketActivityLog.do?command=List&id=" + thisTicket.getId());
+      tmListInfo.setLink(
+          "TroubleTicketActivityLog.do?command=List&id=" + thisTicket.getId());
       thisList.setPagedListInfo(tmListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
@@ -76,10 +77,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-add")) {
@@ -94,15 +95,18 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       // Load form elements
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       context.getRequest().setAttribute("ticketDetails", thisTicket);
-      TicketActivityLog thisMaintenance = (TicketActivityLog) context.getRequest().getAttribute("activityDetails");
+      TicketActivityLog thisMaintenance = (TicketActivityLog) context.getRequest().getAttribute(
+          "activityDetails");
       if (thisMaintenance != null) {
         if (thisMaintenance.getEnteredBy() == -1) {
           // Load the activity log elements
           thisMaintenance = new TicketActivityLog();
-          context.getRequest().setAttribute("activityDetails", thisMaintenance);
+          context.getRequest().setAttribute(
+              "activityDetails", thisMaintenance);
         }
       }
       return ("AddOK");
@@ -116,10 +120,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-edit")) {
@@ -141,9 +145,12 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
         // Load onsite model list
         LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-        onsiteModelList.addItem(-1, "-- None --");
+        onsiteModelList.addItem(
+            -1, this.getSystemStatus(context).getLabel(
+                "calendar.none.4dashes"));
         context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-        context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
+        context.getRequest().setAttribute(
+            "return", context.getRequest().getParameter("return"));
 
         // Load the activity log elements
         TicketActivityLog thisMaintenance = new TicketActivityLog();
@@ -161,10 +168,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-add")) {
@@ -183,35 +190,56 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setEnteredBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      thisMaintenance.setTravelTowardsServiceContract((String) context.getRequest().getParameter("travelTowardsServiceContract"));
-      thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
-      thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
-      thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
-      thisMaintenance.setAlertDateTimeZone((String) context.getRequest().getParameter("alertDateTimeZone"));
-      thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
-      thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
-      thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
-      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
+      thisMaintenance.setTravelTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "travelTowardsServiceContract"));
+      thisMaintenance.setLaborTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "laborTowardsServiceContract"));
+      thisMaintenance.setPhoneResponseTime(
+          (String) context.getRequest().getParameter("phoneResponseTime"));
+      thisMaintenance.setEngineerResponseTime(
+          (String) context.getRequest().getParameter("engineerResponseTime"));
+      thisMaintenance.setAlertDateTimeZone(
+          (String) context.getRequest().getParameter("alertDateTimeZone"));
+      thisMaintenance.setTimeZoneForDateFields(
+          context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
+      thisMaintenance.setFollowUpRequired(
+          (String) context.getRequest().getParameter("followUpRequired"));
+      thisMaintenance.setFollowUpDescription(
+          (String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(
+          context.getRequest().getParameter("onlyWarnings"));
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       isValid = this.validateObject(context, db, thisMaintenance);
-      for (int i=1;(context.getRequest().getParameter("activityDate" + i) != null) || (context.getRequest().getParameter("descriptionOfService" + i) != null);i++) {
-        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals("")) || !(context.getRequest().getParameter("descriptionOfService" + i).trim().equals(""))) {
+      for (int i = 1; (context.getRequest().getParameter("activityDate" + i) != null) || (context.getRequest().getParameter(
+          "descriptionOfService" + i) != null); i++) {
+        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(
+            "")) || !(context.getRequest().getParameter(
+                "descriptionOfService" + i).trim().equals(""))) {
           TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
           HashMap map = new HashMap();
-          map.put("descriptionOfService", context.getRequest().getParameter("descriptionOfService" + i));
-          map.put("activityDateTimeZone", context.getRequest().getParameter("activityDate" + i + "TimeZone"));
-          map.put("activityDate", context.getRequest().getParameter("activityDate" + i));
+          map.put(
+              "descriptionOfService", context.getRequest().getParameter(
+                  "descriptionOfService" + i));
+          map.put(
+              "activityDateTimeZone", context.getRequest().getParameter(
+                  "activityDate" + i + "TimeZone"));
+          map.put(
+              "activityDate", context.getRequest().getParameter(
+                  "activityDate" + i));
           map.put("request", context.getRequest());
-          map.put("parseItem", ""+i);
-          isValid = this.validateObject(context, db, thisPerDayDescription, map) && isValid;
+          map.put("parseItem", "" + i);
+          isValid = this.validateObject(
+              context, db, thisPerDayDescription, map) && isValid;
         }
       }
       if (isValid) {
         inserted = thisMaintenance.insert(db);
       }
-      if (!inserted){
+      if (!inserted) {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
       }
@@ -221,7 +249,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (inserted){
+    if (inserted) {
       return executeCommandList(context);
     }
     return executeCommandAdd(context);
@@ -229,10 +257,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-edit")) {
@@ -252,31 +280,50 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setId(Integer.parseInt(formId));
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      thisMaintenance.setTravelTowardsServiceContract((String) context.getRequest().getParameter("travelTowardsServiceContract"));
-      thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
-      thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
-      thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
-      thisMaintenance.setAlertDateTimeZone((String) context.getRequest().getParameter("alertDateTimeZone"));
-      thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
-      thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
-      thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
-      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
+      thisMaintenance.setTravelTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "travelTowardsServiceContract"));
+      thisMaintenance.setLaborTowardsServiceContract(
+          (String) context.getRequest().getParameter(
+              "laborTowardsServiceContract"));
+      thisMaintenance.setPhoneResponseTime(
+          (String) context.getRequest().getParameter("phoneResponseTime"));
+      thisMaintenance.setEngineerResponseTime(
+          (String) context.getRequest().getParameter("engineerResponseTime"));
+      thisMaintenance.setAlertDateTimeZone(
+          (String) context.getRequest().getParameter("alertDateTimeZone"));
+      thisMaintenance.setTimeZoneForDateFields(
+          context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
+      thisMaintenance.setFollowUpRequired(
+          (String) context.getRequest().getParameter("followUpRequired"));
+      thisMaintenance.setFollowUpDescription(
+          (String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(
+          context.getRequest().getParameter("onlyWarnings"));
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       isValid = this.validateObject(context, db, thisMaintenance);
-      for (int i=1;context.getRequest().getParameter("activityDate" + i) != null;i++) {
-        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(""))) {
+      for (int i = 1; context.getRequest().getParameter("activityDate" + i) != null; i++) {
+        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(
+            ""))) {
           TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
           HashMap map = new HashMap();
-          map.put("descriptionOfService", context.getRequest().getParameter("descriptionOfService" + i));
-          map.put("activityDateTimeZone", context.getRequest().getParameter("activityDate" + i + "TimeZone"));
-          map.put("activityDate", context.getRequest().getParameter("activityDate" + i));
+          map.put(
+              "descriptionOfService", context.getRequest().getParameter(
+                  "descriptionOfService" + i));
+          map.put(
+              "activityDateTimeZone", context.getRequest().getParameter(
+                  "activityDate" + i + "TimeZone"));
+          map.put(
+              "activityDate", context.getRequest().getParameter(
+                  "activityDate" + i));
           map.put("request", context.getRequest());
-          map.put("parseItem", ""+i);
-          isValid = this.validateObject(context, db, thisPerDayDescription, map) && isValid;
+          map.put("parseItem", "" + i);
+          isValid = this.validateObject(
+              context, db, thisPerDayDescription, map) && isValid;
         }
       }
       if (isValid) {
@@ -309,10 +356,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-view")) {
@@ -329,7 +376,8 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
       // Load the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
 
       // Activity Log items
@@ -346,12 +394,11 @@ public final class TroubleTicketActivityLog extends CFSModule {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-delete")) {
@@ -376,10 +423,13 @@ public final class TroubleTicketActivityLog extends CFSModule {
       dependencies = thisMaintenance.processDependencies();
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-      htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -392,10 +442,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "tickets-activity-log-delete")) {
@@ -407,7 +457,8 @@ public final class TroubleTicketActivityLog extends CFSModule {
     Connection db = null;
     // Process the parameters
     String ticketId = context.getRequest().getParameter("id");
-    int formId = Integer.parseInt((String) context.getRequest().getParameter("formId"));
+    int formId = Integer.parseInt(
+        (String) context.getRequest().getParameter("formId"));
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
@@ -418,20 +469,25 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.noteDeletion"));
-      context.getRequest().setAttribute("refreshUrl", "TroubleTicketActivityLog.do?command=View&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "actionError", systemStatus.getLabel(
+              "object.validation.actionError.noteDeletion"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "TroubleTicketActivityLog.do?command=View&id=" + ticketId);
       return ("DeleteError");
     } finally {
       this.freeConnection(context, db);
     }
     // The record was deleted
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "TroubleTicketActivityLog.do?command=List&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "refreshUrl", "TroubleTicketActivityLog.do?command=List&id=" + ticketId);
       return getReturn(context, "Delete");
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
-    context.getRequest().setAttribute("refreshUrl", "TroubleTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
+    context.getRequest().setAttribute(
+        "refreshUrl", "TroubleTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
     return getReturn(context, "Delete");
   }
 }

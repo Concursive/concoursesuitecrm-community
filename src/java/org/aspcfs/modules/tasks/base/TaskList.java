@@ -15,24 +15,28 @@
  */
 package org.aspcfs.modules.tasks.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import java.text.DateFormat;
-import javax.servlet.http.HttpServletRequest;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    August 15, 2002
- *@version    $Id: TaskList.java,v 1.19.50.1 2004/07/06 19:13:37 mrajkowski Exp
- *      $
+ * @author akhi_m
+ * @version $Id: TaskList.java,v 1.19.50.1 2004/07/06 19:13:37 mrajkowski Exp
+ *          $
+ * @created August 15, 2002
  */
 public class TaskList extends ArrayList {
   protected int enteredBy = -1;
@@ -46,18 +50,23 @@ public class TaskList extends ArrayList {
   protected int categoryId = -1;
   protected int projectId = -1;
   protected int ticketId = -1;
+  protected int hasLinkedContact = Constants.UNDEFINED;
+  protected int areAssigned = Constants.UNDEFINED;
+  private java.sql.Timestamp trashedDate = null;
+  private boolean includeOnlyTrashed = false;
 
 
   /**
-   *  Constructor for the TaskList object
+   * Constructor for the TaskList object
    */
-  public TaskList() { }
+  public TaskList() {
+  }
 
 
   /**
-   *  Gets the sharing attribute of the TaskList object
+   * Gets the sharing attribute of the TaskList object
    *
-   *@return    The sharing value
+   * @return The sharing value
    */
   public int getSharing() {
     return sharing;
@@ -65,9 +74,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the sharing attribute of the TaskList object
+   * Sets the sharing attribute of the TaskList object
    *
-   *@param  tmp  The new sharing value
+   * @param tmp The new sharing value
    */
   public void setSharing(int tmp) {
     this.sharing = tmp;
@@ -75,9 +84,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the sharing attribute of the TaskList object
+   * Sets the sharing attribute of the TaskList object
    *
-   *@param  tmp  The new sharing value
+   * @param tmp The new sharing value
    */
   public void setSharing(String tmp) {
     this.sharing = Integer.parseInt(tmp);
@@ -85,9 +94,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the TaskList object
+   * Sets the enteredBy attribute of the TaskList object
    *
-   *@param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -95,9 +104,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TaskList object
+   * Sets the pagedListInfo attribute of the TaskList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -105,9 +114,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the complete attribute of the TaskList object
+   * Sets the complete attribute of the TaskList object
    *
-   *@param  tmp  The new complete value
+   * @param tmp The new complete value
    */
   public void setComplete(int tmp) {
     this.complete = tmp;
@@ -115,9 +124,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the TaskList object
+   * Sets the owner attribute of the TaskList object
    *
-   *@param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -125,9 +134,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the tasksAssignedByUser attribute of the TaskList object
+   * Sets the tasksAssignedByUser attribute of the TaskList object
    *
-   *@param  tmp  The new tasksAssignedByUser value
+   * @param tmp The new tasksAssignedByUser value
    */
   public void setTasksAssignedByUser(int tmp) {
     this.tasksAssignedByUser = tmp;
@@ -135,9 +144,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the Task object
+   * Sets the alertRangeStart attribute of the Task object
    *
-   *@param  alertRangeStart  The new alertRangeStart value
+   * @param alertRangeStart The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
@@ -145,9 +154,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the ticketId attribute of the TaskList object
+   * Sets the ticketId attribute of the TaskList object
    *
-   *@param  ticketId  The new ticketId value
+   * @param ticketId The new ticketId value
    */
   public void setTicketId(int ticketId) {
     this.ticketId = ticketId;
@@ -155,9 +164,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Gets the tasksAssignedByUser attribute of the TaskList object
+   * Gets the tasksAssignedByUser attribute of the TaskList object
    *
-   *@return    The tasksAssignedByUser value
+   * @return The tasksAssignedByUser value
    */
   public int getTasksAssignedByUser() {
     return tasksAssignedByUser;
@@ -165,9 +174,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the TaskList object
+   * Gets the owner attribute of the TaskList object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -175,9 +184,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Gets the ticketId attribute of the TaskList object
+   * Gets the ticketId attribute of the TaskList object
    *
-   *@return    The ticketId value
+   * @return The ticketId value
    */
   public int getTicketId() {
     return ticketId;
@@ -185,9 +194,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the Task object
+   * Sets the alertRangeEnd attribute of the Task object
    *
-   *@param  alertRangeEnd  The new alertRangeEnd value
+   * @param alertRangeEnd The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
@@ -195,9 +204,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the TaskList object
+   * Sets the categoryId attribute of the TaskList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -205,9 +214,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the TaskList object
+   * Sets the projectId attribute of the TaskList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -215,22 +224,141 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the TaskList object
+   * Gets the enteredBy attribute of the TaskList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
   }
 
+  /**
+   * Gets the hasLinkedContact attribute of the TaskList object
+   *
+   * @return The hasLinkedContact value
+   */
+  public int getHasLinkedContact() {
+    return hasLinkedContact;
+  }
+
 
   /**
-   *  Return a mapping of number of alerts for each alert category.
+   * Sets the hasLinkedContact attribute of the TaskList object
    *
-   *@param  db                Description of the Parameter
-   *@param  timeZone          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param tmp The new hasLinkedContact value
+   */
+  public void setHasLinkedContact(int tmp) {
+    this.hasLinkedContact = tmp;
+  }
+
+
+  /**
+   * Sets the hasLinkedContact attribute of the TaskList object
+   *
+   * @param tmp The new hasLinkedContact value
+   */
+  public void setHasLinkedContact(String tmp) {
+    this.hasLinkedContact = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the areAssigned attribute of the TaskList object
+   *
+   * @return The areAssigned value
+   */
+  public int getAreAssigned() {
+    return areAssigned;
+  }
+
+
+  /**
+   * Sets the areAssigned attribute of the TaskList object
+   *
+   * @param tmp The new areAssigned value
+   */
+  public void setAreAssigned(int tmp) {
+    this.areAssigned = tmp;
+  }
+
+
+  /**
+   * Sets the areAssigned attribute of the TaskList object
+   *
+   * @param tmp The new areAssigned value
+   */
+  public void setAreAssigned(String tmp) {
+    this.areAssigned = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the TaskList object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the TaskList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the TaskList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the includeOnlyTrashed attribute of the TaskList object
+   *
+   * @return The includeOnlyTrashed value
+   */
+  public boolean getIncludeOnlyTrashed() {
+    return includeOnlyTrashed;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the TaskList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the TaskList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Return a mapping of number of alerts for each alert category.
+   *
+   * @param db       Description of the Parameter
+   * @param timeZone Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
     PreparedStatement pst = null;
@@ -247,14 +375,16 @@ public class TaskList extends ArrayList {
     sqlFilter.append("AND duedate IS NOT NULL ");
     sqlFilter.append("AND t.complete = " + DatabaseUtils.getFalse(db) + " ");
     sqlTail.append("GROUP BY duedate");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     int i = prepareFilter(pst);
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TaskList-> Building Record Count ");
     }
     while (rs.next()) {
-      String dueDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("duedate"));
+      String dueDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, rs.getTimestamp("duedate"));
       events.put(dueDate, new Integer(rs.getInt("nocols")));
     }
     rs.close();
@@ -264,10 +394,10 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -302,10 +432,10 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -334,7 +464,8 @@ public class TaskList extends ArrayList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND t.priority > ? ");
         items = prepareFilter(pst);
@@ -346,6 +477,9 @@ public class TaskList extends ArrayList {
         }
         rs.close();
         pst.close();
+      }
+      if (pagedListInfo.getMaxRecords() == 0) {
+        pagedListInfo.setCurrentOffset(0);
       }
       //Determine column to sort by
       pagedListInfo.setDefaultSort("t.priority, description", null);
@@ -363,23 +497,17 @@ public class TaskList extends ArrayList {
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
         "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
         "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
-        "t.modifiedby, t.category_id, t.duedate_timezone " +
+        "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Task thisTask = new Task(rs);
       this.add(thisTask);
     }
@@ -397,9 +525,9 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -411,7 +539,8 @@ public class TaskList extends ArrayList {
     }
 
     if (tasksAssignedByUser > 0) {
-      sqlFilter.append("AND t.enteredby = ? AND t.owner NOT IN (SELECT user_id FROM contact WHERE user_id = ?) AND t.owner IS NOT NULL ");
+      sqlFilter.append(
+          "AND t.enteredby = ? AND t.owner NOT IN (SELECT user_id FROM contact WHERE user_id = ?) AND t.owner IS NOT NULL ");
     }
 
     if (owner > 0) {
@@ -429,7 +558,7 @@ public class TaskList extends ArrayList {
         sqlFilter.append("AND t.sharing <= 0 ");
       }
     }
-    
+
     if (alertRangeStart != null) {
       sqlFilter.append("AND t.duedate >= ? ");
     }
@@ -443,21 +572,42 @@ public class TaskList extends ArrayList {
     }
 
     if (projectId > 0) {
-      sqlFilter.append("AND t.task_id IN (SELECT task_id FROM tasklink_project WHERE project_id = ?) ");
+      sqlFilter.append(
+          "AND t.task_id IN (SELECT task_id FROM tasklink_project WHERE project_id = ?) ");
     }
 
     if (ticketId > 0) {
-      sqlFilter.append("AND t.task_id IN (SELECT task_id FROM tasklink_ticket WHERE ticket_id = ?) ");
+      sqlFilter.append(
+          "AND t.task_id IN (SELECT task_id FROM tasklink_ticket WHERE ticket_id = ?) ");
+    }
+    if (hasLinkedContact == Constants.TRUE) {
+      sqlFilter.append(
+          "AND t.task_id IN (SELECT tlc.task_id FROM tasklink_contact tlc WHERE tlc.contact_id IS NOT NULL) ");
+    } else if (hasLinkedContact == Constants.FALSE) {
+      sqlFilter.append(
+          "AND t.task_id NOT IN (SELECT tlc.task_id FROM tasklink_contact tlc WHERE tlc.contact_id IS NOT NULL) ");
+    }
+    if (areAssigned == Constants.TRUE) {
+      sqlFilter.append("AND t.owner IS NOT NULL ");
+    } else if (areAssigned == Constants.FALSE) {
+      sqlFilter.append("AND t.owner IS NULL ");
+    }
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND t.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND t.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND t.trashed_date IS NULL ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -498,17 +648,25 @@ public class TaskList extends ArrayList {
     if (ticketId > 0) {
       pst.setInt(++i, ticketId);
     }
+
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int queryPendingCount(Connection db, int userId) throws SQLException {
     int toReturn = 0;
@@ -531,10 +689,10 @@ public class TaskList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator tasks = this.iterator();
@@ -542,6 +700,25 @@ public class TaskList extends ArrayList {
       Task thisTask = (Task) tasks.next();
       thisTask.delete(db);
     }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      Task tmpTask = (Task) itr.next();
+      tmpTask.updateStatus(db, toTrash, tmpUserId);
+    }
+    return true;
   }
 }
 

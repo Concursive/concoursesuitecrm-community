@@ -18,24 +18,25 @@ package org.aspcfs.utils.formatter;
 import org.aspcfs.modules.base.Address;
 
 /**
- *  Takes an address and formats the various fields to make the records
- *  consistent and presentable.
+ * Takes an address and formats the various fields to make the records
+ * consistent and presentable.
  *
- *@author     matt rajkowski
- *@created    March 5, 2003
- *@version    $Id: AddressFormatter.java,v 1.1.2.2 2003/03/06 17:50:06
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: AddressFormatter.java,v 1.1.2.2 2003/03/06 17:50:06
+ *          mrajkowski Exp $
+ * @created March 5, 2003
  */
 public class AddressFormatter {
 
   /**
-   *  Constructor for the AddressFormatter object
+   * Constructor for the AddressFormatter object
    */
-  public AddressFormatter() { }
+  public AddressFormatter() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void config() {
 
@@ -43,9 +44,9 @@ public class AddressFormatter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisAddress  Description of the Parameter
+   * @param thisAddress Description of the Parameter
    */
   public void format(Address thisAddress) {
     String country = thisAddress.getCountry();
@@ -77,7 +78,8 @@ public class AddressFormatter {
 
         //Split zip code and PO Box No i.e 234569088 ==> 23456-9088
         if (zipCode.trim().length() == 9 && zipCode.indexOf("-") == -1) {
-          thisAddress.setZip(zipCode.trim().substring(0, 5) + "-" + zipCode.substring(5));
+          thisAddress.setZip(
+              zipCode.trim().substring(0, 5) + "-" + zipCode.substring(5));
         }
       }
     }

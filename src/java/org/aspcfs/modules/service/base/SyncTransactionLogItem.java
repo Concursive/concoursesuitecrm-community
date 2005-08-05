@@ -15,18 +15,22 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  For each sync API request, this class represents one or more of the
- *  transactions that occurs. An action can result in records so that count can
- *  be stored.
+ * For each sync API request, this class represents one or more of the
+ * transactions that occurs. An action can result in records so that count can
+ * be stored.
  *
- *@author     matt rajkowski
- *@created    October 25, 2002
- *@version    $Id: SyncTransactionLogItem.java,v 1.3 2003/03/07 14:47:27
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: SyncTransactionLogItem.java,v 1.3 2003/03/07 14:47:27
+ *          mrajkowski Exp $
+ * @created October 25, 2002
  */
 public class SyncTransactionLogItem {
 
@@ -42,16 +46,17 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Constructor for the SyncTransactionLogItem object
+   * Constructor for the SyncTransactionLogItem object
    */
-  public SyncTransactionLogItem() { }
+  public SyncTransactionLogItem() {
+  }
 
 
   /**
-   *  Constructor for the SyncTransactionLogItem object
+   * Constructor for the SyncTransactionLogItem object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SyncTransactionLogItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -59,11 +64,11 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Constructor for the SyncTransactionLogItem object
+   * Constructor for the SyncTransactionLogItem object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SyncTransactionLogItem(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -71,11 +76,11 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -100,9 +105,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the id attribute of the SyncTransactionLogItem object
+   * Sets the id attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -110,9 +115,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the id attribute of the SyncTransactionLogItem object
+   * Sets the id attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -120,9 +125,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the logId attribute of the SyncTransactionLogItem object
+   * Sets the logId attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new logId value
+   * @param tmp The new logId value
    */
   public void setLogId(int tmp) {
     this.logId = tmp;
@@ -130,9 +135,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the logId attribute of the SyncTransactionLogItem object
+   * Sets the logId attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new logId value
+   * @param tmp The new logId value
    */
   public void setLogId(String tmp) {
     this.logId = Integer.parseInt(tmp);
@@ -140,9 +145,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the referenceId attribute of the SyncTransactionLogItem object
+   * Sets the referenceId attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new referenceId value
+   * @param tmp The new referenceId value
    */
   public void setReferenceId(String tmp) {
     this.referenceId = tmp;
@@ -150,9 +155,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the elementName attribute of the SyncTransactionLogItem object
+   * Sets the elementName attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new elementName value
+   * @param tmp The new elementName value
    */
   public void setElementName(String tmp) {
     this.elementName = tmp;
@@ -160,9 +165,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the action attribute of the SyncTransactionLogItem object
+   * Sets the action attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(String tmp) {
     this.action = tmp;
@@ -170,9 +175,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the linkItemId attribute of the SyncTransactionLogItem object
+   * Sets the linkItemId attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -180,9 +185,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the linkItemId attribute of the SyncTransactionLogItem object
+   * Sets the linkItemId attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     this.linkItemId = Integer.parseInt(tmp);
@@ -190,9 +195,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the statusCode attribute of the SyncTransactionLogItem object
+   * Sets the statusCode attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new statusCode value
+   * @param tmp The new statusCode value
    */
   public void setStatusCode(int tmp) {
     this.statusCode = tmp;
@@ -200,9 +205,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the statusCode attribute of the SyncTransactionLogItem object
+   * Sets the statusCode attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new statusCode value
+   * @param tmp The new statusCode value
    */
   public void setStatusCode(String tmp) {
     this.statusCode = Integer.parseInt(tmp);
@@ -210,9 +215,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the recordCount attribute of the SyncTransactionLogItem object
+   * Sets the recordCount attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new recordCount value
+   * @param tmp The new recordCount value
    */
   public void setRecordCount(int tmp) {
     this.recordCount = tmp;
@@ -220,9 +225,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the recordCount attribute of the SyncTransactionLogItem object
+   * Sets the recordCount attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new recordCount value
+   * @param tmp The new recordCount value
    */
   public void setRecordCount(String tmp) {
     this.recordCount = Integer.parseInt(tmp);
@@ -230,9 +235,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Sets the message attribute of the SyncTransactionLogItem object
+   * Sets the message attribute of the SyncTransactionLogItem object
    *
-   *@param  tmp  The new message value
+   * @param tmp The new message value
    */
   public void setMessage(String tmp) {
     this.message = tmp;
@@ -240,9 +245,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the id attribute of the SyncTransactionLogItem object
+   * Gets the id attribute of the SyncTransactionLogItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -250,9 +255,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the logId attribute of the SyncTransactionLogItem object
+   * Gets the logId attribute of the SyncTransactionLogItem object
    *
-   *@return    The logId value
+   * @return The logId value
    */
   public int getLogId() {
     return logId;
@@ -260,9 +265,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the referenceId attribute of the SyncTransactionLogItem object
+   * Gets the referenceId attribute of the SyncTransactionLogItem object
    *
-   *@return    The referenceId value
+   * @return The referenceId value
    */
   public String getReferenceId() {
     return referenceId;
@@ -270,9 +275,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the elementName attribute of the SyncTransactionLogItem object
+   * Gets the elementName attribute of the SyncTransactionLogItem object
    *
-   *@return    The elementName value
+   * @return The elementName value
    */
   public String getElementName() {
     return elementName;
@@ -280,9 +285,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the action attribute of the SyncTransactionLogItem object
+   * Gets the action attribute of the SyncTransactionLogItem object
    *
-   *@return    The action value
+   * @return The action value
    */
   public String getAction() {
     return action;
@@ -290,9 +295,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the linkItemId attribute of the SyncTransactionLogItem object
+   * Gets the linkItemId attribute of the SyncTransactionLogItem object
    *
-   *@return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -300,9 +305,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the statusCode attribute of the SyncTransactionLogItem object
+   * Gets the statusCode attribute of the SyncTransactionLogItem object
    *
-   *@return    The statusCode value
+   * @return The statusCode value
    */
   public int getStatusCode() {
     return statusCode;
@@ -310,9 +315,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the recordCount attribute of the SyncTransactionLogItem object
+   * Gets the recordCount attribute of the SyncTransactionLogItem object
    *
-   *@return    The recordCount value
+   * @return The recordCount value
    */
   public int getRecordCount() {
     return recordCount;
@@ -320,9 +325,9 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Gets the message attribute of the SyncTransactionLogItem object
+   * Gets the message attribute of the SyncTransactionLogItem object
    *
-   *@return    The message value
+   * @return The message value
    */
   public String getMessage() {
     return message;
@@ -330,23 +335,26 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     if (logId == -1) {
-      throw new SQLException("Log Transaction entry must be associated with a Log");
+      throw new SQLException(
+          "Log Transaction entry must be associated with a Log");
     }
-
-    String sql =
-        "INSERT INTO sync_transaction_log " +
-        "(log_id, reference_id, element_name, " +
-        "action, link_item_id, status_code, record_count, message) VALUES " +
-        "(?, ?, ?, ?, ?, ?, ?, ?)";
+    id = DatabaseUtils.getNextSeq(db, "sync_transact_transaction_i_seq");
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO sync_transaction_log " +
+        "(" + (id > -1 ? "transaction_id, " : "") + "log_id, reference_id, element_name, " +
+        "action, link_item_id, status_code, record_count, message) VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?)");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, logId);
     pst.setString(++i, referenceId);
     pst.setString(++i, elementName);
@@ -357,17 +365,16 @@ public class SyncTransactionLogItem {
     pst.setString(++i, message);
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "sync_transact_transaction_i_seq");
+    id = DatabaseUtils.getCurrVal(db, "sync_transact_transaction_i_seq", id);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -384,10 +391,10 @@ public class SyncTransactionLogItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("transaction_id");

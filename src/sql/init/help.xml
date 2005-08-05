@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <helpSystem>
-<module name="My Home Page" contentLevel="2">
+<module name="My Home Page" constant="14" contentLevel="2">
 <briefDescription>This is the &amp;quot;Home Page&amp;quot;. The top set of tabs shows the individual modules that you can access. The second row are the functions available to you in this module.
 If you are looking for a particular module or function you have seen during training or on someone else's machine, and it's NOT visible, then it probably means that you do not have permission for that module or function.
 
@@ -480,7 +480,7 @@ Settings: This feature allows you to modify the information about yourself and y
 <tips/>
 </pageDescription>
 </module>
-<module name="Contacts" contentLevel="2">
+<module name="Contacts" constant="2" contentLevel="2">
 <briefDescription>The purpose of this module is for the users to view contacts and add new contacts. You can also search for contacts as well as export contact data.</briefDescription>
 <detailDescription>The Contacts module has three main features&#13;
 &#13;
@@ -1105,7 +1105,7 @@ If the uploaded file is erroneous in its content (not in cvs format, or if the n
 <tips/>
 </pageDescription>
 </module>
-<module name="Pipeline" contentLevel="2">
+<module name="Pipeline" constant="4" contentLevel="2">
 <briefDescription>Pipeline helps in creating opportunities or leads in the company. Each opportunity helps to follow-up on a lead, which might eventually turn into a client. Here you can create an opportunity, search for an existing opportunity in the system, or export the data in different formats. The dashboard displays a progress chart in different views for all the employees working under the hierarchy of the owner of the opportunity.</briefDescription>
 <detailDescription>This Pipeline System has four main features:
 
@@ -1588,7 +1588,7 @@ Here a new opportunity can be added by giving a description of the opportunity, 
 <tips/>
 </pageDescription>
 </module>
-<module name="Accounts" contentLevel="2">
+<module name="Accounts" constant="1" contentLevel="2">
 <briefDescription>You are looking at the Accounts module homepage, which has a dashboard view of all your accounts. This view is based on a date range selected from the calendar; by default it shows the schedule for the next seven days. You can optionally view the calendar of those below you in your hierarchy. The scheduled actions of each user can also be viewed. In the Accounts Module, new accounts can be added, existing accounts can be searched based on different filters, revenue for each account can be created/maintained and finally, data can be exported to different formats.</briefDescription>
 <detailDescription>The Accounts module has five main features.
 
@@ -2685,7 +2685,7 @@ A service contract describes the terms and conditions in a contract including th
 <tips/>
 </pageDescription>
 </module>
-<module name="Communications" contentLevel="2">
+<module name="Communications" constant="6" contentLevel="2">
 <briefDescription>Communications is a &amp;quot;Campaign Manager&amp;quot; Module where you can manage complex email. fax, or mail communications with your customers. Communications allows you to create and choose Groups, Messages, and Schedules to define communications scenarios from the simple to the very complex. Groups can range from a single contact chosen from a pick list to the result of a complex query of the Account/Contact database. Messages can be anything from a single-line email to a rich, multimedia product catalog to an interactive survey.</briefDescription>
 <detailDescription>The Communication module has six main features.
 
@@ -3376,7 +3376,7 @@ Once activated, today's campaigns will begin processing in under 5 minutes and c
 <tips/>
 </pageDescription>
 </module>
-<module name="Help Desk" contentLevel="2">
+<module name="Help Desk" constant="8" contentLevel="2">
 <briefDescription>You are looking at the Help Desk module home page. The dashboard shows the most recent tickets that have been assigned to you, as well as tickets that are in your department, and tickets that have been created by you. You can add new tickets, search for existing tickets based on different filters and export ticket data.</briefDescription>
 <detailDescription>The Help Desk module has four main features.
 
@@ -3858,7 +3858,7 @@ The data can be exported in different formats. The exported data can be viewed w
 <tips/>
 </pageDescription>
 </module>
-<module name="Employees" contentLevel="2">
+<module name="Employees" constant="1111031131" contentLevel="2">
 <briefDescription>You are looking at the Employee module home page. This page displays the details of all the employees present in the system.</briefDescription>
 <detailDescription>The main feature of the employee module is the view.
 
@@ -3931,7 +3931,7 @@ View: This page displays the details of each employee, which can be viewed, modi
 <tips/>
 </pageDescription>
 </module>
-<module name="Reports" contentLevel="2">
+<module name="Reports" constant="16" contentLevel="2">
 <briefDescription>You are looking at the Reports module home page. This page displays a list of generated reports that are ready to be downloaded. It also displays a list of reports that are scheduled to be processed by server. You can add new reports too.</briefDescription>
 <detailDescription>The Reports module has two main features.
 
@@ -4059,7 +4059,7 @@ A list of customized reports can be viewed and the queue of the reports that are
 <tips/>
 </pageDescription>
 </module>
-<module name="Admin" contentLevel="2">
+<module name="Admin" constant="9" contentLevel="2">
 <briefDescription>The admin module lets the user review the system usage, configure modules, and configure the global/system parameters.</briefDescription>
 <detailDescription>This Admin System has five main features.
 
@@ -4673,19 +4673,19 @@ This page lists the different roles present in the system, their role descriptio
 <tips/>
 </pageDescription>
 </module>
-<module name="Auto Guide" contentLevel="0">
+<module name="Auto Guide" constant="3" contentLevel="0">
 <briefDescription>Auto Guide Brief</briefDescription>
 <detailDescription>Auto Guide Detail</detailDescription>
 </module>
-<module name="Help" contentLevel="0">
+<module name="Help" constant="10" contentLevel="0">
 <briefDescription>Help Brief</briefDescription>
 <detailDescription>Help Detail</detailDescription>
 </module>
-<module name="Demo" contentLevel="0">
+<module name="Demo" constant="5" contentLevel="0">
 <briefDescription>Demo Brief</briefDescription>
 <detailDescription>Demo Detail</detailDescription>
 </module>
-<module name="System" contentLevel="0">
+<module name="System" constant="13" contentLevel="0">
 <briefDescription>System Brief</briefDescription>
 <detailDescription>System Detail</detailDescription>
 <pageDescription contentLevel="0">
@@ -4713,7 +4713,7 @@ This page lists the different roles present in the system, their role descriptio
 <tips/>
 </pageDescription>
 </module>
-<module name="Product Catalog" contentLevel="0">
+<module name="Product Catalog" constant="330041409" contentLevel="0">
 <briefDescription>Brief description for product catalog</briefDescription>
 <detailDescription>detail description for product catalog</detailDescription>
 <pageDescription contentLevel="0">
@@ -4728,7 +4728,7 @@ This page lists the different roles present in the system, their role descriptio
 <tips/>
 </pageDescription>
 </module>
-<module name="Projects" contentLevel="0">
+<module name="Projects" constant="7" contentLevel="0">
 <briefDescription>The Project management module allows individuals and organizations to share up-to-the-minute information with others. Whether you are sharing information with employees, clients, vendors, friends, and family, the information is easily and securely accessible.</briefDescription>
 <detailDescription>Project detail description</detailDescription>
 <pageDescription contentLevel="0">

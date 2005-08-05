@@ -15,16 +15,19 @@
  */
 package org.aspcfs.utils;
 
-import java.util.*;
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
- *  Format utility to work with currency.  Found in public domain.
+ * Format utility to work with currency.  Found in public domain.
  *
- *@author     mrajkowski
- *@created    September 25, 2001
- *@version    $Id: CurrencyFormat.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: CurrencyFormat.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
+ *          Exp $
+ * @created September 25, 2001
  */
 public class CurrencyFormat {
 
@@ -34,18 +37,17 @@ public class CurrencyFormat {
 
 
   /**
-   *  The main program for the CurrencyFormat class
-   *
-   *@since
+   * The main program for the CurrencyFormat class
    */
-  public CurrencyFormat() { }
+  public CurrencyFormat() {
+  }
 
 
   /**
-   *  Gets the currency attribute of the CurrencyFormat object
+   * Gets the currency attribute of the CurrencyFormat object
    *
-   *@param  dollarAmount  Description of the Parameter
-   *@return               The currency value
+   * @param dollarAmount Description of the Parameter
+   * @return The currency value
    */
   public String getCurrency(double dollarAmount) {
     return formatCurrency(dollarAmount, currencySymbols, Locale.US);
@@ -53,17 +55,16 @@ public class CurrencyFormat {
 
 
   /**
-   *  Format a currency amount in a designated denomination locale but displays
-   *  in according to the displayLocal Just a kludge to show it can be done.
+   * Format a currency amount in a designated denomination locale but displays
+   * in according to the displayLocal Just a kludge to show it can be done.
    *
-   *@param  value            Description of Parameter
-   *@param  currencySymbols  Description of Parameter
-   *@param  displayLocale    Description of Parameter
-   *@return                  Description of the Returned Value
-   *@since
+   * @param value           Description of Parameter
+   * @param currencySymbols Description of Parameter
+   * @param displayLocale   Description of Parameter
+   * @return Description of the Returned Value
    */
   private static String formatCurrency(double value,
-      DecimalFormatSymbols currencySymbols, Locale displayLocale) {
+                                       DecimalFormatSymbols currencySymbols, Locale displayLocale) {
     // this is the only way I can find to get the locale specfic
     // currency pattern.
     ResourceBundle resource = ResourceBundle.getBundle
@@ -83,7 +84,8 @@ public class CurrencyFormat {
 
     symbols.setCurrencySymbol(currencySymbols.getCurrencySymbol());
 
-    symbols.setInternationalCurrencySymbol(currencySymbols.getInternationalCurrencySymbol());
+    symbols.setInternationalCurrencySymbol(
+        currencySymbols.getInternationalCurrencySymbol());
     DecimalFormat df = new DecimalFormat(pattern, symbols);
     return justify(displayLocale.getDisplayName()) +
         df.format(value);
@@ -91,11 +93,10 @@ public class CurrencyFormat {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  s  Description of Parameter
-   *@return    Description of the Returned Value
-   *@since
+   * @param s Description of Parameter
+   * @return Description of the Returned Value
    */
   private static String justify(String s) {
     StringBuffer buf = new StringBuffer(s);
@@ -107,10 +108,10 @@ public class CurrencyFormat {
 
 
   /**
-   *  Gets the currencyString attribute of the CurrencyFormat class
+   * Gets the currencyString attribute of the CurrencyFormat class
    *
-   *@param  value  Description of the Parameter
-   *@return        The currencyString value
+   * @param value Description of the Parameter
+   * @return The currencyString value
    */
   public static String getCurrencyString(Double value, Locale locale) {
     String currencyAsString = "";

@@ -23,12 +23,12 @@ import java.text.DateFormat;
 import java.util.Iterator;
 
 /**
- *  Represents a copied survey that can have questions and answers and belongs
- *  to an active Campaign
+ * Represents a copied survey that can have questions and answers and belongs
+ * to an active Campaign
  *
- *@author
- *@created    November 1, 2002
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created November 1, 2002
  */
 public class ActiveSurvey extends SurveyBase {
 
@@ -45,15 +45,16 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Constructor for the ActiveSurvey object
+   * Constructor for the ActiveSurvey object
    */
-  public ActiveSurvey() { }
+  public ActiveSurvey() {
+  }
 
 
   /**
-   *  Constructor for the ActiveSurvey object
+   * Constructor for the ActiveSurvey object
    *
-   *@param  is  Description of the Parameter
+   * @param is Description of the Parameter
    */
   public ActiveSurvey(Survey is) {
     this.setName(is.getName());
@@ -68,10 +69,10 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Constructor for the ActiveSurvey object
+   * Constructor for the ActiveSurvey object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurvey(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -79,11 +80,11 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Constructor for the ActiveSurvey object
+   * Constructor for the ActiveSurvey object
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurvey(Connection db, int surveyId) throws SQLException {
     if (surveyId < 1) {
@@ -109,9 +110,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurvey object
+   * Sets the id attribute of the ActiveSurvey object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -119,9 +120,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the id attribute of the ActiveSurvey object
+   * Sets the id attribute of the ActiveSurvey object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -129,9 +130,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the campaignId attribute of the ActiveSurvey object
+   * Sets the campaignId attribute of the ActiveSurvey object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -139,9 +140,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the campaignId attribute of the ActiveSurvey object
+   * Gets the campaignId attribute of the ActiveSurvey object
    *
-   *@return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -149,9 +150,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the id attribute of the ActiveSurvey object
+   * Gets the id attribute of the ActiveSurvey object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -159,12 +160,12 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the id attribute of the ActiveSurvey class
+   * Gets the id attribute of the ActiveSurvey class
    *
-   *@param  db                Description of the Parameter
-   *@param  activeCampaignId  Description of the Parameter
-   *@return                   The id value
-   *@exception  SQLException  Description of the Exception
+   * @param db               Description of the Parameter
+   * @param activeCampaignId Description of the Parameter
+   * @return The id value
+   * @throws SQLException Description of the Exception
    */
   public static int getId(Connection db, int activeCampaignId, int surveyType) throws SQLException {
     int surveyId = -1;
@@ -186,9 +187,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActiveSurvey object
+   * Sets the enteredBy attribute of the ActiveSurvey object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -196,9 +197,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActiveSurvey object
+   * Sets the modifiedBy attribute of the ActiveSurvey object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -206,9 +207,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActiveSurvey object
+   * Gets the enteredBy attribute of the ActiveSurvey object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -216,9 +217,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActiveSurvey object
+   * Gets the modifiedBy attribute of the ActiveSurvey object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -226,9 +227,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the modified attribute of the ActiveSurvey object
+   * Gets the modified attribute of the ActiveSurvey object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -236,9 +237,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the modifiedString attribute of the ActiveSurvey object
+   * Gets the modifiedString attribute of the ActiveSurvey object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     try {
@@ -250,13 +251,14 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the ActiveSurvey object
+   * Gets the modifiedDateTimeString attribute of the ActiveSurvey object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -264,9 +266,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the entered attribute of the ActiveSurvey object
+   * Gets the entered attribute of the ActiveSurvey object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -274,9 +276,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the enteredString attribute of the ActiveSurvey object
+   * Gets the enteredString attribute of the ActiveSurvey object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -288,13 +290,14 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the ActiveSurvey object
+   * Gets the enteredDateTimeString attribute of the ActiveSurvey object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -302,9 +305,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the enabled attribute of the ActiveSurvey object
+   * Sets the enabled attribute of the ActiveSurvey object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -312,9 +315,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the enabled attribute of the ActiveSurvey object
+   * Gets the enabled attribute of the ActiveSurvey object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -322,9 +325,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the answers attribute of the ActiveSurvey object
+   * Gets the answers attribute of the ActiveSurvey object
    *
-   *@return    The answers value
+   * @return The answers value
    */
   public SurveyAnswerList getAnswers() {
     return answers;
@@ -332,20 +335,19 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the answers attribute of the ActiveSurvey object
+   * Sets the answers attribute of the ActiveSurvey object
    *
-   *@param  answers  The new answers value
+   * @param answers The new answers value
    */
   public void setAnswers(SurveyAnswerList answers) {
     this.answers = answers;
   }
 
 
-
   /**
-   *  Sets the questions attribute of the ActiveSurvey object
+   * Sets the questions attribute of the ActiveSurvey object
    *
-   *@param  inactiveQuestions  The new questions value
+   * @param inactiveQuestions The new questions value
    */
   public void setQuestions(SurveyQuestionList inactiveQuestions) {
     questions = new ActiveSurveyQuestionList(inactiveQuestions);
@@ -354,9 +356,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the answerItems attribute of the ActiveSurvey object
+   * Sets the answerItems attribute of the ActiveSurvey object
    *
-   *@param  request  The new answerItems value
+   * @param request The new answerItems value
    */
   public void setAnswerItems(HttpServletRequest request) {
     answers = new SurveyAnswerList(request);
@@ -364,9 +366,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Gets the questions attribute of the ActiveSurvey object
+   * Gets the questions attribute of the ActiveSurvey object
    *
-   *@return    The questions value
+   * @return The questions value
    */
   public ActiveSurveyQuestionList getQuestions() {
     return questions;
@@ -374,9 +376,9 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Sets the questions attribute of the ActiveSurvey object
+   * Sets the questions attribute of the ActiveSurvey object
    *
-   *@param  items  The new questions value
+   * @param items The new questions value
    */
   public void setQuestions(ActiveSurveyQuestionList items) {
     questions = items;
@@ -384,11 +386,11 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean commit = true;
@@ -398,11 +400,15 @@ public class ActiveSurvey extends SurveyBase {
         db.setAutoCommit(false);
       }
       int i = 0;
+      id = DatabaseUtils.getNextSeq(db, "active_survey_active_survey_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey " +
-          "(campaign_id, name, description, intro, outro, itemLength, type, " +
+          "(" + (id > -1 ? "active_survey_id, " : "") + "campaign_id, name, description, intro, outro, itemLength, type, " +
           "enteredBy, modifiedBy) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?,?,?, ?, ?, ?, ?, ?) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, campaignId);
       pst.setString(++i, name);
       pst.setString(++i, description);
@@ -414,7 +420,7 @@ public class ActiveSurvey extends SurveyBase {
       pst.setInt(++i, modifiedBy);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "active_survey_active_survey_seq");
+      id = DatabaseUtils.getCurrVal(db, "active_survey_active_survey_seq", id);
       //Insert the questions
       Iterator x = questions.iterator();
       while (x.hasNext()) {
@@ -439,11 +445,11 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean commit = true;
@@ -454,13 +460,20 @@ public class ActiveSurvey extends SurveyBase {
         db.setAutoCommit(false);
       }
       st = db.createStatement();
-      st.executeUpdate("DELETE FROM active_survey_answer_items WHERE answer_id IN (SELECT answer_id FROM active_survey_answers sa, active_survey_responses sr WHERE active_survey_id = " + this.getId() + " AND sa.response_id = sr.response_id)");
-      st.executeUpdate("DELETE FROM active_survey_answers WHERE response_id IN (SELECT response_id FROM active_survey_responses WHERE active_survey_id = " + this.getId() + ")");
-      st.executeUpdate("DELETE FROM active_survey_responses WHERE active_survey_id = " + this.getId());
-      st.executeUpdate("DELETE FROM active_survey_answer_avg WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
-      st.executeUpdate("DELETE FROM active_survey_items WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
-      st.executeUpdate("DELETE FROM active_survey_questions WHERE active_survey_id = " + this.getId());
-      st.executeUpdate("DELETE FROM active_survey WHERE active_survey_id = " + this.getId());
+      st.executeUpdate(
+          "DELETE FROM active_survey_answer_items WHERE answer_id IN (SELECT answer_id FROM active_survey_answers sa, active_survey_responses sr WHERE active_survey_id = " + this.getId() + " AND sa.response_id = sr.response_id)");
+      st.executeUpdate(
+          "DELETE FROM active_survey_answers WHERE response_id IN (SELECT response_id FROM active_survey_responses WHERE active_survey_id = " + this.getId() + ")");
+      st.executeUpdate(
+          "DELETE FROM active_survey_responses WHERE active_survey_id = " + this.getId());
+      st.executeUpdate(
+          "DELETE FROM active_survey_answer_avg WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
+      st.executeUpdate(
+          "DELETE FROM active_survey_items WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
+      st.executeUpdate(
+          "DELETE FROM active_survey_questions WHERE active_survey_id = " + this.getId());
+      st.executeUpdate(
+          "DELETE FROM active_survey WHERE active_survey_id = " + this.getId());
       st.close();
       if (commit) {
         db.commit();
@@ -480,11 +493,11 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -512,12 +525,12 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  override          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param override Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -549,10 +562,10 @@ public class ActiveSurvey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //active_survey table

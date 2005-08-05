@@ -14,17 +14,16 @@
 
 package org.jcrontab.data;
 
-import java.util.Properties;
 import org.jcrontab.Crontab;
 import org.jcrontab.log.Log;
 
 /**
- *  This Factory builds a dao using teh given information. Initializes the
- *  system with the given properties or loads the default config
+ * This Factory builds a dao using teh given information. Initializes the
+ * system with the given properties or loads the default config
  *
- *@author     Israel Olalla
- *@created    November, 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November, 2002
  */
 
 public class DataFactory {
@@ -35,12 +34,13 @@ public class DataFactory {
 
 
   /**
-   *  Default Constructor private
+   * Default Constructor private
    */
   private DataFactory() {
     if (dao == null) {
       try {
-        dao = ((DataSource) Class.forName(Crontab.getInstance()
+        dao = ((DataSource) Class.forName(
+            Crontab.getInstance()
             .getProperty("org.jcrontab.data.datasource"))
             .newInstance())
             .getInstance();
@@ -52,10 +52,10 @@ public class DataFactory {
 
 
   /**
-   *  This method returns the DataFactory of the System This method grants the
-   *  Singleton pattern
+   * This method returns the DataFactory of the System This method grants the
+   * Singleton pattern
    *
-   *@return    DataSource I have a lot of doubts about how this method is done.
+   * @return DataSource I have a lot of doubts about how this method is done.
    */
   public static synchronized DataFactory getInstance() {
     if (instance == null) {
@@ -66,9 +66,9 @@ public class DataFactory {
 
 
   /**
-   *  This method returns the DataSource of the System
+   * This method returns the DataSource of the System
    *
-   *@return    DataSource I have a lot of doubts about how this method is done.
+   * @return DataSource I have a lot of doubts about how this method is done.
    */
 
   public static DataSource getDAO() {

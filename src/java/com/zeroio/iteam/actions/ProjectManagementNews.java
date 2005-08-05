@@ -18,11 +18,12 @@ package com.zeroio.iteam.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.*;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.tasks.base.TaskCategoryList;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.tasks.base.TaskCategoryList;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.FileUtils;
 import org.aspcfs.utils.SMTPMessage;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupList;
@@ -32,20 +33,20 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
- *  Actions for working with News Articles
+ * Actions for working with News Articles
  *
- *@author     matt rajkowski
- *@created    June 24, 2003
- *@version    $Id: ProjectManagementNews.java,v 1.1 2003/06/25 04:58:38 matt Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ProjectManagementNews.java,v 1.1 2003/06/25 04:58:38 matt Exp
+ *          $
+ * @created June 24, 2003
  */
 public final class ProjectManagementNews extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -53,24 +54,28 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project (for access)
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-add")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("news_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("news_add").toLowerCase());
       // Default the date for the news article to now
       NewsArticle thisArticle = (NewsArticle) context.getFormBean();
       if (thisArticle.getStartDate() == null) {
-        thisArticle.setStartDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+        thisArticle.setStartDate(
+            DateUtils.roundUpToNextFive(System.currentTimeMillis()));
       }
       // Prepare the list of categories to display
       NewsArticleCategoryList categoryList = new NewsArticleCategoryList();
       categoryList.setProjectId(thisProject.getId());
       categoryList.setEnabled(Constants.TRUE);
       categoryList.buildList(db);
-      context.getRequest().setAttribute("newsArticleCategoryList", categoryList);
+      context.getRequest().setAttribute(
+          "newsArticleCategoryList", categoryList);
       // Prepare the list of templates to display
       LookupList templateList = new LookupList(db, "lookup_news_template");
       context.getRequest().setAttribute("portalTemplateList", templateList);
@@ -80,6 +85,8 @@ public final class ProjectManagementNews extends CFSModule {
       //taskCategoryList.setEnabled(Constants.TRUE);
       taskCategoryList.buildList(db);
       context.getRequest().setAttribute("taskCategoryList", taskCategoryList);
+      context.getRequest().setAttribute(
+          "systemStatus", this.getSystemStatus(context));
       return ("ProjectCenterOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -91,10 +98,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
@@ -108,15 +115,17 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("issues_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("issues_add").toLowerCase());
       //Process the issue
       NewsArticle thisArticle = (NewsArticle) context.getFormBean();
       thisArticle.setModifiedBy(getUserId(context));
       thisArticle.setProjectId(thisProject.getId());
-        if (thisArticle.getId() > 0) {
+      if (thisArticle.getId() > 0) {
         if (!hasProjectAccess(context, db, thisProject, "project-news-edit")) {
           return "PermissionError";
         }
@@ -159,10 +168,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddPage(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -170,7 +179,8 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project (for access)
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-add")) {
         return "PermissionError";
@@ -179,7 +189,10 @@ public final class ProjectManagementNews extends CFSModule {
       //Check the bean
       NewsArticle thisArticle = (NewsArticle) context.getFormBean();
       thisArticle.queryRecord(db, thisArticle.getId());
-      context.getRequest().setAttribute("IncludeSection", ("news_add_page").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("news_add_page").toLowerCase());
+      context.getRequest().setAttribute(
+          "systemStatus", this.getSystemStatus(context));
       return ("ProjectCenterOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -191,10 +204,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSavePage(ActionContext context) {
     Connection db = null;
@@ -205,10 +218,12 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("news_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("news_add").toLowerCase());
       //Process the issue
       NewsArticle thisArticle = (NewsArticle) context.getFormBean();
       thisArticle.setModifiedBy(getUserId(context));
@@ -220,7 +235,8 @@ public final class ProjectManagementNews extends CFSModule {
         resultCount = thisArticle.updatePage(db);
       }
       if (resultCount == 1) {
-        thisArticle = new NewsArticle(db, thisArticle.getId(), thisProject.getId());
+        thisArticle = new NewsArticle(
+            db, thisArticle.getId(), thisProject.getId());
         indexAddItem(context, thisArticle);
         return ("SavePageOK");
       }
@@ -235,10 +251,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeletePage(ActionContext context) {
     Connection db = null;
@@ -249,12 +265,15 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("news_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("news_add").toLowerCase());
       //Process the issue
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(id), thisProject.getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(id), thisProject.getId());
       thisArticle.setModifiedBy(getUserId(context));
       if (!hasProjectAccess(context, db, thisProject, "project-news-edit")) {
         return "PermissionError";
@@ -275,10 +294,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEdit(ActionContext context) {
     Connection db = null;
@@ -288,15 +307,18 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("news_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("news_add").toLowerCase());
       //Load the news article
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(newsId), thisProject.getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(newsId), thisProject.getId());
       context.getRequest().setAttribute("newsArticle", thisArticle);
       // Prepare the list of categories to display
       NewsArticleCategoryList categoryList = new NewsArticleCategoryList();
@@ -304,7 +326,8 @@ public final class ProjectManagementNews extends CFSModule {
       categoryList.setEnabled(Constants.TRUE);
       categoryList.setIncludeId(thisArticle.getCategoryId());
       categoryList.buildList(db);
-      context.getRequest().setAttribute("newsArticleCategoryList", categoryList);
+      context.getRequest().setAttribute(
+          "newsArticleCategoryList", categoryList);
       // Prepare the list of templates to display
       LookupList templateList = new LookupList(db, "lookup_news_template");
       context.getRequest().setAttribute("portalTemplateList", templateList);
@@ -314,6 +337,8 @@ public final class ProjectManagementNews extends CFSModule {
       //taskCategoryList.setEnabled(Constants.TRUE);
       taskCategoryList.buildList(db);
       context.getRequest().setAttribute("taskCategoryList", taskCategoryList);
+      context.getRequest().setAttribute(
+          "systemStatus", this.getSystemStatus(context));
       if (isPopup(context)) {
         return "NewsEditPopupOK";
       }
@@ -328,10 +353,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
@@ -341,13 +366,15 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-delete")) {
         return "PermissionError";
       }
       //Load the issue
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(newsId), thisProject.getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(newsId), thisProject.getId());
       thisArticle.delete(db, this.getPath(context, "projects-news"));
       indexDeleteItem(context, thisArticle);
       return ("DeleteOK");
@@ -361,10 +388,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     Connection db = null;
@@ -374,23 +401,30 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("news_details").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("news_details").toLowerCase());
       //Load the news article
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(newsId), thisProject.getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(newsId), thisProject.getId());
       //Check article to see if user can view this type
-      if (thisArticle.getStatus() == NewsArticle.DRAFT && !hasProjectAccess(context, db, thisProject, "project-news-view-unreleased")) {
+      if (thisArticle.getStatus() == NewsArticle.DRAFT && !hasProjectAccess(
+          context, db, thisProject, "project-news-view-unreleased")) {
         return "PermissionError";
-      } else if (thisArticle.getStatus() == NewsArticle.UNAPPROVED && !hasProjectAccess(context, db, thisProject, "project-news-view-unreleased")) {
+      } else if (thisArticle.getStatus() == NewsArticle.UNAPPROVED && !hasProjectAccess(
+          context, db, thisProject, "project-news-view-unreleased")) {
         return "PermissionError";
       }
       //TODO: Add archived permission check too
       context.getRequest().setAttribute("newsArticle", thisArticle);
+      context.getRequest().setAttribute(
+          "systemStatus", this.getSystemStatus(context));
       if (isPopup(context)) {
         return ("NewsDetailsPopupOK");
       } else {
@@ -403,23 +437,25 @@ public final class ProjectManagementNews extends CFSModule {
       this.freeConnection(context, db);
     }
   }
-  
-  
+
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEditCategoryList(ActionContext context) {
     Connection db = null;
     //Parameters
     String projectId = (String) context.getRequest().getParameter("pid");
-    String previousId = (String) context.getRequest().getParameter("previousId");
+    String previousId = (String) context.getRequest().getParameter(
+        "previousId");
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-add")) {
         return "PermissionError";
@@ -429,10 +465,13 @@ public final class ProjectManagementNews extends CFSModule {
       categoryList.setProjectId(thisProject.getId());
       categoryList.setEnabled(Constants.TRUE);
       categoryList.buildList(db);
-      context.getRequest().setAttribute("editList", categoryList.getHtmlSelect());
+      context.getRequest().setAttribute(
+          "editList", categoryList.getHtmlSelect());
       // Edit List properties
-      context.getRequest().setAttribute("subTitle", "Modify this project's article categories");
-      context.getRequest().setAttribute("returnUrl", "ProjectManagementNews.do?command=SaveCategoryList&pid=" + thisProject.getId() + "&previousId=" + previousId);
+      context.getRequest().setAttribute(
+          "subTitle", "Modify this project's article categories");
+      context.getRequest().setAttribute(
+          "returnUrl", "ProjectManagementNews.do?command=SaveCategoryList&pid=" + thisProject.getId() + "&previousId=" + previousId);
       return ("EditListPopupOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -444,29 +483,33 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveCategoryList(ActionContext context) {
     Connection db = null;
     //Parameters
     String projectId = (String) context.getRequest().getParameter("pid");
-    String previousId = (String) context.getRequest().getParameter("previousId");
+    String previousId = (String) context.getRequest().getParameter(
+        "previousId");
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-add")) {
         return "PermissionError";
       }
       // Parse the request for items
-      String[] params = context.getRequest().getParameterValues("selectedList");
+      String[] params = context.getRequest().getParameterValues(
+          "selectedList");
       String[] names = new String[params.length];
       int j = 0;
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("selectNames"), "^");
       while (st.hasMoreTokens()) {
         names[j] = (String) st.nextToken();
         if (System.getProperty("DEBUG") != null) {
@@ -485,7 +528,8 @@ public final class ProjectManagementNews extends CFSModule {
       categoryList.setIncludeId(previousId);
       categoryList.buildList(db);
       HtmlSelect thisSelect = categoryList.getHtmlSelect();
-      thisSelect.addItem(-1, "-- None --", 0);
+      thisSelect.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"), 0);
       context.getRequest().setAttribute("editList", thisSelect);
       return ("EditListPopupCloseOK");
     } catch (Exception errorMessage) {
@@ -498,10 +542,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
     Connection db = null;
@@ -512,7 +556,8 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-edit")) {
         return "PermissionError";
@@ -520,7 +565,8 @@ public final class ProjectManagementNews extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       //context.getRequest().setAttribute("IncludeSection", ("news_add").toLowerCase());
       //Load the news article
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(newsId), thisProject.getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(newsId), thisProject.getId());
       context.getRequest().setAttribute("newsArticle", thisArticle);
       // Insert a copy of the article
       thisArticle.setEnteredBy(getUserId(context));
@@ -549,10 +595,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEmailMe(ActionContext context) {
     Connection db = null;
@@ -562,21 +608,31 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-view")) {
         return "PermissionError";
       }
       // Load the article and send the email
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(newsId), thisProject.getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(newsId), thisProject.getId());
       if (1 == 1) {
-        NewsArticleEmail newsArticleEmail = new NewsArticleEmail(getDbNamePath(context) + "templates.xml", thisArticle, context);
-        Contact projectContact = new Contact(db, getUser(context, getUserId(context)).getContact().getId());
+        String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(
+            context) + ".xml";
+        if (!FileUtils.fileExists(templateFile)) {
+          templateFile = getDbNamePath(context) + "templates_en_US.xml";
+        }
+        NewsArticleEmail newsArticleEmail = new NewsArticleEmail(
+            templateFile, thisArticle, context);
+        Contact projectContact = new Contact(
+            db, getUser(context, getUserId(context)).getContact().getId());
         // Prepare the email
         SMTPMessage mail = new SMTPMessage();
         mail.setHost(getPref(context, "MAILSERVER"));
         mail.setFrom(getPref(context, "EMAILADDRESS"));
-        mail.addReplyTo(projectContact.getPrimaryEmailAddress(), projectContact.getNameFirstLast());
+        mail.addReplyTo(
+            projectContact.getPrimaryEmailAddress(), projectContact.getNameFirstLast());
         mail.setType("text/html");
         mail.setSubject(newsArticleEmail.getSubject());
         mail.setBody(newsArticleEmail.getBody());
@@ -598,10 +654,10 @@ public final class ProjectManagementNews extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEmailTeam(ActionContext context) {
     Connection db = null;
@@ -611,22 +667,32 @@ public final class ProjectManagementNews extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-news-add")) {
         return "PermissionError";
       }
       // Load the article and send the email
-      NewsArticle thisArticle = new NewsArticle(db, Integer.parseInt(newsId), thisProject.getId());
-      Contact projectContact = new Contact(db, getUser(context, getUserId(context)).getContact().getId());
+      NewsArticle thisArticle = new NewsArticle(
+          db, Integer.parseInt(newsId), thisProject.getId());
+      Contact projectContact = new Contact(
+          db, getUser(context, getUserId(context)).getContact().getId());
       if (1 == 1) {
         // Load the templates
-        NewsArticleEmail newsArticleEmail = new NewsArticleEmail(getDbNamePath(context) + "templates.xml", thisArticle, context);
+        String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(
+            context) + ".xml";
+        if (!FileUtils.fileExists(templateFile)) {
+          templateFile = getDbNamePath(context) + "templates_en_US.xml";
+        }
+        NewsArticleEmail newsArticleEmail = new NewsArticleEmail(
+            templateFile, thisArticle, context);
         // Prepare the email
         SMTPMessage mail = new SMTPMessage();
         mail.setHost(getPref(context, "MAILSERVER"));
         mail.setFrom(getPref(context, "EMAILADDRESS"));
-        mail.addReplyTo(projectContact.getPrimaryEmailAddress(), projectContact.getNameFirstLast());
+        mail.addReplyTo(
+            projectContact.getPrimaryEmailAddress(), projectContact.getNameFirstLast());
         mail.setType("text/html");
         mail.setSubject(newsArticleEmail.getSubject());
         mail.setBody(newsArticleEmail.getBody());

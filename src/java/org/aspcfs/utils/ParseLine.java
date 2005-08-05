@@ -16,19 +16,14 @@
 package org.aspcfs.utils;
 
 import java.util.ArrayList;
-import java.util.zip.*;
-import java.util.regex.*;
-import java.io.*;
-import java.util.*;
-import org.aspcfs.modules.base.Import;
 
 /**
- *  Parses a Line based on the delimiters or file type Assumes that all the
- *  fields have quotes around them.
+ * Parses a Line based on the delimiters or file type Assumes that all the
+ * fields have quotes around them.
  *
- *@author     Mathur
- *@created    April 6, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created April 6, 2004
  */
 public class ParseLine {
   private String line = null;
@@ -36,15 +31,16 @@ public class ParseLine {
 
 
   /**
-   *  Constructor for the ParseLine object
+   * Constructor for the ParseLine object
    */
-  public ParseLine() { }
+  public ParseLine() {
+  }
 
 
   /**
-   *  Constructor for the ParseLine object
+   * Constructor for the ParseLine object
    *
-   *@param  delimiter  Description of the Parameter
+   * @param delimiter Description of the Parameter
    */
   public ParseLine(String delimiter) {
     this.delimiter = delimiter;
@@ -52,9 +48,9 @@ public class ParseLine {
 
 
   /**
-   *  Sets the delimiter attribute of the ParseLine object
+   * Sets the delimiter attribute of the ParseLine object
    *
-   *@param  tmp  The new delimiter value
+   * @param tmp The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -62,9 +58,9 @@ public class ParseLine {
 
 
   /**
-   *  Sets the line attribute of the ParseLine object
+   * Sets the line attribute of the ParseLine object
    *
-   *@param  tmp  The new line value
+   * @param tmp The new line value
    */
   public void setLine(String tmp) {
     this.line = tmp;
@@ -72,9 +68,9 @@ public class ParseLine {
 
 
   /**
-   *  Gets the line attribute of the ParseLine object
+   * Gets the line attribute of the ParseLine object
    *
-   *@return    The line value
+   * @return The line value
    */
   public String getLine() {
     return line;
@@ -82,9 +78,9 @@ public class ParseLine {
 
 
   /**
-   *  Gets the delimiter attribute of the ParseLine object
+   * Gets the delimiter attribute of the ParseLine object
    *
-   *@return    The delimiter value
+   * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -92,11 +88,11 @@ public class ParseLine {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp            Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public ArrayList parse(String tmp) throws Exception {
     this.line = tmp;
@@ -143,11 +139,10 @@ public class ParseLine {
   }
 
 
-
   /**
-   *  Checks to make sure that a delimiter can be found
+   * Checks to make sure that a delimiter can be found
    *
-   *@return    The valid value
+   * @return The valid value
    */
   public boolean isValid() {
     if (delimiter == null) {

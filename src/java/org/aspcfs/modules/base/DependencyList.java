@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    December 18, 2002
- *@version    $Id$
- *      $
+ * @author Mathur
+ * @version $Id$
+ *          $
+ * @created December 18, 2002
  */
 public class DependencyList extends ArrayList {
   private String title = null;
@@ -34,9 +34,9 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Sets the title attribute of the DependencyList object
+   * Sets the title attribute of the DependencyList object
    *
-   *@param  title  The new title value
+   * @param title The new title value
    */
   public void setTitle(String title) {
     this.title = title;
@@ -44,9 +44,9 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Sets the systemStatus attribute of the DependencyList object
+   * Sets the systemStatus attribute of the DependencyList object
    *
-   *@param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -54,9 +54,9 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Gets the systemStatus attribute of the DependencyList object
+   * Gets the systemStatus attribute of the DependencyList object
    *
-   *@return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -64,9 +64,9 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Gets the title attribute of the DependencyList object
+   * Gets the title attribute of the DependencyList object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -74,9 +74,9 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean canDelete() {
     Iterator thisList = this.iterator();
@@ -92,9 +92,9 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Gets the htmlString attribute of the DependencyList object
+   * Gets the htmlString attribute of the DependencyList object
    *
-   *@return    The htmlString value
+   * @return The htmlString value
    */
   public String getHtmlString() {
     boolean canDelete = true;
@@ -110,24 +110,27 @@ public class DependencyList extends ArrayList {
         if (thisDependency.getCanDelete()) {
           html.append("- ");
         } else {
-          html.append("* ");
+          html.append("- ");
           canDelete = false;
         }
         if (systemStatus != null) {
-          html.append(systemStatus.getLabel("dependency."+thisDependency.getName()) + " (" + thisDependency.getCount() + ")");
+          html.append(
+              systemStatus.getLabel("dependency." + thisDependency.getName()) + " (" + thisDependency.getCount() + ")");
         }
         html.append("<br />");
       }
     }
     if (count == 0) {
       if (systemStatus != null) {
-        html.append("&nbsp;&nbsp;"+systemStatus.getLabel("dependency.noDependencyForAction")+"<br />");
+        html.append(
+            "&nbsp;&nbsp;" + systemStatus.getLabel(
+                "dependency.noDependencyForAction") + "<br />");
       }
     }
     if (!canDelete) {
       if (systemStatus != null) {
-        html.append("<br />(*) "+systemStatus.getLabel("dependency.preventingDeletion"));
-        html.append("<br />"+systemStatus.getLabel("dependency.note")+"<br />");
+        //html.append("<br />(*) "+systemStatus.getLabel("dependency.preventingDeletion"));
+        //html.append("<br />"+systemStatus.getLabel("dependency.note")+"<br />");
       }
     }
     return html.toString();
@@ -135,10 +138,10 @@ public class DependencyList extends ArrayList {
 
 
   /**
-   *  Gets the dependency attribute of the DependencyList object
+   * Gets the dependency attribute of the DependencyList object
    *
-   *@param  name  Description of the Parameter
-   *@return       The dependency value
+   * @param name Description of the Parameter
+   * @return The dependency value
    */
   public int getDependencyCount(String name) {
     Iterator iterator = (Iterator) this.iterator();

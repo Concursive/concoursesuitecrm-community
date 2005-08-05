@@ -15,38 +15,38 @@
  */
 package org.aspcfs.modules.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.LookupList;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
-import org.aspcfs.modules.base.FilterList;
-import org.aspcfs.modules.base.Filter;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.FilterList;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- *  Creates a Accounts List for the Account popup with two levels of filters.
- *  <br>
- *  Can be used in two variants : Single/Multiple<br>
- *  Single and mutiple define if multiple accounts can be selected or just
- *  single.
+ * Creates a Accounts List for the Account popup with two levels of filters.
+ * <br>
+ * Can be used in two variants : Single/Multiple<br>
+ * Single and mutiple define if multiple accounts can be selected or just
+ * single.
  *
- *@author     Mathur
- *@created    March 17, 2003
- *@version    $Id: AccountSelector.java,v 1.1.2.1 2003/03/18 23:36:24 akhi_m Exp
- *      $
+ * @author Mathur
+ * @version $Id: AccountSelector.java,v 1.1.2.1 2003/03/18 23:36:24 akhi_m Exp
+ *          $
+ * @created March 17, 2003
  */
 public final class AccountSelector extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListAccounts(ActionContext context) {
 
@@ -54,15 +54,21 @@ public final class AccountSelector extends CFSModule {
     Connection db = null;
     boolean listDone = false;
     String listType = context.getRequest().getParameter("listType");
+
+    SystemStatus thisSystem = this.getSystemStatus(context);
+
     OrganizationList acctList = null;
     OrganizationList finalAccounts = null;
-    ArrayList selectedList = (ArrayList) context.getSession().getAttribute("SelectedAccounts");
+    ArrayList selectedList = (ArrayList) context.getSession().getAttribute(
+        "SelectedAccounts");
 
-    if (selectedList == null || "true".equals(context.getRequest().getParameter("reset"))) {
+    if (selectedList == null || "true".equals(
+        context.getRequest().getParameter("reset"))) {
       selectedList = new ArrayList();
     }
     if (context.getRequest().getParameter("previousSelection") != null) {
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("previousSelection"), "|");
       while (st.hasMoreTokens()) {
         selectedList.add(String.valueOf(st.nextToken()));
       }
@@ -75,7 +81,8 @@ public final class AccountSelector extends CFSModule {
 
       if ("list".equals(listType)) {
         while (context.getRequest().getParameter("hiddenAccountId" + rowCount) != null) {
-          int acctId = Integer.parseInt(context.getRequest().getParameter("hiddenAccountId" + rowCount));
+          int acctId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAccountId" + rowCount));
           if (context.getRequest().getParameter("account" + rowCount) != null) {
             if (!selectedList.contains(String.valueOf(acctId))) {
               selectedList.add(String.valueOf(acctId));
@@ -87,11 +94,14 @@ public final class AccountSelector extends CFSModule {
         }
       }
 
-      if ("true".equals((String) context.getRequest().getParameter("finalsubmit"))) {
+      if ("true".equals(
+          (String) context.getRequest().getParameter("finalsubmit"))) {
         //Handle single selection case
         if ("single".equals(listType)) {
-          rowCount = Integer.parseInt(context.getRequest().getParameter("rowcount"));
-          int acctId = Integer.parseInt(context.getRequest().getParameter("hiddenAccountId" + rowCount));
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          int acctId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAccountId" + rowCount));
           selectedList.clear();
           selectedList.add(String.valueOf(acctId));
         }
@@ -106,7 +116,7 @@ public final class AccountSelector extends CFSModule {
       }
 
       LookupList typeSelect = new LookupList(db, "lookup_account_types");
-      typeSelect.addItem(0, "All Types");
+      typeSelect.addItem(0, thisSystem.getLabel("accounts.allTypes")); //All Types
       context.getRequest().setAttribute("TypeSelect", typeSelect);
 
       //Set OrganizationList Parameters and build the list
@@ -132,32 +142,39 @@ public final class AccountSelector extends CFSModule {
 
 
   /**
-   *  Sets the parameters attribute of the AccountSelector object
+   * Sets the parameters attribute of the AccountSelector object
    *
-   *@param  context   The new parameters value
-   *@param  acctList  The new parameters value
+   * @param context  The new parameters value
+   * @param acctList The new parameters value
    */
   private void setParameters(OrganizationList acctList, ActionContext context) {
+    SystemStatus thisSystem = this.getSystemStatus(context);
     //Check if a text-based filter was entered
+    String acctNameLabel = thisSystem.getLabel("organization.name");
+    String acctNumberLabel = thisSystem.getLabel("organization.accountNumber");
+
     String acctName = context.getRequest().getParameter("acctName");
     String acctNumber = context.getRequest().getParameter("acctNumber");
+
     if (acctName != null) {
-      if (!"Account Name".equals(acctName) && !"".equals(acctName.trim())) {
+      if (!acctNameLabel.equals(acctName) && !"".equals(acctName.trim())) {
         acctList.setName("%" + acctName + "%");
       }
     }
     if (acctNumber != null) {
-      if (!"Account Number".equals(acctNumber) && !"".equals(acctNumber.trim())) {
+      if (!acctNumberLabel.equals(acctNumber) && !"".equals(acctNumber.trim())) {
         acctList.setAccountNumber("%" + acctNumber + "%");
       }
     }
 
-    boolean showMyCompany = "true".equals((String) context.getRequest().getParameter("showMyCompany"));
+    boolean showMyCompany = "true".equals(
+        (String) context.getRequest().getParameter("showMyCompany"));
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("AccountListInfo");
     }
 
-    PagedListInfo acctListInfo = this.getPagedListInfo(context, "AccountListInfo");
+    PagedListInfo acctListInfo = this.getPagedListInfo(
+        context, "AccountListInfo");
     //filter for departments & project teams
     if (!acctListInfo.hasListFilters()) {
       acctListInfo.addFilter(1, "0");
@@ -166,7 +183,7 @@ public final class AccountSelector extends CFSModule {
     //add filters
     FilterList filters = new FilterList();
     filters.setSource(Constants.ACCOUNTS);
-    filters.build(context.getRequest());
+    filters.build(thisSystem, context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
 
     //  set Filter for retrieving addresses depending on typeOfContact

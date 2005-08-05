@@ -25,28 +25,32 @@
 package org.jcrontab.log;
 
 /**
- * This interface defines the basic behaviour of a Jcrontab Logger This class 
+ * This interface defines the basic behaviour of a Jcrontab Logger This class
  * Is simple to make it easier to integrate with other packages.
+ *
  * @author Isreal Olalla
  * @version $Revision$
  */
- 
+
 public interface Logger {
-	/**
-	 *	This method does the basic initialization. 
-	 */
-	public void  init();
-	/**
-	 *	This method reports a message to the log 
-	 */
-	public void info(String message);
-	/**
-	 *	This method reports a Exception or Error to the log  
-	 */
-	public void error(String message, Throwable t);
-	/**
-	 *	This method reports a debug level message to the log
-	 */
-	public void debug(String message);
+  /**
+   * This method does the basic initialization.
+   */
+  public void init();
+
+  /**
+   * This method reports a message to the log
+   */
+  public void info(String message);
+
+  /**
+   * This method reports a Exception or Error to the log
+   */
+  public void error(String message, Throwable t);
+
+  /**
+   * This method reports a debug level message to the log
+   */
+  public void debug(String message);
 }
 

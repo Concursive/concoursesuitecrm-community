@@ -25,12 +25,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: TaskCategory.java,v 1.4.124.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: TaskCategory.java,v 1.4.124.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created January 14, 2003
  */
 public class TaskCategory extends GenericBean {
 
@@ -48,9 +48,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TaskCategory object
+   * Sets the id attribute of the TaskCategory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -58,9 +58,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TaskCategory object
+   * Sets the id attribute of the TaskCategory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -68,9 +68,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the TaskCategory object
+   * Sets the description attribute of the TaskCategory object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -78,9 +78,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the defaultItem attribute of the TaskCategory object
+   * Sets the defaultItem attribute of the TaskCategory object
    *
-   *@param  tmp  The new defaultItem value
+   * @param tmp The new defaultItem value
    */
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
@@ -88,9 +88,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the defaultItem attribute of the TaskCategory object
+   * Sets the defaultItem attribute of the TaskCategory object
    *
-   *@param  tmp  The new defaultItem value
+   * @param tmp The new defaultItem value
    */
   public void setDefaultItem(String tmp) {
     this.defaultItem = DatabaseUtils.parseBoolean(tmp);
@@ -98,9 +98,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the TaskCategory object
+   * Sets the level attribute of the TaskCategory object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -108,9 +108,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the TaskCategory object
+   * Sets the level attribute of the TaskCategory object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -118,9 +118,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TaskCategory object
+   * Sets the enabled attribute of the TaskCategory object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -128,9 +128,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the TaskCategory object
+   * Sets the enabled attribute of the TaskCategory object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -138,9 +138,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the taskCount attribute of the TaskCategory object
+   * Sets the taskCount attribute of the TaskCategory object
    *
-   *@param  tmp  The new taskCount value
+   * @param tmp The new taskCount value
    */
   public void setTaskCount(int tmp) {
     this.taskCount = tmp;
@@ -148,9 +148,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the taskCount attribute of the TaskCategory object
+   * Sets the taskCount attribute of the TaskCategory object
    *
-   *@param  tmp  The new taskCount value
+   * @param tmp The new taskCount value
    */
   public void setTaskCount(String tmp) {
     this.taskCount = Integer.parseInt(tmp);
@@ -158,9 +158,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastTaskEntered attribute of the TaskCategory object
+   * Sets the lastTaskEntered attribute of the TaskCategory object
    *
-   *@param  tmp  The new lastTaskEntered value
+   * @param tmp The new lastTaskEntered value
    */
   public void setLastTaskEntered(java.sql.Timestamp tmp) {
     this.lastTaskEntered = tmp;
@@ -168,9 +168,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastTaskEnteredBy attribute of the TaskCategory object
+   * Sets the lastTaskEnteredBy attribute of the TaskCategory object
    *
-   *@param  tmp  The new lastTaskEnteredBy value
+   * @param tmp The new lastTaskEnteredBy value
    */
   public void setLastTaskEnteredBy(int tmp) {
     this.lastTaskEnteredBy = tmp;
@@ -178,9 +178,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the lastTaskEntered attribute of the TaskCategory object
+   * Sets the lastTaskEntered attribute of the TaskCategory object
    *
-   *@param  tmp  The new lastTaskEntered value
+   * @param tmp The new lastTaskEntered value
    */
   public void setLastTaskEntered(String tmp) {
     this.lastTaskEntered = DatabaseUtils.parseTimestamp(tmp);
@@ -188,9 +188,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the linkModuleId attribute of the TaskCategory object
+   * Sets the linkModuleId attribute of the TaskCategory object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -198,9 +198,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the linkModuleId attribute of the TaskCategory object
+   * Sets the linkModuleId attribute of the TaskCategory object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -208,9 +208,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the linkItemId attribute of the TaskCategory object
+   * Sets the linkItemId attribute of the TaskCategory object
    *
-   *@param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -218,9 +218,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Sets the linkItemId attribute of the TaskCategory object
+   * Sets the linkItemId attribute of the TaskCategory object
    *
-   *@param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     this.linkItemId = Integer.parseInt(tmp);
@@ -228,9 +228,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the TaskCategory object
+   * Gets the id attribute of the TaskCategory object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -238,9 +238,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the TaskCategory object
+   * Gets the description attribute of the TaskCategory object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -248,9 +248,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the defaultItem attribute of the TaskCategory object
+   * Gets the defaultItem attribute of the TaskCategory object
    *
-   *@return    The defaultItem value
+   * @return The defaultItem value
    */
   public boolean getDefaultItem() {
     return defaultItem;
@@ -258,9 +258,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the level attribute of the TaskCategory object
+   * Gets the level attribute of the TaskCategory object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -268,9 +268,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the TaskCategory object
+   * Gets the enabled attribute of the TaskCategory object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -278,9 +278,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the linkModuleId attribute of the TaskCategory object
+   * Gets the linkModuleId attribute of the TaskCategory object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -288,9 +288,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the linkItemId attribute of the TaskCategory object
+   * Gets the linkItemId attribute of the TaskCategory object
    *
-   *@return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -298,9 +298,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the taskCount attribute of the TaskCategory object
+   * Gets the taskCount attribute of the TaskCategory object
    *
-   *@return    The taskCount value
+   * @return The taskCount value
    */
   public int getTaskCount() {
     return taskCount;
@@ -308,9 +308,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastTaskEntered attribute of the TaskCategory object
+   * Gets the lastTaskEntered attribute of the TaskCategory object
    *
-   *@return    The lastTaskEntered value
+   * @return The lastTaskEntered value
    */
   public java.sql.Timestamp getLastTaskEntered() {
     return lastTaskEntered;
@@ -318,9 +318,9 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastTaskEnteredBy attribute of the TaskCategory object
+   * Gets the lastTaskEnteredBy attribute of the TaskCategory object
    *
-   *@return    The lastTaskEnteredBy value
+   * @return The lastTaskEnteredBy value
    */
   public int getLastTaskEnteredBy() {
     return lastTaskEnteredBy;
@@ -328,16 +328,17 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Constructor for the TaskCategory object
+   * Constructor for the TaskCategory object
    */
-  public TaskCategory() { }
+  public TaskCategory() {
+  }
 
 
   /**
-   *  Constructor for the TaskCategory object
+   * Constructor for the TaskCategory object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TaskCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -345,11 +346,11 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Constructor for the TaskCategory object
+   * Constructor for the TaskCategory object
    *
-   *@param  db                Description of the Parameter
-   *@param  categoryId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param categoryId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TaskCategory(Connection db, int categoryId) throws SQLException {
     if (categoryId == -1) {
@@ -374,10 +375,10 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -396,27 +397,32 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
     try {
       db.setAutoCommit(false);
-      sql = "INSERT INTO lookup_task_category " +
-          "(description, default_item, level, enabled) " +
-          "VALUES (?, ?, ?, ?) ";
+      this.id = DatabaseUtils.getNextSeq(db, "lookup_task_category_code_seq");
+      sql = "INSERT INTO lookup_task_category (" + (id > -1 ? "code, " : "") +
+          "description, default_item, \"level\", enabled) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setString(++i, description);
       pst.setBoolean(++i, defaultItem);
       pst.setInt(++i, level);
       pst.setBoolean(++i, enabled);
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "lookup_task_category_code_seq");
+      this.id = DatabaseUtils.getCurrVal(
+          db, "lookup_task_category_code_seq", id);
       pst.close();
       if (linkModuleId == Constants.TASK_CATEGORY_PROJECTS) {
         pst = db.prepareStatement(
@@ -441,11 +447,11 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -457,7 +463,7 @@ public class TaskCategory extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE lookup_task_category " +
-        "SET description = ?, default_item = ?, level = ?, enabled = ? " +
+        "SET description = ?, default_item = ?, \"level\" = ?, enabled = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -473,10 +479,10 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("code");
@@ -488,11 +494,11 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {

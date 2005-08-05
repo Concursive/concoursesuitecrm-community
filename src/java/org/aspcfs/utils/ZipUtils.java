@@ -15,26 +15,29 @@
  */
 package org.aspcfs.utils;
 
-import java.util.zip.*;
 import java.io.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 15, 2003
  */
 public class ZipUtils {
 
   /**
-   *  Adds a feature to the TextEntry attribute of the ZipUtils class
+   * Adds a feature to the TextEntry attribute of the ZipUtils class
    *
-   *@param  zip               The feature to be added to the TextEntry attribute
-   *@param  fileName          The feature to be added to the TextEntry attribute
-   *@param  data              The feature to be added to the TextEntry attribute
-   *@exception  ZipException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param zip      The feature to be added to the TextEntry attribute
+   * @param fileName The feature to be added to the TextEntry attribute
+   * @param data     The feature to be added to the TextEntry attribute
+   * @throws ZipException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void addTextEntry(ZipOutputStream zip, String fileName, String data) throws ZipException, IOException {
     int bytesRead;
@@ -44,6 +47,27 @@ public class ZipUtils {
     while ((bytesRead = file.read()) != -1) {
       zip.write(bytesRead);
     }
+  }
+
+  public static void extract(File zipFile, String destination) throws IOException {
+    ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile));
+    ZipEntry entry = null;
+    byte[] buffer = new byte[1024];
+    while ((entry = zip.getNextEntry()) != null) {
+      if (entry.isDirectory()) {
+        File directory = new File(destination + entry.getName());
+        directory.mkdirs();
+      } else {
+        FileOutputStream file = new FileOutputStream(
+            destination + entry.getName());
+        int count;
+        while ((count = zip.read(buffer)) != -1) {
+          file.write(buffer, 0, count);
+        }
+        file.close();
+      }
+    }
+    zip.close();
   }
 
 }

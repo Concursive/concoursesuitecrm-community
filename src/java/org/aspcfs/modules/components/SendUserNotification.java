@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.components;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
-import org.aspcfs.utils.StringUtils;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ComponentInterface;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 import org.aspcfs.modules.base.Notification;
-import java.sql.*;
+import org.aspcfs.utils.StringUtils;
+
+import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: SendUserNotification.java,v 1.9 2004/05/13 20:37:23
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: SendUserNotification.java,v 1.9 2004/05/13 20:37:23
+ *          mrajkowski Exp $
+ * @created January 14, 2003
  */
 public class SendUserNotification extends ObjectHookComponent implements ComponentInterface {
   public final static String HOST = "notification.host";
@@ -51,9 +52,9 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
 
 
   /**
-   *  Gets the description attribute of the SendUserNotification object
+   * Gets the description attribute of the SendUserNotification object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Send an email notification to a user";
@@ -61,10 +62,10 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     boolean result = false;
@@ -72,19 +73,26 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
     try {
       db = this.getConnection(context);
       Notification thisNotification = new Notification();
-      thisNotification.setUserToNotify(context.getParameterAsInt(SendUserNotification.USER_TO_NOTIFY));
-      thisNotification.setModule(context.getParameter(SendUserNotification.MODULE));
-      thisNotification.setItemId(context.getParameterAsInt(SendUserNotification.ITEM_ID));
+      thisNotification.setUserToNotify(
+          context.getParameterAsInt(SendUserNotification.USER_TO_NOTIFY));
+      thisNotification.setModule(
+          context.getParameter(SendUserNotification.MODULE));
+      thisNotification.setItemId(
+          context.getParameterAsInt(SendUserNotification.ITEM_ID));
       //thisNotification.setItemModified(context.getParameter(SendUserNotification.ITEM_MODIFIED));
       thisNotification.setItemModified(null);
-      thisNotification.setSubject(StringUtils.toHtml(context.getParameter(SendUserNotification.SUBJECT)));
-      String from = StringUtils.toHtmlValue(context.getParameter(SendUserNotification.FROM));
+      thisNotification.setSubject(
+          StringUtils.toHtml(
+              context.getParameter(SendUserNotification.SUBJECT)));
+      String from = StringUtils.toHtmlValue(
+          context.getParameter(SendUserNotification.FROM));
       if (from != null && !"".equals(from)) {
         thisNotification.setFrom(from);
       } else {
         thisNotification.setFrom(context.getParameter("EMAILADDRESS"));
       }
-      thisNotification.setMessageToSend(StringUtils.toHtml(context.getParameter(SendUserNotification.BODY)));
+      thisNotification.setMessageToSend(
+          StringUtils.toHtml(context.getParameter(SendUserNotification.BODY)));
       thisNotification.setType(Notification.EMAIL);
       String host = context.getParameter(HOST);
       if (host != null && !"".equals(host)) {

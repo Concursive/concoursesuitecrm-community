@@ -64,8 +64,8 @@
   </table>
   <br>
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-    <dhv:permission name="contacts-internal_contacts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-    <dhv:permission name="contacts-internal_contacts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+    <dhv:permission name="contacts-internal_contacts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"></dhv:permission>
+    <dhv:permission name="contacts-internal_contacts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';confirmSubmit(this.form);"></dhv:permission>
     <dhv:permission name="contacts-internal_contacts-folders-edit,contacts-internal_contacts-folders-delete">
     <br>
     <br>
@@ -79,7 +79,7 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= thisGroup.getName() %></strong>
+        <strong><%= StringUtils.toHtml(thisGroup.getName()) %></strong>
       </th>
     </tr>
   <%
@@ -137,8 +137,8 @@
   </table>
   <br>
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-    <dhv:permission name="contacts-internal_contacts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-    <dhv:permission name="contacts-internal_contacts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+    <dhv:permission name="contacts-internal_contacts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"></dhv:permission>
+    <dhv:permission name="contacts-internal_contacts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteFields&empid=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';confirmSubmit(this.form);"></dhv:permission>
   </dhv:evaluate>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
 </dhv:container>

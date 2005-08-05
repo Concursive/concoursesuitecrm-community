@@ -15,18 +15,18 @@
  */
 package org.aspcfs.modules.beans;
 
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.controller.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SubmenuItem;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Contains information that a JSP template can access when displaying the page
+ * Contains information that a JSP template can access when displaying the page
  *
- *@author     matt rajkowski
- *@created    July 13, 2001
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 13, 2001
  */
 public class ModuleBean {
 
@@ -38,18 +38,19 @@ public class ModuleBean {
 
 
   /**
-   *  Constructor for the ModuleBean object
+   * Constructor for the ModuleBean object
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public ModuleBean() { }
+  public ModuleBean() {
+  }
 
 
   /**
-   *  Sets the Name attribute of the ModuleBean object
+   * Sets the Name attribute of the ModuleBean object
    *
-   *@param  tmp  The new Name value
-   *@since       1.0
+   * @param tmp The new Name value
+   * @since 1.0
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -57,10 +58,10 @@ public class ModuleBean {
 
 
   /**
-   *  Sets the CurrentAction attribute of the ModuleBean object
+   * Sets the CurrentAction attribute of the ModuleBean object
    *
-   *@param  tmp  The new CurrentAction value
-   *@since       1.0
+   * @param tmp The new CurrentAction value
+   * @since 1.0
    */
   public void setCurrentAction(String tmp) {
     this.currentAction = tmp;
@@ -68,9 +69,9 @@ public class ModuleBean {
 
 
   /**
-   *  Sets the menuKey attribute of the ModuleBean object
+   * Sets the menuKey attribute of the ModuleBean object
    *
-   *@param  tmp  The new menuKey value
+   * @param tmp The new menuKey value
    */
   public void setMenuKey(String tmp) {
     this.menuKey = tmp;
@@ -78,9 +79,9 @@ public class ModuleBean {
 
 
   /**
-   *  Sets the submenuKey attribute of the ModuleBean object
+   * Sets the submenuKey attribute of the ModuleBean object
    *
-   *@param  tmp  The new submenuKey value
+   * @param tmp The new submenuKey value
    */
   public void setSubmenuKey(String tmp) {
     this.submenuKey = tmp;
@@ -88,10 +89,10 @@ public class ModuleBean {
 
 
   /**
-   *  Sets the SubmenuKey attribute of the ModuleBean object
+   * Sets the SubmenuKey attribute of the ModuleBean object
    *
-   *@param  tmp      The new SubmenuKey value
-   *@param  context  The new submenuKey value
+   * @param tmp     The new SubmenuKey value
+   * @param context The new submenuKey value
    */
   public void setSubmenuKey(ActionContext context, String tmp) {
     this.submenuKey = tmp;
@@ -99,10 +100,10 @@ public class ModuleBean {
 
 
   /**
-   *  Gets the Name attribute of the ModuleBean object
+   * Gets the Name attribute of the ModuleBean object
    *
-   *@return    The Name value
-   *@since     1.0
+   * @return The Name value
+   * @since 1.0
    */
   public String getName() {
     return name;
@@ -110,10 +111,10 @@ public class ModuleBean {
 
 
   /**
-   *  Gets the MenuItems attribute of the ModuleBean object
+   * Gets the MenuItems attribute of the ModuleBean object
    *
-   *@return    The MenuItems value
-   *@since     1.0
+   * @return The MenuItems value
+   * @since 1.0
    */
   public ArrayList getMenuItems() {
     return menuItems;
@@ -121,10 +122,10 @@ public class ModuleBean {
 
 
   /**
-   *  Gets the CurrentAction attribute of the ModuleBean object
+   * Gets the CurrentAction attribute of the ModuleBean object
    *
-   *@return    The CurrentAction value
-   *@since     1.0
+   * @return The CurrentAction value
+   * @since 1.0
    */
   public String getCurrentAction() {
     return currentAction;
@@ -132,9 +133,9 @@ public class ModuleBean {
 
 
   /**
-   *  Gets the menuKey attribute of the ModuleBean object
+   * Gets the menuKey attribute of the ModuleBean object
    *
-   *@return    The menuKey value
+   * @return The menuKey value
    */
   public String getMenuKey() {
     return menuKey;
@@ -142,9 +143,9 @@ public class ModuleBean {
 
 
   /**
-   *  Gets the submenuKey attribute of the ModuleBean object
+   * Gets the submenuKey attribute of the ModuleBean object
    *
-   *@return    The submenuKey value
+   * @return The submenuKey value
    */
   public String getSubmenuKey() {
     return this.submenuKey;
@@ -152,10 +153,10 @@ public class ModuleBean {
 
 
   /**
-   *  Gets the Menu attribute of the ModuleBean object
+   * Gets the Menu attribute of the ModuleBean object
    *
-   *@return    The Menu value
-   *@since     1.0
+   * @return The Menu value
+   * @since 1.0
    */
   public String getMenu() {
     StringBuffer menu = new StringBuffer();
@@ -174,10 +175,10 @@ public class ModuleBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
-   *@since     1.0
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public boolean hasName() {
     return (!name.equals(""));
@@ -185,10 +186,10 @@ public class ModuleBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
-   *@since     1.0
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public boolean hasMenu() {
     return (!menuItems.isEmpty());
@@ -196,9 +197,9 @@ public class ModuleBean {
 
 
   /**
-   *  Adds a feature to the MenuItem attribute of the ModuleBean object
+   * Adds a feature to the MenuItem attribute of the ModuleBean object
    *
-   *@param  thisItem  The feature to be added to the MenuItem attribute
+   * @param thisItem The feature to be added to the MenuItem attribute
    */
   public void addMenuItem(SubmenuItem thisItem) {
     menuItems.add(thisItem);

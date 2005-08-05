@@ -15,21 +15,24 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.Constants;
-import javax.servlet.http.*;
-import org.aspcfs.modules.base.SyncableList;
 
 /**
- *  Represents a list of ads (AdRun)
+ * Represents a list of ads (AdRun)
  *
- *@author     matt rajkowski
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class AdRunList extends ArrayList implements SyncableList {
 
@@ -44,16 +47,17 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Constructor for the AdRunList object
+   * Constructor for the AdRunList object
    */
-  public AdRunList() { }
+  public AdRunList() {
+  }
 
 
   /**
-   *  Constructor for the AdRunList object
+   * Constructor for the AdRunList object
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public AdRunList(Connection db) throws SQLException {
     buildList(db);
@@ -61,9 +65,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Constructor for the AdRunList object
+   * Constructor for the AdRunList object
    *
-   *@param  request  Description of Parameter
+   * @param request Description of Parameter
    */
   public AdRunList(HttpServletRequest request) {
     int linearId = 0;
@@ -74,7 +78,8 @@ public class AdRunList extends ArrayList implements SyncableList {
       }
       String runDate = request.getParameter("adrun" + linearId + "runDate");
       String adType = request.getParameter("adrun" + linearId + "adType");
-      String includePhoto = request.getParameter("adrun" + linearId + "includePhoto");
+      String includePhoto = request.getParameter(
+          "adrun" + linearId + "includePhoto");
       String remove = request.getParameter("adrun" + linearId + "remove");
       if (runDate != null && !"".equalsIgnoreCase(runDate.trim())) {
         AdRun thisAdRun = new AdRun();
@@ -97,9 +102,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the AdRunList object
+   * Sets the lastAnchor attribute of the AdRunList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -107,9 +112,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the AdRunList object
+   * Sets the lastAnchor attribute of the AdRunList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -117,9 +122,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the AdRunList object
+   * Sets the nextAnchor attribute of the AdRunList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -127,9 +132,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the AdRunList object
+   * Sets the nextAnchor attribute of the AdRunList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -137,9 +142,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the AdRunList object
+   * Sets the syncType attribute of the AdRunList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -147,9 +152,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the AdRunList object
+   * Sets the syncType attribute of the AdRunList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -157,9 +162,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the inventoryId attribute of the AdRunList object
+   * Sets the inventoryId attribute of the AdRunList object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
@@ -167,9 +172,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the AdRunList object
+   * Sets the accountInventoryId attribute of the AdRunList object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(int tmp) {
     this.inventoryId = tmp;
@@ -177,9 +182,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the AdRunList object
+   * Sets the accountInventoryId attribute of the AdRunList object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
@@ -187,9 +192,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the inventoryId attribute of the AdRunList object
+   * Sets the inventoryId attribute of the AdRunList object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
@@ -197,9 +202,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the incompleteOnly attribute of the AdRunList object
+   * Sets the incompleteOnly attribute of the AdRunList object
    *
-   *@param  tmp  The new incompleteOnly value
+   * @param tmp The new incompleteOnly value
    */
   public void setIncompleteOnly(boolean tmp) {
     this.incompleteOnly = tmp;
@@ -207,20 +212,19 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the AdRunList object
+   * Sets the pagedListInfo attribute of the AdRunList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
 
 
-
   /**
-   *  Gets the tableName attribute of the AdRunList object
+   * Gets the tableName attribute of the AdRunList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -228,9 +232,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the AdRunList object
+   * Gets the uniqueField attribute of the AdRunList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -238,9 +242,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the inventoryId attribute of the AdRunList object
+   * Gets the inventoryId attribute of the AdRunList object
    *
-   *@return    The inventoryId value
+   * @return The inventoryId value
    */
   public int getInventoryId() {
     return inventoryId;
@@ -248,9 +252,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the accountInventoryId attribute of the AdRunList object
+   * Gets the accountInventoryId attribute of the AdRunList object
    *
-   *@return    The accountInventoryId value
+   * @return The accountInventoryId value
    */
   public int getAccountInventoryId() {
     return inventoryId;
@@ -258,9 +262,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the AdRunList object
+   * Gets the pagedListInfo attribute of the AdRunList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -268,11 +272,11 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the object attribute of the AdRunList object
+   * Gets the object attribute of the AdRunList object
    *
-   *@param  rs                Description of Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @return The object value
+   * @throws SQLException Description of Exception
    */
   public AdRun getObject(ResultSet rs) throws SQLException {
     AdRun thisAdRun = new AdRun(rs);
@@ -281,9 +285,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the nextAdRun attribute of the AdRunList object
+   * Gets the nextAdRun attribute of the AdRunList object
    *
-   *@return    The nextAdRun value
+   * @return The nextAdRun value
    */
   public AdRun getNextAdRun() {
     if (this.size() > 0) {
@@ -295,10 +299,10 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the adRun attribute of the AdRunList object
+   * Gets the adRun attribute of the AdRunList object
    *
-   *@param  adId  Description of the Parameter
-   *@return       The adRun value
+   * @param adId Description of the Parameter
+   * @return The adRun value
    */
   public AdRun getAdRun(int adId) {
     Iterator i = this.iterator();
@@ -313,10 +317,10 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -324,22 +328,18 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
-    int count = 0;
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       AdRun thisAdRun = this.getObject(rs);
       this.add(thisAdRun);
     }
@@ -351,13 +351,13 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  This method is required for synchronization, it allows for the resultset
-   *  to be streamed with lower overhead
+   * This method is required for synchronization, it allows for the resultset
+   * to be streamed with lower overhead
    *
-   *@param  db                Description of Parameter
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db  Description of Parameter
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -405,7 +405,8 @@ public class AdRunList extends ArrayList implements SyncableList {
         "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype " +
         "WHERE ad.ad_run_id > -1 " +
         "AND ad.ad_type = adtype.code ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -416,10 +417,10 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void update(Connection db) throws SQLException {
     Iterator adRunList = this.iterator();
@@ -432,10 +433,10 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator adRunList = this.iterator();
@@ -448,10 +449,10 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator adRunList = this.iterator();
@@ -463,9 +464,9 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -492,11 +493,11 @@ public class AdRunList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

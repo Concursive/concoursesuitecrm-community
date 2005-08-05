@@ -77,31 +77,31 @@
         Call thisCall = (Call) jc.next();
 %>
     <tr class="row<%= rowid %>">
-      <td valign="center" nowrap>
+      <td valign="top" nowrap <dhv:evaluate if="<%= CalAccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>"> rowspan="2"</dhv:evaluate>>
         <%= thisCall.getStatusString() %>
       </td>
-      <td valign="center" nowrap>
+      <td valign="top" nowrap>
         <%= toHtml(CallTypeList.getSelectedValue(thisCall.getCallTypeId())) %>
       </td>
-      <td width="100%" valign="center">
+      <td width="100%" valign="top">
           <%= toHtml(thisCall.getSubject()) %>
       </td>
-      <td nowrap>
+      <td valign="top" nowrap>
         <%= toHtml(callResultList.getLookupList(thisCall.getResultId()).getSelectedValue(thisCall.getResultId())) %>
       </td>
-      <td valign="center" nowrap>
+      <td valign="top" nowrap>
         <dhv:tz timestamp="<%= thisCall.getCompleteDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" />
       </td>
-      <td valign="center" nowrap>
+      <td valign="top" nowrap>
         <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/>
       </td>
-      <td valign="center" nowrap>
+      <td valign="top" nowrap>
         <dhv:tz timestamp="<%= thisCall.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
       </td>
     </tr>
     <dhv:evaluate if="<%= CalAccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
     <tr class="row<%= rowid %>">
-      <td colspan="8" valign="top">
+      <td colspan="7" valign="top">
         <%= toHtmlValue(thisCall.getNotes()) %>
       </td>
     </tr>

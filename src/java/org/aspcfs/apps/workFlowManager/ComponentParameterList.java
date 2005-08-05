@@ -15,21 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
-import java.io.*;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Contains a list of ComponentParameter objects and can be used for initially
- *  building the list.
+ * Contains a list of ComponentParameter objects and can be used for initially
+ * building the list.
  *
- *@author     matt rajkowski
- *@created    June 6, 2003
- *@version    $Id: ComponentParameterList.java,v 1.1.2.1 2003/06/11 18:32:13
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ComponentParameterList.java,v 1.1.2.1 2003/06/11 18:32:13
+ *          mrajkowski Exp $
+ * @created June 6, 2003
  */
 public class ComponentParameterList extends ArrayList {
   private int componentId = -1;
@@ -37,15 +39,16 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Constructor for the ComponentParameterList object
+   * Constructor for the ComponentParameterList object
    */
-  public ComponentParameterList() { }
+  public ComponentParameterList() {
+  }
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameterList object
+   * Sets the componentId attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(int tmp) {
     this.componentId = tmp;
@@ -53,9 +56,9 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameterList object
+   * Sets the componentId attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(String tmp) {
     this.componentId = Integer.parseInt(tmp);
@@ -63,9 +66,9 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameterList object
+   * Sets the enabled attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -73,9 +76,9 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameterList object
+   * Sets the enabled attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -83,9 +86,9 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Gets the componentId attribute of the ComponentParameterList object
+   * Gets the componentId attribute of the ComponentParameterList object
    *
-   *@return    The componentId value
+   * @return The componentId value
    */
   public int getComponentId() {
     return componentId;
@@ -93,9 +96,9 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the ComponentParameterList object
+   * Gets the enabled attribute of the ComponentParameterList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -103,10 +106,10 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Builds a list of parameters from a database using selected filters
+   * Builds a list of parameters from a database using selected filters
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
@@ -120,7 +123,8 @@ public class ComponentParameterList extends ArrayList {
         "AND p.parameter_id = pl.parameter_id ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY id ");
-    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -133,9 +137,9 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Adds filters to the WHERE clause of the database query
+   * Adds filters to the WHERE clause of the database query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -151,11 +155,11 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Adds database parameters based on selected filters
+   * Adds database parameters based on selected filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -170,10 +174,10 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator params = this.iterator();
@@ -186,10 +190,10 @@ public class ComponentParameterList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator itr = this.iterator();

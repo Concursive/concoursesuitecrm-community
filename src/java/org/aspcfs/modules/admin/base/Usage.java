@@ -15,22 +15,26 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
- *  Used for tracking user usage. All usage should be able to be tracked to a
- *  specific user. The actual usage may be a count or a sum of items, as
- *  determined by the usage action.<p>
+ * Used for tracking user usage. All usage should be able to be tracked to a
+ * specific user. The actual usage may be a count or a sum of items, as
+ * determined by the usage action.<p>
+ * <p/>
+ * Ex. Tracking # of emails sent would leave recordSize blank, but tracking the
+ * size of email sent would put the number of bytes in the recordSize.
  *
- *  Ex. Tracking # of emails sent would leave recordSize blank, but tracking the
- *  size of email sent would put the number of bytes in the recordSize.
- *
- *@author     matt rajkowski
- *@created    December 6, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created December 6, 2002
  */
 public class Usage {
+  private int id = -1;
   private int enteredBy = -1;
   private int action = -1;
   private int recordId = -1;
@@ -38,17 +42,18 @@ public class Usage {
 
 
   /**
-   *  Constructor for the Usage object
+   * Constructor for the Usage object
    */
-  public Usage() { }
+  public Usage() {
+  }
 
 
   /**
-   *  Sets the user in which the usage originated from.<p>
+   * Sets the user in which the usage originated from.<p>
+   * <p/>
+   * Ex. The person sending an email, NOT the person who the email was sent to.
    *
-   *  Ex. The person sending an email, NOT the person who the email was sent to.
-   *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -56,9 +61,9 @@ public class Usage {
 
 
   /**
-   *  Sets the enteredBy attribute of the Usage object
+   * Sets the enteredBy attribute of the Usage object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -66,13 +71,13 @@ public class Usage {
 
 
   /**
-   *  Sets the type of usage. This is a unique int that refers to a specific
-   *  action.<p>
+   * Sets the type of usage. This is a unique int that refers to a specific
+   * action.<p>
+   * <p/>
+   * Ex. Constants.USAGE_FILE_UPLOAD = 1 tracks when a user sent a file and the
+   * size of the file.
    *
-   *  Ex. Constants.USAGE_FILE_UPLOAD = 1 tracks when a user sent a file and the
-   *  size of the file.
-   *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(int tmp) {
     this.action = tmp;
@@ -80,9 +85,9 @@ public class Usage {
 
 
   /**
-   *  Sets the action attribute of the Usage object
+   * Sets the action attribute of the Usage object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(String tmp) {
     this.action = Integer.parseInt(tmp);
@@ -90,11 +95,11 @@ public class Usage {
 
 
   /**
-   *  If the usage refers back to a record, then set the id.<p>
+   * If the usage refers back to a record, then set the id.<p>
+   * <p/>
+   * Ex. When tracking communications emails, the communication id is set.
    *
-   *  Ex. When tracking communications emails, the communication id is set.
-   *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(int tmp) {
     this.recordId = tmp;
@@ -102,9 +107,9 @@ public class Usage {
 
 
   /**
-   *  Sets the recordId attribute of the Usage object
+   * Sets the recordId attribute of the Usage object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(String tmp) {
     this.recordId = Integer.parseInt(tmp);
@@ -112,11 +117,11 @@ public class Usage {
 
 
   /**
-   *  Sets the recordSize attribute of the Usage object. This is typically the
-   *  number of bytes, but could be used for some other measurement like time,
-   *  depending on the action.
+   * Sets the recordSize attribute of the Usage object. This is typically the
+   * number of bytes, but could be used for some other measurement like time,
+   * depending on the action.
    *
-   *@param  tmp  The new recordSize value
+   * @param tmp The new recordSize value
    */
   public void setRecordSize(long tmp) {
     this.recordSize = tmp;
@@ -124,9 +129,9 @@ public class Usage {
 
 
   /**
-   *  Sets the recordSize attribute of the Usage object
+   * Sets the recordSize attribute of the Usage object
    *
-   *@param  tmp  The new recordSize value
+   * @param tmp The new recordSize value
    */
   public void setRecordSize(String tmp) {
     this.recordSize = Integer.parseInt(tmp);
@@ -134,9 +139,9 @@ public class Usage {
 
 
   /**
-   *  Gets the enteredBy attribute of the Usage object
+   * Gets the enteredBy attribute of the Usage object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -144,9 +149,9 @@ public class Usage {
 
 
   /**
-   *  Gets the action attribute of the Usage object
+   * Gets the action attribute of the Usage object
    *
-   *@return    The action value
+   * @return The action value
    */
   public int getAction() {
     return action;
@@ -154,9 +159,9 @@ public class Usage {
 
 
   /**
-   *  Gets the recordId attribute of the Usage object
+   * Gets the recordId attribute of the Usage object
    *
-   *@return    The recordId value
+   * @return The recordId value
    */
   public int getRecordId() {
     return recordId;
@@ -164,9 +169,9 @@ public class Usage {
 
 
   /**
-   *  Gets the recordSize attribute of the Usage object
+   * Gets the recordSize attribute of the Usage object
    *
-   *@return    The recordSize value
+   * @return The recordSize value
    */
   public long getRecordSize() {
     return recordSize;
@@ -174,26 +179,32 @@ public class Usage {
 
 
   /**
-   *  Records the usage in a table.
+   * Records the usage in a table.
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (action == -1) {
       throw new SQLException("Action not specified");
     }
+    id = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO usage_log " +
-        "(enteredby, action, record_id, record_size) VALUES (?, ?, ?, ?) ");
+        "(" + (id > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     DatabaseUtils.setInt(pst, ++i, enteredBy);
     DatabaseUtils.setInt(pst, ++i, action);
     DatabaseUtils.setInt(pst, ++i, recordId);
     DatabaseUtils.setInt(pst, ++i, (new Long(recordSize)).intValue());
     pst.executeUpdate();
     pst.close();
+    id = DatabaseUtils.getCurrVal(db, "usage_log_usage_id_seq", id);
     return true;
   }
 }

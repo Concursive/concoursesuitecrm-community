@@ -15,21 +15,22 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.sql.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  A generic class that contains a list of LookupElement objects.
+ * A generic class that contains a list of LookupElement objects.
  *
- *@author     mrajkowski
- *@created    September 7, 2001
- *@version    $Id: LookupList.java,v 1.36.12.1 2004/11/29 20:53:42 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: LookupList.java,v 1.36.12.1 2004/11/29 20:53:42 mrajkowski
+ *          Exp $
+ * @created September 7, 2001
  */
 public class LookupList extends HtmlSelect implements SyncableList {
   public static String uniqueField = "code";
@@ -48,23 +49,23 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Constructor for the LookupList object. Generates an empty list, which is
-   *  not very useful.
+   * Constructor for the LookupList object. Generates an empty list, which is
+   * not very useful.
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public LookupList() { }
+  public LookupList() {
+  }
 
 
   /**
-   *  Builds a list of elements based on the database connection and the table
-   *  name specified for the lookup. Only retrieves "enabled" items at this
-   *  time.
+   * Builds a list of elements based on the database connection and the table
+   * name specified for the lookup. Only retrieves "enabled" items at this
+   * time.
    *
-   *@param  db                Description of Parameter
-   *@param  thisTable         Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db        Description of Parameter
+   * @param thisTable Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public LookupList(Connection db, String thisTable) throws SQLException {
     tableName = thisTable;
@@ -73,20 +74,19 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Constructor for the LookupList object
+   * Constructor for the LookupList object
    *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@param  lookupId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param moduleId Description of the Parameter
+   * @param lookupId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public LookupList(Connection db, int moduleId, int lookupId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT lll.table_name AS tableName " +
         "FROM lookup_lists_lookup AS lll " +
         "WHERE lll.category_id = ? " +
-        "AND lll.lookup_id = ? "
-        );
+        "AND lll.lookup_id = ? ");
     pst.setInt(1, moduleId);
     pst.setInt(2, lookupId);
     ResultSet rs = null;
@@ -100,11 +100,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Constructor for the LookupList object
+   * Constructor for the LookupList object
    *
-   *@param  vals              Description of Parameter
-   *@param  names             Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param vals  Description of Parameter
+   * @param names Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public LookupList(String[] vals, String[] names) throws SQLException {
 
@@ -125,9 +125,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the LookupList object
+   * Gets the pagedListInfo attribute of the LookupList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -135,9 +135,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the LookupList object
+   * Sets the pagedListInfo attribute of the LookupList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -145,9 +145,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the selectedItems attribute of the LookupList object
+   * Gets the selectedItems attribute of the LookupList object
    *
-   *@return    The selectedItems value
+   * @return The selectedItems value
    */
   public HashMap getSelectedItems() {
     return selectedItems;
@@ -155,9 +155,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the selectedItems attribute of the LookupList object
+   * Sets the selectedItems attribute of the LookupList object
    *
-   *@param  tmp  The new selectedItems value
+   * @param tmp The new selectedItems value
    */
   public void setSelectedItems(HashMap tmp) {
     this.selectedItems = tmp;
@@ -165,9 +165,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the excludeDisabledIfUnselected attribute of the LookupList object
+   * Gets the excludeDisabledIfUnselected attribute of the LookupList object
    *
-   *@return    The excludeDisabledIfUnselected value
+   * @return The excludeDisabledIfUnselected value
    */
   public boolean getExcludeDisabledIfUnselected() {
     return excludeDisabledIfUnselected;
@@ -175,9 +175,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the excludeDisabledIfUnselected attribute of the LookupList object
+   * Sets the excludeDisabledIfUnselected attribute of the LookupList object
    *
-   *@param  tmp  The new excludeDisabledIfUnselected value
+   * @param tmp The new excludeDisabledIfUnselected value
    */
   public void setExcludeDisabledIfUnselected(boolean tmp) {
     this.excludeDisabledIfUnselected = tmp;
@@ -185,9 +185,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the excludeDisabledIfUnselected attribute of the LookupList object
+   * Sets the excludeDisabledIfUnselected attribute of the LookupList object
    *
-   *@param  tmp  The new excludeDisabledIfUnselected value
+   * @param tmp The new excludeDisabledIfUnselected value
    */
   public void setExcludeDisabledIfUnselected(String tmp) {
     this.excludeDisabledIfUnselected = DatabaseUtils.parseBoolean(tmp);
@@ -195,13 +195,12 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Constructor for the LookupList object
+   * Constructor for the LookupList object
    *
-   *@param  db                Description of Parameter
-   *@param  table             Description of Parameter
-   *@param  fieldId           Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db      Description of Parameter
+   * @param table   Description of Parameter
+   * @param fieldId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public LookupList(Connection db, String table, int fieldId) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -217,7 +216,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
         "WHERE field_id = " + fieldId + " " +
         "AND CURRENT_TIMESTAMP > start_date " +
         "AND (CURRENT_TIMESTAMP < end_date OR end_date IS NULL) " +
-        "ORDER BY level, description ");
+        "ORDER BY \"level\", description ");
 
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
@@ -231,9 +230,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the showDisabledFlag attribute of the LookupList object
+   * Sets the showDisabledFlag attribute of the LookupList object
    *
-   *@param  showDisabledFlag  The new showDisabledFlag value
+   * @param showDisabledFlag The new showDisabledFlag value
    */
   public void setShowDisabledFlag(boolean showDisabledFlag) {
     this.showDisabledFlag = showDisabledFlag;
@@ -241,9 +240,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the showDisabledFlag attribute of the LookupList object
+   * Gets the showDisabledFlag attribute of the LookupList object
    *
-   *@return    The showDisabledFlag value
+   * @return The showDisabledFlag value
    */
   public boolean getShowDisabledFlag() {
     return showDisabledFlag;
@@ -251,9 +250,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the table attribute of the LookupList object
+   * Sets the table attribute of the LookupList object
    *
-   *@param  tmp  The new table value
+   * @param tmp The new table value
    */
   public void setTable(String tmp) {
     this.tableName = tmp;
@@ -261,9 +260,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the tableName attribute of the LookupList object
+   * Sets the tableName attribute of the LookupList object
    *
-   *@param  tmp  The new tableName value
+   * @param tmp The new tableName value
    */
   public void setTableName(String tmp) {
     this.tableName = tmp;
@@ -271,9 +270,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the LookupList object
+   * Sets the lastAnchor attribute of the LookupList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -281,9 +280,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the LookupList object
+   * Sets the lastAnchor attribute of the LookupList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -291,9 +290,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the LookupList object
+   * Sets the nextAnchor attribute of the LookupList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -301,9 +300,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the LookupList object
+   * Sets the nextAnchor attribute of the LookupList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -311,9 +310,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the LookupList object
+   * Sets the syncType attribute of the LookupList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -321,9 +320,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the LookupList object
+   * Sets the syncType attribute of the LookupList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -331,10 +330,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the Multiple attribute of the LookupList object
+   * Sets the Multiple attribute of the LookupList object
    *
-   *@param  multiple  The new Multiple value
-   *@since
+   * @param multiple The new Multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
@@ -342,10 +340,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the JsEvent attribute of the LookupList object
+   * Sets the JsEvent attribute of the LookupList object
    *
-   *@param  tmp  The new JsEvent value
-   *@since
+   * @param tmp The new JsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -353,10 +350,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the SelectSize attribute of the LookupList object
+   * Sets the SelectSize attribute of the LookupList object
    *
-   *@param  tmp  The new SelectSize value
-   *@since
+   * @param tmp The new SelectSize value
    */
   public void setSelectSize(int tmp) {
     this.selectSize = tmp;
@@ -364,9 +360,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Sets the selectStyle attribute of the LookupList object
+   * Sets the selectStyle attribute of the LookupList object
    *
-   *@param  tmp  The new selectStyle value
+   * @param tmp The new selectStyle value
    */
   public void setSelectStyle(String tmp) {
     this.selectStyle = tmp;
@@ -374,9 +370,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the tableName attribute of the LookupList object
+   * Gets the tableName attribute of the LookupList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -384,9 +380,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the LookupList object
+   * Gets the uniqueField attribute of the LookupList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -394,9 +390,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the table attribute of the LookupList object
+   * Gets the table attribute of the LookupList object
    *
-   *@return    The table value
+   * @return The table value
    */
   public String getTable() {
     return tableName;
@@ -404,10 +400,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the Multiple attribute of the LookupList object
+   * Gets the Multiple attribute of the LookupList object
    *
-   *@return    The Multiple value
-   *@since
+   * @return The Multiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -415,14 +410,14 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the htmlSelectDefaultNone attribute of the LookupList object
+   * Gets the htmlSelectDefaultNone attribute of the LookupList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelectDefaultNone value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelectDefaultNone value
    */
-  public String getHtmlSelectDefaultNone(String selectName) {
+  public String getHtmlSelectDefaultNone(SystemStatus thisSystem, String selectName) {
     HtmlSelect thisSelect = new HtmlSelect();
-    thisSelect.addItem(-1, "-- None --");
+    thisSelect.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
     Iterator i = this.iterator();
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
@@ -442,9 +437,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the enabledElementCount attribute of the LookupList object
+   * Gets the enabledElementCount attribute of the LookupList object
    *
-   *@return    The enabledElementCount value
+   * @return The enabledElementCount value
    */
   public int getEnabledElementCount() {
     int count = 0;
@@ -461,12 +456,12 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
+   * Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.1
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The HtmlSelect value
+   * @since 1.1
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect thisSelect = new HtmlSelect();
@@ -485,12 +480,14 @@ public class LookupList extends HtmlSelect implements SyncableList {
       } else {
         // Add the item to the list
         if (thisElement.getEnabled() == true || !showDisabledFlag) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
           if (thisElement.getDefaultItem()) {
             lookupDefault = thisElement.getCode();
           }
         } else if (thisElement.getCode() == defaultKey) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
         }
         if (thisElement.getCode() == defaultKey) {
           keyFound = true;
@@ -506,10 +503,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the LookupList object
+   * Gets the htmlSelectObj attribute of the LookupList object
    *
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelectObj value
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj(int defaultKey) {
     HtmlSelect thisSelect = new HtmlSelect();
@@ -529,12 +526,14 @@ public class LookupList extends HtmlSelect implements SyncableList {
       } else {
         //Add the item
         if (thisElement.getEnabled() == true || !showDisabledFlag) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
           if (thisElement.getDefaultItem()) {
             lookupDefault = thisElement.getCode();
           }
         } else if (thisElement.getCode() == defaultKey) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
         }
         if (thisElement.getCode() == defaultKey) {
           keyFound = true;
@@ -551,12 +550,12 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
+   * Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *
-   *@param  selectName    Description of Parameter
-   *@param  defaultValue  Description of Parameter
-   *@return               The HtmlSelect value
-   *@since                1.1
+   * @param selectName   Description of Parameter
+   * @param defaultValue Description of Parameter
+   * @return The HtmlSelect value
+   * @since 1.1
    */
   public String getHtmlSelect(String selectName, String defaultValue) {
     HtmlSelect thisSelect = new HtmlSelect();
@@ -574,10 +573,12 @@ public class LookupList extends HtmlSelect implements SyncableList {
       } else {
         // Add the item
         if (thisElement.getEnabled() == true) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
         } else if (thisElement.getDescription().equals(defaultValue)) {
           keyFound = true;
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
         }
         if (thisElement.getDescription().equals(defaultValue)) {
           keyFound = true;
@@ -592,11 +593,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the LookupList object
+   * Gets the htmlSelect attribute of the LookupList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  ms          Description of Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @param ms         Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, LookupList ms) {
     HtmlSelect thisSelect = new HtmlSelect();
@@ -616,7 +617,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
       } else {
         // Add the item
         if (thisElement.getEnabled() == true) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          thisSelect.addItem(
+              thisElement.getCode(), thisElement.getDescription());
         }
         if (thisElement.getDefaultItem()) {
           lookupDefault = thisElement.getDescription();
@@ -628,9 +630,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the selectedKey attribute of the LookupList object
+   * Gets the selectedKey attribute of the LookupList object
    *
-   *@return    The selectedKey value
+   * @return The selectedKey value
    */
   public int getSelectedKey() {
     Iterator i = this.iterator();
@@ -661,11 +663,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the SelectedValue attribute of the LookupList object
+   * Gets the SelectedValue attribute of the LookupList object
    *
-   *@param  selectedId  Description of Parameter
-   *@return             The SelectedValue value
-   *@since
+   * @param selectedId Description of Parameter
+   * @return The SelectedValue value
    */
   public String getSelectedValue(int selectedId) {
     Iterator i = this.iterator();
@@ -687,12 +688,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
   }
 
 
-
   /**
-   *  Gets the selectedValue attribute of the LookupList object
+   * Gets the selectedValue attribute of the LookupList object
    *
-   *@param  selectedId  Description of Parameter
-   *@return             The selectedValue value
+   * @param selectedId Description of Parameter
+   * @return The selectedValue value
    */
   public String getSelectedValue(String selectedId) {
     try {
@@ -704,11 +704,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the SelectedValue attribute of the LookupList object
+   * Gets the SelectedValue attribute of the LookupList object
    *
-   *@param  selectedId  Description of Parameter
-   *@return             The SelectedValue value
-   *@since
+   * @param selectedId Description of Parameter
+   * @return The SelectedValue value
    */
   public String getValueFromId(int selectedId) {
     return getSelectedValue(selectedId);
@@ -716,10 +715,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the selectedValue attribute of the LookupList object
+   * Gets the selectedValue attribute of the LookupList object
    *
-   *@param  selectedId  Description of Parameter
-   *@return             The selectedValue value
+   * @param selectedId Description of Parameter
+   * @return The selectedValue value
    */
   public String getValueFromId(String selectedId) {
     return getSelectedValue(selectedId);
@@ -727,11 +726,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the object attribute of the LookupList object
+   * Gets the object attribute of the LookupList object
    *
-   *@param  rs                Description of Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @return The object value
+   * @throws SQLException Description of Exception
    */
   public LookupElement getObject(ResultSet rs) throws SQLException {
     LookupElement thisElement = new LookupElement(rs);
@@ -740,10 +739,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -751,24 +750,21 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
-    int count = 0;
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
       LookupElement thisElement = this.getObject(rs);
-      if (thisElement.getEnabled() == true || !showDisabledFlag || hasItem(thisElement.getCode())) {
-        ++count;
+      if (thisElement.getEnabled() == true || !showDisabledFlag || hasItem(
+          thisElement.getCode())) {
         this.add(thisElement);
       }
     }
@@ -780,13 +776,13 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  This method is required for synchronization, it allows for the resultset
-   *  to be streamed with lower overhead
+   * This method is required for synchronization, it allows for the resultset
+   * to be streamed with lower overhead
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -813,7 +809,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() + sqlFilter.toString() +
             "AND description < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
@@ -827,10 +824,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("enabled DESC,level,description ", null);
+      pagedListInfo.setDefaultSort(
+          "enabled DESC,\"level\",description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY enabled DESC,level,description ");
+      sqlOrder.append("ORDER BY enabled DESC,\"level\",description ");
     }
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -841,7 +839,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
         "* " +
         "FROM " + tableName + " " +
         "WHERE code > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -852,10 +851,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  key  Description of Parameter
-   *@return      Description of the Returned Value
+   * @param key Description of Parameter
+   * @return Description of the Returned Value
    */
   public boolean containsKey(int key) {
     Iterator i = this.iterator();
@@ -874,9 +873,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String valuesAsString() {
     Iterator i = this.iterator();
@@ -896,10 +895,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the idFromLevel attribute of the LookupList object
+   * Gets the idFromLevel attribute of the LookupList object
    *
-   *@param  level  Description of the Parameter
-   *@return        The idFromLevel value
+   * @param level Description of the Parameter
+   * @return The idFromLevel value
    */
   public int getIdFromLevel(int level) {
     Iterator i = this.iterator();
@@ -914,10 +913,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the idFromValue attribute of the LookupList object
+   * Gets the idFromValue attribute of the LookupList object
    *
-   *@param  value  Description of the Parameter
-   *@return        The idFromValue value
+   * @param value Description of the Parameter
+   * @return The idFromValue value
    */
   public int getIdFromValue(String value) {
     Iterator i = this.iterator();
@@ -932,10 +931,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the levelFromId attribute of the LookupList object
+   * Gets the levelFromId attribute of the LookupList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The levelFromId value
+   * @param id Description of the Parameter
+   * @return The levelFromId value
    */
   public int getLevelFromId(int id) {
     Iterator i = this.iterator();
@@ -948,25 +947,36 @@ public class LookupList extends HtmlSelect implements SyncableList {
     return -1;
   }
 
+  public LookupElement get(String value) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (value.equals(thisElement.getDescription())) {
+        return thisElement;
+      }
+    }
+    return null;
+  }
+
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void printVals() {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
-      System.out.println("Level: " + thisElement.getLevel() + ", Desc: " + thisElement.getDescription() + ", Code: " + thisElement.getCode());
+      System.out.println(
+          "Level: " + thisElement.getLevel() + ", Desc: " + thisElement.getDescription() + ", Code: " + thisElement.getCode());
     }
   }
 
 
   /**
-   *  Adds a feature to the Item attribute of the LookupList object
+   * Adds a feature to the Item attribute of the LookupList object
    *
-   *@param  tmp1  The feature to be added to the Item attribute
-   *@param  tmp2  The feature to be added to the Item attribute
-   *@since
+   * @param tmp1 The feature to be added to the Item attribute
+   * @param tmp2 The feature to be added to the Item attribute
    */
   public void addItem(int tmp1, String tmp2) {
     if (!exists(tmp1)) {
@@ -983,10 +993,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Checks to see if the entry is already in the list
+   * Checks to see if the entry is already in the list
    *
-   *@param  tmp1  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param tmp1 Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean exists(int tmp1) {
     Iterator i = this.iterator();
@@ -1001,10 +1011,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp1  Description of Parameter
-   *@param  tmp2  Description of Parameter
+   * @param tmp1 Description of Parameter
+   * @param tmp2 Description of Parameter
    */
   public void appendItem(int tmp1, String tmp2) {
     LookupElement thisElement = new LookupElement();
@@ -1019,10 +1029,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  A group is for visual presentation only, the following items will be in
-   *  this group.
+   * A group is for visual presentation only, the following items will be in
+   * this group.
    *
-   *@param  category  The feature to be added to the Group attribute
+   * @param category The feature to be added to the Group attribute
    */
   public void addGroup(String category) {
     LookupElement thisElement = new LookupElement();
@@ -1033,9 +1043,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -1054,7 +1064,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
     }
     if (selectedItems != null) {
       if (selectedItems.size() > 0) {
-        sqlFilter.append("AND (enabled = ? OR code IN (" + getItemsAsList() + ")) ");
+        sqlFilter.append(
+            "AND (enabled = ? OR code IN (" + getItemsAsList() + ")) ");
       } else {
         sqlFilter.append("AND enabled = ? ");
       }
@@ -1063,11 +1074,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -1090,11 +1101,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  If a list of codes is provided, then hasItem will return whether the list
-   *  contains the specified code
+   * If a list of codes is provided, then hasItem will return whether the list
+   * contains the specified code
    *
-   *@param  code  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param code Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean hasItem(int code) {
     if (selectedItems != null) {
@@ -1107,9 +1118,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  Gets the itemsAsList attribute of the LookupList object
+   * Gets the itemsAsList attribute of the LookupList object
    *
-   *@return    The itemsAsList value
+   * @return The itemsAsList value
    */
   private String getItemsAsList() {
     StringBuffer sb = new StringBuffer();

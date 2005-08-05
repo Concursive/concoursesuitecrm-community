@@ -25,22 +25,22 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- *  Various utilities that relate to Image processing
+ * Various utilities that relate to Image processing
  *
- *@author     matt rajkowski
- *@created    2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created 2002
  */
 public class ImageUtils {
   /**
-   *  Takes an image file and saves a copy with th maximum specified width and
-   *  height, while retaining the image's aspect ratio.
+   * Takes an image file and saves a copy with th maximum specified width and
+   * height, while retaining the image's aspect ratio.
    *
-   *@param  originalFile     Description of the Parameter
-   *@param  thumbnailFile    Description of the Parameter
-   *@param  maxWidth         Description of the Parameter
-   *@param  maxHeight        Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param originalFile  Description of the Parameter
+   * @param thumbnailFile Description of the Parameter
+   * @param maxWidth      Description of the Parameter
+   * @param maxHeight     Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void saveThumbnail(File originalFile, File thumbnailFile, double maxWidth, double maxHeight) throws IOException {
     BufferedImage thumbnailImage = ImageIO.read(originalFile);
@@ -77,7 +77,7 @@ public class ImageUtils {
       //Soften
       try {
         float softenFactor = 0.05f;
-        float[] softenArray = {0, softenFactor, 0, softenFactor, 1-(softenFactor*4), softenFactor, 0, softenFactor, 0};
+        float[] softenArray = {0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0};
         Kernel kernel = new Kernel(3, 3, softenArray);
         ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         thumbnailImage = cOp.filter(thumbnailImage, null);
@@ -94,7 +94,8 @@ public class ImageUtils {
 
       //Scale
       AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
-      AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+      AffineTransformOp op = new AffineTransformOp(
+          at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
       thumbnailImage = op.filter(thumbnailImage, null);
       ImageIO.write(thumbnailImage, "jpg", thumbnailFile);
     }
@@ -102,11 +103,11 @@ public class ImageUtils {
 
 
   /**
-   *  Converts a Postscript file to a Tiff file using ghostscript command-line
-   *  application
+   * Converts a Postscript file to a Tiff file using ghostscript command-line
+   * application
    *
-   *@param  baseFilename  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param baseFilename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int convertPostscriptToTiffG3File(String baseFilename) {
     Process process;
@@ -116,7 +117,7 @@ public class ImageUtils {
     if (osCheckFile.exists()) {
       //Linux
       command = new String[]{"/bin/sh", "-c",
-          "gs -q " +
+                             "gs -q " +
           "-sDEVICE=tiffg3 " +
           "-dNOPAUSE " +
           "-dBATCH " +
@@ -125,7 +126,7 @@ public class ImageUtils {
     } else {
       //Windows
       command = new String[]{"gs",
-          "-q " +
+                             "-q " +
           "-sDEVICE=tiffg4 " +
           "-dNOPAUSE " +
           "-dBATCH " +
@@ -137,21 +138,22 @@ public class ImageUtils {
       process = runtime.exec(command);
       return (process.waitFor());
     } catch (Exception e) {
-      System.err.println("ImageUtils-> convertPostscriptToTiff error: " + e.toString());
+      System.err.println(
+          "ImageUtils-> convertPostscriptToTiff error: " + e.toString());
       return (1);
     }
   }
 
 
   /**
-   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
-   *  which outputs a JPEG file with the given dimensions.
+   * Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
+   * which outputs a JPEG file with the given dimensions.
    *
-   *@param  url        Description of the Parameter
-   *@param  filename   Description of the Parameter
-   *@param  maxWidth   Description of the Parameter
-   *@param  maxHeight  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param url       Description of the Parameter
+   * @param filename  Description of the Parameter
+   * @param maxWidth  Description of the Parameter
+   * @param maxHeight Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int urlToJpegThumbnail(String url, String filename, double maxWidth, double maxHeight) {
     // Determine paths
@@ -190,14 +192,17 @@ public class ImageUtils {
       //Scale
       AffineTransform at = new AffineTransform();
       at.scale(ratio, ratio);
-      AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+      AffineTransformOp op = new AffineTransformOp(
+          at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
       BufferedImage scaledImage = op.filter(originalImage, null);
 
       //Rotate
       at = new AffineTransform();
-      at.setToTranslation(scaledImage.getHeight() / 2, scaledImage.getWidth() / 2);
+      at.setToTranslation(
+          scaledImage.getHeight() / 2, scaledImage.getWidth() / 2);
       at.rotate(Math.toRadians(90));
-      at.translate(-(scaledImage.getWidth() / 2), -(scaledImage.getHeight() / 2));
+      at.translate(
+          -(scaledImage.getWidth() / 2), -(scaledImage.getHeight() / 2));
       op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
       BufferedImage thumbnailImage = op.filter(scaledImage, null);
 
@@ -213,12 +218,12 @@ public class ImageUtils {
 
 
   /**
-   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
-   *  which outputs a JPEG file.
+   * Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
+   * which outputs a JPEG file.
    *
-   *@param  url       Description of the Parameter
-   *@param  filename  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param url      Description of the Parameter
+   * @param filename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int urlToJpegThumbnail(String url, String filename) {
     Process process;

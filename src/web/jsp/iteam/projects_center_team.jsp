@@ -33,18 +33,20 @@
   </tr>
 </table>
 <br />
-<zeroio:permission name="project-team-edit">
-<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>"><dhv:label name="project.modifyTeam">Modify Team</dhv:label></a><br>
-</zeroio:permission>
-<zeroio:permission name="project-team-edit-role">
-<script language="javascript" type="text/javascript">
-  function updateRole(pid, id, rid) {
-    window.frames['server_commands'].location.href='ProjectManagementTeam.do?command=ChangeRole&pid=' + pid + '&id=' + id + '&role=' + rid;
-  }
-</script>
-<font color="blue"><dhv:label name="project.changeTeamMemberRole.text">* Immediately change the team member's role by making changes below</dhv:label></font>
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
-</zeroio:permission>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-team-edit">
+    <a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>"><dhv:label name="project.modifyTeam">Modify Team</dhv:label></a><br>
+  </zeroio:permission>
+  <zeroio:permission name="project-team-edit-role">
+    <script language="javascript" type="text/javascript">
+      function updateRole(pid, id, rid) {
+        window.frames['server_commands'].location.href='ProjectManagementTeam.do?command=ChangeRole&pid=' + pid + '&id=' + id + '&role=' + rid;
+      }
+    </script>
+    <font color="blue"><dhv:label name="project.changeTeamMemberRole.text">* Immediately change the team member's role by making changes below</dhv:label></font>
+    <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
+  </zeroio:permission>
+</dhv:evaluate>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="Employees" object="projectEmployeeTeamInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -81,15 +83,19 @@
         <zeroio:role id="<%= thisMember.getUserLevel() %>"/>
       </zeroio:permission>
       <zeroio:permission name="project-team-edit-role">
-        <zeroio:roleSelect
-          name="<%= roleName %>"
-          value="<%= roleValue %>"
-          onChange="<%= roleOnChange %>"/>
+        <dhv:evaluate if="<%= !Project.isTrashed() %>" >
+          <zeroio:roleSelect
+            name="<%= roleName %>"
+            value="<%= roleValue %>"
+            onChange="<%= roleOnChange %>"/>
+        </dhv:evaluate>
       </zeroio:permission>
     </td>
     <td valign="top"><%= thisMember.getUserId() %></td>
     <td valign="top">
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"><font color="red"></dhv:evaluate>
       <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"> (X)</dhv:evaluate>
       <dhv:evaluate if="<%= hasText(thisContact.getContact().getDepartmentName()) %>">
         /
         <%= toHtml(thisContact.getContact().getDepartmentName()) %>
@@ -97,6 +103,7 @@
       <zeroio:permission name="project-team-view-email">
         <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><br /><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
       </zeroio:permission>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"></font></dhv:evaluate>
     </td>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
       <td valign="top" nowrap>
@@ -160,22 +167,30 @@
         <zeroio:role id="<%= thisMember.getUserLevel() %>"/>
       </zeroio:permission>
       <zeroio:permission name="project-team-edit-role">
-        <zeroio:roleSelect
-          name="<%= roleName %>"
-          value="<%= roleValue %>"
-          onChange="<%= roleOnChange %>"/>
+        <dhv:evaluate if="<%= !Project.isTrashed() %>" >
+          <zeroio:roleSelect
+            name="<%= roleName %>"
+            value="<%= roleValue %>"
+            onChange="<%= roleOnChange %>"/>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= Project.isTrashed() %>" >
+          <zeroio:role id="<%= thisMember.getUserLevel() %>"/>
+        </dhv:evaluate>
       </zeroio:permission>
     </td>
     <td valign="top"><%= thisMember.getUserId() %></td>
     <td valign="top">
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"><font color="red"></dhv:evaluate>
       <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
-      <dhv:evaluate if="<%= hasText(thisContact.getContact().getCompany()) %>">
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"> (X)</dhv:evaluate>
+    <dhv:evaluate if="<%= hasText(thisContact.getContact().getCompany()) %>">
         /
         <%= toHtml(thisContact.getContact().getCompany()) %>
       </dhv:evaluate>
       <zeroio:permission name="project-team-view-email">
         <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><br /><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
       </zeroio:permission>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"></font></dhv:evaluate>
     </td>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
       <td valign="top" nowrap>

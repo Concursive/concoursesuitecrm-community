@@ -6,6 +6,7 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.HtmlSelect;
 
@@ -83,14 +84,16 @@ public class ProjectCategoryList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     //Set the order
-    sqlOrder.append("ORDER BY pc.level, pc.description ");
+    sqlOrder.append("ORDER BY pc.\"level\", pc.description ");
     createFilter(sqlFilter);
     //Need to build a base SQL statement for returning records
     sqlSelect.append("SELECT ");
-    sqlSelect.append("pc.* " +
+    sqlSelect.append(
+        "pc.* " +
         "FROM lookup_project_category pc " +
         "WHERE pc.code > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -195,13 +198,14 @@ public class ProjectCategoryList extends ArrayList {
   }
 
 
-  public String getHtmlSelect(String selectName, int selectedId) {
+  public String getHtmlSelect(SystemStatus thisSystem, String selectName, int selectedId) {
     HtmlSelect thisSelect = new HtmlSelect();
-    thisSelect.addItem(-1, "-- None --");
+    thisSelect.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
     Iterator i = this.iterator();
     while (i.hasNext()) {
       ProjectCategory thisCategory = (ProjectCategory) i.next();
-      thisSelect.addItem(thisCategory.getId(),
+      thisSelect.addItem(
+          thisCategory.getId(),
           thisCategory.getDescription());
     }
     return thisSelect.getHtml(selectName, selectedId);
@@ -213,7 +217,8 @@ public class ProjectCategoryList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       ProjectCategory thisCategory = (ProjectCategory) i.next();
-      thisSelect.addItem(thisCategory.getId(),
+      thisSelect.addItem(
+          thisCategory.getId(),
           thisCategory.getDescription());
     }
     return thisSelect;
@@ -273,8 +278,9 @@ public class ProjectCategoryList extends ArrayList {
 
 
   public void updateLevel(Connection db, int id, int level) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("UPDATE lookup_project_category " +
-        "SET level = ? " +
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE lookup_project_category " +
+        "SET \"level\" = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst.setInt(++i, level);
@@ -285,7 +291,8 @@ public class ProjectCategoryList extends ArrayList {
 
 
   public void updateName(Connection db, int id, String name) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("UPDATE lookup_project_category " +
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE lookup_project_category " +
         "SET description = ? " +
         "WHERE code = ? ");
     int i = 0;

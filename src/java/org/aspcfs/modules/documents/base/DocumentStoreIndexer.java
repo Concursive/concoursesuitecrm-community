@@ -15,35 +15,38 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Indexer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.*;
 import java.io.IOException;
-import com.zeroio.iteam.base.Indexer;
-import com.darkhorseventures.framework.actions.ActionContext;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     
- *@created    
- *@version    $Id:  Exp
- *      $
+ * @author
+ * @version $Id:  Exp
+ *          $
+ * @created
  */
 public class DocumentStoreIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     PreparedStatement pst = db.prepareStatement(
@@ -70,57 +73,74 @@ public class DocumentStoreIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  documentStore          Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer        Description of the Parameter
+   * @param documentStore Description of the Parameter
+   * @param modified      Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, DocumentStore documentStore, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "documentstoredetails"));
-    document.add(Field.Keyword("documentStoreKeyId", String.valueOf(documentStore.getId())));
-    document.add(Field.Keyword("documentStoreId", String.valueOf(documentStore.getId())));
+    document.add(
+        Field.Keyword(
+            "documentStoreKeyId", String.valueOf(documentStore.getId())));
+    document.add(
+        Field.Keyword(
+            "documentStoreId", String.valueOf(documentStore.getId())));
+    document.add(
+        Field.Text(
+            "trashed", ((documentStore.getTrashedDate() != null) ? "Trashed" : "")));
     document.add(Field.Text("title", documentStore.getTitle()));
-    document.add(Field.Text("contents",
-        documentStore.getTitle() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            documentStore.getTitle() + " " +
         documentStore.getShortDescription() + " " +
         documentStore.getRequestedBy() + " " +
         documentStore.getRequestedDept()));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(documentStore.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(
+                  documentStore.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
-      System.out.println("DocumentStoreIndexer-> Added: " + documentStore.getId());
+      System.out.println(
+          "DocumentStoreIndexer-> Added: " + documentStore.getId());
     }
   }
 
 
   /**
-   *  Gets the searchTerm attribute of the DocumentStoreIndexer class
+   * Gets the searchTerm attribute of the DocumentStoreIndexer class
    *
-   *@param  documentStore  Description of the Parameter
-   *@return          The searchTerm value
+   * @param documentStore Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(DocumentStore documentStore) {
-    Term searchTerm = new Term("documentStoreKeyId", String.valueOf(documentStore.getId()));
+    Term searchTerm = new Term(
+        "documentStoreKeyId", String.valueOf(documentStore.getId()));
     return searchTerm;
   }
 
 
   /**
-   *  Gets the deleteTerm attribute of the DocumentStoreIndexer class
+   * Gets the deleteTerm attribute of the DocumentStoreIndexer class
    *
-   *@param  documentStore  Description of the Parameter
-   *@return          The deleteTerm value
+   * @param documentStore Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(DocumentStore documentStore) {
-    Term searchTerm = new Term("documentStoreId", String.valueOf(documentStore.getId()));
+    Term searchTerm = new Term(
+        "documentStoreId", String.valueOf(documentStore.getId()));
     return searchTerm;
   }
 }

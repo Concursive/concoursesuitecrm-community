@@ -15,33 +15,34 @@
  */
 package org.aspcfs.modules.setup.beans;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
 import java.util.StringTokenizer;
 
 /**
- *  Bean to encapsulate the Configure Database HTML form
+ * Bean to encapsulate the Configure Database HTML form
  *
- *@author     mrajkowski
- *@created    August 19, 2003
- *@version    $Id: DatabaseBean.java,v 1.1.2.1 2003/08/19 20:18:47 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: DatabaseBean.java,v 1.1.2.1 2003/08/19 20:18:47 mrajkowski
+ *          Exp $
+ * @created August 19, 2003
  */
 public class DatabaseBean extends GenericBean {
 
   private int configured = -1;
-  private String type = "PostgreSQL";
+  private String type = "none";
   private String driver = null;
   private String ip = "127.0.0.1";
-  private int port = 5432;
+  private int port = 0;
   private String name = "centric_crm";
   private String user = "centric_crm";
   private String password = null;
-
+  private String path = "";
 
   /**
-   *  Sets the configured attribute of the DatabaseBean object
+   * Sets the configured attribute of the DatabaseBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(int tmp) {
     this.configured = tmp;
@@ -49,9 +50,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the DatabaseBean object
+   * Sets the configured attribute of the DatabaseBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(String tmp) {
     this.configured = Integer.parseInt(tmp);
@@ -59,9 +60,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the DatabaseBean object
+   * Sets the type attribute of the DatabaseBean object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = tmp;
@@ -69,9 +70,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the ip attribute of the DatabaseBean object
+   * Sets the ip attribute of the DatabaseBean object
    *
-   *@param  tmp  The new ip value
+   * @param tmp The new ip value
    */
   public void setIp(String tmp) {
     this.ip = tmp;
@@ -79,9 +80,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the port attribute of the DatabaseBean object
+   * Sets the port attribute of the DatabaseBean object
    *
-   *@param  tmp  The new port value
+   * @param tmp The new port value
    */
   public void setPort(int tmp) {
     this.port = tmp;
@@ -89,9 +90,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the port attribute of the DatabaseBean object
+   * Sets the port attribute of the DatabaseBean object
    *
-   *@param  tmp  The new port value
+   * @param tmp The new port value
    */
   public void setPort(String tmp) {
     this.port = Integer.parseInt(tmp);
@@ -99,9 +100,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the DatabaseBean object
+   * Sets the name attribute of the DatabaseBean object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -109,9 +110,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the user attribute of the DatabaseBean object
+   * Sets the user attribute of the DatabaseBean object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(String tmp) {
     this.user = tmp;
@@ -119,9 +120,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the password attribute of the DatabaseBean object
+   * Sets the password attribute of the DatabaseBean object
    *
-   *@param  tmp  The new password value
+   * @param tmp The new password value
    */
   public void setPassword(String tmp) {
     this.password = tmp;
@@ -129,9 +130,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the configured attribute of the DatabaseBean object
+   * Gets the configured attribute of the DatabaseBean object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public int getConfigured() {
     return configured;
@@ -139,9 +140,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the DatabaseBean object
+   * Gets the type attribute of the DatabaseBean object
    *
-   *@return    The type value
+   * @return The type value
    */
   public String getType() {
     return type;
@@ -149,12 +150,15 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the driver attribute of the DatabaseBean object
+   * Gets the driver attribute of the DatabaseBean object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     if (driver == null) {
+      if ("DaffodilDB".equals(type)) {
+        driver = "in.co.daffodil.db.jdbc.DaffodilDBDriver";
+      }
       if ("PostgreSQL".equals(type)) {
         driver = "org.postgresql.Driver";
       }
@@ -165,11 +169,15 @@ public class DatabaseBean extends GenericBean {
     return driver;
   }
 
+  public boolean isEmbedded() {
+    return "DaffodilDB".equals(type);
+  }
+
 
   /**
-   *  Gets the ip attribute of the DatabaseBean object
+   * Gets the ip attribute of the DatabaseBean object
    *
-   *@return    The ip value
+   * @return The ip value
    */
   public String getIp() {
     return ip;
@@ -177,9 +185,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the port attribute of the DatabaseBean object
+   * Gets the port attribute of the DatabaseBean object
    *
-   *@return    The port value
+   * @return The port value
    */
   public int getPort() {
     return port;
@@ -187,9 +195,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the DatabaseBean object
+   * Gets the name attribute of the DatabaseBean object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -197,9 +205,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the user attribute of the DatabaseBean object
+   * Gets the user attribute of the DatabaseBean object
    *
-   *@return    The user value
+   * @return The user value
    */
   public String getUser() {
     return user;
@@ -207,9 +215,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the password attribute of the DatabaseBean object
+   * Gets the password attribute of the DatabaseBean object
    *
-   *@return    The password value
+   * @return The password value
    */
   public String getPassword() {
     return password;
@@ -217,18 +225,22 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the url attribute of the DatabaseBean object
+   * Gets the url attribute of the DatabaseBean object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
+    if ("in.co.daffodil.db.jdbc.DaffodilDBDriver".equals(this.getDriver())) {
+      return "jdbc:daffodilDB_embedded:" + this.getName() + ";path=" + path + "daffodildb";
+    }
     if ("org.postgresql.Driver".equals(this.getDriver())) {
       return "jdbc:postgresql://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
     if ("net.sourceforge.jtds.jdbc.Driver".equals(this.getDriver())) {
       return "jdbc:jtds:sqlserver://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
-    if ("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(this.getDriver())) {
+    if ("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(
+        this.getDriver())) {
       return "jdbc:microsoft:sqlserver://" + this.getIp() + ":" + this.getPort() + ";SelectMethod=cursor;DatabaseName=" + this.getName();
     }
     return "";
@@ -236,9 +248,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Sets the connection attribute of the DatabaseBean object
+   * Sets the connection attribute of the DatabaseBean object
    *
-   *@param  tmp  The new connection value
+   * @param tmp The new connection value
    */
   public void setConnection(String tmp) {
     StringTokenizer st = new StringTokenizer(tmp, "|");
@@ -253,9 +265,9 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the connection attribute of the DatabaseBean object
+   * Gets the connection attribute of the DatabaseBean object
    *
-   *@return    The connection value
+   * @return The connection value
    */
   public String getConnection() {
     return type + "|" +
@@ -267,13 +279,19 @@ public class DatabaseBean extends GenericBean {
         password;
   }
 
+  public void setPath(String path) {
+    this.path = path;
+  }
 
   /**
-   *  Gets the typeValue attribute of the DatabaseBean object
+   * Gets the typeValue attribute of the DatabaseBean object
    *
-   *@return    The typeValue value
+   * @return The typeValue value
    */
   public String getTypeValue() {
+    if ("DaffodilDB".equals(type)) {
+      return "daffodildb";
+    }
     if ("PostgreSQL".equals(type)) {
       return "postgresql";
     }

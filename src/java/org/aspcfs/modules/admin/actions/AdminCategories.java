@@ -33,20 +33,20 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Actions for managing the Category Editors.
+ * Actions for managing the Category Editors.
  *
- *@author     akhi_m
- *@created    May 23, 2003
- *@version    $id: exp$
+ * @author akhi_m
+ * @version $id: exp$
+ * @created May 23, 2003
  */
 public final class AdminCategories extends CFSModule {
 
   /**
-   *  Action to show a list of objects that support category editors for the
-   *  specified module
+   * Action to show a list of objects that support category editors for the
+   * specified module
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShow(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -58,7 +58,8 @@ public final class AdminCategories extends CFSModule {
     try {
       db = getConnection(context);
       // Build the module details
-      PermissionCategory permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
+      PermissionCategory permCat = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
       // Build a list of categories that can be edited in this module
       CategoryEditorList editorList = new CategoryEditorList();
@@ -76,10 +77,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -89,35 +90,42 @@ public final class AdminCategories extends CFSModule {
     Connection db = null;
     String moduleId = context.getRequest().getParameter("moduleId");
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       context.getRequest().setAttribute("categoryEditor", thisEditor);
       //build the module details
-      PermissionCategory permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
+      PermissionCategory permCat = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
       //create lists for selected categories
       HashMap tmpList = null;
-      if (context.getSession().getAttribute("selectedCategories" + constantId) != null || 
+      if (context.getSession().getAttribute("selectedCategories" + constantId) != null ||
           "true".equals(context.getRequest().getParameter("reset"))) {
-        tmpList = (HashMap) context.getSession().getAttribute("selectedCategories" + constantId);
+        tmpList = (HashMap) context.getSession().getAttribute(
+            "selectedCategories" + constantId);
         HashMap categories = thisEditor.getCategoryList();
         for (int k = 1; k < thisEditor.getMaxLevels(); k++) {
           TicketCategoryDraftList subList = null;
           if (tmpList.get(new Integer(k - 1)) != null) {
-            TicketCategoryDraft tmpCat = (TicketCategoryDraft) categories.get((Integer) (tmpList.get(new Integer(k - 1))));
+            TicketCategoryDraft tmpCat = (TicketCategoryDraft) categories.get(
+                (Integer) (tmpList.get(new Integer(k - 1))));
             subList = tmpCat.getShortChildList();
           } else {
             subList = new TicketCategoryDraftList();
           }
-          subList.setHtmlJsEvent("onChange=\"javascript:loadCategories('" + k + "');\"");
+          subList.setHtmlJsEvent(
+              "onChange=\"javascript:loadCategories('" + k + "');\"");
           context.getRequest().setAttribute("SubList" + k, subList);
         }
       } else {
         tmpList = new HashMap();
-        context.getSession().setAttribute("selectedCategories" + constantId, tmpList);
+        context.getSession().setAttribute(
+            "selectedCategories" + constantId, tmpList);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -130,10 +138,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -144,13 +152,16 @@ public final class AdminCategories extends CFSModule {
     TicketCategoryDraftList catList = new TicketCategoryDraftList();
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       if (!"-1".equals(categoryId)) {
-        TicketCategoryDraft thisCategory = (TicketCategoryDraft) thisEditor.getCategory(Integer.parseInt(categoryId));
+        TicketCategoryDraft thisCategory = (TicketCategoryDraft) thisEditor.getCategory(
+            Integer.parseInt(categoryId));
         catList = thisCategory.getShortChildList();
       } else {
         catList = thisEditor.getTopCategoryList();
@@ -167,10 +178,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCategoryJSList(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -179,16 +190,19 @@ public final class AdminCategories extends CFSModule {
     String categoryId = context.getRequest().getParameter("categoryId");
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //get the category editor from system status (for max size)
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       context.getRequest().setAttribute("categoryEditor", thisEditor);
       //load the list
       TicketCategoryDraftList catList = null;
       if (Integer.parseInt(categoryId) > 0) {
-        TicketCategoryDraft thisCategory = thisEditor.getCategory(Integer.parseInt(categoryId));
+        TicketCategoryDraft thisCategory = thisEditor.getCategory(
+            Integer.parseInt(categoryId));
         catList = thisCategory.getShortChildList();
         context.getRequest().setAttribute("ParentCategory", thisCategory);
       } else {
@@ -198,7 +212,8 @@ public final class AdminCategories extends CFSModule {
       //update the selected categories
       context.getSession().removeAttribute("selectedCategories");
       if (Integer.parseInt(categoryId) != -1) {
-        HashMap tmpList = thisEditor.getHierarchyAsList(Integer.parseInt(categoryId));
+        HashMap tmpList = thisEditor.getHierarchyAsList(
+            Integer.parseInt(categoryId));
         context.getSession().setAttribute("selectedCategories", tmpList);
       }
     } catch (Exception e) {
@@ -212,10 +227,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -224,20 +239,23 @@ public final class AdminCategories extends CFSModule {
     addModuleBean(context, "Configuration", "Save Categories");
     String categories = context.getRequest().getParameter("categories");
     String parentCatId = context.getRequest().getParameter("parentCode");
-    
+
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       // get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       // save the item
       thisEditor.setSystemStatus(this.getSystemStatus(context));
       thisEditor.updateCategory(db, categories, Integer.parseInt(parentCatId));
       TicketCategoryDraftList catList = null;
       if (!"-1".equals(parentCatId)) {
-        TicketCategoryDraft thisCategory = thisEditor.getCategory(Integer.parseInt(parentCatId));
+        TicketCategoryDraft thisCategory = thisEditor.getCategory(
+            Integer.parseInt(parentCatId));
         catList = thisCategory.getShortChildList();
       } else {
         catList = thisEditor.getTopCategoryList();
@@ -254,10 +272,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmSave(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -270,31 +288,40 @@ public final class AdminCategories extends CFSModule {
     String parentCatId = context.getRequest().getParameter("parentCode");
     String level = context.getRequest().getParameter("level");
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //escape the ' character in the categories parameter
       categories = StringUtils.replacePattern(categories, "'", "\\\\'");
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       DependencyList dependencies = thisEditor.processDependencies(categories);
       //htmlDialog.addMessage("Please review carefully...\n" + dependencies.getHtmlString());
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (dependencies.size() == 0) {
         htmlDialog.setTitle(systemStatus.getLabel("admin.confirm.title"));
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setHeader(systemStatus.getLabel("admin.confirm.header"));
-        htmlDialog.setDeleteUrl("javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
       } else {
         if (dependencies.canDelete()) {
           htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-          htmlDialog.setHeader(systemStatus.getLabel("admin.confirm.categories.header"));
-          htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
-          htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+          htmlDialog.setHeader(
+              systemStatus.getLabel("admin.confirm.categories.header"));
+          htmlDialog.addButton(
+              systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
+          htmlDialog.addButton(
+              systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
         } else {
           htmlDialog.setTitle(systemStatus.getLabel("admin.confirm.alert"));
-          htmlDialog.setHeader(systemStatus.getLabel("admin.confirm.alert.message"));
-          htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+          htmlDialog.setHeader(
+              systemStatus.getLabel("admin.confirm.alert.message"));
+          htmlDialog.addButton(
+              systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         }
       }
     } catch (Exception e) {
@@ -309,10 +336,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveDraft(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -321,7 +348,8 @@ public final class AdminCategories extends CFSModule {
     addModuleBean(context, "Configuration", "Save Draft");
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -338,10 +366,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReset(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -350,11 +378,13 @@ public final class AdminCategories extends CFSModule {
     addModuleBean(context, "Configuration", "Reset List");
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       thisEditor.reset(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -368,10 +398,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandActivate(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -380,11 +410,13 @@ public final class AdminCategories extends CFSModule {
     addModuleBean(context, "Configuration", "Activate Categories");
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       thisEditor.activate(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -397,10 +429,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Generates the top level of a list of categories for the specified module
+   * Generates the top level of a list of categories for the specified module
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewActive(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -410,14 +442,17 @@ public final class AdminCategories extends CFSModule {
     Connection db = null;
     String moduleId = context.getRequest().getParameter("moduleId");
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       db = getConnection(context);
       // build the module details
-      PermissionCategory permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
+      PermissionCategory permCat = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
       //get the category editor from system status (to determine level count)
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       context.getRequest().setAttribute("categoryEditor", thisEditor);
       // all category editors will put their elements in a common HtmlSelect
       HtmlSelect htmlSelect = new HtmlSelect();
@@ -443,10 +478,10 @@ public final class AdminCategories extends CFSModule {
 
 
   /**
-   *  Returns a list of categories to dynamically populate an HTML select
+   * Returns a list of categories to dynamically populate an HTML select
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandActiveCatJSList(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -455,12 +490,14 @@ public final class AdminCategories extends CFSModule {
     String parentCode = context.getRequest().getParameter("categoryId");
     Connection db = null;
     try {
-      int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
+      int constantId = Integer.parseInt(
+          context.getRequest().getParameter("constantId"));
       HtmlSelect htmlSelect = new HtmlSelect();
       db = getConnection(context);
       //get the category editor from system status (to determine level count)
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      CategoryEditor thisEditor = systemStatus.getCategoryEditor(
+          db, constantId);
       context.getRequest().setAttribute("categoryEditor", thisEditor);
       // all category editors will put their elements in a common HtmlSelect
       CategoryList catList = new CategoryList(thisEditor.getTableName());

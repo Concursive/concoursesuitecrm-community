@@ -15,25 +15,21 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import java.text.DateFormat;
-import javax.servlet.http.HttpServletRequest;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Constants;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  This represents a list of product status for a particular product within an
- *  Order
+ * This represents a list of product status for a particular product within an
+ * Order
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id: OrderProductStatusList.java,v 1.2 2004/05/04 15:52:27
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: OrderProductStatusList.java,v 1.2 2004/05/04 15:52:27
+ *          mrajkowski Exp $
+ * @created March 18, 2004
  */
 public class OrderProductStatusList extends ArrayList {
   private int itemId = -1;
@@ -41,9 +37,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the OrderProductStatusList object
+   * Sets the itemId attribute of the OrderProductStatusList object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -51,9 +47,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the OrderProductStatusList object
+   * Sets the itemId attribute of the OrderProductStatusList object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -61,9 +57,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderProductStatusList object
+   * Sets the statusId attribute of the OrderProductStatusList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -71,9 +67,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderProductStatusList object
+   * Sets the statusId attribute of the OrderProductStatusList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -81,9 +77,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Gets the itemId attribute of the OrderProductStatusList object
+   * Gets the itemId attribute of the OrderProductStatusList object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -91,9 +87,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Gets the statusId attribute of the OrderProductStatusList object
+   * Gets the statusId attribute of the OrderProductStatusList object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -101,16 +97,17 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Constructor for the OrderProductStatusList object
+   * Constructor for the OrderProductStatusList object
    */
-  public OrderProductStatusList() { }
+  public OrderProductStatusList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -136,7 +133,8 @@ public class OrderProductStatusList extends ArrayList {
         " FROM order_product_status ops, order_product prod " +
         " WHERE ops.item_id = prod.item_id AND ops.order_product_status_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -149,9 +147,9 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -169,11 +167,11 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -189,10 +187,10 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -204,10 +202,10 @@ public class OrderProductStatusList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();

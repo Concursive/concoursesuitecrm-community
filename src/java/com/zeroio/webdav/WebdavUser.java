@@ -16,11 +16,11 @@
 package com.zeroio.webdav;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    November 2, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created November 2, 2004
  */
 public class WebdavUser {
   private int userId = -1;
@@ -30,9 +30,9 @@ public class WebdavUser {
 
 
   /**
-   *  Sets the nonce attribute of the WebdavUser object
+   * Sets the nonce attribute of the WebdavUser object
    *
-   *@param  tmp  The new nonce value
+   * @param tmp The new nonce value
    */
   public void setNonce(String tmp) {
     this.nonce = tmp;
@@ -40,9 +40,9 @@ public class WebdavUser {
 
 
   /**
-   *  Gets the nonce attribute of the WebdavUser object
+   * Gets the nonce attribute of the WebdavUser object
    *
-   *@return    The nonce value
+   * @return The nonce value
    */
   public String getNonce() {
     return nonce;
@@ -50,9 +50,9 @@ public class WebdavUser {
 
 
   /**
-   *  Sets the digest attribute of the WebdavUser object
+   * Sets the digest attribute of the WebdavUser object
    *
-   *@param  tmp  The new digest value
+   * @param tmp The new digest value
    */
   public void setDigest(String tmp) {
     this.digest = tmp;
@@ -60,9 +60,9 @@ public class WebdavUser {
 
 
   /**
-   *  Gets the digest attribute of the WebdavUser object
+   * Gets the digest attribute of the WebdavUser object
    *
-   *@return    The digest value
+   * @return The digest value
    */
   public String getDigest() {
     return digest;
@@ -70,9 +70,9 @@ public class WebdavUser {
 
 
   /**
-   *  Sets the userId attribute of the WebdavUser object
+   * Sets the userId attribute of the WebdavUser object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -80,9 +80,9 @@ public class WebdavUser {
 
 
   /**
-   *  Sets the userId attribute of the WebdavUser object
+   * Sets the userId attribute of the WebdavUser object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -90,9 +90,9 @@ public class WebdavUser {
 
 
   /**
-   *  Sets the roleId attribute of the WebdavUser object
+   * Sets the roleId attribute of the WebdavUser object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(int tmp) {
     this.roleId = tmp;
@@ -100,9 +100,9 @@ public class WebdavUser {
 
 
   /**
-   *  Sets the roleId attribute of the WebdavUser object
+   * Sets the roleId attribute of the WebdavUser object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(String tmp) {
     this.roleId = Integer.parseInt(tmp);
@@ -110,9 +110,9 @@ public class WebdavUser {
 
 
   /**
-   *  Gets the userId attribute of the WebdavUser object
+   * Gets the userId attribute of the WebdavUser object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -120,9 +120,9 @@ public class WebdavUser {
 
 
   /**
-   *  Gets the roleId attribute of the WebdavUser object
+   * Gets the roleId attribute of the WebdavUser object
    *
-   *@return    The roleId value
+   * @return The roleId value
    */
   public int getRoleId() {
     return roleId;
@@ -130,16 +130,17 @@ public class WebdavUser {
 
 
   /**
-   *  Constructor for the WebdavUser object
+   * Constructor for the WebdavUser object
    */
-  public WebdavUser() { }
+  public WebdavUser() {
+  }
 
 
   /**
-   *  Constructor for the WebdavUser object
+   * Constructor for the WebdavUser object
    *
-   *@param  userId  Description of the Parameter
-   *@param  roleId  Description of the Parameter
+   * @param userId Description of the Parameter
+   * @param roleId Description of the Parameter
    */
   public WebdavUser(int userId, int roleId) {
     this.userId = userId;

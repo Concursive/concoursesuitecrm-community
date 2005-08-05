@@ -15,18 +15,16 @@
  */
 package org.aspcfs.apps.transfer.reader;
 
-import org.aspcfs.apps.transfer.*;
-import java.util.*;
-import java.io.*;
-import java.util.logging.*;
-import org.w3c.dom.*;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class UnitTestReader implements DataReader {
 
@@ -34,9 +32,9 @@ public class UnitTestReader implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the CFSDatabaseReader object
+   * Gets the version attribute of the CFSDatabaseReader object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -44,9 +42,9 @@ public class UnitTestReader implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the CFSDatabaseReader object
+   * Gets the name attribute of the CFSDatabaseReader object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Unit Test Reader";
@@ -54,9 +52,9 @@ public class UnitTestReader implements DataReader {
 
 
   /**
-   *  Gets the description attribute of the CFSDatabaseReader object
+   * Gets the description attribute of the CFSDatabaseReader object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Coded test data";
@@ -64,9 +62,9 @@ public class UnitTestReader implements DataReader {
 
 
   /**
-   *  Gets the configured attribute of the CFSDatabaseReader object
+   * Gets the configured attribute of the CFSDatabaseReader object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     return true;
@@ -74,10 +72,10 @@ public class UnitTestReader implements DataReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     /*
@@ -120,8 +118,10 @@ public class UnitTestReader implements DataReader {
       thisRecord.addField("orgId", "0");
       thisRecord.addField("contactId", "1");
       thisRecord.addField("sourceCode", "1");
-      thisRecord.addField("problem", "This is a Centric CRM test ticket\r\nThis is line 2.");
-      thisRecord.addField("comment", "The following is set by this ticket:\r\n" +
+      thisRecord.addField(
+          "problem", "This is a Centric CRM test ticket\r\nThis is line 2.");
+      thisRecord.addField(
+          "comment", "The following is set by this ticket:\r\n" +
           "The ticket is entered, modified by, and assigned to McClean using the Web Site source.\r\n" +
           "The ticket will be saved against the internal account (My Company).\r\n" +
           "The severity is normal, and the issue is categorized as:\r\n" +

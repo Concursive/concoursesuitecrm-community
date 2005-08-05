@@ -22,6 +22,10 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
+<jsp:useBean id="environmentSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="competitorsSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="compellingEventSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="budgetSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -61,14 +65,15 @@ function reopenOpportunity(id) {
   <input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
   <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
   <input type="hidden" name="orgId" value="<%= OrgDetails.getId() %>">
-  <dhv:permission name="accounts-accounts-opportunities-edit">
-    <br><br>
-    <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();">
-  </dhv:permission>
-  <dhv:permission name="accounts-accounts-opportunities-delete">
-    <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')">
-  </dhv:permission>
-  <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"></dhv:permission>
+  <dhv:evaluate if="<%= !OppComponentDetails.isTrashed() %>" >
+    <dhv:permission name="accounts-accounts-opportunities-edit">
+      <br><br>
+      <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();">
+    </dhv:permission>
+    <dhv:permission name="accounts-accounts-opportunities-delete">
+      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')">
+    </dhv:permission>
+  </dhv:evaluate>
   <br />
   <br />
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -166,6 +171,47 @@ function reopenOpportunity(id) {
         <%= toHtml(OppComponentDetails.getStageName()) %>&nbsp;
       </td>
     </tr>
+    <dhv:evaluate if="<%= environmentSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.environment">Environment</dhv:label>
+      </td>
+      <td>
+      <zeroio:debug value="<%= "JSP:: the environment is "+ OppComponentDetails.getEnvironment() %>"/>
+      <%= toHtml(environmentSelect.getSelectedValue(OppComponentDetails.getEnvironment())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= competitorsSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.competitors">Competitors</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(competitorsSelect.getSelectedValue(OppComponentDetails.getCompetitors())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= compellingEventSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.compellingEvent">Compelling Event</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(compellingEventSelect.getSelectedValue(OppComponentDetails.getCompellingEvent())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= budgetSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="project.budget">Budget</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(budgetSelect.getSelectedValue(OppComponentDetails.getBudget())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStageDate">Current Stage Date</dhv:label>
@@ -226,9 +272,11 @@ function reopenOpportunity(id) {
       </td>
     </tr>
   </table>
-  <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br></dhv:permission>
-  <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();"></dhv:permission>
-  <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%=OrgDetails.getId()%>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-  <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"></dhv:permission></td>
+  <dhv:evaluate if="<%= !OppComponentDetails.isTrashed() %>" >
+    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br></dhv:permission>
+    <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();"></dhv:permission>
+    <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%=OrgDetails.getId()%>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+  </dhv:evaluate>
+  </td>
 </dhv:container>
 </form>

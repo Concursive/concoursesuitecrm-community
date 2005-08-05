@@ -15,26 +15,24 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
- *  Builds a list of user Roles
+ * Builds a list of user Roles
  *
- *@author     matt rajkowski
- *@created    < January 14, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created < January 14, 2002
  */
 public class RoleList extends ArrayList {
 
@@ -48,15 +46,16 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Constructor for the RoleList object
+   * Constructor for the RoleList object
    */
-  public RoleList() { }
+  public RoleList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the RoleList object
+   * Sets the pagedListInfo attribute of the RoleList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -64,9 +63,9 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the RoleList object
+   * Sets the emptyHtmlSelectRecord attribute of the RoleList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -74,9 +73,9 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Sets the enabledState attribute of the RoleList object
+   * Sets the enabledState attribute of the RoleList object
    *
-   *@param  booleanInt  The new enabledState value
+   * @param booleanInt The new enabledState value
    */
   public void setEnabledState(int booleanInt) {
     enabledState = booleanInt;
@@ -84,9 +83,9 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Sets the buildUsers attribute of the RoleList object
+   * Sets the buildUsers attribute of the RoleList object
    *
-   *@param  tmp  The new buildUsers value
+   * @param tmp The new buildUsers value
    */
   public void setBuildUsers(boolean tmp) {
     this.buildUsers = tmp;
@@ -94,9 +93,9 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Sets the buildUserCount attribute of the RoleList object
+   * Sets the buildUserCount attribute of the RoleList object
    *
-   *@param  tmp  The new buildUserCount value
+   * @param tmp The new buildUserCount value
    */
   public void setBuildUserCount(boolean tmp) {
     this.buildUserCount = tmp;
@@ -104,9 +103,9 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Sets the roleType attribute of the RoleList object
+   * Sets the roleType attribute of the RoleList object
    *
-   *@param  tmp  The new roleType value
+   * @param tmp The new roleType value
    */
   public void setRoleType(int tmp) {
     this.roleType = tmp;
@@ -114,21 +113,23 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Sets the roleType attribute of the RoleList object
+   * Sets the roleType attribute of the RoleList object
    *
-   *@param  tmp  The new roleType value
+   * @param tmp The new roleType value
    */
   public void setRoleType(String tmp) {
     this.roleType = Integer.parseInt(tmp);
   }
 
-  public void setExcludeRoleType(int tmp) { this.excludeRoleType = tmp; }
+  public void setExcludeRoleType(int tmp) {
+    this.excludeRoleType = tmp;
+  }
 
   /**
-   *  Gets the htmlSelect attribute of the RoleList object
+   * Gets the htmlSelect attribute of the RoleList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -136,12 +137,12 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the RoleList object
-   *  Selects the regular roles from the role list
+   * Gets the htmlSelect attribute of the RoleList object
+   * Selects the regular roles from the role list
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect roleListSelect = new HtmlSelect();
@@ -151,19 +152,19 @@ public class RoleList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Role thisRole = (Role) i.next();
-        roleListSelect.addItem(
-            thisRole.getId(),
-            thisRole.getRole());
-      }
+      roleListSelect.addItem(
+          thisRole.getId(),
+          thisRole.getRole());
+    }
     return roleListSelect.getHtml(selectName, defaultKey);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -176,12 +177,13 @@ public class RoleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM role r " +
+        "FROM \"role\" r " +
         "WHERE r.role_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -193,9 +195,10 @@ public class RoleList extends ArrayList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(role) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(\"role\") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -210,27 +213,21 @@ public class RoleList extends ArrayList {
       pagedListInfo.setDefaultSort("role", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY role ");
+      sqlOrder.append("ORDER BY \"role\" ");
     }
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT * " +
-        "FROM role r " +
+        "FROM \"role\" r " +
         "WHERE r.role_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Role thisRole = new Role(rs);
       this.add(thisRole);
     }
@@ -253,9 +250,9 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -274,11 +271,11 @@ public class RoleList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -55,7 +55,9 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-<dhv:permission name="accounts-quotes-add"><a href="AccountQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
+<dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
+  <dhv:permission name="accounts-quotes-add"><a href="AccountQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
+</dhv:evaluate>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountQuoteListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 <tr>
@@ -147,7 +149,7 @@
 		<tr class="containerBody">
       <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= OrgDetails.getOrgId() %>','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>');"
+         <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= OrgDetails.getOrgId() %>','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= thisQuote.isTrashed() || OrgDetails.isTrashed() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
          <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>

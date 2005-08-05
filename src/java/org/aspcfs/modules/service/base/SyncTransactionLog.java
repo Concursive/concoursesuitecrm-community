@@ -15,24 +15,26 @@
  */
 package org.aspcfs.modules.service.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Everytime a client uses the sync API, the action is logged. Each action is
- *  made up of one or more transaction requests that result in a success or
- *  failure.
+ * Everytime a client uses the sync API, the action is logged. Each action is
+ * made up of one or more transaction requests that result in a success or
+ * failure.
  *
- *@author     matt rajkowski
- *@created    October 25, 2002
- *@version    $Id: SyncTransactionLog.java,v 1.3 2003/03/07 14:47:27 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: SyncTransactionLog.java,v 1.3 2003/03/07 14:47:27 mrajkowski
+ *          Exp $
+ * @created October 25, 2002
  */
 public class SyncTransactionLog extends ArrayList {
 
@@ -44,16 +46,17 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Constructor for the SyncTransactionLog object
+   * Constructor for the SyncTransactionLog object
    */
-  public SyncTransactionLog() { }
+  public SyncTransactionLog() {
+  }
 
 
   /**
-   *  Constructor for the SyncTransactionLog object
+   * Constructor for the SyncTransactionLog object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SyncTransactionLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -61,11 +64,11 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Constructor for the SyncTransactionLog object
+   * Constructor for the SyncTransactionLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public SyncTransactionLog(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -73,11 +76,11 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -102,9 +105,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the SyncTransactionLog object
+   * Sets the id attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -112,9 +115,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the SyncTransactionLog object
+   * Sets the id attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -122,9 +125,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the systemId attribute of the SyncTransactionLog object
+   * Sets the systemId attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new systemId value
+   * @param tmp The new systemId value
    */
   public void setSystemId(int tmp) {
     this.systemId = tmp;
@@ -132,9 +135,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the systemId attribute of the SyncTransactionLog object
+   * Sets the systemId attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new systemId value
+   * @param tmp The new systemId value
    */
   public void setSystemId(String tmp) {
     this.systemId = Integer.parseInt(tmp);
@@ -142,9 +145,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the clientId attribute of the SyncTransactionLog object
+   * Sets the clientId attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new clientId value
+   * @param tmp The new clientId value
    */
   public void setClientId(int tmp) {
     this.clientId = tmp;
@@ -152,9 +155,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the clientId attribute of the SyncTransactionLog object
+   * Sets the clientId attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new clientId value
+   * @param tmp The new clientId value
    */
   public void setClientId(String tmp) {
     this.clientId = Integer.parseInt(tmp);
@@ -162,9 +165,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the ip attribute of the SyncTransactionLog object
+   * Sets the ip attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new ip value
+   * @param tmp The new ip value
    */
   public void setIp(String tmp) {
     this.ip = tmp;
@@ -172,9 +175,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the entered attribute of the SyncTransactionLog object
+   * Sets the entered attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -182,9 +185,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Sets the entered attribute of the SyncTransactionLog object
+   * Sets the entered attribute of the SyncTransactionLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -192,9 +195,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the SyncTransactionLog object
+   * Gets the id attribute of the SyncTransactionLog object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -202,9 +205,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Gets the systemId attribute of the SyncTransactionLog object
+   * Gets the systemId attribute of the SyncTransactionLog object
    *
-   *@return    The systemId value
+   * @return The systemId value
    */
   public int getSystemId() {
     return systemId;
@@ -212,9 +215,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Gets the clientId attribute of the SyncTransactionLog object
+   * Gets the clientId attribute of the SyncTransactionLog object
    *
-   *@return    The clientId value
+   * @return The clientId value
    */
   public int getClientId() {
     return clientId;
@@ -222,9 +225,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Gets the ip attribute of the SyncTransactionLog object
+   * Gets the ip attribute of the SyncTransactionLog object
    *
-   *@return    The ip value
+   * @return The ip value
    */
   public String getIp() {
     return ip;
@@ -232,9 +235,9 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Gets the entered attribute of the SyncTransactionLog object
+   * Gets the entered attribute of the SyncTransactionLog object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -242,14 +245,15 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Gets the enteredString attribute of the SyncTransactionLog object
+   * Gets the enteredString attribute of the SyncTransactionLog object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -257,33 +261,40 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     if (systemId == -1 || clientId == -1) {
-      throw new SQLException("Log Entry must be associated with a System and Client");
+      throw new SQLException(
+          "Log Entry must be associated with a System and Client");
     }
 
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
+      id = DatabaseUtils.getNextSeq(db, "sync_log_log_id_seq");
       sql.append(
-          "INSERT INTO sync_log (system_id, client_id, ip ");
+          "INSERT INTO sync_log (" + (id > -1 ? "log_id, " : "") + "system_id, client_id, ip ");
       if (entered != null) {
         sql.append(", entered ");
       }
       sql.append(") ");
       sql.append("VALUES (?, ?, ? ");
+      if (id > -1) {
+        sql.append(", ? ");
+      }
       if (entered != null) {
         sql.append(", ? ");
       }
       sql.append(") ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, systemId);
       pst.setInt(++i, clientId);
       pst.setString(++i, ip);
@@ -292,9 +303,7 @@ public class SyncTransactionLog extends ArrayList {
       }
       pst.execute();
       pst.close();
-
-      id = DatabaseUtils.getCurrVal(db, "sync_log_log_id_seq");
-
+      id = DatabaseUtils.getCurrVal(db, "sync_log_log_id_seq", id);
       if (this.size() > 0) {
         Iterator items = this.iterator();
         while (items.hasNext()) {
@@ -302,7 +311,6 @@ public class SyncTransactionLog extends ArrayList {
           thisItem.insert(db);
         }
       }
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -314,11 +322,11 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -350,10 +358,10 @@ public class SyncTransactionLog extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("log_id");

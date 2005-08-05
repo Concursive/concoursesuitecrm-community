@@ -15,26 +15,25 @@
  */
 package org.aspcfs.utils;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
 import org.aspcfs.modules.login.beans.UserBean;
-import java.util.TimeZone;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 /**
- *  Methods for working with the User object
+ * Methods for working with the User object
  *
- *@author     matt rajkowski
- *@created    October 13, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created October 13, 2003
  */
 public class UserUtils {
 
   /**
-   *  Gets the userId attribute of the UserUtils class
+   * Gets the userId attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userId value
+   * @param request Description of the Parameter
+   * @return The userId value
    */
   public static int getUserId(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getUserId();
@@ -42,10 +41,10 @@ public class UserUtils {
 
 
   /**
-   *  Gets the userRangeId attribute of the UserUtils class
+   * Gets the userRangeId attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userRangeId value
+   * @param request Description of the Parameter
+   * @return The userRangeId value
    */
   public static String getUserIdRange(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getIdRange();
@@ -53,10 +52,10 @@ public class UserUtils {
 
 
   /**
-   *  Gets the userRoleType attribute of the UserUtils class
+   * Gets the userRoleType attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userRoleType value
+   * @param request Description of the Parameter
+   * @return The userRoleType value
    */
   public static int getUserRoleType(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getRoleType();
@@ -64,10 +63,10 @@ public class UserUtils {
 
 
   /**
-   *  Gets the userOrganization attribute of the UserUtils class
+   * Gets the userOrganization attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userOrganization value
+   * @param request Description of the Parameter
+   * @return The userOrganization value
    */
   public static int getUserOrganization(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getOrgId();
@@ -75,10 +74,10 @@ public class UserUtils {
 
 
   /**
-   *  Gets the userTimeZone attribute of the UserUtils class
+   * Gets the userTimeZone attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userTimeZone value
+   * @param request Description of the Parameter
+   * @return The userTimeZone value
    */
   public static String getUserTimeZone(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getTimeZone();
@@ -86,10 +85,10 @@ public class UserUtils {
 
 
   /**
-   *  Gets the userLocale attribute of the UserUtils class
+   * Gets the userLocale attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userLocale value
+   * @param request Description of the Parameter
+   * @return The userLocale value
    */
   public static Locale getUserLocale(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getLocale();
@@ -97,10 +96,10 @@ public class UserUtils {
 
 
   /**
-   *  Gets the userCurrency attribute of the UserUtils class
+   * Gets the userCurrency attribute of the UserUtils class
    *
-   *@param  request  Description of the Parameter
-   *@return          The userCurrency value
+   * @param request Description of the Parameter
+   * @return The userCurrency value
    */
   public static String getUserCurrency(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getCurrency();

@@ -31,20 +31,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Action class to view, add, edit, delete and list maintenance notes
+ * Action class to view, add, edit, delete and list maintenance notes
  *
- *@author     kbhoopal
- *@created    May 13, 2004
- *@version    $Id: TroubleTicketMaintenanceNotes.java,v 1.3 2004/05/13 20:37:23
- *      mrajkowski Exp $
+ * @author kbhoopal
+ * @version $Id: TroubleTicketMaintenanceNotes.java,v 1.3 2004/05/13 20:37:23
+ *          mrajkowski Exp $
+ * @created May 13, 2004
  */
 public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
   /**
-   *  Lists maintenance notes
+   * Lists maintenance notes
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-view")) {
@@ -63,12 +63,15 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
       // Build the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       // Build the list of maintenance notes
       TicketMaintenanceNoteList thisList = new TicketMaintenanceNoteList();
-      PagedListInfo sunListInfo = this.getPagedListInfo(context, "SunListInfo");
-      sunListInfo.setLink("TroubleTicketMaintenanceNotes.do?command=List&id=" + thisTicket.getId());
+      PagedListInfo sunListInfo = this.getPagedListInfo(
+          context, "SunListInfo");
+      sunListInfo.setLink(
+          "TroubleTicketMaintenanceNotes.do?command=List&id=" + thisTicket.getId());
       thisList.setPagedListInfo(sunListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
@@ -84,10 +87,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Prepares the add page to add a maintenance note
+   * Prepares the add page to add a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-add")) {
@@ -103,7 +106,8 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Load form elements
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       return ("AddOK");
     } catch (Exception e) {
@@ -116,10 +120,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Prepares the modify page to modify a maintenance note
+   * Prepares the modify page to modify a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-edit")) {
@@ -138,9 +142,11 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
       // Load onsite model list
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-      context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
+      context.getRequest().setAttribute(
+          "return", context.getRequest().getParameter("return"));
 
       // Load the maintenance note elements
       TicketMaintenanceNote thisSun = new TicketMaintenanceNote();
@@ -157,10 +163,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Saves a maintenance note
+   * Saves a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-add")) {
@@ -178,20 +184,22 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setEnteredBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
+      String descriptionOfService = context.getRequest().getParameter(
+          "descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
       thisMaintenance.setRequestItems(context.getRequest());
       isValid = this.validateObject(context, db, thisMaintenance);
-      int i=1;
-      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator();iterator.hasNext();i++) {
+      int i = 1;
+      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator(); iterator.hasNext(); i++) {
         TicketReplacementPart replacementPart = (TicketReplacementPart) iterator.next();
         HashMap map = new HashMap();
-        isValid = this.validateObject(context, db , replacementPart, map ) && isValid;
+        isValid = this.validateObject(context, db, replacementPart, map) && isValid;
       }
       if (isValid) {
         thisMaintenance.insert(db);
       } else {
-        context.getRequest().setAttribute("maintenanceDetails", thisMaintenance);
+        context.getRequest().setAttribute(
+            "maintenanceDetails", thisMaintenance);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -207,10 +215,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Updates a maintenance note
+   * Updates a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-edit")) {
@@ -230,17 +238,18 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setId(Integer.parseInt(formId));
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
+      String descriptionOfService = context.getRequest().getParameter(
+          "descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
       isValid = this.validateObject(context, db, thisMaintenance);
-      int i=1;
-      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator();iterator.hasNext();i++) {
+      int i = 1;
+      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator(); iterator.hasNext(); i++) {
         TicketReplacementPart replacementPart = (TicketReplacementPart) iterator.next();
         HashMap map = new HashMap();
-        isValid = this.validateObject(context, db , replacementPart, map ) && isValid;
+        isValid = this.validateObject(context, db, replacementPart, map) && isValid;
       }
       if (isValid) {
         resultCount = thisMaintenance.update(db);
@@ -268,10 +277,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Prepares the view page for the maintenance note
+   * Prepares the view page for the maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-view")) {
@@ -287,7 +296,8 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Load the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       // Load the related form items
       TicketMaintenanceNote thisSun = new TicketMaintenanceNote();
@@ -304,10 +314,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Confirms a request for deleting a maintenance note
+   * Confirms a request for deleting a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-delete")) {
@@ -327,10 +337,13 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Prepare the HTML Dialog
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-      htmlDialog.addMessage("\n"+systemStatus.getLabel("confirmdelete.message.question"));
+      htmlDialog.addMessage(
+          "\n" + systemStatus.getLabel("confirmdelete.message.question"));
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-      htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -343,10 +356,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Deletes a maintenance note
+   * Deletes a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "tickets-maintenance-report-delete")) {
@@ -358,7 +371,8 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
     SystemStatus systemStatus = this.getSystemStatus(context);
     // Process the parameters
     String ticketId = context.getRequest().getParameter("id");
-    int formId = Integer.parseInt((String) context.getRequest().getParameter("formId"));
+    int formId = Integer.parseInt(
+        (String) context.getRequest().getParameter("formId"));
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
@@ -367,20 +381,25 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setId(formId);
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.noteDeletion"));
-      context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "actionError", systemStatus.getLabel(
+              "object.validation.actionError.noteDeletion"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId);
       return ("DeleteError");
     } finally {
       this.freeConnection(context, db);
     }
     // The record was deleted
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=List&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "refreshUrl", "TroubleTicketMaintenanceNotes.do?command=List&id=" + ticketId);
       return getReturn(context, "Delete");
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
-    context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
+    context.getRequest().setAttribute(
+        "refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
     return getReturn(context, "Delete");
   }
 }

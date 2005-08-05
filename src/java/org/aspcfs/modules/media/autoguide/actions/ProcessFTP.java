@@ -30,20 +30,20 @@ import java.sql.Connection;
 import java.text.SimpleDateFormat;
 
 /**
- *  Auto Guide FTP module which processes uploaded pictures and moves them into
- *  web site
+ * Auto Guide FTP module which processes uploaded pictures and moves them into
+ * web site
  *
- *@author     matt rajkowski
- *@created    June 23, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 23, 2002
  */
 public final class ProcessFTP extends CFSModule {
 
   /**
-   *  Start the process when triggered by a client app
+   * Start the process when triggered by a client app
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
@@ -52,7 +52,8 @@ public final class ProcessFTP extends CFSModule {
     try {
       AuthenticationItem auth = new AuthenticationItem();
 
-      String filePath = this.getPath(context, auth.getConnectionElement(context), "autoguide");
+      String filePath = this.getPath(
+          context, auth.getConnectionElement(context), "autoguide");
       String ftpPath = filePath + "ftp" + fs;
 
       //Get a list of .JPGs from the ftpPath
@@ -66,7 +67,8 @@ public final class ProcessFTP extends CFSModule {
         String datePathToUse1 = formatter1.format(new java.util.Date());
         SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
         String datePathToUse2 = formatter2.format(new java.util.Date());
-        datedPath = new File(filePath + datePathToUse1 + fs + datePathToUse2 + fs);
+        datedPath = new File(
+            filePath + datePathToUse1 + fs + datePathToUse2 + fs);
         datedPath.mkdirs();
 
         db = auth.getConnection(context, false);
@@ -78,18 +80,22 @@ public final class ProcessFTP extends CFSModule {
         if (filename.endsWith(".jpg") || filename.endsWith(".JPG")) {
           System.out.println(filename);
           String clientId = filename.substring(0, filename.indexOf("-"));
-          String inventoryId = filename.substring(filename.indexOf("-") + 1, filename.indexOf("."));
+          String inventoryId = filename.substring(
+              filename.indexOf("-") + 1, filename.indexOf("."));
 
           //Look up the server's id from the client's id
           SyncClientMap thisClientMap = new SyncClientMap();
           thisClientMap.setClientId(Integer.parseInt(clientId));
-          int tableId = SyncTable.lookupTableId(db, 2, "org.aspcfs.modules.media.autoguide.base.InventoryList");
+          int tableId = SyncTable.lookupTableId(
+              db, 2, "org.aspcfs.modules.media.autoguide.base.InventoryList");
           if (System.getProperty("DEBUG") != null) {
             System.out.println("ProcessFTP-> TableID = " + tableId);
           }
-          int recordId = thisClientMap.lookupServerId(db, tableId, inventoryId);
+          int recordId = thisClientMap.lookupServerId(
+              db, tableId, inventoryId);
           if (recordId > -1) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyyMMddHHmmss");
             String datedFilename = formatter.format(new java.util.Date()) + i;
             System.out.println(datedPath.getPath());
             File thisFile = new File(datedPath.getPath() + fs + datedFilename);
@@ -131,7 +137,8 @@ public final class ProcessFTP extends CFSModule {
             }
           } else {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("ProcessFTP-> Matching client record not found");
+              System.out.println(
+                  "ProcessFTP-> Matching client record not found");
             }
           }
         }

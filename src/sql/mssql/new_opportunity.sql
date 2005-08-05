@@ -52,6 +52,42 @@ CREATE TABLE lookup_opportunity_types (
   enabled BIT DEFAULT 1
 );
 
+--Environment - What stuff is the account already using
+CREATE TABLE lookup_opportunity_environment (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+--Competitors - Who else is competing for this business
+CREATE TABLE lookup_opportunity_competitors (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+--Compelling Event - What event is driving the timeline for purchase
+CREATE TABLE lookup_opportunity_event_compelling (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+--Budget - Where are they getting the money to pay for the purchasse
+CREATE TABLE lookup_opportunity_budget (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
 CREATE TABLE opportunity_header (
   opp_id INT IDENTITY PRIMARY KEY,
   description VARCHAR(80),
@@ -60,7 +96,8 @@ CREATE TABLE opportunity_header (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  trashed_date DATETIME
 );
 
 CREATE TABLE opportunity_component (
@@ -89,7 +126,13 @@ CREATE TABLE opportunity_component (
   enabled BIT NOT NULL DEFAULT 1,
   notes TEXT,
   alertdate_timezone VARCHAR(255),
-  closedate_timezone VARCHAR(255)
+  closedate_timezone VARCHAR(255),
+  trashed_date DATETIME,
+  environment INT REFERENCES lookup_opportunity_environment(code),
+  competitors INT REFERENCES lookup_opportunity_competitors(code),
+  compelling_event INT REFERENCES lookup_opportunity_event_compelling(code),
+  budget INT REFERENCES lookup_opportunity_budget(code)
+
 );
 
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
@@ -133,7 +176,8 @@ CREATE TABLE call_log (
   status_id INT NOT NULL DEFAULT 1,
   reminder_value INT NULL,
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
-  alertdate_timezone VARCHAR(255)
+  alertdate_timezone VARCHAR(255),
+  trashed_date DATETIME
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");

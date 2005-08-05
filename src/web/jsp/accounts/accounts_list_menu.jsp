@@ -14,29 +14,36 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, status) {
+  function displayMenu(loc, id, orgId, status, trashed) {
     thisOrgId = orgId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuAccount", "down", 0, 0, 170, getHeight("menuAccountTable"));
     }
 <dhv:permission name="accounts-accounts-edit">
-    if(status == 0){
+    if(trashed == 'true'){
+      hideSpan('menuModifyAccount');
       hideSpan('menuArchiveAccount');
-      showSpan('menuReEnableAccount');
-    }else if(status == 1){
       hideSpan('menuReEnableAccount');
-      showSpan('menuArchiveAccount');
-    }else{
-      hideSpan('menuReEnableAccount');
-      hideSpan('menuArchiveAccount');
+      hideSpan('menuDeleteAccount');
+    } else {
+      if(status == 0){
+        hideSpan('menuArchiveAccount');
+        showSpan('menuReEnableAccount');
+      }else if(status == 1){
+        hideSpan('menuReEnableAccount');
+        showSpan('menuArchiveAccount');
+      }else{
+        hideSpan('menuReEnableAccount');
+        hideSpan('menuArchiveAccount');
+      }
     }
 </dhv:permission>
     return ypSlideOutMenu.displayDropMenu(id, loc);
@@ -77,7 +84,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuModifyAccount" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -107,7 +114,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteAccount()">
+      <tr id="menuDeleteAccount" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteAccount()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

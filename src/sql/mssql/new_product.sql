@@ -155,7 +155,9 @@ CREATE TABLE product_catalog (
   start_date DATETIME DEFAULT NULL,
   expiration_date DATETIME DEFAULT NULL,
   enabled BIT NOT NULL DEFAULT 1,
-  manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code)
+  manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code),
+  trashed_date DATETIME,
+  active BIT NOT NULL DEFAULT 1
 );
 
 -- Each product can have a price, which can change over time

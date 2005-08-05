@@ -16,24 +16,23 @@
 package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.orders.base.Order;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
-
-import com.zeroio.iteam.base.FileItem;
-import com.zeroio.iteam.base.FileItemList;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
@@ -41,20 +40,20 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    April 23, 2004
- *@version    $Id: AccountQuotes.java,v 1.4.16.3 2004/11/04 20:44:49 partha Exp
- *      $
+ * @author ananth
+ * @version $Id: AccountQuotes.java,v 1.4.16.3 2004/11/04 20:44:49 partha Exp
+ *          $
+ * @created April 23, 2004
  */
 public final class AccountQuotes extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-view"))) {
@@ -76,8 +75,10 @@ public final class AccountQuotes extends CFSModule {
      *  return ("PermissionError");
      *  }
      */
-    PagedListInfo quoteListInfo = this.getPagedListInfo(context, "accountQuoteListInfo","qe.group_id", "desc");
-    quoteListInfo.setLink("AccountQuotes.do?command=View&orgId=" + orgid +"&version="+(version != null?version:""));
+    PagedListInfo quoteListInfo = this.getPagedListInfo(
+        context, "accountQuoteListInfo", "qe.group_id", "desc");
+    quoteListInfo.setLink(
+        "AccountQuotes.do?command=View&orgId=" + orgid + "&version=" + (version != null ? version : ""));
     Connection db = null;
     QuoteList quoteList = new QuoteList();
     Organization thisOrganization = null;
@@ -88,12 +89,18 @@ public final class AccountQuotes extends CFSModule {
       context.getRequest().setAttribute("quoteStatusList", list);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
 
+      if (thisOrganization.isTrashed()) {
+        quoteList.setIncludeOnlyTrashed(true);
+      }
       if (version != null && !"".equals(version)) {
         Quote quote = new Quote(db, Integer.parseInt(version));
         quoteList.setBuildCompleteVersionList(true);
         quoteList.setId(quote.getRootQuote(db, quote.getParentId()));
         quoteList.setPagedListInfo(quoteListInfo);
         quoteListInfo.setSearchCriteria(quoteList, context);
+        if (thisOrganization.isTrashed()) {
+          quoteList.setIncludeOnlyTrashed(true);
+        }
         quoteList.buildList(db);
         context.getRequest().setAttribute("quoteList", quoteList);
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -117,10 +124,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-view"))) {
@@ -136,7 +143,7 @@ public final class AccountQuotes extends CFSModule {
       context.getRequest().setAttribute("canPrint", printQuote);
     }
     String quoteId = (String) context.getRequest().getAttribute("quoteId");
-    if ( quoteId == null || "".equals(quoteId)) {
+    if (quoteId == null || "".equals(quoteId)) {
       quoteId = (String) context.getRequest().getParameter("quoteId");
     }
     Connection db = null;
@@ -152,12 +159,16 @@ public final class AccountQuotes extends CFSModule {
       if (quoteId == null || "".equals(quoteId)) {
         try {
           //check for the product id & ticket id.. is it a request to create a new quote?
-          int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
-          int ticketId = Integer.parseInt((String) context.getRequest().getParameter("ticketId"));
+          int productId = Integer.parseInt(
+              (String) context.getRequest().getParameter("productId"));
+          int ticketId = Integer.parseInt(
+              (String) context.getRequest().getParameter("ticketId"));
         } catch (Exception e) {
           //if the product id is null, then the incomplete form was submitted, set error message
-          context.getRequest().setAttribute("actionError",
-              systemStatus.getLabel("object.validation.actionError.invalidCriteria"));
+          context.getRequest().setAttribute(
+              "actionError",
+              systemStatus.getLabel(
+                  "object.validation.actionError.invalidCriteria"));
           return "SearchCriteriaError";
         }
         // as product id is not null, create a new quote
@@ -209,13 +220,15 @@ public final class AccountQuotes extends CFSModule {
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
-			if (quote.getLogoFileId() > 0) {
-				FileItem thisItem = new FileItem(db, quote.getLogoFileId() , Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
-				context.getRequest().setAttribute("fileItem", thisItem);
-			}
+      if (quote.getLogoFileId() > 0) {
+        FileItem thisItem = new FileItem(
+            db, quote.getLogoFileId(), Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
+        context.getRequest().setAttribute("fileItem", thisItem);
+      }
     } catch (Exception errorMessage) {
       errorMessage.printStackTrace();
       context.getRequest().setAttribute("Error", errorMessage);
@@ -230,17 +243,18 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveProduct(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-edit"))) {
       return ("PermissionError");
     }
     String quoteName = (String) context.getRequest().getParameter("quoteId");
-    String productName = (String) context.getRequest().getParameter("productId");
+    String productName = (String) context.getRequest().getParameter(
+        "productId");
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
@@ -267,10 +281,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveNotes(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-view"))) {
@@ -278,13 +292,16 @@ public final class AccountQuotes extends CFSModule {
     }
     int quoteId = -1;
     boolean isValid = false;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    int recordCount = -1;
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
     QuoteNote quoteNote = null;
     Quote quote = null;
+    Quote previousQuote = null;
     Quote notes = (Quote) context.getFormBean();
     if (notes == null) {
       notes = new Quote();
@@ -300,6 +317,7 @@ public final class AccountQuotes extends CFSModule {
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
       context.getRequest().setAttribute("quote", quote);
+      previousQuote = new Quote(db, quoteId);
 
       thisOrganization = new Organization(db, quote.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -315,23 +333,27 @@ public final class AccountQuotes extends CFSModule {
         if (isValid) {
           quoteNote.insert(db);
         }
-        processInsertHook(context, quoteNote);
       }
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
       if (quote.getStatusId() == list.getIdFromValue("Rejected by customer")) {
         quote.setStatusId(list.getIdFromValue("Pending customer acceptance"));
-        Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+        Timestamp currentTimestamp = new Timestamp(
+            Calendar.getInstance().getTimeInMillis());
         quote.setIssuedDate(currentTimestamp);
         quote.setStatusDate(currentTimestamp);
         //update the quote
         isValid = isValid && this.validateObject(context, db, quote);
         if (isValid) {
-          quote.update(db);
+          recordCount = quote.update(db);
+        }
+        if (recordCount == 1) {
+          this.processUpdateHook(context, previousQuote, quote);
         }
       }
 
@@ -353,10 +375,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSubmit(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-edit"))) {
@@ -367,7 +389,8 @@ public final class AccountQuotes extends CFSModule {
       context.getRequest().setAttribute("version", version);
     }
     int quoteId = -1;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     Quote quote = null;
     Connection db = null;
     try {
@@ -393,10 +416,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-delete"))) {
@@ -406,8 +429,10 @@ public final class AccountQuotes extends CFSModule {
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
-    int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
-    int orgId = Integer.parseInt((String) context.getRequest().getParameter("orgId"));
+    int quoteId = Integer.parseInt(
+        (String) context.getRequest().getParameter("quoteId"));
+    int orgId = Integer.parseInt(
+        (String) context.getRequest().getParameter("orgId"));
     Quote quote = null;
     Connection db = null;
     try {
@@ -425,16 +450,17 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "AccountQuotes.do?command=View&orgId=" + orgId);
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountQuotes.do?command=View&orgId=" + orgId);
     return "DeleteOK";
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-delete"))) {
@@ -465,17 +491,22 @@ public final class AccountQuotes extends CFSModule {
       htmlDialog.setTitle("Centric CRM: Quote Management");
       DependencyList dependencies = quote.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       //htmlDialog.addMessage("Please review carefully...\n" + dependencies.getHtmlString());
       if (quote.getOrderId(db) != -1) {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-        htmlDialog.setHeader(systemStatus.getLabel("quotes.deleteRelatedOrdersFirst"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        htmlDialog.setHeader(
+            systemStatus.getLabel("quotes.deleteRelatedOrdersFirst"));
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       } else {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId() + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId() + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -493,21 +524,24 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-edit"))) {
       return ("PermissionError");
     }
     boolean isValid = false;
+    Quote previousQuote = null;
+    int recordCount = -1;
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
-    int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
+    int quoteId = Integer.parseInt(
+        (String) context.getRequest().getParameter("quoteId"));
     Quote quote = null;
     Connection db = null;
     try {
@@ -518,6 +552,8 @@ public final class AccountQuotes extends CFSModule {
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      previousQuote = new Quote(db, quoteId);
+
       if (quoteBean.getNotes() != null) {
         quote.setNotes(quoteBean.getNotes());
       }
@@ -526,7 +562,10 @@ public final class AccountQuotes extends CFSModule {
       }
       isValid = this.validateObject(context, db, quote);
       if (isValid) {
-        quote.update(db);
+        recordCount = quote.update(db);
+      }
+      if (recordCount == 1) {
+        this.processUpdateHook(context, previousQuote, quote);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -540,10 +579,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyForm(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-edit"))) {
@@ -557,7 +596,8 @@ public final class AccountQuotes extends CFSModule {
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
-    String quoteIdString = (String) context.getRequest().getAttribute("quoteId");
+    String quoteIdString = (String) context.getRequest().getAttribute(
+        "quoteId");
     if (quoteIdString == null || "".equals(quoteIdString)) {
       quoteIdString = (String) context.getRequest().getParameter("quoteId");
     }
@@ -571,7 +611,8 @@ public final class AccountQuotes extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
@@ -587,18 +628,22 @@ public final class AccountQuotes extends CFSModule {
 
       ContactList contactList = new ContactList();
       contactList.setOrgId(quote.getOrgId());
+      contactList.setLeadsOnly(Constants.FALSE);
+      contactList.setEmployeesOnly(Constants.FALSE);
+      contactList.setDefaultContactId(quote.getContactId());
       contactList.buildList(db);
       context.getRequest().setAttribute("contactList", contactList);
 
       Organization orgDetails = new Organization(db, quote.getOrgId());
       context.getRequest().setAttribute("OrgDetails", orgDetails);
-			
-			//Create a list for selection of a logo file
-			FileItemList itemList = new FileItemList();
-			itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
-			itemList.setLinkItemId(Constants.QUOTES);
-			itemList.buildList(db);
-			context.getRequest().setAttribute("fileItemList", itemList);
+
+      //Create a list for selection of a logo file
+      FileItemList itemList = new FileItemList();
+      itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
+      itemList.setLinkItemId(Constants.QUOTES);
+      itemList.buildList(db);
+      context.getRequest().setAttribute("fileItemList", itemList);
+      context.getRequest().setAttribute("systemStatus", systemStatus);
     } catch (Exception e) {
       // Go through the SystemError process
       e.printStackTrace();
@@ -612,14 +657,14 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-edit"))) {
-     return ("PermissionError");
+      return ("PermissionError");
     }
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
@@ -635,14 +680,16 @@ public final class AccountQuotes extends CFSModule {
     if (orgIdString != null && !"".equals(orgIdString)) {
       orgId = Integer.parseInt(orgIdString);
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     int quoteId = -1;
     if (quoteIdString != null && !"".equals(quoteIdString)) {
       quoteId = Integer.parseInt(quoteIdString);
     }
     boolean isValid = false;
-    int resultCount = -1;
+    int recordCount = -1;
     Quote quote = null;
+    Quote previousQuote = null;
     Quote quoteBean = (Quote) context.getFormBean();
     User user = this.getUser(context, this.getUserId(context));
     String printQuote = (String) context.getRequest().getAttribute("canPrint");
@@ -660,12 +707,14 @@ public final class AccountQuotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = new Quote(db, quoteId);
+      previousQuote = new Quote(db, quoteId);
 
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
       //Retrieve the contact id from the bean
@@ -687,12 +736,15 @@ public final class AccountQuotes extends CFSModule {
       quote.setCloseIt(quoteBean.getCloseIt());
       quote.setClosed(quoteBean.getClosed());
       quote.setSubmitAction(quoteBean.getSubmitAction());
-			quote.setShowTotal(quoteBean.getShowTotal());
-			quote.setLogoFileId(quoteBean.getLogoFileId());
+      quote.setShowTotal(quoteBean.getShowTotal());
+      quote.setLogoFileId(quoteBean.getLogoFileId());
       quote.setModifiedBy(user.getId());
       isValid = this.validateObject(context, db, quoteBean);
       if (isValid) {
-        resultCount = quote.update(db);
+        recordCount = quote.update(db);
+      }
+      if (recordCount == 1) {
+        this.processUpdateHook(context, previousQuote, quote);
       }
       Organization orgDetails = new Organization(db, orgId);
       context.getRequest().setAttribute("OrgDetails", orgDetails);
@@ -704,7 +756,7 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1 || !isValid) {
+    if (recordCount == -1 || !isValid) {
       return executeCommandModifyForm(context);
     }
     return getReturn(context, "Modify");
@@ -712,10 +764,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddQuote(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-add"))) {
@@ -727,9 +779,12 @@ public final class AccountQuotes extends CFSModule {
     addModuleBean(context, module, module);
 
     boolean isValid = false;
-    String ticketIdString = (String) context.getRequest().getParameter("ticketId");
+    boolean recordInserted = false;
+    String ticketIdString = (String) context.getRequest().getParameter(
+        "ticketId");
     int ticketId = -1;
-    String productIdString = (String) context.getRequest().getParameter("productId");
+    String productIdString = (String) context.getRequest().getParameter(
+        "productId");
     int productId = -1;
     String orgIdString = (String) context.getRequest().getParameter("orgId");
     int orgId = -1;
@@ -759,7 +814,8 @@ public final class AccountQuotes extends CFSModule {
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
       //Retrieve the ticket
@@ -767,10 +823,12 @@ public final class AccountQuotes extends CFSModule {
         ticket = new Ticket(db, ticketId);
         ProductCatalog product = new ProductCatalog(db, productId);
         quote.setProductId(product.getId());
-        quote.setShortDescription(product.getCategoryName() + ", " + product.getName() + ": ");
+        quote.setShortDescription(
+            product.getCategoryName() + ", " + product.getName() + ": ");
         //if the ticket is not for a new ad design, retrieve the customer product from the database
         if (!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1) {
-          CustomerProduct customerProduct = new CustomerProduct(db, ticket.getCustomerProductId());
+          CustomerProduct customerProduct = new CustomerProduct(
+              db, ticket.getCustomerProductId());
           quote.setCustomerProductId(customerProduct.getId());
         }
         quote.setOrgId(ticket.getOrgId());
@@ -790,9 +848,12 @@ public final class AccountQuotes extends CFSModule {
       isValid = this.validateObject(context, db, quote);
       if (isValid) {
         quote.setVersion(quote.getNewVersion());
-        quote.insert(db);
-        String quoteId = ""+quote.getId();
+        recordInserted = quote.insert(db);
+        String quoteId = "" + quote.getId();
         context.getRequest().setAttribute("quoteId", quoteId);
+      }
+      if (recordInserted) {
+        this.processInsertHook(context, quote);
       }
 
       if (ticketId != -1) {
@@ -823,10 +884,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddQuoteForm(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-add"))) {
@@ -853,7 +914,8 @@ public final class AccountQuotes extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
@@ -883,12 +945,12 @@ public final class AccountQuotes extends CFSModule {
       quote.setModifiedBy(user.getId());
 //      quote.setStatusId(list.getIdFromValue("Incomplete"));
       context.getRequest().setAttribute("quoteBean", quote);
-			
-			FileItemList itemList = new FileItemList();
-			itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
-			itemList.setLinkItemId(Constants.QUOTES);
-			itemList.buildList(db);
-			context.getRequest().setAttribute("fileItemList", itemList);
+
+      FileItemList itemList = new FileItemList();
+      itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
+      itemList.setLinkItemId(Constants.QUOTES);
+      itemList.buildList(db);
+      context.getRequest().setAttribute("fileItemList", itemList);
     } catch (Exception e) {
       // Go through the SystemError process
       e.printStackTrace();
@@ -897,15 +959,17 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     return "AddQuoteFormOK";
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-add"))) {
@@ -940,6 +1004,7 @@ public final class AccountQuotes extends CFSModule {
       quote.setStatusId(list.getIdFromValue("Incomplete"));
       quote = oldQuote.addVersion(db, quote);
       quote.queryRecord(db, quote.getId());
+      this.processUpdateHook(context, oldQuote, quote);
       String quoteIdString = String.valueOf(quote.getId());
       context.getRequest().setAttribute("quoteId", quoteIdString);
     } catch (Exception e) {
@@ -955,10 +1020,10 @@ public final class AccountQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewHistory(ActionContext context) {
     if (!(hasPermission(context, "accounts-quotes-view"))) {
@@ -985,7 +1050,8 @@ public final class AccountQuotes extends CFSModule {
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);

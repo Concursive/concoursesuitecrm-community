@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -59,30 +59,35 @@
 </dhv:evaluate>
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>'"></dhv:permission>
-    </dhv:evaluate>
-    <% if("pending".equals(request.getParameter("view"))){ %>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit">
-        <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>">
-      </dhv:permission>
-    <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit">
-        <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>">
-      </dhv:permission>
-    <%}%>
-    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:permission name="accounts-accounts-contacts-calls-delete">
-      <input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>';"></dhv:permission></dhv:evaluate>
+    <dhv:evaluate if="<%=ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !CallDetails.isTrashed()%>">
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>'"></dhv:permission>
+      </dhv:evaluate>
+      <% if("pending".equals(request.getParameter("view"))){ %>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit">
+          <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>">
+        </dhv:permission>
+      <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit">
+          <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>">
+        </dhv:permission>
+      <%}%>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+        <dhv:permission name="accounts-accounts-contacts-calls-delete">
+          <input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>';">
+        </dhv:permission>
+      </dhv:evaluate>
       <dhv:evaluate if="<%= !isPopup(request) %>">
         <dhv:permission name="myhomepage-inbox-view">
-        <input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&forwardType=<%= Constants.TASKS %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>'"></dhv:permission>
+          <input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&forwardType=<%= Constants.TASKS %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>'">
+        </dhv:permission>
       </dhv:evaluate>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"><br>&nbsp;</dhv:permission>
-      <% if("pending".equals(request.getParameter("view"))){ %>
+    </dhv:evaluate>
+    <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"><br>&nbsp;</dhv:permission>
+    <% if("pending".equals(request.getParameter("view"))){ %>
       <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
-      <%-- include follow up activity details --%>
-      <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
+        <%-- include follow up activity details --%>
+        <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
       </dhv:evaluate>
       &nbsp;
       <%-- include completed activity details --%>
@@ -92,8 +97,8 @@
       <%@ include file="accounts_contacts_calls_details_include.jsp" %>
       &nbsp;
       <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
-      <%-- include follow up activity details --%>
-      <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
+        <%-- include follow up activity details --%>
+        <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
       </dhv:evaluate>
     <% } %>
     &nbsp;
@@ -122,19 +127,22 @@
         </td>
       </tr>
     </table>
-    <br>
-    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>'"></dhv:permission>
-    </dhv:evaluate>
-    <% if("pending".equals(request.getParameter("view"))){ %>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
-    <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
-    <%}%>
-    <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-    <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= isPopup(request) ? "&popup=true" : "" %><%= addLinkParams(request, "popupType|actionId|view|") %>';"></dhv:permission></dhv:evaluate>
-    <dhv:evaluate if="<%= !isPopup(request) %>">
-    <dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&forwardType=<%= Constants.TASKS %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>'"></dhv:permission>
+    <br />
+    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !CallDetails.isTrashed()%>">
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>'"></dhv:permission>
+      </dhv:evaluate>
+      <% if("pending".equals(request.getParameter("view"))){ %>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
+      <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
+      <%}%>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+        <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= isPopup(request) ? "&popup=true" : "" %><%= addLinkParams(request, "popupType|actionId|view|") %>';"></dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= !isPopup(request) %>">
+        <dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&forwardType=<%= Constants.TASKS %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>'"></dhv:permission>
+      </dhv:evaluate>
     </dhv:evaluate>
     <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"><br>&nbsp;</dhv:permission>
   </dhv:container>

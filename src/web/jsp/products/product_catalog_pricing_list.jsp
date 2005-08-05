@@ -66,10 +66,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
-      <dhv:permission name="admin-sysconfig-products-add">
-        <a href="ProductCatalogPricings.do?command=AddPricing&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>"><dhv:label name="product.addProductPrice">Add Product Price</dhv:label></a>
-        &nbsp;<br />
-      </dhv:permission>
+      <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
+        <dhv:permission name="admin-sysconfig-products-add">
+          <a href="ProductCatalogPricings.do?command=AddPricing&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>"><dhv:label name="product.addProductPrice">Add Product Price</dhv:label></a>
+          &nbsp;<br />
+        </dhv:permission>
+      </dhv:evaluate>
       <dhv:formMessage />
 			<table cellspacing="0" cellpadding="0" border="0">
 				<tr>
@@ -98,7 +100,7 @@
 				<tr class="row<%= rowid %>">
 					<td width="8" valign="center" nowrap>
 						<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-						<a href="javascript:displayMenu('select<%= i %>','menuPricing', '<%= thisPricing.getId() %>', 'active');"
+						<a href="javascript:displayMenu('select<%= i %>','menuPricing', '<%= thisPricing.getId() %>', 'active','<%= productCatalog.isTrashed() %>');"
 						onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuPricing');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
 					</td>
 					<td><%= thisPricing.getId() %></td>
@@ -160,7 +162,7 @@
 				<tr class="row<%= rowid %>">
 					<td width="8" valign="center" nowrap>
 						<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-						<a href="javascript:displayMenu('select<%= i %>','menuPricing', '<%= thisPricing.getId() %>', 'inactive');"
+						<a href="javascript:displayMenu('select<%= i %>','menuPricing', '<%= thisPricing.getId() %>', 'inactive','<%= productCatalog.isTrashed() %>');"
 						onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuPricing');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
 					</td>
 					<td><%= thisPricing.getId() %></td>

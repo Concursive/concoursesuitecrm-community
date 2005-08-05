@@ -53,6 +53,46 @@ CREATE TABLE lookup_opportunity_types (
   enabled BOOLEAN DEFAULT true
 );
 
+--Environment - What stuff is the account already using
+CREATE SEQUENCE lookup_opportunity_env_code_seq;
+CREATE TABLE lookup_opportunity_environment (
+  code INTEGER DEFAULT nextval('lookup_opportunity_env_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+--Competitors - Who else is competing for this business
+CREATE SEQUENCE lookup_opportunity_com_code_seq;
+CREATE TABLE lookup_opportunity_competitors (
+  code INTEGER DEFAULT nextval('lookup_opportunity_com_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+--Compelling Event - What event is driving the timeline for purchase
+CREATE SEQUENCE lookup_opportunity_eve_code_seq;
+CREATE TABLE lookup_opportunity_event_compelling (
+  code INTEGER DEFAULT nextval('lookup_opportunity_eve_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+--Budget - Where are they getting the money to pay for the purchasse
+CREATE SEQUENCE lookup_opportunity_bud_code_seq;
+CREATE TABLE lookup_opportunity_budget (
+  code INTEGER DEFAULT nextval('lookup_opportunity_bud_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
 CREATE TABLE opportunity_header (
   opp_id SERIAL PRIMARY KEY,
   description VARCHAR(80),
@@ -61,7 +101,8 @@ CREATE TABLE opportunity_header (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  trashed_date TIMESTAMP(3)
 );
 
 CREATE TABLE opportunity_component (
@@ -90,7 +131,12 @@ CREATE TABLE opportunity_component (
   enabled BOOLEAN NOT NULL DEFAULT true,
   notes TEXT,
   alertdate_timezone VARCHAR(255),
-  closedate_timezone VARCHAR(255)
+  closedate_timezone VARCHAR(255),
+  trashed_date TIMESTAMP(3),
+  environment INT REFERENCES lookup_opportunity_environment(code),
+  competitors INT REFERENCES lookup_opportunity_competitors(code),
+  compelling_event INT REFERENCES lookup_opportunity_event_compelling(code),
+  budget INT REFERENCES lookup_opportunity_budget(code)
 );
 
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
@@ -134,7 +180,8 @@ CREATE TABLE call_log (
   status_id INT NOT NULL DEFAULT 1,
   reminder_value INT NULL,
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
-  alertdate_timezone VARCHAR(255)
+  alertdate_timezone VARCHAR(255),
+  trashed_date TIMESTAMP(3)
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");

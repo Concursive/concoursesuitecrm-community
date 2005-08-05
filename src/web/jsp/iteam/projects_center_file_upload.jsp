@@ -58,7 +58,6 @@
     }
   }
 </script>
-<dhv:formMessage />
 <form method="POST" name="inputForm" action="ProjectManagementFiles.do?command=Upload&pid=<%= request.getParameter("pid") %>&folderId=<%= request.getParameter("folderId") %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
@@ -67,7 +66,7 @@
     </td>
   </tr>
 </table>
-<br />
+<dhv:formMessage showSpace="false"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2" align="left">

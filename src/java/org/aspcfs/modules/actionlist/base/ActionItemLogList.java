@@ -15,22 +15,21 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
-import java.util.*;
-import java.text.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.contacts.base.Contact;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  List of Action Items
+ * List of Action Items
  *
- *@author     akhi_m
- *@created    April 24, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created April 24, 2003
  */
 public class ActionItemLogList extends ArrayList {
   private int itemId = -1;
@@ -39,9 +38,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionItemLogList object
+   * Sets the pagedListInfo attribute of the ActionItemLogList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -49,9 +48,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Sets the buildDetails attribute of the ActionItemLogList object
+   * Sets the buildDetails attribute of the ActionItemLogList object
    *
-   *@param  buildDetails  The new buildDetails value
+   * @param buildDetails The new buildDetails value
    */
   public void setBuildDetails(boolean buildDetails) {
     this.buildDetails = buildDetails;
@@ -59,9 +58,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the ActionItemLogList object
+   * Sets the itemId attribute of the ActionItemLogList object
    *
-   *@param  itemId  The new itemId value
+   * @param itemId The new itemId value
    */
   public void setItemId(int itemId) {
     this.itemId = itemId;
@@ -69,9 +68,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Gets the itemId attribute of the ActionItemLogList object
+   * Gets the itemId attribute of the ActionItemLogList object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -79,9 +78,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Gets the buildDetails attribute of the ActionItemLogList object
+   * Gets the buildDetails attribute of the ActionItemLogList object
    *
-   *@return    The buildDetails value
+   * @return The buildDetails value
    */
   public boolean getBuildDetails() {
     return buildDetails;
@@ -89,9 +88,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ActionItemLogList object
+   * Gets the pagedListInfo attribute of the ActionItemLogList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -99,10 +98,10 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -148,22 +147,15 @@ public class ActionItemLogList extends ArrayList {
         "FROM action_item_log al " +
         "WHERE al.log_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ActionItemLog thisList = new ActionItemLog(rs);
       this.add(thisList);
     }
@@ -180,9 +172,9 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -195,11 +187,11 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -211,13 +203,13 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Gets the itemLinked attribute of the ActionItemLogList class
+   * Gets the itemLinked attribute of the ActionItemLogList class
    *
-   *@param  db                Description of the Parameter
-   *@param  linkItemId        Description of the Parameter
-   *@param  type              Description of the Parameter
-   *@return                   The itemLinked value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param linkItemId Description of the Parameter
+   * @param type       Description of the Parameter
+   * @return The itemLinked value
+   * @throws SQLException Description of the Exception
    */
   public static ActionList isItemLinked(Connection db, int linkItemId, int type) throws SQLException {
     ActionList thisList = null;
@@ -244,14 +236,14 @@ public class ActionItemLogList extends ArrayList {
 
 
   /**
-   *  Gets the number oflinked ActionItem Logs
-   *  associated with the provided type
+   * Gets the number oflinked ActionItem Logs
+   * associated with the provided type
    *
-   *@param  db                Description of the Parameter
-   *@param  linkItemId        Description of the Parameter
-   *@param  type              Description of the Parameter
-   *@return                   The linkedActionItemLogCount value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param linkItemId Description of the Parameter
+   * @param type       Description of the Parameter
+   * @return The linkedActionItemLogCount value
+   * @throws SQLException Description of the Exception
    */
   public static int getLinkedActionItemLogCount(Connection db, int linkItemId, int type) throws SQLException {
     int count = -1;

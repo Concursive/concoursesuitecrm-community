@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.service.base;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.service.base.*;
-import org.aspcfs.modules.login.base.AuthenticationItem;
-import org.aspcfs.controller.objectHookManager.*;
-import com.darkhorseventures.database.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.apps.workFlowManager.WorkflowManager;
-import java.util.*;
+import org.aspcfs.controller.objectHookManager.ObjectHookManager;
+import org.aspcfs.modules.login.base.AuthenticationItem;
+
+import java.util.HashMap;
 
 /**
- *  When a packet request is initiated through ProcessPacket, this context is
- *  created to pass information throughout the packet transactions.
+ * When a packet request is initiated through ProcessPacket, this context is
+ * created to pass information throughout the packet transactions.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created November 11, 2002
  */
 public class PacketContext {
 
@@ -46,15 +46,16 @@ public class PacketContext {
 
 
   /**
-   *  Constructor for the PacketContext object
+   * Constructor for the PacketContext object
    */
-  public PacketContext() { }
+  public PacketContext() {
+  }
 
 
   /**
-   *  Sets the authenticationItem attribute of the PacketContext object
+   * Sets the authenticationItem attribute of the PacketContext object
    *
-   *@param  tmp  The new authenticationItem value
+   * @param tmp The new authenticationItem value
    */
   public void setAuthenticationItem(AuthenticationItem tmp) {
     this.authenticationItem = tmp;
@@ -62,9 +63,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the objectMap attribute of the PacketContext object
+   * Sets the objectMap attribute of the PacketContext object
    *
-   *@param  tmp  The new objectMap value
+   * @param tmp The new objectMap value
    */
   public void setObjectMap(HashMap tmp) {
     this.objectMap = tmp;
@@ -72,9 +73,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the clientManager attribute of the PacketContext object
+   * Sets the clientManager attribute of the PacketContext object
    *
-   *@param  tmp  The new clientManager value
+   * @param tmp The new clientManager value
    */
   public void setClientManager(SyncClientManager tmp) {
     this.clientManager = tmp;
@@ -82,9 +83,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the objectHookManager attribute of the PacketContext object
+   * Sets the objectHookManager attribute of the PacketContext object
    *
-   *@param  tmp  The new objectHookManager value
+   * @param tmp The new objectHookManager value
    */
   public void setObjectHookManager(ObjectHookManager tmp) {
     this.objectHookManager = tmp;
@@ -92,9 +93,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the connectionPool attribute of the PacketContext object
+   * Sets the connectionPool attribute of the PacketContext object
    *
-   *@param  tmp  The new connectionPool value
+   * @param tmp The new connectionPool value
    */
   public void setConnectionPool(ConnectionPool tmp) {
     this.connectionPool = tmp;
@@ -102,9 +103,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the connectionElement attribute of the PacketContext object
+   * Sets the connectionElement attribute of the PacketContext object
    *
-   *@param  tmp  The new connectionElement value
+   * @param tmp The new connectionElement value
    */
   public void setConnectionElement(ConnectionElement tmp) {
     this.connectionElement = tmp;
@@ -112,9 +113,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the workflowManager attribute of the PacketContext object
+   * Sets the workflowManager attribute of the PacketContext object
    *
-   *@param  tmp  The new workflowManager value
+   * @param tmp The new workflowManager value
    */
   public void setWorkflowManager(WorkflowManager tmp) {
     this.workflowManager = tmp;
@@ -122,9 +123,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the actionContext attribute of the PacketContext object
+   * Sets the actionContext attribute of the PacketContext object
    *
-   *@param  tmp  The new actionContext value
+   * @param tmp The new actionContext value
    */
   public void setActionContext(ActionContext tmp) {
     this.actionContext = tmp;
@@ -132,9 +133,9 @@ public class PacketContext {
 
 
   /**
-   *  Sets the clientMap attribute of the PacketContext object
+   * Sets the clientMap attribute of the PacketContext object
    *
-   *@param  tmp  The new clientMap value
+   * @param tmp The new clientMap value
    */
   public void setClientMap(SyncClientMap tmp) {
     this.clientMap = tmp;
@@ -142,9 +143,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the authenticationItem attribute of the PacketContext object
+   * Gets the authenticationItem attribute of the PacketContext object
    *
-   *@return    The authenticationItem value
+   * @return The authenticationItem value
    */
   public AuthenticationItem getAuthenticationItem() {
     return authenticationItem;
@@ -152,9 +153,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the objectMap attribute of the PacketContext object
+   * Gets the objectMap attribute of the PacketContext object
    *
-   *@return    The objectMap value
+   * @return The objectMap value
    */
   public HashMap getObjectMap() {
     return objectMap;
@@ -162,9 +163,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the clientManager attribute of the PacketContext object
+   * Gets the clientManager attribute of the PacketContext object
    *
-   *@return    The clientManager value
+   * @return The clientManager value
    */
   public SyncClientManager getClientManager() {
     return clientManager;
@@ -172,9 +173,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the objectHookManager attribute of the PacketContext object
+   * Gets the objectHookManager attribute of the PacketContext object
    *
-   *@return    The objectHookManager value
+   * @return The objectHookManager value
    */
   public ObjectHookManager getObjectHookManager() {
     return objectHookManager;
@@ -182,9 +183,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the connectionPool attribute of the PacketContext object
+   * Gets the connectionPool attribute of the PacketContext object
    *
-   *@return    The connectionPool value
+   * @return The connectionPool value
    */
   public ConnectionPool getConnectionPool() {
     return connectionPool;
@@ -192,9 +193,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the connectionElement attribute of the PacketContext object
+   * Gets the connectionElement attribute of the PacketContext object
    *
-   *@return    The connectionElement value
+   * @return The connectionElement value
    */
   public ConnectionElement getConnectionElement() {
     return connectionElement;
@@ -202,9 +203,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the workflowManager attribute of the PacketContext object
+   * Gets the workflowManager attribute of the PacketContext object
    *
-   *@return    The workflowManager value
+   * @return The workflowManager value
    */
   public WorkflowManager getWorkflowManager() {
     return workflowManager;
@@ -212,9 +213,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the actionContext attribute of the PacketContext object
+   * Gets the actionContext attribute of the PacketContext object
    *
-   *@return    The actionContext value
+   * @return The actionContext value
    */
   public ActionContext getActionContext() {
     return actionContext;
@@ -222,9 +223,9 @@ public class PacketContext {
 
 
   /**
-   *  Gets the clientMap attribute of the PacketContext object
+   * Gets the clientMap attribute of the PacketContext object
    *
-   *@return    The clientMap value
+   * @return The clientMap value
    */
   public SyncClientMap getClientMap() {
     return clientMap;

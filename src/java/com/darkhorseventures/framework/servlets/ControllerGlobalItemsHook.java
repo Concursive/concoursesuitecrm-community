@@ -15,25 +15,25 @@
  */
 package com.darkhorseventures.framework.servlets;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- *  Description of the Interface
+ * Description of the Interface
  *
- *@author     mrajkowski
- *@created    July 9, 2001
- *@version    $Id: ControllerGlobalItemsHook.java,v 1.3 2003/01/13 14:42:24
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: ControllerGlobalItemsHook.java,v 1.3 2003/01/13 14:42:24
+ *          mrajkowski Exp $
+ * @created July 9, 2001
  */
 public interface ControllerGlobalItemsHook {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of Parameter
-   *@param  servlet  Description of the Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param request Description of Parameter
+   * @param servlet Description of the Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String generateItems(Servlet servlet, HttpServletRequest request);
 }

@@ -26,35 +26,36 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Notification;
 import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
-import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.RequestUtils;
-import org.aspcfs.modules.base.Notification;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  Actions for dealing with Campaigns in the Communications Module, including
- *  the dashboard and campaign center.
+ * Actions for dealing with Campaigns in the Communications Module, including
+ * the dashboard and campaign center.
  *
- *@author     w. gillette
- *@created    October 18, 2001
- *@version    $Id: CampaignManager.java,v 1.4 2002/03/12 21:42:27 mrajkowski Exp
- *      $
+ * @author w. gillette
+ * @version $Id: CampaignManager.java,v 1.4 2002/03/12 21:42:27 mrajkowski Exp
+ *          $
+ * @created October 18, 2001
  */
 public final class CampaignManager extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     //Check to see if the user has a preference
@@ -63,11 +64,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Generates the Dashboard List
+   * Generates the Dashboard List
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "campaign-dashboard-view")) {
@@ -75,7 +76,8 @@ public final class CampaignManager extends CFSModule {
     }
     this.resetPagedListInfo(context);
     Connection db = null;
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardListInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "CampaignDashboardListInfo");
     pagedListInfo.setLink("CampaignManager.do?command=Dashboard");
     try {
       db = this.getConnection(context);
@@ -88,6 +90,9 @@ public final class CampaignManager extends CFSModule {
       } else if ("instant".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
         campaignList.setType(Campaign.INSTANT);
+      } else if ("trashed".equals(pagedListInfo.getListView())) {
+        campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setIncludeOnlyTrashed(true);
       } else {
         campaignList.setType(Campaign.GENERAL);
         campaignList.setOwner(this.getUserId(context));
@@ -114,18 +119,19 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Generates a list of Incomplete Campaigns
+   * Generates a list of Incomplete Campaigns
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
     Connection db = null;
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignListInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "CampaignListInfo");
     pagedListInfo.setLink("CampaignManager.do?command=View");
     deletePagedListInfo(context, "CampaignCenterGroupInfo");
     try {
@@ -160,11 +166,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Generates the items needed to Add a New Campaign
+   * Generates the items needed to Add a New Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-add")) {
@@ -186,11 +192,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Processes the Campaign Insert form
+   * Processes the Campaign Insert form
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandInsert(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-add")) {
@@ -227,11 +233,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Details of a Campaign
+   * Campaign Center: Details of a Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandViewDetails(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -269,10 +275,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -300,11 +306,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Groups of a Campaign
+   * Campaign Center: Groups of a Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandViewGroups(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -332,10 +338,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandPreviewGroups(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -350,17 +356,22 @@ public final class CampaignManager extends CFSModule {
       campaign = new Campaign(db, context.getRequest().getParameter("id"));
       context.getRequest().setAttribute("Campaign", campaign);
       //Load the criteria for the contacts query
-      SearchCriteriaList thisSCL = new SearchCriteriaList(db, context.getRequest().getParameter("scl"));
+      SearchCriteriaList thisSCL = new SearchCriteriaList(
+          db, context.getRequest().getParameter("scl"));
       context.getRequest().setAttribute("SCL", thisSCL);
       //Reset the pagedList if this is the first time being opened
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignCenterPreviewInfo");
       }
-      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterPreviewInfo");
-      pagedListInfo.setLink("CampaignManager.do?command=PreviewGroups&id=" + campaign.getId() + "&scl=" + thisSCL.getId() + "&popup=true");
+      PagedListInfo pagedListInfo = this.getPagedListInfo(
+          context, "CampaignCenterPreviewInfo");
+      pagedListInfo.setLink(
+          "CampaignManager.do?command=PreviewGroups&id=" + campaign.getId() + "&scl=" + thisSCL.getId() + "&popup=true");
       //Generate the contacts for this page
       ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
+      contacts.setScl(
+          thisSCL, campaign.getEnteredBy(), this.getUserRange(
+              context, campaign.getEnteredBy()));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setCheckExcludedFromCampaign(campaign.getId());
       contacts.setBuildDetails(true);
@@ -385,10 +396,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandToggleRecipient(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -408,7 +419,8 @@ public final class CampaignManager extends CFSModule {
       thisContact.build(db);
       thisContact.checkExcludedFromCampaign(db, Integer.parseInt(campaignId));
       thisContact.toggleExcluded(db, Integer.parseInt(campaignId));
-      context.getRequest().setAttribute("recipientText",
+      context.getRequest().setAttribute(
+          "recipientText",
           thisContact.getExcludedFromCampaign() ? "No" : "Yes");
     } catch (Exception e) {
       System.out.println(e.toString());
@@ -421,11 +433,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Message of a Campaign
+   * Campaign Center: Message of a Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandViewMessage(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -446,10 +458,12 @@ public final class CampaignManager extends CFSModule {
       messageList.setPersonalId(MessageList.IGNORE_PERSONAL);
       messageList.buildList(db);
       //Message is not in my messages, so build hierarchy of messages
-      if (campaign.getMessageId() > 0 && !messageList.hasId(campaign.getMessageId())) {
+      if (campaign.getMessageId() > 0 && !messageList.hasId(
+          campaign.getMessageId())) {
         messageList.clear();
         messageList.setOwner(-1);
-        messageList.setControlledHierarchyOnly(true, this.getUserRange(context));
+        messageList.setControlledHierarchyOnly(
+            true, this.getUserRange(context));
         messageList.buildList(db);
         context.getRequest().setAttribute("listView", "all");
       } else {
@@ -471,10 +485,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPreviewMessage(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -507,10 +521,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownloadMessage(ActionContext context) {
 
@@ -528,7 +542,8 @@ public final class CampaignManager extends CFSModule {
     int id = Integer.parseInt(context.getRequest().getParameter("id"));
     try {
       db = getConnection(context);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -543,7 +558,8 @@ public final class CampaignManager extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "communications") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "communications") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -554,14 +570,19 @@ public final class CampaignManager extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("CampaignDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "CampaignDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandPreviewMessage(context));
         }
       } else {
-        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        FileItemVersion itemToDownload = thisItem.getVersion(
+            Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "campaign") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "campaign") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -572,8 +593,11 @@ public final class CampaignManager extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("CampaignMessage Documents -> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "CampaignMessage Documents -> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandPreviewMessage(context));
         }
       }
@@ -602,10 +626,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewAttachment(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -625,7 +649,8 @@ public final class CampaignManager extends CFSModule {
       surveyList.setEnteredBy(this.getUserId(context));
       surveyList.buildList(db);
       //Survey is not in my surveys, so build hierarchy of surveys
-      if (campaign.getSurveyId() > 0 && !surveyList.hasId(campaign.getSurveyId())) {
+      if (campaign.getSurveyId() > 0 && !surveyList.hasId(
+          campaign.getSurveyId())) {
         surveyList.clear();
         surveyList.setEnteredBy(-1);
         surveyList.setEnteredByIdRange(this.getUserRange(context));
@@ -650,11 +675,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Schedule of a Campaign
+   * Campaign Center: Schedule of a Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandViewSchedule(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -685,10 +710,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPreviewSchedule(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -716,10 +741,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPreviewSurvey(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-surveys-view")) {
@@ -754,11 +779,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Add groups to the Campaign
+   * Campaign Center: Add groups to the Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandAddGroups(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -771,7 +796,8 @@ public final class CampaignManager extends CFSModule {
       //TODO... reset the list somehow....
       //context.getRequest().setAttribute("resetList", "true");
     }
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterGroupInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "CampaignCenterGroupInfo");
     pagedListInfo.setLink("CampaignManager.do?command=AddGroups");
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
@@ -813,11 +839,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Processes the selected groups
+   * Campaign Center: Processes the selected groups
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandInsertGroups(ActionContext context) {
 
@@ -862,11 +888,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Generates a list of Messages to choose from
+   * Campaign Center: Generates a list of Messages to choose from
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandAddMessage(ActionContext context) {
 
@@ -912,10 +938,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddAttachment(ActionContext context) {
 
@@ -954,11 +980,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Saves the selected message to the Campaign
+   * Campaign Center: Saves the selected message to the Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandInsertMessage(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -997,10 +1023,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertAttachment(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1015,7 +1041,8 @@ public final class CampaignManager extends CFSModule {
 
     try {
       //TODO: surveyId is not being set!!!
-      surveyId = Integer.parseInt(context.getRequest().getParameter("surveyId"));
+      surveyId = Integer.parseInt(
+          context.getRequest().getParameter("surveyId"));
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       if (!hasAuthority(context, campaign.getEnteredBy())) {
@@ -1039,10 +1066,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateAddressRequest(ActionContext context) {
 
@@ -1072,7 +1099,8 @@ public final class CampaignManager extends CFSModule {
       campaign.setHasAddressRequest(addAddressRequest);
       resultCount = campaign.updateAddressRequest(db);
       context.getRequest().setAttribute("Campaign", campaign);
-      context.getRequest().setAttribute("addressRequestChanged",((resultCount == 1)?"YES":"NO"));
+      context.getRequest().setAttribute(
+          "addressRequestChanged", ((resultCount == 1) ? "YES" : "NO"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1093,11 +1121,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Saves the schedule details to the Campaign
+   * Campaign Center: Saves the schedule details to the Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandInsertSchedule(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1110,7 +1138,8 @@ public final class CampaignManager extends CFSModule {
 
     String campaignId = context.getRequest().getParameter("id");
     String activeDate = context.getRequest().getParameter("activeDate");
-    String activeDateTimeZone = context.getRequest().getParameter("activeDateTimeZone");
+    String activeDateTimeZone = context.getRequest().getParameter(
+        "activeDateTimeZone");
 
     try {
       db = this.getConnection(context);
@@ -1119,14 +1148,16 @@ public final class CampaignManager extends CFSModule {
         return ("PermissionError");
       }
       campaign.setActiveDateTimeZone(activeDateTimeZone);
-      campaign.setTimeZoneForDateFields(context.getRequest(), activeDate, "activeDate");
+      campaign.setTimeZoneForDateFields(
+          context.getRequest(), activeDate, "activeDate");
 
       if (context.getRequest().getParameter("active") != null) {
         campaign.setActive(context.getRequest().getParameter("active"));
       }
 
       campaign.setModifiedBy(this.getUserId(context));
-      campaign.setSendMethodId(Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
+      campaign.setSendMethodId(
+          Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
       isValid = this.validateObject(context, db, campaign);
       if (isValid) {
         resultCount = campaign.updateSchedule(db);
@@ -1145,11 +1176,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Processes the groups and removes them from a Campaign
+   * Campaign Center: Processes the groups and removes them from a Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandRemoveGroups(ActionContext context) {
 
@@ -1194,11 +1225,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Campaign Center: Updates the details of a Campaign
+   * Campaign Center: Updates the details of a Campaign
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1211,7 +1242,8 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       campaign = (Campaign) context.getFormBean();
       int enteredBy = Campaign.queryEnteredBy(db, campaign.getId());
-      if (hasAuthority(context, enteredBy) && (this.validateObject(context, db, campaign))) {
+      if (hasAuthority(context, enteredBy) && (this.validateObject(
+          context, db, campaign))) {
         campaign.setModifiedBy(getUserId(context));
         resultCount = campaign.updateDetails(db);
       } else {
@@ -1235,11 +1267,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  From the Dashboard, processes a Cancel Campaign request
+   * From the Dashboard, processes a Cancel Campaign request
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandCancel(ActionContext context) {
 
@@ -1252,16 +1284,25 @@ public final class CampaignManager extends CFSModule {
     int resultCount = 0;
 
     Campaign campaign = null;
+    Campaign previousCampaign = null;
     String id = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
+      previousCampaign = new Campaign(db, id);
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return "PermissionError";
       }
       campaign.setModifiedBy(getUserId(context));
       resultCount = campaign.cancel(db);
+      campaign.queryRecord(db, campaign.getId());
+      if (resultCount == 1) {
+        campaign.setContacts(
+            db, campaign.getEnteredBy(), this.getUserRange(
+                context, campaign.getEnteredBy()));
+        this.processUpdateHook(context, previousCampaign, campaign);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1272,7 +1313,8 @@ public final class CampaignManager extends CFSModule {
       if (resultCount == 1) {
         return ("CancelOK");
       } else {
-        context.getRequest().setAttribute("Error",
+        context.getRequest().setAttribute(
+            "Error",
             "<p><b>This campaign could not be canceled because it has already started processing or has completed.</b></p>" +
             "<p>Once the server starts sending the messages, the campaign cannot be stopped.</p>" +
             "<p><a href=\"CampaignManager.do?command=Dashboard\">Back to Dashboard</a></p>");
@@ -1286,12 +1328,12 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  From the Incomplete Campaign list or the Campaign center, processes an
-   *  Activate Campaign request
+   * From the Incomplete Campaign list or the Campaign center, processes an
+   * Activate Campaign request
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandActivate(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1300,18 +1342,29 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     int resultCount = 0;
     Campaign campaign = null;
+    Campaign previousCampaign = null;
     String id = context.getRequest().getParameter("id");
     String modified = context.getRequest().getParameter("modified");
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
-      if ((!hasAuthority(context, campaign.getEnteredBy())) || (campaign.getDeliveryType() == Notification.BROADCAST) ) {
+      previousCampaign = new Campaign(db, id);
+      if ((!hasAuthority(context, campaign.getEnteredBy())) || (campaign.getDeliveryType() == Notification.BROADCAST)) {
         return "PermissionError";
       }
       campaign.setModifiedBy(getUserId(context));
       campaign.setModified(modified);
       campaign.setServerName(RequestUtils.getServerUrl(context.getRequest()));
-      resultCount = campaign.activate(db, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
+      resultCount = campaign.activate(
+          db, campaign.getEnteredBy(), this.getUserRange(
+              context, campaign.getEnteredBy()));
+      campaign.queryRecord(db, campaign.getId());
+      if (resultCount == 1) {
+        campaign.setContacts(
+            db, campaign.getEnteredBy(), this.getUserRange(
+                context, campaign.getEnteredBy()));
+        processUpdateHook(context, previousCampaign, campaign);
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1328,11 +1381,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Read in an activated Campaign -- ready only, with stats.
+   * Read in an activated Campaign -- ready only, with stats.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandDetails(ActionContext context) {
 
@@ -1352,16 +1405,19 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
-      if ((surveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
+      if ((surveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, surveyId);
         context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
       }
       int addressSurveyId = -1;
-      if ((addressSurveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
+      if ((addressSurveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, addressSurveyId);
         context.getRequest().setAttribute("AddressSurvey", thisSurvey);
       }
-      context.getRequest().setAttribute("User", this.getUser(context, this.getUserId(context)));
+      context.getRequest().setAttribute(
+          "User", this.getUser(context, this.getUserId(context)));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1382,10 +1438,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewResults(ActionContext context) {
 
@@ -1401,7 +1457,8 @@ public final class CampaignManager extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("SurveyQuestionListInfo");
     }
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "SurveyQuestionListInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "SurveyQuestionListInfo");
     pagedListInfo.setLink("CampaignManager.do?command=ViewResults&id=" + id);
 
     this.deletePagedListInfo(context, "YesResponseDetailsListInfo");
@@ -1414,7 +1471,8 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
-      if ((surveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
+      if ((surveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
         thisList.setPagedListInfo(pagedListInfo);
@@ -1423,18 +1481,21 @@ public final class CampaignManager extends CFSModule {
         context.getRequest().setAttribute("SurveyQuestionList", thisList);
       }
       int addressSurveyId = -1;
-      if ((addressSurveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
+      if ((addressSurveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
         SurveyResponseList thisYesList = new SurveyResponseList();
         thisYesList.setSurveyId(addressSurveyId);
         thisYesList.setAddressUpdated(SurveyResponse.ADDRESS_UPDATED);
         thisYesList.buildList(db);
-        context.getRequest().setAttribute("yesAddressUpdateResponseList", thisYesList);
+        context.getRequest().setAttribute(
+            "yesAddressUpdateResponseList", thisYesList);
 
         SurveyResponseList thisNoList = new SurveyResponseList();
         thisNoList.setSurveyId(addressSurveyId);
         thisNoList.setOnlyNotUpdated(true);
         thisNoList.buildList(db);
-        context.getRequest().setAttribute("noAddressUpdateResponseList", thisNoList);
+        context.getRequest().setAttribute(
+            "noAddressUpdateResponseList", thisNoList);
 
         RecipientList recipients = new RecipientList();
         recipients.setCampaignId(campaign.getId());
@@ -1464,10 +1525,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  View the survey response based on the recipients.
+   * View the survey response based on the recipients.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewResponse(ActionContext context) {
 
@@ -1484,11 +1545,15 @@ public final class CampaignManager extends CFSModule {
       context.getSession().removeAttribute("SurveyResponseListInfo");
       context.getSession().removeAttribute("AddressUpdateResponseListInfo");
     }
-    PagedListInfo surveyResponseListInfo = this.getPagedListInfo(context, "SurveyResponseListInfo");
-    surveyResponseListInfo.setLink("CampaignManager.do?command=ViewResponse&id=" + id);
+    PagedListInfo surveyResponseListInfo = this.getPagedListInfo(
+        context, "SurveyResponseListInfo");
+    surveyResponseListInfo.setLink(
+        "CampaignManager.do?command=ViewResponse&id=" + id);
 
-    PagedListInfo addressUpdateResponseListInfo = this.getPagedListInfo(context, "AddressUpdateResponseListInfo");
-    addressUpdateResponseListInfo.setLink("CampaignManager.do?command=ViewResponse&id=" + id);
+    PagedListInfo addressUpdateResponseListInfo = this.getPagedListInfo(
+        context, "AddressUpdateResponseListInfo");
+    addressUpdateResponseListInfo.setLink(
+        "CampaignManager.do?command=ViewResponse&id=" + id);
 
     try {
       db = this.getConnection(context);
@@ -1496,7 +1561,8 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
-      if ((surveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
+      if ((surveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
         SurveyResponseList thisList = new SurveyResponseList();
         thisList.setSurveyId(surveyId);
         thisList.setPagedListInfo(surveyResponseListInfo);
@@ -1504,12 +1570,14 @@ public final class CampaignManager extends CFSModule {
         context.getRequest().setAttribute("SurveyResponseList", thisList);
       }
       int addressSurveyId = -1;
-      if ((addressSurveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
+      if ((addressSurveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
         SurveyResponseList thisList = new SurveyResponseList();
         thisList.setSurveyId(addressSurveyId);
         thisList.setPagedListInfo(addressUpdateResponseListInfo);
         thisList.buildList(db);
-        context.getRequest().setAttribute("AddressUpdateResponseList", thisList);
+        context.getRequest().setAttribute(
+            "AddressUpdateResponseList", thisList);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -1531,10 +1599,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddressUpdateResponseDetails(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1556,30 +1624,42 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Campaign", campaign);
       //Load the answers for this contact
       int addressSurveyId = -1;
-      if ((addressSurveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
-        if ((section == null) || (String.valueOf(SurveyResponse.ADDRESS_UPDATED)).equals(section)) {
-          PagedListInfo yesResponseDetailsListInfo = this.getPagedListInfo(context, "YesResponseDetailsListInfo");
-          yesResponseDetailsListInfo.setLink("CampaignManager.do?command=AddressUpdateResponseDetails&id=" + id + "&section=" + SurveyResponse.ADDRESS_UPDATED);
+      if ((addressSurveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_ADDRESS_REQUEST)) > 0) {
+        if ((section == null) || (String.valueOf(
+            SurveyResponse.ADDRESS_UPDATED)).equals(section)) {
+          PagedListInfo yesResponseDetailsListInfo = this.getPagedListInfo(
+              context, "YesResponseDetailsListInfo");
+          yesResponseDetailsListInfo.setLink(
+              "CampaignManager.do?command=AddressUpdateResponseDetails&id=" + id + "&section=" + SurveyResponse.ADDRESS_UPDATED);
           SurveyResponseList thisYesList = new SurveyResponseList();
           thisYesList.setSurveyId(addressSurveyId);
           thisYesList.setPagedListInfo(yesResponseDetailsListInfo);
           thisYesList.setAddressUpdated(SurveyResponse.ADDRESS_UPDATED);
           thisYesList.buildList(db);
-          context.getRequest().setAttribute("yesAddressUpdateResponseList", thisYesList);
+          context.getRequest().setAttribute(
+              "yesAddressUpdateResponseList", thisYesList);
         }
-        if ((section == null) || (String.valueOf(SurveyResponse.ADDRESS_VALID)).equals(section)) {
-          PagedListInfo noResponseDetailsListInfo = this.getPagedListInfo(context, "NoResponseDetailsListInfo");
-          noResponseDetailsListInfo.setLink("CampaignManager.do?command=AddressUpdateResponseDetails&id=" + id + "&section=" + SurveyResponse.ADDRESS_VALID);
+        if ((section == null) || (String.valueOf(SurveyResponse.ADDRESS_VALID)).equals(
+            section)) {
+          PagedListInfo noResponseDetailsListInfo = this.getPagedListInfo(
+              context, "NoResponseDetailsListInfo");
+          noResponseDetailsListInfo.setLink(
+              "CampaignManager.do?command=AddressUpdateResponseDetails&id=" + id + "&section=" + SurveyResponse.ADDRESS_VALID);
           SurveyResponseList thisNoList = new SurveyResponseList();
           thisNoList.setSurveyId(addressSurveyId);
           thisNoList.setPagedListInfo(noResponseDetailsListInfo);
           thisNoList.setOnlyNotUpdated(true);
           thisNoList.buildList(db);
-          context.getRequest().setAttribute("noAddressUpdateResponseList", thisNoList);
+          context.getRequest().setAttribute(
+              "noAddressUpdateResponseList", thisNoList);
         }
-        if ((section == null) || (String.valueOf(SurveyResponse.ADDRESS_NO_RESPONSE)).equals(section)) {
-          PagedListInfo recipientListInfo = this.getPagedListInfo(context, "CampaignRecipientInfo");
-          recipientListInfo.setLink("CampaignManager.do?command=AddressUpdateResponseDetails&id=" + id + "&section=" + SurveyResponse.ADDRESS_NO_RESPONSE);
+        if ((section == null) || (String.valueOf(
+            SurveyResponse.ADDRESS_NO_RESPONSE)).equals(section)) {
+          PagedListInfo recipientListInfo = this.getPagedListInfo(
+              context, "CampaignRecipientInfo");
+          recipientListInfo.setLink(
+              "CampaignManager.do?command=AddressUpdateResponseDetails&id=" + id + "&section=" + SurveyResponse.ADDRESS_NO_RESPONSE);
           RecipientList recipients = new RecipientList();
           recipients.setCampaignId(campaign.getId());
           recipients.setBuildContact(true);
@@ -1605,10 +1685,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandResponseDetails(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1624,8 +1704,10 @@ public final class CampaignManager extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("ResponseDetailsListInfo");
     }
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ResponseDetailsListInfo");
-    pagedListInfo.setLink("CampaignManager.do?command=ResponseDetails&id=" + id);
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "ResponseDetailsListInfo");
+    pagedListInfo.setLink(
+        "CampaignManager.do?command=ResponseDetails&id=" + id);
     try {
       db = this.getConnection(context);
       //Load the campaign
@@ -1636,12 +1718,14 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("contact", thisContact);
       //Load the answers for this contact
       int surveyId = -1;
-      if ((surveyId = ActiveSurvey.getId(db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
+      if ((surveyId = ActiveSurvey.getId(
+          db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
         thisList.setPagedListInfo(pagedListInfo);
         thisList.buildList(db);
-        thisList.buildResponse(db, Integer.parseInt(contactId), Integer.parseInt(responseId));
+        thisList.buildResponse(
+            db, Integer.parseInt(contactId), Integer.parseInt(responseId));
         context.getRequest().setAttribute("ResponseDetails", thisList);
       }
     } catch (Exception errorMessage) {
@@ -1659,10 +1743,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPreviewRecipients(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1675,8 +1759,10 @@ public final class CampaignManager extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("CampaignDashboardRecipientInfo");
     }
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardRecipientInfo");
-    pagedListInfo.setLink("CampaignManager.do?command=PreviewRecipients&id=" + id);
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "CampaignDashboardRecipientInfo");
+    pagedListInfo.setLink(
+        "CampaignManager.do?command=PreviewRecipients&id=" + id);
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
@@ -1708,10 +1794,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShowItems(ActionContext context) {
 
@@ -1723,7 +1809,8 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     ActiveSurveyQuestionItemList itemList = null;
 
-    int questionId = Integer.parseInt(context.getRequest().getParameter("questionId"));
+    int questionId = Integer.parseInt(
+        context.getRequest().getParameter("questionId"));
 
     try {
       db = this.getConnection(context);
@@ -1749,10 +1836,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Show all contacts who responded to a specific item in the Item List
+   * Show all contacts who responded to a specific item in the Item List
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShowItemDetails(ActionContext context) {
 
@@ -1769,8 +1856,10 @@ public final class CampaignManager extends CFSModule {
     }
     int itemId = Integer.parseInt(context.getRequest().getParameter("itemId"));
     String questionId = context.getRequest().getParameter("questionId");
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ItemDetailsListInfo");
-    pagedListInfo.setLink("CampaignManager.do?command=ShowItemDetails&itemId=" + itemId + "&questionId=" + questionId);
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "ItemDetailsListInfo");
+    pagedListInfo.setLink(
+        "CampaignManager.do?command=ShowItemDetails&itemId=" + itemId + "&questionId=" + questionId);
 
     try {
       db = this.getConnection(context);
@@ -1795,11 +1884,60 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Processes a Campaign Delete request
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.26
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandConfirmDelete(ActionContext context) {
+    if (!hasPermission(context, "campaign-campaigns-delete")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Exception errorMessage = null;
+    DependencyList dependencies = null;
+    Campaign campaign = null;
+    String passedId = context.getRequest().getParameter("id");
+    HtmlDialog htmlDialog = new HtmlDialog();
+
+    try {
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      db = this.getConnection(context);
+      campaign = new Campaign(db, passedId);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
+      dependencies = campaign.processDependencies(db);
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+      htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+      htmlDialog.addButton(
+          systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='CampaignManager.do?command=Trash&action=delete&id=" + passedId + "&forceDelete=true'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   * Processes a Campaign Delete request
+   *
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.26
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-delete")) {
@@ -1809,21 +1947,30 @@ public final class CampaignManager extends CFSModule {
     Campaign campaign = null;
     String passedId = context.getRequest().getParameter("id");
     Connection db = null;
+    boolean activeCampaign = false;
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, passedId);
+      activeCampaign = campaign.getActive();
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return "PermissionError";
       }
-      recordDeleted = campaign.delete(db, this.getPath(context, null));
+      recordDeleted = campaign.delete(db, this.getDbNamePath(context));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
+      e.printStackTrace();
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     if (recordDeleted) {
-      return ("DeleteOK");
+      if (activeCampaign) {
+        context.getRequest().setAttribute(
+            "refreshUrl", "CampaignManager.do?command=Dashboard");
+        return ("DeleteActiveCampaignOK");
+      } else {
+        return ("DeleteOK");
+      }
     } else {
       processErrors(context, campaign.getErrors());
       return (executeCommandView(context));
@@ -1832,10 +1979,55 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandTrash(ActionContext context) {
+    if (!hasPermission(context, "campaign-campaigns-delete")) {
+      return ("PermissionError");
+    }
+    boolean recordUpdated = false;
+    Campaign campaign = null;
+    String passedId = context.getRequest().getParameter("id");
+    Connection db = null;
+    boolean activeCampaign = false;
+    try {
+      db = this.getConnection(context);
+      campaign = new Campaign(db, passedId);
+      activeCampaign = campaign.getActive();
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
+      recordUpdated = campaign.updateStatus(db, true, this.getUserId(context));
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      e.printStackTrace();
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (recordUpdated) {
+      if (activeCampaign) {
+        context.getRequest().setAttribute(
+            "refreshUrl", "CampaignManager.do?command=Dashboard");
+        return ("DeleteActiveCampaignOK");
+      } else {
+        return ("DeleteOK");
+      }
+    } else {
+      processErrors(context, campaign.getErrors());
+      return (executeCommandView(context));
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1850,7 +2042,8 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      itemToDownload = new FileItem(db, Integer.parseInt(fileId), Integer.parseInt(linkItemId), Constants.COMMUNICATIONS_DOCUMENTS);
+      itemToDownload = new FileItem(
+          db, Integer.parseInt(fileId), Integer.parseInt(linkItemId), Constants.COMMUNICATIONS_DOCUMENTS);
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
@@ -1860,7 +2053,8 @@ public final class CampaignManager extends CFSModule {
 
     //Start the download
     try {
-      String filePath = this.getPath(context, "communications") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "communications") + getDatePath(
+          itemToDownload.getModified()) + itemToDownload.getFilename();
 
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
@@ -1892,11 +2086,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Builds comments for a SurveyQuestion Question could be either a Open Ended
-   *  or Quantitative with comments
+   * Builds comments for a SurveyQuestion Question could be either a Open Ended
+   * or Quantitative with comments
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShowComments(ActionContext context) {
     Connection db = null;
@@ -1905,8 +2099,10 @@ public final class CampaignManager extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("CommentListInfo");
     }
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CommentListInfo");
-    pagedListInfo.setLink("CampaignManager.do?command=ShowComments&questionId=" + questionId + "&type=" + type);
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "CommentListInfo");
+    pagedListInfo.setLink(
+        "CampaignManager.do?command=ShowComments&questionId=" + questionId + "&type=" + type);
     try {
       SurveyAnswerList answerList = new SurveyAnswerList();
       answerList.setQuestionId(Integer.parseInt(questionId));
@@ -1915,7 +2111,8 @@ public final class CampaignManager extends CFSModule {
       db = getConnection(context);
       answerList.buildList(db);
       context.getRequest().setAttribute("SurveyAnswerList", answerList);
-      context.getRequest().setAttribute("SurveyContactList", answerList.getContacts());
+      context.getRequest().setAttribute(
+          "SurveyContactList", answerList.getContacts());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -1927,17 +2124,18 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  selectedList  Description of the Parameter
-   *@param  context       Description of the Parameter
+   * @param selectedList Description of the Parameter
+   * @param context      Description of the Parameter
    */
   private static void processListCheckBoxes(SearchCriteriaListList selectedList, ActionContext context) {
     int count = 0;
     while (context.getRequest().getParameter("select" + (++count)) != null) {
       SearchCriteriaList scl = new SearchCriteriaList();
       scl.setId(context.getRequest().getParameter("select" + count));
-      if ("on".equalsIgnoreCase(context.getRequest().getParameter("select" + count + "check"))) {
+      if ("on".equalsIgnoreCase(
+          context.getRequest().getParameter("select" + count + "check"))) {
         if (!selectedList.containsItem(scl)) {
           selectedList.add(scl);
         }
@@ -1949,10 +2147,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewAttachmentsOverview(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1994,10 +2192,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandManageFileAttachments(ActionContext context) {
 
@@ -2044,10 +2242,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUploadFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -2100,7 +2298,9 @@ public final class CampaignManager extends CFSModule {
         recordInserted = false;
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         processErrors(context, errors);
       }
     } catch (Exception e) {
@@ -2114,10 +2314,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -2133,8 +2333,10 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return "PermissionError";
       }
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
-      recordDeleted = thisItem.delete(db, this.getPath(context, "communications"));
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+      recordDeleted = thisItem.delete(
+          db, this.getPath(context, "communications"));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -2146,10 +2348,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Export a Campaign Report
+   * Export a Campaign Report
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandExportReport(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -2157,7 +2359,8 @@ public final class CampaignManager extends CFSModule {
     }
     String campaignId = (String) context.getRequest().getParameter("id");
     //setup file stuff
-    String filePath = this.getPath(context, "campaign") + getDatePath(new java.util.Date());
+    String filePath = this.getPath(context, "campaign") + getDatePath(
+        new java.util.Date());
     CampaignReport thisReport = new CampaignReport();
     thisReport.setFilePath(filePath);
     thisReport.setCampaignId(Integer.parseInt(campaignId));
@@ -2179,10 +2382,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownloadFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
@@ -2200,7 +2403,8 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return "PermissionError";
       }
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -2211,7 +2415,8 @@ public final class CampaignManager extends CFSModule {
     try {
       FileItem itemToDownload = thisItem;
       itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "communications") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "communications") + getDatePath(
+          itemToDownload.getModified()) + itemToDownload.getFilename();
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -2222,8 +2427,11 @@ public final class CampaignManager extends CFSModule {
         itemToDownload.updateCounter(db);
       } else {
         db = null;
-        System.err.println("CampaignManager-> Trying to send a file that does not exist");
-        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+        System.err.println(
+            "CampaignManager-> Trying to send a file that does not exist");
+        context.getRequest().setAttribute(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.downloadDoesNotExist"));
         return (executeCommandView(context));
       }
     } catch (java.net.SocketException se) {
@@ -2251,10 +2459,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMessageJSList(ActionContext context) {
     Connection db = null;
@@ -2264,9 +2472,11 @@ public final class CampaignManager extends CFSModule {
 
       //check if a filter is selected
       if ("all".equals(listView)) {
-        messageList.setAllMessages(true, this.getUserId(context), this.getUserRange(context));
+        messageList.setAllMessages(
+            true, this.getUserId(context), this.getUserRange(context));
       } else if ("hierarchy".equals(listView)) {
-        messageList.setControlledHierarchyOnly(true, this.getUserRange(context));
+        messageList.setControlledHierarchyOnly(
+            true, this.getUserRange(context));
         messageList.setPersonalId(this.getUserId(context));
       } else if ("personal".equals(listView)) {
         messageList.setOwner(this.getUserId(context));
@@ -2291,10 +2501,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSurveyJSList(ActionContext context) {
     Connection db = null;
@@ -2320,10 +2530,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandBroadcastAuthenticationForm(ActionContext context) {
     String campaignId = context.getRequest().getParameter("id");
@@ -2333,7 +2543,7 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       campaign = new Campaign(db, Integer.parseInt(campaignId));
       context.getRequest().setAttribute("Campaign", campaign);
-      Message message = new Message (db, campaign.getMessageId());
+      Message message = new Message(db, campaign.getMessageId());
       context.getRequest().setAttribute("Message", message);
     } catch (SQLException e) {
       context.getRequest().setAttribute("Error", e);
@@ -2346,10 +2556,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandBroadcastCampaign(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -2375,8 +2585,10 @@ public final class CampaignManager extends CFSModule {
         }
         campaign.setModifiedBy(userId);
         campaign.setModified(modified);
-        campaign.setServerName(RequestUtils.getServerUrl(context.getRequest()));
-        resultCount = campaign.activate(db, campaign.getEnteredBy(),
+        campaign.setServerName(
+            RequestUtils.getServerUrl(context.getRequest()));
+        resultCount = campaign.activate(
+            db, campaign.getEnteredBy(),
             this.getUserRange(context, campaign.getEnteredBy()));
       }
     } catch (SQLException e) {
@@ -2386,10 +2598,12 @@ public final class CampaignManager extends CFSModule {
       this.freeConnection(context, db);
     }
     if (!validUser) {
-      context.getRequest().setAttribute("Error", systemStatus.getLabel("communications.campaign.broadCastInvalidPasswordMessage"));
+      context.getRequest().setAttribute(
+          "Error", systemStatus.getLabel(
+              "communications.campaign.broadCastInvalidPasswordMessage"));
       return executeCommandBroadcastAuthenticationForm(context);
     }
-    if (resultCount == 1){
+    if (resultCount == 1) {
       context.getRequest().setAttribute("finalsubmit", "true");
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
@@ -2400,9 +2614,9 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "CampaignListInfo");

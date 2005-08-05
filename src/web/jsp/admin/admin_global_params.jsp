@@ -18,6 +18,8 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="myCompany" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="hooks" class="java.lang.String" scope="request"/>
+<jsp:useBean id="processes" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
 <%-- BEGIN DHV CODE ONLY --%>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
@@ -64,6 +66,17 @@
       </td>
       <td>
          <%= toHtml(myCompany.getName()) %>
+      </td>
+    </tr>
+    <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+      <td align="center">
+        <a href="AdminConfig.do?command=Modify&param=WORKFLOW"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a>
+      </td>
+      <td>
+        <dhv:label name="admin.config.businessProcessManagement">Business Process Management</dhv:label>
+      </td>
+      <td>
+        <dhv:label name="admin.config.numberOfEvents.text" param="<%= "eventNumber="+hooks %>"><%= hooks %> Object Events</dhv:label> / <dhv:label name="admin.config.numberOfProcesses.text" param="<%= "processNumber="+processes %>"><%= processes %> Business Processes</dhv:label>
       </td>
     </tr>
 <dhv:evaluate if="<%= getPref(getServletContext(), "WEBSERVER.ASPMODE") == null || !"true".equals(getPref(getServletContext(), "WEBSERVER.ASPMODE")) %>">

@@ -15,19 +15,22 @@
  */
 package org.aspcfs.modules.quotes.base;
 
-import java.sql.*;
-import java.util.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    November 1, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created November 1, 2004
  */
 public class QuoteRemarkList extends ArrayList {
   //filters
@@ -38,9 +41,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the QuoteRemarkList object
+   * Gets the pagedListInfo attribute of the QuoteRemarkList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -48,9 +51,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the QuoteRemarkList object
+   * Sets the pagedListInfo attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -58,9 +61,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the QuoteRemarkList object
+   * Gets the id attribute of the QuoteRemarkList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -68,9 +71,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the QuoteRemarkList object
+   * Sets the id attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -78,9 +81,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the QuoteRemarkList object
+   * Sets the id attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -88,9 +91,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteRemarkList object
+   * Gets the quoteId attribute of the QuoteRemarkList object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -98,9 +101,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteRemarkList object
+   * Sets the quoteId attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -108,9 +111,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteRemarkList object
+   * Sets the quoteId attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -118,9 +121,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Gets the remarkId attribute of the QuoteRemarkList object
+   * Gets the remarkId attribute of the QuoteRemarkList object
    *
-   *@return    The remarkId value
+   * @return The remarkId value
    */
   public int getRemarkId() {
     return remarkId;
@@ -128,9 +131,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the remarkId attribute of the QuoteRemarkList object
+   * Sets the remarkId attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new remarkId value
+   * @param tmp The new remarkId value
    */
   public void setRemarkId(int tmp) {
     this.remarkId = tmp;
@@ -138,9 +141,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Sets the remarkId attribute of the QuoteRemarkList object
+   * Sets the remarkId attribute of the QuoteRemarkList object
    *
-   *@param  tmp  The new remarkId value
+   * @param tmp The new remarkId value
    */
   public void setRemarkId(String tmp) {
     this.remarkId = Integer.parseInt(tmp);
@@ -148,16 +151,17 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Constructor for the QuoteRemarkList object
+   * Constructor for the QuoteRemarkList object
    */
-  public QuoteRemarkList() { }
+  public QuoteRemarkList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -173,8 +177,7 @@ public class QuoteRemarkList extends ArrayList {
         " FROM quote_remark AS qr " +
         " LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
         " LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        " WHERE qr.map_id > -1 "
-        );
+        " WHERE qr.map_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -206,23 +209,16 @@ public class QuoteRemarkList extends ArrayList {
         "FROM quote_remark AS qr " +
         "LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
         "LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        " WHERE qr.map_id > -1 "
-        );
+        " WHERE qr.map_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       QuoteRemark thisQuoteRemark = new QuoteRemark(rs);
       this.add(thisQuoteRemark);
     }
@@ -232,9 +228,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -253,11 +249,11 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -275,10 +271,10 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator iterator = this.iterator();
@@ -291,10 +287,10 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  id  Description of the Parameter
-   *@return     Description of the Return Value
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasRemark(int id) {
     Iterator iterator = (Iterator) this.iterator();
@@ -309,9 +305,9 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public HashMap retrieveMap() {
     HashMap map = new HashMap();
@@ -325,12 +321,12 @@ public class QuoteRemarkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  map               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param map Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean fixDeletedRemarks(Connection db, HashMap map) throws SQLException {
     if (map.isEmpty()) {

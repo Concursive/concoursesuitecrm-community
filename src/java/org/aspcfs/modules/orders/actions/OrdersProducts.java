@@ -1,55 +1,50 @@
 package org.aspcfs.modules.orders.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.orders.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.lang.*;
-import java.text.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.actionlist.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.orders.beans.*;
+import org.aspcfs.modules.orders.base.Order;
+import org.aspcfs.modules.orders.base.OrderPaymentList;
+import org.aspcfs.modules.orders.base.OrderProduct;
+import org.aspcfs.modules.orders.base.OrderProductStatusList;
+import org.aspcfs.modules.orders.beans.StatusBean;
+import org.aspcfs.modules.products.base.CustomerProduct;
+import org.aspcfs.modules.products.base.CustomerProductHistoryList;
+import org.aspcfs.modules.products.base.ProductOptionList;
+import org.aspcfs.modules.products.base.ProductOptionValuesList;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    April 20, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created April 20, 2004
  */
 public final class OrdersProducts extends CFSModule {
-  public String executeCommandDefault(ActionContext context){
+  public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
       return ("PermissionError");
     }
     return "OK";
   }
-  
-  public String executeCommandDetails(ActionContext context){
+
+  public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
       return ("PermissionError");
     }
     int productId = -1;
     try {
-      productId = Integer.parseInt(context.getRequest().getParameter("productId"));
+      productId = Integer.parseInt(
+          context.getRequest().getParameter("productId"));
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", 
+      context.getRequest().setAttribute(
+          "actionError",
           "Invalid criteria, please review and make necessary changes before submitting");
       return "SearchCriteriaError";
     }
@@ -57,8 +52,8 @@ public final class OrdersProducts extends CFSModule {
     OrderProductStatusList productStatusList = null;
     OrderPaymentList paymentList = null;
     Order order = null;
-    Connection db=null;
-    try{
+    Connection db = null;
+    try {
       db = getConnection(context);
 
       orderProduct = new OrderProduct();
@@ -72,39 +67,43 @@ public final class OrdersProducts extends CFSModule {
       order.setBuildProducts(true);
       order.queryRecord(db, orderProduct.getOrderId());
       context.getRequest().setAttribute("order", order);
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
-      
-      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+
+      LookupList paymentSelect = systemStatus.getLookupList(
+          db, "lookup_payment_status");
       context.getRequest().setAttribute("paymentSelect", paymentSelect);
 
       productStatusList = orderProduct.getProductStatusList();
-      context.getRequest().setAttribute("productStatusList", productStatusList);
-      
+      context.getRequest().setAttribute(
+          "productStatusList", productStatusList);
+
       paymentList = new OrderPaymentList();
       paymentList.setOrderId(orderProduct.getOrderId());
       paymentList.setOrderItemId(orderProduct.getId());
       paymentList.buildList(db);
       context.getRequest().setAttribute("paymentList", paymentList);
-      
+
       ProductOptionList optionList = new ProductOptionList();
       optionList.buildList(db);
       context.getRequest().setAttribute("productOptionList", optionList);
-      
+
       ProductOptionValuesList valuesList = new ProductOptionValuesList();
       valuesList.buildList(db);
       context.getRequest().setAttribute("productOptionValuesList", valuesList);
-      
+
       CustomerProductHistoryList historyList = new CustomerProductHistoryList();
       historyList.setOrderId(order.getId());
       historyList.setOrderItemId(orderProduct.getId());
       historyList.buildList(db);
       context.getRequest().setAttribute("historyList", historyList);
-      
+
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", 
+      context.getRequest().setAttribute(
+          "actionError",
           "The specified order item could not be found");
       return "SearchCriteriaError";
     } finally {
@@ -115,57 +114,60 @@ public final class OrdersProducts extends CFSModule {
 
   }
 
-  public String executeCommandModify(ActionContext context){
+  public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
       return ("PermissionError");
     }
-    int productId = Integer.parseInt( (String) context.getRequest().getParameter("productId"));
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     OrderProduct orderProduct = null;
     OrderProductStatusList productStatusList = null;
     OrderPaymentList paymentList = null;
     Order order = null;
-    Connection db=null;
-    try{
+    Connection db = null;
+    try {
       db = getConnection(context);
-      
+
       orderProduct = new OrderProduct();
       orderProduct.setBuildProduct(true);
       orderProduct.setBuildProductOptions(true);
       orderProduct.setBuildProductStatus(true);
       orderProduct.queryRecord(db, productId);
       context.getRequest().setAttribute("orderProduct", orderProduct);
-      
+
       StatusBean productBean = new StatusBean();
       productBean.setStatusId(orderProduct.getStatusId());
       context.getRequest().setAttribute("statusBean", productBean);
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
-      statusSelect.addItem(-1, "-- None --");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
+      statusSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("statusSelect", statusSelect);
-      
+
       order = new Order();
       order.setBuildProducts(true);
       order.queryRecord(db, orderProduct.getOrderId());
       context.getRequest().setAttribute("order", order);
-      
+
       productStatusList = orderProduct.getProductStatusList();
-      context.getRequest().setAttribute("productStatusList", productStatusList);
-      
+      context.getRequest().setAttribute(
+          "productStatusList", productStatusList);
+
       paymentList = new OrderPaymentList();
       paymentList.setOrderId(orderProduct.getOrderId());
       paymentList.setOrderItemId(orderProduct.getId());
       paymentList.buildList(db);
       context.getRequest().setAttribute("paymentList", paymentList);
-      
+
       ProductOptionList optionList = new ProductOptionList();
       optionList.buildList(db);
       context.getRequest().setAttribute("productOptionList", optionList);
-      
+
       ProductOptionValuesList valuesList = new ProductOptionValuesList();
       valuesList.buildList(db);
       context.getRequest().setAttribute("productOptionValuesList", valuesList);
-      
+
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -176,20 +178,21 @@ public final class OrdersProducts extends CFSModule {
     addModuleBean(context, "OrdersProducts", "OrdersProducts Details");
     return ("ModifyOK");
   }
-  
-  public String executeCommandSave(ActionContext context){
+
+  public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
       return ("PermissionError");
     }
-    int productId = Integer.parseInt( (String) context.getRequest().getParameter("productId"));
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     OrderProduct orderProduct = null;
     OrderProductStatusList productStatusList = null;
     OrderPaymentList paymentList = null;
     Order order = null;
-    Connection db=null;
-    try{
+    Connection db = null;
+    try {
       db = getConnection(context);
-      
+
       orderProduct = new OrderProduct();
       orderProduct.setBuildProduct(true);
       orderProduct.setBuildProductOptions(true);
@@ -207,7 +210,7 @@ public final class OrdersProducts extends CFSModule {
       }
       orderProduct.setStatusDate(rightNow);
       orderProduct.update(db);
-      
+
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -224,7 +227,8 @@ public final class OrdersProducts extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-    int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     CustomerProduct customerProduct = null;
     try {
       db = getConnection(context);

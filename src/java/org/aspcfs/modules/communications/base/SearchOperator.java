@@ -15,19 +15,17 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Wesley S. Gillette
- *@created    November 1, 2001
- *@version    $Id$
+ * @author Wesley S. Gillette
+ * @version $Id$
+ * @created November 1, 2001
  */
 public class SearchOperator extends GenericBean {
 
@@ -39,19 +37,17 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Constructor for the SearchOperator object
-   *
-   *@since
+   * Constructor for the SearchOperator object
    */
-  public SearchOperator() { }
+  public SearchOperator() {
+  }
 
 
   /**
-   *  Constructor for the SearchOperator object
+   * Constructor for the SearchOperator object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public SearchOperator(ResultSet rs) throws SQLException {
     buildSearchOperator(rs);
@@ -59,10 +55,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the SearchOperator object
+   * Sets the id attribute of the SearchOperator object
    *
-   *@param  tmp  The new id value
-   *@since
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -70,10 +65,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Sets the dataTypeId attribute of the SearchOperator object
+   * Sets the dataTypeId attribute of the SearchOperator object
    *
-   *@param  tmp  The new dataTypeId value
-   *@since
+   * @param tmp The new dataTypeId value
    */
   public void setDataTypeId(int tmp) {
     this.dataTypeId = tmp;
@@ -81,10 +75,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Sets the dataType attribute of the SearchOperator object
+   * Sets the dataType attribute of the SearchOperator object
    *
-   *@param  tmp  The new dataType value
-   *@since
+   * @param tmp The new dataType value
    */
   public void setDataType(String tmp) {
     this.dataType = tmp;
@@ -92,10 +85,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Sets the operator attribute of the SearchOperator object
+   * Sets the operator attribute of the SearchOperator object
    *
-   *@param  tmp  The new operator value
-   *@since
+   * @param tmp The new operator value
    */
   public void setOperator(String tmp) {
     this.operator = tmp;
@@ -103,10 +95,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Sets the displayText attribute of the SearchOperator object
+   * Sets the displayText attribute of the SearchOperator object
    *
-   *@param  tmp  The new displayText value
-   *@since
+   * @param tmp The new displayText value
    */
   public void setDisplayText(String tmp) {
     this.displayText = tmp;
@@ -114,10 +105,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the SearchOperator object
+   * Gets the id attribute of the SearchOperator object
    *
-   *@return    The id value
-   *@since
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -125,10 +115,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Gets the dataTypeId attribute of the SearchOperator object
+   * Gets the dataTypeId attribute of the SearchOperator object
    *
-   *@return    The dataTypeId value
-   *@since
+   * @return The dataTypeId value
    */
   public int getDataTypeId() {
     return dataTypeId;
@@ -136,10 +125,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Gets the dataType attribute of the SearchOperator object
+   * Gets the dataType attribute of the SearchOperator object
    *
-   *@return    The dataType value
-   *@since
+   * @return The dataType value
    */
   public String getDataType() {
     return dataType;
@@ -147,10 +135,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Gets the operator attribute of the SearchOperator object
+   * Gets the operator attribute of the SearchOperator object
    *
-   *@return    The operator value
-   *@since
+   * @return The operator value
    */
   public String getOperator() {
     return operator;
@@ -158,10 +145,9 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Gets the displayText attribute of the SearchOperator object
+   * Gets the displayText attribute of the SearchOperator object
    *
-   *@return    The displayText value
-   *@since
+   * @return The displayText value
    */
   public String getDisplayText() {
     return displayText;
@@ -169,11 +155,11 @@ public class SearchOperator extends GenericBean {
 
 
   /**
-   *  Populates this object from a result set
+   * Populates this object from a result set
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected void buildSearchOperator(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("id"));

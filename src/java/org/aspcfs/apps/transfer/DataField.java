@@ -1,13 +1,13 @@
 package org.aspcfs.apps.transfer;
 
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
- *  A field of a record
+ * A field of a record
  *
- *@author     matt rajkowski
- *@created    September 3, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 3, 2002
  */
 public class DataField {
   public static Logger logger = Logger.getLogger(Transfer.class.getName());
@@ -19,16 +19,17 @@ public class DataField {
 
 
   /**
-   *  Constructor for the DataField object
+   * Constructor for the DataField object
    */
-  public DataField() { }
+  public DataField() {
+  }
 
 
   /**
-   *  Constructor for the DataField object
+   * Constructor for the DataField object
    *
-   *@param  thisName   Description of the Parameter
-   *@param  thisValue  Description of the Parameter
+   * @param thisName  Description of the Parameter
+   * @param thisValue Description of the Parameter
    */
   public DataField(String thisName, String thisValue) {
     this.name = thisName;
@@ -37,12 +38,12 @@ public class DataField {
 
 
   /**
-   *  Constructor for the DataField object
+   * Constructor for the DataField object
    *
-   *@param  thisName         Description of the Parameter
-   *@param  thisValue        Description of the Parameter
-   *@param  thisValueLookup  Description of the Parameter
-   *@param  thisAlias        Description of the Parameter
+   * @param thisName        Description of the Parameter
+   * @param thisValue       Description of the Parameter
+   * @param thisValueLookup Description of the Parameter
+   * @param thisAlias       Description of the Parameter
    */
   public DataField(String thisName, String thisValue, String thisValueLookup, String thisAlias) {
     this.name = thisName;
@@ -53,9 +54,9 @@ public class DataField {
 
 
   /**
-   *  Sets the name attribute of the DataField object
+   * Sets the name attribute of the DataField object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -63,9 +64,9 @@ public class DataField {
 
 
   /**
-   *  Sets the alias attribute of the DataField object
+   * Sets the alias attribute of the DataField object
    *
-   *@param  tmp  The new alias value
+   * @param tmp The new alias value
    */
   public void setAlias(String tmp) {
     this.alias = tmp;
@@ -73,9 +74,9 @@ public class DataField {
 
 
   /**
-   *  Sets the value attribute of the DataField object
+   * Sets the value attribute of the DataField object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     if (tmp != null) {
@@ -87,9 +88,9 @@ public class DataField {
 
 
   /**
-   *  Sets the valueLookup attribute of the DataField object
+   * Sets the valueLookup attribute of the DataField object
    *
-   *@param  tmp  The new valueLookup value
+   * @param tmp The new valueLookup value
    */
   public void setValueLookup(String tmp) {
     this.valueLookup = tmp;
@@ -97,9 +98,9 @@ public class DataField {
 
 
   /**
-   *  Gets the name attribute of the DataField object
+   * Gets the name attribute of the DataField object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -107,9 +108,9 @@ public class DataField {
 
 
   /**
-   *  Gets the alias attribute of the DataField object
+   * Gets the alias attribute of the DataField object
    *
-   *@return    The alias value
+   * @return The alias value
    */
   public String getAlias() {
     return alias;
@@ -117,9 +118,9 @@ public class DataField {
 
 
   /**
-   *  Gets the value attribute of the DataField object
+   * Gets the value attribute of the DataField object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -127,9 +128,9 @@ public class DataField {
 
 
   /**
-   *  Gets the valueLookup attribute of the DataField object
+   * Gets the valueLookup attribute of the DataField object
    *
-   *@return    The valueLookup value
+   * @return The valueLookup value
    */
   public String getValueLookup() {
     return valueLookup;
@@ -137,9 +138,9 @@ public class DataField {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasValue() {
     return (value != null && !"".equals(value));
@@ -147,9 +148,9 @@ public class DataField {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasValueLookup() {
     return (valueLookup != null && !"".equals(valueLookup));
@@ -157,9 +158,9 @@ public class DataField {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasAlias() {
     return (alias != null && !"".equals(alias));

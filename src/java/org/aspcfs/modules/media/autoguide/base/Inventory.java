@@ -15,30 +15,31 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.modules.accounts.base.Organization;
-import javax.servlet.http.*;
-import org.aspcfs.modules.base.Constants;
 import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
- *  Represents a vehicle for the purpose of scheduling advertisements, including
- *  details, options and ad run dates
+ * Represents a vehicle for the purpose of scheduling advertisements, including
+ * details, options and ad run dates
  *
- *@author     matt rajkowski
- *@created    May 17, 2002
- *@version    $Id: Inventory.java,v 1.30.20.1 2003/04/25 21:14:17 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: Inventory.java,v 1.30.20.1 2003/04/25 21:14:17 mrajkowski Exp
+ *          $
+ * @created May 17, 2002
  */
 public class Inventory {
-
   private int id = -1;
   private int vehicleId = -1;
   private int accountId = -1;
@@ -71,16 +72,17 @@ public class Inventory {
 
 
   /**
-   *  Constructor for the Inventory object
+   * Constructor for the Inventory object
    */
-  public Inventory() { }
+  public Inventory() {
+  }
 
 
   /**
-   *  Constructor for the Inventory object
+   * Constructor for the Inventory object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Inventory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -88,11 +90,11 @@ public class Inventory {
 
 
   /**
-   *  Constructor for the Inventory object
+   * Constructor for the Inventory object
    *
-   *@param  db                Description of Parameter
-   *@param  inventoryId       Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db          Description of Parameter
+   * @param inventoryId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Inventory(Connection db, int inventoryId) throws SQLException {
     String sql =
@@ -140,9 +142,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the id attribute of the Inventory object
+   * Sets the id attribute of the Inventory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     id = tmp;
@@ -150,9 +152,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the id attribute of the Inventory object
+   * Sets the id attribute of the Inventory object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     id = Integer.parseInt(tmp);
@@ -160,9 +162,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the vehicleId attribute of the Inventory object
+   * Sets the vehicleId attribute of the Inventory object
    *
-   *@param  tmp  The new vehicleId value
+   * @param tmp The new vehicleId value
    */
   public void setVehicleId(int tmp) {
     this.vehicleId = tmp;
@@ -170,9 +172,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the vehicleId attribute of the Inventory object
+   * Sets the vehicleId attribute of the Inventory object
    *
-   *@param  tmp  The new vehicleId value
+   * @param tmp The new vehicleId value
    */
   public void setVehicleId(String tmp) {
     this.vehicleId = Integer.parseInt(tmp);
@@ -180,9 +182,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the accountId attribute of the Inventory object
+   * Sets the accountId attribute of the Inventory object
    *
-   *@param  tmp  The new accountId value
+   * @param tmp The new accountId value
    */
   public void setAccountId(int tmp) {
     this.accountId = tmp;
@@ -190,9 +192,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the accountId attribute of the Inventory object
+   * Sets the accountId attribute of the Inventory object
    *
-   *@param  tmp  The new accountId value
+   * @param tmp The new accountId value
    */
   public void setAccountId(String tmp) {
     this.accountId = Integer.parseInt(tmp);
@@ -200,9 +202,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the vin attribute of the Inventory object
+   * Sets the vin attribute of the Inventory object
    *
-   *@param  tmp  The new vin value
+   * @param tmp The new vin value
    */
   public void setVin(String tmp) {
     this.vin = tmp;
@@ -210,9 +212,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the mileage attribute of the Inventory object
+   * Sets the mileage attribute of the Inventory object
    *
-   *@param  tmp  The new mileage value
+   * @param tmp The new mileage value
    */
   public void setMileage(int tmp) {
     this.mileage = tmp;
@@ -220,9 +222,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the mileage attribute of the Inventory object
+   * Sets the mileage attribute of the Inventory object
    *
-   *@param  tmp  The new mileage value
+   * @param tmp The new mileage value
    */
   public void setMileage(String tmp) {
     this.mileage = StringUtils.getIntegerNumber(tmp);
@@ -230,9 +232,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the isNew attribute of the Inventory object
+   * Sets the isNew attribute of the Inventory object
    *
-   *@param  tmp  The new isNew value
+   * @param tmp The new isNew value
    */
   public void setIsNew(boolean tmp) {
     this.isNew = tmp;
@@ -240,9 +242,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the isNew attribute of the Inventory object
+   * Sets the isNew attribute of the Inventory object
    *
-   *@param  tmp  The new isNew value
+   * @param tmp The new isNew value
    */
   public void setIsNew(String tmp) {
     this.isNew = DatabaseUtils.parseBoolean(tmp);
@@ -250,9 +252,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the condition attribute of the Inventory object
+   * Sets the condition attribute of the Inventory object
    *
-   *@param  tmp  The new condition value
+   * @param tmp The new condition value
    */
   public void setCondition(String tmp) {
     this.condition = tmp;
@@ -260,9 +262,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the comments attribute of the Inventory object
+   * Sets the comments attribute of the Inventory object
    *
-   *@param  tmp  The new comments value
+   * @param tmp The new comments value
    */
   public void setComments(String tmp) {
     this.comments = tmp;
@@ -270,9 +272,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the stockNo attribute of the Inventory object
+   * Sets the stockNo attribute of the Inventory object
    *
-   *@param  tmp  The new stockNo value
+   * @param tmp The new stockNo value
    */
   public void setStockNo(String tmp) {
     this.stockNo = tmp;
@@ -280,9 +282,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the exteriorColor attribute of the Inventory object
+   * Sets the exteriorColor attribute of the Inventory object
    *
-   *@param  tmp  The new exteriorColor value
+   * @param tmp The new exteriorColor value
    */
   public void setExteriorColor(String tmp) {
     this.exteriorColor = tmp;
@@ -290,9 +292,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the interiorColor attribute of the Inventory object
+   * Sets the interiorColor attribute of the Inventory object
    *
-   *@param  tmp  The new interiorColor value
+   * @param tmp The new interiorColor value
    */
   public void setInteriorColor(String tmp) {
     this.interiorColor = tmp;
@@ -300,9 +302,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the invoicePrice attribute of the Inventory object
+   * Sets the invoicePrice attribute of the Inventory object
    *
-   *@param  tmp  The new invoicePrice value
+   * @param tmp The new invoicePrice value
    */
   public void setInvoicePrice(double tmp) {
     this.invoicePrice = tmp;
@@ -310,9 +312,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the invoicePrice attribute of the Inventory object
+   * Sets the invoicePrice attribute of the Inventory object
    *
-   *@param  tmp  The new invoicePrice value
+   * @param tmp The new invoicePrice value
    */
   public void setInvoicePrice(String tmp) {
     this.invoicePrice = StringUtils.getDoubleNumber(tmp);
@@ -320,9 +322,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the sellingPrice attribute of the Inventory object
+   * Sets the sellingPrice attribute of the Inventory object
    *
-   *@param  tmp  The new sellingPrice value
+   * @param tmp The new sellingPrice value
    */
   public void setSellingPrice(double tmp) {
     this.sellingPrice = tmp;
@@ -330,9 +332,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the sellingPrice attribute of the Inventory object
+   * Sets the sellingPrice attribute of the Inventory object
    *
-   *@param  tmp  The new sellingPrice value
+   * @param tmp The new sellingPrice value
    */
   public void setSellingPrice(String tmp) {
     sellingPrice = StringUtils.getDoubleNumber(tmp);
@@ -340,9 +342,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the sellingPriceText attribute of the Inventory object
+   * Sets the sellingPriceText attribute of the Inventory object
    *
-   *@param  tmp  The new sellingPriceText value
+   * @param tmp The new sellingPriceText value
    */
   public void setSellingPriceText(String tmp) {
     this.sellingPriceText = tmp;
@@ -350,9 +352,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the sold attribute of the Inventory object
+   * Sets the sold attribute of the Inventory object
    *
-   *@param  tmp  The new sold value
+   * @param tmp The new sold value
    */
   public void setSold(boolean tmp) {
     this.sold = tmp;
@@ -360,9 +362,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the sold attribute of the Inventory object
+   * Sets the sold attribute of the Inventory object
    *
-   *@param  tmp  The new sold value
+   * @param tmp The new sold value
    */
   public void setSold(String tmp) {
     this.sold = DatabaseUtils.parseBoolean(tmp);
@@ -370,9 +372,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the style attribute of the Inventory object
+   * Sets the style attribute of the Inventory object
    *
-   *@param  tmp  The new style value
+   * @param tmp The new style value
    */
   public void setStyle(String tmp) {
     this.style = tmp;
@@ -380,9 +382,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the status attribute of the Inventory object
+   * Sets the status attribute of the Inventory object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -390,9 +392,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the entered attribute of the Inventory object
+   * Sets the entered attribute of the Inventory object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -400,9 +402,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the entered attribute of the Inventory object
+   * Sets the entered attribute of the Inventory object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = java.sql.Timestamp.valueOf(tmp);
@@ -410,9 +412,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the enteredBy attribute of the Inventory object
+   * Sets the enteredBy attribute of the Inventory object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -420,9 +422,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the enteredBy attribute of the Inventory object
+   * Sets the enteredBy attribute of the Inventory object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -430,9 +432,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the modified attribute of the Inventory object
+   * Sets the modified attribute of the Inventory object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -440,9 +442,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the modified attribute of the Inventory object
+   * Sets the modified attribute of the Inventory object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = java.sql.Timestamp.valueOf(tmp);
@@ -450,9 +452,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Inventory object
+   * Sets the modifiedBy attribute of the Inventory object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -460,9 +462,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Inventory object
+   * Sets the modifiedBy attribute of the Inventory object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -470,9 +472,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the vehicle attribute of the Inventory object
+   * Sets the vehicle attribute of the Inventory object
    *
-   *@param  tmp  The new vehicle value
+   * @param tmp The new vehicle value
    */
   public void setVehicle(Vehicle tmp) {
     this.vehicle = tmp;
@@ -480,9 +482,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the organization attribute of the Inventory object
+   * Sets the organization attribute of the Inventory object
    *
-   *@param  tmp  The new organization value
+   * @param tmp The new organization value
    */
   public void setOrganization(Organization tmp) {
     this.organization = tmp;
@@ -490,9 +492,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the options attribute of the Inventory object
+   * Sets the options attribute of the Inventory object
    *
-   *@param  tmp  The new options value
+   * @param tmp The new options value
    */
   public void setOptions(OptionList tmp) {
     this.options = tmp;
@@ -500,9 +502,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the requestItems attribute of the Inventory object
+   * Sets the requestItems attribute of the Inventory object
    *
-   *@param  request  The new requestItems value
+   * @param request The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
     options = new OptionList(request);
@@ -519,9 +521,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the adRuns attribute of the Inventory object
+   * Sets the adRuns attribute of the Inventory object
    *
-   *@param  tmp  The new adRuns value
+   * @param tmp The new adRuns value
    */
   public void setAdRuns(AdRunList tmp) {
     this.adRuns = tmp;
@@ -529,9 +531,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the pictureId attribute of the Inventory object
+   * Sets the pictureId attribute of the Inventory object
    *
-   *@param  tmp  The new pictureId value
+   * @param tmp The new pictureId value
    */
   public void setPictureId(int tmp) {
     this.pictureId = tmp;
@@ -539,9 +541,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the picture attribute of the Inventory object
+   * Sets the picture attribute of the Inventory object
    *
-   *@param  tmp  The new picture value
+   * @param tmp The new picture value
    */
   public void setPicture(FileItem tmp) {
     this.picture = tmp;
@@ -549,9 +551,9 @@ public class Inventory {
 
 
   /**
-   *  Sets the showIncompleteAdRunsOnly attribute of the Inventory object
+   * Sets the showIncompleteAdRunsOnly attribute of the Inventory object
    *
-   *@param  tmp  The new showIncompleteAdRunsOnly value
+   * @param tmp The new showIncompleteAdRunsOnly value
    */
   public void setShowIncompleteAdRunsOnly(boolean tmp) {
     this.showIncompleteAdRunsOnly = tmp;
@@ -559,9 +561,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the id attribute of the Inventory object
+   * Gets the id attribute of the Inventory object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -569,9 +571,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the vehicleId attribute of the Inventory object
+   * Gets the vehicleId attribute of the Inventory object
    *
-   *@return    The vehicleId value
+   * @return The vehicleId value
    */
   public int getVehicleId() {
     return vehicleId;
@@ -579,9 +581,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the accountId attribute of the Inventory object
+   * Gets the accountId attribute of the Inventory object
    *
-   *@return    The accountId value
+   * @return The accountId value
    */
   public int getAccountId() {
     return accountId;
@@ -589,9 +591,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the vin attribute of the Inventory object
+   * Gets the vin attribute of the Inventory object
    *
-   *@return    The vin value
+   * @return The vin value
    */
   public String getVin() {
     return vin;
@@ -599,9 +601,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the mileage attribute of the Inventory object
+   * Gets the mileage attribute of the Inventory object
    *
-   *@return    The mileage value
+   * @return The mileage value
    */
   public int getMileage() {
     return mileage;
@@ -609,9 +611,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the mileageString attribute of the Inventory object
+   * Gets the mileageString attribute of the Inventory object
    *
-   *@return    The mileageString value
+   * @return The mileageString value
    */
   public String getMileageString() {
     if (mileage > -1) {
@@ -623,9 +625,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the isNew attribute of the Inventory object
+   * Gets the isNew attribute of the Inventory object
    *
-   *@return    The isNew value
+   * @return The isNew value
    */
   public boolean getIsNew() {
     return isNew;
@@ -633,9 +635,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the condition attribute of the Inventory object
+   * Gets the condition attribute of the Inventory object
    *
-   *@return    The condition value
+   * @return The condition value
    */
   public String getCondition() {
     return condition;
@@ -643,9 +645,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the comments attribute of the Inventory object
+   * Gets the comments attribute of the Inventory object
    *
-   *@return    The comments value
+   * @return The comments value
    */
   public String getComments() {
     return comments;
@@ -653,9 +655,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the stockNo attribute of the Inventory object
+   * Gets the stockNo attribute of the Inventory object
    *
-   *@return    The stockNo value
+   * @return The stockNo value
    */
   public String getStockNo() {
     return stockNo;
@@ -663,9 +665,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the exteriorColor attribute of the Inventory object
+   * Gets the exteriorColor attribute of the Inventory object
    *
-   *@return    The exteriorColor value
+   * @return The exteriorColor value
    */
   public String getExteriorColor() {
     return exteriorColor;
@@ -673,9 +675,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the interiorColor attribute of the Inventory object
+   * Gets the interiorColor attribute of the Inventory object
    *
-   *@return    The interiorColor value
+   * @return The interiorColor value
    */
   public String getInteriorColor() {
     return interiorColor;
@@ -683,9 +685,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the invoicePrice attribute of the Inventory object
+   * Gets the invoicePrice attribute of the Inventory object
    *
-   *@return    The invoicePrice value
+   * @return The invoicePrice value
    */
   public double getInvoicePrice() {
     return invoicePrice;
@@ -693,9 +695,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the invoicePriceString attribute of the Inventory object
+   * Gets the invoicePriceString attribute of the Inventory object
    *
-   *@return    The invoicePriceString value
+   * @return The invoicePriceString value
    */
   public String getInvoicePriceString() {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
@@ -704,9 +706,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the sellingPrice attribute of the Inventory object
+   * Gets the sellingPrice attribute of the Inventory object
    *
-   *@return    The sellingPrice value
+   * @return The sellingPrice value
    */
   public double getSellingPrice() {
     return sellingPrice;
@@ -714,9 +716,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the sellingPriceString attribute of the Inventory object
+   * Gets the sellingPriceString attribute of the Inventory object
    *
-   *@return    The sellingPriceString value
+   * @return The sellingPriceString value
    */
   public String getSellingPriceString() {
     if (sellingPrice > 0) {
@@ -729,9 +731,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the sellingPriceText attribute of the Inventory object
+   * Gets the sellingPriceText attribute of the Inventory object
    *
-   *@return    The sellingPriceText value
+   * @return The sellingPriceText value
    */
   public String getSellingPriceText() {
     return sellingPriceText;
@@ -739,9 +741,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the sold attribute of the Inventory object
+   * Gets the sold attribute of the Inventory object
    *
-   *@return    The sold value
+   * @return The sold value
    */
   public boolean getSold() {
     return sold;
@@ -749,9 +751,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the style attribute of the Inventory object
+   * Gets the style attribute of the Inventory object
    *
-   *@return    The style value
+   * @return The style value
    */
   public String getStyle() {
     return style;
@@ -759,9 +761,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the status attribute of the Inventory object
+   * Gets the status attribute of the Inventory object
    *
-   *@return    The status value
+   * @return The status value
    */
   public String getStatus() {
     return status;
@@ -769,9 +771,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the entered attribute of the Inventory object
+   * Gets the entered attribute of the Inventory object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -779,9 +781,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the enteredBy attribute of the Inventory object
+   * Gets the enteredBy attribute of the Inventory object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -789,9 +791,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the modified attribute of the Inventory object
+   * Gets the modified attribute of the Inventory object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -799,9 +801,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Inventory object
+   * Gets the modifiedBy attribute of the Inventory object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -809,9 +811,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the vehicle attribute of the Inventory object
+   * Gets the vehicle attribute of the Inventory object
    *
-   *@return    The vehicle value
+   * @return The vehicle value
    */
   public Vehicle getVehicle() {
     return vehicle;
@@ -819,9 +821,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the organization attribute of the Inventory object
+   * Gets the organization attribute of the Inventory object
    *
-   *@return    The organization value
+   * @return The organization value
    */
   public Organization getOrganization() {
     return organization;
@@ -829,9 +831,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the account attribute of the Inventory object
+   * Gets the account attribute of the Inventory object
    *
-   *@return    The account value
+   * @return The account value
    */
   public Organization getAccount() {
     return organization;
@@ -839,9 +841,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the options attribute of the Inventory object
+   * Gets the options attribute of the Inventory object
    *
-   *@return    The options value
+   * @return The options value
    */
   public OptionList getOptions() {
     return options;
@@ -849,9 +851,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the adRuns attribute of the Inventory object
+   * Gets the adRuns attribute of the Inventory object
    *
-   *@return    The adRuns value
+   * @return The adRuns value
    */
   public AdRunList getAdRuns() {
     return adRuns;
@@ -859,9 +861,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the pictureId attribute of the Inventory object
+   * Gets the pictureId attribute of the Inventory object
    *
-   *@return    The pictureId value
+   * @return The pictureId value
    */
   public int getPictureId() {
     return pictureId;
@@ -869,9 +871,9 @@ public class Inventory {
 
 
   /**
-   *  Gets the picture attribute of the Inventory object
+   * Gets the picture attribute of the Inventory object
    *
-   *@return    The picture value
+   * @return The picture value
    */
   public FileItem getPicture() {
     return picture;
@@ -879,10 +881,10 @@ public class Inventory {
 
 
   /**
-   *  Gets the hasPicture attribute of the Inventory object used for
-   *  synchronization... since all properties need a get.
+   * Gets the hasPicture attribute of the Inventory object used for
+   * synchronization... since all properties need a get.
    *
-   *@return    The hasPicture value
+   * @return The hasPicture value
    */
   public boolean getHasPicture() {
     return hasPicture();
@@ -890,9 +892,9 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasOptions() {
     return (options != null && options.size() > 0);
@@ -900,10 +902,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  optionId  Description of Parameter
-   *@return           Description of the Returned Value
+   * @param optionId Description of Parameter
+   * @return Description of the Returned Value
    */
   public boolean hasOption(int optionId) {
     return (options != null && options.hasOption(optionId));
@@ -911,9 +913,9 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasAdRuns() {
     return (adRuns != null && adRuns.size() > 0);
@@ -921,9 +923,9 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasPictureId() {
     return pictureId > -1;
@@ -931,9 +933,9 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasPicture() {
     return (picture != null || hasPictureId());
@@ -941,22 +943,24 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    int i = 0;
+    id = DatabaseUtils.getNextSeq(db, "autoguide_inve_inventory_id_seq");
+    PreparedStatement pst = db.prepareStatement(
         "INSERT INTO autoguide_inventory " +
-        "(vehicle_id, account_id, vin, mileage, is_new, condition, comments, " +
+        "(" + (id > -1 ? "inventory_id, " : "") + "vehicle_id, account_id, vin, mileage, is_new, condition, comments, " +
         "stock_no, ext_color, int_color, invoice_price, selling_price, selling_price_text, sold, " +
         "style, status, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, vehicleId);
     pst.setInt(++i, accountId);
     pst.setString(++i, vin);
@@ -977,9 +981,7 @@ public class Inventory {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "autoguide_inve_inventory_id_seq");
-
+    id = DatabaseUtils.getCurrVal(db, "autoguide_inve_inventory_id_seq", id);
     if (options != null) {
       options.setInventoryId(id);
       options.insert(db);
@@ -993,11 +995,11 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1045,7 +1047,8 @@ public class Inventory {
 
       if (resultCount == 1) {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("Inventory-> Vehicle updated, updating options...");
+          System.out.println(
+              "Inventory-> Vehicle updated, updating options...");
         }
 
         if (options == null) {
@@ -1055,7 +1058,8 @@ public class Inventory {
         options.update(db);
 
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("Inventory-> Options updated, updating ad runs...");
+          System.out.println(
+              "Inventory-> Options updated, updating ad runs...");
         }
 
         if (adRuns != null) {
@@ -1077,11 +1081,11 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
@@ -1131,10 +1135,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildOrganizationInfo(Connection db) throws SQLException {
     if (accountId == -1) {
@@ -1145,10 +1149,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildOptions(Connection db) throws SQLException {
     options = new OptionList();
@@ -1158,10 +1162,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildAdRuns(Connection db) throws SQLException {
     adRuns = new AdRunList();
@@ -1172,10 +1176,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void generateVehicleId(Connection db) throws SQLException {
     vehicleId = this.getVehicle().generateId(db);
@@ -1183,10 +1187,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildPictureId(Connection db) throws SQLException {
     try {
@@ -1199,10 +1203,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildPicture(Connection db) throws SQLException {
     try {
@@ -1219,17 +1223,20 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String toString() {
     String lf = System.getProperty("line.separator");
     StringBuffer sb = new StringBuffer();
-    sb.append("AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(new java.util.Date()) + lf);
+    sb.append(
+        "AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(
+            new java.util.Date()) + lf);
     sb.append(lf);
     sb.append(StringUtils.toString(organization.getName()));
-    sb.append(" (" + StringUtils.toString(organization.getAccountNumber()) + ")" + lf);
+    sb.append(
+        " (" + StringUtils.toString(organization.getAccountNumber()) + ")" + lf);
     sb.append(organization.getPhoneNumber("Main") + lf);
     sb.append(lf);
     if (this.hasAdRuns()) {
@@ -1256,15 +1263,21 @@ public class Inventory {
       sb.append("Ad Runs: none specified" + lf);
     }
     sb.append(lf);
-    sb.append("Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
-    sb.append("Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
+    sb.append(
+        "Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
+    sb.append(
+        "Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
     sb.append("Year: " + vehicle.getYear() + lf);
     sb.append("Style: " + StringUtils.toString(style) + lf);
     sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
-    sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
+    sb.append(
+        "Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
     sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);
-    sb.append("Selling Price: " + StringUtils.toString(this.getSellingPriceString()) + lf);
-    sb.append("Selling Price Text: " + StringUtils.toString(this.getSellingPriceText()) + lf);
+    sb.append(
+        "Selling Price: " + StringUtils.toString(this.getSellingPriceString()) + lf);
+    sb.append(
+        "Selling Price Text: " + StringUtils.toString(
+            this.getSellingPriceText()) + lf);
     sb.append("Color: " + StringUtils.toString(this.getExteriorColor()) + lf);
     sb.append("Condition: " + StringUtils.toString(condition) + lf);
     sb.append("Additional Text: " + StringUtils.toString(comments) + lf);
@@ -1285,10 +1298,10 @@ public class Inventory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("inventory_id");

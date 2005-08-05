@@ -35,19 +35,19 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class SetupServer extends CFSModule {
 
   /**
-   *  A sample server action to receive the submitted registration form
+   * A sample server action to receive the submitted registration form
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSubmitRegistration(ActionContext context) {
     try {
@@ -77,7 +77,8 @@ public class SetupServer extends CFSModule {
           }
           //locate a previous registration to send back
           db.setAutoCommit(false);
-          Registration previousRegistration = RegistrationList.locate(db, license.getEmail(), license.getProfile(), true);
+          Registration previousRegistration = RegistrationList.locate(
+              db, license.getEmail(), license.getProfile(), true);
           //If a previous registration matches, then set it to disabled and insert the new registration
           if (previousRegistration != null) {
             previousRegistration.setEnabled(false);
@@ -125,7 +126,8 @@ public class SetupServer extends CFSModule {
           freeConnection(context, db);
         }
         if (sendReg) {
-          if ("ent1source".equals(context.getRequest().getParameter("ent1source"))) {
+          if ("ent1source".equals(
+              context.getRequest().getParameter("ent1source"))) {
             //Stream the license back
             RecordList recordList = new RecordList("license");
             Record record = new Record("processed");
@@ -144,7 +146,8 @@ public class SetupServer extends CFSModule {
       }
       statusList.add(thisStatus);
       statusList.appendResponse(document, app);
-      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, "UTF-8"));
+      context.getRequest().setAttribute(
+          "statusXML", XMLUtils.toString(document, "UTF-8"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
@@ -153,10 +156,10 @@ public class SetupServer extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRequestLicense(ActionContext context) {
     try {
@@ -183,7 +186,8 @@ public class SetupServer extends CFSModule {
             System.out.println("SetupServer-> FATAL: db IS NULL!!!");
           }
           //locate a previous registration to send back
-          Registration previousRegistration = RegistrationList.locate(db, license.getEmail(), license.getProfile(), true);
+          Registration previousRegistration = RegistrationList.locate(
+              db, license.getEmail(), license.getProfile(), true);
           //If not found send back error message
           if (previousRegistration == null) {
             thisStatus.setStatusCode(1);
@@ -222,7 +226,8 @@ public class SetupServer extends CFSModule {
       }
       statusList.add(thisStatus);
       statusList.appendResponse(document, app);
-      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, "UTF-8"));
+      context.getRequest().setAttribute(
+          "statusXML", XMLUtils.toString(document, "UTF-8"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }

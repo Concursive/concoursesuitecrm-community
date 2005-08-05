@@ -15,16 +15,14 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
-import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.modules.contacts.base.CallList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    October 21, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created October 21, 2003
  */
 public class CallEventList {
   CallList pendingCalls = new CallList();
@@ -34,9 +32,9 @@ public class CallEventList {
 
 
   /**
-   *  Sets the pendingCalls attribute of the CallEventList object
+   * Sets the pendingCalls attribute of the CallEventList object
    *
-   *@param  pendingCalls  The new pendingCalls value
+   * @param pendingCalls The new pendingCalls value
    */
   public void setPendingCalls(CallList pendingCalls) {
     this.pendingCalls = pendingCalls;
@@ -44,9 +42,9 @@ public class CallEventList {
 
 
   /**
-   *  Sets the completedCalls attribute of the CallEventList object
+   * Sets the completedCalls attribute of the CallEventList object
    *
-   *@param  completedCalls  The new completedCalls value
+   * @param completedCalls The new completedCalls value
    */
   public void setCompletedCalls(CallList completedCalls) {
     this.completedCalls = completedCalls;
@@ -54,9 +52,9 @@ public class CallEventList {
 
 
   /**
-   *  Sets the canceledCalls attribute of the CallEventList object
+   * Sets the canceledCalls attribute of the CallEventList object
    *
-   *@param  canceledCalls  The new canceledCalls value
+   * @param canceledCalls The new canceledCalls value
    */
   public void setCanceledCalls(CallList canceledCalls) {
     this.canceledCalls = canceledCalls;
@@ -64,9 +62,9 @@ public class CallEventList {
 
 
   /**
-   *  Sets the size attribute of the CallEventList object
+   * Sets the size attribute of the CallEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(int size) {
     this.size = size;
@@ -74,9 +72,9 @@ public class CallEventList {
 
 
   /**
-   *  Sets the size attribute of the CallEventList object
+   * Sets the size attribute of the CallEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
@@ -84,9 +82,9 @@ public class CallEventList {
 
 
   /**
-   *  Gets the size attribute of the CallEventList object
+   * Gets the size attribute of the CallEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -94,9 +92,9 @@ public class CallEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the CallEventList object
+   * Gets the sizeString attribute of the CallEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);
@@ -104,9 +102,9 @@ public class CallEventList {
 
 
   /**
-   *  Gets the pendingCalls attribute of the CallEventList object
+   * Gets the pendingCalls attribute of the CallEventList object
    *
-   *@return    The pendingCalls value
+   * @return The pendingCalls value
    */
   public CallList getPendingCalls() {
     return pendingCalls;
@@ -114,9 +112,9 @@ public class CallEventList {
 
 
   /**
-   *  Gets the completedCalls attribute of the CallEventList object
+   * Gets the completedCalls attribute of the CallEventList object
    *
-   *@return    The completedCalls value
+   * @return The completedCalls value
    */
   public CallList getCompletedCalls() {
     return completedCalls;
@@ -124,9 +122,9 @@ public class CallEventList {
 
 
   /**
-   *  Gets the canceledCalls attribute of the CallEventList object
+   * Gets the canceledCalls attribute of the CallEventList object
    *
-   *@return    The canceledCalls value
+   * @return The canceledCalls value
    */
   public CallList getCanceledCalls() {
     return canceledCalls;

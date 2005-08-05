@@ -33,16 +33,18 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle">
-      <zeroio:tabLabel name="News" object="Project"/>
+      <zeroio:tabLabel name="News" type="project.news" object="Project"/>
     </td>
   </tr>
 </table>
-<br>
-<zeroio:permission name="project-news-add">
-<img src="images/icons/stock_new-news-16.gif" border="0" align="absmiddle">
-<a href="ProjectManagementNews.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.addNewsArticle">Add News Article</dhv:label></a><br>
-&nbsp;<br>
-</zeroio:permission>
+<br />
+<% if (!Project.isTrashed()){ %>
+  <zeroio:permission name="project-news-add">
+    <img src="images/icons/stock_new-news-16.gif" border="0" align="absmiddle">
+    <a href="ProjectManagementNews.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.addNewsArticle">Add News Article</dhv:label></a><br>
+    &nbsp;<br />
+  </zeroio:permission>
+<% } %>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="newsView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>">

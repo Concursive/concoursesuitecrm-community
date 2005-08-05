@@ -15,17 +15,17 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
 import javax.activation.DataSource;
+import java.io.*;
 
 /**
- *  Creates a datasource from a String for a mail message
+ * Creates a datasource from a String for a mail message
  *
- *@author     Portions Copyright 1999 Sun Microsystems, Inc. All rights
- *      reserved. (adapted from JavaMail demo code)
- *@created    April 26, 2004
- *@version    $Id: ByteArrayDataSource.java,v 1.1 2004/04/26 15:21:47 mrajkowski
- *      Exp $
+ * @author Portions Copyright 1999 Sun Microsystems, Inc. All rights
+ *         reserved. (adapted from JavaMail demo code)
+ * @version $Id: ByteArrayDataSource.java,v 1.1 2004/04/26 15:21:47 mrajkowski
+ *          Exp $
+ * @created April 26, 2004
  */
 public class ByteArrayDataSource implements DataSource {
   private String fileName = null;
@@ -34,11 +34,11 @@ public class ByteArrayDataSource implements DataSource {
 
 
   /**
-   *  Constructor for the ByteArrayDataSource object
+   * Constructor for the ByteArrayDataSource object
    *
-   *@param  fileName  Description of the Parameter
-   *@param  data      Description of the Parameter
-   *@param  mimeType  Description of the Parameter
+   * @param fileName Description of the Parameter
+   * @param data     Description of the Parameter
+   * @param mimeType Description of the Parameter
    */
   ByteArrayDataSource(String fileName, String data, String mimeType) {
     this.fileName = fileName;
@@ -54,11 +54,11 @@ public class ByteArrayDataSource implements DataSource {
 
 
   /**
-   *  Constructor for the ByteArrayDataSource object
+   * Constructor for the ByteArrayDataSource object
    *
-   *@param  fileName  Description of the Parameter
-   *@param  data      Description of the Parameter
-   *@param  mimeType  Description of the Parameter
+   * @param fileName Description of the Parameter
+   * @param data     Description of the Parameter
+   * @param mimeType Description of the Parameter
    */
   ByteArrayDataSource(String fileName, byte[] data, String mimeType) {
     this.fileName = fileName;
@@ -68,10 +68,10 @@ public class ByteArrayDataSource implements DataSource {
 
 
   /**
-   *  Gets the inputStream attribute of the ByteArrayDataSource object
+   * Gets the inputStream attribute of the ByteArrayDataSource object
    *
-   *@return                  The inputStream value
-   *@exception  IOException  Description of the Exception
+   * @return The inputStream value
+   * @throws IOException Description of the Exception
    */
   public InputStream getInputStream() throws IOException {
     if (data == null) {
@@ -82,10 +82,10 @@ public class ByteArrayDataSource implements DataSource {
 
 
   /**
-   *  Gets the outputStream attribute of the ByteArrayDataSource object
+   * Gets the outputStream attribute of the ByteArrayDataSource object
    *
-   *@return                  The outputStream value
-   *@exception  IOException  Description of the Exception
+   * @return The outputStream value
+   * @throws IOException Description of the Exception
    */
   public OutputStream getOutputStream() throws IOException {
     throw new IOException("invalid call");
@@ -93,9 +93,9 @@ public class ByteArrayDataSource implements DataSource {
 
 
   /**
-   *  Gets the contentType attribute of the ByteArrayDataSource object
+   * Gets the contentType attribute of the ByteArrayDataSource object
    *
-   *@return    The contentType value
+   * @return The contentType value
    */
   public String getContentType() {
     return mimeType;
@@ -103,9 +103,9 @@ public class ByteArrayDataSource implements DataSource {
 
 
   /**
-   *  Gets the name attribute of the ByteArrayDataSource object
+   * Gets the name attribute of the ByteArrayDataSource object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return fileName;

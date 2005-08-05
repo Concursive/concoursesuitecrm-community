@@ -15,23 +15,24 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.controller.SystemStatus;
-import com.darkhorseventures.database.ConnectionElement;
-import java.util.*;
 import org.aspcfs.utils.StringUtils;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
+
 /**
- *  This Class evaluates a User ID and returns a Contact record from application
- *  scope.
+ * This Class evaluates a User ID and returns a Contact record from application
+ * scope.
  *
- *@author     matt rajkowski
- *@created    December 14, 2001
- *@version    $Id: UsernameHandler.java,v 1.3 2002/12/23 16:12:28 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: UsernameHandler.java,v 1.3 2002/12/23 16:12:28 mrajkowski Exp
+ *          $
+ * @created December 14, 2001
  */
 public class UsernameHandler extends TagSupport {
 
@@ -42,10 +43,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Sets the Id attribute of the UsernameHandler object
+   * Sets the Id attribute of the UsernameHandler object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -53,9 +53,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Sets the id attribute of the UsernameHandler object
+   * Sets the id attribute of the UsernameHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.userId = tmp;
@@ -63,9 +63,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Sets the lastFirst attribute of the UsernameHandler object
+   * Sets the lastFirst attribute of the UsernameHandler object
    *
-   *@param  tmp  The new lastFirst value
+   * @param tmp The new lastFirst value
    */
   public void setLastFirst(String tmp) {
     this.lastFirst = "true".equals(tmp);
@@ -73,9 +73,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Sets the firstInitialLast attribute of the UsernameHandler object
+   * Sets the firstInitialLast attribute of the UsernameHandler object
    *
-   *@param  firstInitialLast  The new firstInitialLast value
+   * @param firstInitialLast The new firstInitialLast value
    */
   public void setFirstInitialLast(boolean firstInitialLast) {
     this.firstInitialLast = firstInitialLast;
@@ -83,9 +83,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Sets the firstInitialLast attribute of the UsernameHandler object
+   * Sets the firstInitialLast attribute of the UsernameHandler object
    *
-   *@param  tmp  The new firstInitialLast value
+   * @param tmp The new firstInitialLast value
    */
   public void setFirstInitialLast(String tmp) {
     this.firstInitialLast = "true".equals(tmp);
@@ -93,9 +93,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Sets the default attribute of the UsernameHandler object
+   * Sets the default attribute of the UsernameHandler object
    *
-   *@param  tmp  The new default value
+   * @param tmp The new default value
    */
   public void setDefault(String tmp) {
     this.defaultText = tmp;
@@ -103,20 +103,21 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Prints the user's name from the user cache, if not found displays the
-   *  default text value.
+   * Prints the user's name from the user cache, if not found displays the
+   * default text value.
    *
-   *@return                   Description of the Returned Value
-   *@exception  JspException  Description of Exception
-   *@since
+   * @return Description of the Returned Value
+   * @throws JspException Description of Exception
    */
   public int doStartTag() throws JspException {
     try {
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce == null) {
         System.out.println("UsernameHandler-> ConnectionElement is null");
       }
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus == null) {
         System.out.println("UsernameHandler-> SystemStatus is null");
       } else {
@@ -125,16 +126,23 @@ public class UsernameHandler extends TagSupport {
           Contact thisContact = thisUser.getContact();
           if (thisContact != null) {
             if (lastFirst) {
-              this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
+              this.pageContext.getOut().write(
+                  StringUtils.toHtml(
+                      thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
             } else if (firstInitialLast) {
-              this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstInitialLast()));
+              this.pageContext.getOut().write(
+                  StringUtils.toHtml(
+                      thisContact.getNameFirstInitialLast() + (!thisUser.getEnabled() ? " *" : "")));
             } else {
-              this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
+              this.pageContext.getOut().write(
+                  StringUtils.toHtml(
+                      thisContact.getNameFirstLast() + (!thisUser.getEnabled() ? " *" : "")));
             }
           }
         } else {
           //NOTE: the default text will already be in the output format
-          this.pageContext.getOut().write(StringUtils.toHtml(systemStatus.getLabel(defaultText)));
+          this.pageContext.getOut().write(
+              StringUtils.toHtml(systemStatus.getLabel(defaultText)));
         }
       }
     } catch (Exception e) {
@@ -145,9 +153,9 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

@@ -45,4 +45,6 @@
   </tr>
 </table>
 <br />
-<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
+<dhv:evaluate if="<%= isPopup(request) %>">
+  <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
+</dhv:evaluate>

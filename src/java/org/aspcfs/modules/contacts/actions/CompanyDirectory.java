@@ -21,7 +21,6 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.communications.base.RecipientList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.utils.web.HtmlDialog;
@@ -109,6 +108,8 @@ public final class CompanyDirectory extends CFSModule {
   /**
    * This method retrieves the details of a single employee. The resulting
    * Employee object is added to the request if successful.<p>
+   * <p/>
+   * <p/>
    * <p/>
    * This method handles output for both viewing and modifying a contact.
    *
@@ -306,20 +307,22 @@ public final class CompanyDirectory extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, id);
       thisContact.checkUserAccount(db);
-      //htmlDialog.setRelationships(thisContact.processDependencies(db));
       DependencyList dependencies = thisContact.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
-      
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (!thisContact.hasAccount()) {
-        htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "&popup=true'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.employeeUserAccountHeader"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        htmlDialog.setHeader(
+            systemStatus.getLabel("confirmdelete.employeeUserAccountHeader"));
       }
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='CompanyDirectory.do?command=TrashEmployee&empid=" + id + "&popup=true'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
 
     } catch (Exception e) {
       errorMessage = e;
@@ -357,7 +360,8 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       //prepare the Department List if employee is being added.
       LookupList departmentList = new LookupList(db, "lookup_department");
-      departmentList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+      departmentList.addItem(
+          0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("DepartmentList", departmentList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -389,34 +393,14 @@ public final class CompanyDirectory extends CFSModule {
     boolean recordDeleted = false;
     Contact thisContact = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
-    String actionError1 = "This contact has an active user account and could not be deleted.";
-    String actionError2 = "Contact disabled from view, since it has a related user account";
-    String actionError3 = "Contact disabled from view, since it has related message records";
-    
-    actionError1 = systemStatus.getLabel("object.validation.actionError.contactDeletionActiveUser");
-    actionError2 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedUser");
-    actionError3 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedMessage");
 
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisContact = new Contact(
           db, context.getRequest().getParameter("empid"));
-      recordDeleted = thisContact.delete(db);
-      if (!recordDeleted) {
-        if (thisContact.getHasAccess() && thisContact.getIsEnabled()) {
-          thisContact.getErrors().put("actionError", actionError1);
-        }
-      } else {
-        if ((thisContact.getHasAccess() && !thisContact.getIsEnabled()) || thisContact.hasRelatedRecords(
-            db)) {
-          thisContact.getErrors().put("actionError", actionError2);
-        }
-        if (RecipientList.retrieveRecordCount(
-            db, Constants.CONTACTS, thisContact.getId()) > 0) {
-          thisContact.getErrors().put("actionError", actionError3);
-        }
-      }
+
+      recordDeleted = thisContact.delete(db, this.getDbNamePath(context));
       processErrors(context, thisContact.getErrors());
     } catch (Exception e) {
       errorMessage = e;
@@ -444,6 +428,57 @@ public final class CompanyDirectory extends CFSModule {
     }
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandTrashEmployee(ActionContext context) {
+
+    if (!(hasPermission(context, "contacts-internal_contacts-delete"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+    Contact thisContact = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(
+          db, context.getRequest().getParameter("empid"));
+
+      recordDeleted = thisContact.updateStatus(
+          db, context, true, this.getUserId(context));
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Internal Contacts", "Internal Delete");
+    if (errorMessage == null) {
+      if (recordDeleted) {
+        deleteRecentItem(context, thisContact);
+        if ("true".equals(context.getRequest().getParameter("popup"))) {
+          context.getRequest().setAttribute(
+              "refreshUrl", "CompanyDirectory.do?command=ListEmployees");
+          return ("EmployeeDeletePopupOK");
+        }
+        return "EmployeeDeleteOK";
+      } else {
+        processErrors(context, thisContact.getErrors());
+        return (executeCommandListEmployees(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
   /**
    * Description of the Method
@@ -569,7 +604,7 @@ public final class CompanyDirectory extends CFSModule {
     }
     addModuleBean(context, "View Employees", "Custom Fields Details");
     if (catId != null && Integer.parseInt(catId) <= 0) {
-      return getReturn(context,"FieldsEmpty");
+      return getReturn(context, "FieldsEmpty");
     } else if (recordId == null && showRecords) {
       return getReturn(context, "FieldRecordList");
     } else {
@@ -611,6 +646,8 @@ public final class CompanyDirectory extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Employees", "Add Folder Record");
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     return getReturn(context, "AddFolderRecord");
   }
 
@@ -743,6 +780,8 @@ public final class CompanyDirectory extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "External Contacts", "Modify Custom Fields");
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     if (recordId.equals("-1")) {
       return getReturn(context, "AddFolderRecord");
     } else {
@@ -762,6 +801,8 @@ public final class CompanyDirectory extends CFSModule {
     Contact thisContact = null;
     int resultCount = 0;
     boolean isValid = false;
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     try {
       String contactId = context.getRequest().getParameter("empid");
       db = this.getConnection(context);
@@ -799,21 +840,24 @@ public final class CompanyDirectory extends CFSModule {
       thisCategory.setModifiedBy(this.getUserId(context));
       if (!thisCategory.getReadOnly()) {
         thisCategory.setCanNotContinue(true);
-        resultCount = thisCategory.update(db);
-        Iterator groups = (Iterator) thisCategory.iterator();
-        isValid = true;
-        while (groups.hasNext()) {
-          CustomFieldGroup group = (CustomFieldGroup) groups.next();
-          Iterator fields = (Iterator) group.iterator();
-          while (fields.hasNext()) {
-            CustomField field = (CustomField) fields.next();
-            field.setValidateData(true);
-            field.setRecordId(thisCategory.getRecordId());
-            isValid = this.validateObject(context, db, field) && isValid;
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          Iterator groups = (Iterator) thisCategory.iterator();
+          while (groups.hasNext()) {
+            CustomFieldGroup group = (CustomFieldGroup) groups.next();
+            Iterator fields = (Iterator) group.iterator();
+            while (fields.hasNext()) {
+              CustomField field = (CustomField) fields.next();
+              field.setValidateData(true);
+              field.setRecordId(thisCategory.getRecordId());
+              isValid = this.validateObject(context, db, field) && isValid;
+            }
           }
         }
-        thisCategory.setCanNotContinue(false);
         if (isValid && resultCount != -1) {
+          thisCategory.setCanNotContinue(true);
+          resultCount = thisCategory.update(db);
+          thisCategory.setCanNotContinue(false);
           resultCount = thisCategory.insertGroup(
               db, thisCategory.getRecordId());
         }

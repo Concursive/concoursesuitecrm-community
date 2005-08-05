@@ -24,7 +24,7 @@
       <strong><dhv:label name="actionList.newMessage">New Message</dhv:label></strong>
     </th>
   </tr>
-  <dhv:evaluate if="<%= (request.getParameter("actionId") == null) &&  (!"addressRequest".equals(request.getAttribute("messageType")))  %>">
+  <dhv:evaluate if="<%= (request.getParameter("actionId") == null) &&  (!"addressRequest".equals(request.getAttribute("messageType"))) && !(showBcc || showCc)  %>">
   <tr>
     <td class="formLabel">
       <dhv:label name="contacts.name">Name</dhv:label>
@@ -56,16 +56,22 @@
       <dhv:label name="project.message">Message</dhv:label>
     </td>
     <td valign=center>
-      <dhv:label name="campaign.from.colon" param="from=">From:</dhv:label> <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
-      <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label><br>
-      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
+      <table cellpadding="0" cellspacing="0" class="empty">
+      <tr><td nowrap>
+      <dhv:label name="campaign.from">From</dhv:label>:</td><td nowrap><input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue((Message.getReplyTo() != null && !"".equals(Message.getReplyTo()) ? Message.getReplyTo():User.getUserRecord().getContact().getPrimaryEmailAddress())) %>" />
+			<font color="red">*</font> <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label></td><td nowrap><%= showAttribute(request, "replyToError") %>
+      </td></tr>
+      <dhv:evaluate if="<%= showCc %>"><tr><td nowrap><dhv:label name="quotes.cc">CC</dhv:label>:</td><td nowrap><input type="text" size="40" maxlength="1024" name="cc" id="cc" value="<%= toHtmlValue((cc != null?cc:"")) %>"/> <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label></td><td nowrap><%= showAttribute(request, "ccError") %></td></tr></dhv:evaluate>
+      <dhv:evaluate if="<%= showBcc %>"><tr><td nowrap><dhv:label name="quotes.bcc">BCC</dhv:label>:</td><td nowrap><input type="text" size="40" maxlength="255" name="bcc" id="bcc" value="<%= toHtmlValue((bcc != null?bcc:"")) %>"/> <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label></td><td nowrap><%= showAttribute(request, "bccError") %></td></tr></dhv:evaluate>
+      <tr><td nowrap>
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>:</td><td nowrap><input type="text" size="50" maxlength="1024" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
+			<font color="red">*</font></td><td nowrap><%= showAttribute(request, "messageSubjectError") %>
+      </td></tr>
+      <tr><td colspan="3">
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
   <textarea id="messageText" name="messageText" style="width:550" rows="20"><%= toString(Message.getMessageText()) %></textarea>
 </dhv:evaluate>
-      
-      <dhv:evaluate if="<%= clientType.showApplet() %>">
+<dhv:evaluate if="<%= clientType.showApplet() %>">
 <input type="hidden" name="messageText" value="<%= toHtmlValue(Message.getMessageText()) %>" />
 <APPLET CODEBASE="." CODE="de.xeinfach.kafenio.KafenioApplet.class" ARCHIVE="applet.jar,gnu-regexp-1.1.4.jar,config.jar,icons.jar" NAME="Kafenio" WIDTH="510" HEIGHT="365" MAYSCRIPT>
 	<PARAM NAME="CODEBASE" VALUE=".">
@@ -107,7 +113,7 @@
   </dhv:evaluate>
 </APPLET>
       </dhv:evaluate>
-      
+      </td></tr></table>
     </td>
   </tr>
 </table>

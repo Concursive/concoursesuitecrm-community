@@ -15,19 +15,19 @@
  */
 package org.aspcfs.modules.products.configurator;
 
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.quotes.base.QuoteProductOption;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 /**
- *  Base Class for all option configurators
+ * Base Class for all option configurators
  *
- *@author     ananth
- *@created    September 24, 2004
- *@version    $Id: Configurator.java,v 1.1.4.1 2004/10/18 19:56:27 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: Configurator.java,v 1.1.4.1 2004/10/18 19:56:27 mrajkowski
+ *          Exp $
+ * @created September 24, 2004
  */
 public abstract class Configurator {
   protected int optionId = -1;
@@ -53,9 +53,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the quotePriceAdjust attribute of the Configurator object
+   * Gets the quotePriceAdjust attribute of the Configurator object
    *
-   *@return    The quotePriceAdjust value
+   * @return The quotePriceAdjust value
    */
   public double getQuotePriceAdjust() {
     return quotePriceAdjust;
@@ -63,9 +63,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the quotePriceAdjust attribute of the Configurator object
+   * Sets the quotePriceAdjust attribute of the Configurator object
    *
-   *@param  tmp  The new quotePriceAdjust value
+   * @param tmp The new quotePriceAdjust value
    */
   public void setQuotePriceAdjust(double tmp) {
     this.quotePriceAdjust = tmp;
@@ -73,9 +73,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the quotePriceAdjust attribute of the Configurator object
+   * Sets the quotePriceAdjust attribute of the Configurator object
    *
-   *@param  tmp  The new quotePriceAdjust value
+   * @param tmp The new quotePriceAdjust value
    */
   public void setQuotePriceAdjust(String tmp) {
     this.quotePriceAdjust = Double.parseDouble(tmp);
@@ -83,9 +83,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the quoteUserInput attribute of the Configurator object
+   * Gets the quoteUserInput attribute of the Configurator object
    *
-   *@return    The quoteUserInput value
+   * @return The quoteUserInput value
    */
   public String getQuoteUserInput() {
     return quoteUserInput;
@@ -93,9 +93,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the allowMultiplePrices attribute of the Configurator object
+   * Gets the allowMultiplePrices attribute of the Configurator object
    *
-   *@return    The allowMultiplePrices value
+   * @return The allowMultiplePrices value
    */
   public boolean getAllowMultiplePrices() {
     return allowMultiplePrices;
@@ -103,9 +103,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the allowMultiplePrices attribute of the Configurator object
+   * Sets the allowMultiplePrices attribute of the Configurator object
    *
-   *@param  tmp  The new allowMultiplePrices value
+   * @param tmp The new allowMultiplePrices value
    */
   public void setAllowMultiplePrices(boolean tmp) {
     this.allowMultiplePrices = tmp;
@@ -113,9 +113,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the allowMultiplePrices attribute of the Configurator object
+   * Sets the allowMultiplePrices attribute of the Configurator object
    *
-   *@param  tmp  The new allowMultiplePrices value
+   * @param tmp The new allowMultiplePrices value
    */
   public void setAllowMultiplePrices(String tmp) {
     this.allowMultiplePrices = DatabaseUtils.parseBoolean(tmp);
@@ -123,9 +123,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the optionId attribute of the Configurator object
+   * Sets the optionId attribute of the Configurator object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(int tmp) {
     this.optionId = tmp;
@@ -133,9 +133,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the optionId attribute of the Configurator object
+   * Sets the optionId attribute of the Configurator object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(String tmp) {
     this.optionId = Integer.parseInt(tmp);
@@ -143,9 +143,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the name attribute of the Configurator object
+   * Sets the name attribute of the Configurator object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -153,9 +153,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the description attribute of the Configurator object
+   * Sets the description attribute of the Configurator object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -163,9 +163,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the built attribute of the Configurator object
+   * Sets the built attribute of the Configurator object
    *
-   *@param  tmp  The new built value
+   * @param tmp The new built value
    */
   public void setBuilt(boolean tmp) {
     this.built = tmp;
@@ -173,9 +173,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the built attribute of the Configurator object
+   * Sets the built attribute of the Configurator object
    *
-   *@param  tmp  The new built value
+   * @param tmp The new built value
    */
   public void setBuilt(String tmp) {
     this.built = DatabaseUtils.parseBoolean(tmp);
@@ -183,9 +183,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the hasValues attribute of the Configurator object
+   * Sets the hasValues attribute of the Configurator object
    *
-   *@param  tmp  The new hasValues value
+   * @param tmp The new hasValues value
    */
   public void setHasValues(boolean tmp) {
     this.hasValues = tmp;
@@ -193,9 +193,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the hasValues attribute of the Configurator object
+   * Sets the hasValues attribute of the Configurator object
    *
-   *@param  tmp  The new hasValues value
+   * @param tmp The new hasValues value
    */
   public void setHasValues(String tmp) {
     this.hasValues = DatabaseUtils.parseBoolean(tmp);
@@ -203,9 +203,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the propertyList attribute of the Configurator object
+   * Sets the propertyList attribute of the Configurator object
    *
-   *@param  tmp  The new propertyList value
+   * @param tmp The new propertyList value
    */
   public void setPropertyList(OptionPropertyList tmp) {
     this.propertyList = tmp;
@@ -213,9 +213,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the warnings attribute of the Configurator object
+   * Sets the warnings attribute of the Configurator object
    *
-   *@param  warnings  The new warnings value
+   * @param warnings The new warnings value
    */
   public void setWarnings(HashMap warnings) {
     this.warnings = warnings;
@@ -223,9 +223,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Sets the onlyWarnings attribute of the Configurator object
+   * Sets the onlyWarnings attribute of the Configurator object
    *
-   *@param  onlyWarnings  The new onlyWarnings value
+   * @param onlyWarnings The new onlyWarnings value
    */
   public void setOnlyWarnings(boolean onlyWarnings) {
     this.onlyWarnings = onlyWarnings;
@@ -233,9 +233,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the optionId attribute of the Configurator object
+   * Gets the optionId attribute of the Configurator object
    *
-   *@return    The optionId value
+   * @return The optionId value
    */
   public int getOptionId() {
     return optionId;
@@ -243,9 +243,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the name attribute of the Configurator object
+   * Gets the name attribute of the Configurator object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -253,9 +253,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the description attribute of the Configurator object
+   * Gets the description attribute of the Configurator object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -263,9 +263,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the built attribute of the Configurator object
+   * Gets the built attribute of the Configurator object
    *
-   *@return    The built value
+   * @return The built value
    */
   public boolean getBuilt() {
     return built;
@@ -273,9 +273,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the hasValues attribute of the Configurator object
+   * Gets the hasValues attribute of the Configurator object
    *
-   *@return    The hasValues value
+   * @return The hasValues value
    */
   public boolean getHasValues() {
     return hasValues;
@@ -283,9 +283,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the propertyList attribute of the Configurator object
+   * Gets the propertyList attribute of the Configurator object
    *
-   *@return    The propertyList value
+   * @return The propertyList value
    */
   public OptionPropertyList getPropertyList() {
     return propertyList;
@@ -293,9 +293,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the errors attribute of the Configurator object
+   * Gets the errors attribute of the Configurator object
    *
-   *@return    The errors value
+   * @return The errors value
    */
   public HashMap getErrors() {
     return propertyList.getErrors();
@@ -303,9 +303,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the warnings attribute of the Configurator object
+   * Gets the warnings attribute of the Configurator object
    *
-   *@return    The warnings value
+   * @return The warnings value
    */
   public HashMap getWarnings() {
     return warnings;
@@ -313,9 +313,9 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the onlyWarnings attribute of the Configurator object
+   * Gets the onlyWarnings attribute of the Configurator object
    *
-   *@return    The onlyWarnings value
+   * @return The onlyWarnings value
    */
   public boolean getOnlyWarnings() {
     return onlyWarnings;
@@ -323,44 +323,45 @@ public abstract class Configurator {
 
 
   /**
-   *  Constructor for the Configurator object
+   * Constructor for the Configurator object
    */
-  public Configurator() { }
+  public Configurator() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   abstract boolean arePropertiesConfigured();
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  doClean           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param doClean  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   abstract void queryProperties(Connection db, int optionId, boolean doClean) throws SQLException;
 
 
   /**
-   *  Gets the label attribute of the Configurator object
+   * Gets the label attribute of the Configurator object
    *
-   *@return    The label value
+   * @return The label value
    */
   abstract String getLabel();
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryQuoteProperties(Connection db, int quoteProductOptionId) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -368,18 +369,19 @@ public abstract class Configurator {
     }
     // populate the label
     quoteUserInput = getQuoteText(db, quoteProductOptionId, QUOTE_USER_INPUT);
-    quotePriceAdjust = getQuoteDouble(db, quoteProductOptionId, QUOTE_PRICE_ADJUST);
+    quotePriceAdjust = getQuoteDouble(
+        db, quoteProductOptionId, QUOTE_PRICE_ADJUST);
     this.quoteProductOptionId = quoteProductOptionId;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  option            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param option Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean saveQuoteOption(Connection db, QuoteProductOption option) throws SQLException {
     //This method is used by clone operation on a quote product
@@ -394,9 +396,11 @@ public abstract class Configurator {
       option.insert(db);
       //Insert the user input for this option
       if (option.getQuoteUserInput() != null) {
-        saveQuoteText(db, option.getId(), QUOTE_USER_INPUT, option.getQuoteUserInput());
+        saveQuoteText(
+            db, option.getId(), QUOTE_USER_INPUT, option.getQuoteUserInput());
       }
-      saveQuoteDouble(db, option.getId(), QUOTE_PRICE_ADJUST, option.getQuotePriceAdjust());
+      saveQuoteDouble(
+          db, option.getId(), QUOTE_PRICE_ADJUST, option.getQuotePriceAdjust());
       if (commit) {
         db.commit();
       }
@@ -416,13 +420,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the text attribute of the Configurator object
+   * Gets the text attribute of the Configurator object
    *
-   *@param  db                    Description of the Parameter
-   *@param  id                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@return                       The text value
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param id                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @return The text value
+   * @throws SQLException Description of the Exception
    */
   public String getQuoteText(Connection db, int quoteProductOptionId, int id) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -446,13 +450,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the quoteDouble attribute of the Configurator object
+   * Gets the quoteDouble attribute of the Configurator object
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  id                    Description of the Parameter
-   *@return                       The quoteDouble value
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param id                   Description of the Parameter
+   * @return The quoteDouble value
+   * @throws SQLException Description of the Exception
    */
   public double getQuoteDouble(Connection db, int quoteProductOptionId, int id) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -476,13 +480,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  id                    Description of the Parameter
-   *@param  value                 Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param id                   Description of the Parameter
+   * @param value                Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveQuoteText(Connection db, int quoteProductOptionId, int id, String value) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -498,17 +502,16 @@ public abstract class Configurator {
     pst.execute();
     pst.close();
   }
-  
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  id                    Description of the Parameter
-   *@param  value                 Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param id                   Description of the Parameter
+   * @param value                Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveQuoteDouble(Connection db, int quoteProductOptionId, int id, double value) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -527,13 +530,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  id                    Description of the Parameter
-   *@param  value                 Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param id                   Description of the Parameter
+   * @param value                Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateQuoteText(Connection db, int quoteProductOptionId, int id, String value) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -554,13 +557,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                    Description of the Parameter
-   *@param  quoteProductOptionId  Description of the Parameter
-   *@param  id                    Description of the Parameter
-   *@param  value                 Description of the Parameter
-   *@exception  SQLException      Description of the Exception
+   * @param db                   Description of the Parameter
+   * @param quoteProductOptionId Description of the Parameter
+   * @param id                   Description of the Parameter
+   * @param value                Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateQuoteDouble(Connection db, int quoteProductOptionId, int id, double value) throws SQLException {
     if (quoteProductOptionId == -1) {
@@ -581,12 +584,12 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean enableOption(Connection db, int optionId) throws SQLException {
     //TODO: Future implementation
@@ -595,13 +598,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the text attribute of the Configurator object
+   * Gets the text attribute of the Configurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@return                   The text value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @return The text value
+   * @throws SQLException Description of the Exception
    */
   public String getText(Connection db, int optionId, int id) throws SQLException {
     if (optionId == -1) {
@@ -625,13 +628,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveText(Connection db, int optionId, int id, String value) throws SQLException {
     if (optionId == -1) {
@@ -650,13 +653,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the integer attribute of the Configurator object
+   * Gets the integer attribute of the Configurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@return                   The integer value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @return The integer value
+   * @throws SQLException Description of the Exception
    */
   public int getInteger(Connection db, int optionId, int id) throws SQLException {
     if (optionId == -1) {
@@ -680,13 +683,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveInteger(Connection db, int optionId, int id, int value) throws SQLException {
     if (optionId == -1) {
@@ -705,13 +708,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the boolean attribute of the Configurator object
+   * Gets the boolean attribute of the Configurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@return                   The boolean value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @return The boolean value
+   * @throws SQLException Description of the Exception
    */
   public boolean getBoolean(Connection db, int optionId, int id) throws SQLException {
     if (optionId == -1) {
@@ -735,13 +738,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveBoolean(Connection db, int optionId, int id, boolean value) throws SQLException {
     if (optionId == -1) {
@@ -760,13 +763,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the double attribute of the Configurator object
+   * Gets the double attribute of the Configurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@return                   The double value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @return The double value
+   * @throws SQLException Description of the Exception
    */
   public double getDouble(Connection db, int optionId, int id) throws SQLException {
     if (optionId == -1) {
@@ -790,13 +793,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveDouble(Connection db, int optionId, int id, double value) throws SQLException {
     if (optionId == -1) {
@@ -815,13 +818,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the timestamp attribute of the Configurator object
+   * Gets the timestamp attribute of the Configurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@return                   The timestamp value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @return The timestamp value
+   * @throws SQLException Description of the Exception
    */
   public Timestamp getTimestamp(Connection db, int optionId, int id) throws SQLException {
     if (optionId == -1) {
@@ -845,13 +848,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void saveTimestamp(Connection db, int optionId, int id, Timestamp value) throws SQLException {
     if (optionId == -1) {
@@ -870,13 +873,13 @@ public abstract class Configurator {
 
 
   /**
-   *  Gets the valueCount attribute of the Configurator object
+   * Gets the valueCount attribute of the Configurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  resultId          Description of the Parameter
-   *@return                   The valueCount value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param resultId Description of the Parameter
+   * @return The valueCount value
+   * @throws SQLException Description of the Exception
    */
   public int getValueCount(Connection db, int optionId, int resultId) throws SQLException {
     if (optionId == -1) {
@@ -897,14 +900,14 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateText(Connection db, int optionId, int id, String value) throws SQLException {
     int resultCount = -1;
@@ -926,14 +929,14 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateInteger(Connection db, int optionId, int id, int value) throws SQLException {
     int resultCount = -1;
@@ -955,14 +958,14 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateBoolean(Connection db, int optionId, int id, boolean value) throws SQLException {
     int resultCount = -1;
@@ -984,14 +987,14 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateDouble(Connection db, int optionId, int id, double value) throws SQLException {
     int resultCount = -1;
@@ -1013,14 +1016,14 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  value             Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param optionId Description of the Parameter
+   * @param id       Description of the Parameter
+   * @param value    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateTimestamp(Connection db, int optionId, int id, Timestamp value) throws SQLException {
     int resultCount = -1;
@@ -1042,14 +1045,14 @@ public abstract class Configurator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionId          Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param optionId  Description of the Parameter
+   * @param id        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deleteValue(Connection db, int optionId, int id, String tableName) throws SQLException {
     boolean result = false;

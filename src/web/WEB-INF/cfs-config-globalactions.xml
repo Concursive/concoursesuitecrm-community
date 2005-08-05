@@ -6,7 +6,7 @@
     <forward name="GraphicsError" resource="/errors/error_graphics.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp" layout="nav"/>
-    <forward name="SetupCompleteError" resource="/setup/setup_complete_error.jsp" layout="dhv"/>
+    <forward name="SetupCompleteError" resource="/setup/setup_complete_error.jsp" layout="centric"/>
     <forward name="UpgradeCheck" resource="/index.jsp" />
   </action>
 </mvc-app>

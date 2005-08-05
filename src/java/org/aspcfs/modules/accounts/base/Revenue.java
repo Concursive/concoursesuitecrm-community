@@ -15,25 +15,28 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.StringUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Hashtable;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Chris
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Chris
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class Revenue extends GenericBean {
 
@@ -65,16 +68,17 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Constructor for the Revenue object
+   * Constructor for the Revenue object
    */
-  public Revenue() { }
+  public Revenue() {
+  }
 
 
   /**
-   *  Constructor for the Revenue object
+   * Constructor for the Revenue object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Revenue(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -82,11 +86,11 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Constructor for the Revenue object
+   * Constructor for the Revenue object
    *
-   *@param  db                Description of the Parameter
-   *@param  revenueId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param revenueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Revenue(Connection db, String revenueId) throws SQLException {
     queryRecord(db, Integer.parseInt(revenueId));
@@ -94,11 +98,11 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Constructor for the Revenue object
+   * Constructor for the Revenue object
    *
-   *@param  db                Description of the Parameter
-   *@param  revenueId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param revenueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Revenue(Connection db, int revenueId) throws SQLException {
     queryRecord(db, revenueId);
@@ -106,11 +110,11 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  revenueId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param revenueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int revenueId) throws SQLException {
     if (revenueId == -1) {
@@ -141,9 +145,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Revenue object
+   * Gets the enteredString attribute of the Revenue object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -155,13 +159,14 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the Revenue object
+   * Gets the enteredDateTimeString attribute of the Revenue object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -169,9 +174,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Revenue object
+   * Gets the modifiedString attribute of the Revenue object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     try {
@@ -183,13 +188,14 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the Revenue object
+   * Gets the modifiedDateTimeString attribute of the Revenue object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -197,9 +203,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the amountValue attribute of the Revenue object
+   * Gets the amountValue attribute of the Revenue object
    *
-   *@return    The amountValue value
+   * @return The amountValue value
    */
   public String getAmountValue() {
     String toReturn = "";
@@ -225,9 +231,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the orgName attribute of the Revenue object
+   * Gets the orgName attribute of the Revenue object
    *
-   *@return    The orgName value
+   * @return The orgName value
    */
   public String getOrgName() {
     return orgName;
@@ -235,9 +241,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the orgName attribute of the Revenue object
+   * Sets the orgName attribute of the Revenue object
    *
-   *@param  orgName  The new orgName value
+   * @param orgName The new orgName value
    */
   public void setOrgName(String orgName) {
     this.orgName = orgName;
@@ -245,9 +251,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the hasEnabledOwnerAccount attribute of the Revenue object
+   * Gets the hasEnabledOwnerAccount attribute of the Revenue object
    *
-   *@return    The hasEnabledOwnerAccount value
+   * @return The hasEnabledOwnerAccount value
    */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
@@ -255,9 +261,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledOwnerAccount attribute of the Revenue object
+   * Sets the hasEnabledOwnerAccount attribute of the Revenue object
    *
-   *@param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   * @param hasEnabledOwnerAccount The new hasEnabledOwnerAccount value
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
@@ -265,9 +271,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Revenue object
+   * Gets the id attribute of the Revenue object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -275,9 +281,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the Revenue object
+   * Gets the orgId attribute of the Revenue object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -285,9 +291,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the transactionId attribute of the Revenue object
+   * Gets the transactionId attribute of the Revenue object
    *
-   *@return    The transactionId value
+   * @return The transactionId value
    */
   public int getTransactionId() {
     return transactionId;
@@ -295,9 +301,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the month attribute of the Revenue object
+   * Gets the month attribute of the Revenue object
    *
-   *@return    The month value
+   * @return The month value
    */
   public int getMonth() {
     return month;
@@ -305,9 +311,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the year attribute of the Revenue object
+   * Gets the year attribute of the Revenue object
    *
-   *@return    The year value
+   * @return The year value
    */
   public int getYear() {
     return year;
@@ -315,9 +321,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the amount attribute of the Revenue object
+   * Gets the amount attribute of the Revenue object
    *
-   *@return    The amount value
+   * @return The amount value
    */
   public double getAmount() {
     return amount;
@@ -325,9 +331,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Revenue object
+   * Gets the description attribute of the Revenue object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -335,9 +341,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Revenue object
+   * Gets the enteredBy attribute of the Revenue object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -345,9 +351,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Revenue object
+   * Gets the modifiedBy attribute of the Revenue object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -355,9 +361,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Revenue object
+   * Gets the modified attribute of the Revenue object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -365,9 +371,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Revenue object
+   * Gets the entered attribute of the Revenue object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -375,9 +381,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the enteredByName attribute of the Revenue object
+   * Gets the enteredByName attribute of the Revenue object
    *
-   *@return    The enteredByName value
+   * @return The enteredByName value
    */
   public String getEnteredByName() {
     return enteredByName;
@@ -385,9 +391,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the modifiedByName attribute of the Revenue object
+   * Gets the modifiedByName attribute of the Revenue object
    *
-   *@return    The modifiedByName value
+   * @return The modifiedByName value
    */
   public String getModifiedByName() {
     return modifiedByName;
@@ -395,9 +401,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the typeName attribute of the Revenue object
+   * Gets the typeName attribute of the Revenue object
    *
-   *@return    The typeName value
+   * @return The typeName value
    */
   public String getTypeName() {
     return typeName;
@@ -405,9 +411,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Revenue object
+   * Sets the id attribute of the Revenue object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -415,9 +421,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Revenue object
+   * Sets the id attribute of the Revenue object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -425,9 +431,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Revenue object
+   * Sets the orgId attribute of the Revenue object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -435,9 +441,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Revenue object
+   * Sets the orgId attribute of the Revenue object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -445,9 +451,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the transactionId attribute of the Revenue object
+   * Sets the transactionId attribute of the Revenue object
    *
-   *@param  tmp  The new transactionId value
+   * @param tmp The new transactionId value
    */
   public void setTransactionId(int tmp) {
     this.transactionId = tmp;
@@ -455,9 +461,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the transactionId attribute of the Revenue object
+   * Sets the transactionId attribute of the Revenue object
    *
-   *@param  tmp  The new transactionId value
+   * @param tmp The new transactionId value
    */
   public void setTransactionId(String tmp) {
     this.transactionId = Integer.parseInt(tmp);
@@ -465,9 +471,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the month attribute of the Revenue object
+   * Sets the month attribute of the Revenue object
    *
-   *@param  tmp  The new month value
+   * @param tmp The new month value
    */
   public void setMonth(int tmp) {
     this.month = tmp;
@@ -475,9 +481,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the month attribute of the Revenue object
+   * Sets the month attribute of the Revenue object
    *
-   *@param  tmp  The new month value
+   * @param tmp The new month value
    */
   public void setMonth(String tmp) {
     this.month = Integer.parseInt(tmp);
@@ -485,9 +491,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the year attribute of the Revenue object
+   * Sets the year attribute of the Revenue object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(int tmp) {
     this.year = tmp;
@@ -495,9 +501,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the year attribute of the Revenue object
+   * Sets the year attribute of the Revenue object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(String tmp) {
     this.year = Integer.parseInt(tmp);
@@ -505,9 +511,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the amount attribute of the Revenue object
+   * Sets the amount attribute of the Revenue object
    *
-   *@param  tmp  The new amount value
+   * @param tmp The new amount value
    */
   public void setAmount(double tmp) {
     this.amount = tmp;
@@ -515,9 +521,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the amount attribute of the Revenue object
+   * Sets the amount attribute of the Revenue object
    *
-   *@param  tmp  The new amount value
+   * @param tmp The new amount value
    */
   public void setAmount(String tmp) {
     tmp = StringUtils.replace(tmp, ",", "");
@@ -527,52 +533,52 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the monthName attribute of the Revenue object
+   * Gets the monthName attribute of the Revenue object
    *
-   *@return    The monthName value
+   * @return The monthName value
    */
   public String getMonthName() {
     String r = "";
 
     switch (month) {
-        case 1:
-          r = "January";
-          break;
-        case 2:
-          r = "February";
-          break;
-        case 3:
-          r = "March";
-          break;
-        case 4:
-          r = "April";
-          break;
-        case 5:
-          r = "May";
-          break;
-        case 6:
-          r = "June";
-          break;
-        case 7:
-          r = "July";
-          break;
-        case 8:
-          r = "August";
-          break;
-        case 9:
-          r = "September";
-          break;
-        case 10:
-          r = "October";
-          break;
-        case 11:
-          r = "November";
-          break;
-        case 12:
-          r = "December";
-          break;
-        default:
-          break;
+      case 1:
+        r = "January";
+        break;
+      case 2:
+        r = "February";
+        break;
+      case 3:
+        r = "March";
+        break;
+      case 4:
+        r = "April";
+        break;
+      case 5:
+        r = "May";
+        break;
+      case 6:
+        r = "June";
+        break;
+      case 7:
+        r = "July";
+        break;
+      case 8:
+        r = "August";
+        break;
+      case 9:
+        r = "September";
+        break;
+      case 10:
+        r = "October";
+        break;
+      case 11:
+        r = "November";
+        break;
+      case 12:
+        r = "December";
+        break;
+      default:
+        break;
     }
 
     return r;
@@ -580,9 +586,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Revenue object
+   * Sets the description attribute of the Revenue object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -590,9 +596,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Revenue object
+   * Sets the enteredBy attribute of the Revenue object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -600,9 +606,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Revenue object
+   * Sets the modifiedBy attribute of the Revenue object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -610,9 +616,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Revenue object
+   * Sets the enteredBy attribute of the Revenue object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -620,9 +626,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Revenue object
+   * Sets the modifiedBy attribute of the Revenue object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -630,9 +636,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Revenue object
+   * Sets the modified attribute of the Revenue object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -640,9 +646,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Revenue object
+   * Sets the entered attribute of the Revenue object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -650,9 +656,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the enteredByName attribute of the Revenue object
+   * Sets the enteredByName attribute of the Revenue object
    *
-   *@param  tmp  The new enteredByName value
+   * @param tmp The new enteredByName value
    */
   public void setEnteredByName(String tmp) {
     this.enteredByName = tmp;
@@ -660,9 +666,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the modifiedByName attribute of the Revenue object
+   * Sets the modifiedByName attribute of the Revenue object
    *
-   *@param  tmp  The new modifiedByName value
+   * @param tmp The new modifiedByName value
    */
   public void setModifiedByName(String tmp) {
     this.modifiedByName = tmp;
@@ -670,9 +676,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the typeName attribute of the Revenue object
+   * Sets the typeName attribute of the Revenue object
    *
-   *@param  tmp  The new typeName value
+   * @param tmp The new typeName value
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -680,9 +686,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Revenue object
+   * Sets the type attribute of the Revenue object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -690,9 +696,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Revenue object
+   * Sets the owner attribute of the Revenue object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -700,9 +706,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Revenue object
+   * Sets the type attribute of the Revenue object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -710,9 +716,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Revenue object
+   * Sets the owner attribute of the Revenue object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -720,9 +726,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the Revenue object
+   * Gets the type attribute of the Revenue object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -730,9 +736,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the Revenue object
+   * Gets the owner attribute of the Revenue object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -740,9 +746,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the ownerNameFirst attribute of the Revenue object
+   * Sets the ownerNameFirst attribute of the Revenue object
    *
-   *@param  tmp  The new ownerNameFirst value
+   * @param tmp The new ownerNameFirst value
    */
   public void setOwnerNameFirst(String tmp) {
     this.ownerNameFirst = tmp;
@@ -750,9 +756,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the ownerNameLast attribute of the Revenue object
+   * Sets the ownerNameLast attribute of the Revenue object
    *
-   *@param  tmp  The new ownerNameLast value
+   * @param tmp The new ownerNameLast value
    */
   public void setOwnerNameLast(String tmp) {
     this.ownerNameLast = tmp;
@@ -760,9 +766,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the ownerNameFirst attribute of the Revenue object
+   * Gets the ownerNameFirst attribute of the Revenue object
    *
-   *@return    The ownerNameFirst value
+   * @return The ownerNameFirst value
    */
   public String getOwnerNameFirst() {
     return ownerNameFirst;
@@ -770,9 +776,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the ownerNameLast attribute of the Revenue object
+   * Gets the ownerNameLast attribute of the Revenue object
    *
-   *@return    The ownerNameLast value
+   * @return The ownerNameLast value
    */
   public String getOwnerNameLast() {
     return ownerNameLast;
@@ -780,9 +786,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Ticket object
+   * Sets the entered attribute of the Ticket object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -790,9 +796,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Ticket object
+   * Sets the modified attribute of the Ticket object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -800,19 +806,20 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the ownerName attribute of the Revenue object
+   * Gets the ownerName attribute of the Revenue object
    *
-   *@return    The ownerName value
+   * @return The ownerName value
    */
   public String getOwnerName() {
-    return (Contact.getNameLastFirst(this.getOwnerNameLast(), this.getOwnerNameFirst()));
+    return (Contact.getNameLastFirst(
+        this.getOwnerNameLast(), this.getOwnerNameFirst()));
   }
 
 
   /**
-   *  Gets the ownerNameAbbr attribute of the Revenue object
+   * Gets the ownerNameAbbr attribute of the Revenue object
    *
-   *@return    The ownerNameAbbr value
+   * @return The ownerNameAbbr value
    */
   public String getOwnerNameAbbr() {
     return (this.getOwnerNameFirst().charAt(0) + ". " + this.getOwnerNameLast());
@@ -820,12 +827,12 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     if (insert(db)) {
@@ -838,10 +845,10 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
@@ -866,12 +873,12 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
@@ -898,12 +905,12 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, ActionContext context) throws SQLException {
     if (delete(db)) {
@@ -916,12 +923,12 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
@@ -937,17 +944,21 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "revenue_id_seq");
     sql.append(
         "INSERT INTO revenue " +
         "(org_id, transaction_id, month, year, amount, type, owner, description, ");
+    if (id > -1) {
+      sql.append("id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -956,6 +967,9 @@ public class Revenue extends GenericBean {
     }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -983,6 +997,9 @@ public class Revenue extends GenericBean {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setString(++i, description);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -993,8 +1010,7 @@ public class Revenue extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-
-      id = DatabaseUtils.getCurrVal(db, "revenue_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "revenue_id_seq", id);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1008,18 +1024,17 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
     try {
       db.setAutoCommit(false);
-      pst = db.prepareStatement(
-          "DELETE FROM revenue WHERE id = ? ");
+      pst = db.prepareStatement("DELETE FROM revenue WHERE id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       db.commit();
@@ -1035,12 +1050,12 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  override          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param override Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -1088,11 +1103,11 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -1112,10 +1127,10 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -1139,8 +1154,10 @@ public class Revenue extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
 
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+    enteredByName = Contact.getNameLastFirst(
+        rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(
+        rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
 
     ownerNameFirst = rs.getString("own_namefirst");
     ownerNameLast = rs.getString("own_namelast");
@@ -1151,10 +1168,9 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@since
+   * @param context Description of Parameter
    */
   public void invalidateUserData(ActionContext context) {
     invalidateUserData(context, owner);
@@ -1162,16 +1178,18 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@param  userId   Description of Parameter
-   *@since
+   * @param context Description of Parameter
+   * @param userId  Description of Parameter
    */
   public void invalidateUserData(ActionContext context, int userId) {
-    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    systemStatus.getHierarchyList().getUser(userId).setRevenueIsValid(false, true);
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+        "ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl());
+    systemStatus.getHierarchyList().getUser(userId).setRevenueIsValid(
+        false, true);
   }
 
 }

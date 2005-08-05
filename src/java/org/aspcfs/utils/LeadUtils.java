@@ -15,41 +15,32 @@
  */
 package org.aspcfs.utils;
 
-import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.Constants;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    March 2, 2005
- * @version    $Id: LeadUtils.java,v 1.1.4.4 2005/03/17 18:12:57 mrajkowski Exp
- *      $
+ * @author partha
+ * @version $Id: LeadUtils.java,v 1.1.4.4 2005/03/17 18:12:57 mrajkowski Exp
+ *          $
+ * @created March 2, 2005
  */
 public class LeadUtils {
 
   /**
-   *  This method checks and sets the read status of the Lead. If the lead is
-   *  being read by someone else, it returns false. If the lead is being read by
-   *  the user or its not being read before, it returns true.
+   * This method checks and sets the read status of the Lead. If the lead is
+   * being read by someone else, it returns false. If the lead is being read by
+   * the user or its not being read before, it returns true.
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @param  userId            The new readStatus value
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param userId    The new readStatus value
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized int setReadStatus(Connection db, int contactId, int userId) throws SQLException {
     if (contactId == -1) {
@@ -71,7 +62,8 @@ public class LeadUtils {
     pst.close();
 
     if (readId == userId) {
-      pst = db.prepareStatement("DELETE FROM contact_lead_skipped_map WHERE contact_id= ? AND user_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM contact_lead_skipped_map WHERE contact_id= ? AND user_id = ? ");
       pst.setInt(1, contactId);
       pst.setInt(2, userId);
       pst.execute();
@@ -80,16 +72,28 @@ public class LeadUtils {
     } else if (readId != -1) {
       return readId;
     } else if (readId == -1) {
-      pst = db.prepareStatement("DELETE FROM contact_lead_skipped_map WHERE contact_id= ? AND user_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM contact_lead_skipped_map WHERE contact_id= ? AND user_id = ? ");
       pst.setInt(1, contactId);
       pst.setInt(2, userId);
       pst.execute();
       pst.close();
-      pst = db.prepareStatement("INSERT INTO contact_lead_read_map (contact_id, user_id) VALUES(?,?)");
-      pst.setInt(1, contactId);
-      pst.setInt(2, userId);
+      int mapId = DatabaseUtils.getNextSeq(
+          db, "contact_lead_read_map_map_id_seq");
+      pst = db.prepareStatement(
+          "INSERT INTO contact_lead_read_map " +
+          "(" + (mapId > -1 ? "map_id, " : "") + "contact_id, user_id) " +
+          "VALUES(" + (mapId > -1 ? "?, " : "") + "?, ?)");
+      int i = 0;
+      if (mapId > -1) {
+        pst.setInt(++i, mapId);
+      }
+      pst.setInt(++i, contactId);
+      pst.setInt(++i, userId);
       pst.execute();
       pst.close();
+      mapId = DatabaseUtils.getCurrVal(
+          db, "contact_lead_read_map_map_id_seq", mapId);
       return userId;
     }
     return -1;
@@ -97,13 +101,13 @@ public class LeadUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized boolean skipLead(Connection db, int contactId, int userId) throws SQLException {
     PreparedStatement pst = null;
@@ -113,7 +117,8 @@ public class LeadUtils {
 
     //Check to see if the user is the owner of the record being skipped
     int ownerId = 0;
-    pst = db.prepareStatement("SELECT owner FROM contact WHERE contact_id = ?");
+    pst = db.prepareStatement(
+        "SELECT owner FROM contact WHERE contact_id = ?");
     pst.setInt(1, contactId);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -123,7 +128,8 @@ public class LeadUtils {
     pst.close();
 
     //Check the read_map table to see who is reading the lead
-    pst = db.prepareStatement("SELECT map_id, user_id FROM contact_lead_read_map WHERE contact_id = ?");
+    pst = db.prepareStatement(
+        "SELECT map_id, user_id FROM contact_lead_read_map WHERE contact_id = ?");
     pst.setInt(1, contactId);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -143,17 +149,30 @@ public class LeadUtils {
         //Allow the skip.
       } else if (userId == readId && ownerId == -1) {
         //Remove the mapping of the user and the contact from the read map
-        pst = db.prepareStatement("DELETE FROM contact_lead_read_map WHERE map_id = ?");
+        pst = db.prepareStatement(
+            "DELETE FROM contact_lead_read_map WHERE map_id = ?");
         pst.setInt(1, mapId);
         pst.execute();
         pst.close();
 
         //User wants to skip the lead. Add an entry to the skipped table
-        pst = db.prepareStatement("INSERT INTO contact_lead_skipped_map (contact_id, user_id) VALUES (?, ?)");
-        pst.setInt(1, contactId);
-        pst.setInt(2, userId);
+        int skipMapId = -1;
+        skipMapId = DatabaseUtils.getNextSeq(
+            db, "contact_lead_skipped_map_map_id_seq");
+        pst = db.prepareStatement(
+            "INSERT INTO contact_lead_skipped_map " +
+            "(" + (skipMapId > -1 ? "map_id, " : "") + "contact_id, user_id) " +
+            "VALUES (" + (skipMapId > -1 ? "?, " : "") + "?, ?)");
+        int i = 0;
+        if (skipMapId > -1) {
+          pst.setInt(++i, skipMapId);
+        }
+        pst.setInt(++i, contactId);
+        pst.setInt(++i, userId);
         pst.execute();
         pst.close();
+        skipMapId = DatabaseUtils.getCurrVal(
+            db, "contact_lead_skipped_map_map_id_seq", skipMapId);
       }
     }
     return true;
@@ -161,24 +180,26 @@ public class LeadUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized int cleanUpContact(Connection db, int contactId, int userId) throws SQLException {
     PreparedStatement pst = null;
     //delete the contact_id related record in the contact_lead_read_map
-    pst = db.prepareStatement("DELETE FROM contact_lead_read_map WHERE contact_id = ?");
+    pst = db.prepareStatement(
+        "DELETE FROM contact_lead_read_map WHERE contact_id = ?");
     pst.setInt(1, contactId);
     int size = pst.executeUpdate();
     pst.close();
 
     //delete the contact_id related record in the contact_lead_skipped_map
-    pst = db.prepareStatement("DELETE FROM contact_lead_skipped_map WHERE contact_id = ?");
+    pst = db.prepareStatement(
+        "DELETE FROM contact_lead_skipped_map WHERE contact_id = ?");
     pst.setInt(1, contactId);
     size = size + pst.executeUpdate();
     pst.close();
@@ -188,13 +209,13 @@ public class LeadUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized boolean tryToAssignLead(Connection db, int contactId, int userId) throws SQLException {
     boolean lead = true;
@@ -217,35 +238,48 @@ public class LeadUtils {
     }
 
     //delete the read status
-    pst = db.prepareStatement("DELETE FROM contact_lead_read_map WHERE contact_id = ? ");
+    pst = db.prepareStatement(
+        "DELETE FROM contact_lead_read_map WHERE contact_id = ? ");
     pst.setInt(1, contactId);
     pst.execute();
     pst.close();
 
-    pst = db.prepareStatement("UPDATE contact SET owner = ? WHERE contact_id = ?");
+    pst = db.prepareStatement(
+        "UPDATE contact SET owner = ? WHERE contact_id = ?");
     pst.setInt(1, userId);
     pst.setInt(2, contactId);
     int result = pst.executeUpdate();
     pst.close();
 
-    pst = db.prepareStatement("INSERT INTO contact_lead_read_map (contact_id, user_id) VALUES(?,?)");
-    pst.setInt(1, contactId);
-    pst.setInt(2, userId);
+    int mapId = DatabaseUtils.getNextSeq(
+        db, "contact_lead_read_map_map_id_seq");
+    pst = db.prepareStatement(
+        "INSERT INTO contact_lead_read_map " +
+        "(" + (mapId > -1 ? "map_id, " : "") + "contact_id, user_id) " +
+        "VALUES(" + (mapId > -1 ? "?, " : "") + "?, ?)");
+    int i = 0;
+    if (mapId > -1) {
+      pst.setInt(++i, mapId);
+    }
+    pst.setInt(++i, contactId);
+    pst.setInt(++i, userId);
     pst.execute();
     pst.close();
+    mapId = DatabaseUtils.getCurrVal(
+        db, "contact_lead_read_map_map_id_seq", mapId);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @param  ownerId           Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @param ownerId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized boolean tryToAssignLead(Connection db, int contactId, int userId, int ownerId) throws SQLException {
     boolean lead = true;
@@ -268,36 +302,49 @@ public class LeadUtils {
     }
 
     //delete the read status
-    pst = db.prepareStatement("DELETE FROM contact_lead_read_map WHERE contact_id = ? ");
+    pst = db.prepareStatement(
+        "DELETE FROM contact_lead_read_map WHERE contact_id = ? ");
     pst.setInt(1, contactId);
     pst.execute();
     pst.close();
 
-    pst = db.prepareStatement("UPDATE contact SET owner = ? WHERE contact_id = ?");
+    pst = db.prepareStatement(
+        "UPDATE contact SET owner = ? WHERE contact_id = ?");
     pst.setInt(1, userId);
     pst.setInt(2, contactId);
     int result = pst.executeUpdate();
     pst.close();
 
     if (userId == ownerId) {
-      pst = db.prepareStatement("INSERT INTO contact_lead_read_map (contact_id, user_id) VALUES(?,?)");
-      pst.setInt(1, contactId);
-      pst.setInt(2, userId);
+      int mapId = DatabaseUtils.getNextSeq(
+          db, "contact_lead_read_map_map_id_seq");
+      pst = db.prepareStatement(
+          "INSERT INTO contact_lead_read_map " +
+          "(" + (mapId > -1 ? "map_id, " : "") + "contact_id, user_id) " +
+          "VALUES(" + (mapId > -1 ? "?, " : "") + "?, ?)");
+      int i = 0;
+      if (mapId > -1) {
+        pst.setInt(++i, mapId);
+      }
+      pst.setInt(++i, contactId);
+      pst.setInt(++i, userId);
       pst.execute();
       pst.close();
+      mapId = DatabaseUtils.getCurrVal(
+          db, "contact_lead_read_map_map_id_seq", mapId);
     }
     return true;
   }
 
 
   /**
-   *  Gets the nextLead attribute of the LeadUtils class
+   * Gets the nextLead attribute of the LeadUtils class
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @param  criteria          Description of the Parameter
-   * @return                   The nextLead value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param criteria  Description of the Parameter
+   * @return The nextLead value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized int getNextLead(Connection db, int contactId, ContactList criteria) throws SQLException {
     int nextContactId = -1;
@@ -310,7 +357,8 @@ public class LeadUtils {
      *  case and set it to contactId
      */
     if (criteria.getOldestFirst() == Constants.FALSE && contactId == 0) {
-      pst = db.prepareStatement("SELECT MAX(contact_id) as contact_id FROM contact ");
+      pst = db.prepareStatement(
+          "SELECT MAX(contact_id) as contact_id FROM contact ");
       rs = pst.executeQuery();
       if (rs.next()) {
         contactId = DatabaseUtils.getInt(rs, "contact_id") + 1;
@@ -357,12 +405,12 @@ public class LeadUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  sqlFilter         Description of the Parameter
-   * @param  criteria          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param criteria  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private static void createFilter(Connection db, StringBuffer sqlFilter, ContactList criteria) throws SQLException {
     int owner = criteria.getOwner();
@@ -443,13 +491,15 @@ public class LeadUtils {
     }
 
     if (emailAddress != null) {
-      sqlFilter.append("AND c.contact_id IN (SELECT cc.contact_id FROM " +
+      sqlFilter.append(
+          "AND c.contact_id IN (SELECT cc.contact_id FROM " +
           "contact cc LEFT JOIN contact_emailaddress ce ON (cc.contact_id = ce.contact_id ) " +
           "WHERE cc.contact_id = c.contact_id AND ce.email = ? )");
     }
 
     if (postalCode != -1) {
-      sqlFilter.append("AND c.contact_id IN (" +
+      sqlFilter.append(
+          "AND c.contact_id IN (" +
           "SELECT cc.contact_id FROM contact cc LEFT JOIN contact_address ca " +
           "ON (cc.contact_id = ca.contact_id) " +
           "WHERE ca.postalcode = ? ) ");
@@ -462,7 +512,8 @@ public class LeadUtils {
     }
 
     if (country != null && !"-1".equals(country)) {
-      sqlFilter.append("AND c.contact_id IN (SELECT cc.contact_id FROM " +
+      sqlFilter.append(
+          "AND c.contact_id IN (SELECT cc.contact_id FROM " +
           "contact cc LEFT JOIN contact_address ca ON (cc.contact_id = ca.contact_id) " +
           "WHERE ca.country = ? ) ");
     }
@@ -478,12 +529,12 @@ public class LeadUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @param  criteria          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst      Description of the Parameter
+   * @param criteria Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private static int prepareFilter(PreparedStatement pst, ContactList criteria) throws SQLException {
     int i = 1;

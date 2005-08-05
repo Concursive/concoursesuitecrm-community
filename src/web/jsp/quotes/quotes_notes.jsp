@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,org.aspcfs.modules.contacts.base.*,java.text.DateFormat,org.aspcfs.modules.products.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.quotes.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="quote" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
@@ -60,10 +61,14 @@
 <dhv:container name="quotes" selected="notes" object="quote" param="<%= param1 %>">
   <%@ include file="quotes_header_include.jsp" %>
   <% String status = quoteStatusList.getValueFromId(quote.getStatusId()); %>
-  <% if(quote.getClosed() == null){ %>
-  <dhv:permission name="quotes-quotes-edit"><input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/> </dhv:permission>
-    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>'"/><br /><br />
-  <% } %>
+  <dhv:evaluate if="<%= !quote.isTrashed() %>">
+    <dhv:evaluate if="<%=quote.getClosed() == null%>">
+      <dhv:permission name="quotes-quotes-edit">
+        <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
+      </dhv:permission>
+      <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>'"/><br /><br />
+    </dhv:evaluate>
+  </dhv:evaluate>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr><th colspan="3"><strong><dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label></strong></th></tr>
     <tr class="containerBody">
@@ -94,28 +99,32 @@
   <%}%>
   </table>
   <br />
-  <% if(quote.getClosed() == null){ %>
-  <dhv:permission name="quotes-quotes-edit">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-    <tr>
-      <th width="100%">
-        <strong><dhv:label name="quotes.notes.addNewNote">Add a new note</dhv:label></strong><br />
-      </th>
-    </tr>
-    <tr class="containerBody">
-      <td>
-        <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
-          <textarea name="notes" rows="5" cols="65"></textarea>
-        </td><td valign="top" nowrap>&nbsp;
-          <font color="red">*</font><%= showAttribute(request, "notesError") %>
-        </td></tr></table>
-      </td>
-    </tr>
-  </table>
-  </dhv:permission>
-  <br />
-  <dhv:permission name="quotes-quotes-edit"><input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/> </dhv:permission>
-  <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>'"/>
-  <% } %>
+  <dhv:evaluate if="<%= !quote.isTrashed() %>">
+    <dhv:evaluate if="<%=quote.getClosed() == null%>">
+      <dhv:permission name="quotes-quotes-edit">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+        <tr>
+          <th width="100%">
+            <strong><dhv:label name="quotes.notes.addNewNote">Add a new note</dhv:label></strong><br />
+          </th>
+        </tr>
+        <tr class="containerBody">
+          <td>
+            <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+              <textarea name="notes" rows="5" cols="65"></textarea>
+            </td><td valign="top" nowrap>&nbsp;
+              <font color="red">*</font><%= showAttribute(request, "notesError") %>
+            </td></tr></table>
+          </td>
+        </tr>
+      </table>
+      </dhv:permission>
+      <br />
+      <dhv:permission name="quotes-quotes-edit">
+        <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
+      </dhv:permission>
+      <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>'"/>
+    </dhv:evaluate>
+  </dhv:evaluate>
 </dhv:container>
 </form>

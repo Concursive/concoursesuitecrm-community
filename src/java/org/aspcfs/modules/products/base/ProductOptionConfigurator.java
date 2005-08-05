@@ -25,12 +25,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    September 2, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created September 2, 2004
  */
 public class ProductOptionConfigurator extends GenericBean {
   private int id = -1;
@@ -42,10 +43,10 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the configuratorName attribute of the ProductOptionConfigurator
-   *  object
+   * Sets the configuratorName attribute of the ProductOptionConfigurator
+   * object
    *
-   *@param  tmp  The new configuratorName value
+   * @param tmp The new configuratorName value
    */
   public void setConfiguratorName(String tmp) {
     this.configuratorName = tmp;
@@ -53,10 +54,10 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Gets the configuratorName attribute of the ProductOptionConfigurator
-   *  object
+   * Gets the configuratorName attribute of the ProductOptionConfigurator
+   * object
    *
-   *@return    The configuratorName value
+   * @return The configuratorName value
    */
   public String getConfiguratorName() {
     return configuratorName;
@@ -64,9 +65,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProductOptionConfigurator object
+   * Sets the id attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -74,9 +75,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ProductOptionConfigurator object
+   * Sets the id attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -84,10 +85,10 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the shortDescription attribute of the ProductOptionConfigurator
-   *  object
+   * Sets the shortDescription attribute of the ProductOptionConfigurator
+   * object
    *
-   *@param  tmp  The new shortDescription value
+   * @param tmp The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -95,9 +96,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the longDescription attribute of the ProductOptionConfigurator object
+   * Sets the longDescription attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new longDescription value
+   * @param tmp The new longDescription value
    */
   public void setLongDescription(String tmp) {
     this.longDescription = tmp;
@@ -105,9 +106,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the className attribute of the ProductOptionConfigurator object
+   * Sets the className attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new className value
+   * @param tmp The new className value
    */
   public void setClassName(String tmp) {
     this.className = tmp;
@@ -115,9 +116,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the resultType attribute of the ProductOptionConfigurator object
+   * Sets the resultType attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new resultType value
+   * @param tmp The new resultType value
    */
   public void setResultType(int tmp) {
     this.resultType = tmp;
@@ -125,9 +126,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the resultType attribute of the ProductOptionConfigurator object
+   * Sets the resultType attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new resultType value
+   * @param tmp The new resultType value
    */
   public void setResultType(String tmp) {
     this.resultType = Integer.parseInt(tmp);
@@ -135,9 +136,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ProductOptionConfigurator object
+   * Gets the id attribute of the ProductOptionConfigurator object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -145,10 +146,10 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Gets the shortDescription attribute of the ProductOptionConfigurator
-   *  object
+   * Gets the shortDescription attribute of the ProductOptionConfigurator
+   * object
    *
-   *@return    The shortDescription value
+   * @return The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -156,9 +157,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Gets the longDescription attribute of the ProductOptionConfigurator object
+   * Gets the longDescription attribute of the ProductOptionConfigurator object
    *
-   *@return    The longDescription value
+   * @return The longDescription value
    */
   public String getLongDescription() {
     return longDescription;
@@ -166,9 +167,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Gets the className attribute of the ProductOptionConfigurator object
+   * Gets the className attribute of the ProductOptionConfigurator object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;
@@ -176,9 +177,9 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Gets the resultType attribute of the ProductOptionConfigurator object
+   * Gets the resultType attribute of the ProductOptionConfigurator object
    *
-   *@return    The resultType value
+   * @return The resultType value
    */
   public int getResultType() {
     return resultType;
@@ -186,17 +187,18 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Constructor for the ProductOptionConfigurator object
+   * Constructor for the ProductOptionConfigurator object
    */
-  public ProductOptionConfigurator() { }
+  public ProductOptionConfigurator() {
+  }
 
 
   /**
-   *  Constructor for the ProductOptionConfigurator object
+   * Constructor for the ProductOptionConfigurator object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProductOptionConfigurator(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -204,10 +206,10 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Constructor for the ProductOptionConfigurator object
+   * Constructor for the ProductOptionConfigurator object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProductOptionConfigurator(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -215,11 +217,11 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -229,8 +231,7 @@ public class ProductOptionConfigurator extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT conf.* " +
         "FROM product_option_configurator AS conf " +
-        "WHERE conf.configurator_id = ? "
-        );
+        "WHERE conf.configurator_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -245,10 +246,10 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     // product_option_configurator table
@@ -262,12 +263,12 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     boolean result = false;
@@ -302,22 +303,21 @@ public class ProductOptionConfigurator extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "DELETE from product_option_configurator " +
-          "WHERE configurator_id = ? "
-          );
+          "WHERE configurator_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      if(commit) {
+      if (commit) {
         db.commit();
       }
       result = true;
     } catch (SQLException e) {
-      if(commit) {
+      if (commit) {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
     } finally {
-      if(commit) {
+      if (commit) {
         db.setAutoCommit(true);
       }
     }
@@ -326,11 +326,11 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -341,13 +341,17 @@ public class ProductOptionConfigurator extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
+      id = DatabaseUtils.getCurrVal(
+          db, "product_option_configurator_configurator_id_seq", id);
       sql.append(
           "INSERT INTO product_option_configurator(" +
-          "  configurator_name, short_description, long_description, class_name, result_type ) "
-          );
-      sql.append("VALUES (?, ?, ?, ?, ?) ");
+          (id > -1 ? "configurator_id, " : "") + "configurator_name, short_description, long_description, class_name, result_type ) ");
+      sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setString(++i, this.getConfiguratorName());
       pst.setString(++i, this.getShortDescription());
       pst.setString(++i, this.getLongDescription());
@@ -355,18 +359,19 @@ public class ProductOptionConfigurator extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getResultType());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "product_option_configurator_configurator_id_seq");
-      if(commit) {
+      id = DatabaseUtils.getCurrVal(
+          db, "product_option_configurator_configurator_id_seq", id);
+      if (commit) {
         db.commit();
       }
       result = true;
     } catch (SQLException e) {
-      if(commit) {
+      if (commit) {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
     } finally {
-      if(commit) {
+      if (commit) {
         db.setAutoCommit(true);
       }
     }
@@ -375,11 +380,11 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -391,8 +396,7 @@ public class ProductOptionConfigurator extends GenericBean {
     sql.append(
         " UPDATE product_option_configurator SET " +
         " configurator_name = ?, short_description = ?, long_description = ?, class_name = ?, " +
-        " result_type = ? "
-        );
+        " result_type = ? ");
     sql.append(" WHERE configurator_id = ? ");
 
     int i = 0;
@@ -410,11 +414,11 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     // This method checks all the mappings for any product_option_configurator with the current id
@@ -446,8 +450,7 @@ public class ProductOptionConfigurator extends GenericBean {
       pst = db.prepareStatement(
           "SELECT count(*) as parentcount " +
           " FROM product_option " +
-          "WHERE configurator_id = ?"
-          );
+          "WHERE configurator_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -469,12 +472,12 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                          Description of the Parameter
-   *@param  id                          Description of the Parameter
-   *@return                             Description of the Return Value
-   *@exception  SQLException            Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static OptionConfigurator getConfigurator(Connection db, int id) throws SQLException {
     OptionConfigurator configurator = null;
@@ -497,7 +500,7 @@ public class ProductOptionConfigurator extends GenericBean {
       configurator = (OptionConfigurator) cls.newInstance();
     } catch (InstantiationException ie) {
       // Shouldn't happen
-	  // TODO: implement reporting these exceptions to the application
+      // TODO: implement reporting these exceptions to the application
       ie.printStackTrace(System.out);
     } catch (ClassNotFoundException cnfe) {
       cnfe.printStackTrace(System.out);

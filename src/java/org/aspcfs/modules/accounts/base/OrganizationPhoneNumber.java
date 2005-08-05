@@ -15,35 +15,34 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.PhoneNumber;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
 
 /**
- *  Represents an organization phone number, extending the base PhoneNumber
- *  class.
+ * Represents an organization phone number, extending the base PhoneNumber
+ * class.
  *
- *@author     mrajkowski
- *@created    September 4, 2001
- *@version    $Id: OrganizationPhoneNumber.java,v 1.13 2002/09/20 14:52:45 chris
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: OrganizationPhoneNumber.java,v 1.13 2002/09/20 14:52:45 chris
+ *          Exp $
+ * @created September 4, 2001
  */
 public class OrganizationPhoneNumber extends PhoneNumber {
 
   /**
-   *  Constructor for the OrganizationPhoneNumber object
-   *
-   *@since
+   * Constructor for the OrganizationPhoneNumber object
    */
-  public OrganizationPhoneNumber() { }
+  public OrganizationPhoneNumber() {
+  }
 
 
   /**
-   *  Constructor for the OrganizationPhoneNumber object
+   * Constructor for the OrganizationPhoneNumber object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public OrganizationPhoneNumber(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -51,12 +50,11 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Constructor for the OrganizationPhoneNumber object
+   * Constructor for the OrganizationPhoneNumber object
    *
-   *@param  db                Description of Parameter
-   *@param  phoneNumberId     Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db            Description of Parameter
+   * @param phoneNumberId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public OrganizationPhoneNumber(Connection db, String phoneNumberId) throws SQLException {
     queryRecord(db, Integer.parseInt(phoneNumberId));
@@ -64,11 +62,11 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Constructor for the OrganizationPhoneNumber object
+   * Constructor for the OrganizationPhoneNumber object
    *
-   *@param  db                Description of the Parameter
-   *@param  phoneNumberId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param phoneNumberId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrganizationPhoneNumber(Connection db, int phoneNumberId) throws SQLException {
     queryRecord(db, phoneNumberId);
@@ -76,11 +74,11 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  phoneNumberId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param phoneNumberId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int phoneNumberId) throws SQLException {
     if (phoneNumberId <= 0) {
@@ -109,13 +107,13 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  orgId             Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@param  modifiedBy        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param orgId      Description of the Parameter
+   * @param enteredBy  Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void process(Connection db, int orgId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
@@ -135,10 +133,10 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     insert(db, this.getOrgId(), this.getEnteredBy());
@@ -146,17 +144,22 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  orgId             Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param orgId     Description of the Parameter
+   * @param enteredBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
-    sql.append("INSERT INTO organization_phone " +
-        "(org_id, phone_type, number, extension, primary_number,");
+    int id = DatabaseUtils.getNextSeq(db, "organization_phone_phone_id_seq");
+    sql.append(
+        "INSERT INTO organization_phone " +
+        "(org_id, phone_type, \"number\", extension, primary_number, ");
+    if (id > -1) {
+      sql.append("phone_id, ");
+    }
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -165,6 +168,9 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -189,6 +195,9 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
     pst.setBoolean(++i, this.getPrimaryNumber());
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -201,21 +210,22 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     pst.execute();
     pst.close();
 
-    this.setId(DatabaseUtils.getCurrVal(db, "organization_phone_phone_id_seq"));
+    this.setId(
+        DatabaseUtils.getCurrVal(db, "organization_phone_phone_id_seq", id));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  modifiedBy        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_phone " +
-        "SET phone_type = ?, number = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
+        "SET phone_type = ?, \"number\" = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE phone_id = ? ");
     int i = 0;
@@ -235,10 +245,10 @@ public class OrganizationPhoneNumber extends PhoneNumber {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

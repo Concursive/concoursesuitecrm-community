@@ -151,7 +151,7 @@
   %>
       <tr class="row<%= rowid %>">
         <td width="30" nowrap>
-          <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>&responseId=<%= thisResponse.getId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
+          <%= toHtml(thisResponse.getContact().getNameLastFirst()) %>
         </td>
         <td nowrap>
           <zeroio:tz timestamp="<%= thisResponse.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

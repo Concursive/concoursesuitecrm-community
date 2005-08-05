@@ -25,10 +25,10 @@ import org.aspcfs.modules.tasks.base.TaskCategoryList;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
@@ -38,20 +38,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Project Management module
+ * Project Management module
  *
- *@author     matt rajkowski
- *@created    November 6, 2001
- *@version    $Id: ProjectManagement.java,v 1.1.1.1 2002/01/14 19:49:26
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProjectManagement.java,v 1.1.1.1 2002/01/14 19:49:26
+ *          mrajkowski Exp $
+ * @created November 6, 2001
  */
 public final class ProjectManagement extends CFSModule {
 
   /**
-   *  Show the Project List by default
+   * Show the Project List by default
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandOverview(context);
@@ -59,11 +59,11 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Lists the users in the system that have a corresponding contact record
+   * Lists the users in the system that have a corresponding contact record
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.6
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.6
    */
   public String executeCommandPersonalView(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -102,10 +102,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandEnterpriseView(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -118,7 +118,8 @@ public final class ProjectManagement extends CFSModule {
     try {
       db = getConnection(context);
       ProjectList projects = new ProjectList();
-      PagedListInfo projectListInfo = this.getPagedListInfo(context, "projectEnterpriseInfo");
+      PagedListInfo projectListInfo = this.getPagedListInfo(
+          context, "projectEnterpriseInfo");
       projectListInfo.setLink("ProjectManagement.do?command=EnterpriseView");
       if (projectListInfo.getListView() == null) {
         projectListInfo.setItemsPerPage(0);
@@ -190,10 +191,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProjectList(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -207,7 +208,8 @@ public final class ProjectManagement extends CFSModule {
       db = getConnection(context);
       //PagedList Info
       ProjectList projects = new ProjectList();
-      PagedListInfo projectListInfo = this.getPagedListInfo(context, "projectListInfo");
+      PagedListInfo projectListInfo = this.getPagedListInfo(
+          context, "projectListInfo");
       projectListInfo.setLink("ProjectManagement.do?command=ProjectList");
       if (projectListInfo.getListView() == null) {
         projectListInfo.setItemsPerPage(0);
@@ -229,6 +231,8 @@ public final class ProjectManagement extends CFSModule {
         projects.setClosedProjectsOnly(true);
       } else if (projectListInfo.getListView().equals("recent")) {
         projects.setDaysLastAccessed(7);
+      } else if (projectListInfo.getListView().equals("trashed")) {
+        projects.setIncludeOnlyTrashed(true);
       }
       projects.setInvitationAcceptedOnly(true);
       projects.setBuildOverallProgress(true);
@@ -255,10 +259,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandRSVP(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -285,10 +289,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandOverview(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -302,7 +306,8 @@ public final class ProjectManagement extends CFSModule {
       sectionId = context.getRequest().getParameter("pagedListSectionId");
     }
     // Prepare the drop-down
-    PagedListInfo overviewListInfo = this.getPagedListInfo(context, "overviewListInfo");
+    PagedListInfo overviewListInfo = this.getPagedListInfo(
+        context, "overviewListInfo");
     overviewListInfo.setLink("ProjectManagement.do?command=Overview");
     if (overviewListInfo.getListView() == null) {
       overviewListInfo.setListView("48hours");
@@ -339,7 +344,8 @@ public final class ProjectManagement extends CFSModule {
     FileItemList fileItemList = new FileItemList();
     TicketList ticketList = new TicketList();
     //reset the paged lists
-    if (context.getRequest().getParameter("resetList") != null && context.getRequest().getParameter("resetList").equals("true")) {
+    if (context.getRequest().getParameter("resetList") != null && context.getRequest().getParameter(
+        "resetList").equals("true")) {
       context.getSession().removeAttribute("overviewAssignmentListInfo");
       context.getSession().removeAttribute("overviewNewsListInfo");
       context.getSession().removeAttribute("overviewIssueListInfo");
@@ -347,11 +353,21 @@ public final class ProjectManagement extends CFSModule {
       context.getSession().removeAttribute("overviewTicketListInfo");
     }
     //PagedLists needed
-    assignmentList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewAssignmentListInfo", "a.due_date", null, link, MINIMIZED_ITEMS_PER_PAGE));
-    newsList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewNewsListInfo", "n.start_date", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
-    issueList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewIssueListInfo", "i.last_reply_date", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
-    fileItemList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewFileItemListListInfo", "f.modified", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
-    ticketList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewTicketListInfo", "t.entered", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
+    assignmentList.setPagedListInfo(
+        processPagedListInfo(
+            context, sectionId, "overviewAssignmentListInfo", "a.due_date", null, link, MINIMIZED_ITEMS_PER_PAGE));
+    newsList.setPagedListInfo(
+        processPagedListInfo(
+            context, sectionId, "overviewNewsListInfo", "n.start_date", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
+    issueList.setPagedListInfo(
+        processPagedListInfo(
+            context, sectionId, "overviewIssueListInfo", "i.last_reply_date", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
+    fileItemList.setPagedListInfo(
+        processPagedListInfo(
+            context, sectionId, "overviewFileItemListListInfo", "f.modified", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
+    ticketList.setPagedListInfo(
+        processPagedListInfo(
+            context, sectionId, "overviewTicketListInfo", "t.entered", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
     //Query the records
     assignmentList.setForProjectUser(getUserId(context));
     assignmentList.setAssignmentsForUser(getUserId(context));
@@ -416,10 +432,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCalendar(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -470,11 +486,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandAddProject(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -487,17 +502,20 @@ public final class ProjectManagement extends CFSModule {
     try {
       Project thisProject = (Project) context.getFormBean();
       if (thisProject.getRequestDate() == null) {
-        thisProject.setRequestDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+        thisProject.setRequestDate(
+            DateUtils.roundUpToNextFive(System.currentTimeMillis()));
       }
       db = getConnection(context);
       //Category List
       LookupList categoryList = new LookupList(db, "lookup_project_category");
-      categoryList.addItem(-1, "--None--");
+      categoryList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("categoryList", categoryList);
       //Previous projects
       ProjectList projectList = new ProjectList();
       projectList.setGroupId(-1);
-      projectList.setEmptyHtmlSelectRecord("--None--");
+      projectList.setEmptyHtmlSelectRecord(
+          this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       //projectList.setEnteredByUserRange(getUserRange(context));
       projectList.setProjectsForUser(getUserId(context));
       projectList.setIncludeGuestProjects(true);
@@ -514,10 +532,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandInsertProject(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -541,18 +559,21 @@ public final class ProjectManagement extends CFSModule {
       isValid = this.validateObject(context, db, thisProject);
       if (isValid) {
         if (thisProject.insert(db, context)) {
-          updateProjectCache(context, thisProject.getId(), thisProject.getTitle());
+          updateProjectCache(
+              context, thisProject.getId(), thisProject.getTitle());
           indexAddItem(context, thisProject);
           //Add the current user to the team TODO: Put in a transaction
           TeamMember thisMember = new TeamMember();
           thisMember.setProjectId(thisProject.getId());
           thisMember.setUserId(this.getUserId(context));
-          thisMember.setUserLevel(getUserLevel(context, db, TeamMember.PROJECT_LEAD));
+          thisMember.setUserLevel(
+              getUserLevel(context, db, TeamMember.PROJECT_LEAD));
           thisMember.setEnteredBy(this.getUserId(context));
           thisMember.setModifiedBy(this.getUserId(context));
           thisMember.insert(db);
           //Go to the project
-          context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
+          context.getRequest().setAttribute(
+              "pid", String.valueOf(thisProject.getId()));
           return (executeCommandProjectCenter(context));
         }
       }
@@ -567,11 +588,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandModifyProject(ActionContext context) {
     if (!(hasPermission(context, "projects-projects-edit"))) {
@@ -582,16 +602,19 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-details-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("modifyproject").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("modifyproject").toLowerCase());
       //Category List
       LookupList categoryList = new LookupList(db, "lookup_project_category");
-      categoryList.addItem(-1, "--None--");
+      categoryList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("categoryList", categoryList);
       return ("ProjectCenterOK");
     } catch (Exception errorMessage) {
@@ -604,10 +627,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCustomizeProject(ActionContext context) {
     Connection db = null;
@@ -615,13 +638,16 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-setup-customize")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-setup-customize")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("setup_customize").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("setup_customize").toLowerCase());
       return ("ProjectCenterOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -633,10 +659,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfigurePermissions(ActionContext context) {
     Connection db = null;
@@ -644,13 +670,16 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-setup-permissions")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-setup-permissions")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("setup_permissions").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("setup_permissions").toLowerCase());
       //Load the possible permission categories and permissions
       PermissionCategoryLookupList categories = new PermissionCategoryLookupList();
       categories.setIncludeEnabled(Constants.TRUE);
@@ -668,23 +697,26 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdatePermissions(ActionContext context) {
     Connection db = null;
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       //Make sure user can modify permissions
-      if (!hasProjectAccess(context, db, thisProject, "project-setup-permissions")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-setup-permissions")) {
         return "PermissionError";
       }
-      PermissionList.updateProjectPermissions(db, context.getRequest(), Integer.parseInt(projectId));
+      PermissionList.updateProjectPermissions(
+          db, context.getRequest(), Integer.parseInt(projectId));
       return "UpdatePermissionsOK";
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -696,11 +728,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandUpdateProject(ActionContext context) {
     if (!(hasPermission(context, "projects-projects-edit"))) {
@@ -724,11 +755,15 @@ public final class ProjectManagement extends CFSModule {
       }
       if (resultCount == -1) {
         //Category List
-        LookupList categoryList = new LookupList(db, "lookup_project_category");
-        categoryList.addItem(-1, "--None--");
+        LookupList categoryList = new LookupList(
+            db, "lookup_project_category");
+        categoryList.addItem(
+            -1, this.getSystemStatus(context).getLabel(
+                "calendar.none.4dashes"));
         context.getRequest().setAttribute("categoryList", categoryList);
       } else if (resultCount == 1) {
-        updateProjectCache(context, thisProject.getId(), thisProject.getTitle());
+        updateProjectCache(
+            context, thisProject.getId(), thisProject.getTitle());
         indexAddItem(context, thisProject);
       }
     } catch (Exception errorMessage) {
@@ -742,7 +777,8 @@ public final class ProjectManagement extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       return ("ModifyProjectOK");
     } else if (resultCount == 1) {
-      context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
+      context.getRequest().setAttribute(
+          "pid", String.valueOf(thisProject.getId()));
       return ("UpdateProjectOK");
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
@@ -752,10 +788,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateFeatures(ActionContext context) {
     Project thisProject = (Project) context.getFormBean();
@@ -764,7 +800,8 @@ public final class ProjectManagement extends CFSModule {
     try {
       db = this.getConnection(context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-setup-customize")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-setup-customize")) {
         return "PermissionError";
       }
       thisProject.setModifiedBy(this.getUserId(context));
@@ -777,7 +814,8 @@ public final class ProjectManagement extends CFSModule {
         return ("CustomizeProjectOK");
       }
       if (resultCount == 1) {
-        context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
+        context.getRequest().setAttribute(
+            "pid", String.valueOf(thisProject.getId()));
         return ("UpdateFeaturesOK");
       }
     } catch (Exception errorMessage) {
@@ -792,11 +830,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandProjectCenter(ActionContext context) {
     if (!(hasPermission(context, "projects-projects-view"))) {
@@ -825,9 +862,6 @@ public final class ProjectManagement extends CFSModule {
       deletePagedListInfo(context, "projectAccountContactTeamInfo");
       deletePagedListInfo(context, "projectDocumentsGalleryInfo");
       deletePagedListInfo(context, "projectAccountsInfo");
-      deletePagedListInfo(context, "projectTeamInfo");
-      deletePagedListInfo(context, "projectEmployeeTeamInfo");
-      deletePagedListInfo(context, "projectAccountContactTeamInfo");
     }
     try {
       db = getConnection(context);
@@ -838,20 +872,26 @@ public final class ProjectManagement extends CFSModule {
           return "PermissionError";
         }
         addRecentItem(context, thisProject);
-        PagedListInfo newsInfo = this.getPagedListInfo(context, "projectNewsInfo");
-        newsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=News&pid=" + thisProject.getId());
+        PagedListInfo newsInfo = this.getPagedListInfo(
+            context, "projectNewsInfo");
+        newsInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=News&pid=" + thisProject.getId());
         //Load the news
         NewsArticleList newsList = new NewsArticleList();
         newsList.setProjectId(thisProject.getId());
         newsList.setPagedListInfo(newsInfo);
-        if ("archived".equals(newsInfo.getListView()) && hasProjectAccess(context, db, thisProject, "project-news-view-archived")) {
+        if ("archived".equals(newsInfo.getListView()) && hasProjectAccess(
+            context, db, thisProject, "project-news-view-archived")) {
           newsList.setArchivedNews(Constants.TRUE);
-        } else if ("unreleased".equals(newsInfo.getListView()) && hasProjectAccess(context, db, thisProject, "project-news-view-unreleased")) {
+        } else if ("unreleased".equals(newsInfo.getListView()) && hasProjectAccess(
+            context, db, thisProject, "project-news-view-unreleased")) {
           newsList.setUnreleasedNews(Constants.TRUE);
-        } else if ("drafts".equals(newsInfo.getListView()) && hasProjectAccess(context, db, thisProject, "project-news-view-unreleased")) {
+        } else if ("drafts".equals(newsInfo.getListView()) && hasProjectAccess(
+            context, db, thisProject, "project-news-view-unreleased")) {
           newsList.setIncompleteNews(Constants.TRUE);
         } else {
-          if (hasProjectAccess(context, db, thisProject, "project-news-view-unreleased")) {
+          if (hasProjectAccess(
+              context, db, thisProject, "project-news-view-unreleased")) {
             //all news (project access)
             newsList.setOverviewAll(true);
           } else {
@@ -861,7 +901,8 @@ public final class ProjectManagement extends CFSModule {
         }
         // Determine the list view
         // Show news by order for projects
-        context.getRequest().setAttribute("IncludeSubSection", "news_by_article");
+        context.getRequest().setAttribute(
+            "IncludeSubSection", "news_by_article");
         newsInfo.setColumnToSortBy("n.priority_id asc, n.start_date desc");
         newsList.buildList(db);
         context.getRequest().setAttribute("newsList", newsList);
@@ -870,20 +911,24 @@ public final class ProjectManagement extends CFSModule {
         categoryList.setProjectId(thisProject.getId());
         categoryList.setEnabled(Constants.TRUE);
         categoryList.buildList(db);
-        context.getRequest().setAttribute("newsArticleCategoryList", categoryList);
+        context.getRequest().setAttribute(
+            "newsArticleCategoryList", categoryList);
         // Prepare the list of Lists to display
         TaskCategoryList taskCategoryList = new TaskCategoryList();
         taskCategoryList.setProjectId(thisProject.getId());
         //taskCategoryList.setEnabled(Constants.TRUE);
         taskCategoryList.buildList(db);
-        context.getRequest().setAttribute("taskCategoryList", taskCategoryList);
+        context.getRequest().setAttribute(
+            "taskCategoryList", taskCategoryList);
       } else if ("Requirements".equals(section)) {
         context.getSession().removeAttribute("projectAssignmentsInfo");
         if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
           return "PermissionError";
         }
-        PagedListInfo requirementsInfo = this.getPagedListInfo(context, "projectRequirementsInfo", 50);
-        requirementsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
+        PagedListInfo requirementsInfo = this.getPagedListInfo(
+            context, "projectRequirementsInfo", 50);
+        requirementsInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
         thisProject.getRequirements().setPagedListInfo(requirementsInfo);
         thisProject.setBuildRequirementAssignments(false);
         if ("all".equals(requirementsInfo.getListView())) {
@@ -900,23 +945,31 @@ public final class ProjectManagement extends CFSModule {
           return "PermissionError";
         }
         //Check the pagedList filter
-        PagedListInfo projectTeamInfo = this.getPagedListInfo(context, "projectTeamInfo");
-        projectTeamInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
+        PagedListInfo projectTeamInfo = this.getPagedListInfo(
+            context, "projectTeamInfo");
+        projectTeamInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
         projectTeamInfo.setItemsPerPage(0);
 
-        PagedListInfo projectEmployeeTeamInfo = this.getPagedListInfo(context, "projectEmployeeTeamInfo");
-        projectEmployeeTeamInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
+        PagedListInfo projectEmployeeTeamInfo = this.getPagedListInfo(
+            context, "projectEmployeeTeamInfo");
+        projectEmployeeTeamInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
         projectEmployeeTeamInfo.setItemsPerPage(0);
 
-        PagedListInfo projectAccountContactTeamInfo = this.getPagedListInfo(context, "projectAccountContactTeamInfo");
-        projectAccountContactTeamInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
+        PagedListInfo projectAccountContactTeamInfo = this.getPagedListInfo(
+            context, "projectAccountContactTeamInfo");
+        projectAccountContactTeamInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
         projectAccountContactTeamInfo.setItemsPerPage(0);
 
         //Generate the list
         thisProject.getTeam().setPagedListInfo(projectTeamInfo);
-        thisProject.getEmployeeTeam().setPagedListInfo(projectEmployeeTeamInfo);
-        thisProject.getAccountContactTeam().setPagedListInfo(projectAccountContactTeamInfo);
-        
+        thisProject.getEmployeeTeam().setPagedListInfo(
+            projectEmployeeTeamInfo);
+        thisProject.getAccountContactTeam().setPagedListInfo(
+            projectAccountContactTeamInfo);
+
         thisProject.buildTeamMemberList(db);
         Iterator i = thisProject.getTeam().iterator();
         while (i.hasNext()) {
@@ -950,17 +1003,22 @@ public final class ProjectManagement extends CFSModule {
           return "PermissionError";
         }
         //Configure paged list for handling the list view
-        PagedListInfo projectAssignmentsInfo = this.getPagedListInfo(context, "projectAssignmentsInfo");
+        PagedListInfo projectAssignmentsInfo = this.getPagedListInfo(
+            context, "projectAssignmentsInfo");
         projectAssignmentsInfo.setItemsPerPage(0);
-        projectAssignmentsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + thisProject.getId());
+        projectAssignmentsInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + thisProject.getId());
         thisProject.getAssignments().setPagedListInfo(projectAssignmentsInfo);
         //Variables that can be used
         //String folderId = (String) context.getRequest().getParameter("fid");
         String expand = (String) context.getRequest().getParameter("expand");
-        String contract = (String) context.getRequest().getParameter("contract");
-        String requirementId = (String) context.getRequest().getParameter("rid");
+        String contract = (String) context.getRequest().getParameter(
+            "contract");
+        String requirementId = (String) context.getRequest().getParameter(
+            "rid");
         //Build the requirement and the assignments
-        Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId));
+        Requirement thisRequirement = new Requirement(
+            db, Integer.parseInt(requirementId));
         context.getRequest().setAttribute("requirement", thisRequirement);
         if ("open".equals(projectAssignmentsInfo.getListView())) {
           thisRequirement.getAssignments().setIncompleteOnly(true);
@@ -970,15 +1028,19 @@ public final class ProjectManagement extends CFSModule {
           //All
         }
         //HashMap that contains folder state info
-        HashMap folderState = (HashMap) context.getSession().getAttribute("AssignmentsFolderState");
+        HashMap folderState = (HashMap) context.getSession().getAttribute(
+            "AssignmentsFolderState");
         if (folderState == null) {
           folderState = new HashMap();
-          context.getSession().setAttribute("AssignmentsFolderState", folderState);
+          context.getSession().setAttribute(
+              "AssignmentsFolderState", folderState);
         }
-        ArrayList thisFolderState = (ArrayList) folderState.get(new Integer(thisRequirement.getId()));
+        ArrayList thisFolderState = (ArrayList) folderState.get(
+            new Integer(thisRequirement.getId()));
         if (thisFolderState == null) {
           thisFolderState = new ArrayList();
-          folderState.put(new Integer(thisRequirement.getId()), thisFolderState);
+          folderState.put(
+              new Integer(thisRequirement.getId()), thisFolderState);
         }
         if (expand != null) {
           thisFolderState.add(new Integer(Integer.parseInt(expand)));
@@ -999,7 +1061,9 @@ public final class ProjectManagement extends CFSModule {
         assignments.buildList(db);
         context.getRequest().setAttribute("assignments", assignments);
         //Filter the maplist
-        map.filter(assignments, RequirementMapList.FILTER_PRIORITY, projectAssignmentsInfo.getFilterValue("listFilter1"));
+        map.filter(
+            assignments, RequirementMapList.FILTER_PRIORITY, projectAssignmentsInfo.getFilterValue(
+                "listFilter1"));
         if ("open".equals(projectAssignmentsInfo.getListView())) {
           map.filterAssignments(assignments, "incompleteOnly");
         } else if ("closed".equals(projectAssignmentsInfo.getListView())) {
@@ -1013,18 +1077,23 @@ public final class ProjectManagement extends CFSModule {
         folders.buildList(db);
         context.getRequest().setAttribute("folders", folders);
         //Load the Priority Lookup for displaying values
-        LookupList priorityList = new LookupList(db, "lookup_project_priority");
+        LookupList priorityList = new LookupList(
+            db, "lookup_project_priority");
         context.getRequest().setAttribute("PriorityList", priorityList);
       } else if ("Issues_Categories".equals(section)) {
-        if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-view")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-discussion-forums-view")) {
           return "PermissionError";
         }
-        PagedListInfo categoryInfo = this.getPagedListInfo(context, "projectIssueCategoryInfo");
-        categoryInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=" + thisProject.getId());
+        PagedListInfo categoryInfo = this.getPagedListInfo(
+            context, "projectIssueCategoryInfo");
+        categoryInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=" + thisProject.getId());
         thisProject.getIssueCategories().setPagedListInfo(categoryInfo);
         thisProject.buildIssueCategoryList(db);
       } else if ("Issues".equals(section)) {
-        if (!hasProjectAccess(context, db, thisProject, "project-discussion-topics-view")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-discussion-topics-view")) {
           return "PermissionError";
         }
         String categoryId = context.getRequest().getParameter("cid");
@@ -1035,16 +1104,21 @@ public final class ProjectManagement extends CFSModule {
         if ("true".equals(context.getRequest().getParameter("resetList"))) {
           this.deletePagedListInfo(context, "projectIssuesInfo");
         }
-        PagedListInfo issuesInfo = this.getPagedListInfo(context, "projectIssuesInfo");
-        issuesInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Issues&pid=" + thisProject.getId() + "&cid=" + categoryId);
+        PagedListInfo issuesInfo = this.getPagedListInfo(
+            context, "projectIssuesInfo");
+        issuesInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Issues&pid=" + thisProject.getId() + "&cid=" + categoryId);
         thisProject.getIssues().setPagedListInfo(issuesInfo);
         //Build the category info
-        IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+        IssueCategory issueCategory = new IssueCategory(
+            db, Integer.parseInt(categoryId), thisProject.getId());
         context.getRequest().setAttribute("IssueCategory", issueCategory);
         //Build the issues
         thisProject.buildIssueList(db, issueCategory.getId());
-      } else if ("File_Library".equals(section) || "File_Gallery".equals(section)) {
-        if (!hasProjectAccess(context, db, thisProject, "project-documents-view")) {
+      } else if ("File_Library".equals(section) || "File_Gallery".equals(
+          section)) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-documents-view")) {
           return "PermissionError";
         }
         String folderId = context.getRequest().getParameter("folderId");
@@ -1059,7 +1133,8 @@ public final class ProjectManagement extends CFSModule {
           deletePagedListInfo(context, "projectDocumentsGalleryInfo");
         } else {
           //Load the folder to determine the view
-          FileFolder thisFolder = new FileFolder(db, Integer.parseInt(folderId));
+          FileFolder thisFolder = new FileFolder(
+              db, Integer.parseInt(folderId));
           context.getRequest().setAttribute("currentFolder", thisFolder);
           if (thisFolder.getDisplay() == FileFolder.VIEW_GALLERY ||
               thisFolder.getDisplay() == FileFolder.VIEW_SLIDESHOW) {
@@ -1070,13 +1145,16 @@ public final class ProjectManagement extends CFSModule {
         files.setLinkModuleId(Constants.PROJECTS_FILES);
         files.setLinkItemId(thisProject.getId());
         if ("File_Gallery".equals(section)) {
-          PagedListInfo galleryInfo = this.getPagedListInfo(context, "projectDocumentsGalleryInfo");
+          PagedListInfo galleryInfo = this.getPagedListInfo(
+              context, "projectDocumentsGalleryInfo");
           files.setPagedListInfo(galleryInfo);
           if (context.getRequest().getParameter("details") != null) {
-            galleryInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=File_Gallery&pid=" + thisProject.getId() + "&folderId=" + folderId + "&details=true");
+            galleryInfo.setLink(
+                "ProjectManagement.do?command=ProjectCenter&section=File_Gallery&pid=" + thisProject.getId() + "&folderId=" + folderId + "&details=true");
             galleryInfo.setItemsPerPage(1);
           } else {
-            galleryInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=File_Gallery&pid=" + thisProject.getId() + "&folderId=" + folderId);
+            galleryInfo.setLink(
+                "ProjectManagement.do?command=ProjectCenter&section=File_Gallery&pid=" + thisProject.getId() + "&folderId=" + folderId);
             galleryInfo.setItemsPerPage(6);
           }
         }
@@ -1103,8 +1181,10 @@ public final class ProjectManagement extends CFSModule {
         TaskCategoryList categoryList = new TaskCategoryList();
         categoryList.setProjectId(thisProject.getId());
         //Check the pagedList filter
-        PagedListInfo projectListsCategoriesInfo = this.getPagedListInfo(context, "projectListsCategoriesInfo");
-        projectListsCategoriesInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=" + thisProject.getId());
+        PagedListInfo projectListsCategoriesInfo = this.getPagedListInfo(
+            context, "projectListsCategoriesInfo");
+        projectListsCategoriesInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=" + thisProject.getId());
         projectListsCategoriesInfo.setItemsPerPage(0);
         //Generate the list
         categoryList.setPagedListInfo(projectListsCategoriesInfo);
@@ -1119,15 +1199,19 @@ public final class ProjectManagement extends CFSModule {
           categoryId = context.getRequest().getParameter("categoryId");
         }
         //Add the category to the request
-        LookupElement thisCategory = new LookupElement(db, Integer.parseInt(categoryId), "lookup_task_category");
+        LookupElement thisCategory = new LookupElement(
+            db, Integer.parseInt(categoryId), "lookup_task_category");
         context.getRequest().setAttribute("category", thisCategory);
         //Build the list items
         TaskList outlineList = new TaskList();
         outlineList.setProjectId(thisProject.getId());
         outlineList.setCategoryId(Integer.parseInt(categoryId));
         //Check the pagedList filter
-        PagedListInfo projectListsInfo = this.getPagedListInfo(context, "projectListsInfo");
-        projectListsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Lists&pid=" + thisProject.getId() + "&cid=" + Integer.parseInt(categoryId));
+        PagedListInfo projectListsInfo = this.getPagedListInfo(
+            context, "projectListsInfo");
+        projectListsInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Lists&pid=" + thisProject.getId() + "&cid=" + Integer.parseInt(
+                categoryId));
         projectListsInfo.setItemsPerPage(0);
         if ("all".equals(projectListsInfo.getListView())) {
           outlineList.setComplete(Constants.UNDEFINED);
@@ -1141,11 +1225,14 @@ public final class ProjectManagement extends CFSModule {
         outlineList.buildList(db);
         context.getRequest().setAttribute("outlineList", outlineList);
       } else if ("Tickets".equals(section)) {
-        if (!hasProjectAccess(context, db, thisProject, "project-tickets-view")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-tickets-view")) {
           return "PermissionError";
         }
-        PagedListInfo projectTicketsInfo = this.getPagedListInfo(context, "projectTicketsInfo");
-        projectTicketsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + thisProject.getId());
+        PagedListInfo projectTicketsInfo = this.getPagedListInfo(
+            context, "projectTicketsInfo");
+        projectTicketsInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + thisProject.getId());
         projectTicketsInfo.setMode(PagedListInfo.LIST_VIEW);
         //projectTicketsInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
         ////projectTicketsInfo.setExpandedSelection(true);
@@ -1159,11 +1246,15 @@ public final class ProjectManagement extends CFSModule {
         } else {
           tickets.setOnlyOpen(true);
         }
+        if (thisProject.isTrashed()) {
+          tickets.setIncludeOnlyTrashed(true);
+        }
         tickets.buildList(db);
         context.getRequest().setAttribute("ticketList", tickets);
       } else {
         //Just looking at the details
-        if (!hasProjectAccess(context, db, thisProject, "project-details-view")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-details-view")) {
           return "PermissionError";
         }
         // Prepare the list of categories to display
@@ -1175,9 +1266,11 @@ public final class ProjectManagement extends CFSModule {
         context.getRequest().setAttribute("projectCategoryList", categoryList);
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", section.toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", section.toLowerCase());
       //The user has access, so show that they accessed the project
-      TeamMember.updateLastAccessed(db, thisProject.getId(), getUserId(context));
+      TeamMember.updateLastAccessed(
+          db, thisProject.getId(), getUserId(context));
       String popUp = context.getRequest().getParameter("popup");
       if (popUp != null && !"null".equals(popUp)) {
         return ("ProjectCenterPopupOK");
@@ -1195,10 +1288,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteProject(ActionContext context) {
     Connection db = null;
@@ -1206,20 +1299,24 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-details-delete")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-details-delete")) {
         return "PermissionError";
       }
-      if (!thisProject.delete(db, this.getPath(context, "projects"))) {
+      if (!thisProject.delete(db, getDbNamePath(context))) {
         SystemStatus systemStatus = this.getSystemStatus(context);
-        thisProject.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.projectDeletion"));
+        thisProject.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.projectDeletion"));
         processErrors(context, thisProject.getErrors());
       } else {
         updateProjectCache(context, thisProject.getId(), null);
         indexDeleteItem(context, thisProject);
       }
-        return "DeleteProjectOK";
+      return "DeleteProjectOK";
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1230,10 +1327,88 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandTrashProject(ActionContext context) {
+    Connection db = null;
+    //Params
+    String projectId = (String) context.getRequest().getParameter("pid");
+    try {
+      db = this.getConnection(context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-details-delete")) {
+        return "PermissionError";
+      }
+      if (!thisProject.updateStatus(db, true, this.getUserId(context))) {
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        thisProject.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.projectDeletion"));
+        processErrors(context, thisProject.getErrors());
+      } else {
+        updateProjectCache(context, thisProject.getId(), null);
+        indexAddItem(context, thisProject);
+      }
+      return "DeleteProjectOK";
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandRestoreProject(ActionContext context) {
+    Connection db = null;
+    //Params
+    String projectId = (String) context.getRequest().getParameter("pid");
+    try {
+      db = this.getConnection(context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-details-delete")) {
+        return "PermissionError";
+      }
+      if (!thisProject.updateStatus(db, false, this.getUserId(context))) {
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        thisProject.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.projectDeletion"));
+        processErrors(context, thisProject.getErrors());
+      } else {
+        updateProjectCache(context, thisProject.getId(), null);
+        indexAddItem(context, thisProject);
+      }
+      return "DeleteProjectOK";
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAcceptProject(ActionContext context) {
     Connection db = null;
@@ -1241,7 +1416,8 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.accept(db, this.getUserId(context));
       return "AcceptProjectOK";
     } catch (Exception errorMessage) {
@@ -1254,10 +1430,10 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRejectProject(ActionContext context) {
     Connection db = null;
@@ -1265,7 +1441,8 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.reject(db, this.getUserId(context));
       return "AcceptProjectOK";
     } catch (Exception errorMessage) {
@@ -1278,19 +1455,20 @@ public final class ProjectManagement extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context                   Description of the Parameter
-   *@param  sectionId                 Description of the Parameter
-   *@param  infoName                  Description of the Parameter
-   *@param  sortColumn                Description of the Parameter
-   *@param  sortOrder                 Description of the Parameter
-   *@param  link                      Description of the Parameter
-   *@param  MINIMIZED_ITEMS_PER_PAGE  Description of the Parameter
-   *@return                           Description of the Return Value
+   * @param context                  Description of the Parameter
+   * @param sectionId                Description of the Parameter
+   * @param infoName                 Description of the Parameter
+   * @param sortColumn               Description of the Parameter
+   * @param sortOrder                Description of the Parameter
+   * @param link                     Description of the Parameter
+   * @param MINIMIZED_ITEMS_PER_PAGE Description of the Parameter
+   * @return Description of the Return Value
    */
   private PagedListInfo processPagedListInfo(ActionContext context, String sectionId, String infoName, String sortColumn, String sortOrder, String link, int MINIMIZED_ITEMS_PER_PAGE) {
-    PagedListInfo thisInfo = this.getPagedListInfo(context, infoName, sortColumn, sortOrder);
+    PagedListInfo thisInfo = this.getPagedListInfo(
+        context, infoName, sortColumn, sortOrder);
     thisInfo.setLink(link);
     if (sectionId == null) {
       if (!thisInfo.getExpandedSelection()) {

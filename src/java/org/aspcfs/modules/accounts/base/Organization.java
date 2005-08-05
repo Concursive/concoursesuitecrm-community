@@ -19,19 +19,22 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.iteam.utils.ProjectUtils;
+import com.zeroio.webdav.utils.ICalendar;
 import org.aspcfs.controller.ObjectValidator;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.assets.base.AssetList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.communications.base.RecipientList;
 import org.aspcfs.modules.contacts.base.CallList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.mycfs.base.OrganizationEventList;
+import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.quotes.base.QuoteList;
-import org.aspcfs.modules.relationships.base.*;
+import org.aspcfs.modules.relationships.base.RelationshipList;
 import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.LookupElement;
@@ -42,12 +45,13 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 /**
- *@author     chris
- *@created    July 12, 2001
- *@version    $Id: Organization.java,v 1.82.2.1 2004/07/26 20:46:39 kbhoopal Exp
- *      $
+ * @author chris
+ * @version $Id: Organization.java,v 1.82.2.1 2004/07/26 20:46:39 kbhoopal Exp
+ *          $
+ * @created July 12, 2001
  */
 public class Organization extends GenericBean {
   protected double YTD = 0;
@@ -80,6 +84,7 @@ public class Organization extends GenericBean {
   private int duplicateId = -1;
   private int importId = -1;
   private int statusId = -1;
+  private Timestamp trashedDate = null;
   private String alertDateTimeZone = null;
   private String contractEndDateTimeZone = null;
 
@@ -110,20 +115,23 @@ public class Organization extends GenericBean {
   private boolean hasOpportunities = false;
   private boolean hasPortalUsers = false;
 
+  private boolean forceDelete = false;
+
 
   /**
-   *  Constructor for the Organization object, creates an empty Organization
+   * Constructor for the Organization object, creates an empty Organization
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public Organization() { }
+  public Organization() {
+  }
 
 
   /**
-   *  Constructor for the Organization object
+   * Constructor for the Organization object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Organization(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -131,11 +139,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  org_id            Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db     Description of Parameter
+   * @param org_id Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Organization(Connection db, int org_id) throws SQLException {
     if (org_id == -1) {
@@ -161,7 +169,7 @@ public class Organization extends GenericBean {
     rs.close();
     pst.close();
     if (orgId == -1) {
-      throw new SQLException("Account not found");
+      throw new SQLException(Constants.NOT_FOUND_ERROR);
     }
     buildTypes(db);
     //if this is an individual account, populate the primary contact record
@@ -178,9 +186,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the typeList attribute of the Organization object
+   * Sets the typeList attribute of the Organization object
    *
-   *@param  typeList  The new typeList value
+   * @param typeList The new typeList value
    */
   public void setTypeList(ArrayList typeList) {
     this.typeList = typeList;
@@ -188,9 +196,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the typeList attribute of the Organization object
+   * Sets the typeList attribute of the Organization object
    *
-   *@param  criteriaString  The new typeList value
+   * @param criteriaString The new typeList value
    */
   public void setTypeList(String[] criteriaString) {
     if (criteriaString != null) {
@@ -203,9 +211,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ContactDelete attribute of the Organization object
+   * Sets the ContactDelete attribute of the Organization object
    *
-   *@param  tmp  The new ContactDelete value
+   * @param tmp The new ContactDelete value
    */
   public void setContactDelete(boolean tmp) {
     this.contactDelete = tmp;
@@ -213,9 +221,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the RevenueDelete attribute of the Organization object
+   * Sets the RevenueDelete attribute of the Organization object
    *
-   *@param  tmp  The new RevenueDelete value
+   * @param tmp The new RevenueDelete value
    */
   public void setRevenueDelete(boolean tmp) {
     this.revenueDelete = tmp;
@@ -223,9 +231,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the DocumentDelete attribute of the Organization object
+   * Sets the DocumentDelete attribute of the Organization object
    *
-   *@param  tmp  The new DocumentDelete value
+   * @param tmp The new DocumentDelete value
    */
   public void setDocumentDelete(boolean tmp) {
     this.documentDelete = tmp;
@@ -233,9 +241,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the EnteredByName attribute of the Organization object
+   * Sets the EnteredByName attribute of the Organization object
    *
-   *@param  enteredByName  The new EnteredByName value
+   * @param enteredByName The new EnteredByName value
    */
   public void setEnteredByName(String enteredByName) {
     this.enteredByName = enteredByName;
@@ -243,9 +251,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedByName attribute of the Organization object
+   * Sets the ModifiedByName attribute of the Organization object
    *
-   *@param  modifiedByName  The new ModifiedByName value
+   * @param modifiedByName The new ModifiedByName value
    */
   public void setModifiedByName(String modifiedByName) {
     this.modifiedByName = modifiedByName;
@@ -253,9 +261,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledOwnerAccount attribute of the Organization object
+   * Sets the hasEnabledOwnerAccount attribute of the Organization object
    *
-   *@param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   * @param hasEnabledOwnerAccount The new hasEnabledOwnerAccount value
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
@@ -263,9 +271,29 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Organization object
+   * Sets the trashedDate attribute of the Organization object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the Organization object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the statusId attribute of the Organization object
+   *
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -273,9 +301,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Organization object
+   * Sets the statusId attribute of the Organization object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -283,9 +311,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the alertDateTimeZone attribute of the Organization object
+   * Sets the alertDateTimeZone attribute of the Organization object
    *
-   *@param  tmp  The new alertDateTimeZone value
+   * @param tmp The new alertDateTimeZone value
    */
   public void setAlertDateTimeZone(String tmp) {
     this.alertDateTimeZone = tmp;
@@ -293,9 +321,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the contractEndDateTimeZone attribute of the Organization object
+   * Sets the contractEndDateTimeZone attribute of the Organization object
    *
-   *@param  tmp  The new contractEndDateTimeZone value
+   * @param tmp The new contractEndDateTimeZone value
    */
   public void setContractEndDateTimeZone(String tmp) {
     this.contractEndDateTimeZone = tmp;
@@ -303,9 +331,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the alertDateTimeZone attribute of the Organization object
+   * Gets the alertDateTimeZone attribute of the Organization object
    *
-   *@return    The alertDateTimeZone value
+   * @return The alertDateTimeZone value
    */
   public String getAlertDateTimeZone() {
     return alertDateTimeZone;
@@ -313,9 +341,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the contractEndDateTimeZone attribute of the Organization object
+   * Gets the contractEndDateTimeZone attribute of the Organization object
    *
-   *@return    The contractEndDateTimeZone value
+   * @return The contractEndDateTimeZone value
    */
   public String getContractEndDateTimeZone() {
     return contractEndDateTimeZone;
@@ -323,9 +351,19 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Organization object
+   * Gets the trashedDate attribute of the Organization object
    *
-   *@return    The statusId value
+   * @return The trashedDate value
+   */
+  public Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the statusId attribute of the Organization object
+   *
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -333,9 +371,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the hasEnabledOwnerAccount attribute of the Organization object
+   * Gets the hasEnabledOwnerAccount attribute of the Organization object
    *
-   *@return    The hasEnabledOwnerAccount value
+   * @return The hasEnabledOwnerAccount value
    */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
@@ -343,9 +381,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the OwnerName attribute of the Organization object
+   * Sets the OwnerName attribute of the Organization object
    *
-   *@param  ownerName  The new OwnerName value
+   * @param ownerName The new OwnerName value
    */
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
@@ -353,10 +391,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
@@ -381,9 +419,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ErrorMessage attribute of the Organization object
+   * Sets the ErrorMessage attribute of the Organization object
    *
-   *@param  tmp  The new ErrorMessage value
+   * @param tmp The new ErrorMessage value
    */
   public void setErrorMessage(String tmp) {
     this.errorMessage = tmp;
@@ -391,9 +429,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the types attribute of the Organization object
+   * Sets the types attribute of the Organization object
    *
-   *@param  types  The new types value
+   * @param types The new types value
    */
   public void setTypes(LookupList types) {
     this.types = types;
@@ -401,9 +439,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Organization object
+   * Sets the Owner attribute of the Organization object
    *
-   *@param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -411,9 +449,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the importId attribute of the Organization object
+   * Sets the importId attribute of the Organization object
    *
-   *@param  tmp  The new importId value
+   * @param tmp The new importId value
    */
   public void setImportId(int tmp) {
     this.importId = tmp;
@@ -421,9 +459,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the importId attribute of the Organization object
+   * Sets the importId attribute of the Organization object
    *
-   *@param  tmp  The new importId value
+   * @param tmp The new importId value
    */
   public void setImportId(String tmp) {
     this.importId = Integer.parseInt(tmp);
@@ -431,9 +469,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the importId attribute of the Organization object
+   * Gets the importId attribute of the Organization object
    *
-   *@return    The importId value
+   * @return The importId value
    */
   public int getImportId() {
     return importId;
@@ -441,9 +479,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the primaryContact attribute of the Organization object
+   * Gets the primaryContact attribute of the Organization object
    *
-   *@return    The primaryContact value
+   * @return The primaryContact value
    */
   public Contact getPrimaryContact() {
     return primaryContact;
@@ -451,9 +489,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the primaryContact attribute of the Organization object
+   * Sets the primaryContact attribute of the Organization object
    *
-   *@param  primaryContact  The new primaryContact value
+   * @param primaryContact The new primaryContact value
    */
   public void setPrimaryContact(Contact primaryContact) {
     this.primaryContact = primaryContact;
@@ -461,9 +499,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the OwnerId attribute of the Organization object
+   * Sets the OwnerId attribute of the Organization object
    *
-   *@param  owner  The new OwnerId value
+   * @param owner The new OwnerId value
    */
   public void setOwnerId(int owner) {
     this.owner = owner;
@@ -471,9 +509,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Entered attribute of the Organization object
+   * Sets the Entered attribute of the Organization object
    *
-   *@param  tmp  The new Entered value
+   * @param tmp The new Entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -481,9 +519,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the Organization object
+   * Sets the alertDate attribute of the Organization object
    *
-   *@param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
@@ -491,9 +529,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the alertText attribute of the Organization object
+   * Sets the alertText attribute of the Organization object
    *
-   *@param  tmp  The new alertText value
+   * @param tmp The new alertText value
    */
   public void setAlertText(String tmp) {
     this.alertText = tmp;
@@ -501,9 +539,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Modified attribute of the Organization object
+   * Sets the Modified attribute of the Organization object
    *
-   *@param  tmp  The new Modified value
+   * @param tmp The new Modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -511,9 +549,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Organization object
+   * Sets the entered attribute of the Organization object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -521,9 +559,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Organization object
+   * Sets the modified attribute of the Organization object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -531,9 +569,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Organization object
+   * Sets the Owner attribute of the Organization object
    *
-   *@param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -541,9 +579,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the OwnerId attribute of the Organization object
+   * Sets the OwnerId attribute of the Organization object
    *
-   *@param  owner  The new OwnerId value
+   * @param owner The new OwnerId value
    */
   public void setOwnerId(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -551,9 +589,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ContractEndDate attribute of the Organization object
+   * Sets the ContractEndDate attribute of the Organization object
    *
-   *@param  contractEndDate  The new ContractEndDate value
+   * @param contractEndDate The new ContractEndDate value
    */
   public void setContractEndDate(java.sql.Timestamp contractEndDate) {
     this.contractEndDate = contractEndDate;
@@ -561,9 +599,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the YTD attribute of the Organization object
+   * Sets the YTD attribute of the Organization object
    *
-   *@param  YTD  The new YTD value
+   * @param YTD The new YTD value
    */
   public void setYTD(double YTD) {
     this.YTD = YTD;
@@ -571,9 +609,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ContractEndDate attribute of the Organization object
+   * Sets the ContractEndDate attribute of the Organization object
    *
-   *@param  tmp  The new ContractEndDate value
+   * @param tmp The new ContractEndDate value
    */
   public void setContractEndDate(String tmp) {
     this.contractEndDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -581,9 +619,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the Organization object
+   * Sets the alertDate attribute of the Organization object
    *
-   *@param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(String tmp) {
     this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -591,9 +629,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Employees attribute of the Organization object
+   * Sets the Employees attribute of the Organization object
    *
-   *@param  employees  The new Employees value
+   * @param employees The new Employees value
    */
   public void setEmployees(String employees) {
     try {
@@ -605,9 +643,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the DuplicateId attribute of the Organization object
+   * Sets the DuplicateId attribute of the Organization object
    *
-   *@param  duplicateId  The new DuplicateId value
+   * @param duplicateId The new DuplicateId value
    */
   public void setDuplicateId(int duplicateId) {
     this.duplicateId = duplicateId;
@@ -615,9 +653,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Organization object
+   * Sets the orgId attribute of the Organization object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -628,9 +666,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Organization object
+   * Sets the ModifiedBy attribute of the Organization object
    *
-   *@param  modifiedBy  The new ModifiedBy value
+   * @param modifiedBy The new ModifiedBy value
    */
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
@@ -638,9 +676,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Organization object
+   * Sets the ModifiedBy attribute of the Organization object
    *
-   *@param  modifiedBy  The new ModifiedBy value
+   * @param modifiedBy The new ModifiedBy value
    */
   public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = Integer.parseInt(modifiedBy);
@@ -648,9 +686,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the AccountNumber attribute of the Organization obA  9
+   * Sets the AccountNumber attribute of the Organization obA  9
    *
-   *@param  accountNumber  The new AccountNumber value
+   * @param accountNumber The new AccountNumber value
    */
   public void setAccountNumber(String accountNumber) {
     this.accountNumber = accountNumber;
@@ -658,9 +696,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Organization object
+   * Sets the OrgId attribute of the Organization object
    *
-   *@param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(String tmp) {
     this.setOrgId(Integer.parseInt(tmp));
@@ -668,9 +706,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Revenue attribute of the Organization object
+   * Sets the Revenue attribute of the Organization object
    *
-   *@param  revenue  The new Revenue value
+   * @param revenue The new Revenue value
    */
   public void setRevenue(String revenue) {
     this.revenue = Double.parseDouble(revenue);
@@ -678,9 +716,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the revenue attribute of the Organization object
+   * Sets the revenue attribute of the Organization object
    *
-   *@param  tmp  The new revenue value
+   * @param tmp The new revenue value
    */
   public void setRevenue(double tmp) {
     this.revenue = tmp;
@@ -688,9 +726,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Name attribute of the Organization object
+   * Sets the Name attribute of the Organization object
    *
-   *@param  tmp  The new Name value
+   * @param tmp The new Name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -698,9 +736,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Url attribute of the Organization object
+   * Sets the Url attribute of the Organization object
    *
-   *@param  tmp  The new Url value
+   * @param tmp The new Url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -708,9 +746,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Ticker attribute of the Organization object
+   * Sets the Ticker attribute of the Organization object
    *
-   *@param  ticker  The new Ticker value
+   * @param ticker The new Ticker value
    */
   public void setTicker(String ticker) {
     this.ticker = ticker;
@@ -718,9 +756,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the LastModified attribute of the Organization object
+   * Sets the LastModified attribute of the Organization object
    *
-   *@param  tmp  The new LastModified value
+   * @param tmp The new LastModified value
    */
   public void setLastModified(String tmp) {
     this.lastModified = tmp;
@@ -728,9 +766,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Notes attribute of the Organization object
+   * Sets the Notes attribute of the Organization object
    *
-   *@param  tmp  The new Notes value
+   * @param tmp The new Notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -738,9 +776,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Industry attribute of the Organization object
+   * Sets the Industry attribute of the Organization object
    *
-   *@param  tmp  The new Industry value
+   * @param tmp The new Industry value
    */
   public void setIndustry(String tmp) {
     this.industry = Integer.parseInt(tmp);
@@ -748,9 +786,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the industry attribute of the Organization object
+   * Sets the industry attribute of the Organization object
    *
-   *@param  tmp  The new industry value
+   * @param tmp The new industry value
    */
   public void setIndustry(int tmp) {
     industry = tmp;
@@ -758,9 +796,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Miner_only attribute of the Organization object
+   * Sets the Miner_only attribute of the Organization object
    *
-   *@param  tmp  The new Miner_only value
+   * @param tmp The new Miner_only value
    */
   public void setMiner_only(boolean tmp) {
     this.minerOnly = tmp;
@@ -768,19 +806,20 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Miner_only attribute of the Organization object
+   * Sets the Miner_only attribute of the Organization object
    *
-   *@param  tmp  The new Miner_only value
+   * @param tmp The new Miner_only value
    */
   public void setMiner_only(String tmp) {
-    this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the MinerOnly attribute of the Organization object
+   * Sets the MinerOnly attribute of the Organization object
    *
-   *@param  tmp  The new MinerOnly value
+   * @param tmp The new MinerOnly value
    */
   public void setMinerOnly(boolean tmp) {
     this.minerOnly = tmp;
@@ -788,19 +827,20 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the MinerOnly attribute of the Organization object
+   * Sets the MinerOnly attribute of the Organization object
    *
-   *@param  tmp  The new MinerOnly value
+   * @param tmp The new MinerOnly value
    */
   public void setMinerOnly(String tmp) {
-    this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the AddressList attribute of the Organization object
+   * Sets the AddressList attribute of the Organization object
    *
-   *@param  tmp  The new AddressList value
+   * @param tmp The new AddressList value
    */
   public void setAddressList(OrganizationAddressList tmp) {
     this.addressList = tmp;
@@ -808,9 +848,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the PhoneNumberList attribute of the Organization object
+   * Sets the PhoneNumberList attribute of the Organization object
    *
-   *@param  tmp  The new PhoneNumberList value
+   * @param tmp The new PhoneNumberList value
    */
   public void setPhoneNumberList(OrganizationPhoneNumberList tmp) {
     this.phoneNumberList = tmp;
@@ -818,9 +858,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the EmailAddressList attribute of the Organization object
+   * Sets the EmailAddressList attribute of the Organization object
    *
-   *@param  tmp  The new EmailAddressList value
+   * @param tmp The new EmailAddressList value
    */
   public void setEmailAddressList(OrganizationEmailAddressList tmp) {
     this.emailAddressList = tmp;
@@ -828,9 +868,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Enteredby attribute of the Organization object
+   * Sets the Enteredby attribute of the Organization object
    *
-   *@param  tmp  The new Enteredby value
+   * @param tmp The new Enteredby value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -838,9 +878,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Organization object
+   * Sets the EnteredBy attribute of the Organization object
    *
-   *@param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -848,9 +888,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Organization object
+   * Sets the Enabled attribute of the Organization object
    *
-   *@param  tmp  The new Enabled value
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -858,9 +898,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Organization object
+   * Sets the Enabled attribute of the Organization object
    *
-   *@param  tmp  The new Enabled value
+   * @param tmp The new Enabled value
    */
   public void setEnabled(String tmp) {
     enabled = DatabaseUtils.parseBoolean(tmp);
@@ -868,11 +908,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Since dynamic fields cannot be auto-populated, passing the request to this
-   *  method will populate the indicated fields.
+   * Since dynamic fields cannot be auto-populated, passing the request to this
+   * method will populate the indicated fields.
    *
-   *@param  context  The new requestItems value
-   *@since           1.15
+   * @param context The new requestItems value
+   * @since 1.15
    */
   public void setRequestItems(ActionContext context) {
     phoneNumberList = new OrganizationPhoneNumberList(context);
@@ -882,9 +922,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ContactDelete attribute of the Organization object
+   * Gets the ContactDelete attribute of the Organization object
    *
-   *@return    The ContactDelete value
+   * @return The ContactDelete value
    */
   public boolean getContactDelete() {
     return contactDelete;
@@ -892,9 +932,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the RevenueDelete attribute of the Organization object
+   * Gets the RevenueDelete attribute of the Organization object
    *
-   *@return    The RevenueDelete value
+   * @return The RevenueDelete value
    */
   public boolean getRevenueDelete() {
     return revenueDelete;
@@ -902,9 +942,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the hasOpportunities attribute of the Organization object
+   * Gets the hasOpportunities attribute of the Organization object
    *
-   *@return    The hasOpportunities value
+   * @return The hasOpportunities value
    */
   public boolean getHasOpportunities() {
     return hasOpportunities;
@@ -912,9 +952,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the hasOpportunities attribute of the Organization object
+   * Sets the hasOpportunities attribute of the Organization object
    *
-   *@param  hasOpportunities  The new hasOpportunities value
+   * @param hasOpportunities The new hasOpportunities value
    */
   public void setHasOpportunities(boolean hasOpportunities) {
     this.hasOpportunities = hasOpportunities;
@@ -922,9 +962,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the hasPortalUsers attribute of the Organization object
+   * Sets the hasPortalUsers attribute of the Organization object
    *
-   *@param  tmp  The new hasPortalUsers value
+   * @param tmp The new hasPortalUsers value
    */
   public void setHasPortalUsers(boolean tmp) {
     this.hasPortalUsers = tmp;
@@ -932,9 +972,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the hasPortalUsers attribute of the Organization object
+   * Gets the hasPortalUsers attribute of the Organization object
    *
-   *@return    The hasPortalUsers value
+   * @return The hasPortalUsers value
    */
   public boolean getHasPortalUsers() {
     return hasPortalUsers;
@@ -942,9 +982,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the DocumentDelete attribute of the Organization object
+   * Gets the DocumentDelete attribute of the Organization object
    *
-   *@return    The DocumentDelete value
+   * @return The DocumentDelete value
    */
   public boolean getDocumentDelete() {
     return documentDelete;
@@ -952,9 +992,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the YTD attribute of the Organization object
+   * Gets the YTD attribute of the Organization object
    *
-   *@return    The YTD value
+   * @return The YTD value
    */
   public double getYTD() {
     return YTD;
@@ -962,9 +1002,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the YTDValue attribute of the Organization object
+   * Gets the YTDValue attribute of the Organization object
    *
-   *@return    The YTDValue value
+   * @return The YTDValue value
    */
   public String getYTDValue() {
     double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
@@ -982,9 +1022,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the Organization object
+   * Gets the Enabled attribute of the Organization object
    *
-   *@return    The Enabled value
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -992,9 +1032,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the typeList attribute of the Organization object
+   * Gets the typeList attribute of the Organization object
    *
-   *@return    The typeList value
+   * @return The typeList value
    */
   public ArrayList getTypeList() {
     return typeList;
@@ -1002,9 +1042,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the types attribute of the Organization object
+   * Gets the types attribute of the Organization object
    *
-   *@return    The types value
+   * @return The types value
    */
   public LookupList getTypes() {
     return types;
@@ -1012,9 +1052,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the alertDate attribute of the Organization object
+   * Gets the alertDate attribute of the Organization object
    *
-   *@return    The alertDate value
+   * @return The alertDate value
    */
   public java.sql.Timestamp getAlertDate() {
     return alertDate;
@@ -1022,9 +1062,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the alertText attribute of the Organization object
+   * Gets the alertText attribute of the Organization object
    *
-   *@return    The alertText value
+   * @return The alertText value
    */
   public String getAlertText() {
     return alertText;
@@ -1032,9 +1072,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Entered attribute of the Organization object
+   * Gets the Entered attribute of the Organization object
    *
-   *@return    The Entered value
+   * @return The Entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1042,9 +1082,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Modified attribute of the Organization object
+   * Gets the Modified attribute of the Organization object
    *
-   *@return    The Modified value
+   * @return The Modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1052,14 +1092,15 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedString attribute of the Organization object
+   * Gets the ModifiedString attribute of the Organization object
    *
-   *@return    The ModifiedString value
+   * @return The ModifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -1067,14 +1108,15 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the EnteredString attribute of the Organization object
+   * Gets the EnteredString attribute of the Organization object
    *
-   *@return    The EnteredString value
+   * @return The EnteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -1082,9 +1124,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the nameSalutation attribute of the Organization object
+   * Gets the nameSalutation attribute of the Organization object
    *
-   *@return    The nameSalutation value
+   * @return The nameSalutation value
    */
   public String getNameSalutation() {
     return nameSalutation;
@@ -1092,9 +1134,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the Organization object
+   * Gets the nameFirst attribute of the Organization object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -1102,9 +1144,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the nameMiddle attribute of the Organization object
+   * Gets the nameMiddle attribute of the Organization object
    *
-   *@return    The nameMiddle value
+   * @return The nameMiddle value
    */
   public String getNameMiddle() {
     return nameMiddle;
@@ -1112,9 +1154,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the Organization object
+   * Gets the nameLast attribute of the Organization object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -1122,9 +1164,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the nameSuffix attribute of the Organization object
+   * Gets the nameSuffix attribute of the Organization object
    *
-   *@return    The nameSuffix value
+   * @return The nameSuffix value
    */
   public String getNameSuffix() {
     return nameSuffix;
@@ -1132,9 +1174,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the nameSalutation attribute of the Organization object
+   * Sets the nameSalutation attribute of the Organization object
    *
-   *@param  tmp  The new nameSalutation value
+   * @param tmp The new nameSalutation value
    */
   public void setNameSalutation(String tmp) {
     this.nameSalutation = tmp;
@@ -1142,9 +1184,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the Organization object
+   * Sets the nameFirst attribute of the Organization object
    *
-   *@param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -1152,9 +1194,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the nameMiddle attribute of the Organization object
+   * Sets the nameMiddle attribute of the Organization object
    *
-   *@param  tmp  The new nameMiddle value
+   * @param tmp The new nameMiddle value
    */
   public void setNameMiddle(String tmp) {
     this.nameMiddle = tmp;
@@ -1162,9 +1204,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the Organization object
+   * Sets the nameLast attribute of the Organization object
    *
-   *@param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -1172,9 +1214,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Sets the nameSuffix attribute of the Organization object
+   * Sets the nameSuffix attribute of the Organization object
    *
-   *@param  tmp  The new nameSuffix value
+   * @param tmp The new nameSuffix value
    */
   public void setNameSuffix(String tmp) {
     this.nameSuffix = tmp;
@@ -1182,9 +1224,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ContractEndDate attribute of the Organization object
+   * Gets the ContractEndDate attribute of the Organization object
    *
-   *@return    The ContractEndDate value
+   * @return The ContractEndDate value
    */
   public java.sql.Timestamp getContractEndDate() {
     return contractEndDate;
@@ -1192,9 +1234,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ContractEndDateString attribute of the Organization object
+   * Gets the ContractEndDateString attribute of the Organization object
    *
-   *@return    The ContractEndDateString value
+   * @return The ContractEndDateString value
    */
   public String getContractEndDateString() {
     String tmp = "";
@@ -1206,10 +1248,20 @@ public class Organization extends GenericBean {
   }
 
 
+  public String getContractEndDateBufferedString() {
+    String tmp = "None";
+    try {
+      return DateFormat.getDateInstance(3).format(contractEndDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
   /**
-   *  Gets the asValuesArray attribute of the Organization object
+   * Gets the asValuesArray attribute of the Organization object
    *
-   *@return    The asValuesArray value
+   * @return The asValuesArray value
    */
   public String[] getAsValuesArray() {
     String[] temp = new String[5];
@@ -1223,11 +1275,10 @@ public class Organization extends GenericBean {
   }
 
 
-
   /**
-   *  Gets the alertDateString attribute of the Organization object
+   * Gets the alertDateString attribute of the Organization object
    *
-   *@return    The alertDateString value
+   * @return The alertDateString value
    */
   public String getAlertDateString() {
     String tmp = "";
@@ -1241,9 +1292,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the alertDetails attribute of the Organization object
+   * Gets the alertDetails attribute of the Organization object
    *
-   *@return    The alertDetails value
+   * @return The alertDetails value
    */
   public String getAlertDetails() {
     StringBuffer out = new StringBuffer();
@@ -1258,9 +1309,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the DuplicateId attribute of the Organization object
+   * Gets the DuplicateId attribute of the Organization object
    *
-   *@return    The DuplicateId value
+   * @return The DuplicateId value
    */
   public int getDuplicateId() {
     return duplicateId;
@@ -1268,9 +1319,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the OwnerName attribute of the Organization object
+   * Gets the OwnerName attribute of the Organization object
    *
-   *@return    The OwnerName value
+   * @return The OwnerName value
    */
   public String getOwnerName() {
     return ownerName;
@@ -1278,9 +1329,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the EnteredByName attribute of the Organization object
+   * Gets the EnteredByName attribute of the Organization object
    *
-   *@return    The EnteredByName value
+   * @return The EnteredByName value
    */
   public String getEnteredByName() {
     return enteredByName;
@@ -1288,9 +1339,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedByName attribute of the Organization object
+   * Gets the ModifiedByName attribute of the Organization object
    *
-   *@return    The ModifiedByName value
+   * @return The ModifiedByName value
    */
   public String getModifiedByName() {
     return modifiedByName;
@@ -1298,9 +1349,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Owner attribute of the Organization object
+   * Gets the Owner attribute of the Organization object
    *
-   *@return    The Owner value
+   * @return The Owner value
    */
   public int getOwner() {
     return owner;
@@ -1308,9 +1359,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the OwnerId attribute of the Organization object
+   * Gets the OwnerId attribute of the Organization object
    *
-   *@return    The OwnerId value
+   * @return The OwnerId value
    */
   public int getOwnerId() {
     return owner;
@@ -1318,9 +1369,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the AccountNumber attribute of the Organization object
+   * Gets the AccountNumber attribute of the Organization object
    *
-   *@return    The AccountNumber value
+   * @return The AccountNumber value
    */
   public String getAccountNumber() {
     return accountNumber;
@@ -1328,9 +1379,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Ticker attribute of the Organization object
+   * Gets the Ticker attribute of the Organization object
    *
-   *@return    The Ticker value
+   * @return The Ticker value
    */
   public String getTicker() {
     return ticker;
@@ -1338,9 +1389,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Revenue attribute of the Organization object
+   * Gets the Revenue attribute of the Organization object
    *
-   *@return    The Revenue value
+   * @return The Revenue value
    */
   public double getRevenue() {
     return revenue;
@@ -1348,9 +1399,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Employees attribute of the Organization object
+   * Gets the Employees attribute of the Organization object
    *
-   *@return    The Employees value
+   * @return The Employees value
    */
   public int getEmployees() {
     return employees;
@@ -1358,9 +1409,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ErrorMessage attribute of the Organization object
+   * Gets the ErrorMessage attribute of the Organization object
    *
-   *@return    The ErrorMessage value
+   * @return The ErrorMessage value
    */
   public String getErrorMessage() {
     return errorMessage;
@@ -1368,9 +1419,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the Organization object
+   * Gets the orgId attribute of the Organization object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -1378,9 +1429,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Organization object
+   * Gets the id attribute of the Organization object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return orgId;
@@ -1388,9 +1439,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Name attribute of the Organization object
+   * Gets the Name attribute of the Organization object
    *
-   *@return    The Name value
+   * @return The Name value
    */
   public String getName() {
     if (name != null && name.trim().length() > 0) {
@@ -1401,9 +1452,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the accountNameOnly attribute of the Organization object
+   * Gets the accountNameOnly attribute of the Organization object
    *
-   *@return    The accountNameOnly value
+   * @return The accountNameOnly value
    */
   public String getAccountNameOnly() {
     return name;
@@ -1411,9 +1462,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Url attribute of the Organization object
+   * Gets the Url attribute of the Organization object
    *
-   *@return    The Url value
+   * @return The Url value
    */
   public String getUrl() {
     return url;
@@ -1421,10 +1472,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the urlString attribute of the Organization object when a url or link
-   *  needs to be displayed
+   * Gets the urlString attribute of the Organization object when a url or link
+   * needs to be displayed
    *
-   *@return    The urlString value
+   * @return The urlString value
    */
   public String getUrlString() {
     if (url != null) {
@@ -1437,9 +1488,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the LastModified attribute of the Organization object
+   * Gets the LastModified attribute of the Organization object
    *
-   *@return    The LastModified value
+   * @return The LastModified value
    */
   public String getLastModified() {
     return lastModified;
@@ -1447,9 +1498,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Notes attribute of the Organization object
+   * Gets the Notes attribute of the Organization object
    *
-   *@return    The Notes value
+   * @return The Notes value
    */
   public String getNotes() {
     return notes;
@@ -1457,9 +1508,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Industry attribute of the Organization object
+   * Gets the Industry attribute of the Organization object
    *
-   *@return    The Industry value
+   * @return The Industry value
    */
   public int getIndustry() {
     return industry;
@@ -1467,9 +1518,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the IndustryName attribute of the Organization object
+   * Gets the IndustryName attribute of the Organization object
    *
-   *@return    The IndustryName value
+   * @return The IndustryName value
    */
   public String getIndustryName() {
     return industryName;
@@ -1477,10 +1528,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the PhoneNumber attribute of the Organization object
+   * Gets the PhoneNumber attribute of the Organization object
    *
-   *@param  thisType  Description of Parameter
-   *@return           The PhoneNumber value
+   * @param thisType Description of Parameter
+   * @return The PhoneNumber value
    */
   public String getPhoneNumber(String thisType) {
     return phoneNumberList.getPhoneNumber(thisType);
@@ -1488,10 +1539,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddress attribute of the Organization object
+   * Gets the EmailAddress attribute of the Organization object
    *
-   *@param  thisType  Description of Parameter
-   *@return           The EmailAddress value
+   * @param thisType Description of Parameter
+   * @return The EmailAddress value
    */
   public String getEmailAddress(String thisType) {
     return emailAddressList.getEmailAddress(thisType);
@@ -1499,10 +1550,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Address attribute of the Organization object
+   * Gets the Address attribute of the Organization object
    *
-   *@param  thisType  Description of Parameter
-   *@return           The Address value
+   * @param thisType Description of Parameter
+   * @return The Address value
    */
   public Address getAddress(String thisType) {
     return addressList.getAddress(thisType);
@@ -1510,9 +1561,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the primaryEmailAddress attribute of the Organization object
+   * Gets the primaryEmailAddress attribute of the Organization object
    *
-   *@return    The primaryEmailAddress value
+   * @return The primaryEmailAddress value
    */
   public String getPrimaryEmailAddress() {
     return emailAddressList.getPrimaryEmailAddress();
@@ -1520,9 +1571,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the primaryPhoneNumber attribute of the Organization object
+   * Gets the primaryPhoneNumber attribute of the Organization object
    *
-   *@return    The primaryPhoneNumber value
+   * @return The primaryPhoneNumber value
    */
   public String getPrimaryPhoneNumber() {
     return phoneNumberList.getPrimaryPhoneNumber();
@@ -1530,20 +1581,19 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the primaryAddress attribute of the Organization object
+   * Gets the primaryAddress attribute of the Organization object
    *
-   *@return    The primaryAddress value
+   * @return The primaryAddress value
    */
   public Address getPrimaryAddress() {
     return addressList.getPrimaryAddress();
   }
 
 
-
   /**
-   *  Gets the Enteredby attribute of the Organization object
+   * Gets the Enteredby attribute of the Organization object
    *
-   *@return    The Enteredby value
+   * @return The Enteredby value
    */
   public int getEnteredby() {
     return enteredBy;
@@ -1551,9 +1601,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Miner_only attribute of the Organization object
+   * Gets the Miner_only attribute of the Organization object
    *
-   *@return    The Miner_only value
+   * @return The Miner_only value
    */
   public boolean getMiner_only() {
     return minerOnly;
@@ -1561,9 +1611,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the MinerOnly attribute of the Organization object
+   * Gets the MinerOnly attribute of the Organization object
    *
-   *@return    The MinerOnly value
+   * @return The MinerOnly value
    */
   public boolean getMinerOnly() {
     return minerOnly;
@@ -1571,9 +1621,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Organization object
+   * Gets the EnteredBy attribute of the Organization object
    *
-   *@return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1581,9 +1631,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Organization object
+   * Gets the ModifiedBy attribute of the Organization object
    *
-   *@return    The ModifiedBy value
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1591,9 +1641,42 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the AddressList attribute of the Organization object
+   * Sets the forceDelete attribute of the Organization object
    *
-   *@return    The AddressList value
+   * @param tmp The new forceDelete value
+   */
+  public void setForceDelete(boolean tmp) {
+    this.forceDelete = tmp;
+  }
+
+
+  /**
+   * Sets the forceDelete attribute of the Organization object
+   *
+   * @param tmp The new forceDelete value
+   */
+  public void setForceDelete(String tmp) {
+    this.forceDelete = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the forceDelete attribute of the Organization object
+   *
+   * @return The forceDelete value
+   */
+  public boolean getForceDelete() {
+    return forceDelete;
+  }
+
+  public boolean isTrashed() {
+    return (trashedDate != null);
+  }
+
+  /**
+   * Gets the AddressList attribute of the Organization object
+   *
+   * @return The AddressList value
    */
   public OrganizationAddressList getAddressList() {
     return addressList;
@@ -1601,9 +1684,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the PhoneNumberList attribute of the Organization object
+   * Gets the PhoneNumberList attribute of the Organization object
    *
-   *@return    The PhoneNumberList value
+   * @return The PhoneNumberList value
    */
   public OrganizationPhoneNumberList getPhoneNumberList() {
     return phoneNumberList;
@@ -1611,9 +1694,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddressList attribute of the Organization object
+   * Gets the EmailAddressList attribute of the Organization object
    *
-   *@return    The EmailAddressList value
+   * @return The EmailAddressList value
    */
   public OrganizationEmailAddressList getEmailAddressList() {
     return emailAddressList;
@@ -1621,30 +1704,34 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
     try {
       Dependency contactDependency = new Dependency();
       contactDependency.setName("contacts");
-      contactDependency.setCount(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      contactDependency.setCount(
+          ContactList.retrieveRecordCount(
+              db, Constants.ACCOUNTS, this.getId(), true));
       contactDependency.setCanDelete(true);
 
       if (contactDependency.getCount() > 0) {
         ContactList contactList = new ContactList();
         contactList.setOrgId(this.orgId);
+        contactList.setIncludeEnabledUsersOnly(true);
         contactList.buildList(db);
         Iterator itr = contactList.iterator();
 
         // For history, keep this contact if they previously received a comm. message
-        while (itr.hasNext()){
+        while (itr.hasNext()) {
           Contact contact = (Contact) itr.next();
-          if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, contact.getId()) > 0) {
+          if (RecipientList.retrieveRecordCount(
+              db, Constants.CONTACTS, contact.getId()) > 0) {
             contactDependency.setCanDelete(false);
             break;
           }
@@ -1679,11 +1766,14 @@ public class Organization extends GenericBean {
 
       Dependency revenueDependency = new Dependency();
       revenueDependency.setName("revenue");
-      revenueDependency.setCount(RevenueList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      revenueDependency.setCount(
+          RevenueList.retrieveRecordCount(
+              db, Constants.ACCOUNTS, this.getId()));
       revenueDependency.setCanDelete(true);
       dependencyList.add(revenueDependency);
 
-      int oppCount = OpportunityList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId());
+      int oppCount = OpportunityList.retrieveRecordCount(
+          db, Constants.ACCOUNTS, this.getId());
 
       if (oppCount > 0) {
         this.setHasOpportunities(true);
@@ -1697,43 +1787,46 @@ public class Organization extends GenericBean {
 
       Dependency scDependency = new Dependency();
       scDependency.setName("contracts");
-      scDependency.setCount(ServiceContractList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      scDependency.setCount(
+          ServiceContractList.retrieveRecordCount(
+              db, Constants.ACCOUNTS, this.getId()));
       scDependency.setCanDelete(true);
       dependencyList.add(scDependency);
 
       Dependency assetDependency = new Dependency();
       assetDependency.setName("assets");
-      assetDependency.setCount(AssetList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      assetDependency.setCount(
+          AssetList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       assetDependency.setCanDelete(true);
       dependencyList.add(assetDependency);
 
       Dependency ticDependency = new Dependency();
       ticDependency.setName("tickets");
-      ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      ticDependency.setCount(
+          TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       ticDependency.setCanDelete(true);
       dependencyList.add(ticDependency);
 
       Dependency docDependency = new Dependency();
       docDependency.setName("documents");
-      docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      docDependency.setCount(
+          FileItemList.retrieveRecordCount(
+              db, Constants.ACCOUNTS, this.getId()));
       docDependency.setCanDelete(true);
       dependencyList.add(docDependency);
 
       Dependency quoteDependency = new Dependency();
       quoteDependency.setName("quotes");
-      quoteDependency.setCount(QuoteList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      quoteDependency.setCount(
+          QuoteList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       quoteDependency.setCanDelete(true);
       dependencyList.add(quoteDependency);
 
-      Dependency projectDependency = new Dependency();
-      projectDependency.setName("projects");
-      projectDependency.setCount(ProjectUtils.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
-      projectDependency.setCanDelete(true);
-      dependencyList.add(projectDependency);
-
       Dependency folderDependency = new Dependency();
       folderDependency.setName("folders");
-      folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      folderDependency.setCount(
+          CustomFieldRecordList.retrieveRecordCount(
+              db, Constants.ACCOUNTS, this.getId()));
       folderDependency.setCanDelete(true);
       dependencyList.add(folderDependency);
     } catch (SQLException e) {
@@ -1744,18 +1837,18 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  year              Description of Parameter
-   *@param  type              Description of Parameter
-   *@param  ownerId           Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param year    Description of Parameter
+   * @param type    Description of Parameter
+   * @param ownerId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildRevenueYTD(Connection db, int year, int type, int ownerId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT sum(rv.amount) as s " +
+        "SELECT SUM(rv.amount) AS s " +
         "FROM revenue rv " +
         "WHERE rv.org_id = ? AND rv.year = ? AND rv.owner = ? ");
     if (type > 0) {
@@ -1780,26 +1873,28 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  sets the items in the type list to the the lookup list 'types'
-   *  Organization object
+   * sets the items in the type list to the the lookup list 'types'
+   * Organization object
    *
-   *@param  db                The new typeListToTypes value
-   *@exception  SQLException  Description of the Exception
+   * @param db The new typeListToTypes value
+   * @throws SQLException Description of the Exception
    */
   public void setTypeListToTypes(Connection db) throws SQLException {
     Iterator itr = typeList.iterator();
     while (itr.hasNext()) {
       String tmpId = (String) itr.next();
-      types.add(new LookupElement(db, Integer.parseInt(tmpId), "lookup_account_types"));
+      types.add(
+          new LookupElement(
+              db, Integer.parseInt(tmpId), "lookup_account_types"));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildTypes(Connection db) throws SQLException {
     ResultSet rs = null;
@@ -1807,27 +1902,28 @@ public class Organization extends GenericBean {
     sql.append(
         "SELECT atl.type_id " +
         "FROM account_type_levels atl " +
-        "WHERE atl.org_id = ? ORDER BY atl.level ");
+        "WHERE atl.org_id = ? ORDER BY atl.\"level\" ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, this.getId());
     rs = pst.executeQuery();
     while (rs.next()) {
-      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
+      types.add(
+          new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
     }
     rs.close();
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  type_id           Description of Parameter
-   *@param  level             Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param type_id Description of Parameter
+   * @param level   Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insertType(Connection db, int type_id, int level) throws SQLException {
     if (orgId == -1) {
@@ -1835,7 +1931,7 @@ public class Organization extends GenericBean {
     }
     String sql =
         "INSERT INTO account_type_levels " +
-        "(org_id, type_id, level) " +
+        "(org_id, type_id, \"level\") " +
         "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1849,18 +1945,19 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean resetType(Connection db) throws SQLException {
     if (this.getOrgId() == -1) {
       throw new SQLException("Organization ID not specified");
     }
     int i = 0;
-    PreparedStatement pst = db.prepareStatement("DELETE FROM account_type_levels WHERE org_id = ? ");
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM account_type_levels WHERE org_id = ? ");
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
@@ -1869,11 +1966,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean disable(Connection db) throws SQLException {
     if (this.getOrgId() == -1) {
@@ -1909,11 +2006,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean enable(Connection db) throws SQLException {
     if (this.getOrgId() == -1) {
@@ -1948,12 +2045,12 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  checkName         Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db        Description of Parameter
+   * @param checkName Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean checkIfExists(Connection db, String checkName) throws SQLException {
     PreparedStatement pst = null;
@@ -1961,7 +2058,7 @@ public class Organization extends GenericBean {
     String sqlSelect =
         "SELECT name, org_id " +
         "FROM organization " +
-        "WHERE lower(organization.name) = ? ";
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(organization.name) = ? ";
     int i = 0;
     pst = db.prepareStatement(sqlSelect);
     pst.setString(++i, checkName.toLowerCase());
@@ -1980,13 +2077,13 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  lookupName        Description of the Parameter
-   *@param  importId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param lookupName Description of the Parameter
+   * @param importId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int lookupAccount(Connection db, String lookupName, int importId) throws SQLException {
     PreparedStatement pst = null;
@@ -1995,7 +2092,7 @@ public class Organization extends GenericBean {
     String sqlSelect =
         "SELECT org_id " +
         "FROM organization o " +
-        "WHERE lower(o.name) = ? AND (o.status_id IS NULL OR o.status_id = ? OR (o.status_id = ? AND o.import_id = ?) ) ";
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(o.name) = ? AND (o.status_id IS NULL OR o.status_id = ? OR (o.status_id = ? AND o.import_id = ?) ) ";
     int i = 0;
     pst = db.prepareStatement(sqlSelect);
     pst.setString(++i, lookupName.toLowerCase());
@@ -2013,11 +2110,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException     Description of the Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
 
@@ -2028,8 +2125,15 @@ public class Organization extends GenericBean {
       if ((doCommit = db.getAutoCommit()) == true) {
         db.setAutoCommit(false);
       }
-      sql.append("INSERT INTO organization (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
-      sql.append("notes, employees, revenue, ticker_symbol, account_number, nameFirst, nameLast, nameMiddle, ");
+      orgId = DatabaseUtils.getNextSeq(db, "organization_org_id_seq");
+      sql.append(
+          "INSERT INTO organization (name, industry_temp_code, url, " +
+          "miner_only, owner, duplicate_id, notes, employees, revenue, " +
+          "ticker_symbol, account_number, nameFirst, nameLast, nameMiddle, " +
+          "trashed_date, ");
+      if (orgId > -1) {
+        sql.append("org_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2043,7 +2147,10 @@ public class Organization extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (orgId > -1) {
+        sql.append("?,");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -2073,7 +2180,10 @@ public class Organization extends GenericBean {
       pst.setString(++i, this.getNameFirst());
       pst.setString(++i, this.getNameLast());
       pst.setString(++i, this.getNameMiddle());
-
+      DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
+      if (orgId > -1) {
+        pst.setInt(++i, orgId);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2092,13 +2202,14 @@ public class Organization extends GenericBean {
       pst.execute();
       pst.close();
 
-      orgId = DatabaseUtils.getCurrVal(db, "organization_org_id_seq");
+      orgId = DatabaseUtils.getCurrVal(db, "organization_org_id_seq", orgId);
 
       //Insert primary contact if account is an individual
       if (nameLast != null && !"".equals(nameLast)) {
         primaryContact.setOrgId(orgId);
         primaryContact.setOrgName(this.getName());
-        boolean contactInserted = ObjectValidator.validate(null, db, primaryContact);
+        boolean contactInserted = ObjectValidator.validate(
+            null, db, primaryContact);
         if (contactInserted) {
           contactInserted = primaryContact.insert(db);
         }
@@ -2112,7 +2223,8 @@ public class Organization extends GenericBean {
       while (iphone.hasNext()) {
         OrganizationPhoneNumber thisPhoneNumber = (OrganizationPhoneNumber) iphone.next();
         //thisPhoneNumber.insert(db, this.getOrgId(), this.getEnteredBy());
-        thisPhoneNumber.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
+        thisPhoneNumber.process(
+            db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the addresses if there are any
@@ -2120,7 +2232,8 @@ public class Organization extends GenericBean {
       while (iaddress.hasNext()) {
         OrganizationAddress thisAddress = (OrganizationAddress) iaddress.next();
         //thisAddress.insert(db, this.getOrgId(), this.getEnteredBy());
-        thisAddress.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
+        thisAddress.process(
+            db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the email addresses if there are any
@@ -2128,7 +2241,8 @@ public class Organization extends GenericBean {
       while (iemail.hasNext()) {
         OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress) iemail.next();
         //thisEmailAddress.insert(db, this.getOrgId(), this.getEnteredBy());
-        thisEmailAddress.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
+        thisEmailAddress.process(
+            db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
       this.update(db, true);
       if (doCommit) {
@@ -2149,11 +2263,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int i = -1;
@@ -2167,21 +2281,24 @@ public class Organization extends GenericBean {
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
         OrganizationPhoneNumber thisPhoneNumber = (OrganizationPhoneNumber) iphone.next();
-        thisPhoneNumber.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
+        thisPhoneNumber.process(
+            db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the addresses if there are any
       Iterator iaddress = addressList.iterator();
       while (iaddress.hasNext()) {
         OrganizationAddress thisAddress = (OrganizationAddress) iaddress.next();
-        thisAddress.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
+        thisAddress.process(
+            db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the email addresses if there are any
       Iterator iemail = emailAddressList.iterator();
       while (iemail.hasNext()) {
         OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress) iemail.next();
-        thisEmailAddress.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
+        thisEmailAddress.process(
+            db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
       if (doCommit) {
         db.commit();
@@ -2201,12 +2318,12 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
@@ -2222,9 +2339,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  This function populates the primaryContact with information from the
-   *  account The Contact addresses, etc. must be set using the context in the
-   *  actual Account module.
+   * This function populates the primaryContact with information from the
+   * account The Contact addresses, etc. must be set using the context in the
+   * actual Account module.
    */
 
   public void populatePrimaryContact() {
@@ -2243,7 +2360,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void updatePrimaryContact() {
     primaryContact.setNameFirst(this.getNameFirst());
@@ -2256,10 +2373,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void populatePrimaryContact(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -2280,12 +2397,12 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  override          Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param override Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -2301,14 +2418,18 @@ public class Organization extends GenericBean {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
 
-    sql.append("modifiedby = ?, " +
+    sql.append(
+        "modifiedby = ?, " +
         "employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, ");
 
     if (owner > -1) {
       sql.append("owner = ?, ");
     }
 
-    sql.append("duplicate_id = ?, contract_end = ?, contract_end_timezone = ?, alertdate = ?, alertdate_timezone=?, alert = ?, nameFirst = ?, nameMiddle = ?, nameLast = ? " +
+    sql.append(
+        "duplicate_id = ?, contract_end = ?, contract_end_timezone = ?, " +
+        "alertdate = ?, alertdate_timezone=?, alert = ?, nameFirst = ?, " +
+        "nameMiddle = ?, nameLast = ?, trashed_date = ? " +
         "WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -2337,6 +2458,7 @@ public class Organization extends GenericBean {
     pst.setString(++i, nameFirst);
     pst.setString(++i, nameMiddle);
     pst.setString(++i, nameLast);
+    DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
     pst.setInt(++i, orgId);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -2377,11 +2499,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Renames the organization running this database
+   * Renames the organization running this database
    *
-   *@param  db                Description of the Parameter
-   *@param  newName           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param newName Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void renameMyCompany(Connection db, String newName) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -2395,19 +2517,22 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  baseFilePath      Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db           Description of Parameter
+   * @param baseFilePath Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
-  public boolean delete(Connection db, String baseFilePath) throws SQLException {
+  public boolean delete(Connection db, ActionContext context, String baseFilePath) throws SQLException {
     if (this.getOrgId() == -1) {
       throw new SQLException("Organization ID not specified.");
     }
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
 
       //build the relationship list(both from and to mappings)
       RelationshipList thisList = new RelationshipList();
@@ -2424,18 +2549,39 @@ public class Organization extends GenericBean {
       ticketList.delete(db, baseFilePath);
       ticketList = null;
 
+      ticketList = new TicketList();
+      ticketList.setOrgId(this.getOrgId());
+      ticketList.setIncludeOnlyTrashed(true);
+      ticketList.buildList(db);
+      ticketList.delete(db, baseFilePath);
+      ticketList = null;
+
       // Delete after tickets
       AssetList assetList = new AssetList();
       assetList.setOrgId(this.getOrgId());
       assetList.buildList(db);
-      assetList.delete(db);
+      assetList.delete(db, baseFilePath);
+      assetList = null;
+
+      assetList = new AssetList();
+      assetList.setOrgId(this.getOrgId());
+      assetList.setIncludeOnlyTrashed(true);
+      assetList.buildList(db);
+      assetList.delete(db, baseFilePath);
       assetList = null;
 
       // Delete after tickets and after assets
       ServiceContractList scList = new ServiceContractList();
       scList.setOrgId(this.getOrgId());
       scList.buildList(db);
-      scList.delete(db);
+      scList.delete(db, baseFilePath);
+      scList = null;
+
+      scList = new ServiceContractList();
+      scList.setOrgId(this.getOrgId());
+      scList.setIncludeOnlyTrashed(true);
+      scList.buildList(db);
+      scList.delete(db, baseFilePath);
       scList = null;
 
       if (documentDelete) {
@@ -2443,7 +2589,7 @@ public class Organization extends GenericBean {
         fileList.setLinkModuleId(Constants.ACCOUNTS);
         fileList.setLinkItemId(this.getOrgId());
         fileList.buildList(db);
-        fileList.delete(db, baseFilePath);
+        fileList.delete(db, getFileLibraryPath(baseFilePath, "accounts"));
         fileList = null;
       }
 
@@ -2471,22 +2617,59 @@ public class Organization extends GenericBean {
       //Delete all the associated quotes
       QuoteList quotes = new QuoteList();
       quotes.setOrgId(this.getOrgId());
+      quotes.setDeleteAllQuotes(true);
       quotes.buildList(db);
       quotes.delete(db);
       quotes = null;
 
       //Delete all the project associations
-      ProjectUtils.removeAccounts(db,this.getOrgId());
+      ProjectUtils.removeAccounts(db, this.getOrgId());
+
+      if (forceDelete) {
+        // Delete opportunities associated with the organization
+        OpportunityHeaderList opportunityList = new OpportunityHeaderList();
+        opportunityList.setOrgId(this.getOrgId());
+        opportunityList.buildList(db);
+        opportunityList.delete(db, context, baseFilePath);
+
+        opportunityList = new OpportunityHeaderList();
+        opportunityList.setOrgId(this.getOrgId());
+        opportunityList.setIncludeOnlyTrashed(true);
+        opportunityList.buildList(db);
+        opportunityList.delete(db, context, baseFilePath);
+      }
 
       //Save for next to last since other records related to contacts
       if (contactDelete) {
+        //delete enabled records
         ContactList contactList = new ContactList();
         contactList.setOrgId(this.getOrgId());
         contactList.buildList(db);
-        contactList.delete(db);
+        contactList.delete(db, baseFilePath, forceDelete);
+        contactList = null;
+
+        //delete archived/disabled records
+        contactList = new ContactList();
+        contactList.setOrgId(this.getOrgId());
+        contactList.setIncludeEnabled(Constants.FALSE);
+        contactList.buildList(db);
+        contactList.delete(db, baseFilePath, forceDelete);
+        contactList = null;
+
+        //delete records marked for trashing
+        contactList = new ContactList();
+        contactList.setOrgId(this.getOrgId());
+        contactList.setIncludeOnlyTrashed(true);
+        contactList.buildList(db);
+        contactList.delete(db, baseFilePath, forceDelete);
         contactList = null;
       }
-      
+
+      OrganizationHistoryList history = new OrganizationHistoryList();
+      history.setOrgId(this.getOrgId());
+      history.buildList(db);
+      history.delete(db);
+
       this.resetType(db);
 
       Statement st = db.createStatement();
@@ -2499,23 +2682,29 @@ public class Organization extends GenericBean {
       st.executeUpdate(
           "DELETE FROM organization WHERE org_id = " + this.getOrgId());
       st.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void deleteMinerOnly(Connection db) throws SQLException {
     if (this.getOrgId() == -1) {
@@ -2524,8 +2713,7 @@ public class Organization extends GenericBean {
     try {
       db.setAutoCommit(false);
       Statement st = db.createStatement();
-      st.executeUpdate(
-          "DELETE FROM news WHERE org_id = " + this.getOrgId());
+      st.executeUpdate("DELETE FROM news WHERE org_id = " + this.getOrgId());
       st.executeUpdate(
           "DELETE FROM organization " +
           "WHERE org_id = " + this.getOrgId() + " " +
@@ -2541,13 +2729,13 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Approves all records for a specific import
+   * Approves all records for a specific import
    *
-   *@param  db                Description of the Parameter
-   *@param  importId          Description of the Parameter
-   *@param  status            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param importId Description of the Parameter
+   * @param status   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int updateImportStatus(Connection db, int importId, int status) throws SQLException {
     int count = 0;
@@ -2585,12 +2773,158 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisImportId      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
+    int count = 0;
+
+    boolean commit = true;
+
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "UPDATE organization " +
+          "SET trashed_date = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+          "modifiedby = ? " +
+          "WHERE org_id = ? ");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (toTrash) {
+        DatabaseUtils.setTimestamp(
+            pst, ++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+      }
+      pst.setInt(++i, tmpUserId);
+      pst.setInt(++i, this.getId());
+      count = pst.executeUpdate();
+      pst.close();
+
+      OrganizationHistoryList historyList = new OrganizationHistoryList();
+      historyList.setOrgId(this.getOrgId());
+      historyList.setDefaultFilters(true);
+      historyList.setShowDisabledWithEnabled(true);
+      historyList.buildList(db);
+      historyList.disableNotesInHistory(db, (!toTrash));
+
+      //build the relationship list(both from and to mappings)
+      RelationshipList thisList = new RelationshipList();
+      thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+      thisList.setObjectIdMapsFrom(this.getOrgId());
+      thisList.setBuildDualMappings(true);
+      thisList.buildList(db);
+      thisList.updateStatus(db, toTrash, tmpUserId);
+
+      // mark opportunities of trashed and active contacts to trashed status
+      ContactList contactList = new ContactList();
+      contactList.setShowTrashedAndNormal(true);
+      contactList.setOrgId(this.getId());
+      contactList.buildList(db);
+      Iterator iterator = (Iterator) contactList.iterator();
+      while (iterator.hasNext()) {
+        Contact contact = (Contact) iterator.next();
+        OpportunityHeaderList oppList = new OpportunityHeaderList();
+        if (!toTrash) {
+          oppList.setIncludeOnlyTrashed(true);
+        }
+        oppList.setContactId(contact.getId());
+        oppList.buildList(db);
+        oppList.updateStatus(db, context, toTrash, tmpUserId);
+      }
+
+      contactList = new ContactList();
+      contactList.setOrgId(this.getId());
+      if (!toTrash) {
+        contactList.setIncludeOnlyTrashed(true);
+      }
+      contactList.buildList(db);
+      contactList.updateStatus(db, context, toTrash, tmpUserId);
+
+      CallList callList = new CallList();
+      callList.setOrgId(this.getOrgId());
+      if (!toTrash) {
+        callList.setIncludeOnlyTrashed(true);
+      }
+      callList.buildList(db);
+      callList.updateStatus(db, toTrash, tmpUserId);
+
+      QuoteList quoteList = new QuoteList();
+      quoteList.setOrgId(this.getId());
+      if (!toTrash) {
+        quoteList.setIncludeOnlyTrashed(true);
+      }
+      quoteList.buildList(db);
+      quoteList.updateStatus(db, toTrash, tmpUserId);
+
+      OpportunityList opportunityList = new OpportunityList();
+      opportunityList.setOrgId(this.getId());
+      if (!toTrash) {
+        opportunityList.setIncludeOnlyTrashed(true);
+      }
+      opportunityList.buildList(db);
+      opportunityList.updateStatus(db, context, toTrash, tmpUserId);
+
+      AssetList assetList = new AssetList();
+      assetList.setOrgId(this.getId());
+      if (!toTrash) {
+        assetList.setIncludeOnlyTrashed(true);
+      }
+      assetList.buildList(db);
+      assetList.updateStatus(db, toTrash, tmpUserId);
+
+      ServiceContractList serviceContractList = new ServiceContractList();
+      serviceContractList.setOrgId(this.getId());
+      if (!toTrash) {
+        serviceContractList.setIncludeOnlyTrashed(true);
+      }
+      serviceContractList.buildList(db);
+      serviceContractList.updateStatus(db, toTrash, tmpUserId);
+
+      TicketList ticketList = new TicketList();
+      ticketList.setOrgId(this.getId());
+      if (!toTrash) {
+        ticketList.setIncludeOnlyTrashed(true);
+      }
+      ticketList.buildList(db);
+      ticketList.updateStatus(db, toTrash, tmpUserId);
+
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db           Description of the Parameter
+   * @param thisImportId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean deleteImportedRecords(Connection db, int thisImportId) throws SQLException {
     boolean commit = true;
@@ -2644,11 +2978,11 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Checks to see if the this account has any associated contacts
+   * Checks to see if the this account has any associated contacts
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean hasContacts(Connection db) throws SQLException {
     int recordCount = -1;
@@ -2671,9 +3005,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String toString() {
     StringBuffer out = new StringBuffer();
@@ -2685,10 +3019,10 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //organization table
@@ -2726,11 +3060,15 @@ public class Organization extends GenericBean {
     statusId = DatabaseUtils.getInt(rs, "status_id");
     alertDateTimeZone = rs.getString("alertdate_timezone");
     contractEndDateTimeZone = rs.getString("contract_end_timezone");
+    trashedDate = rs.getTimestamp("trashed_date");
 
     //contact table
-    ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+    ownerName = Contact.getNameLastFirst(
+        rs.getString("o_namelast"), rs.getString("o_namefirst"));
+    enteredByName = Contact.getNameLastFirst(
+        rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(
+        rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
 
     //industry_temp table
     industryName = rs.getString("industry_name");
@@ -2738,9 +3076,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the nameLastFirstMiddle attribute of the Organization object
+   * Gets the nameLastFirstMiddle attribute of the Organization object
    *
-   *@return    The nameLastFirstMiddle value
+   * @return The nameLastFirstMiddle value
    */
   public String getNameLastFirstMiddle() {
     StringBuffer out = new StringBuffer();
@@ -2767,9 +3105,9 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive for a Call
+   * Gets the properties that are TimeZone sensitive for a Call
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -2780,14 +3118,87 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the Organization class
+   * Gets the numberParams attribute of the Organization class
    *
-   *@return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("revenue");
     return thisList;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param tz        Description of the Parameter
+   * @param created   Description of the Parameter
+   * @param alertDate Description of the Parameter
+   * @param user      Description of the Parameter
+   * @param category  Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String generateWebcalEvent(TimeZone tz, Timestamp created, Timestamp alertDate,
+                                    User user, String category, int type) {
+
+    StringBuffer webcal = new StringBuffer();
+    String CRLF = System.getProperty("line.separator");
+
+    String description = "";
+    if (name != null) {
+      description += "Account: " + name;
+    }
+
+    if (user != null && user.getContact() != null) {
+      description += "\\nOwner: " + user.getContact().getNameFirstLast();
+    }
+    
+    //write the event
+    webcal.append("BEGIN:VEVENT" + CRLF);
+
+    if (type == OrganizationEventList.ACCOUNT_EVENT_ALERT) {
+      webcal.append(
+          "UID:www.centriccrm.com-accounts-alerts-" + this.getOrgId() + CRLF);
+    } else if (type == OrganizationEventList.ACCOUNT_CONTRACT_ALERT) {
+      webcal.append(
+          "UID:www.centriccrm.com-accounts-contract-alerts-" + this.getOrgId() + CRLF);
+    }
+
+    if (created != null) {
+      webcal.append("DTSTAMP:" + ICalendar.getDateTimeUTC(created) + CRLF);
+    }
+    if (entered != null) {
+      webcal.append("CREATED:" + ICalendar.getDateTimeUTC(entered) + CRLF);
+    }
+    if (alertDate != null) {
+      webcal.append(
+          "DTSTART;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
+              tz, alertDate) + CRLF);
+    }
+
+    if (type == OrganizationEventList.ACCOUNT_EVENT_ALERT) {
+      if (alertText != null) {
+        webcal.append(
+            ICalendar.foldLine("SUMMARY:" + ICalendar.parseNewLine(alertText)) + CRLF);
+      }
+    } else if (type == OrganizationEventList.ACCOUNT_CONTRACT_ALERT) {
+      webcal.append("SUMMARY:Account Contract Expiry!" + CRLF);
+    }
+
+
+    if (description != null) {
+      webcal.append(
+          ICalendar.foldLine(
+              "DESCRIPTION:" + ICalendar.parseNewLine(description)) + CRLF);
+    }
+    if (category != null) {
+      webcal.append("CATEGORIES:" + category + CRLF);
+    }
+
+    webcal.append("END:VEVENT" + CRLF);
+
+    return webcal.toString();
   }
 }
 

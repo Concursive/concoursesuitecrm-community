@@ -33,7 +33,6 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Import;
 import org.aspcfs.modules.base.ImportList;
-import org.aspcfs.modules.communications.base.RecipientList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactImport;
 import org.aspcfs.modules.contacts.base.ContactImportValidate;
@@ -49,19 +48,19 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  Web Actions for Accounts -> Imports
+ * Web Actions for Accounts -> Imports
  *
- *@author     Mathur
- *@created    June 21, 2004
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created June 21, 2004
  */
 public final class AccountContactsImports extends CFSModule {
 
   /**
-   *  Default Action: View Imports
+   * Default Action: View Imports
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return (this.executeCommandView(context));
@@ -69,17 +68,18 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  View Imports
+   * View Imports
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
     Connection db = null;
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "AccountContactsImportListInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "AccountContactsImportListInfo");
     pagedListInfo.setLink("AccountContactsImports.do?command=View");
     try {
       db = this.getConnection(context);
@@ -116,10 +116,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Create new import
+   * Create new import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
@@ -131,10 +131,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Save import
+   * Save import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
@@ -170,7 +170,9 @@ public final class AccountContactsImports extends CFSModule {
       thisImport.setDescription(description);
       if (!((Object) parts.get("id") instanceof FileInfo)) {
         fileRecordInserted = false;
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         processErrors(context, errors);
         isValid = this.validateObject(context, db, thisImport);
         context.getRequest().setAttribute("name", subject);
@@ -226,10 +228,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Import Details
+   * Import Details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
@@ -242,7 +244,8 @@ public final class AccountContactsImports extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       //build the import
       String importId = context.getRequest().getParameter("importId");
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
       thisImport.buildFileDetails(db);
       thisImport.setSystemStatus(systemStatus);
 
@@ -268,10 +271,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Start import validation
+   * Start import validation
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInitValidate(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
@@ -283,12 +286,14 @@ public final class AccountContactsImports extends CFSModule {
       db = this.getConnection(context);
       //build the import
       String importId = context.getRequest().getParameter("importId");
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
       thisImport.buildFileDetails(db);
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       //load the property map
-      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty("file.separator") + "cfs-import-properties.xml";
+      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty(
+          "file.separator") + "cfs-import-properties.xml";
       PropertyMap thisMap = new PropertyMap(propertyFile, "accountContact");
 
       //load the file item
@@ -296,7 +301,8 @@ public final class AccountContactsImports extends CFSModule {
       context.getRequest().setAttribute("FileItem", importFile);
 
       //get path to import file
-      String filePath = this.getPath(context, "accounts") + getDatePath(importFile.getModified()) + importFile.getFilename();
+      String filePath = this.getPath(context, "accounts") + getDatePath(
+          importFile.getModified()) + importFile.getFilename();
 
       if (FileUtils.fileExists(filePath)) {
         //Run the validator(only maps fields to properties in this iteration)
@@ -307,7 +313,9 @@ public final class AccountContactsImports extends CFSModule {
         validator.initialize();
         context.getRequest().setAttribute("ImportValidator", validator);
       } else {
-        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importFileDoesNotExist"));
+        context.getRequest().setAttribute(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.importFileDoesNotExist"));
       }
 
       //build form elements
@@ -323,10 +331,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Validate import
+   * Validate import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandValidate(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
@@ -338,20 +346,23 @@ public final class AccountContactsImports extends CFSModule {
       db = this.getConnection(context);
       //build the import
       String importId = context.getRequest().getParameter("importId");
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
       thisImport.buildFileDetails(db);
       thisImport.setProperties(context.getRequest());
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       //load the property map
-      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty("file.separator") + "cfs-import-properties.xml";
+      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty(
+          "file.separator") + "cfs-import-properties.xml";
       PropertyMap thisMap = new PropertyMap(propertyFile, "accountContact");
 
       //load the file item
       FileItem importFile = thisImport.getFile();
       context.getRequest().setAttribute("FileItem", importFile);
 
-      String filePath = this.getPath(context, "accounts") + getDatePath(importFile.getModified()) + importFile.getFilename();
+      String filePath = this.getPath(context, "accounts") + getDatePath(
+          importFile.getModified()) + importFile.getFilename();
 
       if (FileUtils.fileExists(filePath)) {
         //Run the validator(only maps fields to properties in this iteration)
@@ -366,7 +377,9 @@ public final class AccountContactsImports extends CFSModule {
           return executeCommandProcess(context);
         }
       } else {
-        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importFileDoesNotExist"));
+        context.getRequest().setAttribute(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.importFileDoesNotExist"));
       }
 
       buildValidateFormElements(db, context, thisImport);
@@ -381,20 +394,24 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Run the import
+   * Run the import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProcess(ActionContext context) {
     try {
       //validate has already built the import and maps, use those
-      ContactImportValidate validator = (ContactImportValidate) context.getRequest().getAttribute("ImportValidator");
-      ContactImport thisImport = (ContactImport) context.getRequest().getAttribute("ImportDetails");
-      FileItem thisItem = (FileItem) context.getRequest().getAttribute("FileItem");
+      ContactImportValidate validator = (ContactImportValidate) context.getRequest().getAttribute(
+          "ImportValidator");
+      ContactImport thisImport = (ContactImport) context.getRequest().getAttribute(
+          "ImportDetails");
+      FileItem thisItem = (FileItem) context.getRequest().getAttribute(
+          "FileItem");
 
       //get the database elements
-      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+          "ConnectionElement");
 
       //get manager
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -403,6 +420,7 @@ public final class AccountContactsImports extends CFSModule {
       Object activeImport = manager.getImport(thisImport.getId());
       if (activeImport == null) {
         //run
+        thisImport.setSystemStatus(systemStatus);
         thisImport.setPropertyMap(validator.getPropertyMap());
         thisImport.setLookupAccount(true);
         thisImport.setFilePath(validator.getFilePath());
@@ -414,9 +432,12 @@ public final class AccountContactsImports extends CFSModule {
       } else {
         HashMap map = new HashMap();
         map.put("${thisImport.name}", thisImport.getName());
-        Template template = new Template(systemStatus.getLabel("object.validation.actionError.importAlreadyRunning"));
+        Template template = new Template(
+            systemStatus.getLabel(
+                "object.validation.actionError.importAlreadyRunning"));
         template.setParseElements(map);
-        context.getRequest().setAttribute("actionError", template.getParsedText());
+        context.getRequest().setAttribute(
+            "actionError", template.getParsedText());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -427,10 +448,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Cancel the import
+   * Cancel the import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCancel(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
@@ -444,7 +465,9 @@ public final class AccountContactsImports extends CFSModule {
 
       //cancel import
       if (!manager.cancel(Integer.parseInt(importId))) {
-        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importNotRunning"));
+        context.getRequest().setAttribute(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.importNotRunning"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -458,10 +481,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Confirm deletion of import
+   * Confirm deletion of import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Connection db = null;
@@ -475,18 +498,23 @@ public final class AccountContactsImports extends CFSModule {
     try {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
       DependencyList dependencies = thisImport.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -500,10 +528,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Delete import
+   * Delete import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
@@ -514,12 +542,14 @@ public final class AccountContactsImports extends CFSModule {
     String importId = (String) context.getRequest().getParameter("importId");
     try {
       db = this.getConnection(context);
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
       int recordDeleted = thisImport.updateStatus(db, Import.DELETED);
 
       if (recordDeleted > 0) {
         //delete the files
-        FileItem importFile = new FileItem(db, thisImport.getId(), Constants.IMPORT_ACCOUNT_CONTACTS);
+        FileItem importFile = new FileItem(
+            db, thisImport.getId(), Constants.IMPORT_ACCOUNT_CONTACTS);
         importFile.delete(db, this.getPath(context, "accounts"));
       }
     } catch (Exception e) {
@@ -528,16 +558,17 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "AccountContactsImports.do?command=View");
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountContactsImports.do?command=View");
     return getReturn(context, "Delete");
   }
 
 
   /**
-   *  Download import file(could be error file)
+   * Download import file(could be error file)
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
 
@@ -558,7 +589,8 @@ public final class AccountContactsImports extends CFSModule {
     try {
       db = getConnection(context);
       thisImport = new ContactImport(db, Integer.parseInt(importId));
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(importId), Constants.IMPORT_ACCOUNT_CONTACTS);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(importId), Constants.IMPORT_ACCOUNT_CONTACTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -574,7 +606,8 @@ public final class AccountContactsImports extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -589,16 +622,21 @@ public final class AccountContactsImports extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("AccountContactsImports-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "AccountContactsImports-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           context.getRequest().setAttribute("ImportDetails", thisImport);
           context.getRequest().setAttribute("FileItem", itemToDownload);
           return getReturn(context, "Details");
         }
       } else {
-        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        FileItemVersion itemToDownload = thisItem.getVersion(
+            Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -609,8 +647,11 @@ public final class AccountContactsImports extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("AccountContactsImports-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "AccountContactsImports-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -633,10 +674,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Approve the import
+   * Approve the import
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandApprove(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
@@ -648,12 +689,15 @@ public final class AccountContactsImports extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
 
       if (thisImport.canApprove()) {
         thisImport.updateStatus(db, Import.PROCESSED_APPROVED);
       } else {
-        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importNotSuccessful"));
+        context.getRequest().setAttribute(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.importNotSuccessful"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -666,10 +710,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  View Results
+   * View Results
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewResults(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
@@ -678,12 +722,15 @@ public final class AccountContactsImports extends CFSModule {
 
     Connection db = null;
     String importId = context.getRequest().getParameter("importId");
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "AccountContactsImportResultsInfo");
-    pagedListInfo.setLink("AccountContactsImports.do?command=ViewResults&importId=" + importId);
+    PagedListInfo pagedListInfo = this.getPagedListInfo(
+        context, "AccountContactsImportResultsInfo");
+    pagedListInfo.setLink(
+        "AccountContactsImports.do?command=ViewResults&importId=" + importId);
 
     try {
       db = this.getConnection(context);
-      ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
+      ContactImport thisImport = new ContactImport(
+          db, Integer.parseInt(importId));
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       ContactList thisList = new ContactList();
@@ -705,10 +752,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  View details of a contact
+   * View details of a contact
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandContactDetails(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
@@ -736,10 +783,10 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Delete a contact
+   * Delete a contact
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteContact(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
@@ -749,33 +796,16 @@ public final class AccountContactsImports extends CFSModule {
     boolean recordDeleted = false;
     String contactId = context.getRequest().getParameter("contactId");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    String actionError1 = "This contact has an active user account and could not be deleted.";
-    String actionError2 = "Contact disabled from view, since it has a related user account";
-    String actionError3 = "Contact disabled from view, since it has related message records";
-    actionError1 = systemStatus.getLabel("object.validation.actionError.contactDeletionActiveUser");
-    actionError2 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedUser");
-    actionError3 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedMessage");
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
       if (thisContact.getStatusId() != Import.PROCESSED_APPROVED) {
-        recordDeleted = thisContact.delete(db);
-        if (!recordDeleted) {
-          if (thisContact.getHasAccess() && thisContact.getIsEnabled()) {
-            thisContact.getErrors().put("actionError", actionError1);
-          }
-        } else {
-          if ((thisContact.getHasAccess() && !thisContact.getIsEnabled()) || thisContact.hasRelatedRecords(db)) {
-            thisContact.getErrors().put("actionError", actionError2);
-          }
-          if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, thisContact.getId()) > 0) {
-            thisContact.getErrors().put("actionError", actionError3);
-          }
-        }
+        recordDeleted = thisContact.delete(
+            db, this.getPath(context, "contacts"));
         processErrors(context, thisContact.getErrors());
         Organization thisOrg = new Organization(db, thisContact.getOrgId());
         if (thisOrg.getImportId() > 0 && !thisOrg.hasContacts(db)) {
-          thisOrg.delete(db, this.getPath(context, "accounts"));
+          thisOrg.delete(db, context, getDbNamePath(context));
         }
         if (!recordDeleted) {
           context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -799,12 +829,12 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  thisImport        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param context    Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param thisImport Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildValidateFormElements(Connection db, ActionContext context, ContactImport thisImport) throws SQLException {
     SystemStatus systemStatus = getSystemStatus(context);
@@ -812,23 +842,29 @@ public final class AccountContactsImports extends CFSModule {
     //access type
     AccessTypeList accessTypeList = null;
     if (thisImport.getType() == Constants.IMPORT_ACCOUNT_CONTACTS) {
-      accessTypeList = systemStatus.getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+      accessTypeList = systemStatus.getAccessTypeList(
+          db, AccessType.ACCOUNT_CONTACTS);
     } else {
-      accessTypeList = systemStatus.getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      accessTypeList = systemStatus.getAccessTypeList(
+          db, AccessType.GENERAL_CONTACTS);
     }
     context.getRequest().setAttribute("AccessTypeList", accessTypeList);
 
     //Email types
-    LookupList emailTypeList = systemStatus.getLookupList(db, "lookup_contactemail_types");
+    LookupList emailTypeList = systemStatus.getLookupList(
+        db, "lookup_contactemail_types");
     context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
 
     //Phone types
-    LookupList phoneTypeList = systemStatus.getLookupList(db, "lookup_contactphone_types");
+    LookupList phoneTypeList = systemStatus.getLookupList(
+        db, "lookup_contactphone_types");
     context.getRequest().setAttribute("ContactPhoneTypeList", phoneTypeList);
 
     //Address types
-    LookupList addressTypeList = systemStatus.getLookupList(db, "lookup_contactaddress_types");
-    context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
+    LookupList addressTypeList = systemStatus.getLookupList(
+        db, "lookup_contactaddress_types");
+    context.getRequest().setAttribute(
+        "ContactAddressTypeList", addressTypeList);
   }
 }
 

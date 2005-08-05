@@ -13,22 +13,23 @@
  */
 package org.jcrontab;
 
-import java.io.*;
-import java.util.*;
-import org.jcrontab.data.*;
-import org.jcrontab.log.Log;
-import java.sql.Connection;
-import javax.servlet.ServletContext;
-
 import org.aspcfs.utils.Dictionary;
+import org.jcrontab.data.HoliDay;
+import org.jcrontab.data.HoliDayFactory;
+import org.jcrontab.log.Log;
+
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.sql.Connection;
+import java.util.*;
 
 /**
- *  Manages the creation and execution of all the scheduled tasks of jcrontab.
- *  This class is the core of the jcrontab
+ * Manages the creation and execution of all the scheduled tasks of jcrontab.
+ * This class is the core of the jcrontab
  *
- *@author     Israel Olalla
- *@created    November 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November 2002
  */
 
 public class Crontab {
@@ -40,9 +41,9 @@ public class Crontab {
   private Object connectionPool = null;
   private ServletContext servletContext = null;
   private Dictionary dictionary = null;
-  
+
   /**
-   *  The Cron that controls the execution of the tasks
+   * The Cron that controls the execution of the tasks
    */
   private Cron cron;
   private boolean stopping = false;
@@ -55,14 +56,14 @@ public class Crontab {
       "jcrontab.properties";
   private boolean isInternalConfig = true;
   /**
-   *  The only instance of this cache
+   * The only instance of this cache
    */
   private static Crontab singleton = null;
 
 
   /**
-   *  Crontab constructor Change the default constructor to public if you need
-   *  more than an instance running on the system
+   * Crontab constructor Change the default constructor to public if you need
+   * more than an instance running on the system
    */
   private Crontab() {
     tasks = new HashMap();
@@ -72,11 +73,11 @@ public class Crontab {
 
 
   /**
-   *  Returns the only instance of this class we've choosen a singleton pattern
-   *  to avoid launch different Crontab If you need diferent crontab classes to
-   *  be launched only should Change the private constructor to public.
+   * Returns the only instance of this class we've choosen a singleton pattern
+   * to avoid launch different Crontab If you need diferent crontab classes to
+   * be launched only should Change the private constructor to public.
    *
-   *@return    singleton the only instance of this class
+   * @return singleton the only instance of this class
    */
   public static synchronized Crontab getInstance() {
     if (singleton == null) {
@@ -87,9 +88,9 @@ public class Crontab {
 
 
   /**
-   *  Initializes the crontab, reading task table from configuration file
+   * Initializes the crontab, reading task table from configuration file
    *
-   *@throws  Exception
+   * @throws Exception
    */
   public void init() throws Exception {
     // Properties prop = new Properties
@@ -104,13 +105,13 @@ public class Crontab {
 
 
   /**
-   *  Initializes the crontab, reading task table from configuration file
+   * Initializes the crontab, reading task table from configuration file
    *
-   *@param  strFileName  Name of the tasks configuration file
-   *@throws  Exception
+   * @param strFileName Name of the tasks configuration file
+   * @throws Exception
    */
   public void init(String strFileName)
-       throws Exception {
+      throws Exception {
 
     this.strFileName = strFileName;
     loadConfig();
@@ -130,14 +131,14 @@ public class Crontab {
 
 
   /**
-   *  Used by the loadCrontabServlet to start Crontab with the configuration
-   *  passed in a Properties object.
+   * Used by the loadCrontabServlet to start Crontab with the configuration
+   * passed in a Properties object.
    *
-   *@param  props       a <code>Properties</code> object
-   *@throws  Exception
+   * @param props a <code>Properties</code> object
+   * @throws Exception
    */
   public void init(Properties props)
-       throws Exception {
+      throws Exception {
     this.strFileName = null;
     String refreshFrequency =
         props.getProperty("org.jcrontab.Crontab.refreshFrequency");
@@ -147,8 +148,8 @@ public class Crontab {
     }
     
     //Populate the dictionary
-    String fs = System.getProperty("file.separator") ;
-    String languagePath = getProperty("org.jcrontab.path.DefaultFilePath") + ".." + fs +  "languages" + fs; 
+    String fs = System.getProperty("file.separator");
+    String languagePath = getProperty("org.jcrontab.path.DefaultFilePath") + ".." + fs + "languages" + fs;
     String systemLanguage = getProperty("org.jcrontab.data.SystemLanguage");
     dictionary = new Dictionary(languagePath, "en_US");
     if (systemLanguage != null) {
@@ -168,8 +169,8 @@ public class Crontab {
 
 
   /**
-   *  UnInitializes the Crontab. Calls to the method stopInTheNextMinute() of
-   *  the Cron.
+   * UnInitializes the Crontab. Calls to the method stopInTheNextMinute() of
+   * the Cron.
    */
   public void uninit() {
     if (stopping) {
@@ -181,11 +182,11 @@ public class Crontab {
 
 
   /**
-   *  UnInitializes the crontab. Calls to the method join() of each of the tasks
-   *  running.
+   * UnInitializes the crontab. Calls to the method join() of each of the tasks
+   * running.
    *
-   *@param  iSecondsToWait  Number of seconds to wait for the tasks to end their
-   *      process before returning from this method
+   * @param iSecondsToWait Number of seconds to wait for the tasks to end their
+   *                       process before returning from this method
    */
   public void uninit(int iSecondsToWait) {
     if (stopping) {
@@ -213,9 +214,9 @@ public class Crontab {
 
 
   /**
-   *  This method sets the Cron to daemon or not
+   * This method sets the Cron to daemon or not
    *
-   *@param  daemon      The new daemon value
+   * @param daemon The new daemon value
    */
   public void setDaemon(boolean daemon) {
     this.daemon = daemon;
@@ -223,10 +224,10 @@ public class Crontab {
 
 
   /**
-   *  This method loads the config for the whole Crontab. If this method doesn't
-   *  find the files creates itself them
+   * This method loads the config for the whole Crontab. If this method doesn't
+   * find the files creates itself them
    *
-   *@throws  Exception
+   * @throws Exception
    */
   private void loadConfig() throws Exception {
     // Get the Params from the config File
@@ -241,7 +242,7 @@ public class Crontab {
       prop.load(input);
       input.close();
 
-      for (Enumeration e = prop.propertyNames(); e.hasMoreElements(); ) {
+      for (Enumeration e = prop.propertyNames(); e.hasMoreElements();) {
         String ss = (String) e.nextElement();
         Log.debug(ss + " : " + prop.getProperty(ss));
       }
@@ -253,7 +254,8 @@ public class Crontab {
         org.jcrontab.data.DefaultFiles.createPropertiesFile();
         loadConfig();
       } else {
-        throw new FileNotFoundException("Unable to find: " +
+        throw new FileNotFoundException(
+            "Unable to find: " +
             strFileName);
       }
     }
@@ -261,9 +263,9 @@ public class Crontab {
 
 
   /**
-   *  Sets the connectionPool attribute of the Crontab object
+   * Sets the connectionPool attribute of the Crontab object
    *
-   *@param  tmp  The new connectionPool value
+   * @param tmp The new connectionPool value
    */
   public void setConnectionPool(Object tmp) {
     this.connectionPool = tmp;
@@ -271,9 +273,9 @@ public class Crontab {
 
 
   /**
-   *  Sets the servletContext attribute of the Crontab object
+   * Sets the servletContext attribute of the Crontab object
    *
-   *@param  tmp  The new servletContext value
+   * @param tmp The new servletContext value
    */
   public void setServletContext(ServletContext tmp) {
     this.servletContext = tmp;
@@ -281,9 +283,9 @@ public class Crontab {
 
 
   /**
-   *  Gets the connectionPool attribute of the Crontab object
+   * Gets the connectionPool attribute of the Crontab object
    *
-   *@return    The connectionPool value
+   * @return The connectionPool value
    */
   public Object getConnectionPool() {
     return connectionPool;
@@ -291,21 +293,20 @@ public class Crontab {
 
 
   /**
-   *  Gets the servletContext attribute of the Crontab object
+   * Gets the servletContext attribute of the Crontab object
    *
-   *@return    The servletContext value
+   * @return The servletContext value
    */
   public ServletContext getServletContext() {
     return servletContext;
   }
 
 
-
   /**
-   *  This method gets the value of the given property
+   * This method gets the value of the given property
    *
-   *@param  property
-   *@return           value
+   * @param property
+   * @return value
    */
   public String getProperty(String property) {
     return prop.getProperty(property);
@@ -313,10 +314,10 @@ public class Crontab {
 
 
   /**
-   *  This method sets the given property
+   * This method sets the given property
    *
-   *@param  property
-   *@param  value
+   * @param property
+   * @param value
    */
   public void setProperty(String property, String value) {
     prop.setProperty(property, value);
@@ -324,11 +325,11 @@ public class Crontab {
 
 
   /**
-   *  This method Stores in the properties File the given property and all the
-   *  "live" properties
+   * This method Stores in the properties File the given property and all the
+   * "live" properties
    *
-   *@param  property
-   *@param  value
+   * @param property
+   * @param value
    */
   public void storeProperty(String property, String value) {
     prop.setProperty(property, value);
@@ -344,14 +345,14 @@ public class Crontab {
 
 
   /**
-   *  This method says if today is a holiday or not
+   * This method says if today is a holiday or not
    *
-   *@return             true if today is holiday false otherWise
-   *@throws  Exception
+   * @return true if today is holiday false otherWise
+   * @throws Exception
    */
   public boolean isHoliday() throws Exception {
     if (getProperty("org.jcrontab.data.holidaysource") == null
-         || getProperty("org.jcrontab.data.holidaysource") == "") {
+        || getProperty("org.jcrontab.data.holidaysource") == "") {
       return false;
     }
     Calendar today = Calendar.getInstance();
@@ -359,7 +360,8 @@ public class Crontab {
     HoliDay[] holidays = HoliDayFactory.getInstance().findAll();
     for (int i = 0; i < holidays.length; i++) {
       holiday.setTime(holidays[i].getDate());
-      if (holiday.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) &&
+      if (holiday.get(Calendar.DAY_OF_MONTH) == today.get(
+          Calendar.DAY_OF_MONTH) &&
           holiday.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
         return true;
       }
@@ -369,18 +371,18 @@ public class Crontab {
 
 
   /**
-   *  Creates and runs a new task
+   * Creates and runs a new task
    *
-   *@param  strClassName       Name of the task
-   *@param  strMethodName      Name of the method that will be called
-   *@param  strExtraInfo       Extra Information given to the task
-   *@param  connectionContext  Description of the Parameter
-   *@return                    The identifier of the new task created, or -1 if
-   *      could not create the new task (maximum number of tasks exceeded or
-   *      another error)
+   * @param strClassName      Name of the task
+   * @param strMethodName     Name of the method that will be called
+   * @param strExtraInfo      Extra Information given to the task
+   * @param connectionContext Description of the Parameter
+   * @return The identifier of the new task created, or -1 if
+   *         could not create the new task (maximum number of tasks exceeded or
+   *         another error)
    */
   public synchronized int newTask(String strClassName,
-      String strMethodName, String[] strExtraInfo, Object connectionContext) {
+                                  String strMethodName, String[] strExtraInfo, Object connectionContext) {
     // Do not run new tasks if jcron is uninitializing
     if (stopping) {
       return -1;
@@ -399,7 +401,8 @@ public class Crontab {
         org.aspcfs.controller.SystemStatus thisSystem = null;
         try {
           db = cp.getConnection(ce);
-          thisSystem = org.aspcfs.controller.SecurityHook.retrieveSystemStatus(servletContext, db, ce);
+          thisSystem = org.aspcfs.controller.SecurityHook.retrieveSystemStatus(
+              servletContext, db, ce);
         } catch (Exception e) {
         } finally {
           if (db != null) {
@@ -427,17 +430,20 @@ public class Crontab {
           for (int i = 0; i < strExtraInfo.length; i++) {
             //Perform substitutions org.jcrontab.path.DefaultFilePath
             if (strExtraInfo[i].indexOf("${FILEPATH}") > -1) {
-              strExtraInfo[i] = replace(strExtraInfo[i], "${FILEPATH}",
+              strExtraInfo[i] = replace(
+                  strExtraInfo[i], "${FILEPATH}",
                   getProperty("org.jcrontab.path.DefaultFilePath"));
             }
             if (strExtraInfo[i].indexOf("${WEBSERVER.URL}") > -1) {
-              strExtraInfo[i] = replace(strExtraInfo[i], "${WEBSERVER.URL}",
+              strExtraInfo[i] = replace(
+                  strExtraInfo[i], "${WEBSERVER.URL}",
                   getProperty("org.jcrontab.path.WebServerUrl"));
             }
           }
         }
         newTask.setDictionary(dictionary);
-        newTask.setParams(this, iTaskID, strClassName, strMethodName,
+        newTask.setParams(
+            this, iTaskID, strClassName, strMethodName,
             strExtraInfo);
         // Added name to newTask to show a name instead of Threads when
         // logging.  Thanks to Sander Verbruggen
@@ -447,7 +453,8 @@ public class Crontab {
           newTask.setName(classOnlyName);
         }
         synchronized (tasks) {
-          tasks.put(new Integer(iTaskID),
+          tasks.put(
+              new Integer(iTaskID),
               new TaskTableEntry(strClassName, newTask));
         }
         // Starts the task execution
@@ -463,7 +470,8 @@ public class Crontab {
         iNextTaskID++;
         return iTaskID;
       } catch (Exception e) {
-        Log.error("Something was wrong with" +
+        Log.error(
+            "Something was wrong with" +
             strClassName +
             "#" +
             strMethodName +
@@ -476,11 +484,11 @@ public class Crontab {
 
 
   /**
-   *  Removes a task from the internal arrays of active tasks. This method is
-   *  called from method run() of CronTask when a task has finished.
+   * Removes a task from the internal arrays of active tasks. This method is
+   * called from method run() of CronTask when a task has finished.
    *
-   *@param  iTaskID  Identifier of the task to delete
-   *@return          true if the task was deleted correctly, false otherwise
+   * @param iTaskID Identifier of the task to delete
+   * @return true if the task was deleted correctly, false otherwise
    */
   public boolean deleteTask(int iTaskID) {
     synchronized (tasks) {
@@ -493,10 +501,10 @@ public class Crontab {
 
 
   /**
-   *  Returns an array with all active tasks
+   * Returns an array with all active tasks
    *
-   *@return    An array with all active tasks NOTE: Does not returns the
-   *      internal array because it is synchronized, returns a copy of it.
+   * @return An array with all active tasks NOTE: Does not returns the
+   *         internal array because it is synchronized, returns a copy of it.
    */
   public CronTask[] getAllTasks() {
     CronTask[] t;
@@ -514,12 +522,12 @@ public class Crontab {
 
 
   /**
-   *  Helper method to replace a string with another string in a string
+   * Helper method to replace a string with another string in a string
    *
-   *@param  str  Description of the Parameter
-   *@param  o    Description of the Parameter
-   *@param  n    Description of the Parameter
-   *@return      Description of the Return Value
+   * @param str Description of the Parameter
+   * @param o   Description of the Parameter
+   * @param n   Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String replace(String str, String o, String n) {
     boolean all = true;
@@ -552,11 +560,11 @@ public class Crontab {
 
 
   /**
-   *  Internal class that represents an entry in the task table
+   * Internal class that represents an entry in the task table
    *
-   *@author     Israel Olalla
-   *@created    November 2002
-   *@version    $Id$
+   * @author Israel Olalla
+   * @version $Id$
+   * @created November 2002
    */
   private class TaskTableEntry {
     String strClassName;
@@ -564,13 +572,13 @@ public class Crontab {
 
 
     /**
-     *  Constructor of an entry of the task table
+     * Constructor of an entry of the task table
      *
-     *@param  strClassName  Name of the class of the task
-     *@param  task          Reference to the task
+     * @param strClassName Name of the class of the task
+     * @param task         Reference to the task
      */
     public TaskTableEntry(String strClassName,
-        CronTask task) {
+                          CronTask task) {
       this.strClassName = strClassName;
       this.task = task;
     }

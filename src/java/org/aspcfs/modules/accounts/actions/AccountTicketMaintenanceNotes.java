@@ -33,23 +33,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Action class to view, add, edit, delete and list maintenance notes
+ * Action class to view, add, edit, delete and list maintenance notes
  *
- *@author     kbhoopal
- *@created    March 17, 2004
- *@version    $Id: AccountTicketMaintenanceNotes.java,v 1.3.8.1 2004/05/13
- *      16:12:09 kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: AccountTicketMaintenanceNotes.java,v 1.3.8.1 2004/05/13
+ *          16:12:09 kbhoopal Exp $
+ * @created March 17, 2004
  */
 public final class AccountTicketMaintenanceNotes extends CFSModule {
 
   /**
-   *  Lists maintenance notes
+   * Lists maintenance notes
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-view")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -73,12 +74,15 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
       // Build the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       // Build the list of maintenance notes
       TicketMaintenanceNoteList thisList = new TicketMaintenanceNoteList();
-      PagedListInfo sunListInfo = this.getPagedListInfo(context, "SunListInfo");
-      sunListInfo.setLink("AccountTicketMaintenanceNotes.do?command=List&id=" + thisTicket.getId());
+      PagedListInfo sunListInfo = this.getPagedListInfo(
+          context, "SunListInfo");
+      sunListInfo.setLink(
+          "AccountTicketMaintenanceNotes.do?command=List&id=" + thisTicket.getId());
       thisList.setPagedListInfo(sunListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
@@ -94,13 +98,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Prepares the add page to add a maintenance note
+   * Prepares the add page to add a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-add")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -115,7 +120,8 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Load form elements
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       return ("AddOK");
     } catch (Exception e) {
@@ -128,13 +134,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Prepares the modify page to modify a maintenance note
+   * Prepares the modify page to modify a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-edit")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-edit")) {
       return ("PermissionError");
     }
     Ticket thisTicket = null;
@@ -151,9 +158,11 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Load onsite model list
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-      context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
+      context.getRequest().setAttribute(
+          "return", context.getRequest().getParameter("return"));
       // Load the maintenance note elements
       TicketMaintenanceNote thisSun = new TicketMaintenanceNote();
       thisSun.queryRecord(db, Integer.parseInt(formId));
@@ -169,13 +178,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Saves a maintenance note
+   * Saves a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-add")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -192,24 +202,28 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setEnteredBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
+      String descriptionOfService = context.getRequest().getParameter(
+          "descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
       //Saves details of each replaced part
       thisMaintenance.setRequestItems(context.getRequest());
       isValid = this.validateObject(context, db, thisMaintenance);
-      int i=1;
-      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator();iterator.hasNext();i++) {
+      int i = 1;
+      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator(); iterator.hasNext(); i++) {
         TicketReplacementPart replacementPart = (TicketReplacementPart) iterator.next();
         HashMap map = new HashMap();
-        String parseItem = (String) map.put("parseItem", ""+i);
-        String partNumber  = (String) map.put("partNumber", replacementPart.getPartNumber());
-        String partDescription = (String) map.put("partDescription", replacementPart.getPartDescription());
-        isValid = this.validateObject(context, db , replacementPart, map ) && isValid;
+        String parseItem = (String) map.put("parseItem", "" + i);
+        String partNumber = (String) map.put(
+            "partNumber", replacementPart.getPartNumber());
+        String partDescription = (String) map.put(
+            "partDescription", replacementPart.getPartDescription());
+        isValid = this.validateObject(context, db, replacementPart, map) && isValid;
       }
       if (isValid) {
         thisMaintenance.insert(db);
       } else {
-        context.getRequest().setAttribute("maintenanceDetails", thisMaintenance);
+        context.getRequest().setAttribute(
+            "maintenanceDetails", thisMaintenance);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -225,13 +239,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Updates a maintenance note
+   * Updates a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-edit")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -250,21 +265,24 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setId(Integer.parseInt(formId));
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
-      String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
+      String descriptionOfService = context.getRequest().getParameter(
+          "descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
       //Saves details of each replaced part
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
       isValid = this.validateObject(context, db, thisMaintenance);
-      int i=1;
-      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator();iterator.hasNext();i++) {
+      int i = 1;
+      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator(); iterator.hasNext(); i++) {
         TicketReplacementPart replacementPart = (TicketReplacementPart) iterator.next();
         HashMap map = new HashMap();
-        String parseItem = (String) map.put("parseItem", ""+i);
-        String partNumber  = (String) map.put("partNumber", replacementPart.getPartNumber());
-        String partDescription = (String) map.put("partDescription", replacementPart.getPartDescription());
-        isValid = this.validateObject(context, db , replacementPart, map ) && isValid;
+        String parseItem = (String) map.put("parseItem", "" + i);
+        String partNumber = (String) map.put(
+            "partNumber", replacementPart.getPartNumber());
+        String partDescription = (String) map.put(
+            "partDescription", replacementPart.getPartDescription());
+        isValid = this.validateObject(context, db, replacementPart, map) && isValid;
       }
       if (isValid) {
         resultCount = thisMaintenance.update(db);
@@ -292,13 +310,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Prepares the view page for the maintenance note
+   * Prepares the view page for the maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-view")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -319,7 +338,8 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Load the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
+      onsiteModelList.addItem(
+          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       // Load the related form items
       // Maintenance Note items
@@ -336,15 +356,15 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
   }
 
 
-
   /**
-   *  Confirms a request for deleting a maintenance note
+   * Confirms a request for deleting a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-delete")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-delete")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -361,10 +381,13 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Prepare the HTML Dialog
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n");
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n");
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.formHeader"));
-      htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -377,13 +400,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Deletes a maintenance note
+   * Deletes a maintenance note
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-maintenance-report-delete")) {
+    if (!hasPermission(
+        context, "accounts-accounts-tickets-maintenance-report-delete")) {
       return ("PermissionError");
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -392,7 +416,8 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
     Connection db = null;
     // Process the parameters
     String ticketId = context.getRequest().getParameter("id");
-    int formId = Integer.parseInt((String) context.getRequest().getParameter("formId"));
+    int formId = Integer.parseInt(
+        (String) context.getRequest().getParameter("formId"));
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
@@ -403,31 +428,36 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setId(formId);
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.noteDeletion"));
-      context.getRequest().setAttribute("refreshUrl", "AccountTicketMaintenanceNotes.do?command=View&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "actionError", systemStatus.getLabel(
+              "object.validation.actionError.noteDeletion"));
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountTicketMaintenanceNotes.do?command=View&id=" + ticketId);
       return ("DeleteError");
     } finally {
       this.freeConnection(context, db);
     }
     // The record was deleted
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "AccountTicketMaintenanceNotes.do?command=List&id=" + ticketId);
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountTicketMaintenanceNotes.do?command=List&id=" + ticketId);
       return getReturn(context, "Delete");
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
-    context.getRequest().setAttribute("refreshUrl", "AccountTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
     return getReturn(context, "Delete");
   }
 
 
   /**
-   *  loads organization details to display in at the top of the page
+   * loads organization details to display in at the top of the page
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  ticket            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param ticket  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void loadOrganizaton(ActionContext context, Connection db, Ticket ticket) throws SQLException {
     //Load the organization

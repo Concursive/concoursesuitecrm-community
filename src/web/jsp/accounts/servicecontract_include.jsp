@@ -371,6 +371,7 @@
     </td>
   </tr>
    <input type="hidden" name="modified" value="<%= serviceContract.getModified() %>" />
+   <input type="hidden" name="trashedDate" value="<%= serviceContract.getTrashedDate() %>" />
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 

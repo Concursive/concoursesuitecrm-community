@@ -1,0 +1,43 @@
+# These scripts upgrade the 3.0 production databases to 3.1
+
+# Instant Messaging fields
+2005-06-21-script01.sql
+2005-06-21-script02.bsh
+2005-06-22gk.sql
+
+# Lookups
+2005-07-07-script01-partha.sql
+2005-07-07-script01-partha.bsh
+
+# History and deleting updates
+2005-06-27-script01.sql
+2005-06-27-script02.bsh
+2005-06-27gk.bsh
+2005-05-25-script01-partha.bsh
+2005-05-25-script02-partha.bsh
+2005-05-25-script03-partha.bsh
+2005-05-25-script04-partha.bsh
+2005-05-25-script05-partha.bsh
+2005-05-25-script06-partha.bsh
+2005-05-25-script07-partha.bsh
+2005-05-25-script08-partha.bsh
+2005-05-25-script09-partha.bsh
+2005-05-25-script10-partha.bsh
+2005-05-25-script11-partha.bsh
+2005-05-25-script12-partha.bsh
+2005-05-25-script13-partha.bsh
+2005-05-25-script14-partha.bsh
+
+# Activity - Opportunity relationship
+2005-07-14-script01-partha.bsh
+
+# Permissions
+2005-07-01-script01.bsh
+2005-07-01-script02.bsh
+
+# Template files
+2005-07-20-script01-mr.bsh
+
+# Locale adjustments
+2005-06-28gk.sql
+

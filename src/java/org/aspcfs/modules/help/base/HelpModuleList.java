@@ -15,21 +15,21 @@
  */
 package org.aspcfs.modules.help.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    May 20, 2004
- *@version    $Id: HelpModuleList.java,v 1.2 2004/05/25 19:48:07 mrajkowski Exp
- *      $
+ * @author kbhoopal
+ * @version $Id: HelpModuleList.java,v 1.2 2004/05/25 19:48:07 mrajkowski Exp
+ *          $
+ * @created May 20, 2004
  */
 public class HelpModuleList extends ArrayList {
 
@@ -39,9 +39,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the HelpNoteList object
+   * Sets the pagedListInfo attribute of the HelpNoteList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -49,9 +49,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the HelpNoteList object
+   * Gets the pagedListInfo attribute of the HelpNoteList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -59,9 +59,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Sets the moduleId attribute of the HelpModuleList object
+   * Sets the moduleId attribute of the HelpModuleList object
    *
-   *@param  tmp  The new moduleId value
+   * @param tmp The new moduleId value
    */
   public void setModuleId(int tmp) {
     this.moduleId = tmp;
@@ -69,9 +69,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Sets the moduleId attribute of the HelpModuleList object
+   * Sets the moduleId attribute of the HelpModuleList object
    *
-   *@param  tmp  The new moduleId value
+   * @param tmp The new moduleId value
    */
   public void setModuleId(String tmp) {
     this.moduleId = Integer.parseInt(tmp);
@@ -79,9 +79,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the HelpModuleList object
+   * Sets the categoryId attribute of the HelpModuleList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -89,9 +89,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the HelpModuleList object
+   * Sets the categoryId attribute of the HelpModuleList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -99,9 +99,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Gets the moduleId attribute of the HelpModuleList object
+   * Gets the moduleId attribute of the HelpModuleList object
    *
-   *@return    The moduleId value
+   * @return The moduleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -109,9 +109,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the HelpModuleList object
+   * Gets the categoryId attribute of the HelpModuleList object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -119,10 +119,10 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Builds the list
+   * Builds the list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -167,7 +167,8 @@ public class HelpModuleList extends ArrayList {
         "FROM help_module hm, permission_category pc " +
         "WHERE hm.category_id = pc.category_id ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
 
     rs = pst.executeQuery();
@@ -175,15 +176,7 @@ public class HelpModuleList extends ArrayList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       HelpModule thisModule = new HelpModule(rs);
       this.add(thisModule);
     }
@@ -193,9 +186,9 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Create the filters
+   * Create the filters
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -212,11 +205,11 @@ public class HelpModuleList extends ArrayList {
 
 
   /**
-   *  Sets the filters
+   * Sets the filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

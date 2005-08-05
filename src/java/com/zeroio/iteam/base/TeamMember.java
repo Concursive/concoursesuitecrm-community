@@ -24,12 +24,12 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 
 /**
- *  Represents a member of a project
+ * Represents a member of a project
  *
- *@author     matt rajkowski
- *@created    July 23, 2001
- *@version    $Id: TeamMember.java,v 1.1.136.2 2004/04/08 14:55:53 rvasista Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: TeamMember.java,v 1.1.136.2 2004/04/08 14:55:53 rvasista Exp
+ *          $
+ * @created July 23, 2001
  */
 public class TeamMember {
 //Constants that control permissions within a project
@@ -63,18 +63,17 @@ public class TeamMember {
   private boolean temporaryAdmin = false;
 
   /**
-   *  Constructor for the Assignment object
-   *
-   *@since
+   * Constructor for the Assignment object
    */
-  public TeamMember() { }
+  public TeamMember() {
+  }
 
 
   /**
-   *  Constructor for the TeamMember object
+   * Constructor for the TeamMember object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TeamMember(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -82,16 +81,16 @@ public class TeamMember {
 
 
   /**
-   *  Constructor for the TeamMember object
+   * Constructor for the TeamMember object
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@param  teamId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @param teamId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TeamMember(Connection db, int projectId, int teamId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT t.*, r.level " +
+        "SELECT t.*, r.\"level\" " +
         "FROM project_team t, lookup_project_role r " +
         "WHERE t.project_id = ? " +
         "AND t.user_id = ? " +
@@ -112,10 +111,10 @@ public class TeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //project_team
@@ -134,9 +133,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the project attribute of the TeamMember object
+   * Sets the project attribute of the TeamMember object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -144,9 +143,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the contact attribute of the TeamMember object
+   * Sets the contact attribute of the TeamMember object
    *
-   *@param  tmp  The new contact value
+   * @param tmp The new contact value
    */
   public void setContact(Object tmp) {
     this.contact = tmp;
@@ -154,9 +153,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the user attribute of the TeamMember object
+   * Sets the user attribute of the TeamMember object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(Object tmp) {
     this.user = tmp;
@@ -164,9 +163,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the projectId attribute of the TeamMember object
+   * Sets the projectId attribute of the TeamMember object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -174,9 +173,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the projectId attribute of the TeamMember object
+   * Sets the projectId attribute of the TeamMember object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -184,9 +183,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the userId attribute of the TeamMember object
+   * Sets the userId attribute of the TeamMember object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -194,9 +193,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the userId attribute of the TeamMember object
+   * Sets the userId attribute of the TeamMember object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -204,9 +203,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the userLevel attribute of the TeamMember object
+   * Sets the userLevel attribute of the TeamMember object
    *
-   *@param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(int tmp) {
     this.userLevel = tmp;
@@ -214,9 +213,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the userLevel attribute of the TeamMember object
+   * Sets the userLevel attribute of the TeamMember object
    *
-   *@param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(String tmp) {
     this.userLevel = Integer.parseInt(tmp);
@@ -224,9 +223,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the entered attribute of the TeamMember object
+   * Sets the entered attribute of the TeamMember object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -234,9 +233,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the entered attribute of the TeamMember object
+   * Sets the entered attribute of the TeamMember object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -244,9 +243,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the enteredBy attribute of the TeamMember object
+   * Sets the enteredBy attribute of the TeamMember object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -254,9 +253,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the enteredBy attribute of the TeamMember object
+   * Sets the enteredBy attribute of the TeamMember object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -264,9 +263,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the modified attribute of the TeamMember object
+   * Sets the modified attribute of the TeamMember object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -274,9 +273,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the modified attribute of the TeamMember object
+   * Sets the modified attribute of the TeamMember object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -284,9 +283,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TeamMember object
+   * Sets the modifiedBy attribute of the TeamMember object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -294,9 +293,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TeamMember object
+   * Sets the modifiedBy attribute of the TeamMember object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -304,9 +303,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the roleId attribute of the TeamMember object
+   * Sets the roleId attribute of the TeamMember object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(int tmp) {
     this.roleId = tmp;
@@ -314,9 +313,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the roleId attribute of the TeamMember object
+   * Sets the roleId attribute of the TeamMember object
    *
-   *@param  tmp  The new roleId value
+   * @param tmp The new roleId value
    */
   public void setRoleId(String tmp) {
     this.roleId = Integer.parseInt(tmp);
@@ -324,9 +323,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the status attribute of the TeamMember object
+   * Sets the status attribute of the TeamMember object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -334,9 +333,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the status attribute of the TeamMember object
+   * Sets the status attribute of the TeamMember object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -344,9 +343,9 @@ public class TeamMember {
 
 
   /**
-   *  Sets the lastAccessed attribute of the TeamMember object
+   * Sets the lastAccessed attribute of the TeamMember object
    *
-   *@param  tmp  The new lastAccessed value
+   * @param tmp The new lastAccessed value
    */
   public void setLastAccessed(java.sql.Timestamp tmp) {
     this.lastAccessed = tmp;
@@ -354,9 +353,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the project attribute of the TeamMember object
+   * Gets the project attribute of the TeamMember object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -364,9 +363,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the contact attribute of the TeamMember object
+   * Gets the contact attribute of the TeamMember object
    *
-   *@return    The contact value
+   * @return The contact value
    */
   public Object getContact() {
     return contact;
@@ -374,9 +373,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the user attribute of the TeamMember object
+   * Gets the user attribute of the TeamMember object
    *
-   *@return    The user value
+   * @return The user value
    */
   public Object getUser() {
     return user;
@@ -384,9 +383,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the projectId attribute of the TeamMember object
+   * Gets the projectId attribute of the TeamMember object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -394,9 +393,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the userId attribute of the TeamMember object
+   * Gets the userId attribute of the TeamMember object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -404,9 +403,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the userLevel attribute of the TeamMember object
+   * Gets the userLevel attribute of the TeamMember object
    *
-   *@return    The userLevel value
+   * @return The userLevel value
    */
   public int getUserLevel() {
     return userLevel;
@@ -414,9 +413,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the entered attribute of the TeamMember object
+   * Gets the entered attribute of the TeamMember object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -424,9 +423,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the enteredString attribute of the TeamMember object
+   * Gets the enteredString attribute of the TeamMember object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -438,9 +437,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the enteredBy attribute of the TeamMember object
+   * Gets the enteredBy attribute of the TeamMember object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -448,9 +447,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the modified attribute of the TeamMember object
+   * Gets the modified attribute of the TeamMember object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -458,9 +457,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the modifiedString attribute of the TeamMember object
+   * Gets the modifiedString attribute of the TeamMember object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     try {
@@ -472,9 +471,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the modifiedBy attribute of the TeamMember object
+   * Gets the modifiedBy attribute of the TeamMember object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -482,9 +481,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the roleId attribute of the TeamMember object
+   * Gets the roleId attribute of the TeamMember object
    *
-   *@return    The roleId value
+   * @return The roleId value
    */
   public int getRoleId() {
     return roleId;
@@ -492,9 +491,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the status attribute of the TeamMember object
+   * Gets the status attribute of the TeamMember object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -502,9 +501,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the lastAccessed attribute of the TeamMember object
+   * Gets the lastAccessed attribute of the TeamMember object
    *
-   *@return    The lastAccessed value
+   * @return The lastAccessed value
    */
   public java.sql.Timestamp getLastAccessed() {
     return lastAccessed;
@@ -512,9 +511,9 @@ public class TeamMember {
 
 
   /**
-   *  Gets the lastAccessedString attribute of the TeamMember object
+   * Gets the lastAccessedString attribute of the TeamMember object
    *
-   *@return    The lastAccessedString value
+   * @return The lastAccessedString value
    */
   public String getLastAccessedString() {
     try {
@@ -533,11 +532,11 @@ public class TeamMember {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -588,10 +587,10 @@ public class TeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -606,19 +605,19 @@ public class TeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  userLevel         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @param userLevel Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean changeRole(Connection db, int projectId, int userId, int userLevel) throws SQLException {
     //Check current level, if user is not a leader than it doesn't matter what the change is
     PreparedStatement pst = db.prepareStatement(
-        "SELECT level " +
+        "SELECT \"level\" " +
         "FROM lookup_project_role " +
         "WHERE code IN (SELECT userlevel FROM project_team WHERE project_id = ? AND user_id = ?) ");
     pst.setInt(1, projectId);
@@ -639,7 +638,7 @@ public class TeamMember {
           "SELECT count(user_id) AS other " +
           "FROM project_team " +
           "WHERE project_id = ? " +
-          "AND userlevel IN (SELECT code FROM lookup_project_role WHERE level <= ?) " +
+          "AND userlevel IN (SELECT code FROM lookup_project_role WHERE \"level\" <= ?) " +
           "AND user_id <> ? ");
       pst.setInt(1, projectId);
       pst.setInt(2, TeamMember.PROJECT_LEAD);
@@ -671,10 +670,10 @@ public class TeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateStatus(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -691,12 +690,12 @@ public class TeamMember {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void updateLastAccessed(Connection db, int projectId, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

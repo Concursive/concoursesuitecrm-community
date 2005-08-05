@@ -15,19 +15,22 @@
  */
 package org.aspcfs.apps.transfer.reader.mapreader;
 
-import java.util.*;
-import java.io.*;
-import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.HtmlSelect;
-import org.w3c.dom.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.File;
+import java.util.*;
 
 /**
- *  Contains a list of Property objects and defines an object Mapping
+ * Contains a list of Property objects and defines an object Mapping
  *
- *@author     Mathur
- *@created    April 5, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created April 5, 2004
  */
 public class PropertyMap {
   private String id = null;
@@ -37,16 +40,17 @@ public class PropertyMap {
 
 
   /**
-   *  Constructor for the PropertyMap object
+   * Constructor for the PropertyMap object
    */
-  public PropertyMap() { }
+  public PropertyMap() {
+  }
 
 
   /**
-   *  Constructor for the PropertyMap object
+   * Constructor for the PropertyMap object
    *
-   *@param  mapFile  Description of the Parameter
-   *@param  mapName  Description of the Parameter
+   * @param mapFile Description of the Parameter
+   * @param mapName Description of the Parameter
    */
   public PropertyMap(String mapFile, String mapName) {
     loadMap(mapFile, mapName);
@@ -54,9 +58,9 @@ public class PropertyMap {
 
 
   /**
-   *  Sets the displayName attribute of the PropertyMap object
+   * Sets the displayName attribute of the PropertyMap object
    *
-   *@param  tmp  The new displayName value
+   * @param tmp The new displayName value
    */
   public void setDisplayName(String tmp) {
     this.displayName = tmp;
@@ -64,9 +68,9 @@ public class PropertyMap {
 
 
   /**
-   *  Gets the displayName attribute of the PropertyMap object
+   * Gets the displayName attribute of the PropertyMap object
    *
-   *@return    The displayName value
+   * @return The displayName value
    */
   public String getDisplayName() {
     return displayName;
@@ -74,9 +78,9 @@ public class PropertyMap {
 
 
   /**
-   *  Sets the id attribute of the PropertyMap object
+   * Sets the id attribute of the PropertyMap object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = tmp;
@@ -84,9 +88,9 @@ public class PropertyMap {
 
 
   /**
-   *  Sets the properties attribute of the PropertyMap object
+   * Sets the properties attribute of the PropertyMap object
    *
-   *@param  tmp  The new properties value
+   * @param tmp The new properties value
    */
   public void setProperties(LinkedHashMap tmp) {
     this.properties = tmp;
@@ -94,9 +98,9 @@ public class PropertyMap {
 
 
   /**
-   *  Sets the dependencies attribute of the PropertyMap object
+   * Sets the dependencies attribute of the PropertyMap object
    *
-   *@param  tmp  The new dependencies value
+   * @param tmp The new dependencies value
    */
   public void setDependencies(HashMap tmp) {
     this.dependencies = tmp;
@@ -104,9 +108,9 @@ public class PropertyMap {
 
 
   /**
-   *  Gets the properties attribute of the PropertyMap object
+   * Gets the properties attribute of the PropertyMap object
    *
-   *@return    The properties value
+   * @return The properties value
    */
   public HashMap getProperties() {
     return properties;
@@ -114,9 +118,9 @@ public class PropertyMap {
 
 
   /**
-   *  Gets the dependencies attribute of the PropertyMap object
+   * Gets the dependencies attribute of the PropertyMap object
    *
-   *@return    The dependencies value
+   * @return The dependencies value
    */
   public HashMap getDependencies() {
     return dependencies;
@@ -124,9 +128,9 @@ public class PropertyMap {
 
 
   /**
-   *  Gets the id attribute of the PropertyMap object
+   * Gets the id attribute of the PropertyMap object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -134,9 +138,9 @@ public class PropertyMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasProperties() {
     return (properties.size() > 0);
@@ -144,10 +148,10 @@ public class PropertyMap {
 
 
   /**
-   *  Adds a property if it doesn't already exist
+   * Adds a property if it doesn't already exist
    *
-   *@param  thisProperty  The feature to be added to the Property attribute
-   *@return               Description of the Return Value
+   * @param thisProperty The feature to be added to the Property attribute
+   * @return Description of the Return Value
    */
   public boolean addProperty(Property thisProperty) {
     if (!properties.containsKey(thisProperty.getName())) {
@@ -160,10 +164,10 @@ public class PropertyMap {
 
 
   /**
-   *  Loads the map with the given name and all its dependencies
+   * Loads the map with the given name and all its dependencies
    *
-   *@param  mapFile  Description of the Parameter
-   *@param  mapName  Description of the Parameter
+   * @param mapFile Description of the Parameter
+   * @param mapName Description of the Parameter
    */
   public void loadMap(String mapFile, String mapName) {
     try {
@@ -171,7 +175,8 @@ public class PropertyMap {
       XMLUtils xml = new XMLUtils(configFile);
       ArrayList mapElements = new ArrayList();
 
-      XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
+      XMLUtils.getAllChildren(
+          xml.getFirstChild("mappings"), "map", mapElements);
       Iterator mapItems = mapElements.iterator();
 
       //load the head map
@@ -182,7 +187,8 @@ public class PropertyMap {
           this.setId((String) map.getAttribute("id"));
           this.setDisplayName((String) map.getAttribute("displayName"));
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("PropertyMap -> Adding Map " + map.getAttribute("id"));
+            System.out.println(
+                "PropertyMap -> Adding Map " + map.getAttribute("id"));
           }
           //Process this map
           NodeList nl = map.getChildNodes();
@@ -190,16 +196,19 @@ public class PropertyMap {
             Node n = nl.item(i);
 
             //load properties
-            if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("properties")) {
+            if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+                "properties")) {
               NodeList nl1 = n.getChildNodes();
               for (int j = 0; j < nl1.getLength(); j++) {
                 Node p = nl1.item(j);
 
                 //add property
-                if (p.getNodeType() == Node.ELEMENT_NODE && ((Element) p).getTagName().equals("property")) {
+                if (p.getNodeType() == Node.ELEMENT_NODE && ((Element) p).getTagName().equals(
+                    "property")) {
                   Property thisProperty = new Property(p);
                   //use [mapName + "." + propertyName] to uniquely identify a property
-                  thisProperty.setUniqueName(mapName + "." + thisProperty.getName());
+                  thisProperty.setUniqueName(
+                      mapName + "." + thisProperty.getName());
                   if (thisProperty.isValid()) {
                     this.addProperty(thisProperty);
                   }
@@ -208,16 +217,19 @@ public class PropertyMap {
             }
 
             //get the dependencies
-            if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("dependencies")) {
+            if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+                "dependencies")) {
               dependencies = new HashMap();
               NodeList nl1 = n.getChildNodes();
               for (int j = 0; j < nl1.getLength(); j++) {
                 Node d = nl1.item(j);
-                if (d.getNodeType() == Node.ELEMENT_NODE && ((Element) d).getTagName().equals("dependency")) {
+                if (d.getNodeType() == Node.ELEMENT_NODE && ((Element) d).getTagName().equals(
+                    "dependency")) {
                   //add dependency
                   DependencyMap dMap = new DependencyMap(d);
                   if (System.getProperty("DEBUG") != null) {
-                    System.out.println("PropertyMap -> Adding Dependency " + dMap.getDependencyId());
+                    System.out.println(
+                        "PropertyMap -> Adding Dependency " + dMap.getDependencyId());
                   }
                   dependencies.put(dMap.getDependencyId(), dMap);
                 }
@@ -249,10 +261,10 @@ public class PropertyMap {
 
 
   /**
-   *  Gets the property attribute of the PropertyMap object
+   * Gets the property attribute of the PropertyMap object
    *
-   *@param  propertyName  Description of the Parameter
-   *@return               The property value
+   * @param propertyName Description of the Parameter
+   * @return The property value
    */
   public Property getProperty(String propertyName) {
     Property p = null;
@@ -264,10 +276,10 @@ public class PropertyMap {
 
 
   /**
-   *  Gets a dependency from this map
+   * Gets a dependency from this map
    *
-   *@param  mapId  Description of the Parameter
-   *@return        The dependencyMap value
+   * @param mapId Description of the Parameter
+   * @return The dependencyMap value
    */
   public ArrayList getDependencyMapList(String mapId) {
     ArrayList mapList = null;
@@ -279,12 +291,11 @@ public class PropertyMap {
   }
 
 
-
   /**
-   *  Checks to see if the dependency specified has grouping enabled
+   * Checks to see if the dependency specified has grouping enabled
    *
-   *@param  dependencyId  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param dependencyId Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasGroups(String dependencyId) {
     if ("".equals(StringUtils.toString(dependencyId))) {
@@ -301,12 +312,12 @@ public class PropertyMap {
 
 
   /**
-   *  Tries to map the field to a property based on the alias speic
+   * Tries to map the field to a property based on the alias speic
    *
-   *@param  field                           Description of the Parameter
-   *@param  position                        Description of the Parameter
-   *@return                                 Description of the Return Value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @param field    Description of the Parameter
+   * @param position Description of the Parameter
+   * @return Description of the Return Value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public Property mapProperty(String field, int position) throws CloneNotSupportedException {
     Property mappedProperty = null;
@@ -370,13 +381,13 @@ public class PropertyMap {
    *  }
    */
   /**
-   *  Gets the property attribute of the PropertyMap object
+   * Gets the property attribute of the PropertyMap object
    *
-   *@param  field                           Description of the Parameter
-   *@param  uniquePropertyName              Description of the Parameter
-   *@param  groupId                         Description of the Parameter
-   *@return                                 The property value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @param field              Description of the Parameter
+   * @param uniquePropertyName Description of the Parameter
+   * @param groupId            Description of the Parameter
+   * @return The property value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public Property getProperty(String field, String uniquePropertyName, String groupId) throws CloneNotSupportedException {
     if ("".equals(StringUtils.toString(groupId))) {
@@ -387,14 +398,14 @@ public class PropertyMap {
 
 
   /**
-   *  Retrieves the property from the map based on the name <br>
-   *  field parameter is used if it is a dependency property
+   * Retrieves the property from the map based on the name <br>
+   * field parameter is used if it is a dependency property
    *
-   *@param  field                           Description of the Parameter
-   *@param  uniquePropertyName              Description of the Parameter
-   *@param  groupId                         Description of the Parameter
-   *@return                                 The property value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @param field              Description of the Parameter
+   * @param uniquePropertyName Description of the Parameter
+   * @param groupId            Description of the Parameter
+   * @return The property value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public Property getProperty(String field, String uniquePropertyName, int groupId) throws CloneNotSupportedException {
     Property mappedProperty = null;
@@ -426,9 +437,9 @@ public class PropertyMap {
 
 
   /**
-   *  Prepares a list of required properties in the header map only
+   * Prepares a list of required properties in the header map only
    *
-   *@return    The requiredProperties value
+   * @return The requiredProperties value
    */
   public ArrayList getRequiredProperties() {
     ArrayList requiredList = new ArrayList();
@@ -445,10 +456,10 @@ public class PropertyMap {
 
 
   /**
-   *  Retrieves the dependency map for the specified id
+   * Retrieves the dependency map for the specified id
    *
-   *@param  mapId  Description of the Parameter
-   *@return        The dependencyMap value
+   * @param mapId Description of the Parameter
+   * @return The dependencyMap value
    */
   public DependencyMap getDependencyMap(String mapId) {
     DependencyMap thisMap = null;
@@ -460,11 +471,11 @@ public class PropertyMap {
 
 
   /**
-   *  Clones the map
+   * Clones the map
    *
-   *@param  instanceId                      Description of the Parameter
-   *@return                                 Description of the Return Value
-   *@exception  CloneNotSupportedException  Description of the Exception
+   * @param instanceId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws CloneNotSupportedException Description of the Exception
    */
   public PropertyMap duplicate(String instanceId) throws CloneNotSupportedException {
     PropertyMap duplicateMap = new PropertyMap();
@@ -475,18 +486,19 @@ public class PropertyMap {
       Property thisProperty = (Property) properties.get(propertyName);
       Property clonedProperty = (Property) thisProperty.duplicate();
       clonedProperty.setMappedColumn(-1);
-      duplicateMap.getProperties().put(clonedProperty.getName(), clonedProperty);
+      duplicateMap.getProperties().put(
+          clonedProperty.getName(), clonedProperty);
     }
     return duplicateMap;
   }
 
 
   /**
-   *  Returns a HTML Select drop down list of properties
+   * Returns a HTML Select drop down list of properties
    *
-   *@param  field    Description of the Parameter
-   *@param  mapping  Description of the Parameter
-   *@return          The htmlSelect value
+   * @param field   Description of the Parameter
+   * @param mapping Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String field, Property mapping) {
     String defaultKey = "-1";
@@ -495,7 +507,8 @@ public class PropertyMap {
     }
     HtmlSelect htmlSelect = new HtmlSelect();
     htmlSelect.setSelectName(field);
-    htmlSelect.addAttribute("onChange", "javascript:checkPrompt('" + field + "');");
+    htmlSelect.addAttribute(
+        "onChange", "javascript:checkPrompt('" + field + "');");
     htmlSelect.addAttribute("id", field);
     htmlSelect.addItem("-1", " ");
 
@@ -505,8 +518,10 @@ public class PropertyMap {
     while (props.hasNext()) {
       String propertyName = (String) props.next();
       Property thisProperty = (Property) properties.get(propertyName);
-      if (thisProperty.getIsForPrompting() && !"".equals(StringUtils.toString(thisProperty.getDisplayName()))) {
-        htmlSelect.addItem(thisProperty.getUniqueName(), thisProperty.getDisplayName());
+      if (thisProperty.getIsForPrompting() && !"".equals(
+          StringUtils.toString(thisProperty.getDisplayName()))) {
+        htmlSelect.addItem(
+            thisProperty.getUniqueName(), thisProperty.getDisplayName());
       }
     }
 
@@ -522,9 +537,12 @@ public class PropertyMap {
         props = dMap.getProperties().keySet().iterator();
         while (props.hasNext()) {
           String propertyName = (String) props.next();
-          Property thisProperty = (Property) dMap.getProperties().get(propertyName);
-          if (thisProperty.getIsForPrompting() && !"".equals(StringUtils.toString(thisProperty.getDisplayName()))) {
-            htmlSelect.addItem(thisProperty.getUniqueName(), thisProperty.getDisplayName());
+          Property thisProperty = (Property) dMap.getProperties().get(
+              propertyName);
+          if (thisProperty.getIsForPrompting() && !"".equals(
+              StringUtils.toString(thisProperty.getDisplayName()))) {
+            htmlSelect.addItem(
+                thisProperty.getUniqueName(), thisProperty.getDisplayName());
           }
         }
       }
@@ -534,12 +552,12 @@ public class PropertyMap {
 
 
   /**
-   *  Gets the htmlSelect attribute of the PropertyMap object
+   * Gets the htmlSelect attribute of the PropertyMap object
    *
-   *@param  defaultKey  Description of the Parameter
-   *@param  selectName  Description of the Parameter
-   *@param  groupType   Description of the Parameter
-   *@return             The htmlSelect value
+   * @param defaultKey Description of the Parameter
+   * @param selectName Description of the Parameter
+   * @param groupType  Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getGroupHtmlSelect(String selectName, int defaultKey, String groupType) {
     HtmlSelect htmlSelect = new HtmlSelect();
@@ -548,7 +566,8 @@ public class PropertyMap {
 
     //allow 10 group id choices
     for (int i = 1; i < 11; i++) {
-      htmlSelect.addItem(String.valueOf(i), (groupType != null ? groupType : "Group") + i);
+      htmlSelect.addItem(
+          String.valueOf(i), (groupType != null ? groupType : "Group") + i);
     }
     return htmlSelect.getHtml(selectName, defaultKey);
   }

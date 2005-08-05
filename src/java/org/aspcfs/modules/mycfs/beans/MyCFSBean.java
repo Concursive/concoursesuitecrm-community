@@ -15,15 +15,16 @@
  */
 package org.aspcfs.modules.mycfs.beans;
 
-import java.util.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.util.Vector;
 
 /**
- *  Used by the MyCFS module for passing formatted data to the MyCFS JSP
+ * Used by the MyCFS module for passing formatted data to the MyCFS JSP
  *
- *@author     mrajkowski
- *@created    July 9, 2001
- *@version    1.1
+ * @author mrajkowski
+ * @version 1.1
+ * @created July 9, 2001
  */
 public class MyCFSBean extends GenericBean {
 
@@ -35,19 +36,20 @@ public class MyCFSBean extends GenericBean {
 
 
   /**
-   *  Constructor for the myCFSBean object
+   * Constructor for the myCFSBean object
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public MyCFSBean() { }
+  public MyCFSBean() {
+  }
 
 
   /**
-   *  Sets the FirstName attribute of the myCFSBean object
+   * Sets the FirstName attribute of the myCFSBean object
    *
-   *@param  tmp    The new FirstName value
-   *@since         1.0
-   *@deprecated
+   * @param tmp The new FirstName value
+   * @since 1.0
+   * @deprecated
    */
   public void setFirstName(String tmp) {
     this.firstName = tmp;
@@ -55,11 +57,11 @@ public class MyCFSBean extends GenericBean {
 
 
   /**
-   *  Sets the LastName attribute of the myCFSBean object
+   * Sets the LastName attribute of the myCFSBean object
    *
-   *@param  tmp    The new LastName value
-   *@since         1.0
-   *@deprecated
+   * @param tmp The new LastName value
+   * @since 1.0
+   * @deprecated
    */
   public void setLastName(String tmp) {
     this.lastName = tmp;
@@ -67,11 +69,11 @@ public class MyCFSBean extends GenericBean {
 
 
   /**
-   *  Gets the FirstName attribute of the myCFSBean object
+   * Gets the FirstName attribute of the myCFSBean object
    *
-   *@return        The FirstName value
-   *@since         1.0
-   *@deprecated
+   * @return The FirstName value
+   * @since 1.0
+   * @deprecated
    */
   public String getFirstName() {
     return firstName;
@@ -79,11 +81,11 @@ public class MyCFSBean extends GenericBean {
 
 
   /**
-   *  Gets the LastName attribute of the myCFSBean object
+   * Gets the LastName attribute of the myCFSBean object
    *
-   *@return        The LastName value
-   *@since         1.0
-   *@deprecated
+   * @return The LastName value
+   * @since 1.0
+   * @deprecated
    */
   public String getLastName() {
     return lastName;
@@ -91,11 +93,11 @@ public class MyCFSBean extends GenericBean {
 
 
   /**
-   *  Gets the Items attribute of the MyCFSBean object, this should be a Vector
-   *  of HTML String objects
+   * Gets the Items attribute of the MyCFSBean object, this should be a Vector
+   * of HTML String objects
    *
-   *@return    The Items value
-   *@since     1.1
+   * @return The Items value
+   * @since 1.1
    */
   public Vector getItems() {
     return items;
@@ -103,11 +105,11 @@ public class MyCFSBean extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Item attribute of the MyCFSBean object, this should
-   *  be a String object formatted with HTML
+   * Adds a feature to the Item attribute of the MyCFSBean object, this should
+   * be a String object formatted with HTML
    *
-   *@param  tmp  The feature to be added to the Item attribute
-   *@since       1.1
+   * @param tmp The feature to be added to the Item attribute
+   * @since 1.1
    */
   public void addItem(String tmp) {
     this.items.addElement(tmp);

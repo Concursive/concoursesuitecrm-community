@@ -28,12 +28,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    December 23, 2002
- *@version    $Id: RequirementList.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: RequirementList.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created December 23, 2002
  */
 public class RequirementList extends ArrayList {
 
@@ -54,15 +54,16 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Constructor for the RequirementList object
+   * Constructor for the RequirementList object
    */
-  public RequirementList() { }
+  public RequirementList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the RequirementList object
+   * Sets the pagedListInfo attribute of the RequirementList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -70,9 +71,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the RequirementList object
+   * Sets the emptyHtmlSelectRecord attribute of the RequirementList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -80,9 +81,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the RequirementList object
+   * Sets the projectId attribute of the RequirementList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -90,9 +91,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the project attribute of the RequirementList object
+   * Sets the project attribute of the RequirementList object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -100,9 +101,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the buildAssignments attribute of the RequirementList object
+   * Sets the buildAssignments attribute of the RequirementList object
    *
-   *@param  tmp  The new buildAssignments value
+   * @param tmp The new buildAssignments value
    */
   public void setBuildAssignments(boolean tmp) {
     this.buildAssignments = tmp;
@@ -110,9 +111,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the RequirementList object
+   * Sets the enteredBy attribute of the RequirementList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -120,9 +121,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the RequirementList object
+   * Sets the modifiedBy attribute of the RequirementList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -130,9 +131,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the openOnly attribute of the RequirementList object
+   * Sets the openOnly attribute of the RequirementList object
    *
-   *@param  tmp  The new openOnly value
+   * @param tmp The new openOnly value
    */
   public void setOpenOnly(boolean tmp) {
     this.openOnly = tmp;
@@ -140,9 +141,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the closedOnly attribute of the RequirementList object
+   * Sets the closedOnly attribute of the RequirementList object
    *
-   *@param  tmp  The new closedOnly value
+   * @param tmp The new closedOnly value
    */
   public void setClosedOnly(boolean tmp) {
     this.closedOnly = tmp;
@@ -150,10 +151,10 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the RequirementList object
+   * Gets the htmlSelect attribute of the RequirementList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -161,9 +162,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the planActivityCount attribute of the RequirementList object
+   * Gets the planActivityCount attribute of the RequirementList object
    *
-   *@return    The planActivityCount value
+   * @return The planActivityCount value
    */
   public int getPlanActivityCount() {
     return planActivityCount;
@@ -171,9 +172,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the planActivityCount attribute of the RequirementList object
+   * Sets the planActivityCount attribute of the RequirementList object
    *
-   *@param  planActivityCount  The new planActivityCount value
+   * @param planActivityCount The new planActivityCount value
    */
   public void setPlanActivityCount(int planActivityCount) {
     this.planActivityCount = planActivityCount;
@@ -181,9 +182,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the planClosedCount attribute of the RequirementList object
+   * Gets the planClosedCount attribute of the RequirementList object
    *
-   *@return    The planClosedCount value
+   * @return The planClosedCount value
    */
   public int getPlanClosedCount() {
     return planClosedCount;
@@ -191,9 +192,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the planClosedCount attribute of the RequirementList object
+   * Sets the planClosedCount attribute of the RequirementList object
    *
-   *@param  planClosedCount  The new planClosedCount value
+   * @param planClosedCount The new planClosedCount value
    */
   public void setPlanClosedCount(int planClosedCount) {
     this.planClosedCount = planClosedCount;
@@ -201,9 +202,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the planUpcomingCount attribute of the RequirementList object
+   * Gets the planUpcomingCount attribute of the RequirementList object
    *
-   *@return    The planUpcomingCount value
+   * @return The planUpcomingCount value
    */
   public int getPlanUpcomingCount() {
     return planUpcomingCount;
@@ -211,9 +212,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the planUpcomingCount attribute of the RequirementList object
+   * Sets the planUpcomingCount attribute of the RequirementList object
    *
-   *@param  planUpcomingCount  The new planUpcomingCount value
+   * @param planUpcomingCount The new planUpcomingCount value
    */
   public void setPlanUpcomingCount(int planUpcomingCount) {
     this.planUpcomingCount = planUpcomingCount;
@@ -221,9 +222,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the planOverdueCount attribute of the RequirementList object
+   * Gets the planOverdueCount attribute of the RequirementList object
    *
-   *@return    The planOverdueCount value
+   * @return The planOverdueCount value
    */
   public int getPlanOverdueCount() {
     return planOverdueCount;
@@ -231,9 +232,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Sets the planOverdueCount attribute of the RequirementList object
+   * Sets the planOverdueCount attribute of the RequirementList object
    *
-   *@param  planOverdueCount  The new planOverdueCount value
+   * @param planOverdueCount The new planOverdueCount value
    */
   public void setPlanOverdueCount(int planOverdueCount) {
     this.planOverdueCount = planOverdueCount;
@@ -241,11 +242,11 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the RequirementList object
+   * Gets the htmlSelect attribute of the RequirementList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect listSelect = new HtmlSelect();
@@ -264,9 +265,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Gets the project attribute of the RequirementList object
+   * Gets the project attribute of the RequirementList object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -274,10 +275,10 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -316,9 +317,10 @@ public class RequirementList extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
-          "AND lower(shortDescription) < ? ");
+          "AND " + DatabaseUtils.toLowerCase(db) + "(shortDescription) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -343,22 +345,14 @@ public class RequirementList extends ArrayList {
         " LEFT JOIN lookup_project_loe loe_a ON (r.actual_loetype = loe_a.code) " +
         "WHERE r.requirement_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Requirement thisRequirement = new Requirement(rs);
       thisRequirement.setProject(project);
       this.add(thisRequirement);
@@ -377,9 +371,9 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -398,11 +392,11 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -414,11 +408,11 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     Iterator requirements = this.iterator();
@@ -437,10 +431,10 @@ public class RequirementList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator requirements = this.iterator();
@@ -449,52 +443,55 @@ public class RequirementList extends ArrayList {
       thisRequirement.delete(db);
     }
   }
-  
-  
+
+
   /**
-   *  Gets the percentClosed attribute of the RequirementList object
+   * Gets the percentClosed attribute of the RequirementList object
    *
-   *@return    The percentClosed value
+   * @return The percentClosed value
    */
   public int getPercentClosed() {
     if (planActivityCount == 0 || planClosedCount == planActivityCount) {
       return 100;
     }
-    return (int) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0);
+    return (int) Math.round(
+        ((double) planClosedCount / (double) planActivityCount) * 100.0);
   }
 
 
   /**
-   *  Gets the percentUpcoming attribute of the RequirementList object
+   * Gets the percentUpcoming attribute of the RequirementList object
    *
-   *@return    The percentUpcoming value
+   * @return The percentUpcoming value
    */
   public int getPercentUpcoming() {
     if (planActivityCount == 0 || planUpcomingCount == 0) {
       return 0;
     }
-    return (int) Math.round(((double) planUpcomingCount / (double) planActivityCount) * 100.0);
+    return (int) Math.round(
+        ((double) planUpcomingCount / (double) planActivityCount) * 100.0);
   }
 
 
   /**
-   *  Gets the percentOverdue attribute of the RequirementList object
+   * Gets the percentOverdue attribute of the RequirementList object
    *
-   *@return    The percentOverdue value
+   * @return The percentOverdue value
    */
   public int getPercentOverdue() {
     if (planActivityCount == 0 || planOverdueCount == 0) {
       return 0;
     }
-    return (int) Math.round(((double) planOverdueCount / (double) planActivityCount) * 100.0);
+    return (int) Math.round(
+        ((double) planOverdueCount / (double) planActivityCount) * 100.0);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPlanActivityCounts(Connection db) throws SQLException {
     planActivityCount = 0;

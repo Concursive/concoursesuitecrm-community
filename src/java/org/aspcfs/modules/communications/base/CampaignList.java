@@ -15,21 +15,25 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Represents the combination of a Message, Recipients, and Schedule details.
+ * Represents the combination of a Message, Recipients, and Schedule details.
  *
- *@author     Wesley_S_Gillette
- *@created    November 16, 2001
- *@version    $Id: CampaignList.java,v 1.12.22.2 2003/05/14 17:41:56 akhi_m Exp
- *      $
+ * @author Wesley_S_Gillette
+ * @version $Id: CampaignList.java,v 1.12.22.2 2003/05/14 17:41:56 akhi_m Exp
+ *          $
+ * @created November 16, 2001
  */
 public class CampaignList extends Vector {
 
@@ -51,6 +55,9 @@ public class CampaignList extends Vector {
   private String idRange = null;
   private int ready = -1;
   private int contactId = -1;
+  private java.sql.Timestamp trashedDate = null;
+  private boolean includeOnlyTrashed = false;
+
   private java.sql.Timestamp activeRangeStart = null;
   private java.sql.Timestamp activeRangeEnd = null;
   private java.sql.Timestamp runRangeStart = null;
@@ -64,18 +71,19 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Constructor for the CampaignList object
+   * Constructor for the CampaignList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public CampaignList() { }
+  public CampaignList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the CampaignList object
+   * Sets the pagedListInfo attribute of the CampaignList object
    *
-   *@param  tmp  The new pagedListInfo value
-   *@since       1.1
+   * @param tmp The new pagedListInfo value
+   * @since 1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -83,10 +91,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the name attribute of the CampaignList object
+   * Sets the name attribute of the CampaignList object
    *
-   *@param  tmp  The new name value
-   *@since       1.1
+   * @param tmp The new name value
+   * @since 1.1
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -94,10 +102,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the description attribute of the CampaignList object
+   * Sets the description attribute of the CampaignList object
    *
-   *@param  tmp  The new description value
-   *@since       1.1
+   * @param tmp The new description value
+   * @since 1.1
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -105,10 +113,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the ActiveDate attribute of the CampaignList object
+   * Sets the ActiveDate attribute of the CampaignList object
    *
-   *@param  tmp  The new ActiveDate value
-   *@since       1.2
+   * @param tmp The new ActiveDate value
+   * @since 1.2
    */
   public void setActiveDate(java.sql.Timestamp tmp) {
     this.activeDate = tmp;
@@ -116,10 +124,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the Enabled attribute of the CampaignList object
+   * Sets the Enabled attribute of the CampaignList object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.2
+   * @param tmp The new Enabled value
+   * @since 1.2
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -127,10 +135,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the Active attribute of the CampaignList object
+   * Sets the Active attribute of the CampaignList object
    *
-   *@param  tmp  The new Active value
-   *@since
+   * @param tmp The new Active value
    */
   public void setActive(int tmp) {
     this.active = tmp;
@@ -138,9 +145,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the ready attribute of the CampaignList object
+   * Sets the ready attribute of the CampaignList object
    *
-   *@param  tmp  The new ready value
+   * @param tmp The new ready value
    */
   public void setReady(int tmp) {
     this.ready = tmp;
@@ -148,21 +155,59 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the contactId attribute of the CampaignList object
+   * Sets the contactId attribute of the CampaignList object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
   }
 
 
+  /**
+   * Sets the trashedDate attribute of the CampaignList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
 
   /**
-   *  Sets the IncompleteOnly attribute of the CampaignList object
+   * Sets the trashedDate attribute of the CampaignList object
    *
-   *@param  tmp  The new IncompleteOnly value
-   *@since
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the CampaignList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the CampaignList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Sets the IncompleteOnly attribute of the CampaignList object
+   *
+   * @param tmp The new IncompleteOnly value
    */
   public void setIncompleteOnly(boolean tmp) {
     this.incompleteOnly = tmp;
@@ -170,10 +215,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the CompleteOnly attribute of the CampaignList object
+   * Sets the CompleteOnly attribute of the CampaignList object
    *
-   *@param  tmp  The new CompleteOnly value
-   *@since
+   * @param tmp The new CompleteOnly value
    */
   public void setCompleteOnly(boolean tmp) {
     this.completeOnly = tmp;
@@ -181,9 +225,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the owner attribute of the CampaignList object
+   * Sets the owner attribute of the CampaignList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -191,9 +235,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the ownerIdRange attribute of the CampaignList object
+   * Sets the ownerIdRange attribute of the CampaignList object
    *
-   *@param  tmp  The new ownerIdRange value
+   * @param tmp The new ownerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -201,9 +245,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the idRange attribute of the CampaignList object
+   * Sets the idRange attribute of the CampaignList object
    *
-   *@param  idRange  The new idRange value
+   * @param idRange The new idRange value
    */
   public void setIdRange(String idRange) {
     this.idRange = idRange;
@@ -211,9 +255,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the activeRangeStart attribute of the CampaignList object
+   * Sets the activeRangeStart attribute of the CampaignList object
    *
-   *@param  tmp  The new activeRangeStart value
+   * @param tmp The new activeRangeStart value
    */
   public void setActiveRangeStart(java.sql.Timestamp tmp) {
     this.activeRangeStart = tmp;
@@ -221,9 +265,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the activeRangeEnd attribute of the CampaignList object
+   * Sets the activeRangeEnd attribute of the CampaignList object
    *
-   *@param  tmp  The new activeRangeEnd value
+   * @param tmp The new activeRangeEnd value
    */
   public void setActiveRangeEnd(java.sql.Timestamp tmp) {
     this.activeRangeEnd = tmp;
@@ -231,9 +275,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the runRangeStart attribute of the CampaignList object
+   * Sets the runRangeStart attribute of the CampaignList object
    *
-   *@param  tmp  The new runRangeStart value
+   * @param tmp The new runRangeStart value
    */
   public void setRunRangeStart(java.sql.Timestamp tmp) {
     this.runRangeStart = tmp;
@@ -241,9 +285,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the runRangeEnd attribute of the CampaignList object
+   * Sets the runRangeEnd attribute of the CampaignList object
    *
-   *@param  tmp  The new runRangeEnd value
+   * @param tmp The new runRangeEnd value
    */
   public void setRunRangeEnd(java.sql.Timestamp tmp) {
     this.runRangeEnd = tmp;
@@ -251,9 +295,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the tableName attribute of the CampaignList object
+   * Gets the tableName attribute of the CampaignList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -261,9 +305,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the uniqueField attribute of the CampaignList object
+   * Gets the uniqueField attribute of the CampaignList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -271,9 +315,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the lastAnchor attribute of the CampaignList object
+   * Gets the lastAnchor attribute of the CampaignList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -281,9 +325,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the nextAnchor attribute of the CampaignList object
+   * Gets the nextAnchor attribute of the CampaignList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -291,9 +335,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the syncType attribute of the CampaignList object
+   * Gets the syncType attribute of the CampaignList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -301,9 +345,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the lastAnchor attribute of the CampaignList object
+   * Sets the lastAnchor attribute of the CampaignList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -311,9 +355,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the nextAnchor attribute of the CampaignList object
+   * Sets the nextAnchor attribute of the CampaignList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -321,9 +365,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the syncType attribute of the CampaignList object
+   * Sets the syncType attribute of the CampaignList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -331,9 +375,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Sets the type attribute of the CampaignList object
+   * Sets the type attribute of the CampaignList object
    *
-   *@param  type  The new type value
+   * @param type The new type value
    */
   public void setType(int type) {
     this.type = type;
@@ -341,9 +385,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the type attribute of the CampaignList object
+   * Gets the type attribute of the CampaignList object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -351,10 +395,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the CampaignList object
+   * Gets the pagedListInfo attribute of the CampaignList object
    *
-   *@return    The pagedListInfo value
-   *@since     1.1
+   * @return The pagedListInfo value
+   * @since 1.1
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -362,9 +406,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the idRange attribute of the CampaignList object
+   * Gets the idRange attribute of the CampaignList object
    *
-   *@return    The idRange value
+   * @return The idRange value
    */
   public String getIdRange() {
     return idRange;
@@ -372,10 +416,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the name attribute of the CampaignList object
+   * Gets the name attribute of the CampaignList object
    *
-   *@return    The name value
-   *@since     1.1
+   * @return The name value
+   * @since 1.1
    */
   public String getName() {
     return name;
@@ -383,37 +427,35 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the description attribute of the CampaignList object
+   * Gets the description attribute of the CampaignList object
    *
-   *@return    The description value
-   *@since     1.1
+   * @return The description value
+   * @since 1.1
    */
   public String getDescription() {
     return description;
   }
 
 
-
   /**
-   *  Gets the htmlSelect attribute of the CampaignList object
+   * Gets the htmlSelect attribute of the CampaignList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The htmlSelect value
-   *@since              1.1
+   * @param selectName Description of Parameter
+   * @return The htmlSelect value
+   * @since 1.1
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
   }
 
 
-
   /**
-   *  Gets the htmlSelect attribute of the CampaignList object
+   * Gets the htmlSelect attribute of the CampaignList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The htmlSelect value
-   *@since              1.1
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The htmlSelect value
+   * @since 1.1
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect campaignListSelect = new HtmlSelect();
@@ -429,10 +471,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the ActiveDate attribute of the CampaignList object
+   * Gets the ActiveDate attribute of the CampaignList object
    *
-   *@return    The ActiveDate value
-   *@since     1.2
+   * @return The ActiveDate value
+   * @since 1.2
    */
   public java.sql.Timestamp getActiveDate() {
     return activeDate;
@@ -440,10 +482,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the Enabled attribute of the CampaignList object
+   * Gets the Enabled attribute of the CampaignList object
    *
-   *@return    The Enabled value
-   *@since     1.2
+   * @return The Enabled value
+   * @since 1.2
    */
   public int getEnabled() {
     return enabled;
@@ -451,10 +493,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the Active attribute of the CampaignList object
+   * Gets the Active attribute of the CampaignList object
    *
-   *@return    The Active value
-   *@since
+   * @return The Active value
    */
   public int getActive() {
     return active;
@@ -462,10 +503,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the IncompleteOnly attribute of the CampaignList object
+   * Gets the IncompleteOnly attribute of the CampaignList object
    *
-   *@return    The IncompleteOnly value
-   *@since
+   * @return The IncompleteOnly value
    */
   public boolean getIncompleteOnly() {
     return incompleteOnly;
@@ -473,10 +513,9 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Gets the CompleteOnly attribute of the CampaignList object
+   * Gets the CompleteOnly attribute of the CampaignList object
    *
-   *@return    The CompleteOnly value
-   *@since
+   * @return The CompleteOnly value
    */
   public boolean getCompleteOnly() {
     return completeOnly;
@@ -484,11 +523,11 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -508,7 +547,8 @@ public class CampaignList extends Vector {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -520,9 +560,10 @@ public class CampaignList extends Vector {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(c.name) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -559,22 +600,15 @@ public class CampaignList extends Vector {
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.campaign_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Campaign thisCamp = new Campaign(rs);
       this.add(thisCamp);
     }
@@ -585,10 +619,10 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.1
+   * @param sqlFilter Description of Parameter
+   * @since 1.1
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -622,10 +656,12 @@ public class CampaignList extends Vector {
       sqlFilter.append("AND c.campaign_id IN (" + idRange + ") ");
     }
     if (ready == TRUE) {
-      sqlFilter.append("AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");
+      sqlFilter.append(
+          "AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");
     }
     if (contactId > -1) {
-      sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM scheduled_recipient WHERE contact_id = ?) ");
+      sqlFilter.append(
+          "AND c.campaign_id IN (SELECT campaign_id FROM scheduled_recipient WHERE contact_id = ?) ");
     }
     if (activeRangeStart != null) {
       sqlFilter.append("AND active_date >= ? ");
@@ -634,21 +670,30 @@ public class CampaignList extends Vector {
       sqlFilter.append("AND active_date <= ? ");
     }
     if (runRangeStart != null) {
-      sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM campaign_run WHERE run_date >= ?) ");
+      sqlFilter.append(
+          "AND c.campaign_id IN (SELECT campaign_id FROM campaign_run WHERE run_date >= ?) ");
     }
     if (runRangeEnd != null) {
-      sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM campaign_run WHERE run_date <= ?) ");
+      sqlFilter.append(
+          "AND c.campaign_id IN (SELECT campaign_id FROM campaign_run WHERE run_date <= ?) ");
+    }
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND c.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND c.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND c.trashed_date IS NULL ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -692,16 +737,22 @@ public class CampaignList extends Vector {
     if (runRangeEnd != null) {
       pst.setTimestamp(++i, runRangeEnd);
     }
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   private void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -717,11 +768,11 @@ public class CampaignList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
@@ -731,7 +782,8 @@ public class CampaignList extends Vector {
         "FROM campaign c " +
         "WHERE c.campaign_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -740,6 +792,21 @@ public class CampaignList extends Vector {
     rs.close();
     pst.close();
     return recordCount;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void delete(Connection db, String filePath) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      Campaign thisCampaign = (Campaign) itr.next();
+      thisCampaign.delete(db, filePath);
+    }
   }
 }
 

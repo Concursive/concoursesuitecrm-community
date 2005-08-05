@@ -41,7 +41,7 @@ ant upgradedb -Darg1=2005-03-02-script04.sql -Darg2=
 ant upgradedb -Darg1=2005-02-07-script01.bsh -Darg2=
 
 # Employee projects
-ant upgradedb -Darg1=2005-03-02-script05.sql -Darg2=
+ant upgradedb -Darg1=2005-03-02-script05.bsh -Darg2=
 
 # Lookup list changes
 ant upgradedb -Darg1=2005-03-03-script01.sql -Darg2=

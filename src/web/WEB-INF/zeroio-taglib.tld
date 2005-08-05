@@ -126,6 +126,14 @@
       <required>yes</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+    <attribute>
+      <name>display</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <required>true</required>
+    </attribute>
   </tag>
   
   <tag>
@@ -263,6 +271,10 @@
     </attribute>
     <attribute>
       <name>object</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>type</name>
       <required>yes</required>
     </attribute>
   </tag>

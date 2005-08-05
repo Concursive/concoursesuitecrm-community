@@ -1,0 +1,48 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+import java.util.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.mycfs.base.*;
+
+print("Inserting new contact history for all Email as CFSNotes...");
+ContactHistory history = null;
+CFSNoteList notes = new CFSNoteList();
+  notes.setBuildAll(true);
+  notes.buildList(db);
+  print(" the total number of notes in the system are "+ notes.size());
+  Iterator iterator = (Iterator) notes.iterator();
+  while (iterator.hasNext()) {
+    CFSNote note = (CFSNote) iterator.next();
+    Contact contact = new Contact(db, note.getSentTo());
+    if (contact.getEnabled()) {
+      if (note.getStatus() != 0 && note.getStatus() != 1 && note.getStatus() != -1) {
+        history = new ContactHistory();
+        history.setContactId(note.getSentTo());
+        history.setLinkObjectId(OrganizationHistory.CFSNOTE);
+        history.setLinkItemId(note.getId());
+        history.queryRecord(db);
+        if (history.getId() == -1) {
+          history.setLevel(10);
+          history.setModifiedBy(note.getModifiedBy());
+          history.setEnteredBy(note.getEnteredBy());
+          history.setEntered(note.getEntered());
+          history.setModified(note.getModified());
+          history.setEnabled(!contact.isTrashed());
+          history.setStatus("INSERT");
+          history.setType("Email Message");
+          history.setDescription("Subject: "+note.getSubject());
+          history.insert(db);
+          print("Contact History inserted for CFSNote ID --> "+note.getId() +" with description --> "+history.getDescription());
+        } else {
+          print("history already exists for CFSNote ID --> "+note.getId());
+        }
+      }
+    }
+  }
+
+print("Completed inserting contact history");
+
+

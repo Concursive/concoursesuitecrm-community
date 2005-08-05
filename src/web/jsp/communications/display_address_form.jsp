@@ -26,6 +26,7 @@
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -355,7 +356,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -376,7 +377,7 @@
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% CountrySelect = new CountrySelect(); %>
+      <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -443,7 +444,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -464,7 +465,7 @@
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% CountrySelect = new CountrySelect(); %>
+      <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
   <dhv:evaluate if="<%= acount != atotal %>">

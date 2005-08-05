@@ -15,16 +15,19 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 14, 2003
- *@version    $Id: SavedCriteriaElement.java,v 1.3 2003/01/14 20:40:41 akhi_m
- *      Exp $
+ * @author Mathur
+ * @version $Id: SavedCriteriaElement.java,v 1.3 2003/01/14 20:40:41 akhi_m
+ *          Exp $
+ * @created January 14, 2003
  */
 public class SavedCriteriaElement {
 
@@ -37,15 +40,16 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Constructor for the SavedCriteriaElement object
+   * Constructor for the SavedCriteriaElement object
    */
-  public SavedCriteriaElement() { }
+  public SavedCriteriaElement() {
+  }
 
 
   /**
-   *  Sets the savedCriteriaListId attribute of the SavedCriteriaElement object
+   * Sets the savedCriteriaListId attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new savedCriteriaListId value
+   * @param tmp The new savedCriteriaListId value
    */
   public void setSavedCriteriaListId(int tmp) {
     this.savedCriteriaListId = tmp;
@@ -53,9 +57,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the savedCriteriaListId attribute of the SavedCriteriaElement object
+   * Sets the savedCriteriaListId attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new savedCriteriaListId value
+   * @param tmp The new savedCriteriaListId value
    */
   public void setSavedCriteriaListId(String tmp) {
     this.savedCriteriaListId = Integer.parseInt(tmp);
@@ -63,9 +67,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the fieldId attribute of the SavedCriteriaElement object
+   * Sets the fieldId attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new fieldId value
+   * @param tmp The new fieldId value
    */
   public void setFieldId(int tmp) {
     this.fieldId = tmp;
@@ -73,9 +77,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the fieldId attribute of the SavedCriteriaElement object
+   * Sets the fieldId attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new fieldId value
+   * @param tmp The new fieldId value
    */
   public void setFieldId(String tmp) {
     this.fieldId = Integer.parseInt(tmp);
@@ -83,9 +87,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the operator attribute of the SavedCriteriaElement object
+   * Sets the operator attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new operator value
+   * @param tmp The new operator value
    */
   public void setOperator(String tmp) {
     this.operator = tmp;
@@ -93,9 +97,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the operatorId attribute of the SavedCriteriaElement object
+   * Sets the operatorId attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new operatorId value
+   * @param tmp The new operatorId value
    */
   public void setOperatorId(int tmp) {
     this.operatorId = tmp;
@@ -103,9 +107,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the operatorId attribute of the SavedCriteriaElement object
+   * Sets the operatorId attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new operatorId value
+   * @param tmp The new operatorId value
    */
   public void setOperatorId(String tmp) {
     this.operatorId = Integer.parseInt(tmp);
@@ -113,9 +117,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the value attribute of the SavedCriteriaElement object
+   * Sets the value attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -123,9 +127,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Sets the source attribute of the SavedCriteriaElement object
+   * Sets the source attribute of the SavedCriteriaElement object
    *
-   *@param  tmp  The new source value
+   * @param tmp The new source value
    */
   public void setSource(int tmp) {
     this.source = tmp;
@@ -133,9 +137,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Gets the savedCriteriaListId attribute of the SavedCriteriaElement object
+   * Gets the savedCriteriaListId attribute of the SavedCriteriaElement object
    *
-   *@return    The savedCriteriaListId value
+   * @return The savedCriteriaListId value
    */
   public int getSavedCriteriaListId() {
     return savedCriteriaListId;
@@ -143,9 +147,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Gets the fieldId attribute of the SavedCriteriaElement object
+   * Gets the fieldId attribute of the SavedCriteriaElement object
    *
-   *@return    The fieldId value
+   * @return The fieldId value
    */
   public int getFieldId() {
     return fieldId;
@@ -153,9 +157,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Gets the operator attribute of the SavedCriteriaElement object
+   * Gets the operator attribute of the SavedCriteriaElement object
    *
-   *@return    The operator value
+   * @return The operator value
    */
   public String getOperator() {
     return operator;
@@ -163,9 +167,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Gets the operatorId attribute of the SavedCriteriaElement object
+   * Gets the operatorId attribute of the SavedCriteriaElement object
    *
-   *@return    The operatorId value
+   * @return The operatorId value
    */
   public int getOperatorId() {
     return operatorId;
@@ -173,9 +177,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Gets the value attribute of the SavedCriteriaElement object
+   * Gets the value attribute of the SavedCriteriaElement object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -183,9 +187,9 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Gets the source attribute of the SavedCriteriaElement object
+   * Gets the source attribute of the SavedCriteriaElement object
    *
-   *@return    The source value
+   * @return The source value
    */
   public int getSource() {
     return source;
@@ -193,11 +197,11 @@ public class SavedCriteriaElement {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (savedCriteriaListId == -1) {
@@ -209,12 +213,20 @@ public class SavedCriteriaElement {
     if (operatorId == -1) {
       throw new SQLException("Field ID not specified");
     }
+    savedCriteriaListId = DatabaseUtils.getNextSeq(
+        db, "saved_criteriaelement_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO saved_criteriaelement " +
-        "(id, field, operator, operatorid, value, source, value_id) VALUES " +
-        "(?, ?, ?, ?, ?, ?, ?) ");
+        "( " +
+        (savedCriteriaListId > 0 ? "id, " : " ") +
+        "field, operator, operatorid, value, source, value_id) VALUES " +
+        "(" +
+        (savedCriteriaListId > 0 ? "?, " : "") +
+        "?, ?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, savedCriteriaListId);
+    if (savedCriteriaListId > 0) {
+      pst.setInt(++i, savedCriteriaListId);
+    }
     pst.setInt(++i, fieldId);
     pst.setString(++i, operator);
     pst.setInt(++i, operatorId);

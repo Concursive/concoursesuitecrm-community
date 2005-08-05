@@ -16,9 +16,29 @@ import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
 
 try{
+  PreparedStatement pst = db.prepareStatement(
+      "DELETE from business_process_events ");
+  pst.executeUpdate();
+  print("All business_process_events entries have been deleted");
+  pst.close();
+
   BusinessProcessList processList = new BusinessProcessList();
+  processList.setBuildScheduledEvents(true);
   processList.buildList(db);
   processList.delete(db);
+
+  pst = db.prepareStatement(
+      "DELETE FROM business_process_hook_triggers ");
+  pst.executeUpdate();
+  print("All business_process_hook_triggers entries have been deleted");
+  pst.close();
+
+  pst = db.prepareStatement(
+      "DELETE from business_process_hook_library ");
+  pst.executeUpdate();
+  print("All business_process_hook_library entries have been deleted");
+  pst.close();
+
 } catch (e){
   print(e);
 }

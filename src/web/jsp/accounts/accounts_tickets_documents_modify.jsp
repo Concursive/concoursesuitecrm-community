@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
@@ -44,6 +45,17 @@
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
+    <table border="0" cellpadding="4" cellspacing="0" width="100%">
+      <tr class="subtab">
+        <td>
+          <%
+            String documentLink = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId();
+            String documentModule = "AccountTickets";
+          %>
+          <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentLink %>"/>
+        </td>
+      </tr>
+    </table><br />
     <%@ include file="../troubletickets/documents_modify_include.jsp" %>
     <br>
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="update" />

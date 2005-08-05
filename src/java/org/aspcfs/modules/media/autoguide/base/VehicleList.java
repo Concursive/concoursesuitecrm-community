@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
- *  Represents a list of vehicles
+ * Represents a list of vehicles
  *
- *@author     matt
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class VehicleList extends ArrayList implements SyncableList {
 
@@ -43,17 +44,18 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Constructor for the VehicleList object
+   * Constructor for the VehicleList object
    */
-  public VehicleList() { }
+  public VehicleList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public static ArrayList buildYearList(Connection db) throws SQLException {
     ArrayList years = new ArrayList();
@@ -72,9 +74,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the VehicleList object
+   * Sets the pagedListInfo attribute of the VehicleList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -82,9 +84,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the VehicleList object
+   * Gets the pagedListInfo attribute of the VehicleList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -92,9 +94,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the VehicleList object
+   * Sets the lastAnchor attribute of the VehicleList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -102,9 +104,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the VehicleList object
+   * Sets the lastAnchor attribute of the VehicleList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -112,9 +114,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the VehicleList object
+   * Sets the nextAnchor attribute of the VehicleList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -122,9 +124,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the VehicleList object
+   * Sets the nextAnchor attribute of the VehicleList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -132,9 +134,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the VehicleList object
+   * Sets the syncType attribute of the VehicleList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -142,9 +144,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the VehicleList object
+   * Sets the syncType attribute of the VehicleList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -152,9 +154,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the year attribute of the VehicleList object
+   * Sets the year attribute of the VehicleList object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(int tmp) {
     this.year = tmp;
@@ -162,9 +164,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the year attribute of the VehicleList object
+   * Sets the year attribute of the VehicleList object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(String tmp) {
     this.year = Integer.parseInt(tmp);
@@ -172,9 +174,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the tableName attribute of the VehicleList object
+   * Gets the tableName attribute of the VehicleList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -182,9 +184,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the VehicleList object
+   * Gets the uniqueField attribute of the VehicleList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -192,11 +194,11 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the object attribute of the VehicleList object
+   * Gets the object attribute of the VehicleList object
    *
-   *@param  rs                Description of Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @return The object value
+   * @throws SQLException Description of Exception
    */
   public Vehicle getObject(ResultSet rs) throws SQLException {
     Vehicle thisVehicle = new Vehicle(rs);
@@ -205,10 +207,10 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -216,18 +218,15 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
-        break;
-      }
       Vehicle thisVehicle = this.getObject(rs);
       this.add(thisVehicle);
     }
@@ -239,13 +238,13 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  This method is required for synchronization, it allows for the resultset
-   *  to be streamed with lower overhead
+   * This method is required for synchronization, it allows for the resultset
+   * to be streamed with lower overhead
    *
-   *@param  db                Description of Parameter
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db  Description of Parameter
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -305,7 +304,8 @@ public class VehicleList extends ArrayList implements SyncableList {
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
         " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
         "WHERE vehicle_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -316,9 +316,9 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -342,11 +342,11 @@ public class VehicleList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

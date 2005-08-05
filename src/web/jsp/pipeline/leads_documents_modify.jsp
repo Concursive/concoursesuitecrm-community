@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
@@ -89,6 +90,17 @@ function reopenOpportunity(id) {
    String param2 = addLinkParams(request, "viewSource");
 %>      
 <dhv:container name="opportunities" selected="documents" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+        <%
+          String documentLink = "LeadsDocuments.do?command=View&headerId="+ opportunityHeader.getId();
+          String documentModule = "Pipeline";
+        %>
+        <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentLink %>"/>
+      </td>
+    </tr>
+  </table>
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>

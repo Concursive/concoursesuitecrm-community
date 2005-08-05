@@ -19,9 +19,9 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.CallList;
 import org.aspcfs.modules.contacts.base.CallResultList;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.RequestUtils;
@@ -30,18 +30,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *  Actions for the Account Activities
+ * Actions for the Account Activities
  *
- *@author     Mathur
- *@created    January 20, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created January 20, 2004
  */
 public final class AccountsCalls extends CFSModule {
   /**
-   *  Default Action: View Activities
+   * Default Action: View Activities
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandView(context);
@@ -49,10 +49,10 @@ public final class AccountsCalls extends CFSModule {
 
 
   /**
-   *   View Activities
+   * View Activities
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     int MINIMIZED_ITEMS_PER_PAGE = 5;
@@ -66,7 +66,8 @@ public final class AccountsCalls extends CFSModule {
     //reset the paged lists
     if ("true".equals(context.getRequest().getParameter("resetList"))) {
       context.getSession().removeAttribute("AccountContactCallsListInfo");
-      context.getSession().removeAttribute("AccountContactCompletedCallsListInfo");
+      context.getSession().removeAttribute(
+          "AccountContactCompletedCallsListInfo");
     }
     //Determine the sections to view
     String sectionId = null;
@@ -81,9 +82,12 @@ public final class AccountsCalls extends CFSModule {
     String pendingPagedListId = "AccountContactCallsListInfo";
 
     if (sectionId == null || pendingPagedListId.equals(sectionId)) {
-      PagedListInfo callListInfo = this.getPagedListInfo(context, pendingPagedListId, "c.alertdate", null);
-      callListInfo.setLink("AccountsCalls.do?command=View&orgId=" + orgId +
-          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+      PagedListInfo callListInfo = this.getPagedListInfo(
+          context, pendingPagedListId, "c.alertdate", null);
+      callListInfo.setLink(
+          "AccountsCalls.do?command=View&orgId=" + orgId +
+          RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!callListInfo.getExpandedSelection()) {
           if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -109,9 +113,12 @@ public final class AccountsCalls extends CFSModule {
     String completedPagedListId = "AccountContactCompletedCallsListInfo";
 
     if (sectionId == null || completedPagedListId.equals(sectionId)) {
-      PagedListInfo completedCallListInfo = this.getPagedListInfo(context, completedPagedListId, "c.entered", "desc");
-      completedCallListInfo.setLink("AccountsCalls.do?command=View&orgId=" + orgId +
-          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+      PagedListInfo completedCallListInfo = this.getPagedListInfo(
+          context, completedPagedListId, "c.entered", "desc");
+      completedCallListInfo.setLink(
+          "AccountsCalls.do?command=View&orgId=" + orgId +
+          RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!completedCallListInfo.getExpandedSelection()) {
           if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -119,7 +126,8 @@ public final class AccountsCalls extends CFSModule {
           }
         } else {
           if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
-            completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+            completedCallListInfo.setItemsPerPage(
+                PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
           }
         }
       } else if (sectionId.equals(completedCallListInfo.getId())) {
@@ -128,22 +136,34 @@ public final class AccountsCalls extends CFSModule {
       completedCallList.setPagedListInfo(completedCallListInfo);
       completedCallList.setAllContactsInAccount(true, Integer.parseInt(orgId));
     }
-    
     try {
       db = this.getConnection(context);
+      //add account to the request
+      addFormElements(context, db);
+      Organization tmpOrganization = (Organization) context.getRequest().getAttribute(
+          "OrgDetails");
+      if (tmpOrganization.isTrashed()) {
+        callList.setIncludeOnlyTrashed(true);
+      } else {
+        callList.setAvoidDisabledContacts(Constants.TRUE);
+      }
       if (sectionId == null || pendingPagedListId.equals(sectionId)) {
         callList.buildList(db);
+      }
+      if (tmpOrganization.isTrashed()) {
+        completedCallList.setIncludeOnlyTrashed(true);
+      } else {
+        completedCallList.setAvoidDisabledContacts(Constants.TRUE);
       }
       if (sectionId == null || completedPagedListId.equals(sectionId)) {
         completedCallList.buildList(db);
       }
 
-      //add account to the request
-      addFormElements(context, db);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Need the call types for display purposes
-      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
 
       //Need the result types for display purposes
@@ -163,12 +183,12 @@ public final class AccountsCalls extends CFSModule {
 
 
   /**
-   *  Adds a feature to the FormElements attribute of the AccountsCalls object
+   * Adds a feature to the FormElements attribute of the AccountsCalls object
    *
-   *@param  context           The feature to be added to the FormElements attribute
-   *@param  db                The feature to be added to the FormElements attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the FormElements attribute
+   * @param db      The feature to be added to the FormElements attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Organization addFormElements(ActionContext context, Connection db) throws SQLException {
     String orgId = context.getRequest().getParameter("orgId");

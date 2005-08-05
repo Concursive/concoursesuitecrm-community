@@ -16,6 +16,7 @@
 package org.aspcfs.apps.users.task;
 
 import com.zeroio.iteam.base.AssignmentList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.accounts.base.RevenueList;
 import org.aspcfs.modules.admin.base.User;
@@ -26,30 +27,32 @@ import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Connection;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    December 8, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created December 8, 2004
  */
 public class ProcessUserCleanup {
 
   public final static String fs = System.getProperty("file.separator");
 
+  public ProcessUserCleanup(Connection db, String url) throws Exception {
+    ProcessUserCleanup temp = new ProcessUserCleanup(db, (SystemStatus) null);
+    temp = null;
+  }
 
   /**
-   *  Constructor for the ProcessUserCleanup object
+   * Constructor for the ProcessUserCleanup object
    *
-   *@param  db             Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public ProcessUserCleanup(Connection db, String urlString) throws Exception {
+  public ProcessUserCleanup(Connection db, SystemStatus thisSystem) throws Exception {
 
     UserList users = null;
     UserList expiredUsers = null;
@@ -91,9 +94,9 @@ public class ProcessUserCleanup {
     }
     if (flag) {
       try {
-        URL url = new URL(urlString);
-        URLConnection conn = url.openConnection();
-        Object result = conn.getContent();
+        if (thisSystem != null) {
+          thisSystem.updateHierarchy(db);
+        }
         System.out.println("ExitValue: 0");
       } catch (Exception e) {
         System.out.println("ExitValue: 1");
@@ -103,12 +106,12 @@ public class ProcessUserCleanup {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  userId         Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean checkUser(Connection db, int userId) throws Exception {
     int valid = 0;
@@ -172,7 +175,7 @@ public class ProcessUserCleanup {
     sourceActivities.buildList(db);
     valid += sourceActivities.size();
 
-    return (valid==0);
+    return (valid == 0);
   }
 }
 

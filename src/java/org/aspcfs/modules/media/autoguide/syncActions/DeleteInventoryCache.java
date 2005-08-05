@@ -18,49 +18,58 @@ package org.aspcfs.modules.media.autoguide.actions;
 import org.aspcfs.modules.service.base.CustomActionHandler;
 import org.aspcfs.modules.service.base.PacketContext;
 import org.aspcfs.modules.service.base.SyncTable;
-import java.sql.*;
-import java.util.HashMap;
 import org.aspcfs.utils.StringUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+
 /**
- *  The sync process doesn't handle synchronizing partial tables, so this action
- *  is used when a PDA syncs and the owner of an account has changed. In that
- *  case, the PDA must request that the server deletes the inventory cache for
- *  that account.
+ * The sync process doesn't handle synchronizing partial tables, so this action
+ * is used when a PDA syncs and the owner of an account has changed. In that
+ * case, the PDA must request that the server deletes the inventory cache for
+ * that account.
  *
- *@author     matt rajkowski
- *@created    April 29, 2003
- *@version    $Id: DeleteInventoryCache.java,v 1.2 2003/05/08 13:50:18
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: DeleteInventoryCache.java,v 1.2 2003/05/08 13:50:18
+ *          mrajkowski Exp $
+ * @created April 29, 2003
  */
 public class DeleteInventoryCache implements CustomActionHandler {
 
   /**
-   *  Deletes the inventory cache for the given account, and related cache data
-   *  (not the actual records) when a PDA says to.
+   * Deletes the inventory cache for the given account, and related cache data
+   * (not the actual records) when a PDA says to.
    *
-   *@param  packetContext     Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  values            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param packetContext Description of the Parameter
+   * @param db            Description of the Parameter
+   * @param values        Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(PacketContext packetContext, Connection db, HashMap values) throws SQLException {
     System.out.println("DeleteInventoryCache-> BEGIN");
     //Collect the required properties
     int systemId = packetContext.getAuthenticationItem().getSystemId();
     int clientId = packetContext.getAuthenticationItem().getClientId();
-    int clientAccountId = StringUtils.parseInt((String) values.get("accountGuid"), -1);
+    int clientAccountId = StringUtils.parseInt(
+        (String) values.get("accountGuid"), -1);
     //Validate the properties
     if (systemId == -1 || clientId == -1 || clientAccountId == -1) {
       System.out.println("DeleteInventoryCache-> Something is not configured");
       return false;
     }
     //Get the table reference to lookup and delete items from the cache
-    SyncTable accountTable = (SyncTable) packetContext.getObjectMap().get("accountList");
-    SyncTable accountInventoryTable = (SyncTable) packetContext.getObjectMap().get("accountInventoryList");
-    SyncTable optionTable = (SyncTable) packetContext.getObjectMap().get("optionList");
-    SyncTable adRunTable = (SyncTable) packetContext.getObjectMap().get("adRunList");
+    SyncTable accountTable = (SyncTable) packetContext.getObjectMap().get(
+        "accountList");
+    SyncTable accountInventoryTable = (SyncTable) packetContext.getObjectMap().get(
+        "accountInventoryList");
+    SyncTable optionTable = (SyncTable) packetContext.getObjectMap().get(
+        "optionList");
+    SyncTable adRunTable = (SyncTable) packetContext.getObjectMap().get(
+        "adRunList");
     //Begin retrieving and deleting records
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -84,7 +93,8 @@ public class DeleteInventoryCache implements CustomActionHandler {
     if (accountId == -1) {
       return false;
     }
-    System.out.println("DeleteInventoryCache-> Found server accountId: " + accountId);
+    System.out.println(
+        "DeleteInventoryCache-> Found server accountId: " + accountId);
     //For this account, delete the ad_run cache for all related records
     pst = db.prepareStatement(
         "DELETE from sync_map " +

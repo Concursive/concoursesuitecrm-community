@@ -15,20 +15,19 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a data field for a record. Multiple fields can make up a record.
+ * Represents a data field for a record. Multiple fields can make up a record.
  *
- *@author     matt rajkowski
- *@created    ---
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created ---
  */
 public class CustomFieldData extends GenericBean {
 
@@ -41,16 +40,17 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Constructor for the CustomFieldData object
+   * Constructor for the CustomFieldData object
    */
-  public CustomFieldData() { }
+  public CustomFieldData() {
+  }
 
 
   /**
-   *  Constructor for the CustomFieldData object
+   * Constructor for the CustomFieldData object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CustomFieldData(ResultSet rs) throws SQLException {
     build(rs);
@@ -58,9 +58,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the recordId attribute of the CustomFieldData object
+   * Sets the recordId attribute of the CustomFieldData object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(int tmp) {
     this.recordId = tmp;
@@ -68,9 +68,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the recordId attribute of the CustomFieldData object
+   * Sets the recordId attribute of the CustomFieldData object
    *
-   *@param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(String tmp) {
     this.recordId = Integer.parseInt(tmp);
@@ -78,9 +78,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the fieldId attribute of the CustomFieldData object
+   * Sets the fieldId attribute of the CustomFieldData object
    *
-   *@param  tmp  The new fieldId value
+   * @param tmp The new fieldId value
    */
   public void setFieldId(int tmp) {
     this.fieldId = tmp;
@@ -88,9 +88,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the fieldId attribute of the CustomFieldData object
+   * Sets the fieldId attribute of the CustomFieldData object
    *
-   *@param  tmp  The new fieldId value
+   * @param tmp The new fieldId value
    */
   public void setFieldId(String tmp) {
     this.fieldId = Integer.parseInt(tmp);
@@ -98,9 +98,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the selectedItemId attribute of the CustomFieldData object
+   * Sets the selectedItemId attribute of the CustomFieldData object
    *
-   *@param  tmp  The new selectedItemId value
+   * @param tmp The new selectedItemId value
    */
   public void setSelectedItemId(int tmp) {
     this.selectedItemId = tmp;
@@ -108,9 +108,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the selectedItemId attribute of the CustomFieldData object
+   * Sets the selectedItemId attribute of the CustomFieldData object
    *
-   *@param  tmp  The new selectedItemId value
+   * @param tmp The new selectedItemId value
    */
   public void setSelectedItemId(String tmp) {
     this.selectedItemId = Integer.parseInt(tmp);
@@ -118,9 +118,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the enteredValue attribute of the CustomFieldData object
+   * Sets the enteredValue attribute of the CustomFieldData object
    *
-   *@param  tmp  The new enteredValue value
+   * @param tmp The new enteredValue value
    */
   public void setEnteredValue(String tmp) {
     this.enteredValue = tmp;
@@ -128,9 +128,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the enteredNumber attribute of the CustomFieldData object
+   * Sets the enteredNumber attribute of the CustomFieldData object
    *
-   *@param  tmp  The new enteredNumber value
+   * @param tmp The new enteredNumber value
    */
   public void setEnteredNumber(int tmp) {
     this.enteredNumber = tmp;
@@ -138,9 +138,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the enteredNumber attribute of the CustomFieldData object
+   * Sets the enteredNumber attribute of the CustomFieldData object
    *
-   *@param  tmp  The new enteredNumber value
+   * @param tmp The new enteredNumber value
    */
   public void setEnteredNumber(String tmp) {
     this.enteredNumber = Integer.parseInt(tmp);
@@ -148,9 +148,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the enteredDouble attribute of the CustomFieldData object
+   * Sets the enteredDouble attribute of the CustomFieldData object
    *
-   *@param  tmp  The new enteredDouble value
+   * @param tmp The new enteredDouble value
    */
   public void setEnteredDouble(double tmp) {
     this.enteredDouble = tmp;
@@ -158,9 +158,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Sets the enteredDouble attribute of the CustomFieldData object
+   * Sets the enteredDouble attribute of the CustomFieldData object
    *
-   *@param  tmp  The new enteredDouble value
+   * @param tmp The new enteredDouble value
    */
   public void setEnteredDouble(String tmp) {
     this.enteredDouble = Double.parseDouble(tmp);
@@ -168,9 +168,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the recordId attribute of the CustomFieldData object
+   * Gets the recordId attribute of the CustomFieldData object
    *
-   *@return    The recordId value
+   * @return The recordId value
    */
   public int getRecordId() {
     return recordId;
@@ -178,9 +178,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the fieldId attribute of the CustomFieldData object
+   * Gets the fieldId attribute of the CustomFieldData object
    *
-   *@return    The fieldId value
+   * @return The fieldId value
    */
   public int getFieldId() {
     return fieldId;
@@ -188,9 +188,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the selectedItemId attribute of the CustomFieldData object
+   * Gets the selectedItemId attribute of the CustomFieldData object
    *
-   *@return    The selectedItemId value
+   * @return The selectedItemId value
    */
   public int getSelectedItemId() {
     return selectedItemId;
@@ -198,9 +198,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the enteredValue attribute of the CustomFieldData object
+   * Gets the enteredValue attribute of the CustomFieldData object
    *
-   *@return    The enteredValue value
+   * @return The enteredValue value
    */
   public String getEnteredValue() {
     return enteredValue;
@@ -208,9 +208,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the enteredNumber attribute of the CustomFieldData object
+   * Gets the enteredNumber attribute of the CustomFieldData object
    *
-   *@return    The enteredNumber value
+   * @return The enteredNumber value
    */
   public int getEnteredNumber() {
     return enteredNumber;
@@ -218,9 +218,9 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the enteredDouble attribute of the CustomFieldData object
+   * Gets the enteredDouble attribute of the CustomFieldData object
    *
-   *@return    The enteredDouble value
+   * @return The enteredDouble value
    */
   public double getEnteredDouble() {
     return enteredDouble;
@@ -228,11 +228,11 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the CustomFieldData object
+   * Gets the type attribute of the CustomFieldData object
    *
-   *@param  db                Description of the Parameter
-   *@return                   The type value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The type value
+   * @throws SQLException Description of the Exception
    */
   public int getType(Connection db) throws SQLException {
     int result = -1;
@@ -252,10 +252,10 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(ResultSet rs) throws SQLException {
     recordId = rs.getInt("record_id");
@@ -268,11 +268,11 @@ public class CustomFieldData extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     int i = 0;

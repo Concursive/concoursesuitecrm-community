@@ -24,11 +24,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Represents a phone number.
+ * Represents a phone number.
  *
- *@author     mrajkowski
- *@created    September 4, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created September 4, 2001
  */
 public class PhoneNumber {
 
@@ -50,10 +50,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Id attribute of the PhoneNumber object
+   * Sets the Id attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Id value
-   *@since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -61,10 +61,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Id attribute of the PhoneNumber object
+   * Sets the Id attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Id value
-   *@since       1.8
+   * @param tmp The new Id value
+   * @since 1.8
    */
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
@@ -72,10 +72,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the OrgId attribute of the PhoneNumber object
+   * Sets the OrgId attribute of the PhoneNumber object
    *
-   *@param  tmp  The new OrgId value
-   *@since       1.1
+   * @param tmp The new OrgId value
+   * @since 1.1
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -83,9 +83,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the orgId attribute of the PhoneNumber object
+   * Sets the orgId attribute of the PhoneNumber object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -93,10 +93,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the ContactId attribute of the PhoneNumber object
+   * Sets the ContactId attribute of the PhoneNumber object
    *
-   *@param  tmp  The new ContactId value
-   *@since
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -104,9 +103,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the contactId attribute of the PhoneNumber object
+   * Sets the contactId attribute of the PhoneNumber object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -114,10 +113,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Type attribute of the PhoneNumber object
+   * Sets the Type attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Type value
-   *@since       1.1
+   * @param tmp The new Type value
+   * @since 1.1
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -125,10 +124,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Type attribute of the PhoneNumber object
+   * Sets the Type attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Type value
-   *@since
+   * @param tmp The new Type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -136,10 +134,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the TypeName attribute of the PhoneNumber object
+   * Sets the TypeName attribute of the PhoneNumber object
    *
-   *@param  tmp  The new TypeName value
-   *@since       1.1
+   * @param tmp The new TypeName value
+   * @since 1.1
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -147,10 +145,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Number attribute of the PhoneNumber object
+   * Sets the Number attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Number value
-   *@since       1.1
+   * @param tmp The new Number value
+   * @since 1.1
    */
   public void setNumber(String tmp) {
     this.number = tmp;
@@ -158,10 +156,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Extension attribute of the PhoneNumber object
+   * Sets the Extension attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Extension value
-   *@since       1.1
+   * @param tmp The new Extension value
+   * @since 1.1
    */
   public void setExtension(String tmp) {
     this.extension = tmp;
@@ -169,10 +167,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the EnteredBy attribute of the PhoneNumber object
+   * Sets the EnteredBy attribute of the PhoneNumber object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.1
+   * @param tmp The new EnteredBy value
+   * @since 1.1
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -180,9 +178,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the enteredBy attribute of the PhoneNumber object
+   * Sets the enteredBy attribute of the PhoneNumber object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -190,10 +188,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the PhoneNumber object
+   * Sets the ModifiedBy attribute of the PhoneNumber object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since       1.1
+   * @param tmp The new ModifiedBy value
+   * @since 1.1
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -201,9 +199,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the modifiedBy attribute of the PhoneNumber object
+   * Sets the modifiedBy attribute of the PhoneNumber object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -211,9 +209,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the primaryNumber attribute of the PhoneNumber object
+   * Sets the primaryNumber attribute of the PhoneNumber object
    *
-   *@param  tmp  The new primaryNumber value
+   * @param tmp The new primaryNumber value
    */
   public void setPrimaryNumber(boolean tmp) {
     this.primaryNumber = tmp;
@@ -221,9 +219,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the primaryNumber attribute of the PhoneNumber object
+   * Sets the primaryNumber attribute of the PhoneNumber object
    *
-   *@param  tmp  The new primaryNumber value
+   * @param tmp The new primaryNumber value
    */
   public void setPrimaryNumber(String tmp) {
     this.primaryNumber = DatabaseUtils.parseBoolean(tmp);
@@ -231,9 +229,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the primaryNumber attribute of the PhoneNumber object
+   * Gets the primaryNumber attribute of the PhoneNumber object
    *
-   *@return    The primaryNumber value
+   * @return The primaryNumber value
    */
   public boolean getPrimaryNumber() {
     return primaryNumber;
@@ -241,9 +239,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the contactId attribute of the PhoneNumber object
+   * Gets the contactId attribute of the PhoneNumber object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -251,10 +249,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the Enabled attribute of the PhoneNumber object
+   * Sets the Enabled attribute of the PhoneNumber object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.8
+   * @param tmp The new Enabled value
+   * @since 1.8
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -262,9 +260,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the enabled attribute of the PhoneNumber object
+   * Sets the enabled attribute of the PhoneNumber object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -272,10 +270,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Valid attribute of the PhoneNumber object
+   * Gets the Valid attribute of the PhoneNumber object
    *
-   *@return    The Valid value
-   *@since     1.7
+   * @return The Valid value
+   * @since 1.7
    */
   public boolean isValid() {
     return ((type > -1 && number != null && !number.trim().equals("")) || !enabled);
@@ -283,10 +281,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Id attribute of the PhoneNumber object
+   * Gets the Id attribute of the PhoneNumber object
    *
-   *@return    The Id value
-   *@since     1.1
+   * @return The Id value
+   * @since 1.1
    */
   public int getId() {
     return id;
@@ -294,10 +292,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the OrgId attribute of the PhoneNumber object
+   * Gets the OrgId attribute of the PhoneNumber object
    *
-   *@return    The OrgId value
-   *@since     1.1
+   * @return The OrgId value
+   * @since 1.1
    */
   public int getOrgId() {
     return orgId;
@@ -305,10 +303,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Type attribute of the PhoneNumber object
+   * Gets the Type attribute of the PhoneNumber object
    *
-   *@return    The Type value
-   *@since     1.1
+   * @return The Type value
+   * @since 1.1
    */
   public int getType() {
     return type;
@@ -316,10 +314,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the TypeName attribute of the PhoneNumber object
+   * Gets the TypeName attribute of the PhoneNumber object
    *
-   *@return    The TypeName value
-   *@since     1.1
+   * @return The TypeName value
+   * @since 1.1
    */
   public String getTypeName() {
     return typeName;
@@ -327,10 +325,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Number attribute of the PhoneNumber object
+   * Gets the Number attribute of the PhoneNumber object
    *
-   *@return    The Number value
-   *@since     1.1
+   * @return The Number value
+   * @since 1.1
    */
   public String getNumber() {
     return number;
@@ -338,10 +336,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Extension attribute of the PhoneNumber object
+   * Gets the Extension attribute of the PhoneNumber object
    *
-   *@return    The Extension value
-   *@since     1.1
+   * @return The Extension value
+   * @since 1.1
    */
   public String getExtension() {
     return extension;
@@ -349,10 +347,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the EnteredBy attribute of the PhoneNumber object
+   * Gets the EnteredBy attribute of the PhoneNumber object
    *
-   *@return    The EnteredBy value
-   *@since     1.1
+   * @return The EnteredBy value
+   * @since 1.1
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -360,10 +358,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the PhoneNumber object
+   * Gets the ModifiedBy attribute of the PhoneNumber object
    *
-   *@return    The ModifiedBy value
-   *@since     1.1
+   * @return The ModifiedBy value
+   * @since 1.1
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -371,9 +369,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the entered attribute of the PhoneNumber object
+   * Gets the entered attribute of the PhoneNumber object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -381,9 +379,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the modified attribute of the PhoneNumber object
+   * Gets the modified attribute of the PhoneNumber object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -391,9 +389,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the entered attribute of the PhoneNumber object
+   * Sets the entered attribute of the PhoneNumber object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -401,9 +399,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the modified attribute of the PhoneNumber object
+   * Sets the modified attribute of the PhoneNumber object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -411,9 +409,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the entered attribute of the PhoneNumber object
+   * Sets the entered attribute of the PhoneNumber object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -421,9 +419,9 @@ public class PhoneNumber {
 
 
   /**
-   *  Sets the modified attribute of the PhoneNumber object
+   * Sets the modified attribute of the PhoneNumber object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -431,10 +429,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Returns the phone number and an extension if it has one
+   * Returns the phone number and an extension if it has one
    *
-   *@return    The PhoneNumber value
-   *@since     1.1
+   * @return The PhoneNumber value
+   * @since 1.1
    */
   public String getPhoneNumber() {
     if (extension != null && !extension.equals("")) {
@@ -446,10 +444,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the AreaCode attribute of the PhoneNumber object
+   * Gets the AreaCode attribute of the PhoneNumber object
    *
-   *@return    The AreaCode value
-   *@since     1.9
+   * @return The AreaCode value
+   * @since 1.9
    */
   public String getAreaCode() {
     if (getNumber().length() == 12) {
@@ -461,10 +459,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Prefix attribute of the PhoneNumber object
+   * Gets the Prefix attribute of the PhoneNumber object
    *
-   *@return    The Prefix value
-   *@since     1.9
+   * @return The Prefix value
+   * @since 1.9
    */
   public String getPrefix() {
     if (getNumber().length() == 12) {
@@ -478,10 +476,10 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Postfix (number) attribute of the PhoneNumber object
+   * Gets the Postfix (number) attribute of the PhoneNumber object
    *
-   *@return    The Postfix value
-   *@since     1.9
+   * @return The Postfix value
+   * @since 1.9
    */
   public String getPostfix() {
     if (getNumber().length() == 12) {
@@ -497,23 +495,22 @@ public class PhoneNumber {
 
 
   /**
-   *  Gets the Enabled attribute of the PhoneNumber object
+   * Gets the Enabled attribute of the PhoneNumber object
    *
-   *@return    The Enabled value
-   *@since     1.8
+   * @return The Enabled value
+   * @since 1.8
    */
   public boolean getEnabled() {
     return enabled;
   }
 
 
-
   /**
-   *  Populates the object fields from a ResultSet
+   * Populates the object fields from a ResultSet
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.4
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.4
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("phone_id"));
@@ -552,58 +549,66 @@ public class PhoneNumber {
 
 
   /**
-   *  From an HttpRequest, the object can search to see if valid data is present
-   *  to initialize the object.<p>
+   * From an HttpRequest, the object can search to see if valid data is present
+   * to initialize the object.<p>
+   * <p/>
+   * Each phone number should be defined as follows in the Http request,
+   * replace the number 1 with the item number corresponding with the Html
+   * entry:<p>
+   * <p/>
+   * - phone1id (Corresponds with the db field id for updates/deletes) a number
+   * <br>
+   * - phone1type (Corresponds with the db table id LookupPhoneType) a number
+   * <br>
+   * - phone1ac (Area Code) 757<br>
+   * - phone1pre (Prefix) 555<br>
+   * - phone1number (Rest of number) 1212<br>
+   * - phone1ext (If the number has an extension) a string<br>
+   * - phone1delete (exists if record should be deleted)
    *
-   *  Each phone number should be defined as follows in the Http request,
-   *  replace the number 1 with the item number corresponding with the Html
-   *  entry:<p>
-   *
-   *  - phone1id (Corresponds with the db field id for updates/deletes) a number
-   *  <br>
-   *  - phone1type (Corresponds with the db table id LookupPhoneType) a number
-   *  <br>
-   *  - phone1ac (Area Code) 757<br>
-   *  - phone1pre (Prefix) 555<br>
-   *  - phone1number (Rest of number) 1212<br>
-   *  - phone1ext (If the number has an extension) a string<br>
-   *  - phone1delete (exists if record should be deleted)
-   *
-   *@param  parseItem  The phone number item to parse
-   *@param  context    Description of the Parameter
-   *@since             1.8
+   * @param parseItem The phone number item to parse
+   * @param context   Description of the Parameter
+   * @since 1.8
    */
   public void buildRecord(ActionContext context, int parseItem) {
-    this.setType(context.getRequest().getParameter("phone" + parseItem + "type"));
+    this.setType(
+        context.getRequest().getParameter("phone" + parseItem + "type"));
 
     StringBuffer thisString = new StringBuffer();
 
     if (context.getRequest().getParameter("phone" + parseItem + "number") != null &&
-        !context.getRequest().getParameter("phone" + parseItem + "number").trim().equals("")) {
-      thisString.append(convertToFormattedNumber(context, context.getRequest().getParameter("phone" + parseItem + "number")));
+        !context.getRequest().getParameter("phone" + parseItem + "number").trim().equals(
+            "")) {
+      thisString.append(
+          convertToFormattedNumber(
+              context, context.getRequest().getParameter(
+                  "phone" + parseItem + "number")));
     }
 
     this.setNumber(thisString.toString());
-    this.setExtension(context.getRequest().getParameter("phone" + parseItem + "ext"));
+    this.setExtension(
+        context.getRequest().getParameter("phone" + parseItem + "ext"));
 
     if (context.getRequest().getParameter("phone" + parseItem + "delete") != null) {
-      String action = context.getRequest().getParameter("phone" + parseItem + "delete").toLowerCase();
+      String action = context.getRequest().getParameter(
+          "phone" + parseItem + "delete").toLowerCase();
       if (action.equals("on")) {
         this.setEnabled(false);
       }
     }
 
     if (context.getRequest().getParameter("phone" + parseItem + "id") != null) {
-      this.setId(context.getRequest().getParameter("phone" + parseItem + "id"));
+      this.setId(
+          context.getRequest().getParameter("phone" + parseItem + "id"));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public final static String convertToNumber(String tmp) {
     tmp = tmp.trim();
@@ -623,11 +628,11 @@ public class PhoneNumber {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp      Description of the Parameter
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param tmp     Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public final static String convertToFormattedNumber(ActionContext context, String tmp) {
     String tmpNum = "";
@@ -638,7 +643,8 @@ public class PhoneNumber {
     }
     StringBuffer result = new StringBuffer();
 
-    String defaultCountry = ApplicationPrefs.getPref(context.getServletContext(), "SYSTEM.COUNTRY");
+    String defaultCountry = ApplicationPrefs.getPref(
+        context.getServletContext(), "SYSTEM.COUNTRY");
     //it's a US number
     if ((tmpNum.indexOf("+") == -1) &&
         ("UNITED STATES".equals(defaultCountry))) {

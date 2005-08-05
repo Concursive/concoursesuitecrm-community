@@ -10,7 +10,7 @@ int result = 0;
 
 // Retrieve the timezone from the build.properties file
 String fs = System.getProperty("file.separator");
-ApplicationPrefs prefs = new ApplicationPrefs(dbFileLibraryPath + fs + "build.properties");
+ApplicationPrefs prefs = new ApplicationPrefs(dbFileLibraryPath + "build.properties");
 String systemTimeZone = prefs.get("SYSTEM.TIMEZONE");
 
 if (systemTimeZone != null) {

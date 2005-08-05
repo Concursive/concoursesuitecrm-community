@@ -15,36 +15,31 @@
  */
 package org.aspcfs.controller;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.servlets.ControllerInitHook;
-import com.darkhorseventures.database.*;
 import org.aspcfs.utils.web.CustomFormList;
-import java.sql.*;
-import java.util.Hashtable;
-import java.util.Properties;
-import org.aspcfs.utils.StringUtils;
-import java.io.File;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 /**
- *  Code that is initialized when the ServletController starts.
+ * Code that is initialized when the ServletController starts.
  *
- *@author     mrajkowski
- *@created    July 10, 2001
- *@version    $Id: InitHook.java,v 1.24.18.1 2003/08/12 21:12:56 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: InitHook.java,v 1.24.18.1 2003/08/12 21:12:56 mrajkowski Exp
+ *          $
+ * @created July 10, 2001
  */
 public class InitHook implements ControllerInitHook {
   public final static String fs = System.getProperty("file.separator");
 
 
   /**
-   *  When the ServletController is initialized, this code maps init-params to
-   *  the Context or Application scope.
+   * When the ServletController is initialized, this code maps init-params to
+   * the Context or Application scope.
    *
-   *@param  config  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since          1.1
+   * @param config Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeControllerInit(ServletConfig config) {
     System.out.println("InitHook-> Executing");
@@ -54,12 +49,16 @@ public class InitHook implements ControllerInitHook {
     context.setAttribute("applicationPrefs", prefs);
     //Define the keystore, to be used by tasks that require SSL certificates
     addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
-    addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
+    addAttribute(
+        config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
     //Read in the default module settings
-    addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
+    addAttribute(
+        config, context, "ContainerMenuConfig", "ContainerMenuConfig");
     if (config.getInitParameter("DynamicFormConfig") != null) {
-      context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
-      CustomFormList forms = new CustomFormList(context, config.getInitParameter("DynamicFormConfig"));
+      context.setAttribute(
+          "DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
+      CustomFormList forms = new CustomFormList(
+          context, config.getInitParameter("DynamicFormConfig"));
       context.setAttribute("DynamicFormList", forms);
     }
     return null;
@@ -67,12 +66,12 @@ public class InitHook implements ControllerInitHook {
 
 
   /**
-   *  Adds a feature to the Attribute attribute of the InitHook class
+   * Adds a feature to the Attribute attribute of the InitHook class
    *
-   *@param  config         The feature to be added to the Attribute attribute
-   *@param  context        The feature to be added to the Attribute attribute
-   *@param  attributeName  The feature to be added to the Attribute attribute
-   *@param  paramName      The feature to be added to the Attribute attribute
+   * @param config        The feature to be added to the Attribute attribute
+   * @param context       The feature to be added to the Attribute attribute
+   * @param attributeName The feature to be added to the Attribute attribute
+   * @param paramName     The feature to be added to the Attribute attribute
    */
   private static void addAttribute(ServletConfig config, ServletContext context, String attributeName, String paramName) {
     if (config.getInitParameter(paramName) != null) {

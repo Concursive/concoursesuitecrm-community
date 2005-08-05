@@ -15,24 +15,24 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
-import com.zeroio.iteam.base.*;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.communications.base.MessageList;
 import org.aspcfs.modules.communications.base.SearchCriteriaListList;
-import com.zeroio.iteam.base.*;
-import java.util.*;
+import org.aspcfs.utils.web.CustomLookupElement;
+import org.aspcfs.utils.web.CustomLookupList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Processes Tickets
+ * Processes Tickets
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: ImportCommunications.java,v 1.35 2003/01/14 22:53:33 akhi_m
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: ImportCommunications.java,v 1.35 2003/01/14 22:53:33 akhi_m
+ *          Exp $
+ * @created January 14, 2003
  */
 public class ImportCommunications implements CFSDatabaseReaderImportModule {
 
@@ -41,13 +41,13 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -76,13 +76,15 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     writer.setAutoCommit(true);
 
     logger.info("ImportCommunications-> Inserting Field Types");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "fieldTypes");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "fieldTypes");
     if (!processOK) {
       return false;
     }
 
     logger.info("ImportCommunications-> Inserting Search Field Elements");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "searchFieldElement");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "searchFieldElement");
     if (!processOK) {
       return false;
     }
@@ -103,21 +105,26 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
         DataRecord thisRecord = new DataRecord();
         thisRecord.setName("savedCriteriaElement");
         thisRecord.setAction("insert");
-        thisRecord.addField("savedCriteriaListId", thisElement.getValue("id"), "searchCriteriaElements", null);
-        thisRecord.addField("fieldId", thisElement.getValue("field"), "searchFieldElement", null);
+        thisRecord.addField(
+            "savedCriteriaListId", thisElement.getValue("id"), "searchCriteriaElements", null);
+        thisRecord.addField(
+            "fieldId", thisElement.getValue("field"), "searchFieldElement", null);
         thisRecord.addField("operator", thisElement.getValue("operator"));
-        thisRecord.addField("operatorId", thisElement.getValue("operatorid"), "fieldTypes", null);
+        thisRecord.addField(
+            "operatorId", thisElement.getValue("operatorid"), "fieldTypes", null);
         switch (Integer.parseInt(thisElement.getValue("field"))) {
-            case (8):
-              thisRecord.addField("value", thisElement.getValue("value"), "lookupContactTypes", null);
-              break;
-            case (9):
-              thisRecord.addField("value", thisElement.getValue("value"), "contact", null);
-              break;
+          case (8):
+            thisRecord.addField(
+                "value", thisElement.getValue("value"), "lookupContactTypes", null);
+            break;
+          case (9):
+            thisRecord.addField(
+                "value", thisElement.getValue("value"), "contact", null);
+            break;
             //case (10): thisRecord.addField("value", thisElement.getValue("value"), "lookupAccountTypes", null); break;
-            default:
-              thisRecord.addField("value", thisElement.getValue("value"));
-              break;
+          default:
+            thisRecord.addField("value", thisElement.getValue("value"));
+            break;
         }
         processOK = writer.save(thisRecord);
       }
@@ -131,31 +138,37 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
 //    }
 
     logger.info("ImportCommunications-> Inserting Campaign Records");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaign");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "campaign");
     if (!processOK) {
       return false;
     }
 
     logger.info("ImportCommunications-> Inserting Campaign Run");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignRun");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "campaignRun");
     if (!processOK) {
       return false;
     }
 
-    logger.info("ImportCommunications-> Inserting Scheduled Recipient Records");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "scheduledRecipient");
+    logger.info(
+        "ImportCommunications-> Inserting Scheduled Recipient Records");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "scheduledRecipient");
     if (!processOK) {
       return false;
     }
 
     logger.info("ImportCommunications-> Inserting Excluded Recipients");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "excludedRecipient");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "excludedRecipient");
     if (!processOK) {
       return false;
     }
 
     logger.info("ImportCommunications-> Inserting Campaign List Groups");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignListGroups");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "campaignListGroups");
     if (!processOK) {
       return false;
     }

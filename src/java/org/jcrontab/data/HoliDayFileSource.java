@@ -14,26 +14,27 @@
 package org.jcrontab.data;
 
 import org.jcrontab.Crontab;
-import java.util.Vector;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 /**
- *  This HoliDaySource builds a basic holidays information source.
+ * This HoliDaySource builds a basic holidays information source.
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 public class HoliDayFileSource implements HoliDaySource {
   private HoliDay[] hol = null;
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public HoliDay[] findAll() throws Exception {
 
@@ -49,7 +50,8 @@ public class HoliDayFileSource implements HoliDaySource {
     Vector listOfLines = new Vector();
 
     if (filename == null || filename == "") {
-      throw new FileNotFoundException("Should provide a valid file" +
+      throw new FileNotFoundException(
+          "Should provide a valid file" +
           "name plz set correctly org.jcrontab.data.holidaysfilesource");
     }
 
@@ -59,8 +61,7 @@ public class HoliDayFileSource implements HoliDaySource {
 
     InputStream fis = new FileInputStream(filename);
 
-    BufferedReader input = new BufferedReader(
-        new InputStreamReader(fis));
+    BufferedReader input = new BufferedReader(new InputStreamReader(fis));
 
     SimpleDateFormat formater = new SimpleDateFormat(dateFormat);
 

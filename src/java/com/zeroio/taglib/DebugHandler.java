@@ -15,15 +15,15 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 19, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 19, 2003
  */
 public class DebugHandler extends TagSupport {
 
@@ -31,9 +31,9 @@ public class DebugHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the DebugHandler object
+   * Sets the value attribute of the DebugHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -41,10 +41,10 @@ public class DebugHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     if (System.getProperty("DEBUG") != null) {
@@ -55,9 +55,9 @@ public class DebugHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

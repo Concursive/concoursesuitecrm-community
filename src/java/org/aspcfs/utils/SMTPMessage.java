@@ -21,20 +21,22 @@ import com.zeroio.iteam.base.FileItemList;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.activation.URLDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.net.URL;
 import java.util.*;
 
 /**
- *  A wrapper around Sun's JavaMail API. Makes sending email a snap.
+ * A wrapper around Sun's JavaMail API. Makes sending email a snap.
  *
- *@author     mrajkowski
- *@created    July 12, 2001
- *@version    $Id: SMTPMessage.java,v 1.11.4.1 2004/11/29 20:53:41 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: SMTPMessage.java,v 1.11.4.1 2004/11/29 20:53:41 mrajkowski
+ *          Exp $
+ * @created July 12, 2001
  */
 public class SMTPMessage {
 
@@ -50,21 +52,20 @@ public class SMTPMessage {
   private HashMap replyTo = new HashMap();
   private FileItemList attachments = null;
   private ArrayList byteArrayAttachments = null;
+  private HashMap images = new HashMap();
 
 
   /**
-   *  Constructor for the SMTPMessage object
-   *
-   *@since
+   * Constructor for the SMTPMessage object
    */
-  public SMTPMessage() { }
+  public SMTPMessage() {
+  }
 
 
   /**
-   *  Sets the Host attribute of the SMTPMessage object
+   * Sets the Host attribute of the SMTPMessage object
    *
-   *@param  tmp  The new Host value
-   *@since
+   * @param tmp The new Host value
    */
   public void setHost(String tmp) {
     host = tmp;
@@ -72,10 +73,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the From attribute of the SMTPMessage object
+   * Sets the From attribute of the SMTPMessage object
    *
-   *@param  tmp  The new From value
-   *@since
+   * @param tmp The new From value
    */
   public void setFrom(String tmp) {
     from = tmp;
@@ -83,10 +83,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the To attribute of the SMTPMessage object
+   * Sets the To attribute of the SMTPMessage object
    *
-   *@param  tmp  The new To value
-   *@since
+   * @param tmp The new To value
    */
   public void setTo(String tmp) {
     to.clear();
@@ -99,10 +98,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the Cc attribute of the SMTPMessage object
+   * Sets the Cc attribute of the SMTPMessage object
    *
-   *@param  tmp  The new Cc value
-   *@since
+   * @param tmp The new Cc value
    */
   public void setCc(String tmp) {
     cc.clear();
@@ -115,9 +113,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the bcc attribute of the SMTPMessage object
+   * Sets the bcc attribute of the SMTPMessage object
    *
-   *@param  tmp  The new bcc value
+   * @param tmp The new bcc value
    */
   public void setBcc(String tmp) {
     bcc.clear();
@@ -130,10 +128,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the Subject attribute of the SMTPMessage object
+   * Sets the Subject attribute of the SMTPMessage object
    *
-   *@param  tmp  The new Subject value
-   *@since
+   * @param tmp The new Subject value
    */
   public void setSubject(String tmp) {
     subject = tmp;
@@ -141,10 +138,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the Body attribute of the SMTPMessage object
+   * Sets the Body attribute of the SMTPMessage object
    *
-   *@param  tmp  The new Body value
-   *@since
+   * @param tmp The new Body value
    */
   public void setBody(String tmp) {
     body = tmp;
@@ -152,9 +148,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Gets the replyTo attribute of the SMTPMessage object
+   * Gets the replyTo attribute of the SMTPMessage object
    *
-   *@return    The replyTo value
+   * @return The replyTo value
    */
   public HashMap getReplyTo() {
     return replyTo;
@@ -162,9 +158,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the replyTo attribute of the SMTPMessage object
+   * Sets the replyTo attribute of the SMTPMessage object
    *
-   *@param  replyTo  The new replyTo value
+   * @param replyTo The new replyTo value
    */
   public void setReplyTo(HashMap replyTo) {
     this.replyTo = replyTo;
@@ -172,22 +168,20 @@ public class SMTPMessage {
 
 
   /**
-   *  Sets the attachments attribute of the SMTPMessage object
+   * Sets the attachments attribute of the SMTPMessage object
    *
-   *@param  tmp  The new attachments value
+   * @param tmp The new attachments value
    */
   public void setAttachments(FileItemList tmp) {
     this.attachments = tmp;
   }
 
 
-
   /**
-   *  Sets the Type attribute of the SMTPMessage object. Use "text" for standard
-   *  email. Use "text/html" for sending HTML messages.
+   * Sets the Type attribute of the SMTPMessage object. Use "text" for standard
+   * email. Use "text/html" for sending HTML messages.
    *
-   *@param  tmp  The new Type value
-   *@since
+   * @param tmp The new Type value
    */
   public void setType(String tmp) {
     type = tmp;
@@ -202,10 +196,9 @@ public class SMTPMessage {
   }
 
   /**
-   *  Gets the ErrorMsg attribute of the SMTPMessage object
+   * Gets the ErrorMsg attribute of the SMTPMessage object
    *
-   *@return    The ErrorMsg value
-   *@since
+   * @return The ErrorMsg value
    */
   public String getErrorMsg() {
     return errorMsg;
@@ -213,10 +206,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the To attribute of the SMTPMessage object
+   * Adds a feature to the To attribute of the SMTPMessage object
    *
-   *@param  tmp  The feature to be added to the To attribute
-   *@since
+   * @param tmp The feature to be added to the To attribute
    */
   public void addTo(String tmp) {
     to.add(tmp);
@@ -224,9 +216,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the ReplyTo attribute of the SMTPMessage object
+   * Adds a feature to the ReplyTo attribute of the SMTPMessage object
    *
-   *@param  address  The feature to be added to the ReplyTo attribute
+   * @param address The feature to be added to the ReplyTo attribute
    */
   public void addReplyTo(String address) {
     replyTo.put(address, "");
@@ -234,10 +226,10 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the ReplyTo attribute of the SMTPMessage object
+   * Adds a feature to the ReplyTo attribute of the SMTPMessage object
    *
-   *@param  address   The feature to be added to the ReplyTo attribute
-   *@param  personal  The feature to be added to the ReplyTo attribute
+   * @param address  The feature to be added to the ReplyTo attribute
+   * @param personal The feature to be added to the ReplyTo attribute
    */
   public void addReplyTo(String address, String personal) {
     replyTo.put(address, personal);
@@ -245,10 +237,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the Cc attribute of the SMTPMessage object
+   * Adds a feature to the Cc attribute of the SMTPMessage object
    *
-   *@param  tmp  The feature to be added to the Cc attribute
-   *@since
+   * @param tmp The feature to be added to the Cc attribute
    */
   public void addCc(String tmp) {
     cc.add(tmp);
@@ -256,9 +247,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the Bcc attribute of the SMTPMessage object
+   * Adds a feature to the Bcc attribute of the SMTPMessage object
    *
-   *@param  tmp  The feature to be added to the Bcc attribute
+   * @param tmp The feature to be added to the Bcc attribute
    */
   public void addBcc(String tmp) {
     bcc.add(tmp);
@@ -266,9 +257,9 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the FileAttachment attribute of the SMTPMessage object
+   * Adds a feature to the FileAttachment attribute of the SMTPMessage object
    *
-   *@param  tmp  The feature to be added to the FileAttachment attribute
+   * @param tmp The feature to be added to the FileAttachment attribute
    */
   public void addFileAttachment(FileItem tmp) {
     if (attachments == null) {
@@ -279,15 +270,15 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage
-   *  object
+   * Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage
+   * object
    *
-   *@param  fileName  The feature to be added to the ByteArrayAttachment
-   *      attribute
-   *@param  data      The feature to be added to the ByteArrayAttachment
-   *      attribute
-   *@param  mimeType  The feature to be added to the ByteArrayAttachment
-   *      attribute
+   * @param fileName The feature to be added to the ByteArrayAttachment
+   *                 attribute
+   * @param data     The feature to be added to the ByteArrayAttachment
+   *                 attribute
+   * @param mimeType The feature to be added to the ByteArrayAttachment
+   *                 attribute
    */
   public void addByteArrayAttachment(String fileName, String data, String mimeType) {
     DataSource attachment = new ByteArrayDataSource(fileName, data, mimeType);
@@ -299,15 +290,15 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage
-   *  object
+   * Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage
+   * object
    *
-   *@param  fileName  The feature to be added to the ByteArrayAttachment
-   *      attribute
-   *@param  data      The feature to be added to the ByteArrayAttachment
-   *      attribute
-   *@param  mimeType  The feature to be added to the ByteArrayAttachment
-   *      attribute
+   * @param fileName The feature to be added to the ByteArrayAttachment
+   *                 attribute
+   * @param data     The feature to be added to the ByteArrayAttachment
+   *                 attribute
+   * @param mimeType The feature to be added to the ByteArrayAttachment
+   *                 attribute
    */
   public void addByteArrayAttachment(String fileName, byte[] data, String mimeType) {
     DataSource attachment = new ByteArrayDataSource(fileName, data, mimeType);
@@ -317,11 +308,14 @@ public class SMTPMessage {
     byteArrayAttachments.add(attachment);
   }
 
+  public void addImage(String contentId, String urlImageLocation) {
+    images.put(contentId, urlImageLocation);
+  }
 
   /**
-   *  Sends an email based on this objects properties
+   * Sends an email based on this objects properties
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public int send() {
     //throws Exception {
@@ -381,19 +375,22 @@ public class SMTPMessage {
 
       // Set the to address(es)
       for (int i = 0; i < to.size(); i++) {
-        message.addRecipient(Message.RecipientType.TO,
+        message.addRecipient(
+            Message.RecipientType.TO,
             new InternetAddress((String) to.get(i)));
       }
 
       // Set the cc address(es)
       for (int i = 0; i < cc.size(); i++) {
-        message.addRecipient(Message.RecipientType.CC,
+        message.addRecipient(
+            Message.RecipientType.CC,
             new InternetAddress((String) cc.get(i)));
       }
 
       // Set the bcc address(es)
       for (int i = 0; i < bcc.size(); i++) {
-        message.addRecipient(Message.RecipientType.BCC,
+        message.addRecipient(
+            Message.RecipientType.BCC,
             new InternetAddress((String) bcc.get(i)));
       }
 
@@ -446,13 +443,20 @@ public class SMTPMessage {
         multipart.addBodyPart(messageBodyPart);
 
         //Process the array tags, either local image or download the image, and embed the content
-        /*
-         *  BodyPart embeddedBodyPart = new MimeBodyPart();
-         *  DataSource fds = new FileDataSource("/home/matt/cfs2/production/webapps/cfs2/images/refresh.gif");
-         *  embeddedBodyPart.setDataHandler(new DataHandler(fds));
-         *  embeddedBodyPart.setHeader("Content-ID", "<memememe>");
-         *  multipart.addBodyPart(embeddedBodyPart);
-         */
+        if (images.size() > 0) {
+          Iterator i = images.keySet().iterator();
+          while (i.hasNext()) {
+            String contentId = (String) i.next();
+            String urlImageLocation = (String) images.get(contentId);
+            // Embed the image
+            BodyPart embeddedBodyPart = new MimeBodyPart();
+            DataSource fds = new URLDataSource(new URL(urlImageLocation));
+            embeddedBodyPart.setDataHandler(new DataHandler(fds));
+            embeddedBodyPart.setHeader("Content-ID", "<" + contentId + ">");
+            multipart.addBodyPart(embeddedBodyPart);
+          }
+        }
+
         //Add the complete html to the content
         MimeBodyPart mbp = new MimeBodyPart();
         mbp.setContent(multipart);
@@ -474,6 +478,9 @@ public class SMTPMessage {
     } catch (javax.mail.MessagingException me) {
       errorMsg = me.toString();
       return 2;
+    } catch (java.net.MalformedURLException mu) {
+      errorMsg = mu.toString();
+      return 2;
     } catch (java.io.UnsupportedEncodingException ue) {
       errorMsg = ue.toString();
       return 2;
@@ -482,11 +489,11 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds file attachments to the email message using the FileItem object
+   * Adds file attachments to the email message using the FileItem object
    *
-   *@param  root                    The feature to be added to the
-   *      FileAttachments attribute
-   *@exception  MessagingException  Description of the Exception
+   * @param root The feature to be added to the
+   *             FileAttachments attribute
+   * @throws MessagingException Description of the Exception
    */
   private void addFileAttachments(MimeMultipart root) throws MessagingException {
     if (attachments != null) {
@@ -505,12 +512,12 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds a feature to the ByteArrayFileAttachments attribute of the
-   *  SMTPMessage object
+   * Adds a feature to the ByteArrayFileAttachments attribute of the
+   * SMTPMessage object
    *
-   *@param  root                    The feature to be added to the
-   *      ByteArrayFileAttachments attribute
-   *@exception  MessagingException  Description of the Exception
+   * @param root The feature to be added to the
+   *             ByteArrayFileAttachments attribute
+   * @throws MessagingException Description of the Exception
    */
   private void addByteArrayFileAttachments(MimeMultipart root) throws MessagingException {
     if (byteArrayAttachments != null) {
@@ -530,10 +537,10 @@ public class SMTPMessage {
 
 
   /**
-   *  Adds multiple addresses that are comma separated to the email list
+   * Adds multiple addresses that are comma separated to the email list
    *
-   *@param  list    The feature to be added to the Multiple attribute
-   *@param  emails  The feature to be added to the Multiple attribute
+   * @param list   The feature to be added to the Multiple attribute
+   * @param emails The feature to be added to the Multiple attribute
    */
   private void addMultiple(ArrayList list, String emails) {
     StringTokenizer st = new StringTokenizer(emails, ",");

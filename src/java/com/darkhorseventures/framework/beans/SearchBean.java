@@ -15,18 +15,16 @@
  */
 package com.darkhorseventures.framework.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.util.*;
-import org.aspcfs.utils.StringUtils;
 import com.zeroio.utils.SearchUtils;
 
+import java.util.ArrayList;
+
 /**
- *  Contains the properties of a search form
+ * Contains the properties of a search form
  *
- *@author     matt rajkowski
- *@created    May 17, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 17, 2004
  */
 public class SearchBean extends GenericBean {
   public final static int UNDEFINED = -1;
@@ -54,15 +52,16 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Constructor for the SearchBean object
+   * Constructor for the SearchBean object
    */
-  public SearchBean() { }
+  public SearchBean() {
+  }
 
 
   /**
-   *  Gets the query attribute of the SearchBean object
+   * Gets the query attribute of the SearchBean object
    *
-   *@return    The query value
+   * @return The query value
    */
   public String getQuery() {
     return query;
@@ -70,9 +69,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the query attribute of the SearchBean object
+   * Sets the query attribute of the SearchBean object
    *
-   *@param  tmp  The new query value
+   * @param tmp The new query value
    */
   public void setQuery(String tmp) {
     this.query = tmp;
@@ -80,9 +79,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Gets the scope attribute of the SearchBean object
+   * Gets the scope attribute of the SearchBean object
    *
-   *@return    The scope value
+   * @return The scope value
    */
   public int getScope() {
     return scope;
@@ -90,9 +89,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the scope attribute of the SearchBean object
+   * Sets the scope attribute of the SearchBean object
    *
-   *@param  tmp  The new scope value
+   * @param tmp The new scope value
    */
   public void setScope(int tmp) {
     this.scope = tmp;
@@ -100,9 +99,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Gets the section attribute of the SearchBean object
+   * Gets the section attribute of the SearchBean object
    *
-   *@return    The section value
+   * @return The section value
    */
   public int getSection() {
     return section;
@@ -110,9 +109,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the section attribute of the SearchBean object
+   * Sets the section attribute of the SearchBean object
    *
-   *@param  tmp  The new section value
+   * @param tmp The new section value
    */
   public void setSection(int tmp) {
     this.section = tmp;
@@ -120,9 +119,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the section attribute of the SearchBean object
+   * Sets the section attribute of the SearchBean object
    *
-   *@param  tmp  The new section value
+   * @param tmp The new section value
    */
   public void setSection(String tmp) {
     this.section = Integer.parseInt(tmp);
@@ -130,9 +129,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the scope attribute of the SearchBean object
+   * Sets the scope attribute of the SearchBean object
    *
-   *@param  tmp  The new scope value
+   * @param tmp The new scope value
    */
   public void setScope(String tmp) {
     // scope
@@ -165,9 +164,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the SearchBean object
+   * Gets the valid attribute of the SearchBean object
    *
-   *@return    The valid value
+   * @return The valid value
    */
   public boolean isValid() {
     return valid;
@@ -175,9 +174,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Gets the parsedQuery attribute of the SearchBean object
+   * Gets the parsedQuery attribute of the SearchBean object
    *
-   *@return    The parsedQuery value
+   * @return The parsedQuery value
    */
   public String getParsedQuery() {
     return parsedQuery;
@@ -185,9 +184,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the parsedQuery attribute of the SearchBean object
+   * Sets the parsedQuery attribute of the SearchBean object
    *
-   *@param  tmp  The new parsedQuery value
+   * @param tmp The new parsedQuery value
    */
   public void setParsedQuery(String tmp) {
     this.parsedQuery = tmp;
@@ -195,9 +194,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Gets the terms attribute of the SearchBean object
+   * Gets the terms attribute of the SearchBean object
    *
-   *@return    The terms value
+   * @return The terms value
    */
   public ArrayList getTerms() {
     return terms;
@@ -205,9 +204,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Sets the terms attribute of the SearchBean object
+   * Sets the terms attribute of the SearchBean object
    *
-   *@param  tmp  The new terms value
+   * @param tmp The new terms value
    */
   public void setTerms(ArrayList tmp) {
     this.terms = tmp;
@@ -215,9 +214,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Adds a feature to the NumberFound attribute of the SearchBean object
+   * Adds a feature to the NumberFound attribute of the SearchBean object
    *
-   *@param  count  The feature to be added to the NumberFound attribute
+   * @param count The feature to be added to the NumberFound attribute
    */
   public void addNumberFound(int count) {
     numberFound += count;
@@ -225,9 +224,9 @@ public class SearchBean extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean parseQuery() {
     // break up the query string into pieces to be used for building database queries
@@ -245,7 +244,8 @@ public class SearchBean extends GenericBean {
       parsedQuery = SearchUtils.parseSearchText(sb.toString(), true);
       terms = SearchUtils.parseSearchTerms(parsedQuery);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("SearchBean-> Terms: (" + terms.size() + ") " + terms.toString());
+        System.out.println(
+            "SearchBean-> Terms: (" + terms.size() + ") " + terms.toString());
       }
     }
     if (System.getProperty("DEBUG") != null) {

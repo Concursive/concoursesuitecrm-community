@@ -29,11 +29,11 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 /**
- *  User Session record -- maintained while the user is logged in
+ * User Session record -- maintained while the user is logged in
  *
- *@author     matt rajkowski
- *@created    September 21, 2001
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 21, 2001
  */
 public class UserBean extends GenericBean {
   private int userId = -1;
@@ -51,15 +51,16 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Constructor for the UserBean object
+   * Constructor for the UserBean object
    */
-  public UserBean() { }
+  public UserBean() {
+  }
 
 
   /**
-   *  Sets the userId attribute of the UserBean object
+   * Sets the userId attribute of the UserBean object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     userId = tmp;
@@ -67,9 +68,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the idRange attribute of the UserBean object
+   * Sets the idRange attribute of the UserBean object
    *
-   *@param  tmp  The new idRange value
+   * @param tmp The new idRange value
    */
   public void setIdRange(String tmp) {
     this.idRange = tmp;
@@ -77,10 +78,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the CssFile attribute of the userBean object
+   * Sets the CssFile attribute of the userBean object
    *
-   *@param  tmp  The new CssFile value
-   *@since       1.14
+   * @param tmp The new CssFile value
+   * @since 1.14
    */
   public void setCssFile(String tmp) {
     this.cssFile = tmp;
@@ -88,10 +89,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the Template attribute of the User object
+   * Sets the Template attribute of the User object
    *
-   *@param  tmp  The new Template value
-   *@since       1.14
+   * @param tmp The new Template value
+   * @since 1.14
    */
   public void setTemplate(String tmp) {
     this.template = tmp;
@@ -99,10 +100,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the PermissionCheck attribute of the User object
+   * Sets the PermissionCheck attribute of the User object
    *
-   *@param  tmp  The new PermissionCheck value
-   *@since       1.12
+   * @param tmp The new PermissionCheck value
+   * @since 1.12
    */
   public void setPermissionCheck(java.util.Date tmp) {
     this.permissionCheck = tmp;
@@ -110,10 +111,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the HierarchyCheck attribute of the User object
+   * Sets the HierarchyCheck attribute of the User object
    *
-   *@param  tmp  The new HierarchyCheck value
-   *@since       1.12
+   * @param tmp The new HierarchyCheck value
+   * @since 1.12
    */
   public void setHierarchyCheck(java.util.Date tmp) {
     this.hierarchyCheck = tmp;
@@ -121,11 +122,11 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the User attribute of the User object, added to support the
-   *  SecurityCheck
+   * Sets the User attribute of the User object, added to support the
+   * SecurityCheck
    *
-   *@param  tmp  The new User value
-   *@since       1.13
+   * @param tmp The new User value
+   * @since 1.13
    */
   public void setUserRecord(User tmp) {
     this.userRecord = tmp;
@@ -133,9 +134,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the clientType attribute of the UserBean object
+   * Sets the clientType attribute of the UserBean object
    *
-   *@param  tmp  The new clientType value
+   * @param tmp The new clientType value
    */
   public void setClientType(ClientType tmp) {
     this.clientType = tmp;
@@ -143,9 +144,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the clientType attribute of the UserBean object
+   * Sets the clientType attribute of the UserBean object
    *
-   *@param  request  The new clientType value
+   * @param request The new clientType value
    */
   public void setClientType(HttpServletRequest request) {
     this.clientType = new ClientType(request);
@@ -153,9 +154,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the connectionElement attribute of the UserBean object
+   * Sets the connectionElement attribute of the UserBean object
    *
-   *@param  connectionElement  The new connectionElement value
+   * @param connectionElement The new connectionElement value
    */
   public void setConnectionElement(ConnectionElement connectionElement) {
     this.connectionElement = connectionElement;
@@ -163,9 +164,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the actualUserId attribute of the UserBean object
+   * Sets the actualUserId attribute of the UserBean object
    *
-   *@param  actualUserId  The new aliasId value
+   * @param actualUserId The new aliasId value
    */
   public void setActualUserId(int actualUserId) {
     this.actualUserId = actualUserId;
@@ -173,9 +174,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the actualUserId which would be different in case of an aliased user.
+   * Gets the actualUserId which would be different in case of an aliased user.
    *
-   *@return    The actualUserId value
+   * @return The actualUserId value
    */
   public int getActualUserId() {
     return actualUserId;
@@ -183,10 +184,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the systemStatus attribute of the UserBean object
+   * Gets the systemStatus attribute of the UserBean object
    *
-   *@param  config  Description of the Parameter
-   *@return         The systemStatus value
+   * @param config Description of the Parameter
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus(ServletConfig config) {
     return (this.getSystemStatus(config.getServletContext()));
@@ -194,10 +195,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the systemStatus attribute of the UserBean object
+   * Gets the systemStatus attribute of the UserBean object
    *
-   *@param  context  Description of the Parameter
-   *@return          The systemStatus value
+   * @param context Description of the Parameter
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus(ServletContext context) {
     Hashtable globalStatus = (Hashtable) context.getAttribute("SystemStatus");
@@ -206,9 +207,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the connectionElement attribute of the UserBean object
+   * Gets the connectionElement attribute of the UserBean object
    *
-   *@return    The connectionElement value
+   * @return The connectionElement value
    */
   public ConnectionElement getConnectionElement() {
     return connectionElement;
@@ -216,22 +217,21 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the User attribute of the User object
+   * Gets the User attribute of the User object
    *
-   *@return    The User value
-   *@since     1.10
+   * @return The User value
+   * @since 1.10
    */
   public User getUserRecord() {
     return userRecord;
   }
 
 
-
   /**
-   *  Returns the user's identifier
+   * Returns the user's identifier
    *
-   *@return    String
-   *@since     1.14
+   * @return String
+   * @since 1.14
    */
   public String getUsername() {
     return userRecord.getUsername();
@@ -239,10 +239,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the UserId attribute of the userBean object
+   * Gets the UserId attribute of the userBean object
    *
-   *@return    The UserId value
-   *@since     1.14
+   * @return The UserId value
+   * @since 1.14
    */
   public int getUserId() {
     return userId;
@@ -250,9 +250,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the browserId attribute of the UserBean object
+   * Gets the browserId attribute of the UserBean object
    *
-   *@return    The browserId value
+   * @return The browserId value
    */
   public String getBrowserId() {
     return clientType.getBrowserId();
@@ -260,9 +260,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the browserVersion attribute of the UserBean object
+   * Gets the browserVersion attribute of the UserBean object
    *
-   *@return    The browserVersion value
+   * @return The browserVersion value
    */
   public double getBrowserVersion() {
     return clientType.getBrowserVersion();
@@ -270,10 +270,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the Role attribute of the userBean object
+   * Gets the Role attribute of the userBean object
    *
-   *@return    The Role value
-   *@since     1.14
+   * @return The Role value
+   * @since 1.14
    */
   public int getRoleId() {
     return getUserRecord().getRoleId();
@@ -281,10 +281,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the Role attribute of the User object
+   * Gets the Role attribute of the User object
    *
-   *@return    The Role value
-   *@since     1.9
+   * @return The Role value
+   * @since 1.9
    */
   public String getRole() {
     return getUserRecord().getRole();
@@ -292,9 +292,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the roleType attribute of the UserBean object
+   * Gets the roleType attribute of the UserBean object
    *
-   *@return    The roleType value
+   * @return The roleType value
    */
   public int getRoleType() {
     return getUserRecord().getRoleType();
@@ -302,9 +302,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the UserBean object
+   * Gets the orgId attribute of the UserBean object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return getUserRecord().getContact().getOrgId();
@@ -312,10 +312,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the CssFile attribute of the userBean object
+   * Gets the CssFile attribute of the userBean object
    *
-   *@return    The CssFile value
-   *@since     1.14
+   * @return The CssFile value
+   * @since 1.14
    */
   public String getCssFile() {
     return cssFile;
@@ -323,9 +323,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the contact attribute of the UserBean object
+   * Gets the contact attribute of the UserBean object
    *
-   *@return    The contact value
+   * @return The contact value
    */
   public Contact getContact() {
     return getUserRecord().getContact();
@@ -333,9 +333,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the locale attribute of the UserBean object
+   * Gets the locale attribute of the UserBean object
    *
-   *@return    The locale value
+   * @return The locale value
    */
   public Locale getLocale() {
     return getUserRecord().getLocale();
@@ -343,9 +343,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the timeZone attribute of the UserBean object
+   * Gets the timeZone attribute of the UserBean object
    *
-   *@return    The timeZone value
+   * @return The timeZone value
    */
   public String getTimeZone() {
     return getUserRecord().getTimeZone();
@@ -353,9 +353,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the currency attribute of the UserBean object
+   * Gets the currency attribute of the UserBean object
    *
-   *@return    The currency value
+   * @return The currency value
    */
   public String getCurrency() {
     return getUserRecord().getCurrency();
@@ -363,10 +363,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the Template attribute of the User object
+   * Gets the Template attribute of the User object
    *
-   *@return    The Template value
-   *@since     1.14
+   * @return The Template value
+   * @since 1.14
    */
   public String getTemplate() {
     return template;
@@ -374,12 +374,12 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the comma separated IdRange attribute of the User object. Each id
-   *  represents a user id in which this user can access data for, including the
-   *  user's own id.
+   * Gets the comma separated IdRange attribute of the User object. Each id
+   * represents a user id in which this user can access data for, including the
+   * user's own id.
    *
-   *@return    The comma separated IdRange attribute
-   *@since     1.12
+   * @return The comma separated IdRange attribute
+   * @since 1.12
    */
   public String getIdRange() {
     return idRange;
@@ -387,9 +387,9 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the clientType attribute of the UserBean object
+   * Gets the clientType attribute of the UserBean object
    *
-   *@return    The clientType value
+   * @return The clientType value
    */
   public ClientType getClientType() {
     return clientType;
@@ -397,10 +397,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the PermissionCheck attribute of the User object
+   * Gets the PermissionCheck attribute of the User object
    *
-   *@return    The PermissionCheck value
-   *@since     1.12
+   * @return The PermissionCheck value
+   * @since 1.12
    */
   public java.util.Date getPermissionCheck() {
     return permissionCheck;
@@ -408,10 +408,10 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the HierarchyCheck attribute of the User object
+   * Gets the HierarchyCheck attribute of the User object
    *
-   *@return    The HierarchyCheck value
-   *@since     1.12
+   * @return The HierarchyCheck value
+   * @since 1.12
    */
   public java.util.Date getHierarchyCheck() {
     return hierarchyCheck;

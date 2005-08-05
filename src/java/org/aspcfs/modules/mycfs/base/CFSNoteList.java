@@ -15,19 +15,21 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    February 21, 2002
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created February 21, 2002
  */
 public class CFSNoteList extends Vector {
 
@@ -37,20 +39,20 @@ public class CFSNoteList extends Vector {
   private boolean oldMessagesOnly = false;
   private boolean sentMessagesOnly = false;
   private boolean newMessagesOnly = false;
+  private boolean buildAll = false;
 
 
   /**
-   *  Constructor for the CFSNoteList object
-   *
-   *@since
+   * Constructor for the CFSNoteList object
    */
-  public CFSNoteList() { }
+  public CFSNoteList() {
+  }
 
 
   /**
-   *  Sets the newMessagesOnly attribute of the CFSNoteList object
+   * Sets the newMessagesOnly attribute of the CFSNoteList object
    *
-   *@param  newMessagesOnly  The new newMessagesOnly value
+   * @param newMessagesOnly The new newMessagesOnly value
    */
   public void setNewMessagesOnly(boolean newMessagesOnly) {
     this.newMessagesOnly = newMessagesOnly;
@@ -58,10 +60,9 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Sets the PagedListInfo attribute of the CFSNoteList object
+   * Sets the PagedListInfo attribute of the CFSNoteList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -69,22 +70,19 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Sets the SentTo attribute of the CFSNoteList object
+   * Sets the SentTo attribute of the CFSNoteList object
    *
-   *@param  sentTo  The new SentTo value
-   *@since
+   * @param sentTo The new SentTo value
    */
   public void setSentTo(int sentTo) {
     this.sentTo = sentTo;
   }
 
 
-
   /**
-   *  Sets the SentFrom attribute of the CFSNoteList object
+   * Sets the SentFrom attribute of the CFSNoteList object
    *
-   *@param  sentFrom  The new SentFrmm value
-   *@since
+   * @param sentFrom The new SentFrmm value
    */
   public void setSentFrom(int sentFrom) {
     this.sentFrom = sentFrom;
@@ -92,10 +90,9 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Sets the OldMessagesOnly attribute of the CFSNoteList object
+   * Sets the OldMessagesOnly attribute of the CFSNoteList object
    *
-   *@param  oldMessagesOnly  The new OldMessagesOnly value
-   *@since
+   * @param oldMessagesOnly The new OldMessagesOnly value
    */
   public void setOldMessagesOnly(boolean oldMessagesOnly) {
     this.oldMessagesOnly = oldMessagesOnly;
@@ -103,22 +100,19 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Sets the sentMessagesOnly attribute of the CFSNoteList object
+   * Sets the sentMessagesOnly attribute of the CFSNoteList object
    *
-   *@param  sentMessagesOnly  The sent Messages Only value
-   *@since
+   * @param sentMessagesOnly The sent Messages Only value
    */
   public void setSentMessagesOnly(boolean sentMessagesOnly) {
     this.sentMessagesOnly = sentMessagesOnly;
   }
 
 
-
   /**
-   *  Gets the PagedListInfo attribute of the CFSNoteList object
+   * Gets the PagedListInfo attribute of the CFSNoteList object
    *
-   *@return    The PagedListInfo value
-   *@since
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -126,10 +120,9 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Gets the SentTo attribute of the CFSNoteList object
+   * Gets the SentTo attribute of the CFSNoteList object
    *
-   *@return    The SentTo value
-   *@since
+   * @return The SentTo value
    */
   public int getSentTo() {
     return sentTo;
@@ -137,10 +130,9 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Gets the SentFrom attribute of the CFSNoteList object
+   * Gets the SentFrom attribute of the CFSNoteList object
    *
-   *@return    The SentFrom value
-   *@since
+   * @return The SentFrom value
    */
   public int getSentFrom() {
     return sentFrom;
@@ -148,22 +140,32 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Gets the OldMessagesOnly attribute of the CFSNoteList object
+   * Gets the OldMessagesOnly attribute of the CFSNoteList object
    *
-   *@return    The OldMessagesOnly value
-   *@since
+   * @return The OldMessagesOnly value
    */
   public boolean getOldMessagesOnly() {
     return oldMessagesOnly;
   }
 
+  public boolean getBuildAll() {
+    return buildAll;
+  }
+
+  public void setBuildAll(boolean tmp) {
+    this.buildAll = tmp;
+  }
+
+  public void setBuildAll(String tmp) {
+    this.buildAll = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -195,7 +197,8 @@ public class CFSNoteList extends Vector {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -208,7 +211,8 @@ public class CFSNoteList extends Vector {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND subject < ? ");
         items = prepareFilter(pst);
@@ -251,23 +255,14 @@ public class CFSNoteList extends Vector {
           "WHERE m.id > -1 AND (m.id = ml.id) ");
     }
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-
       CFSNote thisNote = new CFSNote();
       if (pagedListInfo != null) {
         thisNote.setCurrentView(pagedListInfo.getListView());
@@ -282,14 +277,16 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
+    }
+    if (buildAll) {
+      return;
     }
 
     if (sentTo > -1 && !sentMessagesOnly) {
@@ -309,15 +306,18 @@ public class CFSNoteList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    if (buildAll) {
+      return i;
+    }
 
     if (sentTo > -1 && !sentMessagesOnly) {
       pst.setInt(++i, sentTo);

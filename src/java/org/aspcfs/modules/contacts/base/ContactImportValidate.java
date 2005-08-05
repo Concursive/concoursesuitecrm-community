@@ -15,22 +15,23 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import java.lang.reflect.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.apps.transfer.reader.mapreader.*;
+import org.aspcfs.apps.transfer.reader.mapreader.Property;
+import org.aspcfs.apps.transfer.reader.mapreader.PropertyMap;
+import org.aspcfs.utils.CFSFileReader;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
- *  Validates the import data against the properties
+ * Validates the import data against the properties
  *
- *@author     Mathur
- *@created    April 6, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created April 6, 2004
  */
 public class ContactImportValidate {
   PropertyMap propertyMap = null;
@@ -42,15 +43,16 @@ public class ContactImportValidate {
 
 
   /**
-   *  Constructor for the ContactImportValidate object
+   * Constructor for the ContactImportValidate object
    */
-  public ContactImportValidate() { }
+  public ContactImportValidate() {
+  }
 
 
   /**
-   *  Sets the propertyMapList attribute of the ContactImportValidate object
+   * Sets the propertyMapList attribute of the ContactImportValidate object
    *
-   *@param  tmp  The new propertyMapList value
+   * @param tmp The new propertyMapList value
    */
   public void setPropertyMap(PropertyMap tmp) {
     this.propertyMap = tmp;
@@ -58,9 +60,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Sets the filePath attribute of the ContactImportValidate object
+   * Sets the filePath attribute of the ContactImportValidate object
    *
-   *@param  tmp  The new filePath value
+   * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -68,9 +70,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Sets the fieldMappings attribute of the ContactImportValidate object
+   * Sets the fieldMappings attribute of the ContactImportValidate object
    *
-   *@param  tmp  The new fieldMappings value
+   * @param tmp The new fieldMappings value
    */
   public void setFieldMappings(LinkedHashMap tmp) {
     this.fieldMappings = tmp;
@@ -78,9 +80,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the fieldMappings attribute of the ContactImportValidate object
+   * Gets the fieldMappings attribute of the ContactImportValidate object
    *
-   *@return    The fieldMappings value
+   * @return The fieldMappings value
    */
   public LinkedHashMap getFieldMappings() {
     return fieldMappings;
@@ -88,9 +90,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Sets the contactImport attribute of the ContactImportValidate object
+   * Sets the contactImport attribute of the ContactImportValidate object
    *
-   *@param  tmp  The new contactImport value
+   * @param tmp The new contactImport value
    */
   public void setContactImport(ContactImport tmp) {
     this.contactImport = tmp;
@@ -98,9 +100,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Sets the sampleRecords attribute of the ContactImportValidate object
+   * Sets the sampleRecords attribute of the ContactImportValidate object
    *
-   *@param  tmp  The new sampleRecords value
+   * @param tmp The new sampleRecords value
    */
   public void setSampleRecords(ArrayList tmp) {
     this.sampleRecords = tmp;
@@ -108,9 +110,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Sets the errors attribute of the ContactImportValidate object
+   * Sets the errors attribute of the ContactImportValidate object
    *
-   *@param  tmp  The new errors value
+   * @param tmp The new errors value
    */
   public void setErrors(HashMap tmp) {
     this.errors = tmp;
@@ -118,9 +120,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the errors attribute of the ContactImportValidate object
+   * Gets the errors attribute of the ContactImportValidate object
    *
-   *@return    The errors value
+   * @return The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -128,9 +130,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the generalErrors attribute of the ContactImportValidate object
+   * Gets the generalErrors attribute of the ContactImportValidate object
    *
-   *@return    The generalErrors value
+   * @return The generalErrors value
    */
   public ArrayList getGeneralErrors() {
     if (errors.containsKey("generalErrors")) {
@@ -141,9 +143,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the fieldErrors attribute of the ContactImportValidate object
+   * Gets the fieldErrors attribute of the ContactImportValidate object
    *
-   *@return    The fieldErrors value
+   * @return The fieldErrors value
    */
   public HashMap getFieldErrors() {
     if (errors.containsKey("fieldErrors")) {
@@ -154,9 +156,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the sampleRecords attribute of the ContactImportValidate object
+   * Gets the sampleRecords attribute of the ContactImportValidate object
    *
-   *@return    The sampleRecords value
+   * @return The sampleRecords value
    */
   public ArrayList getSampleRecords() {
     return sampleRecords;
@@ -164,9 +166,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the contactImport attribute of the ContactImportValidate object
+   * Gets the contactImport attribute of the ContactImportValidate object
    *
-   *@return    The contactImport value
+   * @return The contactImport value
    */
   public ContactImport getContactImport() {
     return contactImport;
@@ -174,9 +176,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the propertyMap attribute of the ContactImportValidate object
+   * Gets the propertyMap attribute of the ContactImportValidate object
    *
-   *@return    The propertyMap value
+   * @return The propertyMap value
    */
   public PropertyMap getPropertyMap() {
     return propertyMap;
@@ -184,9 +186,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Gets the filePath attribute of the ContactImportValidate object
+   * Gets the filePath attribute of the ContactImportValidate object
    *
-   *@return    The filePath value
+   * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -194,7 +196,7 @@ public class ContactImportValidate {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void initialize() {
     autoMapProperties();
@@ -203,19 +205,21 @@ public class ContactImportValidate {
 
 
   /**
-   *  Auto maps fields of a import file to contact properties
+   * Auto maps fields of a import file to contact properties
    */
   public void autoMapProperties() {
     ArrayList thisRecord = null;
     try {
-      CFSFileReader fileReader = new CFSFileReader(filePath, contactImport.getFileType());
+      CFSFileReader fileReader = new CFSFileReader(
+          filePath, contactImport.getFileType());
       CFSFileReader.Record record = null;
       if ((record = fileReader.nextLine()) != null) {
         //Get the record
         thisRecord = record.data;
 
         if (thisRecord == null || thisRecord.size() < 1) {
-          addGeneralError("Invalid Header: Could not parse line based on data or there data is insufficient");
+          addGeneralError(
+              "Invalid Header: Could not parse line based on data or there data is insufficient");
           return;
         }
       }
@@ -230,13 +234,16 @@ public class ContactImportValidate {
         }
         if (!"".equals(StringUtils.toString(field))) {
           if (fieldMappings.containsKey(field)) {
-            addGeneralError("Duplicate Field: Field \"" + field + "\" occurs twice in the header record");
+            addGeneralError(
+                "Duplicate Field: Field \"" + field + "\" occurs twice in the header record");
           } else {
-            Property thisProperty = propertyMap.mapProperty(field, fieldNumber);
+            Property thisProperty = propertyMap.mapProperty(
+                field, fieldNumber);
             fieldMappings.put(field, thisProperty);
           }
         } else {
-          addGeneralError("Invalid Field: Field Number " + fieldNumber + "is blank");
+          addGeneralError(
+              "Invalid Field: Field Number " + fieldNumber + "is blank");
         }
       }
 
@@ -252,13 +259,14 @@ public class ContactImportValidate {
 
 
   /**
-   *  Retrieves first "n" lines from the import file
+   * Retrieves first "n" lines from the import file
    *
-   *@param  count  Description of the Parameter
+   * @param count Description of the Parameter
    */
   public void buildImportSample(int count) {
     try {
-      CFSFileReader fileReader = new CFSFileReader(filePath, contactImport.getFileType());
+      CFSFileReader fileReader = new CFSFileReader(
+          filePath, contactImport.getFileType());
       CFSFileReader.Record record = null;
       ArrayList header = null;
       while ((record = fileReader.nextLine()) != null && count-- > 0) {
@@ -268,7 +276,8 @@ public class ContactImportValidate {
         }
         if (sampleRecords.size() == 2) {
           if (header.size() != record.data.size()) {
-            addGeneralError("Insufficient Data: Count of columns in header and data do not match");
+            addGeneralError(
+                "Insufficient Data: Count of columns in header and data do not match");
           }
         }
       }
@@ -281,22 +290,24 @@ public class ContactImportValidate {
 
 
   /**
-   *  Run the validation
+   * Run the validation
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public void validate(HttpServletRequest request) {
     //get field mappings from file
     ArrayList thisRecord = null;
     try {
-      CFSFileReader fileReader = new CFSFileReader(filePath, contactImport.getFileType());
+      CFSFileReader fileReader = new CFSFileReader(
+          filePath, contactImport.getFileType());
       CFSFileReader.Record record = null;
       if ((record = fileReader.nextLine()) != null) {
         //Get the record
         thisRecord = record.data;
 
         if (thisRecord == null || thisRecord.size() < 1) {
-          addGeneralError("Invalid Header: Could not parse line based on data or there data is insufficient");
+          addGeneralError(
+              "Invalid Header: Could not parse line based on data or there data is insufficient");
           return;
         }
       }
@@ -310,7 +321,8 @@ public class ContactImportValidate {
           continue;
         }
         if (fieldMappings.containsKey(field)) {
-          addGeneralError("Duplicate Field: Field \"" + field + "\" occurs twice in the header record");
+          addGeneralError(
+              "Duplicate Field: Field \"" + field + "\" occurs twice in the header record");
         } else {
           Property mappedProperty = null;
 
@@ -319,37 +331,47 @@ public class ContactImportValidate {
             String propertyName = request.getParameter(field);
             String groupId = request.getParameter(field + "groupId");
             if (!"-1".equals(propertyName)) {
-              Property thisProperty = propertyMap.getProperty(field, propertyName, groupId);
+              Property thisProperty = propertyMap.getProperty(
+                  field, propertyName, groupId);
               if (thisProperty.getMappedColumn() > 0) {
                 if (thisProperty.getGroupId() > 0) {
-                  addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + " has already been mapped to another field");
+                  addFieldError(
+                      field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + " has already been mapped to another field");
                 } else {
-                  addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
+                  addFieldError(
+                      field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
                 }
               } else {
                 if (System.getProperty("DEBUG") != null) {
-                  System.out.println("** Mapping " + field + " to " + fieldNumber);
+                  System.out.println(
+                      "** Mapping " + field + " to " + fieldNumber);
                 }
                 thisProperty.setMappedColumn(fieldNumber);
                 mappedProperty = thisProperty;
 
                 //check for email type
                 if (mappedProperty.getName().equals("email")) {
-                  String emailType = request.getParameter(field + "_hiddenemailtype");
-                  Property emailTypeProperty = propertyMap.getProperty(field, "contactEmail.type", groupId);
+                  String emailType = request.getParameter(
+                      field + "_hiddenemailtype");
+                  Property emailTypeProperty = propertyMap.getProperty(
+                      field, "contactEmail.type", groupId);
                   emailTypeProperty.setDefaultValue(emailType);
                 }
 
                 //check for phone
                 if (mappedProperty.getName().equals("number")) {
-                  String phoneType = request.getParameter(field + "_hiddenphonetype");
-                  Property phoneTypeProperty = propertyMap.getProperty(field, "contactPhone.type", groupId);
+                  String phoneType = request.getParameter(
+                      field + "_hiddenphonetype");
+                  Property phoneTypeProperty = propertyMap.getProperty(
+                      field, "contactPhone.type", groupId);
                   phoneTypeProperty.setDefaultValue(phoneType);
                 }
                 //check for address
                 if (mappedProperty.getName().equals("streetAddressLine1")) {
-                  String addressType = request.getParameter(field + "_hiddenaddresstype");
-                  Property addressTypeProperty = propertyMap.getProperty(field, "contactAddress.type", groupId);
+                  String addressType = request.getParameter(
+                      field + "_hiddenaddresstype");
+                  Property addressTypeProperty = propertyMap.getProperty(
+                      field, "contactAddress.type", groupId);
                   addressTypeProperty.setDefaultValue(addressType);
                 }
               }
@@ -374,7 +396,7 @@ public class ContactImportValidate {
 
 
   /**
-   *  Checks to see if all required properties have a mapping
+   * Checks to see if all required properties have a mapping
    */
   public void checkRequiredProperties() {
     ArrayList thisList = propertyMap.getRequiredProperties();
@@ -388,10 +410,12 @@ public class ContactImportValidate {
             String substitute = p.getSubstitute();
             Property thisProp = propertyMap.getProperty(substitute);
             if (thisProp.getMappedColumn() < 0) {
-              addGeneralError("Required Property: The property " + p.getDisplayName() + " or " + thisProp.getDisplayName() + " is required");
+              addGeneralError(
+                  "Required Property: The property " + p.getDisplayName() + " or " + thisProp.getDisplayName() + " is required");
             }
           } else {
-            addGeneralError("Required Property: The property " + p.getDisplayName() + " is required");
+            addGeneralError(
+                "Required Property: The property " + p.getDisplayName() + " is required");
           }
         }
       }
@@ -400,9 +424,9 @@ public class ContactImportValidate {
 
 
   /**
-   *  Adds a general error
+   * Adds a general error
    *
-   *@param  error  The feature to be added to the FileError attribute
+   * @param error The feature to be added to the FileError attribute
    */
   public void addGeneralError(String error) {
     if (!errors.containsKey("generalErrors")) {
@@ -414,10 +438,10 @@ public class ContactImportValidate {
 
 
   /**
-   *  Adds a field specific error
+   * Adds a field specific error
    *
-   *@param  error  The feature to be added to the FieldError attribute
-   *@param  field  The feature to be added to the FieldError attribute
+   * @param error The feature to be added to the FieldError attribute
+   * @param field The feature to be added to the FieldError attribute
    */
   public void addFieldError(String field, String error) {
     if (!errors.containsKey("fieldErrors")) {
@@ -429,19 +453,22 @@ public class ContactImportValidate {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void printHeaderMappings() {
-    System.out.println("================= Auto Mapped Fields =====================");
+    System.out.println(
+        "================= Auto Mapped Fields =====================");
     Iterator props = fieldMappings.keySet().iterator();
     while (props.hasNext()) {
       String field = (String) props.next();
       Property property = (Property) fieldMappings.get(field);
       if (property != null && property.getMappedColumn() > -1) {
-        System.out.println(property.getUniqueName() + ":" + property.getMappedColumn());
+        System.out.println(
+            property.getUniqueName() + ":" + property.getMappedColumn());
       }
     }
-    System.out.println("===========================================================");
+    System.out.println(
+        "===========================================================");
   }
 }
 

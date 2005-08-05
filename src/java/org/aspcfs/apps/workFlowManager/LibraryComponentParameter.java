@@ -15,22 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.Constants;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  A LibraryComponentParameter represents a valid parameter for a component,
- *  and contains the default value. When adding components to a business
- *  process, the default parameters can be selected from and the default value
- *  can be overridden.
+ * A LibraryComponentParameter represents a valid parameter for a component,
+ * and contains the default value. When adding components to a business
+ * process, the default parameters can be selected from and the default value
+ * can be overridden.
  *
- *@author     matt rajkowski
- *@created    June 6, 2003
- *@version    $Id: LibraryComponentParameter.java,v 1.1.2.1 2003/06/11 18:37:45
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: LibraryComponentParameter.java,v 1.1.2.1 2003/06/11 18:37:45
+ *          mrajkowski Exp $
+ * @created June 6, 2003
  */
 public class LibraryComponentParameter {
 
@@ -43,16 +44,17 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Constructor for the LibraryComponent object
+   * Constructor for the LibraryComponent object
    */
-  public LibraryComponentParameter() { }
+  public LibraryComponentParameter() {
+  }
 
 
   /**
-   *  Constructor for the LibraryComponent object
+   * Constructor for the LibraryComponent object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public LibraryComponentParameter(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -60,9 +62,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the id attribute of the LibraryComponentParameter object
+   * Sets the id attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -70,9 +72,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the id attribute of the LibraryComponentParameter object
+   * Sets the id attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -80,9 +82,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the componentId attribute of the LibraryComponentParameter object
+   * Sets the componentId attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(int tmp) {
     this.componentId = tmp;
@@ -90,9 +92,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the componentId attribute of the LibraryComponentParameter object
+   * Sets the componentId attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(String tmp) {
     this.componentId = Integer.parseInt(tmp);
@@ -100,9 +102,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the name attribute of the LibraryComponentParameter object
+   * Sets the name attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -110,9 +112,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the description attribute of the LibraryComponentParameter object
+   * Sets the description attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -120,9 +122,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the defaultValue attribute of the LibraryComponentParameter object
+   * Sets the defaultValue attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new defaultValue value
+   * @param tmp The new defaultValue value
    */
   public void setDefaultValue(String tmp) {
     this.defaultValue = tmp;
@@ -130,9 +132,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the enabled attribute of the LibraryComponentParameter object
+   * Sets the enabled attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -140,9 +142,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Sets the enabled attribute of the LibraryComponentParameter object
+   * Sets the enabled attribute of the LibraryComponentParameter object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -150,9 +152,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Gets the id attribute of the LibraryComponentParameter object
+   * Gets the id attribute of the LibraryComponentParameter object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -160,9 +162,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Gets the componentId attribute of the LibraryComponentParameter object
+   * Gets the componentId attribute of the LibraryComponentParameter object
    *
-   *@return    The componentId value
+   * @return The componentId value
    */
   public int getComponentId() {
     return componentId;
@@ -170,9 +172,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Gets the name attribute of the LibraryComponentParameter object
+   * Gets the name attribute of the LibraryComponentParameter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -180,9 +182,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Gets the description attribute of the LibraryComponentParameter object
+   * Gets the description attribute of the LibraryComponentParameter object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -190,9 +192,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Gets the defaultValue attribute of the LibraryComponentParameter object
+   * Gets the defaultValue attribute of the LibraryComponentParameter object
    *
-   *@return    The defaultValue value
+   * @return The defaultValue value
    */
   public String getDefaultValue() {
     return defaultValue;
@@ -200,9 +202,9 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Gets the enabled attribute of the LibraryComponentParameter object
+   * Gets the enabled attribute of the LibraryComponentParameter object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -210,10 +212,10 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Populates this object from a database recordset
+   * Populates this object from a database recordset
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("component_id");
@@ -226,17 +228,21 @@ public class LibraryComponentParameter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "business_process_pa_lib_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO business_process_parameter_library " +
-        "(component_id, param_name, description, default_value, enabled) VALUES " +
-        "(?, ?, ?, ?, ?) ");
+        "(" + (id > -1 ? "parameter_id, " : "") + "component_id, param_name, description, default_value, enabled) VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, componentId);
     pst.setString(++i, name);
     pst.setString(++i, description);
@@ -244,15 +250,15 @@ public class LibraryComponentParameter {
     pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "business_process_pa_lib_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "business_process_pa_lib_id_seq", id);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

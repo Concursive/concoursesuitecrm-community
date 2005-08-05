@@ -15,47 +15,51 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CustomFieldDataList extends ArrayList {
-  
+
   private PagedListInfo pagedListInfo = null;
 
   //Properties for building the list
   private int recordId = -1;
 
-  public CustomFieldDataList() { }
+  public CustomFieldDataList() {
+  }
 
 
   /**
-   *  Sets the PagedListInfo attribute of the CustomFieldCategoryList object
+   * Sets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
 
 
-  public void setRecordId(int tmp) { this.recordId = tmp; }
+  public void setRecordId(int tmp) {
+    this.recordId = tmp;
+  }
 
   /**
-   *  Gets the PagedListInfo attribute of the CustomFieldCategoryList object
+   * Gets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
-   *@return    The PagedListInfo value
-   *@since
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
 
-  public int getRecordId() { return recordId; }
+  public int getRecordId() {
+    return recordId;
+  }
 
   public void buildList(Connection db) throws SQLException {
 
@@ -105,22 +109,15 @@ public class CustomFieldDataList extends ArrayList {
         "* " +
         "FROM custom_field_data cfd " +
         "WHERE cfd.record_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       CustomFieldData thisField = new CustomFieldData(rs);
       this.add(thisField);
     }
@@ -133,7 +130,7 @@ public class CustomFieldDataList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    
+
     if (recordId > -1) {
       sqlFilter.append("AND cfd.record_id = ? ");
     }

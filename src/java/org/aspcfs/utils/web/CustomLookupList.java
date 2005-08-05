@@ -15,18 +15,19 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.web.CustomLookupElement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created January 14, 2003
  */
 public class CustomLookupList extends LookupList {
 
@@ -34,7 +35,7 @@ public class CustomLookupList extends LookupList {
 
 
   /**
-   *  Constructor for the CustomLookupList object
+   * Constructor for the CustomLookupList object
    */
   public CustomLookupList() {
     super();
@@ -42,10 +43,10 @@ public class CustomLookupList extends LookupList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     int items = -1;
@@ -73,9 +74,9 @@ public class CustomLookupList extends LookupList {
 
 
   /**
-   *  Adds a feature to the Field attribute of the CustomLookupList object
+   * Adds a feature to the Field attribute of the CustomLookupList object
    *
-   *@param  fieldName  The feature to be added to the Field attribute
+   * @param fieldName The feature to be added to the Field attribute
    */
   public void addField(String fieldName) {
     if (fields == null) {

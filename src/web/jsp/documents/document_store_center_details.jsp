@@ -35,13 +35,18 @@
 </table>
 <br>
 <dhv:evaluate if="<%= currentMember.getRoleId() <= DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER %>">
+<dhv:evaluate if="<%= !documentStore.isTrashed() %>">
 <a href="DocumentManagement.do?command=ModifyDocumentStore&documentStoreId=<%= documentStore.getId() %>&return=DocumentStoreCenter">
   <dhv:label name="documents.details.modifyDocumentStore">Modify Document Store</dhv:label></a>
 |
-<a href="javascript:confirmDelete('DocumentManagement.do?command=DeleteDocumentStore&documentStoreId=<%= documentStore.getId() %>');">
+<a href="javascript:confirmDelete('DocumentManagement.do?command=TrashDocumentStore&documentStoreId=<%= documentStore.getId() %>');">
   <dhv:label name="documents.details.deleteDocumentStore">Delete Document Store</dhv:label></a>
-<br>
-<br>
+</dhv:evaluate>
+<dhv:evaluate if="<%= documentStore.isTrashed() %>">
+<a href="javascript:confirmDelete('DocumentManagement.do?command=RestoreDocumentStore&documentStoreId=<%= documentStore.getId() %>');">
+  <dhv:label name="documents.details.restoreDocumentStore">Restore Document Store</dhv:label></a>
+</dhv:evaluate>
+<br /><br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

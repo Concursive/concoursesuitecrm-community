@@ -16,30 +16,32 @@
 package org.aspcfs.modules.components;
 
 import org.aspcfs.apps.workFlowManager.ComponentContext;
-import org.aspcfs.modules.base.Notification;
-import org.aspcfs.utils.StringUtils;
-import java.sql.*;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Notification;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.StringUtils;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class EmailDigestUtil {
 
   /**
-   *  This method separates out one or more specified email addresses in which a
-   *  message will be associated with and eventually sent to.
+   * This method separates out one or more specified email addresses in which a
+   * message will be associated with and eventually sent to.
    *
-   *@param  mailList  Description of the Parameter
-   *@param  emails    Description of the Parameter
-   *@param  message   Description of the Parameter
-   *@param  prefix    Description of the Parameter
+   * @param mailList Description of the Parameter
+   * @param emails   Description of the Parameter
+   * @param message  Description of the Parameter
+   * @param prefix   Description of the Parameter
    */
   public static void appendEmailAddresses(HashMap mailList, String emails, String message, String prefix) {
     if (emails != null) {
@@ -59,16 +61,16 @@ public class EmailDigestUtil {
 
 
   /**
-   *  This method separates out one or more specified user ids, looks up the
-   *  contact record, gets the email address in which a message will be
-   *  associated with and eventually sent to.
+   * This method separates out one or more specified user ids, looks up the
+   * contact record, gets the email address in which a message will be
+   * associated with and eventually sent to.
    *
-   *@param  db                Description of the Parameter
-   *@param  mailList          Description of the Parameter
-   *@param  userIds           Description of the Parameter
-   *@param  message           Description of the Parameter
-   *@param  prefix            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param mailList Description of the Parameter
+   * @param userIds  Description of the Parameter
+   * @param message  Description of the Parameter
+   * @param prefix   Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void appendEmailUsers(Connection db, HashMap mailList, String userIds, String message, String prefix) throws SQLException {
     if (userIds != null) {
@@ -87,7 +89,8 @@ public class EmailDigestUtil {
             thisUser.setBuildContact(true);
             thisUser.setBuildContactDetails(true);
             thisUser.buildResources(db);
-            addMessage(mailList, thisUser.getContact().getPrimaryEmailAddress(), message, prefix);
+            addMessage(
+                mailList, thisUser.getContact().getPrimaryEmailAddress(), message, prefix);
           }
         }
       } else {
@@ -102,7 +105,8 @@ public class EmailDigestUtil {
           thisUser.setBuildContact(true);
           thisUser.setBuildContactDetails(true);
           thisUser.buildResources(db);
-          addMessage(mailList, thisUser.getContact().getPrimaryEmailAddress(), message, prefix);
+          addMessage(
+              mailList, thisUser.getContact().getPrimaryEmailAddress(), message, prefix);
         }
       }
     }
@@ -110,16 +114,16 @@ public class EmailDigestUtil {
 
 
   /**
-   *  This method separates out one or more specified contact ids, looks up the
-   *  contact record, gets the email address in which a message will be
-   *  associated with and eventually sent to.
+   * This method separates out one or more specified contact ids, looks up the
+   * contact record, gets the email address in which a message will be
+   * associated with and eventually sent to.
    *
-   *@param  db                Description of the Parameter
-   *@param  mailList          Description of the Parameter
-   *@param  contactIds        Description of the Parameter
-   *@param  message           Description of the Parameter
-   *@param  prefix            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param mailList   Description of the Parameter
+   * @param contactIds Description of the Parameter
+   * @param message    Description of the Parameter
+   * @param prefix     Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void appendEmailContacts(Connection db, HashMap mailList, String contactIds, String message, String prefix) throws SQLException {
     if (contactIds != null) {
@@ -135,7 +139,8 @@ public class EmailDigestUtil {
           }
           if (id > -1) {
             Contact thisContact = new Contact(db, id);
-            addMessage(mailList, thisContact.getPrimaryEmailAddress(), message, prefix);
+            addMessage(
+                mailList, thisContact.getPrimaryEmailAddress(), message, prefix);
           }
         }
       } else {
@@ -147,7 +152,8 @@ public class EmailDigestUtil {
         }
         if (id > -1) {
           Contact thisContact = new Contact(db, id);
-          addMessage(mailList, thisContact.getPrimaryEmailAddress(), message, prefix);
+          addMessage(
+              mailList, thisContact.getPrimaryEmailAddress(), message, prefix);
         }
       }
     }
@@ -155,13 +161,13 @@ public class EmailDigestUtil {
 
 
   /**
-   *  Appends a message to the specified email address. Each email address
-   *  receives a single email that can have multiple appended messages.
+   * Appends a message to the specified email address. Each email address
+   * receives a single email that can have multiple appended messages.
    *
-   *@param  mailList      The feature to be added to the Message attribute
-   *@param  emailAddress  The feature to be added to the Message attribute
-   *@param  thisMessage   The feature to be added to the Message attribute
-   *@param  prefix        The feature to be added to the Message attribute
+   * @param mailList     The feature to be added to the Message attribute
+   * @param emailAddress The feature to be added to the Message attribute
+   * @param thisMessage  The feature to be added to the Message attribute
+   * @param prefix       The feature to be added to the Message attribute
    */
   public static void addMessage(HashMap mailList, String emailAddress, String thisMessage, String prefix) {
     if (emailAddress != null && thisMessage != null) {
@@ -176,10 +182,10 @@ public class EmailDigestUtil {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context   Description of the Parameter
-   *@param  mailList  Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param mailList Description of the Parameter
    */
   public static void sendMail(ComponentContext context, HashMap mailList) {
     //Process the HashMap and send emails
@@ -194,8 +200,11 @@ public class EmailDigestUtil {
         messageDigest.append((String) messages.next());
       }
       Notification thisNotification = new Notification();
-      thisNotification.setSubject(StringUtils.toHtml(context.getParameter(SendUserNotification.SUBJECT)));
-      String from = StringUtils.toHtmlValue(context.getParameter(SendUserNotification.FROM));
+      thisNotification.setSubject(
+          StringUtils.toHtml(
+              context.getParameter(SendUserNotification.SUBJECT)));
+      String from = StringUtils.toHtmlValue(
+          context.getParameter(SendUserNotification.FROM));
       if (from != null && !"".equals(from)) {
         thisNotification.setFrom(from);
       } else {
@@ -203,7 +212,9 @@ public class EmailDigestUtil {
       }
       thisNotification.setType(Notification.EMAIL);
       thisNotification.setEmailToNotify(emailAddressTo);
-      thisNotification.setMessageToSend(StringUtils.toHtml(context.getParameter(SendUserNotification.BODY) + messageDigest.toString()));
+      thisNotification.setMessageToSend(
+          StringUtils.toHtml(
+              context.getParameter(SendUserNotification.BODY) + messageDigest.toString()));
       String host = context.getParameter(SendUserNotification.HOST);
       if (host != null && !"".equals(host)) {
         thisNotification.setHost(host);

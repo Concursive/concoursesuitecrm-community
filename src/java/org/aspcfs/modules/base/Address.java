@@ -24,11 +24,11 @@ import java.sql.SQLException;
 import java.util.Locale;
 
 /**
- *  Represents a mailing address to be used as a base class.
+ * Represents a mailing address to be used as a base class.
  *
- *@author     mrajkowski
- *@created    July 11, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 11, 2001
  */
 public class Address {
 
@@ -57,10 +57,10 @@ public class Address {
 
 
   /**
-   *  Sets the Id attribute of the Address object
+   * Sets the Id attribute of the Address object
    *
-   *@param  tmp  The new Id value
-   *@since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -68,9 +68,9 @@ public class Address {
 
 
   /**
-   *  Sets the enabled attribute of the Address object
+   * Sets the enabled attribute of the Address object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     enabled = (DatabaseUtils.parseBoolean(tmp));
@@ -78,10 +78,10 @@ public class Address {
 
 
   /**
-   *  Sets the Id attribute of the Address object
+   * Sets the Id attribute of the Address object
    *
-   *@param  tmp  The new Id value
-   *@since       1.8
+   * @param tmp The new Id value
+   * @since 1.8
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -89,10 +89,10 @@ public class Address {
 
 
   /**
-   *  Sets the OrgId attribute of the Address object
+   * Sets the OrgId attribute of the Address object
    *
-   *@param  orgId  The new OrgId value
-   *@since         1.6
+   * @param orgId The new OrgId value
+   * @since 1.6
    */
   public void setOrgId(int orgId) {
     this.orgId = orgId;
@@ -100,9 +100,9 @@ public class Address {
 
 
   /**
-   *  Sets the orgId attribute of the Address object
+   * Sets the orgId attribute of the Address object
    *
-   *@param  orgId  The new orgId value
+   * @param orgId The new orgId value
    */
   public void setOrgId(String orgId) {
     this.orgId = Integer.parseInt(orgId);
@@ -110,10 +110,10 @@ public class Address {
 
 
   /**
-   *  Sets the ContactId attribute of the Address object
+   * Sets the ContactId attribute of the Address object
    *
-   *@param  tmp  The new ContactId value
-   *@since       1.8
+   * @param tmp The new ContactId value
+   * @since 1.8
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -121,9 +121,9 @@ public class Address {
 
 
   /**
-   *  Sets the contactId attribute of the Address object
+   * Sets the contactId attribute of the Address object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -131,9 +131,9 @@ public class Address {
 
 
   /**
-   *  Sets the streetAddressLine3 attribute of the Address object
+   * Sets the streetAddressLine3 attribute of the Address object
    *
-   *@param  streetAddressLine3  The new streetAddressLine3 value
+   * @param streetAddressLine3 The new streetAddressLine3 value
    */
   public void setStreetAddressLine3(String streetAddressLine3) {
     this.streetAddressLine3 = streetAddressLine3;
@@ -141,9 +141,9 @@ public class Address {
 
 
   /**
-   *  Sets the otherState attribute of the Address object
+   * Sets the otherState attribute of the Address object
    *
-   *@param  tmp  The new otherState value
+   * @param tmp The new otherState value
    */
   public void setOtherState(String tmp) {
     if (tmp != null) {
@@ -157,9 +157,9 @@ public class Address {
 
 
   /**
-   *  Sets the primaryAddress attribute of the Address object
+   * Sets the primaryAddress attribute of the Address object
    *
-   *@param  tmp  The new primaryAddress value
+   * @param tmp The new primaryAddress value
    */
   public void setPrimaryAddress(boolean tmp) {
     this.primaryAddress = tmp;
@@ -167,9 +167,9 @@ public class Address {
 
 
   /**
-   *  Sets the primaryAddress attribute of the Address object
+   * Sets the primaryAddress attribute of the Address object
    *
-   *@param  tmp  The new primaryAddress value
+   * @param tmp The new primaryAddress value
    */
   public void setPrimaryAddress(String tmp) {
     this.primaryAddress = DatabaseUtils.parseBoolean(tmp);
@@ -177,9 +177,9 @@ public class Address {
 
 
   /**
-   *  Gets the primaryAddress attribute of the Address object
+   * Gets the primaryAddress attribute of the Address object
    *
-   *@return    The primaryAddress value
+   * @return The primaryAddress value
    */
   public boolean getPrimaryAddress() {
     return primaryAddress;
@@ -187,9 +187,9 @@ public class Address {
 
 
   /**
-   *  Gets the otherState attribute of the Address object
+   * Gets the otherState attribute of the Address object
    *
-   *@return    The otherState value
+   * @return The otherState value
    */
   public String getOtherState() {
     return otherState;
@@ -197,9 +197,9 @@ public class Address {
 
 
   /**
-   *  Gets the streetAddressLine3 attribute of the Address object
+   * Gets the streetAddressLine3 attribute of the Address object
    *
-   *@return    The streetAddressLine3 value
+   * @return The streetAddressLine3 value
    */
   public String getStreetAddressLine3() {
     return streetAddressLine3;
@@ -207,9 +207,9 @@ public class Address {
 
 
   /**
-   *  Gets the contactId attribute of the Address object
+   * Gets the contactId attribute of the Address object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -217,10 +217,10 @@ public class Address {
 
 
   /**
-   *  Sets the StreetAddressLine1 attribute of the Address object
+   * Sets the StreetAddressLine1 attribute of the Address object
    *
-   *@param  tmp  The new StreetAddressLine1 value
-   *@since       1.5
+   * @param tmp The new StreetAddressLine1 value
+   * @since 1.5
    */
   public void setStreetAddressLine1(String tmp) {
     this.streetAddressLine1 = tmp;
@@ -228,10 +228,10 @@ public class Address {
 
 
   /**
-   *  Sets the StreetAddressLine2 attribute of the Address object
+   * Sets the StreetAddressLine2 attribute of the Address object
    *
-   *@param  tmp  The new StreetAddressLine2 value
-   *@since       1.5
+   * @param tmp The new StreetAddressLine2 value
+   * @since 1.5
    */
   public void setStreetAddressLine2(String tmp) {
     this.streetAddressLine2 = tmp;
@@ -239,10 +239,10 @@ public class Address {
 
 
   /**
-   *  Sets the City attribute of the Address object
+   * Sets the City attribute of the Address object
    *
-   *@param  tmp  The new City value
-   *@since       1.5
+   * @param tmp The new City value
+   * @since 1.5
    */
   public void setCity(String tmp) {
     this.city = tmp;
@@ -250,10 +250,10 @@ public class Address {
 
 
   /**
-   *  Sets the State attribute of the Address object
+   * Sets the State attribute of the Address object
    *
-   *@param  tmp  The new State value
-   *@since       1.5
+   * @param tmp The new State value
+   * @since 1.5
    */
   public void setState(String tmp) {
     if (tmp != null) {
@@ -267,10 +267,10 @@ public class Address {
 
 
   /**
-   *  Sets the Zip attribute of the Address object
+   * Sets the Zip attribute of the Address object
    *
-   *@param  tmp  The new Zip value
-   *@since       1.5
+   * @param tmp The new Zip value
+   * @since 1.5
    */
   public void setZip(String tmp) {
     this.zip = tmp;
@@ -278,10 +278,10 @@ public class Address {
 
 
   /**
-   *  Sets the Country attribute of the Address object
+   * Sets the Country attribute of the Address object
    *
-   *@param  tmp  The new Country value
-   *@since       1.5
+   * @param tmp The new Country value
+   * @since 1.5
    */
   public void setCountry(String tmp) {
     this.country = tmp;
@@ -289,11 +289,11 @@ public class Address {
 
 
   /**
-   *  Sets the Type attribute of the Address object, for example: Home, Work,
-   *  Billing, etc.
+   * Sets the Type attribute of the Address object, for example: Home, Work,
+   * Billing, etc.
    *
-   *@param  tmp  The new Type value
-   *@since       1.6
+   * @param tmp The new Type value
+   * @since 1.6
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -301,10 +301,10 @@ public class Address {
 
 
   /**
-   *  Sets the Type attribute of the Address object
+   * Sets the Type attribute of the Address object
    *
-   *@param  tmp  The new Type value
-   *@since       1.8
+   * @param tmp The new Type value
+   * @since 1.8
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -312,10 +312,10 @@ public class Address {
 
 
   /**
-   *  Sets the TypeName attribute of the Address object
+   * Sets the TypeName attribute of the Address object
    *
-   *@param  tmp  The new TypeName value
-   *@since       1.6
+   * @param tmp The new TypeName value
+   * @since 1.6
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -323,10 +323,10 @@ public class Address {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Address object
+   * Sets the EnteredBy attribute of the Address object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.6
+   * @param tmp The new EnteredBy value
+   * @since 1.6
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -334,9 +334,9 @@ public class Address {
 
 
   /**
-   *  Sets the enteredBy attribute of the Address object
+   * Sets the enteredBy attribute of the Address object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -344,10 +344,10 @@ public class Address {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Address object
+   * Sets the ModifiedBy attribute of the Address object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since       1.6
+   * @param tmp The new ModifiedBy value
+   * @since 1.6
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -355,9 +355,9 @@ public class Address {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Address object
+   * Sets the modifiedBy attribute of the Address object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -365,10 +365,10 @@ public class Address {
 
 
   /**
-   *  Sets the Enabled attribute of the Address object
+   * Sets the Enabled attribute of the Address object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.8
+   * @param tmp The new Enabled value
+   * @since 1.8
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -376,10 +376,10 @@ public class Address {
 
 
   /**
-   *  Gets the Id attribute of the Address object
+   * Gets the Id attribute of the Address object
    *
-   *@return    The Id value
-   *@since     1.6
+   * @return The Id value
+   * @since 1.6
    */
   public int getId() {
     return id;
@@ -387,10 +387,10 @@ public class Address {
 
 
   /**
-   *  Gets the OrgId attribute of the Address object
+   * Gets the OrgId attribute of the Address object
    *
-   *@return    The OrgId value
-   *@since     1.6
+   * @return The OrgId value
+   * @since 1.6
    */
   public int getOrgId() {
     return orgId;
@@ -398,9 +398,9 @@ public class Address {
 
 
   /**
-   *  Gets the entered attribute of the Address object
+   * Gets the entered attribute of the Address object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -408,9 +408,9 @@ public class Address {
 
 
   /**
-   *  Gets the modified attribute of the Address object
+   * Gets the modified attribute of the Address object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -418,10 +418,10 @@ public class Address {
 
 
   /**
-   *  Gets the StreetAddressLine1 attribute of the Address object
+   * Gets the StreetAddressLine1 attribute of the Address object
    *
-   *@return    The StreetAddressLine1 value
-   *@since     1.5
+   * @return The StreetAddressLine1 value
+   * @since 1.5
    */
   public String getStreetAddressLine1() {
     return streetAddressLine1;
@@ -429,10 +429,10 @@ public class Address {
 
 
   /**
-   *  Gets the StreetAddressLine2 attribute of the Address object
+   * Gets the StreetAddressLine2 attribute of the Address object
    *
-   *@return    The StreetAddressLine2 value
-   *@since     1.5
+   * @return The StreetAddressLine2 value
+   * @since 1.5
    */
   public String getStreetAddressLine2() {
     return streetAddressLine2;
@@ -440,10 +440,10 @@ public class Address {
 
 
   /**
-   *  Gets the City attribute of the Address object
+   * Gets the City attribute of the Address object
    *
-   *@return    The City value
-   *@since     1.5
+   * @return The City value
+   * @since 1.5
    */
   public String getCity() {
     return city;
@@ -451,10 +451,10 @@ public class Address {
 
 
   /**
-   *  Gets the State attribute of the Address object
+   * Gets the State attribute of the Address object
    *
-   *@return    The State value
-   *@since     1.5
+   * @return The State value
+   * @since 1.5
    */
   public String getState() {
     if ("UNITED STATES".equals(country) || ("CANADA".equals(country))) {
@@ -469,17 +469,20 @@ public class Address {
 
 
   /**
-   *  Gets the CityState attribute of the Address object
+   * Gets the CityState attribute of the Address object
    *
-   *@return    The CityState value
-   *@since     1.5
+   * @return The CityState value
+   * @since 1.5
    */
   public String getCityState() {
-    if (getCity() != null && getState() != null && !getCity().equals("") && !getState().equals("") && !"-1".equals(getState())) {
-        return (getCity() + ", " + getState());
-    } else if ((getCity() == null || "".equals(getCity())) && getState() != null && !"".equals(getState()) && !"-1".equals(getState())) {
-        return (getState());
-    } else if ((getState() == null || "".equals(getState()) || "-1".equals(getState())) && getCity() != null && !"".equals(getCity())) {
+    if (getCity() != null && getState() != null && !getCity().equals("") && !getState().equals(
+        "") && !"-1".equals(getState())) {
+      return (getCity() + ", " + getState());
+    } else if ((getCity() == null || "".equals(getCity())) && getState() != null && !"".equals(
+        getState()) && !"-1".equals(getState())) {
+      return (getState());
+    } else if ((getState() == null || "".equals(getState()) || "-1".equals(
+        getState())) && getCity() != null && !"".equals(getCity())) {
       return (getCity());
     } else {
       return ("");
@@ -488,10 +491,10 @@ public class Address {
 
 
   /**
-   *  Gets the Zip attribute of the Address object
+   * Gets the Zip attribute of the Address object
    *
-   *@return    The Zip value
-   *@since     1.5
+   * @return The Zip value
+   * @since 1.5
    */
   public String getZip() {
     return zip;
@@ -499,10 +502,10 @@ public class Address {
 
 
   /**
-   *  Gets the Country attribute of the Address object
+   * Gets the Country attribute of the Address object
    *
-   *@return    The Country value
-   *@since     1.5
+   * @return The Country value
+   * @since 1.5
    */
   public String getCountry() {
     if ("-1".equals(country)) {
@@ -514,10 +517,10 @@ public class Address {
 
 
   /**
-   *  Gets the Type attribute of the Address object
+   * Gets the Type attribute of the Address object
    *
-   *@return    The Type value
-   *@since     1.6
+   * @return The Type value
+   * @since 1.6
    */
   public int getType() {
     return type;
@@ -525,10 +528,10 @@ public class Address {
 
 
   /**
-   *  Gets the TypeName attribute of the Address object
+   * Gets the TypeName attribute of the Address object
    *
-   *@return    The TypeName value
-   *@since     1.6
+   * @return The TypeName value
+   * @since 1.6
    */
   public String getTypeName() {
     return typeName;
@@ -536,9 +539,9 @@ public class Address {
 
 
   /**
-   *  Sets the orderId attribute of the Address object
+   * Sets the orderId attribute of the Address object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -546,9 +549,9 @@ public class Address {
 
 
   /**
-   *  Sets the orderId attribute of the Address object
+   * Sets the orderId attribute of the Address object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -556,9 +559,9 @@ public class Address {
 
 
   /**
-   *  Gets the orderId attribute of the Address object
+   * Gets the orderId attribute of the Address object
    *
-   *@return    The orderId value
+   * @return The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -566,11 +569,11 @@ public class Address {
 
 
   /**
-   *  If any of the information for an address is filled in, then the address is
-   *  valid
+   * If any of the information for an address is filled in, then the address is
+   * valid
    *
-   *@return    The Valid value
-   *@since     1.10
+   * @return The Valid value
+   * @since 1.10
    */
   public boolean isValid() {
     //A blank record is not valid, and having the default UNITED STATES selected
@@ -585,7 +588,7 @@ public class Address {
         (state == null ||
         state.trim().equals("") ||
         "-1".equals(state)) &&
-        (zip == null || zip.trim().equals(""))){
+        (zip == null || zip.trim().equals(""))) {
       return false;
     }
     return true;
@@ -593,10 +596,10 @@ public class Address {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Address object
+   * Gets the EnteredBy attribute of the Address object
    *
-   *@return    The EnteredBy value
-   *@since     1.8
+   * @return The EnteredBy value
+   * @since 1.8
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -604,9 +607,9 @@ public class Address {
 
 
   /**
-   *  Sets the entered attribute of the Address object
+   * Sets the entered attribute of the Address object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -614,9 +617,9 @@ public class Address {
 
 
   /**
-   *  Sets the modified attribute of the Address object
+   * Sets the modified attribute of the Address object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -624,9 +627,9 @@ public class Address {
 
 
   /**
-   *  Sets the entered attribute of the Address object
+   * Sets the entered attribute of the Address object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -634,9 +637,9 @@ public class Address {
 
 
   /**
-   *  Sets the modified attribute of the Address object
+   * Sets the modified attribute of the Address object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -644,10 +647,10 @@ public class Address {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Address object
+   * Gets the ModifiedBy attribute of the Address object
    *
-   *@return    The ModifiedBy value
-   *@since     1.6
+   * @return The ModifiedBy value
+   * @since 1.6
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -655,10 +658,10 @@ public class Address {
 
 
   /**
-   *  Gets the Enabled attribute of the Address object
+   * Gets the Enabled attribute of the Address object
    *
-   *@return    The Enabled value
-   *@since     1.9
+   * @return The Enabled value
+   * @since 1.9
    */
   public boolean getEnabled() {
     return enabled;
@@ -666,20 +669,23 @@ public class Address {
 
 
   /**
-   *  Gets the Address attribute of the Address object
+   * Gets the Address attribute of the Address object
    *
-   *@return    The Address value
-   *@since     1.9
+   * @return The Address value
+   * @since 1.9
    */
   public String toString() {
     StringBuffer thisAddress = new StringBuffer();
-    if (this.getStreetAddressLine1() != null && !this.getStreetAddressLine1().trim().equals("")) {
+    if (this.getStreetAddressLine1() != null && !this.getStreetAddressLine1().trim().equals(
+        "")) {
       thisAddress.append(this.getStreetAddressLine1().trim() + "\r\n");
     }
-    if (this.getStreetAddressLine2() != null && !this.getStreetAddressLine2().trim().equals("")) {
+    if (this.getStreetAddressLine2() != null && !this.getStreetAddressLine2().trim().equals(
+        "")) {
       thisAddress.append(this.getStreetAddressLine2().trim() + "\r\n");
     }
-    if (this.getStreetAddressLine3() != null && !this.getStreetAddressLine3().trim().equals("")) {
+    if (this.getStreetAddressLine3() != null && !this.getStreetAddressLine3().trim().equals(
+        "")) {
       thisAddress.append(this.getStreetAddressLine3().trim() + "\r\n");
     }
     if (!this.getCityState().trim().equals("")) {
@@ -696,9 +702,9 @@ public class Address {
 
 
   /**
-   *  Gets the locale attribute of the Address object
+   * Gets the locale attribute of the Address object
    *
-   *@return    The locale value
+   * @return The locale value
    */
   public Locale getLocale() {
     if ("UNITED STATES".equals(country)) {
@@ -715,11 +721,11 @@ public class Address {
 
 
   /**
-   *  Populates the object from a ResultSet
+   * Populates the object from a ResultSet
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.6
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.6
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("address_id"));
@@ -769,11 +775,11 @@ public class Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of Parameter
-   *@param  parseItem  Description of Parameter
-   *@since             1.8
+   * @param request   Description of Parameter
+   * @param parseItem Description of Parameter
+   * @since 1.8
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setType(request.getParameter("address" + parseItem + "type"));
@@ -782,31 +788,31 @@ public class Address {
     }
     String buffer = null;
     buffer = request.getParameter("address" + parseItem + "line1");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setStreetAddressLine1(buffer);
     }
     buffer = request.getParameter("address" + parseItem + "line2");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setStreetAddressLine2(buffer);
     }
     buffer = request.getParameter("address" + parseItem + "line3");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setStreetAddressLine3(buffer);
     }
     buffer = request.getParameter("address" + parseItem + "city");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setCity(buffer);
     }
     buffer = request.getParameter("address" + parseItem + "state");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setState(buffer);
     }
     buffer = request.getParameter("address" + parseItem + "otherState");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setOtherState(buffer);
     }
     buffer = request.getParameter("address" + parseItem + "zip");
-    if ( buffer != null && !"".equals(buffer.trim())) {
+    if (buffer != null && !"".equals(buffer.trim())) {
       this.setZip(buffer);
     }
     this.setCountry(request.getParameter("address" + parseItem + "country"));

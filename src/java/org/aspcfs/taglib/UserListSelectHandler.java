@@ -15,23 +15,25 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.controller.SystemStatus;
 import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.admin.base.UserList;
-import java.util.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.login.beans.UserBean;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    March 25, 2003
- *@version    $Id: UserListSelectHandler.java,v 1.1 2003/03/26 22:31:44 akhi_m
- *      Exp $
+ * @author Mathur
+ * @version $Id: UserListSelectHandler.java,v 1.1 2003/03/26 22:31:44 akhi_m
+ *          Exp $
+ * @created March 25, 2003
  */
 public class UserListSelectHandler extends TagSupport {
   private String selectName = null;
@@ -43,9 +45,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the jsEvent attribute of the UserListSelectHandler object
+   * Sets the jsEvent attribute of the UserListSelectHandler object
    *
-   *@param  jsEvent  The new jsEvent value
+   * @param jsEvent The new jsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -53,10 +55,10 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the UserListSelectHandler
-   *  object
+   * Sets the emptyHtmlSelectRecord attribute of the UserListSelectHandler
+   * object
    *
-   *@param  emptyHtmlSelectRecord  The new emptyHtmlSelectRecord value
+   * @param emptyHtmlSelectRecord The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String emptyHtmlSelectRecord) {
     this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
@@ -64,9 +66,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the includeMe attribute of the UserListSelectHandler object
+   * Sets the includeMe attribute of the UserListSelectHandler object
    *
-   *@param  includeMe  The new includeMe value
+   * @param includeMe The new includeMe value
    */
   public void setIncludeMe(boolean includeMe) {
     this.includeMe = includeMe;
@@ -74,9 +76,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the includeMe attribute of the UserListSelectHandler object
+   * Sets the includeMe attribute of the UserListSelectHandler object
    *
-   *@param  tmp  The new includeMe value
+   * @param tmp The new includeMe value
    */
   public void setIncludeMe(String tmp) {
     this.includeMe = "true".equals(tmp);
@@ -84,11 +86,11 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the excludeDisabledIfUnselected attribute of the
-   *  UserListSelectHandler object
+   * Sets the excludeDisabledIfUnselected attribute of the
+   * UserListSelectHandler object
    *
-   *@param  excludeDisabledIfUnselected  The new excludeDisabledIfUnselected
-   *      value
+   * @param excludeDisabledIfUnselected The new excludeDisabledIfUnselected
+   *                                    value
    */
   public void setExcludeDisabledIfUnselected(boolean excludeDisabledIfUnselected) {
     this.excludeDisabledIfUnselected = excludeDisabledIfUnselected;
@@ -96,10 +98,10 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the excludeDisabledIfUnselected attribute of the
-   *  UserListSelectHandler object
+   * Sets the excludeDisabledIfUnselected attribute of the
+   * UserListSelectHandler object
    *
-   *@param  tmp  The new excludeDisabledIfUnselected value
+   * @param tmp The new excludeDisabledIfUnselected value
    */
   public void setExcludeDisabledIfUnselected(String tmp) {
     this.excludeDisabledIfUnselected = "true".equals(tmp);
@@ -107,9 +109,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the defaultKey attribute of the UserListSelectHandler object
+   * Sets the defaultKey attribute of the UserListSelectHandler object
    *
-   *@param  defaultKey  The new defaultKey value
+   * @param defaultKey The new defaultKey value
    */
   public void setDefaultKey(int defaultKey) {
     this.defaultKey = defaultKey;
@@ -117,9 +119,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the defaultKey attribute of the UserListSelectHandler object
+   * Sets the defaultKey attribute of the UserListSelectHandler object
    *
-   *@param  tmp  The new defaultKey value
+   * @param tmp The new defaultKey value
    */
   public void setDefaultKey(String tmp) {
     this.defaultKey = Integer.parseInt(tmp);
@@ -127,9 +129,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the selectName attribute of the UserListSelectHandler object
+   * Sets the selectName attribute of the UserListSelectHandler object
    *
-   *@param  selectName  The new selectName value
+   * @param selectName The new selectName value
    */
   public void setSelectName(String selectName) {
     this.selectName = selectName;
@@ -137,9 +139,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the defaultKey attribute of the UserListSelectHandler object
+   * Gets the defaultKey attribute of the UserListSelectHandler object
    *
-   *@return    The defaultKey value
+   * @return The defaultKey value
    */
   public int getDefaultKey() {
     return defaultKey;
@@ -147,9 +149,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the selectName attribute of the UserListSelectHandler object
+   * Gets the selectName attribute of the UserListSelectHandler object
    *
-   *@return    The selectName value
+   * @return The selectName value
    */
   public String getSelectName() {
     return selectName;
@@ -157,9 +159,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the jsEvent attribute of the UserListSelectHandler object
+   * Gets the jsEvent attribute of the UserListSelectHandler object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -167,10 +169,10 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the UserListSelectHandler
-   *  object
+   * Gets the emptyHtmlSelectRecord attribute of the UserListSelectHandler
+   * object
    *
-   *@return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -178,9 +180,9 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the includeMe attribute of the UserListSelectHandler object
+   * Gets the includeMe attribute of the UserListSelectHandler object
    *
-   *@return    The includeMe value
+   * @return The includeMe value
    */
   public boolean getIncludeMe() {
     return includeMe;
@@ -188,10 +190,10 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the excludeDisabledIfUnselected attribute of the
-   *  UserListSelectHandler object
+   * Gets the excludeDisabledIfUnselected attribute of the
+   * UserListSelectHandler object
    *
-   *@return    The excludeDisabledIfUnselected value
+   * @return The excludeDisabledIfUnselected value
    */
   public boolean getExcludeDisabledIfUnselected() {
     return excludeDisabledIfUnselected;
@@ -199,28 +201,33 @@ public class UserListSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
       System.out.println("1");
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce == null) {
         System.out.println("UsernameHandler-> ConnectionElement is null");
       }
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus == null) {
         System.out.println("UsernameHandler-> SystemStatus is null");
       }
       if (emptyHtmlSelectRecord != null) {
-        this.pageContext.getOut().write("<option value=\"-1\">" + emptyHtmlSelectRecord + "</option>");
+        this.pageContext.getOut().write(
+            "<option value=\"-1\">" + emptyHtmlSelectRecord + "</option>");
       }
       if (includeMe) {
-        User thisUser = ((UserBean) pageContext.getSession().getAttribute("User")).getUserRecord();
-        this.pageContext.getOut().write("<option value=\"" + thisUser.getId() + "\">" + thisUser.getContact().getNameLastFirst() + "</option>");
+        User thisUser = ((UserBean) pageContext.getSession().getAttribute(
+            "User")).getUserRecord();
+        this.pageContext.getOut().write(
+            "<option value=\"" + thisUser.getId() + "\">" + thisUser.getContact().getNameLastFirst() + "</option>");
       }
       UserList userList = systemStatus.getHierarchyList();
       Iterator i = userList.iterator();
@@ -228,27 +235,30 @@ public class UserListSelectHandler extends TagSupport {
         User thisUser = (User) i.next();
         String elementText = null;
 
-        elementText = Contact.getNameLastFirst(thisUser.getContact().getNameLast(), thisUser.getContact().getNameFirst());
+        elementText = Contact.getNameLastFirst(
+            thisUser.getContact().getNameLast(), thisUser.getContact().getNameFirst());
 
         if (!(thisUser.getEnabled())) {
           elementText += " *";
         }
 
         if ((thisUser.getEnabled() && thisUser.getContact() != null && thisUser.getRoleId() != -1) || (!thisUser.getEnabled() && !excludeDisabledIfUnselected) || (excludeDisabledIfUnselected && thisUser.getId() == defaultKey)) {
-          this.pageContext.getOut().write("<option value=\"" + thisUser.getId() + "\">" + thisUser.getContact().getNameLastFirst() + "</option>");
+          this.pageContext.getOut().write(
+              "<option value=\"" + thisUser.getId() + "\">" + thisUser.getContact().getNameLastFirst() + "</option>");
         }
       }
     } catch (Exception e) {
-      throw new JspException("UserListSelectHandler - > Error: " + e.getMessage());
+      throw new JspException(
+          "UserListSelectHandler - > Error: " + e.getMessage());
     }
     return SKIP_BODY;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

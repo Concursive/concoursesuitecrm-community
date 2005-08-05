@@ -16,11 +16,11 @@
 package com.zeroio.iteam.base;
 
 /**
- *  Skeleton methods for Indexers
+ * Skeleton methods for Indexers
  *
- *@author     matt rajkowski
- *@created    June 2, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 2, 2004
  */
 public interface Indexer {
   //public static void add(IndexWriter writer, Connection db) throws SQLException, IOException

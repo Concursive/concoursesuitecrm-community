@@ -765,23 +765,6 @@ UPDATE permission_category SET enabled = true, active = true WHERE category = 'P
 
 UPDATE permission SET description = 'Product Catalog Editor' where permission = 'admin-sysconfig-products';
 
-INSERT INTO permission VALUES (95, 1, 'accounts-accounts-contacts-move', true, false, false, false, 'Move contacts to other accounts', 90, true, true, false);
-INSERT INTO permission VALUES (96, 1, 'accounts-accounts-relationships', true, true, true, true, 'Relationships', 290, true, true, false);
-INSERT INTO permission VALUES (97, 1, 'accounts-accounts-contact-updater', true, false, false, false, 'Request contact information update', 300, true, true, false);
-INSERT INTO permission VALUES (98, 1, 'accounts-projects', true, false, false, false, 'Projects', 310, true, true, false);
-INSERT INTO permission VALUES (99, 2, 'contacts-external-contact-updater', true, false, false, false, 'Request contact information update', 90, true, true, false);
-INSERT INTO permission VALUES (100, 9, 'admin-sysconfig-logos', true, true, true, true, 'Configure Module Logos', 110, true, true, false);
-INSERT INTO permission VALUES (101, 22, 'sales', true, false, false, false, 'Access to Leads Module', 10, true, true, false);
-INSERT INTO permission VALUES (102, 22, 'sales-leads', true, true, true, true, 'Lead Records', 20, true, true, false);
-INSERT INTO permission VALUES (103, 22, 'sales-import', true, false, false, false, 'Access to Import Leads', 30, true, true, false);
-INSERT INTO permission VALUES (104, 19, 'quotes-quotes', true, true, true, true, 'Quote Records', 20, true, true, false);
-INSERT INTO permission VALUES (105, 20, 'orders', true, false, false, false, 'Access to Orders module', 10, true, true, false);
-INSERT INTO permission VALUES (106, 20, 'orders-orders', true, true, true, true, 'Order Records', 20, true, true, false);
-INSERT INTO permission VALUES (107, 21, 'contacts-internal_contacts-folders', true, true, true, true, 'Folders', 30, true, true, false);
-INSERT INTO permission VALUES (108, 21, 'contacts-internal_contacts-projects', true, false, false, false, 'Projects', 40, true, true, false);
-INSERT INTO permission VALUES (109, 23, 'documents', true, false, false, false, 'Access to Documents module', 10, true, true, false);
-INSERT INTO permission VALUES (110, 23, 'documents_documentstore', true, true, true, true, 'Manage Document Stores', 20, true, true, false);
-
 UPDATE permission SET permission_add = false, permission_edit = false, permission_delete = false, description = 'Access to Quotes module' where permission = 'quotes';
 UPDATE permission SET enabled = true, active = true WHERE permission = 'accounts-quotes';
 
@@ -789,28 +772,6 @@ UPDATE permission SET enabled = true, active = true WHERE permission = 'accounts
 INSERT INTO lookup_delivery_options VALUES (7, 'Broadcast', false, 70, true);
 INSERT INTO lookup_delivery_options VALUES (8, 'Instant Message', false, 80, false);
 INSERT INTO lookup_delivery_options VALUES (9, 'Secure Socket', false, 90, false);
-
-
-INSERT INTO lookup_lists_lookup VALUES (25, 22, 228051102, 'lookupList', 'lookup_contact_rating', 10, 'Contact Rating', '2005-03-16 11:27:45.046', 228051100);
-INSERT INTO lookup_lists_lookup VALUES (26, 22, 228051103, 'lookupList', 'lookup_contact_source', 20, 'Contact Source', '2005-03-16 11:27:45.056', 228051100);
-INSERT INTO lookup_lists_lookup VALUES (27, 17, 1017040901, 'lookupList', 'lookup_product_type', 10, 'Product Types', '2005-03-16 11:27:45.142', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (28, 17, 1017040902, 'lookupList', 'lookup_product_format', 20, 'Product Format Types', '2005-03-16 11:27:45.15', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (29, 17, 1017040903, 'lookupList', 'lookup_product_shipping', 30, 'Product Shipping Types', '2005-03-16 11:27:45.162', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (30, 17, 1017040904, 'lookupList', 'lookup_product_ship_time', 40, 'Product Shipping Times', '2005-03-16 11:27:45.171', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (31, 17, 1017040905, 'lookupList', 'lookup_product_category_type', 50, 'Product Category Types', '2005-03-16 11:27:45.19', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (32, 17, 1017040906, 'lookupList', 'lookup_product_tax', 60, 'Product Tax Types', '2005-03-16 11:27:45.202', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (33, 17, 1017040907, 'lookupList', 'lookup_currency', 70, 'Currency Types', '2005-03-16 11:27:45.212', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (34, 17, 1017040908, 'lookupList', 'lookup_recurring_type', 80, 'Price Recurring Types', '2005-03-16 11:27:45.223', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (35, 17, 1017040909, 'lookupList', 'lookup_product_manufacturer', 90, 'Product Manufacturer Types', '2005-03-16 11:27:45.237', 330041409);
-INSERT INTO lookup_lists_lookup VALUES (36, 19, 1123041000, 'lookupList', 'lookup_quote_status', 10, 'Quote Status', '2005-03-16 11:27:45.342', 420041017);
---INSERT INTO lookup_lists_lookup VALUES (37, 19, 1123041001, 'lookupList', 'lookup_quote_type', 20, 'Quote Types', '2005-03-16 11:27:45.352', 420041017);
---INSERT INTO lookup_lists_lookup VALUES (38, 19, 1123041002, 'lookupList', 'lookup_quote_terms', 30, 'Quote Terms', '2005-03-16 11:27:45.366', 420041017);
-INSERT INTO lookup_lists_lookup VALUES (39, 19, 1123041003, 'lookupList', 'lookup_quote_source', 40, 'Quote Source', '2005-03-16 11:27:45.373', 420041017);
-INSERT INTO lookup_lists_lookup VALUES (40, 19, 1123041004, 'lookupList', 'lookup_quote_delivery', 50, 'Quote Delivery', '2005-03-16 11:27:45.393', 420041017);
-INSERT INTO lookup_lists_lookup VALUES (41, 19, 1123041005, 'lookupList', 'lookup_quote_condition', 60, 'Quote Terms & Conditions', '2005-03-16 11:27:45.408', 420041017);
-INSERT INTO lookup_lists_lookup VALUES (42, 19, 1123041006, 'lookupList', 'lookup_quote_remarks', 70, 'Quote Remarks', '2005-03-16 11:27:45.419', 420041017);
-INSERT INTO lookup_lists_lookup VALUES (43, 1, 302051030, 'lookupList', 'lookup_industry', 70, 'Industry Types', '2005-03-16 11:27:42.354', 1);
-INSERT INTO lookup_lists_lookup VALUES (44, 2, 111051354, 'lookupList', 'lookup_textmessage_types', 50, 'Text Messaging Types', '2005-03-16 11:27:42.354', 2);
 
 
 INSERT INTO webdav VALUES (1, 1, 'org.aspcfs.modules.accounts.webdav.AccountsWebdavContext', '2005-03-16 11:27:42.489', 0, '2005-03-16 11:27:42.489', 0);
@@ -1846,9 +1807,7 @@ SELECT pg_catalog.setval('quote_remark_map_id_seq', 1, false);
 
 SELECT pg_catalog.setval('lookup_project_permission_category_code_seq', 10, false);
 SELECT pg_catalog.setval('lookup_project_permission_code_seq', 53, false);
-SELECT pg_catalog.setval('lookup_lists_lookup_id_seq', 44, false);
 SELECT pg_catalog.setval('permission_cate_category_id_seq', 23, false);
-SELECT pg_catalog.setval('permission_permission_id_seq', 110, false);
 SELECT pg_catalog.setval('lookup_product_conf_re_code_seq', 5, true);
 SELECT pg_catalog.setval('lookup_quote_source_code_seq', 7, true);
 SELECT pg_catalog.setval('lookup_quote_type_code_seq', 5, true);
@@ -1857,4 +1816,4 @@ SELECT pg_catalog.setval('product_option_configurator_configurator_id_seq', 4, t
 SELECT pg_catalog.setval('module_field_categorylin_id_seq', 5, true);
 
 
-INSERT INTO database_version (script_filename, script_version) VALUES ('postgresql.sql', '2005-03-30');
+INSERT INTO database_version (script_filename, script_version) VALUES ('postgresql_2005-03-30.sql', '2005-03-30');

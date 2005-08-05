@@ -15,33 +15,28 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.base.DependencyList;
-import java.sql.*;
-import java.util.Vector;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
 
 /**
- *  Action class for the Campaign Module
+ * Action class for the Campaign Module
  *
- *@author
- *@created    October 18, 2001
- *@version    $Id: CampaignManager.java,v 1.1 2001/10/18 12:45:57 mrajkowski Exp
- *      $
+ * @author
+ * @version $Id: CampaignManager.java,v 1.1 2001/10/18 12:45:57 mrajkowski Exp
+ *          $
+ * @created October 18, 2001
  */
 public final class CampaignManagerProto extends CFSModule {
 
   /**
-   *  Used for Html pages and prototypes
+   * Used for Html pages and prototypes
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.2
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.2
    */
   public String executeCommandDefault(ActionContext context) {
     String module = context.getRequest().getParameter("module");
@@ -58,11 +53,10 @@ public final class CampaignManagerProto extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDashboard(ActionContext context) {
     addModuleBean(context, "Dashboard", "Dashboard");
@@ -71,16 +65,17 @@ public final class CampaignManagerProto extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeCommandListManager(ActionContext context) {
     Exception errorMessage = null;
 
-    PagedListInfo campaignListInfo = this.getPagedListInfo(context, "CampaignListInfo");
+    PagedListInfo campaignListInfo = this.getPagedListInfo(
+        context, "CampaignListInfo");
     campaignListInfo.setLink("CampaignManager.do?command=Dashboard");
 
     Connection db = null;
@@ -108,11 +103,10 @@ public final class CampaignManagerProto extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandMessageBuilder(ActionContext context) {
     addModuleBean(context, "MessageBuilder", "List of Messages");

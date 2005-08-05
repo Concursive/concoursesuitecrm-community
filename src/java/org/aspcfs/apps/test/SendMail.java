@@ -15,21 +15,21 @@
  */
 package org.aspcfs.apps.test;
 
-import org.aspcfs.utils.*;
+import org.aspcfs.utils.SMTPMessage;
 
 /**
- *  Application to test sending mail
+ * Application to test sending mail
  *
- *@author     matt rajkowski
- *@created    January 28, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 28, 2003
  */
 public class SendMail {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void main(String args[]) {
     if (args[0] == null || "".equals(args[0])) {

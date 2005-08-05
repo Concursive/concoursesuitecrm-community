@@ -15,19 +15,18 @@
  */
 package org.aspcfs.modules.help.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
-import java.util.*;
-import java.text.*;
+
+import java.sql.*;
+import java.text.DateFormat;
 
 /**
- *  Represents a Help Feature on a page
+ * Represents a Help Feature on a page
  *
- *@author     akhi_m
- *@created    July 9, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created July 9, 2003
  */
 public class HelpFeature extends GenericBean {
   //static variables
@@ -50,18 +49,18 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpFeature object
+   * Constructor for the HelpFeature object
    */
-  public HelpFeature() { }
-
+  public HelpFeature() {
+  }
 
 
   /**
-   *  Constructor for the HelpFeature object
+   * Constructor for the HelpFeature object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpFeature(Connection db, int thisId) throws SQLException {
     if (thisId == -1) {
@@ -87,10 +86,10 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpFeature object
+   * Constructor for the HelpFeature object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpFeature(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -98,9 +97,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpFeature object
+   * Sets the id attribute of the HelpFeature object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -108,9 +107,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpFeature object
+   * Sets the id attribute of the HelpFeature object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -118,9 +117,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpFeature object
+   * Sets the linkHelpId attribute of the HelpFeature object
    *
-   *@param  tmp  The new linkHelpId value
+   * @param tmp The new linkHelpId value
    */
   public void setLinkHelpId(int tmp) {
     this.linkHelpId = tmp;
@@ -128,9 +127,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpFeature object
+   * Sets the linkHelpId attribute of the HelpFeature object
    *
-   *@param  tmp  The new linkHelpId value
+   * @param tmp The new linkHelpId value
    */
   public void setLinkHelpId(String tmp) {
     this.linkHelpId = Integer.parseInt(tmp);
@@ -138,9 +137,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the HelpFeature object
+   * Sets the description attribute of the HelpFeature object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -148,9 +147,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the HelpFeature object
+   * Sets the level attribute of the HelpFeature object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -158,9 +157,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the HelpFeature object
+   * Sets the level attribute of the HelpFeature object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -168,9 +167,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpFeature object
+   * Sets the enteredBy attribute of the HelpFeature object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -178,9 +177,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpFeature object
+   * Sets the enteredBy attribute of the HelpFeature object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -188,9 +187,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpFeature object
+   * Sets the entered attribute of the HelpFeature object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -198,9 +197,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpFeature object
+   * Sets the entered attribute of the HelpFeature object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -208,9 +207,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpFeature object
+   * Sets the modifiedBy attribute of the HelpFeature object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -218,9 +217,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpFeature object
+   * Sets the modifiedBy attribute of the HelpFeature object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -228,9 +227,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpFeature object
+   * Sets the modified attribute of the HelpFeature object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -238,9 +237,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpFeature object
+   * Sets the modified attribute of the HelpFeature object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -248,9 +247,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the HelpFeature object
+   * Sets the complete attribute of the HelpFeature object
    *
-   *@param  tmp  The new complete value
+   * @param tmp The new complete value
    */
   public void setComplete(boolean tmp) {
     this.complete = tmp;
@@ -258,9 +257,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the HelpFeature object
+   * Sets the complete attribute of the HelpFeature object
    *
-   *@param  tmp  The new complete value
+   * @param tmp The new complete value
    */
   public void setComplete(String tmp) {
     this.complete = DatabaseUtils.parseBoolean(tmp);
@@ -268,9 +267,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the HelpFeature object
+   * Sets the enabled attribute of the HelpFeature object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -278,9 +277,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the HelpFeature object
+   * Sets the enabled attribute of the HelpFeature object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -288,9 +287,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the HelpFeature object
+   * Sets the completeDate attribute of the HelpFeature object
    *
-   *@param  completeDate  The new completeDate value
+   * @param completeDate The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp completeDate) {
     this.completeDate = completeDate;
@@ -298,9 +297,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the HelpFeature object
+   * Gets the completeDate attribute of the HelpFeature object
    *
-   *@return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -308,9 +307,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the completedBy attribute of the HelpFeature object
+   * Sets the completedBy attribute of the HelpFeature object
    *
-   *@param  completedBy  The new completedBy value
+   * @param completedBy The new completedBy value
    */
   public void setCompletedBy(int completedBy) {
     this.completedBy = completedBy;
@@ -318,9 +317,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the linkFeatureId attribute of the HelpFeature object
+   * Sets the linkFeatureId attribute of the HelpFeature object
    *
-   *@param  linkFeatureId  The new linkFeatureId value
+   * @param linkFeatureId The new linkFeatureId value
    */
   public void setLinkFeatureId(int linkFeatureId) {
     this.linkFeatureId = linkFeatureId;
@@ -328,9 +327,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Sets the linkFeatureId attribute of the HelpFeature object
+   * Sets the linkFeatureId attribute of the HelpFeature object
    *
-   *@param  linkFeatureId  The new linkFeatureId value
+   * @param linkFeatureId The new linkFeatureId value
    */
   public void setLinkFeatureId(String linkFeatureId) {
     this.linkFeatureId = Integer.parseInt(linkFeatureId);
@@ -338,9 +337,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the linkFeatureId attribute of the HelpFeature object
+   * Gets the linkFeatureId attribute of the HelpFeature object
    *
-   *@return    The linkFeatureId value
+   * @return The linkFeatureId value
    */
   public int getLinkFeatureId() {
     return linkFeatureId;
@@ -348,9 +347,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the completedBy attribute of the HelpFeature object
+   * Gets the completedBy attribute of the HelpFeature object
    *
-   *@return    The completedBy value
+   * @return The completedBy value
    */
   public int getCompletedBy() {
     return completedBy;
@@ -358,9 +357,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the completeDateString attribute of the HelpFeature object
+   * Gets the completeDateString attribute of the HelpFeature object
    *
-   *@return    The completeDateString value
+   * @return The completeDateString value
    */
   public String getCompleteDateString() {
     String tmp = "";
@@ -373,9 +372,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the HelpFeature object
+   * Gets the id attribute of the HelpFeature object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -383,9 +382,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the linkHelpId attribute of the HelpFeature object
+   * Gets the linkHelpId attribute of the HelpFeature object
    *
-   *@return    The linkHelpId value
+   * @return The linkHelpId value
    */
   public int getLinkHelpId() {
     return linkHelpId;
@@ -393,9 +392,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the HelpFeature object
+   * Gets the description attribute of the HelpFeature object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -403,9 +402,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the level attribute of the HelpFeature object
+   * Gets the level attribute of the HelpFeature object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -413,9 +412,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the HelpFeature object
+   * Gets the enteredBy attribute of the HelpFeature object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -423,9 +422,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the HelpFeature object
+   * Gets the entered attribute of the HelpFeature object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -433,9 +432,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the HelpFeature object
+   * Gets the modifiedBy attribute of the HelpFeature object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -443,9 +442,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the HelpFeature object
+   * Gets the modified attribute of the HelpFeature object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -453,9 +452,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the complete attribute of the HelpFeature object
+   * Gets the complete attribute of the HelpFeature object
    *
-   *@return    The complete value
+   * @return The complete value
    */
   public boolean getComplete() {
     return complete;
@@ -463,9 +462,9 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the HelpFeature object
+   * Gets the enabled attribute of the HelpFeature object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -473,15 +472,15 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Gets the maxLevel attribute of the HelpFeature object
+   * Gets the maxLevel attribute of the HelpFeature object
    *
-   *@param  db                Description of the Parameter
-   *@return                   The maxLevel value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The maxLevel value
+   * @throws SQLException Description of the Exception
    */
   private int getMaxLevel(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT max(level) AS max " +
+        "SELECT max(\"level\") AS maxrecord " +
         "FROM help_features " +
         "WHERE link_help_id = ? ");
     int i = 0;
@@ -490,18 +489,18 @@ public class HelpFeature extends GenericBean {
     pst.execute();
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      max = DatabaseUtils.getInt(rs, "max");
+      max = DatabaseUtils.getInt(rs, "maxrecord");
     }
     return max;
   }
 
 
   /**
-   *  Insert a Help Feature
+   * Insert a Help Feature
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
@@ -512,15 +511,18 @@ public class HelpFeature extends GenericBean {
       if (this.getLevel() < 1) {
         this.setLevel(getMaxLevel(db) + 1);
       }
+      id = DatabaseUtils.getNextSeq(db, "help_features_feature_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO help_features " +
-          "(link_help_id, description, level, enteredby, modifiedby, enabled, " +
+          "(" + (id > -1 ? "feature_id, " : "") + "link_help_id, description, \"level\", enteredby, modifiedby, enabled, " +
           (linkFeatureId > 0 ? " link_feature_id, " : "") +
           "completedate, completedby) " +
-          "VALUES (?, ?, ?, ?, ?, ?, " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, " +
           (linkFeatureId > 0 ? "?, " : "") +
-          "?, ? ) "
-          );
+          "?, ? ) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getLinkHelpId());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getLevel());
@@ -538,8 +540,9 @@ public class HelpFeature extends GenericBean {
         pst.setNull(++i, java.sql.Types.SMALLINT);
       }
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "help_features_feature_id_seq");
       pst.close();
+      this.id = DatabaseUtils.getCurrVal(
+          db, "help_features_feature_id_seq", id);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -552,11 +555,11 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Update a Help Feature
+   * Update a Help Feature
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     String sql = null;
@@ -576,11 +579,10 @@ public class HelpFeature extends GenericBean {
       int i = 0;
       pst = db.prepareStatement(
           "UPDATE help_features " +
-          "SET modifiedby = ?, description = ?, level = ?, enabled = ?, " +
+          "SET modifiedby = ?, description = ?, \"level\" = ?, enabled = ?, " +
           (linkFeatureId > 0 ? " link_feature_id = ?, " : "") +
           "completedate = ?, completedby = ? " +
-          "WHERE feature_id = ? AND modified = ? "
-          );
+          "WHERE feature_id = ? AND modified = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getLevel());
@@ -614,11 +616,11 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Delete a Help Feature
+   * Delete a Help Feature
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -644,10 +646,10 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("feature_id");

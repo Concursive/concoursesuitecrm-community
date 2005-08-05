@@ -32,40 +32,43 @@ import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    August 3, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created August 3, 2004
  */
 public final class ProductCategories extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      LookupList typeSelect = new LookupList(db, "lookup_product_category_type");
+      LookupList typeSelect = new LookupList(
+          db, "lookup_product_category_type");
       typeSelect.addItem(-1, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
 
       //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
-      PagedListInfo categoryListInfo = this.getPagedListInfo(context, "SearchProductCategoryListInfo");
+      PagedListInfo categoryListInfo = this.getPagedListInfo(
+          context, "SearchProductCategoryListInfo");
       categoryListInfo.setCurrentLetter("");
       categoryListInfo.setCurrentOffset(0);
     } catch (Exception e) {
@@ -79,16 +82,17 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearch(ActionContext context) {
     ProductCategoryList categoryList = new ProductCategoryList();
 
     //Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchProductCategoryListInfo");
+    PagedListInfo searchListInfo = this.getPagedListInfo(
+        context, "SearchProductCategoryListInfo");
 
     //Need to reset any sub PagedListInfos since this is a new search
     //this.resetPagedListInfo(context);
@@ -96,9 +100,12 @@ public final class ProductCategories extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      searchListInfo.setLink("ProductCategories.do?command=Search&moduleId=" + moduleId);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
+      searchListInfo.setLink(
+          "ProductCategories.do?command=Search&moduleId=" + moduleId);
       categoryList.setPagedListInfo(searchListInfo);
       categoryList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
       searchListInfo.setSearchCriteria(categoryList, context);
@@ -125,10 +132,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-add")) {
@@ -138,17 +145,23 @@ public final class ProductCategories extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("permissionCategory", permissionCategory);
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "permissionCategory", permissionCategory);
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_product_category_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_product_category_type");
       typeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CategoryTypeList", typeSelect);
 
       String categoryId = context.getRequest().getParameter("categoryId");
-      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(categoryId) != -1) {
-        ProductCategory parentCategory = new ProductCategory(db, Integer.parseInt(categoryId));
+      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
+          categoryId) != -1) {
+        ProductCategory parentCategory = new ProductCategory(
+            db, Integer.parseInt(categoryId));
         this.buildHierarchy(db, context);
         context.getRequest().setAttribute("parentCategory", parentCategory);
       }
@@ -164,10 +177,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSubCategoryList(ActionContext context) {
     ProductCategoryList categoryList = new ProductCategoryList();
@@ -175,14 +188,18 @@ public final class ProductCategories extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
 
-      PagedListInfo subCatListInfo = this.getPagedListInfo(context, "SubCategoryListInfo");
+      PagedListInfo subCatListInfo = this.getPagedListInfo(
+          context, "SubCategoryListInfo");
       categoryList = new ProductCategoryList();
       categoryList.setParentId(categoryId);
       categoryList.setPagedListInfo(subCatListInfo);
@@ -198,10 +215,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-add")) {
@@ -218,8 +235,10 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
       isValid = this.validateObject(context, db, newCategory);
       if (isValid) {
         recordInserted = newCategory.insert(db);
@@ -243,10 +262,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-edit")) {
@@ -257,15 +276,19 @@ public final class ProductCategories extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("permissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "permissionCategory", permissionCategory);
 
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_product_category_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_product_category_type");
       typeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CategoryTypeList", typeSelect);
 
       String catId = context.getRequest().getParameter("catId");
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(catId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(catId));
       this.buildHierarchy(db, context);
       context.getRequest().setAttribute("productCategory", category);
 
@@ -287,10 +310,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-edit")) {
@@ -305,8 +328,10 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("permissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "permissionCategory", permissionCategory);
       isValid = this.validateObject(context, db, newCategory);
       if (isValid) {
         recordInserted = newCategory.update(db);
@@ -330,10 +355,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-edit")) {
@@ -345,9 +370,11 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("permissionCategory", permissionCategory);
-      
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "permissionCategory", permissionCategory);
+
       String categoryId = context.getRequest().getParameter("categoryId");
       category = new ProductCategory(db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("productCategory", category);
@@ -378,10 +405,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-edit")) {
@@ -389,11 +416,14 @@ public final class ProductCategories extends CFSModule {
     }
     Connection db = null;
     String id = (String) context.getRequest().getParameter("id");
-    String categoryId = (String) context.getRequest().getParameter("categoryId");
+    String categoryId = (String) context.getRequest().getParameter(
+        "categoryId");
     try {
       db = this.getConnection(context);
-      ProductCategory thisCategory = new ProductCategory(db, Integer.parseInt(id));
-      ProductCategory category = thisCategory.getChild(db, Integer.parseInt(categoryId)); 
+      ProductCategory thisCategory = new ProductCategory(
+          db, Integer.parseInt(id));
+      ProductCategory category = thisCategory.getChild(
+          db, Integer.parseInt(categoryId));
       if (category != null) {
         category.updateParent(db, thisCategory.getParentId());
       }
@@ -409,10 +439,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-delete")) {
@@ -433,11 +463,14 @@ public final class ProductCategories extends CFSModule {
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       DependencyList dependencies = category.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-      htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ProductCategories.do?command=Delete&action=delete&return=" + returnUrl + "&moduleId=" + (moduleId != null ? moduleId : "") + "&categoryId=" + (parentId != null ? parentId : "") + "&catId=" + category.getId() + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ProductCategories.do?command=Delete&action=delete&return=" + returnUrl + "&moduleId=" + (moduleId != null ? moduleId : "") + "&categoryId=" + (parentId != null ? parentId : "") + "&catId=" + category.getId() + "'");
       //htmlDialog.addButton("button.disableOnly"), "javascript:window.location.href='ProductCategories.do?command=Delete&action=disable&categoryId=" + category.getId() + "&return=" + returnUrl + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       e.printStackTrace(System.out);
       errorMessage = e;
@@ -455,10 +488,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-delete")) {
@@ -477,9 +510,12 @@ public final class ProductCategories extends CFSModule {
       String categoryId = context.getRequest().getParameter("catId");
       thisCategory = new ProductCategory(db, Integer.parseInt(categoryId));
       if (context.getRequest().getParameter("action") != null) {
-        if (((String) context.getRequest().getParameter("action")).equals("delete")) {
-          recordDeleted = thisCategory.delete(db, this.getPath(context, "products"));
-        } else if (((String) context.getRequest().getParameter("action")).equals("disable")) {
+        if (((String) context.getRequest().getParameter("action")).equals(
+            "delete")) {
+          recordDeleted = thisCategory.delete(
+              db, this.getPath(context, "products"));
+        } else if (((String) context.getRequest().getParameter("action")).equals(
+            "disable")) {
           //recordDeleted = thisCategory.disable(db);
         }
       }
@@ -497,7 +533,9 @@ public final class ProductCategories extends CFSModule {
         return "SystemError";
       }
     } else {
-      context.getRequest().setAttribute("actionError", this.getSystemStatus(context).getLabel("object.validation.actionError.categoryDeletion"));
+      context.getRequest().setAttribute(
+          "actionError", this.getSystemStatus(context).getLabel(
+              "object.validation.actionError.categoryDeletion"));
       context.getRequest().setAttribute("refreshUrl", returnUrl);
       return ("DeleteError");
     }
@@ -505,10 +543,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-products-view")) {
@@ -521,10 +559,13 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int categoryId = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      int categoryId = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       newCategory = new ProductCategory(db, categoryId);
     } catch (Exception e) {
       errorMessage = e;
@@ -544,10 +585,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandImageList(ActionContext context) {
     Connection db = null;
@@ -555,8 +596,10 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
       category = new ProductCategory(db, Integer.parseInt(categoryId));
@@ -588,21 +631,24 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownloadFile(ActionContext context) {
     Exception errorMessage = null;
     String itemId = (String) context.getRequest().getParameter("fid");
-    String categoryId = (String) context.getRequest().getParameter("categoryId");
+    String categoryId = (String) context.getRequest().getParameter(
+        "categoryId");
     FileItem thisItem = null;
     Connection db = null;
     try {
       db = getConnection(context);
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(categoryId), Constants.DOCUMENTS_PRODUCT_CATEGORY);
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(categoryId), Constants.DOCUMENTS_PRODUCT_CATEGORY);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -613,7 +659,8 @@ public final class ProductCategories extends CFSModule {
     try {
       FileItem itemToDownload = thisItem;
       itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "products") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "products") + getDatePath(
+          itemToDownload.getModified()) + itemToDownload.getFilename();
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -624,8 +671,10 @@ public final class ProductCategories extends CFSModule {
         itemToDownload.updateCounter(db);
       } else {
         db = null;
-        System.err.println("ProductCategories-> Trying to send a file that does not exist");
-        context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+        System.err.println(
+            "ProductCategories-> Trying to send a file that does not exist");
+        context.getRequest().setAttribute(
+            "actionError", "The requested download no longer exists on the system");
         return (executeCommandImageList(context));
       }
     } catch (java.net.SocketException se) {
@@ -652,20 +701,24 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveFile(ActionContext context) {
     Connection db = null;
     try {
       String itemId = (String) context.getRequest().getParameter("fid");
-      String categoryId = (String) context.getRequest().getParameter("categoryId");
+      String categoryId = (String) context.getRequest().getParameter(
+          "categoryId");
       db = getConnection(context);
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
       String imageType = context.getRequest().getParameter("imageType");
-      category.removeFileItem(db, Integer.parseInt(itemId), imageType, this.getPath(context, "products"));
+      category.removeFileItem(
+          db, Integer.parseInt(itemId), imageType, this.getPath(
+              context, "products"));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -677,10 +730,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUploadFile(ActionContext context) {
     Connection db = null;
@@ -699,12 +752,15 @@ public final class ProductCategories extends CFSModule {
       db = getConnection(context);
 
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
       String categoryId = context.getRequest().getParameter("categoryId");
       String subject = "Attachment";
-      ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+      ProductCategory category = new ProductCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("ProductCategory", category);
 
       if ((Object) parts.get("id" + categoryId) instanceof FileInfo) {
@@ -744,7 +800,9 @@ public final class ProductCategories extends CFSModule {
         recordInserted = false;
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         processErrors(context, errors);
       }
     } catch (Exception e) {
@@ -758,10 +816,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMappingList(ActionContext context) {
     Connection db = null;
@@ -771,17 +829,21 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int categoryId = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      int categoryId = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       category = new ProductCategory(db, categoryId);
       ProductCategoryList mappings = new ProductCategoryList();
       mappings.setMasterCategoryId(category.getId());
       mappings.buildList(db);
       context.getRequest().setAttribute("MappingList", mappings);
 
-      LookupList typeSelect = new LookupList(db, "lookup_product_category_type");
+      LookupList typeSelect = new LookupList(
+          db, "lookup_product_category_type");
       context.getRequest().setAttribute("CategoryTypeList", typeSelect);
     } catch (Exception e) {
       errorMessage = e;
@@ -801,10 +863,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddMapping(ActionContext context) {
     Connection db = null;
@@ -814,9 +876,12 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      int categoryId = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
+      int categoryId = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       category = new ProductCategory(db, categoryId);
       context.getRequest().setAttribute("ProductCategory", category);
       // build the product categories not already mapped
@@ -842,10 +907,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveMapping(ActionContext context) {
     Connection db = null;
@@ -855,10 +920,13 @@ public final class ProductCategories extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute(
+          "PermissionCategory", permissionCategory);
 
-      int cat1 = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      int cat1 = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       category1 = new ProductCategory(db, cat1);
       context.getRequest().setAttribute("ProductCategory", category1);
       //remove both mappings cat1 -> cat2 and cat2 -> cat1
@@ -881,10 +949,10 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsertMapping(ActionContext context) {
     Connection db = null;
@@ -898,7 +966,8 @@ public final class ProductCategories extends CFSModule {
        *  PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
        *  context.getRequest().setAttribute("PermissionCategory", permissionCategory);
        */
-      int categoryId = Integer.parseInt(context.getRequest().getParameter("categoryId"));
+      int categoryId = Integer.parseInt(
+          context.getRequest().getParameter("categoryId"));
       category = new ProductCategory(db, categoryId);
 
       String mapcategory = context.getRequest().getParameter("mapcategory");
@@ -923,9 +992,9 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     //this.deletePagedListInfo(context, "");
@@ -933,17 +1002,19 @@ public final class ProductCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public final static void buildHierarchy(Connection db, ActionContext context) throws SQLException {
     String categoryId = context.getRequest().getParameter("categoryId");
-    if (categoryId != null && !"-1".equals(categoryId) && !"0".equals(categoryId)) {
+    if (categoryId != null && !"-1".equals(categoryId) && !"0".equals(
+        categoryId)) {
       LinkedHashMap categoryLevels = new LinkedHashMap();
-      ProductCategory.buildHierarchy(db, categoryLevels, Integer.parseInt(categoryId));
+      ProductCategory.buildHierarchy(
+          db, categoryLevels, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("categoryLevels", categoryLevels);
     }
   }

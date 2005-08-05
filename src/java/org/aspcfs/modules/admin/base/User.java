@@ -32,22 +32,33 @@ import java.text.DateFormat;
 import java.util.*;
 
 /**
- *  Represents a user access record <p>
+ * Represents a user access record <p>
+ * <p/>
+ * Password control is implemented with three fields: password is the database
+ * (stored) field, containing the encrypted string; password1 is the field that
+ * the user sees; password2 is the field used for verification.<p>
+ * <p/>
+ * For an existing record, the password field is only included in the SQL
+ * command if the password1 field is left blank. Otherwise, it is compared to
+ * the password2 field (also filled in by the user), and if valid, is encrypted
+ * and included in the update.<p>
+ * <p/>
+ * For a new record, the password 1 and 2 fields are required.
+ * <p/>
+ * Password control is implemented with three fields: password is the database
+ * (stored) field, containing the encrypted string; password1 is the field that
+ * the user sees; password2 is the field used for verification.<p>
+ * <p/>
+ * For an existing record, the password field is only included in the SQL
+ * command if the password1 field is left blank. Otherwise, it is compared to
+ * the password2 field (also filled in by the user), and if valid, is encrypted
+ * and included in the update.<p>
+ * <p/>
+ * For a new record, the password 1 and 2 fields are required.
  *
- *  Password control is implemented with three fields: password is the database
- *  (stored) field, containing the encrypted string; password1 is the field that
- *  the user sees; password2 is the field used for verification.<p>
- *
- *  For an existing record, the password field is only included in the SQL
- *  command if the password1 field is left blank. Otherwise, it is compared to
- *  the password2 field (also filled in by the user), and if valid, is encrypted
- *  and included in the update.<p>
- *
- *  For a new record, the password 1 and 2 fields are required.
- *
- *@author     matt rajkowski
- *@created    September 17, 2001
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 17, 2001
  */
 public class User extends GenericBean {
   //User Properties
@@ -111,20 +122,22 @@ public class User extends GenericBean {
   protected boolean leadsNumberIsValid = false;
   protected GraphSummaryList lccr = new GraphSummaryList();
 
+
   /**
-   *  Constructor for the User object
+   * Constructor for the User object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public User() { }
+  public User() {
+  }
 
 
   /**
-   *  Constructor for the User object
+   * Constructor for the User object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public User(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -132,12 +145,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Constructor for the User object
+   * Constructor for the User object
    *
-   *@param  db                Description of Parameter
-   *@param  userId            Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db     Description of Parameter
+   * @param userId Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public User(Connection db, String userId) throws SQLException {
     buildRecord(db, Integer.parseInt(userId));
@@ -145,13 +158,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Constructor for the User object
+   * Constructor for the User object
    *
-   *@param  db                Description of Parameter
-   *@param  userId            Description of Parameter
-   *@param  doHierarchy       Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.26
+   * @param db          Description of Parameter
+   * @param userId      Description of Parameter
+   * @param doHierarchy Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.26
    */
   public User(Connection db, String userId, boolean doHierarchy) throws SQLException {
     this.buildHierarchy = doHierarchy;
@@ -160,12 +173,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Constructor for the User object
+   * Constructor for the User object
    *
-   *@param  db                Description of Parameter
-   *@param  userId            Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.20
+   * @param db     Description of Parameter
+   * @param userId Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.20
    */
   public User(Connection db, int userId) throws SQLException {
     buildRecord(db, userId);
@@ -173,9 +186,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the webdavPassword attribute of the User object
+   * Sets the webdavPassword attribute of the User object
    *
-   *@param  tmp  The new webdavPassword value
+   * @param tmp The new webdavPassword value
    */
   public void setWebdavPassword(String tmp) {
     this.webdavPassword = tmp;
@@ -183,9 +196,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the webdavPassword attribute of the User object
+   * Gets the webdavPassword attribute of the User object
    *
-   *@return    The webdavPassword value
+   * @return The webdavPassword value
    */
   public String getWebdavPassword() {
     return webdavPassword;
@@ -193,9 +206,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the revenue attribute of the User object
+   * Gets the revenue attribute of the User object
    *
-   *@return    The revenue value
+   * @return The revenue value
    */
   public GraphSummaryList getRevenue() {
     return revenue;
@@ -203,9 +216,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the revenue attribute of the User object
+   * Sets the revenue attribute of the User object
    *
-   *@param  revenue  The new revenue value
+   * @param revenue The new revenue value
    */
   public void setRevenue(GraphSummaryList revenue) {
     this.revenue = revenue;
@@ -213,9 +226,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the yTD attribute of the User object
+   * Gets the yTD attribute of the User object
    *
-   *@return    The yTD value
+   * @return The yTD value
    */
   public double getYTD() {
     return YTD;
@@ -223,9 +236,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the yTD attribute of the User object
+   * Sets the yTD attribute of the User object
    *
-   *@param  YTD  The new yTD value
+   * @param YTD The new yTD value
    */
   public void setYTD(double YTD) {
     this.YTD = YTD;
@@ -233,9 +246,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the yTDValue attribute of the User object
+   * Gets the yTDValue attribute of the User object
    *
-   *@return    The yTDValue value
+   * @return The yTDValue value
    */
   public String getYTDValue() {
     double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
@@ -253,9 +266,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the hidden attribute of the User object
+   * Gets the hidden attribute of the User object
    *
-   *@return    The hidden value
+   * @return The hidden value
    */
   public boolean getHidden() {
     return hidden;
@@ -263,9 +276,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the hidden attribute of the User object
+   * Sets the hidden attribute of the User object
    *
-   *@param  tmp  The new hidden value
+   * @param tmp The new hidden value
    */
   public void setHidden(boolean tmp) {
     this.hidden = tmp;
@@ -273,9 +286,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the hidden attribute of the User object
+   * Sets the hidden attribute of the User object
    *
-   *@param  tmp  The new hidden value
+   * @param tmp The new hidden value
    */
   public void setHidden(String tmp) {
     this.hidden = DatabaseUtils.parseBoolean(tmp);
@@ -283,9 +296,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the hideHiddenChildren attribute of the User object
+   * Gets the hideHiddenChildren attribute of the User object
    *
-   *@return    The hideHiddenChildren value
+   * @return The hideHiddenChildren value
    */
   public boolean getHideHiddenChildren() {
     return hideHiddenChildren;
@@ -293,9 +306,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the hideHiddenChildren attribute of the User object
+   * Sets the hideHiddenChildren attribute of the User object
    *
-   *@param  tmp  The new hideHiddenChildren value
+   * @param tmp The new hideHiddenChildren value
    */
   public void setHideHiddenChildren(boolean tmp) {
     this.hideHiddenChildren = tmp;
@@ -303,9 +316,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the hideHiddenChildren attribute of the User object
+   * Sets the hideHiddenChildren attribute of the User object
    *
-   *@param  tmp  The new hideHiddenChildren value
+   * @param tmp The new hideHiddenChildren value
    */
   public void setHideHiddenChildren(String tmp) {
     this.hideHiddenChildren = DatabaseUtils.parseBoolean(tmp);
@@ -313,9 +326,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the leadsLock attribute of the User object
+   * Gets the leadsLock attribute of the User object
    *
-   * @return    The leadsLock value
+   * @return The leadsLock value
    */
   public boolean getLeadsLock() {
     return leadsLock;
@@ -323,9 +336,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the leadsLock attribute of the User object
+   * Sets the leadsLock attribute of the User object
    *
-   * @param  tmp  The new leadsLock value
+   * @param tmp The new leadsLock value
    */
   public void setLeadsLock(boolean tmp) {
     this.leadsLock = tmp;
@@ -333,9 +346,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the leadsLock attribute of the User object
+   * Sets the leadsLock attribute of the User object
    *
-   * @param  tmp  The new leadsLock value
+   * @param tmp The new leadsLock value
    */
   public void setLeadsLock(String tmp) {
     this.leadsLock = DatabaseUtils.parseBoolean(tmp);
@@ -343,9 +356,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the leadsNumber attribute of the User object
+   * Gets the leadsNumber attribute of the User object
    *
-   * @return    The leadsNumber value
+   * @return The leadsNumber value
    */
   public double getLeadsNumber() {
     return leadsNumber;
@@ -353,9 +366,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the leadsNumber attribute of the User object
+   * Sets the leadsNumber attribute of the User object
    *
-   * @param  tmp  The new leadsNumber value
+   * @param tmp The new leadsNumber value
    */
   public void setLeadsNumber(double tmp) {
     this.leadsNumber = tmp;
@@ -363,9 +376,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the leadsNumber attribute of the User object
+   * Sets the leadsNumber attribute of the User object
    *
-   * @param  tmp  The new leadsNumber value
+   * @param tmp The new leadsNumber value
    */
   public void setLeadsNumber(String tmp) {
     this.leadsNumber = Double.parseDouble(tmp);
@@ -373,9 +386,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the leadsNumberIsValid attribute of the User object
+   * Gets the leadsNumberIsValid attribute of the User object
    *
-   * @return    The leadsNumberIsValid value
+   * @return The leadsNumberIsValid value
    */
   public boolean getLeadsNumberIsValid() {
     return leadsNumberIsValid;
@@ -383,9 +396,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the leadsNumberIsValid attribute of the User object
+   * Sets the leadsNumberIsValid attribute of the User object
    *
-   * @param  tmp  The new leadsNumberIsValid value
+   * @param tmp The new leadsNumberIsValid value
    */
   public void setLeadsNumberIsValid(boolean tmp) {
     this.leadsNumberIsValid = tmp;
@@ -393,9 +406,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the leadsNumberIsValid attribute of the User object
+   * Sets the leadsNumberIsValid attribute of the User object
    *
-   * @param  tmp  The new leadsNumberIsValid value
+   * @param tmp The new leadsNumberIsValid value
    */
   public void setLeadsNumberIsValid(String tmp) {
     this.leadsNumberIsValid = DatabaseUtils.parseBoolean(tmp);
@@ -403,9 +416,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the lccr attribute of the User object
+   * Gets the lccr attribute of the User object
    *
-   * @return    The lccr value
+   * @return The lccr value
    */
   public GraphSummaryList getLccr() {
     return lccr;
@@ -413,9 +426,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the lccr attribute of the User object
+   * Sets the lccr attribute of the User object
    *
-   * @param  tmp  The new lccr value
+   * @param tmp The new lccr value
    */
   public void setLccr(GraphSummaryList tmp) {
     this.lccr = tmp;
@@ -423,10 +436,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the graphValuesLeads attribute of the User object
+   * Sets the graphValuesLeads attribute of the User object
    *
-   * @param  key    The new graphValuesLeads value
-   * @param  value  The new graphValuesLeads value
+   * @param key   The new graphValuesLeads value
+   * @param value The new graphValuesLeads value
    */
   public void setGraphValuesLeads(String key, Double value) {
     this.getLccr().setValue(key, value);
@@ -434,9 +447,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the isValidLeads attribute of the User object
+   * Gets the isValidLeads attribute of the User object
    *
-   * @return    The isValidLeads value
+   * @return The isValidLeads value
    */
   public boolean getIsValidLead() {
     if (this.lccr.getIsValid() == true) {
@@ -448,7 +461,7 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void doLeadsLock() {
     while (leadsLock == true) {
@@ -462,7 +475,7 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void doLeadsUnlock() {
     this.leadsLock = false;
@@ -470,10 +483,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the isValidLead attribute of the User object
+   * Sets the isValidLead attribute of the User object
    *
-   * @param  isValid   The new isValidLead value
-   * @param  dataAlso  The new isValidLead value
+   * @param isValid  The new isValidLead value
+   * @param dataAlso The new isValidLead value
    */
   public void setIsValidLead(boolean isValid, boolean dataAlso) {
     if (dataAlso) {
@@ -491,13 +504,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Constructor for the User object
+   * Constructor for the User object
    *
-   *@param  db                Description of Parameter
-   *@param  userId            Description of Parameter
-   *@param  doHierarchy       Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.28
+   * @param db          Description of Parameter
+   * @param userId      Description of Parameter
+   * @param doHierarchy Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.28
    */
   public User(Connection db, int userId, boolean doHierarchy) throws SQLException {
     this.buildHierarchy = doHierarchy;
@@ -506,9 +519,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the expires attribute of the User object
+   * Sets the expires attribute of the User object
    *
-   *@param  expires  The new expires value
+   * @param expires The new expires value
    */
   public void setExpires(java.sql.Timestamp expires) {
     this.expires = expires;
@@ -517,9 +530,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the expires attribute of the User object
+   * Sets the expires attribute of the User object
    *
-   *@param  tmp  The new expires value
+   * @param tmp The new expires value
    */
   public void setExpires(String tmp) {
     this.expires = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -528,12 +541,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int generateRandomPassword(Connection db, ActionContext context) throws SQLException {
     int resultCount = -1;
@@ -552,16 +565,23 @@ public class User extends GenericBean {
       modUser.buildRecord(db, modifiedBy);
 
       targetContact = new Contact(db, this.getContactId());
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(((ConnectionElement) context.getSession().getAttribute("ConnectionElement")).getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+          "SystemStatus")).get(
+              ((ConnectionElement) context.getSession().getAttribute(
+                  "ConnectionElement")).getUrl());
 
       //send email
       SMTPMessage mail = new SMTPMessage();
-      mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
-      mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
+      mail.setHost(
+          ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
+      mail.setFrom(
+          ApplicationPrefs.getPref(
+              context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(targetContact.getPrimaryEmailAddress());
       if (systemStatus != null) {
-        String message = systemStatus.getLabel("mail.subject.accountInformation");
+        String message = systemStatus.getLabel(
+            "mail.subject.accountInformation");
         if (message != null) {
           mail.setSubject(message);
         } else {
@@ -615,10 +635,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Assistant attribute of the User object
+   * Sets the Assistant attribute of the User object
    *
-   *@param  tmp  The new Assistant value
-   *@since
+   * @param tmp The new Assistant value
    */
   public void setAssistant(int tmp) {
     this.assistant = tmp;
@@ -626,9 +645,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the childUsers attribute of the User object
+   * Gets the childUsers attribute of the User object
    *
-   *@return    The childUsers value
+   * @return The childUsers value
    */
   public UserList getChildUsers() {
     return childUsers;
@@ -636,9 +655,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the assistant attribute of the User object
+   * Sets the assistant attribute of the User object
    *
-   *@param  tmp  The new assistant value
+   * @param tmp The new assistant value
    */
   public void setAssistant(String tmp) {
     this.assistant = Integer.parseInt(tmp);
@@ -646,10 +665,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Alias attribute of the User object
+   * Sets the Alias attribute of the User object
    *
-   *@param  tmp  The new Alias value
-   *@since
+   * @param tmp The new Alias value
    */
   public void setAlias(int tmp) {
     alias = tmp;
@@ -657,9 +675,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the alias attribute of the User object
+   * Sets the alias attribute of the User object
    *
-   *@param  tmp  The new alias value
+   * @param tmp The new alias value
    */
   public void setAlias(String tmp) {
     alias = Integer.parseInt(tmp);
@@ -667,10 +685,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Gmr attribute of the User object
+   * Sets the Gmr attribute of the User object
    *
-   *@param  tmp  The new Gmr value
-   *@since       1.18
+   * @param tmp The new Gmr value
+   * @since 1.18
    */
   public void setGmr(GraphSummaryList tmp) {
     this.gmr = tmp;
@@ -678,9 +696,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the managerUserEnabled attribute of the User object
+   * Sets the managerUserEnabled attribute of the User object
    *
-   *@param  managerUserEnabled  The new managerUserEnabled value
+   * @param managerUserEnabled The new managerUserEnabled value
    */
   public void setManagerUserEnabled(boolean managerUserEnabled) {
     this.managerUserEnabled = managerUserEnabled;
@@ -688,9 +706,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the managerUserEnabled attribute of the User object
+   * Gets the managerUserEnabled attribute of the User object
    *
-   *@return    The managerUserEnabled value
+   * @return The managerUserEnabled value
    */
   public boolean getManagerUserEnabled() {
     return managerUserEnabled;
@@ -698,9 +716,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the revenueLock attribute of the User object
+   * Gets the revenueLock attribute of the User object
    *
-   *@return    The revenueLock value
+   * @return The revenueLock value
    */
   public boolean getRevenueLock() {
     return revenueLock;
@@ -708,9 +726,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the revenueLock attribute of the User object
+   * Sets the revenueLock attribute of the User object
    *
-   *@param  revenueLock  The new revenueLock value
+   * @param revenueLock The new revenueLock value
    */
   public void setRevenueLock(boolean revenueLock) {
     this.revenueLock = revenueLock;
@@ -718,10 +736,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Ramr attribute of the User object
+   * Sets the Ramr attribute of the User object
    *
-   *@param  tmp  The new Ramr value
-   *@since       1.18
+   * @param tmp The new Ramr value
+   * @since 1.18
    */
   public void setRamr(GraphSummaryList tmp) {
     this.ramr = tmp;
@@ -729,9 +747,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the pipelineValueIsValid attribute of the User object
+   * Gets the pipelineValueIsValid attribute of the User object
    *
-   *@return    The pipelineValueIsValid value
+   * @return The pipelineValueIsValid value
    */
   public boolean getPipelineValueIsValid() {
     return pipelineValueIsValid;
@@ -739,9 +757,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the pipelineValueIsValid attribute of the User object
+   * Sets the pipelineValueIsValid attribute of the User object
    *
-   *@param  pipelineValueIsValid  The new pipelineValueIsValid value
+   * @param pipelineValueIsValid The new pipelineValueIsValid value
    */
   public void setPipelineValueIsValid(boolean pipelineValueIsValid) {
     this.pipelineValueIsValid = pipelineValueIsValid;
@@ -749,11 +767,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the IsValid attribute of the User object
+   * Sets the IsValid attribute of the User object
    *
-   *@param  isValid   The new IsValid value
-   *@param  dataAlso  The new IsValid value
-   *@since
+   * @param isValid  The new IsValid value
+   * @param dataAlso The new IsValid value
    */
   public void setIsValid(boolean isValid, boolean dataAlso) {
     if (dataAlso) {
@@ -777,10 +794,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the revenueIsValid attribute of the User object
+   * Sets the revenueIsValid attribute of the User object
    *
-   *@param  isValid   The new revenueIsValid value
-   *@param  dataAlso  The new revenueIsValid value
+   * @param isValid  The new revenueIsValid value
+   * @param dataAlso The new revenueIsValid value
    */
   public void setRevenueIsValid(boolean isValid, boolean dataAlso) {
     if (dataAlso == true) {
@@ -796,14 +813,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the GraphValues attribute of the User object
+   * Sets the GraphValues attribute of the User object
    *
-   *@param  key  The new GraphValues value
-   *@param  v1   The new GraphValues value
-   *@param  v2   The new GraphValues value
-   *@param  v3   The new GraphValues value
-   *@param  v4   The new GraphValues value
-   *@since
+   * @param key The new GraphValues value
+   * @param v1  The new GraphValues value
+   * @param v2  The new GraphValues value
+   * @param v3  The new GraphValues value
+   * @param v4  The new GraphValues value
    */
   public void setGraphValues(String key, Double v1, Double v2, Double v3, Double v4) {
     this.getGmr().setValue(key, v1);
@@ -814,10 +830,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the revenueGraphValues attribute of the User object
+   * Sets the revenueGraphValues attribute of the User object
    *
-   *@param  key  The new revenueGraphValues value
-   *@param  v1   The new revenueGraphValues value
+   * @param key The new revenueGraphValues value
+   * @param v1  The new revenueGraphValues value
    */
   public void setRevenueGraphValues(String key, Double v1) {
     this.getRevenue().setValue(key, v1);
@@ -825,10 +841,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Cgmr attribute of the User object
+   * Sets the Cgmr attribute of the User object
    *
-   *@param  tmp  The new Cgmr value
-   *@since       1.18
+   * @param tmp The new Cgmr value
+   * @since 1.18
    */
   public void setCgmr(GraphSummaryList tmp) {
     this.cgmr = tmp;
@@ -836,10 +852,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Cramr attribute of the User object
+   * Sets the Cramr attribute of the User object
    *
-   *@param  tmp  The new Cramr value
-   *@since       1.18
+   * @param tmp The new Cramr value
+   * @since 1.18
    */
   public void setCramr(GraphSummaryList tmp) {
     this.cramr = tmp;
@@ -847,10 +863,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the User object
+   * Sets the Id attribute of the User object
    *
-   *@param  tmp  The new Id value
-   *@since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -858,10 +874,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the User object
+   * Sets the Id attribute of the User object
    *
-   *@param  tmp  The new Id value
-   *@since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -869,10 +885,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Username attribute of the User object
+   * Sets the Username attribute of the User object
    *
-   *@param  tmp  The new Username value
-   *@since       1.1
+   * @param tmp The new Username value
+   * @since 1.1
    */
   public void setUsername(String tmp) {
     this.username = tmp;
@@ -880,10 +896,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the PreviousUsername attribute of the User object
+   * Sets the PreviousUsername attribute of the User object
    *
-   *@param  tmp  The new PreviousUsername value
-   *@since       1.28
+   * @param tmp The new PreviousUsername value
+   * @since 1.28
    */
   public void setPreviousUsername(String tmp) {
     this.previousUsername = tmp;
@@ -891,9 +907,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the encryptedPassword attribute of the User object
+   * Sets the encryptedPassword attribute of the User object
    *
-   *@param  tmp  The new encryptedPassword value
+   * @param tmp The new encryptedPassword value
    */
   public void setEncryptedPassword(String tmp) {
     this.encryptedPassword = tmp;
@@ -901,10 +917,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Password attribute of the User object
+   * Sets the Password attribute of the User object
    *
-   *@param  tmp  The new Password value
-   *@since       1.1
+   * @param tmp The new Password value
+   * @since 1.1
    */
   public void setPassword(String tmp) {
     this.password = tmp;
@@ -912,10 +928,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Password1 attribute of the User object
+   * Sets the Password1 attribute of the User object
    *
-   *@param  tmp  The new Password1 value
-   *@since       1.1
+   * @param tmp The new Password1 value
+   * @since 1.1
    */
   public void setPassword1(String tmp) {
     this.password1 = tmp;
@@ -923,10 +939,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Password2 attribute of the User object
+   * Sets the Password2 attribute of the User object
    *
-   *@param  tmp  The new Password2 value
-   *@since       1.1
+   * @param tmp The new Password2 value
+   * @since 1.1
    */
   public void setPassword2(String tmp) {
     this.password2 = tmp;
@@ -934,9 +950,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the User object
+   * Sets the entered attribute of the User object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -944,9 +960,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the User object
+   * Sets the modified attribute of the User object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -954,9 +970,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the User object
+   * Sets the entered attribute of the User object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -964,9 +980,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the User object
+   * Sets the modified attribute of the User object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -974,10 +990,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the User object
+   * Sets the ContactId attribute of the User object
    *
-   *@param  tmp  The new ContactId value
-   *@since       1.1
+   * @param tmp The new ContactId value
+   * @since 1.1
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -986,10 +1002,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the User object
+   * Sets the ContactId attribute of the User object
    *
-   *@param  tmp  The new ContactId value
-   *@since       1.1
+   * @param tmp The new ContactId value
+   * @since 1.1
    */
   public void setContactId(String tmp) {
     if (tmp != null) {
@@ -999,10 +1015,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the RoleId attribute of the User object
+   * Sets the RoleId attribute of the User object
    *
-   *@param  tmp  The new RoleId value
-   *@since       1.1
+   * @param tmp The new RoleId value
+   * @since 1.1
    */
   public void setRoleId(int tmp) {
     this.roleId = tmp;
@@ -1010,12 +1026,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newManager        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param newManager Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int newManager) throws SQLException {
     int result = -1;
@@ -1031,10 +1047,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the RoleId attribute of the User object
+   * Sets the RoleId attribute of the User object
    *
-   *@param  tmp  The new RoleId value
-   *@since       1.1
+   * @param tmp The new RoleId value
+   * @since 1.1
    */
   public void setRoleId(String tmp) {
     if (tmp != null) {
@@ -1044,9 +1060,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the pipelineValue attribute of the User object
+   * Sets the pipelineValue attribute of the User object
    *
-   *@param  pipelineValue  The new pipelineValue value
+   * @param pipelineValue The new pipelineValue value
    */
   public void setPipelineValue(double pipelineValue) {
     this.pipelineValue = pipelineValue;
@@ -1054,9 +1070,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the pipelineValue attribute of the User object
+   * Gets the pipelineValue attribute of the User object
    *
-   *@return    The pipelineValue value
+   * @return The pipelineValue value
    */
   public double getPipelineValue() {
     return pipelineValue;
@@ -1064,10 +1080,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Role attribute of the User object
+   * Sets the Role attribute of the User object
    *
-   *@param  tmp  The new Role value
-   *@since       1.11
+   * @param tmp The new Role value
+   * @since 1.11
    */
   public void setRole(String tmp) {
     this.role = tmp;
@@ -1075,10 +1091,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the managerId attribute of the User object
+   * Sets the managerId attribute of the User object
    *
-   *@param  tmp  The new managerId value
-   *@since       1.1
+   * @param tmp The new managerId value
+   * @since 1.1
    */
   public void setManagerId(int tmp) {
     this.managerId = (tmp);
@@ -1086,10 +1102,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the managerId attribute of the User object DPM 8.14.03
+   * Sets the managerId attribute of the User object DPM 8.14.03
    *
-   *@param  tmp  The new managerId value
-   *@since       1.1
+   * @param tmp The new managerId value
+   * @since 1.1
    */
   public void setManagerId(String tmp) {
     if (tmp != null) {
@@ -1099,10 +1115,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the User object
+   * Sets the EnteredBy attribute of the User object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.1
+   * @param tmp The new EnteredBy value
+   * @since 1.1
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -1110,10 +1126,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the User object
+   * Sets the EnteredBy attribute of the User object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.1
+   * @param tmp The new EnteredBy value
+   * @since 1.1
    */
   public void setEnteredBy(String tmp) {
     if (tmp != null) {
@@ -1123,10 +1139,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the User object
+   * Sets the ModifiedBy attribute of the User object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since       1.1
+   * @param tmp The new ModifiedBy value
+   * @since 1.1
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -1134,10 +1150,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the User object
+   * Sets the ModifiedBy attribute of the User object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since       1.1
+   * @param tmp The new ModifiedBy value
+   * @since 1.1
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -1145,10 +1161,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the User object
+   * Sets the Enabled attribute of the User object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.1
+   * @param tmp The new Enabled value
+   * @since 1.1
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -1157,10 +1173,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the User object
+   * Sets the Enabled attribute of the User object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.1
+   * @param tmp The new Enabled value
+   * @since 1.1
    */
   public void setEnabled(String tmp) {
     if (tmp.toLowerCase().equals("false")) {
@@ -1173,9 +1189,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the lastLogin attribute of the User object
+   * Sets the lastLogin attribute of the User object
    *
-   *@param  tmp  The new lastLogin value
+   * @param tmp The new lastLogin value
    */
   public void setLastLogin(java.sql.Timestamp tmp) {
     this.lastLogin = tmp;
@@ -1183,9 +1199,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the lastLogin attribute of the User object
+   * Sets the lastLogin attribute of the User object
    *
-   *@param  tmp  The new lastLogin value
+   * @param tmp The new lastLogin value
    */
   public void setLastLogin(String tmp) {
     this.lastLogin = DateUtils.parseTimestampString(tmp);
@@ -1193,10 +1209,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Ip attribute of the User object
+   * Sets the Ip attribute of the User object
    *
-   *@param  tmp  The new Ip value
-   *@since
+   * @param tmp The new Ip value
    */
   public void setIp(String tmp) {
     this.ip = tmp;
@@ -1204,10 +1219,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the TimeZone attribute of the User object
+   * Sets the TimeZone attribute of the User object
    *
-   *@param  tmp  The new TimeZone value
-   *@since
+   * @param tmp The new TimeZone value
    */
   public void setTimeZone(String tmp) {
     this.timeZone = tmp;
@@ -1215,10 +1229,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the BuildContact attribute of the User object
+   * Sets the BuildContact attribute of the User object
    *
-   *@param  tmp  The new BuildContact value
-   *@since       1.29
+   * @param tmp The new BuildContact value
+   * @since 1.29
    */
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
@@ -1226,9 +1240,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the buildContactDetails attribute of the User object
+   * Sets the buildContactDetails attribute of the User object
    *
-   *@param  tmp  The new buildContactDetails value
+   * @param tmp The new buildContactDetails value
    */
   public void setBuildContactDetails(boolean tmp) {
     this.buildContactDetails = tmp;
@@ -1236,10 +1250,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the BuildHierarchy attribute of the User object
+   * Sets the BuildHierarchy attribute of the User object
    *
-   *@param  tmp  The new BuildHierarchy value
-   *@since       1.23
+   * @param tmp The new BuildHierarchy value
+   * @since 1.23
    */
   public void setBuildHierarchy(boolean tmp) {
     this.buildHierarchy = tmp;
@@ -1247,10 +1261,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Contact attribute of the User object
+   * Sets the Contact attribute of the User object
    *
-   *@param  tmp  The new Contact value
-   *@since       1.1
+   * @param tmp The new Contact value
+   * @since 1.1
    */
   public void setContact(Contact tmp) {
     this.contact = tmp;
@@ -1258,10 +1272,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the ManagerUser attribute of the User object
+   * Sets the ManagerUser attribute of the User object
    *
-   *@param  tmp  The new ManagerUser value
-   *@since       1.17
+   * @param tmp The new ManagerUser value
+   * @since 1.17
    */
   public void setManagerUser(User tmp) {
     this.managerUser = tmp;
@@ -1269,10 +1283,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the ChildUsers attribute of the User object
+   * Sets the ChildUsers attribute of the User object
    *
-   *@param  tmp  The new ChildUsers value
-   *@since
+   * @param tmp The new ChildUsers value
    */
   public void setChildUsers(UserList tmp) {
     this.childUsers = tmp;
@@ -1280,9 +1293,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the roleType attribute of the User object
+   * Sets the roleType attribute of the User object
    *
-   *@param  tmp  The new roleType value
+   * @param tmp The new roleType value
    */
   public void setRoleType(int tmp) {
     this.roleType = tmp;
@@ -1290,9 +1303,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the roleType attribute of the User object
+   * Sets the roleType attribute of the User object
    *
-   *@param  tmp  The new roleType value
+   * @param tmp The new roleType value
    */
   public void setRoleType(String tmp) {
     this.roleType = Integer.parseInt(tmp);
@@ -1300,9 +1313,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the expires attribute of the User object
+   * Gets the expires attribute of the User object
    *
-   *@return    The expires value
+   * @return The expires value
    */
   public java.sql.Timestamp getExpires() {
     return expires;
@@ -1310,9 +1323,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the expiresString attribute of the User object
+   * Gets the expiresString attribute of the User object
    *
-   *@return    The expiresString value
+   * @return The expiresString value
    */
   public String getExpiresString() {
     String tmp = "";
@@ -1325,9 +1338,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the User object
+   * Gets the entered attribute of the User object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1335,9 +1348,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the User object
+   * Gets the modified attribute of the User object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1345,14 +1358,15 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the User object
+   * Gets the modifiedString attribute of the User object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -1360,14 +1374,15 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the User object
+   * Gets the enteredString attribute of the User object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -1375,9 +1390,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the lastLogin attribute of the User object
+   * Gets the lastLogin attribute of the User object
    *
-   *@return    The lastLogin value
+   * @return The lastLogin value
    */
   public java.sql.Timestamp getLastLogin() {
     return lastLogin;
@@ -1385,14 +1400,15 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the lastLoginString attribute of the User object
+   * Gets the lastLoginString attribute of the User object
    *
-   *@return    The lastLoginString value
+   * @return The lastLoginString value
    */
   public String getLastLoginString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastLogin);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          lastLogin);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -1400,10 +1416,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Assistant attribute of the User object
+   * Gets the Assistant attribute of the User object
    *
-   *@return    The Assistant value
-   *@since
+   * @return The Assistant value
    */
   public int getAssistant() {
     return assistant;
@@ -1411,10 +1426,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Alias attribute of the User object
+   * Gets the Alias attribute of the User object
    *
-   *@return    The Alias value
-   *@since
+   * @return The Alias value
    */
   public int getAlias() {
     return alias;
@@ -1422,10 +1436,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the IsValid attribute of the User object
+   * Gets the IsValid attribute of the User object
    *
-   *@return    The IsValid value
-   *@since
+   * @return The IsValid value
    */
   public boolean getIsValid() {
     if (this.gmr.getIsValid() == true && this.ramr.getIsValid() == true &&
@@ -1438,9 +1451,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the revenueIsValid attribute of the User object
+   * Gets the revenueIsValid attribute of the User object
    *
-   *@return    The revenueIsValid value
+   * @return The revenueIsValid value
    */
   public boolean getRevenueIsValid() {
     if (this.revenue.getIsValid() == true) {
@@ -1452,10 +1465,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Gmr attribute of the User object
+   * Gets the Gmr attribute of the User object
    *
-   *@return    The Gmr value
-   *@since     1.18
+   * @return The Gmr value
+   * @since 1.18
    */
   public GraphSummaryList getGmr() {
     return gmr;
@@ -1463,10 +1476,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Ramr attribute of the User object
+   * Gets the Ramr attribute of the User object
    *
-   *@return    The Ramr value
-   *@since     1.18
+   * @return The Ramr value
+   * @since 1.18
    */
   public GraphSummaryList getRamr() {
     return ramr;
@@ -1474,10 +1487,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Cgmr attribute of the User object
+   * Gets the Cgmr attribute of the User object
    *
-   *@return    The Cgmr value
-   *@since     1.18
+   * @return The Cgmr value
+   * @since 1.18
    */
   public GraphSummaryList getCgmr() {
     return cgmr;
@@ -1485,10 +1498,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Cramr attribute of the User object
+   * Gets the Cramr attribute of the User object
    *
-   *@return    The Cramr value
-   *@since     1.18
+   * @return The Cramr value
+   * @since 1.18
    */
   public GraphSummaryList getCramr() {
     return cramr;
@@ -1496,10 +1509,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the User object
+   * Gets the Id attribute of the User object
    *
-   *@return    The Id value
-   *@since     1.1
+   * @return The Id value
+   * @since 1.1
    */
   public int getId() {
     return id;
@@ -1507,10 +1520,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Username attribute of the User object
+   * Gets the Username attribute of the User object
    *
-   *@return    The Username value
-   *@since     1.1
+   * @return The Username value
+   * @since 1.1
    */
   public String getUsername() {
     return username;
@@ -1518,10 +1531,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the PreviousUsername attribute of the User object
+   * Gets the PreviousUsername attribute of the User object
    *
-   *@return    The PreviousUsername value
-   *@since     1.28
+   * @return The PreviousUsername value
+   * @since 1.28
    */
   public String getPreviousUsername() {
     return previousUsername;
@@ -1529,10 +1542,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Password attribute of the User object
+   * Gets the Password attribute of the User object
    *
-   *@return    The Password value
-   *@since     1.1
+   * @return The Password value
+   * @since 1.1
    */
   public String getPassword() {
     return password;
@@ -1540,10 +1553,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the EncryptedPassword attribute of the User object
+   * Gets the EncryptedPassword attribute of the User object
    *
-   *@return    The EncryptedPassword value
-   *@since
+   * @return The EncryptedPassword value
    */
   public String getEncryptedPassword() {
     if (encryptedPassword != null) {
@@ -1555,22 +1567,21 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Password1 attribute of the User object
+   * Gets the Password1 attribute of the User object
    *
-   *@return    The Password1 value
-   *@since     1.1
+   * @return The Password1 value
+   * @since 1.1
    */
   public String getPassword1() {
     return password1;
   }
 
 
-
   /**
-   *  Gets the Password2 attribute of the User object
+   * Gets the Password2 attribute of the User object
    *
-   *@return    The Password2 value
-   *@since     1.1
+   * @return The Password2 value
+   * @since 1.1
    */
   public String getPassword2() {
     return password2;
@@ -1578,10 +1589,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the ContactId attribute of the User object
+   * Gets the ContactId attribute of the User object
    *
-   *@return    The ContactId value
-   *@since     1.1
+   * @return The ContactId value
+   * @since 1.1
    */
   public int getContactId() {
     return contactId;
@@ -1589,10 +1600,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the RoleId attribute of the User object
+   * Gets the RoleId attribute of the User object
    *
-   *@return    The RoleId value
-   *@since     1.1
+   * @return The RoleId value
+   * @since 1.1
    */
   public int getRoleId() {
     return roleId;
@@ -1600,10 +1611,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the managerId attribute of the User object
+   * Gets the managerId attribute of the User object
    *
-   *@return    The manager value
-   *@since     1.1
+   * @return The manager value
+   * @since 1.1
    */
   public int getManagerId() {
     return managerId;
@@ -1611,10 +1622,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Role attribute of the User object
+   * Gets the Role attribute of the User object
    *
-   *@return    The Role value
-   *@since     1.11
+   * @return The Role value
+   * @since 1.11
    */
   public String getRole() {
     return role;
@@ -1622,10 +1633,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the User object
+   * Gets the EnteredBy attribute of the User object
    *
-   *@return    The EnteredBy value
-   *@since     1.1
+   * @return The EnteredBy value
+   * @since 1.1
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1633,10 +1644,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Ip attribute of the User object
+   * Gets the Ip attribute of the User object
    *
-   *@return    The Ip value
-   *@since
+   * @return The Ip value
    */
   public String getIp() {
     return ip;
@@ -1644,10 +1654,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the TimeZone attribute of the User object
+   * Gets the TimeZone attribute of the User object
    *
-   *@return    The TimeZone value
-   *@since
+   * @return The TimeZone value
    */
   public String getTimeZone() {
     return timeZone;
@@ -1655,9 +1664,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneActual attribute of the User object
+   * Gets the timeZoneActual attribute of the User object
    *
-   *@return    The timeZoneActual value
+   * @return The timeZoneActual value
    */
   public TimeZone getTimeZoneActual() {
     TimeZone tZone = Calendar.getInstance().getTimeZone();
@@ -1669,9 +1678,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the currency attribute of the User object
+   * Gets the currency attribute of the User object
    *
-   *@return    The currency value
+   * @return The currency value
    */
   public String getCurrency() {
     return currency;
@@ -1679,9 +1688,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the currency attribute of the User object
+   * Sets the currency attribute of the User object
    *
-   *@param  tmp  The new currency value
+   * @param tmp The new currency value
    */
   public void setCurrency(String tmp) {
     this.currency = tmp;
@@ -1689,9 +1698,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the language attribute of the User object
+   * Gets the language attribute of the User object
    *
-   *@return    The language value
+   * @return The language value
    */
   public String getLanguage() {
     return language;
@@ -1699,9 +1708,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the language and locale attributes of the User object
+   * Sets the language and locale attributes of the User object
    *
-   *@param  tmp  The new language value
+   * @param tmp The new language value
    */
   public void setLanguage(String tmp) {
     this.language = tmp;
@@ -1713,11 +1722,14 @@ public class User extends GenericBean {
           locale = new Locale(language.substring(0, 2), "");
           break;
         case 5:
-          locale = new Locale(language.substring(0, 2), language.substring(3, 5));
+          locale = new Locale(
+              language.substring(0, 2), language.substring(3, 5));
           break;
         case 10:
           // fr_FR_EURO
-          locale = new Locale(language.substring(0, 2), language.substring(3, 5), language.substring(6));
+          locale = new Locale(
+              language.substring(0, 2), language.substring(3, 5), language.substring(
+                  6));
           break;
         default:
           locale = Locale.getDefault();
@@ -1728,9 +1740,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the locale attribute of the User object
+   * Gets the locale attribute of the User object
    *
-   *@return    The locale value
+   * @return The locale value
    */
   public Locale getLocale() {
     return locale;
@@ -1738,9 +1750,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the locale attribute of the User object
+   * Sets the locale attribute of the User object
    *
-   *@param  tmp  The new locale value
+   * @param tmp The new locale value
    */
   public void setLocale(Locale tmp) {
     this.locale = tmp;
@@ -1748,12 +1760,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the FullChildList attribute of the User object
+   * Gets the FullChildList attribute of the User object
    *
-   *@param  inList       Description of Parameter
-   *@param  currentList  Description of Parameter
-   *@return              The FullChildList value
-   *@since               1.23
+   * @param inList      Description of Parameter
+   * @param currentList Description of Parameter
+   * @return The FullChildList value
+   * @since 1.23
    */
   public UserList getFullChildList(UserList inList, UserList currentList) {
     if (inList != null) {
@@ -1773,10 +1785,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the ShortChildList attribute of the User object
+   * Gets the ShortChildList attribute of the User object
    *
-   *@return    The ShortChildList value
-   *@since     1.20
+   * @return The ShortChildList value
+   * @since 1.20
    */
   public UserList getShortChildList() {
     return this.childUsers;
@@ -1784,18 +1796,19 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Child attribute of the User object by navigating through the
-   *  children.
+   * Gets the Child attribute of the User object by navigating through the
+   * children.
    *
-   *@param  childId  Description of Parameter
-   *@return          The Child value
-   *@since           1.30
+   * @param childId Description of Parameter
+   * @return The Child value
+   * @since 1.30
    */
   public User getChild(int childId) {
     UserList shortChildList = this.getShortChildList();
     if (shortChildList != null) {
       //System.out.println("User-> Child List Size: " + shortChildList.size());
-      UserList fullChildList = this.getFullChildList(shortChildList, new UserList());
+      UserList fullChildList = this.getFullChildList(
+          shortChildList, new UserList());
       Iterator i = fullChildList.iterator();
       while (i.hasNext()) {
         User childRecord = (User) i.next();
@@ -1809,10 +1822,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the User object
+   * Gets the ModifiedBy attribute of the User object
    *
-   *@return    The ModifiedBy value
-   *@since     1.1
+   * @return The ModifiedBy value
+   * @since 1.1
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1820,10 +1833,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the User object
+   * Gets the Enabled attribute of the User object
    *
-   *@return    The Enabled value
-   *@since     1.1
+   * @return The Enabled value
+   * @since 1.1
    */
   public boolean getEnabled() {
     return enabled;
@@ -1831,10 +1844,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Geentuhe Contact attribute of the User object
+   * Geentuhe Contact attribute of the User object
    *
-   *@return    The Contact value
-   *@since     1.1
+   * @return The Contact value
+   * @since 1.1
    */
   public Contact getContact() {
     return contact;
@@ -1842,10 +1855,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the ManagerUser attribute of the User object
+   * Gets the ManagerUser attribute of the User object
    *
-   *@return    The ManagerUser value
-   *@since     1.17
+   * @return The ManagerUser value
+   * @since 1.17
    */
   public User getManagerUser() {
     return managerUser;
@@ -1853,9 +1866,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the roleType attribute of the User object
+   * Gets the roleType attribute of the User object
    *
-   *@return    The roleType value
+   * @return The roleType value
    */
   public int getRoleType() {
     return roleType;
@@ -1863,11 +1876,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Returns whether this user is above the specified userId. If the specified
-   *  userId is a child of this user, returns true.
+   * Returns whether this user is above the specified userId. If the specified
+   * userId is a child of this user, returns true.
    *
-   *@param  userId  Description of Parameter
-   *@return         The managerOf value
+   * @param userId Description of Parameter
+   * @return The managerOf value
    */
   public boolean isManagerOf(int userId) {
     return (this.getChild(userId) != null);
@@ -1875,10 +1888,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the opportunityLock to true, causing any other requests to this
-   *  method to block until released.
+   * Sets the opportunityLock to true, causing any other requests to this
+   * method to block until released.
    *
-   *@since    1.19
+   * @since 1.19
    */
   public void doOpportunityLock() {
     while (opportunityLock == true) {
@@ -1892,7 +1905,7 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void doRevenueLock() {
     while (revenueLock == true) {
@@ -1906,10 +1919,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the opportunityLock to false, allowing any waiting requests to try
-   *  and lock it.
+   * Sets the opportunityLock to false, allowing any waiting requests to try
+   * and lock it.
    *
-   *@since    1.19
+   * @since 1.19
    */
   public void doOpportunityUnlock() {
     this.opportunityLock = false;
@@ -1917,7 +1930,7 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void doRevenueUnlock() {
     this.revenueLock = false;
@@ -1925,14 +1938,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@param  currPass          Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db       Description of Parameter
+   * @param context  Description of Parameter
+   * @param currPass Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int updatePassword(Connection db, ActionContext context, String currPass) throws SQLException {
     if (!isValidChangePass(context, currPass)) {
@@ -1963,21 +1975,21 @@ public class User extends GenericBean {
 
 
   /**
-   *  Checks to see if the user entered password is correct.
-   *  If correct, then a webdav encrypted password is generated and stored
+   * Checks to see if the user entered password is correct. If correct, then a
+   * webdav encrypted password is generated and stored
    *
-   *@param  db                Description of the Parameter
-   *@param  username          Description of the Parameter
-   *@param  currPass          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pwd Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public int activateWebdav(Connection db, String username, String currPass) throws SQLException {
-    if (!(this.getEncryptedPassword().equals(currPass)) || password == null || password.trim().equals("")) {
-      errors.put("passwordError", "Incorrect value for current password");
-      return -1;
-    } else {
-      int resultCount = -1;
+  public void checkWebdavAccess(Connection db, String pwd) throws SQLException {
+    String tmpPwd = encryptWebdavPassword(username, pwd);
+    if (!tmpPwd.equals(webdavPassword)) {
+      //Existing webdav password is no longer valid. generate a new webdav password and
+      //update the user's webdav password
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("User-> Generating a new webdav password");
+      }
       if (this.getId() == -1) {
         throw new SQLException("User ID was not specified");
       }
@@ -1990,22 +2002,24 @@ public class User extends GenericBean {
           "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
-      pst.setString(++i, encryptWebdavPassword(username, password));
+      pst.setString(++i, tmpPwd);
       pst.setBoolean(++i, this.getHidden());
       pst.setInt(++i, getId());
-      resultCount = pst.executeUpdate();
+      pst.executeUpdate();
+
+      this.setWebdavPassword(tmpPwd);
+
       pst.close();
-      return resultCount;
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int select(Connection db) throws SQLException {
     buildRecord(db, this.id);
@@ -2023,11 +2037,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean doCommit = false;
@@ -2056,10 +2070,14 @@ public class User extends GenericBean {
       checkHidden();
       //Insert the user
       StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "access_user_id_seq");
       sql.append(
           "INSERT INTO access " +
           "(username, password, contact_id, alias, " +
           "manager_id, role_id, expires, ");
+      if (id > -1) {
+        sql.append("user_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2076,10 +2094,13 @@ public class User extends GenericBean {
         sql.append("currency, ");
       }
       if (language != null) {
-        sql.append("language, ");
+        sql.append("\"language\", ");
       }
       sql.append("enteredBy, modifiedBy, webdav_password, hidden ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -2116,7 +2137,9 @@ public class User extends GenericBean {
       }
       pst.setInt(++i, getRoleId());
       DatabaseUtils.setTimestamp(pst, ++i, this.getExpires());
-
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2144,7 +2167,7 @@ public class User extends GenericBean {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Getting interval value");
       }
-      id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "access_user_id_seq", id);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Updating contact");
       }
@@ -2178,11 +2201,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updatePortalUser(Connection db) throws SQLException {
 
@@ -2204,7 +2227,8 @@ public class User extends GenericBean {
       sql.append("password = ?,");
     }
 
-    sql.append("role_id = ?, hidden = ?, " +
+    sql.append(
+        "role_id = ?, hidden = ?, " +
         "modifiedBy = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE username = ? " +
@@ -2232,13 +2256,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Inserts the current user record into the database
+   * Inserts the current user record into the database
    *
-   *@param  db             Description of Parameter
-   *@param  context        Description of Parameter
-   *@return                Description of the Returned Value
-   *@exception  Exception  Description of the Exception
-   *@since                 1.1
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws Exception Description of the Exception
+   * @since 1.1
    */
   public boolean insert(Connection db, ActionContext context) throws Exception {
     if (!isValid(db, context)) {
@@ -2249,14 +2273,14 @@ public class User extends GenericBean {
 
 
   /**
-   *  Deletes the current user record
+   * Deletes the current user record
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
-  public boolean delete(Connection db) throws SQLException {
+  public boolean disable(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified.");
     }
@@ -2282,11 +2306,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean enable(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2313,11 +2337,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  This method builds are extra data for a user... Children Users, etc.
+   * This method builds are extra data for a user... Children Users, etc.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.12
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.12
    */
   public void buildResources(Connection db) throws SQLException {
     if (buildContact || buildHierarchy) {
@@ -2336,11 +2360,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.18
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.18
    */
   public void updateLogin(Connection db) throws SQLException {
     if (this.id > -1) {
@@ -2362,10 +2386,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void insertLogRecord(Connection db) throws SQLException {
     AccessLog thisLog = new AccessLog();
@@ -2377,17 +2401,17 @@ public class User extends GenericBean {
 
 
   /**
-   *  Updates just the user settings
+   * Updates just the user settings
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateSettings(Connection db) throws SQLException {
     if (this.id > -1) {
       checkHidden();
       String sql =
           "UPDATE access " +
-          "SET timezone = ?, currency = ?, language = ?, hidden = ? " +
+          "SET timezone = ?, currency = ?, \"language\" = ?, hidden = ? " +
           "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.timeZone);
@@ -2402,12 +2426,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  userId            Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.10
+   * @param db     Description of Parameter
+   * @param userId Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.10
    */
   public void buildRecord(Connection db, int userId) throws SQLException {
     PreparedStatement pst = null;
@@ -2422,20 +2446,20 @@ public class User extends GenericBean {
         "a.enabled as access_enabled, a.assistant, " +
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
-        "a.currency, a.language, a.webdav_password, a.hidden as hidden, " +
-        "r.role, r.role_type, " +
+        "a.currency, a.\"language\", a.webdav_password, a.hidden as hidden, " +
+        "r.\"role\" AS systemrole, r.role_type, " +
         "m_usr.enabled as mgr_enabled, " +
         "c.* " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
-        "LEFT JOIN role r ON (a.role_id = r.role_id) " +
+        "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
         "WHERE a.user_id > -1 ");
     if (userId > -1) {
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
-          "AND lower(a.username) = ? " +
+          "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
           "AND a.password = ? " +
           "AND a.enabled = ? ");
     }
@@ -2462,12 +2486,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  year              Description of the Parameter
-   *@param  type              Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db   Description of the Parameter
+   * @param year Description of the Parameter
+   * @param type Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -2494,10 +2518,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the grossPipelineCurrency attribute of the User object
+   * Gets the grossPipelineCurrency attribute of the User object
    *
-   *@param  divisor  Description of the Parameter
-   *@return          The grossPipelineCurrency value
+   * @param divisor Description of the Parameter
+   * @return The grossPipelineCurrency value
    */
   public double getGrossPipeline(int divisor) {
     return (java.lang.Math.round(pipelineValue) / divisor);
@@ -2505,10 +2529,10 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildGrossPipelineValue(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -2528,16 +2552,16 @@ public class User extends GenericBean {
 
 
   /**
-   *  Method added in for SSS and other ASP customers newPassword: Updates the
-   *  User's password with a new one. Does not verify the current one since this
-   *  method is intended for those who have forgotten their password and need a
-   *  new one.
+   * Method added in for SSS and other ASP customers newPassword: Updates the
+   * User's password with a new one. Does not verify the current one since this
+   * method is intended for those who have forgotten their password and need a
+   * new one.
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public int newPassword(Connection db, ActionContext context) throws SQLException {
     int resultCount = -1;
@@ -2552,7 +2576,9 @@ public class User extends GenericBean {
         "UPDATE access " +
         "SET password = ?, hidden = ? ");
     if (modifiedBy > -1) {
-      sql.append(", modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+      sql.append(
+          ", modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(
+              db) + " ");
     }
     sql.append(" WHERE user_id = ? ");
     int i = 0;
@@ -2571,19 +2597,21 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the Valid attribute of the User object
+   * Gets the Valid attribute of the User object
    *
-   *@param  db             Description of Parameter
-   *@param  context        Description of Parameter
-   *@return                The Valid value
-   *@exception  Exception  Description of the Exception
-   *@since                 1.12
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return The Valid value
+   * @throws Exception Description of the Exception
+   * @since 1.12
    */
   protected boolean isValid(Connection db, ActionContext context) throws Exception {
     isValidNoPass(db, context);
 
-    if (contactId < 1 && (contact == null || !ObjectValidator.validate(null, db, contact))) {
-      errors.put("contactIdError", "Contact needs to be selected or newly created first");
+    if (contactId < 1 && (contact == null || !ObjectValidator.validate(
+        null, db, contact))) {
+      errors.put(
+          "contactIdError", "Contact needs to be selected or newly created first");
     }
 
     if (password1 == null || password1.trim().equals("")) {
@@ -2594,10 +2622,13 @@ public class User extends GenericBean {
       errors.put("password2Error", "Verification password does not match");
     }
 
-    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    Timestamp currentTime = new Timestamp(
+        Calendar.getInstance().getTimeInMillis());
     if (hidden && expires != null && currentTime.before(expires) && enabled) {
-      errors.put("expiresError", "The user cannot be hidden when the user is enabled and has not expired.");
-      errors.put("enabledError", "The user cannot be hidden when the user is enabled and has not expired.");
+      errors.put(
+          "expiresError", "The user cannot be hidden when the user is enabled and has not expired.");
+      errors.put(
+          "enabledError", "The user cannot be hidden when the user is enabled and has not expired.");
     }
 
     if (hasErrors()) {
@@ -2609,16 +2640,16 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the ValidChangePass attribute of the User object
+   * Gets the ValidChangePass attribute of the User object
    *
-   *@param  context      Description of Parameter
-   *@param  currentPass  Description of Parameter
-   *@return              The ValidChangePass value
-   *@since
+   * @param context     Description of Parameter
+   * @param currentPass Description of Parameter
+   * @return The ValidChangePass value
    */
   protected boolean isValidChangePass(ActionContext context, String currentPass) {
 
-    if (!(this.getEncryptedPassword().equals(currentPass)) || password == null || password.trim().equals("")) {
+    if (!(this.getEncryptedPassword().equals(currentPass)) || password == null || password.trim().equals(
+        "")) {
       errors.put("passwordError", "Incorrect value for current password");
     }
 
@@ -2639,13 +2670,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the ValidNoPass attribute of the User object
+   * Gets the ValidNoPass attribute of the User object
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   The ValidNoPass value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.27
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return The ValidNoPass value
+   * @throws SQLException Description of Exception
+   * @since 1.27
    */
   protected boolean isValidNoPass(Connection db, ActionContext context) throws SQLException {
 
@@ -2668,8 +2699,10 @@ public class User extends GenericBean {
         errors.put("managerIdError", "User cannot report to self");
       } else {
         //Check 2: User cannot report to someone already beneath them
-        ConnectionElement ce = (ConnectionElement) context.getRequest().getSession().getAttribute("ConnectionElement");
-        SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+        ConnectionElement ce = (ConnectionElement) context.getRequest().getSession().getAttribute(
+            "ConnectionElement");
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
         User updatedUser = systemStatus.getHierarchyList().getUser(id);
         User testChild = updatedUser.getChild(managerId);
 
@@ -2687,7 +2720,8 @@ public class User extends GenericBean {
           names.push(updatedUser.getContact().getNameFirstLast());
           //Now work back down and show the hierarchy
           StringBuffer sb = new StringBuffer();
-          sb.append("Cannot create a circular hierarchy, review current hierarchy:\r\n");
+          sb.append(
+              "Cannot create a circular hierarchy, review current hierarchy:\r\n");
           while (!names.empty()) {
             sb.append((String) names.pop());
             if (!names.empty()) {
@@ -2708,11 +2742,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Populates the current user record from a ResultSet
+   * Populates the current user record from a ResultSet
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //access table
@@ -2742,7 +2776,7 @@ public class User extends GenericBean {
     this.setWebdavPassword(rs.getString("webdav_password"));
     hidden = rs.getBoolean("hidden");
     //role table
-    this.setRole(rs.getString("role"));
+    this.setRole(rs.getString("systemrole"));
     roleType = DatabaseUtils.getInt(rs, "role_type");
     //user table (manager)
     if (managerId > -1) {
@@ -2754,22 +2788,24 @@ public class User extends GenericBean {
 
 
   /**
-   *  Checks to see if the user is a duplicate in the database
+   * Checks to see if the user is a duplicate in the database
    *
-   *@param  db                Description of Parameter
-   *@return                   The Duplicate value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.11
+   * @param db Description of Parameter
+   * @return The Duplicate value
+   * @throws SQLException Description of Exception
+   * @since 1.11
    */
   private boolean isDuplicate(Connection db) throws SQLException {
     boolean duplicate = false;
     if (previousUsername != null && previousUsername.equals(username)) {
       return false;
-    }
+    }    
+    //finding if an enabled user exists
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
-        "WHERE lower(username) = lower(?) " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = " + DatabaseUtils.toLowerCase(
+            db) + "(?) " +
         "AND enabled = ? ");
     pst.setString(1, getUsername());
     pst.setBoolean(2, true);
@@ -2779,17 +2815,39 @@ public class User extends GenericBean {
     }
     rs.close();
     pst.close();
+    
+    //finding if a disabled user exists whose contact is enabled
+    //  return true if exists as such a user can be enabled
+    pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM access, contact " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = " + DatabaseUtils.toLowerCase(
+            db) + "(?) " +
+        "AND access.enabled = ? " +
+        "AND contact.user_id = access.user_id " +
+        "AND contact.enabled = ? ");
+    int i = 0;
+    pst.setString(++i, getUsername());
+    pst.setBoolean(++i, false);
+    pst.setBoolean(++i, true);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      duplicate = true;
+    }
+    rs.close();
+    pst.close();
+
     return duplicate;
   }
 
 
   /**
-   *  Gets the contactId attribute of the User class
+   * Gets the contactId attribute of the User class
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   The contactId value
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return The contactId value
+   * @throws SQLException Description of the Exception
    */
   public static int getContactId(Connection db, int userId) throws SQLException {
     int contactId = -1;
@@ -2813,11 +2871,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Updates the list of users that this user manages.
+   * Updates the list of users that this user manages.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.28
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.28
    */
   private void buildChildren(Connection db) throws SQLException {
     childUsers = new UserList();
@@ -2832,13 +2890,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Updates the current user record
+   * Updates the current user record
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     int i = -1;
@@ -2848,11 +2906,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     return update(db, null, true);
@@ -2860,14 +2918,14 @@ public class User extends GenericBean {
 
 
   /**
-   *  Updates the current user record, this method is used internally
+   * Updates the current user record, this method is used internally
    *
-   *@param  db                Description of Parameter
-   *@param  override          Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db       Description of Parameter
+   * @param override Description of Parameter
+   * @param context  Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   private int update(Connection db, ActionContext context, boolean override) throws SQLException {
     int resultCount = 0;
@@ -2885,6 +2943,7 @@ public class User extends GenericBean {
         "SET username = ?, manager_id = ?, role_id = ?, expires = ?, ");
     if (password1 != null) {
       sql.append("password = ?, ");
+      sql.append("webdav_password = ?, ");
     }
     if (enteredBy > -1) {
       sql.append("enteredby = ?, ");
@@ -2917,6 +2976,7 @@ public class User extends GenericBean {
     }
     if (password1 != null) {
       pst.setString(++i, encryptPassword(password1));
+      pst.setString(++i, encryptWebdavPassword(username, password1));
     }
     if (enteredBy > -1) {
       pst.setInt(++i, enteredBy);
@@ -2941,12 +3001,12 @@ public class User extends GenericBean {
 
 
   /**
-   *  Hashes a password... the resulting encrypted password cannot be decrypted
-   *  since this is one-way.
+   * Hashes a password... the resulting encrypted password cannot be decrypted
+   * since this is one-way.
    *
-   *@param  tmp  Description of Parameter
-   *@return      Description of the Returned Value
-   *@since       1.1
+   * @param tmp Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   private String encryptPassword(String tmp) {
     return PasswordHash.encrypt(tmp);
@@ -2954,42 +3014,58 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * In the Digest Authentication the client sends an encrypted request-digest
+   * to the server which is made of 3 components. The server will need to
+   * generate a similar digest and will need to compare it with the
+   * request-digest to see if there is a match so as to validate the request.
+   * The first component in the digest is an encrypted value computed by the
+   * following hash<p>
+   * <p/>
+   * First component = H [username + ":" + realm + ":" + password]<p>
+   * <p/>
+   * Since the password needs to be clear text, we determine the first
+   * component only when a user is added or updated and store this as the
+   * webdav_password field.
    *
-   *@param  username  Description of the Parameter
-   *@param  password  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param username Description of the Parameter
+   * @param password Description of the Parameter
+   * @return Description of the Return Value
    */
   private String encryptWebdavPassword(String username, String password) {
-    return PasswordHash.encrypt(username + ":" + WebdavServlet.CFS_USER_REALM + ":" + password);
+    if (username != null && password != null) {
+      return PasswordHash.encrypt(
+          username + ":" + WebdavServlet.CFS_USER_REALM + ":" + password);
+    }
+    return null;
   }
 
 
   /**
-   *  Returns a comma delimited string of all users in this user's hierarchy for
-   *  querying records.
+   * Returns a comma delimited string of all users in this user's hierarchy for
+   * querying records.
    *
-   *@return    The idRange value
+   * @return The idRange value
    */
   public String getIdRange() {
     UserList shortChildList = this.getShortChildList();
-    UserList fullChildList = this.getFullChildList(shortChildList, new UserList());
+    UserList fullChildList = this.getFullChildList(
+        shortChildList, new UserList());
     return (fullChildList.getUserListIds(id));
   }
 
 
   /**
-   *  Gets the numberOfSimilarUsernames attribute of the User class
+   * Gets the numberOfSimilarUsernames attribute of the User class
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpUsername       Description of the Parameter
-   *@return                   The numberOfSimilarUsernames value
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param tmpUsername Description of the Parameter
+   * @return The numberOfSimilarUsernames value
+   * @throws SQLException Description of the Exception
    */
   public static int getNumberOfSimilarUsernames(Connection db, String tmpUsername) throws SQLException {
     ResultSet rs = null;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) as no " +
+        "SELECT count(*) as recordcount " +
         "FROM access " +
         "WHERE username LIKE (?)");
     int i = 0;
@@ -2997,7 +3073,7 @@ public class User extends GenericBean {
     rs = pst.executeQuery();
     int no = 0;
     if (rs.next()) {
-      no = rs.getInt("no");
+      no = rs.getInt("recordcount");
     }
     rs.close();
     pst.close();
@@ -3006,9 +3082,9 @@ public class User extends GenericBean {
 
 
   /**
-   *  Returns the names of the fields that must be adjusted for time
+   * Returns the names of the fields that must be adjusted for time
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -3018,19 +3094,19 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the idByEmailAddress attribute of the User class
+   * Gets the idByEmailAddress attribute of the User class
    *
-   *@param  db                Description of the Parameter
-   *@param  email             Description of the Parameter
-   *@return                   The idByEmailAddress value
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param email Description of the Parameter
+   * @return The idByEmailAddress value
+   * @throws SQLException Description of the Exception
    */
   public static int getIdByEmailAddress(Connection db, String email) throws SQLException {
     int userId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT user_id " +
         "FROM contact c, contact_emailaddress e " +
-        "WHERE lower(e.email) = ? " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(e.email) = ? " +
         "AND c.contact_id = e.contact_id " +
         "AND user_id IS NOT NULL " +
         "AND user_id > 0 ");
@@ -3046,10 +3122,11 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   private void checkHidden() {
-    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    Timestamp currentTime = new Timestamp(
+        Calendar.getInstance().getTimeInMillis());
     if (this.getExpires() != null && currentTime.before(this.getExpires()) && this.getEnabled()) {
       this.setHidden(false);
     } else if (this.getExpires() == null && this.getEnabled()) {
@@ -3059,12 +3136,13 @@ public class User extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  enabledValue  Description of the Parameter
+   * @param enabledValue Description of the Parameter
    */
   private void checkHidden(boolean enabledValue) {
-    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    Timestamp currentTime = new Timestamp(
+        Calendar.getInstance().getTimeInMillis());
     if (this.getExpires() != null && currentTime.before(this.getExpires()) && enabledValue) {
       this.setHidden(false);
     } else if (this.getExpires() == null && enabledValue) {

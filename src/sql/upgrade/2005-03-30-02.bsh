@@ -1,0 +1,53 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+// Database upgrade v3.0 (2005-03-30)
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.*;
+
+print("Inserting new lookup tables...");
+
+PreparedStatement pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+
+void insertLookup(Connection db, int moduleId, int lookupId, String tableName, int level, String description, int categoryId) {
+  pst.setInt(1, moduleId);
+  pst.setInt(2, categoryId);
+  pst.setInt(3, lookupId);
+  pst.setInt(4, level);
+  pst.setString(5, tableName);
+  pst.setString(6, "lookupList");
+  pst.setString(7, description);
+  pst.executeUpdate();
+}
+
+int leadsId = PermissionCategory.lookupId(db, "Leads");
+insertLookup(db, leadsId, 228051102, "lookup_contact_rating", 10, "Contact Rating", 228051100);
+insertLookup(db, leadsId, 228051103, "lookup_contact_source", 20, "Contact Source", 228051100);
+
+int productCatalogId = PermissionCategory.lookupId(db, "Product Catalog");
+insertLookup(db, productCatalogId, 1017040901, "lookup_product_type", 10, "Product Types", 330041409);
+insertLookup(db, productCatalogId, 1017040902, "lookup_product_format", 20, "Product Format Types", 330041409);
+insertLookup(db, productCatalogId, 1017040903, "lookup_product_shipping", 30, "Product Shipping Types", 330041409);
+insertLookup(db, productCatalogId, 1017040904, "lookup_product_ship_time", 40, "Product Shipping Times", 330041409);
+insertLookup(db, productCatalogId, 1017040905, "lookup_product_category_type", 50, "Product Category Types", 330041409);
+insertLookup(db, productCatalogId, 1017040906, "lookup_product_tax", 60, "Product Tax Types", 330041409);
+insertLookup(db, productCatalogId, 1017040907, "lookup_currency", 70, "Currency Types", 330041409);
+insertLookup(db, productCatalogId, 1017040908, "lookup_recurring_type", 80, "Price Recurring Types", 330041409);
+insertLookup(db, productCatalogId, 1017040909, "lookup_product_manufacturer", 90, "Product Manufacturer Types", 330041409);
+
+int quotesId = PermissionCategory.lookupId(db, "Quotes");
+insertLookup(db, quotesId, 1123041000, "lookup_quote_status", 10, "Quote Status", 420041017);
+insertLookup(db, quotesId, 1123041003, "lookup_quote_source", 40, "Quote Source", 420041017);
+insertLookup(db, quotesId, 1123041004, "lookup_quote_delivery", 50, "Quote Delivery", 420041017);
+insertLookup(db, quotesId, 1123041005, "lookup_quote_condition", 60, "Quote Terms & Conditions", 420041017);
+insertLookup(db, quotesId, 1123041006, "lookup_quote_remarks", 70, "Quote Remarks", 420041017);
+
+int accountsId = PermissionCategory.lookupId(db, "Accounts");
+insertLookup(db, accountsId, 302051030, "lookup_industry", 70, "Industry Types", 1);
+
+int contactsId = PermissionCategory.lookupId(db, "Contacts");
+insertLookup(db, contactsId, 111051354, "lookup_textmessage_types", 50, "Text Messaging Types", 2);
+
+pst.close();

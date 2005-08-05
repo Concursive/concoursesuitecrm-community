@@ -15,23 +15,25 @@
  */
 package org.aspcfs.modules.mycfs.actions;
 
-import org.aspcfs.modules.actions.CFSModule;
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.actions.CFSModule;
 
 /**
- *  Layout preference actions
+ * Layout preference actions
  *
- *@author     matt rajkowski
- *@created    March 13, 2005
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created March 13, 2005
  */
 public final class Layout extends CFSModule {
 
   public String executeCommandResizeGlobalItemsPane(ActionContext context) {
     if ("show".equals(context.getRequest().getParameter("view"))) {
-      context.getRequest().getSession().setAttribute("globalItemsPaneState", "SHOW");
+      context.getRequest().getSession().setAttribute(
+          "globalItemsPaneState", "SHOW");
     } else {
-      context.getRequest().getSession().setAttribute("globalItemsPaneState", "HIDE");
+      context.getRequest().getSession().setAttribute(
+          "globalItemsPaneState", "HIDE");
     }
     return ("ResizeGlobalItemsPaneOK");
   }

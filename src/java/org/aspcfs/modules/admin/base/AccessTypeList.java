@@ -15,36 +15,40 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import org.aspcfs.utils.web.LookupList;
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Represents a list of access types
+ * Represents a list of access types
  *
- *@author     Mathur
- *@created    June 25, 2003
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created June 25, 2003
  */
 public class AccessTypeList extends LookupList {
   int linkModuleId = -1;
 
 
   /**
-   *Constructor for the AccessTypeList object
+   * Constructor for the AccessTypeList object
    */
-  public AccessTypeList() { }
+  public AccessTypeList() {
+  }
 
 
   /**
-   *Constructor for the AccessTypeList object
+   * Constructor for the AccessTypeList object
    *
-   *@param  db                Description of the Parameter
-   *@param  linkModuleId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkModuleId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AccessTypeList(Connection db, int linkModuleId) throws SQLException {
     queryRecord(db, linkModuleId);
@@ -52,11 +56,11 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  linkModuleId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkModuleId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int linkModuleId) throws SQLException {
     this.linkModuleId = linkModuleId;
@@ -65,9 +69,9 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the AccessTypeList object
+   * Sets the linkModuleId attribute of the AccessTypeList object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -75,9 +79,9 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the AccessTypeList object
+   * Sets the linkModuleId attribute of the AccessTypeList object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -85,9 +89,9 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Gets the linkModuleId attribute of the AccessTypeList object
+   * Gets the linkModuleId attribute of the AccessTypeList object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -95,10 +99,10 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Builds the Access Type list
+   * Builds the Access Type list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -128,8 +132,9 @@ public class AccessTypeList extends LookupList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
-            "AND lower(description) < ? ");
+        pst = db.prepareStatement(
+            sqlCount.toString() + sqlFilter.toString() +
+            "AND " + DatabaseUtils.toLowerCase(db) + "(description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -145,7 +150,7 @@ public class AccessTypeList extends LookupList {
       pagedListInfo.setDefaultSort("description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY level,description ");
+      sqlOrder.append("ORDER BY \"level\",description ");
     }
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -156,20 +161,14 @@ public class AccessTypeList extends LookupList {
         "* " +
         "FROM lookup_access_types " +
         "WHERE code > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       AccessType thisType = new AccessType(rs);
       this.add(thisType);
     }
@@ -181,9 +180,9 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Creates filters for the building the list
+   * Creates filters for the building the list
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -207,11 +206,11 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Prepares and sets values for filters created by the createFilter method
+   * Prepares and sets values for filters created by the createFilter method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -234,9 +233,9 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Gets the default item from the Access Types
+   * Gets the default item from the Access Types
    *
-   *@return    The defaultItem value
+   * @return The defaultItem value
    */
   public int getDefaultItem() {
     Iterator i = this.iterator();
@@ -251,10 +250,10 @@ public class AccessTypeList extends LookupList {
 
 
   /**
-   *  Gets the code for a specified rule in a access list
+   * Gets the code for a specified rule in a access list
    *
-   *@param  ruleId  Description of the Parameter
-   *@return         The code value
+   * @param ruleId Description of the Parameter
+   * @return The code value
    */
   public int getCode(int ruleId) {
     Iterator i = this.iterator();

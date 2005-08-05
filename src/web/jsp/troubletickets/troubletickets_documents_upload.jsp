@@ -47,6 +47,14 @@
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
   <%@ include file="ticket_header_include.jsp" %>
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+        <% String documentLink = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+        <zeroio:folderHierarchy module="TroubleTickets" link="<%= documentLink %>" showLastLink="false"/>
+      </td>
+    </tr>
+  </table>
   <%@ include file="documents_add_include.jsp" %>
   <p align="center">
     * <dhv:label name="accounts.accounts_documents_upload.LargeFilesUpload">Large files may take a while to upload.</dhv:label><br>

@@ -15,35 +15,35 @@
  */
 package org.aspcfs.modules.help.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 
 /**
- *  List class of TableofContentItem
+ * List class of TableofContentItem
  *
- *@author     kbhoopal
- *@created    November 10, 2003
- *@version    $Id: HelpTableOfContents.java,v 1.8 2003/07/25 21:19:25 kbhoopal
- *      Exp $
+ * @author kbhoopal
+ * @version $Id: HelpTableOfContents.java,v 1.8 2003/07/25 21:19:25 kbhoopal
+ *          Exp $
+ * @created November 10, 2003
  */
 public class HelpTableOfContents extends ArrayList {
 
   /**
-   *  Constructor for the HelpTableOfContents object
+   * Constructor for the HelpTableOfContents object
    */
-  public HelpTableOfContents() { }
+  public HelpTableOfContents() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpTableOfContents(Connection db) throws SQLException {
     int items = -1;
@@ -62,10 +62,10 @@ public class HelpTableOfContents extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  id           Description of the Parameter
-   *@param  contentList  Description of the Parameter
+   * @param id          Description of the Parameter
+   * @param contentList Description of the Parameter
    */
   public void buildChildren(int id, HelpTableOfContents contentList) {
     Iterator i = contentList.iterator();
@@ -79,9 +79,9 @@ public class HelpTableOfContents extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  contentList  Description of the Parameter
+   * @param contentList Description of the Parameter
    */
   public void buildTopLevelList(HelpTableOfContents contentList) {
     Iterator i = contentList.iterator();
@@ -95,10 +95,10 @@ public class HelpTableOfContents extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void buildItemLinks(Connection db) throws SQLException {
     for (int i = 0; i < this.size(); i++) {

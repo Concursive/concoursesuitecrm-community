@@ -15,25 +15,25 @@
  */
 package com.darkhorseventures.framework.servlets;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- *  Description of the Interface
+ * Description of the Interface
  *
- *@author     kevin duffey
- *@author     matt rajkowski
- *@created    June 1, 2001
- *@version    $Id: ControllerHook.java,v 1.2 2003/01/13 14:42:24 mrajkowski Exp
- *      $
+ * @author kevin duffey
+ * @author matt rajkowski
+ * @version $Id: ControllerHook.java,v 1.2 2003/01/13 14:42:24 mrajkowski Exp
+ *          $
+ * @created June 1, 2001
  */
 public interface ControllerHook {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  servlet  Description of the Parameter
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param servlet Description of the Parameter
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public String securityCheck(Servlet servlet, HttpServletRequest request);
 }

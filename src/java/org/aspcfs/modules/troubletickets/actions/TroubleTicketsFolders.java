@@ -15,36 +15,32 @@
  */
 package org.aspcfs.modules.troubletickets.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.troubletickets.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Constants;
-import com.zeroio.webutils.*;
 import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.Iterator;
 
 /**
- *  Web actions for working with custom folder form data
+ * Web actions for working with custom folder form data
  *
- *@author     matt rajkowski
- *@created    November 6, 2003
- *@version    $Id: TroubleTicketsFolders.java,v 1.5 2004/04/01 14:47:43
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: TroubleTicketsFolders.java,v 1.5 2004/04/01 14:47:43
+ *          mrajkowski Exp $
+ * @created November 6, 2003
  */
 public final class TroubleTicketsFolders extends CFSModule {
 
   /**
-   *  Fields: Shows a list of custom field records that are located "within" the
-   *  selected Custom Folder. Also shows the details of a particular Custom
-   *  Field Record when it is selected (details page)
+   * Fields: Shows a list of custom field records that are located "within" the
+   * selected Custom Folder. Also shows the details of a particular Custom
+   * Field Record when it is selected (details page)
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandFields(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -83,18 +79,22 @@ public final class TroubleTicketsFolders extends CFSModule {
       if (Integer.parseInt(selectedCatId) > 0) {
         //See if a specific record has been chosen from the list
         recordId = context.getRequest().getParameter("recId");
-        String recordDeleted = (String) context.getRequest().getAttribute("recordDeleted");
+        String recordDeleted = (String) context.getRequest().getAttribute(
+            "recordDeleted");
         if (recordDeleted != null) {
           recordId = null;
         }
 
         //Now build the specified or default category
-        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+        CustomFieldCategory thisCategory = thisList.getCategory(
+            Integer.parseInt(selectedCatId));
         if (recordId == null && thisCategory.getAllowMultipleRecords()) {
           //The user didn't request a specific record, so show a list
           //of records matching this category that the user can choose from
-          PagedListInfo folderListInfo = this.getPagedListInfo(context, "TicketsFolderInfo");
-          folderListInfo.setLink("TroubleTicketsFolders.do?command=Fields&ticketId=" + ticketId + "&catId=" + selectedCatId);
+          PagedListInfo folderListInfo = this.getPagedListInfo(
+              context, "TicketsFolderInfo");
+          folderListInfo.setLink(
+              "TroubleTicketsFolders.do?command=Fields&ticketId=" + ticketId + "&catId=" + selectedCatId);
 
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.FOLDERS_TICKETS);
@@ -121,7 +121,8 @@ public final class TroubleTicketsFolders extends CFSModule {
           showRecords = false;
 
           if (thisCategory.getRecordId() > -1) {
-            CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+            CustomFieldRecord thisRecord = new CustomFieldRecord(
+                db, thisCategory.getRecordId());
             context.getRequest().setAttribute("Record", thisRecord);
           }
         }
@@ -145,10 +146,10 @@ public final class TroubleTicketsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandFolderList(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -184,11 +185,11 @@ public final class TroubleTicketsFolders extends CFSModule {
 
 
   /**
-   *  AddFolderRecord: Displays the form for inserting a new custom field record
-   *  for the selected Account.
+   * AddFolderRecord: Displays the form for inserting a new custom field record
+   * for the selected Account.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandAddFolderRecord(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -202,8 +203,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
-      String selectedCatId = (String) context.getRequest().getParameter("catId");
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+      String selectedCatId = (String) context.getRequest().getParameter(
+          "catId");
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
           Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisCategory.setLinkItemId(thisTicket.getId());
@@ -219,16 +222,18 @@ public final class TroubleTicketsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "ViewTickets", "Add Folder Record");
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     return ("AddFolderRecordOK");
   }
 
 
   /**
-   *  ModifyFields: Displays the modify form for the selected Custom Field
-   *  Record.
+   * ModifyFields: Displays the modify form for the selected Custom Field
+   * Record.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandModifyFields(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -246,7 +251,8 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
           Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisCategory.setLinkItemId(thisTicket.getId());
@@ -263,6 +269,8 @@ public final class TroubleTicketsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "ViewTickets", "Modify Custom Fields");
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     if (recordId.equals("-1")) {
       return ("AddFolderRecordOK");
     } else {
@@ -272,11 +280,11 @@ public final class TroubleTicketsFolders extends CFSModule {
 
 
   /**
-   *  UpdateFields: Performs the actual update of the selected Custom Field
-   *  Record based on user-submitted information from the modify form.
+   * UpdateFields: Performs the actual update of the selected Custom Field
+   * Record based on user-submitted information from the modify form.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandUpdateFields(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -286,6 +294,8 @@ public final class TroubleTicketsFolders extends CFSModule {
     Ticket thisTicket = null;
     int resultCount = 0;
     boolean isValid = false;
+    context.getRequest().setAttribute(
+        "systemStatus", this.getSystemStatus(context));
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -300,11 +310,13 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
 
-      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      String selectedCatId = (String) context.getRequest().getParameter(
+          "catId");
       String recordId = (String) context.getRequest().getParameter("recId");
 
       context.getRequest().setAttribute("catId", selectedCatId);
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
           Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisCategory.setLinkItemId(thisTicket.getId());
@@ -317,33 +329,38 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisCategory.setModifiedBy(this.getUserId(context));
       if (!thisCategory.getReadOnly()) {
         thisCategory.setCanNotContinue(true);
-        resultCount = thisCategory.update(db);
-        Iterator groups = (Iterator) thisCategory.iterator();
-        isValid = true;
-        while (groups.hasNext()) {
-          CustomFieldGroup group = (CustomFieldGroup) groups.next();
-          Iterator fields = (Iterator) group.iterator();
-          while (fields.hasNext()) {
-            CustomField field = (CustomField) fields.next();
-            field.setValidateData(true);
-            field.setRecordId(thisCategory.getRecordId());
-            isValid = this.validateObject(context, db, field) && isValid;
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          Iterator groups = (Iterator) thisCategory.iterator();
+          while (groups.hasNext()) {
+            CustomFieldGroup group = (CustomFieldGroup) groups.next();
+            Iterator fields = (Iterator) group.iterator();
+            while (fields.hasNext()) {
+              CustomField field = (CustomField) fields.next();
+              field.setValidateData(true);
+              field.setRecordId(thisCategory.getRecordId());
+              isValid = this.validateObject(context, db, field) && isValid;
+            }
           }
         }
-        thisCategory.setCanNotContinue(false);
         if (isValid && resultCount != -1) {
-          resultCount = thisCategory.insertGroup(db, thisCategory.getRecordId());
+          thisCategory.setCanNotContinue(true);
+          resultCount = thisCategory.update(db);
+          thisCategory.setCanNotContinue(false);
+          resultCount = thisCategory.insertGroup(
+              db, thisCategory.getRecordId());
         }
       }
       context.getRequest().setAttribute("Category", thisCategory);
       if (resultCount == -1 || !isValid) {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("TroubleTicketsFolders-> ModifyField validation error");
+          System.out.println(
+              "TroubleTicketsFolders-> ModifyField validation error");
         }
         return ("ModifyFieldsOK");
       } else {
-        thisCategory.buildResources(db);
-        CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+        CustomFieldRecord thisRecord = new CustomFieldRecord(
+            db, thisCategory.getRecordId());
         context.getRequest().setAttribute("Record", thisRecord);
       }
     } catch (Exception e) {
@@ -355,17 +372,18 @@ public final class TroubleTicketsFolders extends CFSModule {
     if (resultCount == 1) {
       return ("UpdateFieldsOK");
     } else {
-      context.getRequest().setAttribute("Error", CFSModule.NOT_UPDATED_MESSAGE);
+      context.getRequest().setAttribute(
+          "Error", CFSModule.NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
   }
 
 
   /**
-   *  InsertFields: Performs the actual insert of a new Custom Field Record.
+   * InsertFields: Performs the actual insert of a new Custom Field Record.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandInsertFields(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -389,9 +407,11 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
 
-      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      String selectedCatId = (String) context.getRequest().getParameter(
+          "catId");
       context.getRequest().setAttribute("catId", selectedCatId);
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
           Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisCategory.setLinkItemId(thisTicket.getId());
@@ -419,17 +439,20 @@ public final class TroubleTicketsFolders extends CFSModule {
         }
         thisCategory.setCanNotContinue(false);
         if (isValid) {
-          resultCode = thisCategory.insertGroup(db, thisCategory.getRecordId());
+          resultCode = thisCategory.insertGroup(
+              db, thisCategory.getRecordId());
         }
       }
       context.getRequest().setAttribute("Category", thisCategory);
       if (resultCode == -1 || !isValid) {
         if (thisCategory.getRecordId() != -1) {
-          CustomFieldRecord record = new CustomFieldRecord(db, thisCategory.getRecordId());
+          CustomFieldRecord record = new CustomFieldRecord(
+              db, thisCategory.getRecordId());
           record.delete(db);
         }
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("TroubleTicketsFolders-> InsertField validation error");
+          System.out.println(
+              "TroubleTicketsFolders-> InsertField validation error");
         }
         return ("AddFolderRecordOK");
       } else {
@@ -446,10 +469,10 @@ public final class TroubleTicketsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteFields(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
@@ -462,9 +485,11 @@ public final class TroubleTicketsFolders extends CFSModule {
       String recordId = context.getRequest().getParameter("recId");
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
           Integer.parseInt(selectedCatId));
-      CustomFieldRecord thisRecord = new CustomFieldRecord(db, Integer.parseInt(recordId));
+      CustomFieldRecord thisRecord = new CustomFieldRecord(
+          db, Integer.parseInt(recordId));
       thisRecord.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisRecord.setLinkItemId(Integer.parseInt(ticketId));
       thisRecord.setCategoryId(Integer.parseInt(selectedCatId));

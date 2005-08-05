@@ -33,6 +33,7 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="../initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -667,7 +668,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -689,7 +690,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -755,7 +756,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -777,7 +778,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -845,7 +846,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -867,7 +868,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -933,7 +934,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -955,7 +956,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -1071,5 +1072,7 @@
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();" />
   </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="statusId" value="<%=OrgDetails.getStatusId()%>">
+  <input type="hidden" name="trashedDate" value="<%=OrgDetails.getTrashedDate()%>">
 </dhv:container>
 </form>

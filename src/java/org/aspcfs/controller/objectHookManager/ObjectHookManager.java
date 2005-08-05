@@ -15,45 +15,49 @@
  */
 package org.aspcfs.controller.objectHookManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import java.sql.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.apps.workFlowManager.*;
-import java.io.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import org.aspcfs.modules.service.base.PacketContext;
-import javax.servlet.ServletContext;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.apps.workFlowManager.BusinessProcessList;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ScheduledEventList;
+import org.aspcfs.apps.workFlowManager.WorkflowManager;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.service.base.PacketContext;
+import org.w3c.dom.Element;
+
+import javax.servlet.ServletContext;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *  Manages hooks within the application and attaches to a WorkflowManager to
- *  execute BusinessProcess objects as defined by ObjectHook objects.
+ * Manages hooks within the application and attaches to a WorkflowManager to
+ * execute BusinessProcess objects as defined by ObjectHook objects.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: ObjectHookManager.java,v 1.9 2003/05/08 13:50:18 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ObjectHookManager.java,v 1.9 2003/05/08 13:50:18 mrajkowski
+ *          Exp $
+ * @created November 11, 2002
  */
 public class ObjectHookManager {
 
   private ObjectHookList hookList = null;
   private BusinessProcessList processList = null;
+  private ScheduledEventList eventList = null;
   private String fileLibraryPath = null;
 
 
   /**
-   *  Constructor for the ObjectHookManager object
+   * Constructor for the ObjectHookManager object
    */
-  public ObjectHookManager() { }
+  public ObjectHookManager() {
+  }
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the ObjectHookManager object
+   * Sets the fileLibraryPath attribute of the ObjectHookManager object
    *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -61,9 +65,9 @@ public class ObjectHookManager {
 
 
   /**
-   *  Gets the hookList attribute of the ObjectHookManager object
+   * Gets the hookList attribute of the ObjectHookManager object
    *
-   *@return    The hookList value
+   * @return The hookList value
    */
   public ObjectHookList getHookList() {
     return hookList;
@@ -71,9 +75,19 @@ public class ObjectHookManager {
 
 
   /**
-   *  Gets the processList attribute of the ObjectHookManager object
+   * Sets the hookList attribute of the ObjectHookManager object
    *
-   *@return    The processList value
+   * @param tmp The new hookList value
+   */
+  public void setHookList(ObjectHookList tmp) {
+    this.hookList = tmp;
+  }
+
+
+  /**
+   * Gets the processList attribute of the ObjectHookManager object
+   *
+   * @return The processList value
    */
   public BusinessProcessList getProcessList() {
     return processList;
@@ -81,93 +95,158 @@ public class ObjectHookManager {
 
 
   /**
-   *  Initializes the list of objects that can be hooked from an XML Element
+   * Sets the processList attribute of the ObjectHookManager object
    *
-   *@param  documentElement  Description of the Parameter
+   * @param tmp The new processList value
    */
-  public void initializeObjectHookList(Element documentElement) {
-    hookList = new ObjectHookList();
-    hookList.parse(documentElement);
+  public void setProcessList(BusinessProcessList tmp) {
+    this.processList = tmp;
   }
 
 
   /**
-   *  Description of the Method
+   * Gets the eventList attribute of the ObjectHookManager object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @return The eventList value
    */
-  public void initializeObjectHookList(Connection db) throws SQLException {
-    hookList = new ObjectHookList();
+  public ScheduledEventList getEventList() {
+    return eventList;
+  }
+
+
+  /**
+   * Sets the eventList attribute of the ObjectHookManager object
+   *
+   * @param tmp The new eventList value
+   */
+  public void setEventList(ScheduledEventList tmp) {
+    this.eventList = tmp;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param documentElement Description of the Parameter
+   */
+  public void initializeObjectHookList(Element documentElement, boolean overwrite, boolean isApplicationType) {
+    if (overwrite) {
+      hookList = new ObjectHookList();
+    }
+    hookList.parse(documentElement, isApplicationType);
+  }
+
+
+  /**
+   * Description of the Method
+   */
+  public void initializeObjectHookList(boolean overwrite) {
+    if (overwrite) {
+      hookList = new ObjectHookList();
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void initializeObjectHookList(Connection db, boolean overwrite) throws SQLException {
+    if (overwrite) {
+      hookList = new ObjectHookList();
+    }
     hookList.buildList(db);
   }
 
 
   /**
-   *  Initializes the list of processes that can be executed, from an XML
-   *  Element
+   * Initializes the list of processes that can be executed, from an XML
+   * Element
    *
-   *@param  documentElement  Description of the Parameter
+   * @param documentElement Description of the Parameter
    */
-  public void initializeBusinessProcessList(Element documentElement) {
-    processList = new BusinessProcessList();
-    processList.parse(documentElement);
+  public void initializeBusinessProcessList(Element documentElement, boolean overwrite, boolean isApplicationType) {
+    if (overwrite) {
+      processList = new BusinessProcessList();
+    }
+    processList.parse(documentElement, isApplicationType);
   }
 
 
   /**
-   *  Initializes the list of processes that can be executed, from a database
+   * Initializes the list of processes that can be executed, from a database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  public void initializeBusinessProcessList(Connection db) throws SQLException {
-    processList = new BusinessProcessList();
+  public void initializeBusinessProcessList(Connection db, boolean overwrite) throws SQLException {
+    if (overwrite) {
+      processList = new BusinessProcessList();
+    }
     processList.buildList(db);
   }
 
 
   /**
-   *  Forwards the request to execute a business process to process(...)
-   *
-   *@param  packetContext   Description of the Parameter
-   *@param  action          Description of the Parameter
-   *@param  previousObject  Description of the Parameter
-   *@param  object          Description of the Parameter
+   * Description of the Method
    */
-  public void process(PacketContext packetContext, int action, Object previousObject, Object object) {
-    process(packetContext.getActionContext(), action, previousObject, object, packetContext.getConnectionPool(), packetContext.getConnectionElement());
+  public void initializeBusinessProcessList(boolean overwrite) {
+    if (overwrite) {
+      processList = new BusinessProcessList();
+    }
   }
 
 
   /**
-   *  Executes a business process based on the objects that are specified. The
-   *  objectHook must already be loaded into the hookList, with a corresponding
-   *  action to trigger on: insert, update, or delete. Also, the business
-   *  process must already be loaded into the business process list.
+   * Forwards the request to execute a business process to process(...)
    *
-   *@param  actionContext   Description of the Parameter
-   *@param  action          Description of the Parameter
-   *@param  previousObject  Description of the Parameter
-   *@param  object          Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
+   * @param packetContext  Description of the Parameter
+   * @param action         Description of the Parameter
+   * @param previousObject Description of the Parameter
+   * @param object         Description of the Parameter
+   */
+  public void process(PacketContext packetContext, int action, Object previousObject, Object object) {
+    process(
+        packetContext.getActionContext(), action, previousObject, object, packetContext.getConnectionPool(), packetContext.getConnectionElement());
+  }
+
+
+  /**
+   * Executes a business process based on the objects that are specified. The
+   * objectHook must already be loaded into the hookList, with a corresponding
+   * action to trigger on: insert, update, or delete. Also, the business
+   * process must already be loaded into the business process list.
+   *
+   * @param actionContext  Description of the Parameter
+   * @param action         Description of the Parameter
+   * @param previousObject Description of the Parameter
+   * @param object         Description of the Parameter
+   * @param sqlDriver      Description of the Parameter
+   * @param ce             Description of the Parameter
    */
   public void process(ActionContext actionContext, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     try {
-      WorkflowManager wfManager = (WorkflowManager) actionContext.getServletContext().getAttribute("WorkflowManager");
+      WorkflowManager wfManager = (WorkflowManager) actionContext.getServletContext().getAttribute(
+          "WorkflowManager");
       if (wfManager != null && hookList != null && processList != null) {
         if ((object != null && hookList.has(object)) ||
             (previousObject != null && hookList.has(previousObject))) {
-          ApplicationPrefs prefs = (ApplicationPrefs) actionContext.getServletContext().getAttribute("applicationPrefs");
+          ApplicationPrefs prefs = (ApplicationPrefs) actionContext.getServletContext().getAttribute(
+              "applicationPrefs");
           ComponentContext context = new ComponentContext();
           context.setPreviousObject(previousObject);
           context.setThisObject(object);
           context.setParameter("FileLibraryPath", fileLibraryPath);
           context.setAttribute("ConnectionPool", sqlDriver);
           context.setAttribute("ConnectionElement", ce);
-          context.setAttribute("ClientSSLKeystore", actionContext.getServletContext().getAttribute("ClientSSLKeystore"));
-          context.setAttribute("ClientSSLKeystorePassword", actionContext.getServletContext().getAttribute("ClientSSLKeystorePassword"));
+          context.setAttribute(
+              "ClientSSLKeystore", actionContext.getServletContext().getAttribute(
+                  "ClientSSLKeystore"));
+          context.setAttribute(
+              "ClientSSLKeystorePassword", actionContext.getServletContext().getAttribute(
+                  "ClientSSLKeystorePassword"));
           context.setAttribute("MAILSERVER", prefs.get("MAILSERVER"));
           context.setAttribute("EMAILADDRESS", prefs.get("EMAILADDRESS"));
           if (System.getProperty("DEBUG") != null) {
@@ -196,33 +275,40 @@ public class ObjectHookManager {
 
 
   /**
-   *  Executes a specified business process in a new thread. The business
-   *  process must already be loaded into the business process list.<p>
+   * Executes a specified business process in a new thread. The business
+   * process must already be loaded into the business process list.<p>
+   * <p/>
+   * Commonly used for business processes that are triggered by a cron, or
+   * manually triggered.
    *
-   *  Commonly used for business processes that are triggered by a cron, or
-   *  manually triggered.
-   *
-   *@param  servletContext  Description of the Parameter
-   *@param  processName     Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
+   * @param servletContext Description of the Parameter
+   * @param processName    Description of the Parameter
+   * @param sqlDriver      Description of the Parameter
+   * @param ce             Description of the Parameter
    */
   public void process(ServletContext servletContext, String processName, ConnectionPool sqlDriver, ConnectionElement ce) {
-    WorkflowManager wfManager = (WorkflowManager) servletContext.getAttribute("WorkflowManager");
+    WorkflowManager wfManager = (WorkflowManager) servletContext.getAttribute(
+        "WorkflowManager");
     if (wfManager != null && processList != null) {
       ComponentContext context = new ComponentContext();
       context.setParameter("FileLibraryPath", fileLibraryPath);
       context.setAttribute("ConnectionPool", sqlDriver);
       context.setAttribute("ConnectionElement", ce);
-      context.setAttribute("ClientSSLKeystore", servletContext.getAttribute("ClientSSLKeystore"));
-      context.setAttribute("ClientSSLKeystorePassword", servletContext.getAttribute("ClientSSLKeystorePassword"));
-      ApplicationPrefs prefs = (ApplicationPrefs) servletContext.getAttribute("applicationPrefs");
+      context.setAttribute(
+          "ClientSSLKeystore", servletContext.getAttribute(
+              "ClientSSLKeystore"));
+      context.setAttribute(
+          "ClientSSLKeystorePassword", servletContext.getAttribute(
+              "ClientSSLKeystorePassword"));
+      ApplicationPrefs prefs = (ApplicationPrefs) servletContext.getAttribute(
+          "applicationPrefs");
       if (prefs != null) {
         context.setAttribute("MAILSERVER", prefs.get("MAILSERVER"));
         context.setAttribute("EMAILADDRESS", prefs.get("EMAILADDRESS"));
       }
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ObjectHookList-> Hook thread start for process: " + processName);
+        System.out.println(
+            "ObjectHookList-> Hook thread start for process: " + processName);
       }
       //Thread the business process
       ObjectHook thisHook = new ObjectHook(context);

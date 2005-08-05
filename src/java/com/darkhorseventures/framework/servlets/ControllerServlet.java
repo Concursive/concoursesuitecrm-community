@@ -15,43 +15,54 @@
  */
 package com.darkhorseventures.framework.servlets;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import java.lang.reflect.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.beans.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
+import com.darkhorseventures.framework.actions.Action;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.actions.Beans;
+import com.darkhorseventures.framework.actions.Resource;
+import com.darkhorseventures.framework.beans.Populate;
 import org.aspcfs.controller.ApplicationPrefs;
 
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.*;
+
 /**
- *  This servlet is the core of a web application. All requests go through it
- *  and various Hooks are called to operate on the request, if configured in the
- *  application XML to do so. <p>
+ * This servlet is the core of a web application. All requests go through it
+ * and various Hooks are called to operate on the request, if configured in the
+ * application XML to do so. <p>
+ * <p/>
+ * ControllerInitHook: When the servlet is first initialized <p>
+ * <p/>
+ * ControllerHook: A security check on every request <p>
+ * <p/>
+ * ControllerMainMenuHook: When an action is going to result in a JSP with a
+ * layout, the MainMenuHook configures aspects of the page <p>
+ * <p/>
+ * ControllerGobalItemsHook: For items that a user may or may not be able to
+ * access, usually based on Permissions and Preferences <p>
+ * <p/>
+ * Ideas: TransactionLogHook
  *
- *  ControllerInitHook: When the servlet is first initialized <p>
- *
- *  ControllerHook: A security check on every request <p>
- *
- *  ControllerMainMenuHook: When an action is going to result in a JSP with a
- *  layout, the MainMenuHook configures aspects of the page <p>
- *
- *  ControllerGobalItemsHook: For items that a user may or may not be able to
- *  access, usually based on Permissions and Preferences <p>
- *
- *  Ideas: TransactionLogHook
- *
- *@author     kevin duffey
- *@author     matt rajkowski
- *@created    July 1, 2001
- *@version    $Id: ControllerServlet.java,v 1.8 2001/08/02 15:45:49 mrajkowski
- *      Exp $
+ * @author kevin duffey
+ * @author matt rajkowski
+ * @version $Id: ControllerServlet.java,v 1.8 2001/08/02 15:45:49 mrajkowski
+ *          Exp $
+ * @created July 1, 2001
  */
 public class ControllerServlet extends HttpServlet
-     implements ControllerInitHook, ControllerHook, ControllerMainMenuHook,
+    implements ControllerInitHook, ControllerHook, ControllerMainMenuHook,
     ControllerGlobalItemsHook, ControllerDestroyHook {
   private Map actions = new HashMap();
   private Map classes = new HashMap();
@@ -74,12 +85,12 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Returns the response output mode by using the Templates XSL attribute
-   *  <xsl:output method=""/>tag otherwise it uses HTML output
+   * Returns the response output mode by using the Templates XSL attribute
+   * <xsl:output method=""/>tag otherwise it uses HTML output
    *
-   *@param  templates  Description of Parameter
-   *@return            The ResponseOutput value
-   *@since             1.0
+   * @param templates Description of Parameter
+   * @return The ResponseOutput value
+   * @since 1.0
    */
   public String getResponseOutput(Templates templates) {
     if ((templates == null) || (templates.getOutputProperties() == null)) {
@@ -100,8 +111,7 @@ public class ControllerServlet extends HttpServlet
       if (method != null) {
         if (method.equals("html")) {
           return "text/html";
-        } else
-            if (method.equals("text")) {
+        } else if (method.equals("text")) {
           return "text/plain";
         } else {
           return "text/xml";
@@ -114,11 +124,11 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Gets the XSLDocument attribute of the ControllerServlet object
+   * Gets the XSLDocument attribute of the ControllerServlet object
    *
-   *@param  xsl  Description of Parameter
-   *@return      The XSLDocument value
-   *@since       1.0
+   * @param xsl Description of Parameter
+   * @return The XSLDocument value
+   * @since 1.0
    */
   public StreamSource getXSLDocument(String xsl) {
     File f = new File(getServletContext().getRealPath(xsl));
@@ -127,11 +137,11 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Called when this servlet is first called upon.
+   * Called when this servlet is first called upon.
    *
-   *@param  config                Description of Parameter
-   *@exception  ServletException  Description of Exception
-   *@since                        1.0
+   * @param config Description of Parameter
+   * @throws ServletException Description of Exception
+   * @since 1.0
    */
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
@@ -143,7 +153,8 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        initHook = (ControllerInitHook) Class.forName(config.getInitParameter("InitHook")).newInstance();
+        initHook = (ControllerInitHook) Class.forName(
+            config.getInitParameter("InitHook")).newInstance();
         initHook.executeControllerInit(config);
       } catch (Exception e) {
         System.out.println(e.toString());
@@ -183,7 +194,8 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        mainMenuHook = (ControllerMainMenuHook) Class.forName(config.getInitParameter("MainMenuHook")).newInstance();
+        mainMenuHook = (ControllerMainMenuHook) Class.forName(
+            config.getInitParameter("MainMenuHook")).newInstance();
         mainMenuHook.executeControllerMainMenu(config);
       } catch (Exception e) {
         System.out.println(e.toString());
@@ -201,7 +213,8 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        globalItemsHook = (ControllerGlobalItemsHook) Class.forName(config.getInitParameter("GlobalItemsHook")).newInstance();
+        globalItemsHook = (ControllerGlobalItemsHook) Class.forName(
+            config.getInitParameter("GlobalItemsHook")).newInstance();
       } catch (Exception e) {
         System.out.println(e.toString());
         globalItemsHook = null;
@@ -216,7 +229,8 @@ public class ControllerServlet extends HttpServlet
     // notifications, for example.
     if (config.getInitParameter("DestroyHook") != null) {
       try {
-        destroyHook = (ControllerDestroyHook) Class.forName(config.getInitParameter("DestroyHook")).newInstance();
+        destroyHook = (ControllerDestroyHook) Class.forName(
+            config.getInitParameter("DestroyHook")).newInstance();
         destroyHook.executeControllerDestroyInit(config);
       } catch (Exception e) {
         System.out.println(e.toString());
@@ -232,16 +246,20 @@ public class ControllerServlet extends HttpServlet
     xmlConfig.setActions(actions);
 
     if (config.getInitParameter("ActionConfig") != null) {
-      StringTokenizer strtkn = new StringTokenizer(config.getInitParameter("ActionConfig"), ",");
+      StringTokenizer strtkn = new StringTokenizer(
+          config.getInitParameter("ActionConfig"), ",");
 
       while (strtkn.hasMoreTokens()) {
-        xmlConfig.setFile(config.getServletContext().getRealPath("/WEB-INF/" + strtkn.nextToken().trim()));
+        xmlConfig.setFile(
+            config.getServletContext().getRealPath(
+                "/WEB-INF/" + strtkn.nextToken().trim()));
         xmlConfig.load();
         // load the configuration file
       }
     } else {
       // no config file info in web.xml, so use default.
-      xmlConfig.setFile(config.getServletContext().getRealPath("/WEB-INF/theseus.xml"));
+      xmlConfig.setFile(
+          config.getServletContext().getRealPath("/WEB-INF/theseus.xml"));
       xmlConfig.load();
       // load the configuration file
     }
@@ -327,7 +345,8 @@ public class ControllerServlet extends HttpServlet
 
               // first make sure its not already in the table.
               if (xslCache.get(resource.getXSL()) == null) {
-                File f = new File(getServletContext().getRealPath(resource.getXSL()));
+                File f = new File(
+                    getServletContext().getRealPath(resource.getXSL()));
                 StreamSource xslStream = new StreamSource(f);
 
                 try {
@@ -347,9 +366,9 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Called when the servlet container closes down.
+   * Called when the servlet container closes down.
    *
-   *@since    1.0
+   * @since 1.0
    */
   public void destroy() {
     destroyHook.executeControllerDestroy();
@@ -357,21 +376,21 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  This method handles all incoming actions (both post and get). It will
-   *  remove the extension being passed in as well as the last / in the request
-   *  URI, then deduct from that the proper action to call. The action is looked
-   *  up via a hashtable of already loaded classes (single instances of action
-   *  classes), and if the action exists, the instance is called, passing to it
-   *  the servlet, request, response and one or more beans mapped to the
-   *  particular action. Finally, it gets a result string back from the method
-   *  in the action it calls, and forwards (or redirects) to a JSP page that is
-   *  mapped to the result string returned. This method will trap all
-   *  exceptions, and forward them via the MESSAGE request attribute to what
-   *  ever JSP page is forwarded to.
+   * This method handles all incoming actions (both post and get). It will
+   * remove the extension being passed in as well as the last / in the request
+   * URI, then deduct from that the proper action to call. The action is looked
+   * up via a hashtable of already loaded classes (single instances of action
+   * classes), and if the action exists, the instance is called, passing to it
+   * the servlet, request, response and one or more beans mapped to the
+   * particular action. Finally, it gets a result string back from the method
+   * in the action it calls, and forwards (or redirects) to a JSP page that is
+   * mapped to the result string returned. This method will trap all
+   * exceptions, and forward them via the MESSAGE request attribute to what
+   * ever JSP page is forwarded to.
    *
-   *@param  request   Description of Parameter
-   *@param  response  Description of Parameter
-   *@since            1.0
+   * @param request  Description of Parameter
+   * @param response Description of Parameter
+   * @since 1.0
    */
   public void service(HttpServletRequest request, HttpServletResponse response) {
     String actionPath = getActionPath(request);
@@ -423,18 +442,19 @@ public class ControllerServlet extends HttpServlet
         // next, we get the bean reference from the scope the
         // bean is stored in.
         switch (beans.getBeanScope()) {
-            case 1:
-              // request scope
-              beanRef = request.getAttribute(beans.getBeanName());
-              break;
-            case 2:
-              // session scope
-              beanRef = request.getSession(true).getAttribute(beans.getBeanName());
-              break;
-            case 3:
-              // application/global scope (not thread safe)
-              beanRef = getServletContext().getAttribute(beans.getBeanName());
-              break;
+          case 1:
+            // request scope
+            beanRef = request.getAttribute(beans.getBeanName());
+            break;
+          case 2:
+            // session scope
+            beanRef = request.getSession(true).getAttribute(
+                beans.getBeanName());
+            break;
+          case 3:
+            // application/global scope (not thread safe)
+            beanRef = getServletContext().getAttribute(beans.getBeanName());
+            break;
         }
 
         // if its not found, create it.
@@ -442,27 +462,31 @@ public class ControllerServlet extends HttpServlet
           try {
             beanRef = Class.forName(beans.getClassName()).newInstance();
           } catch (ClassNotFoundException cnfe) {
-            System.out.println("Class not found exception. MESSAGE = " + cnfe.getMessage());
+            System.out.println(
+                "Class not found exception. MESSAGE = " + cnfe.getMessage());
           } catch (InstantiationException ie) {
-            System.out.println("Instantiation Exception. MESSAGE = " + ie.getMessage());
+            System.out.println(
+                "Instantiation Exception. MESSAGE = " + ie.getMessage());
           } catch (IllegalAccessException iae) {
-            System.out.println("Illegal Access Exception. MESSAGE = " + iae.getMessage());
+            System.out.println(
+                "Illegal Access Exception. MESSAGE = " + iae.getMessage());
           }
 
           // store it in the scope it is assigned to,
           switch (beans.getBeanScope()) {
-              case 1:
-                // request scope
-                request.setAttribute(beans.getBeanName(), beanRef);
-                break;
-              case 2:
-                // session scope
-                request.getSession(true).setAttribute(beans.getBeanName(), beanRef);
-                break;
-              case 3:
-                // application/global scope (not thread safe)
-                getServletContext().setAttribute(beans.getBeanName(), beanRef);
-                break;
+            case 1:
+              // request scope
+              request.setAttribute(beans.getBeanName(), beanRef);
+              break;
+            case 2:
+              // session scope
+              request.getSession(true).setAttribute(
+                  beans.getBeanName(), beanRef);
+              break;
+            case 3:
+              // application/global scope (not thread safe)
+              getServletContext().setAttribute(beans.getBeanName(), beanRef);
+              break;
           }
         }
 
@@ -478,13 +502,16 @@ public class ControllerServlet extends HttpServlet
         if (request.getParameter(populateAttribute) != null) {
           if (populateClassInstance != null) {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("> Auto populating a bean: " + beans.getClassName());
+              System.out.println(
+                  "> Auto populating a bean: " + beans.getClassName());
             }
-            populateClassInstance.populateObject(beanRef, request, nestedAttribute, indexAttribute);
+            populateClassInstance.populateObject(
+                beanRef, request, nestedAttribute, indexAttribute);
           }
         }
       }
-      context = new ActionContext(this, contextBeanRef, action, request, response);
+      context = new ActionContext(
+          this, contextBeanRef, action, request, response);
 
       // at this point, we have a newly created ActionContext and an auto-populated
       // javabean (if the request attribute was passed in to indicate so). We are now ready to
@@ -498,11 +525,14 @@ public class ControllerServlet extends HttpServlet
           classRef = Class.forName(action.getActionClassName()).newInstance();
           classes.put(actionPath, classRef);
         } catch (ClassNotFoundException cnfe) {
-          System.out.println("Class Not Found Exception. MESSAGE = " + cnfe.getMessage());
+          System.out.println(
+              "Class Not Found Exception. MESSAGE = " + cnfe.getMessage());
         } catch (InstantiationException ie) {
-          System.out.println("Instantiation Exception. MESSAGE = " + ie.getMessage());
+          System.out.println(
+              "Instantiation Exception. MESSAGE = " + ie.getMessage());
         } catch (IllegalAccessException iae) {
-          System.out.println("Illegal Argument Exception. MESSAGE = " + iae.getMessage());
+          System.out.println(
+              "Illegal Argument Exception. MESSAGE = " + iae.getMessage());
         }
       }
 
@@ -520,23 +550,31 @@ public class ControllerServlet extends HttpServlet
         if ("2".equals(System.getProperty("DEBUG"))) {
           long actionStartTime = System.currentTimeMillis();
           if (request.getAttribute("debug.action.startTime") != null) {
-            actionStartTime = Long.parseLong((String) request.getAttribute("debug.action.startTime"));
+            actionStartTime = Long.parseLong(
+                (String) request.getAttribute("debug.action.startTime"));
           } else {
-            request.setAttribute("debug.action.startTime", String.valueOf(actionStartTime));
+            request.setAttribute(
+                "debug.action.startTime", String.valueOf(actionStartTime));
           }
-          Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
+          Method method = classRef.getClass().getMethod(
+              "executeCommand" + context.getCommand(), new Class[]{context.getClass()});
           result = (String) method.invoke(classRef, new Object[]{context});
           long actionExecuteTime = System.currentTimeMillis() - actionStartTime;
-          request.setAttribute("debug.action.time", String.valueOf(actionExecuteTime));
-          System.out.println("ControllerServlet-> Action Took: " + actionExecuteTime + " ms");
+          request.setAttribute(
+              "debug.action.time", String.valueOf(actionExecuteTime));
+          System.out.println(
+              "ControllerServlet-> Action Took: " + actionExecuteTime + " ms");
         } else {
-          Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
+          Method method = classRef.getClass().getMethod(
+              "executeCommand" + context.getCommand(), new Class[]{context.getClass()});
           result = (String) method.invoke(classRef, new Object[]{context});
         }
       } catch (NoSuchMethodException nm) {
-        System.out.println("No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
+        System.out.println(
+            "No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
       } catch (IllegalAccessException ia) {
-        System.out.println("Illegal Access Exception. MESSAGE = " + ia.getMessage());
+        System.out.println(
+            "Illegal Access Exception. MESSAGE = " + ia.getMessage());
       } catch (java.lang.reflect.InvocationTargetException ite) {
         result = "GraphicsError";
       } catch (Exception e) {
@@ -560,13 +598,13 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Handles the process of forwarding to a resource.
+   * Handles the process of forwarding to a resource.
    *
-   *@param  lookup    Description of Parameter
-   *@param  action    Description of Parameter
-   *@param  request   Description of Parameter
-   *@param  response  Description of Parameter
-   *@since            1.0
+   * @param lookup   Description of Parameter
+   * @param action   Description of Parameter
+   * @param request  Description of Parameter
+   * @param response Description of Parameter
+   * @since 1.0
    */
   public void forward(String lookup, Action action, HttpServletRequest request, HttpServletResponse response) {
     // last but not least..we now try to forward or redirect to the
@@ -582,19 +620,22 @@ public class ControllerServlet extends HttpServlet
       System.out.println("> Looking up resource: " + lookup);
     }
     // Get a handle to the application prefs
-    ApplicationPrefs applicationPrefs = (ApplicationPrefs) getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) getServletContext().getAttribute(
+        "applicationPrefs");
     // An action source returns the flow back to the originating action
     if (request.getParameter("actionSource") != null) {
       String actualActionPath = (String) request.getParameter("actionSource");
       action = (Action) actions.get(actualActionPath);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("> Action source found, forward to action: " + actualActionPath + " result: " + lookup);
+        System.out.println(
+            "> Action source found, forward to action: " + actualActionPath + " result: " + lookup);
       }
     }
     Resource resource = action.getResource(lookup);
     if (resource == null) {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("> Action not found, looking up under GlobalActions ");
+        System.out.println(
+            "> Action not found, looking up under GlobalActions ");
       }
       resource = ((Action) actions.get("GlobalActions")).getResource(lookup);
     }
@@ -607,7 +648,8 @@ public class ControllerServlet extends HttpServlet
         Templates templates = null;
         if (!useXSLCache) {
           try {
-            templates = tFactory.newTemplates(getXSLDocument(resource.getXSL()));
+            templates = tFactory.newTemplates(
+                getXSLDocument(resource.getXSL()));
           } catch (Exception e) {
           }
         } else {
@@ -618,7 +660,8 @@ public class ControllerServlet extends HttpServlet
             // didn't find it in cache, but we want to use cache, so try to read
             // the XSL page off the hd, then store it in cache.
             try {
-              templates = tFactory.newTemplates(getXSLDocument(resource.getXSL()));
+              templates = tFactory.newTemplates(
+                  getXSLDocument(resource.getXSL()));
               // syncronize this section to make sure that multiple threads don't
               // add the same XSL file to the HashMap, which is not
               // thread safe
@@ -652,9 +695,11 @@ public class ControllerServlet extends HttpServlet
 
           xmlStream = new StreamSource(new URL(link.toString()).openStream());
           Transformer transformer = templates.newTransformer();
-          transformer.transform(xmlStream, new StreamResult(response.getOutputStream()));
+          transformer.transform(
+              xmlStream, new StreamResult(response.getOutputStream()));
         } catch (Exception e) {
-          System.out.println("Exception trying to read in JSP or transform. MESSAGE: " + e.getMessage());
+          System.out.println(
+              "Exception trying to read in JSP or transform. MESSAGE: " + e.getMessage());
           e.printStackTrace(System.out);
         }
       } else {
@@ -667,7 +712,8 @@ public class ControllerServlet extends HttpServlet
           if (resource.getLayout() != null && resource.getLayout().length() > 0) {
             String templateForwardPath = resource.getName();
             request.setAttribute("IncludeModule", templateForwardPath);
-            forwardPath = "/templates/" + applicationPrefs.get("LAYOUT.TEMPLATE") + resource.getLayout() + ".jsp";
+            forwardPath = "/templates/" + applicationPrefs.get(
+                "LAYOUT.TEMPLATE") + resource.getLayout() + ".jsp";
 
             //Process extra layout options
             if (resource.getLayout().toLowerCase().startsWith("nav")) {
@@ -675,7 +721,8 @@ public class ControllerServlet extends HttpServlet
               mainMenuHook.generateMenu(request, action.getActionName());
 
               //Build the Global Items
-              String globalItems = globalItemsHook.generateItems(this, request);
+              String globalItems = globalItemsHook.generateItems(
+                  this, request);
               if (globalItems != null) {
                 request.setAttribute("GlobalItems", globalItems);
               }
@@ -685,18 +732,23 @@ public class ControllerServlet extends HttpServlet
           if ((forwardPath != null) && (forwardPath.length() > 0)) {
             try {
               if (System.getProperty("DEBUG") != null) {
-                System.out.println("ControllerServlet-> Resource: " + resource.getName());
+                System.out.println(
+                    "ControllerServlet-> Resource: " + resource.getName());
               }
-              getServletContext().getRequestDispatcher(forwardPath).forward(request, response);
+              getServletContext().getRequestDispatcher(forwardPath).forward(
+                  request, response);
             } catch (Throwable t) {
-              System.out.println("Throwable exception trying to forward to " + forwardPath + "MESSAGE: " + t.getMessage());
+              System.out.println(
+                  "Throwable exception trying to forward to " + forwardPath + "MESSAGE: " + t.getMessage());
               t.printStackTrace(System.out);
               PrintWriter out = response.getWriter();
-              out.println("<font color='red'>The included page caused a problem.</font>");
+              out.println(
+                  "<font color='red'>The included page caused a problem.</font>");
             }
           }
         } catch (Exception e) {
-          System.out.println("Exception while trying to handle JSP forwarding. MESSAGE: " + e.getMessage());
+          System.out.println(
+              "Exception while trying to handle JSP forwarding. MESSAGE: " + e.getMessage());
         }
       }
     } else {
@@ -705,7 +757,8 @@ public class ControllerServlet extends HttpServlet
       try {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        out.println("<font color=\"red\">The requested page was not found.</font>");
+        out.println(
+            "<font color=\"red\">The requested page was not found.</font>");
       } catch (IOException e) {
       }
     }
@@ -713,12 +766,12 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Implements a default "stub" handler for the controllerInit()
-   *  ControllerInitHook method
+   * Implements a default "stub" handler for the controllerInit()
+   * ControllerInitHook method
    *
-   *@param  config  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since          1.1
+   * @param config Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeControllerInit(ServletConfig config) {
     return null;
@@ -726,11 +779,11 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Initialize the DestroyHook with servletconfig
+   * Initialize the DestroyHook with servletconfig
    *
-   *@param  config  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since          1.8
+   * @param config Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.8
    */
   public String executeControllerDestroyInit(ServletConfig config) {
     return null;
@@ -738,11 +791,11 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Implements a default "stub" handler for the controllerDestroy()
-   *  ControllerDestroyHook method
+   * Implements a default "stub" handler for the controllerDestroy()
+   * ControllerDestroyHook method
    *
-   *@return    Description of the Returned Value
-   *@since     1.8
+   * @return Description of the Returned Value
+   * @since 1.8
    */
   public String executeControllerDestroy() {
     return null;
@@ -750,13 +803,13 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Implements a default "stub" handler for the securityCheck() ControllerHook
-   *  method
+   * Implements a default "stub" handler for the securityCheck() ControllerHook
+   * method
    *
-   *@param  request  Description of Parameter
-   *@param  servlet  Description of the Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param request Description of Parameter
+   * @param servlet Description of the Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String securityCheck(Servlet servlet, HttpServletRequest request) {
     return null;
@@ -764,23 +817,22 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Implements a default "stub" handler for the generateMenu()
-   *  ControllerMainMenuHook method
+   * Implements a default "stub" handler for the generateMenu()
+   * ControllerMainMenuHook method
    *
-   *@param  request     Description of Parameter
-   *@param  actionPath  Description of Parameter
-   *@since              1.1
+   * @param request    Description of Parameter
+   * @param actionPath Description of Parameter
+   * @since 1.1
    */
   public void generateMenu(HttpServletRequest request, String actionPath) {
   }
 
 
   /**
-   *  Initializes the MainMenuHook with the servletconfig
+   * Initializes the MainMenuHook with the servletconfig
    *
-   *@param  config  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since
+   * @param config Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeControllerMainMenu(ServletConfig config) {
     return null;
@@ -788,13 +840,13 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Implements a default "stub" handler for the generateItems()
-   *  ControllerGlobalItemsHook method
+   * Implements a default "stub" handler for the generateItems()
+   * ControllerGlobalItemsHook method
    *
-   *@param  request  Description of Parameter
-   *@param  servlet  Description of the Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param request Description of Parameter
+   * @param servlet Description of the Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String generateItems(Servlet servlet, HttpServletRequest request) {
     return null;
@@ -802,11 +854,11 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   *  Returns the servlet path of the request.
+   * Returns the servlet path of the request.
    *
-   *@param  request  Description of Parameter
-   *@return          The ActionPath value
-   *@since           1.0
+   * @param request Description of Parameter
+   * @return The ActionPath value
+   * @since 1.0
    */
   private String getActionPath(HttpServletRequest request) {
     String s = request.getServletPath();

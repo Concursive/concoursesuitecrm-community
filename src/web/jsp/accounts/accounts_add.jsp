@@ -30,6 +30,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
@@ -631,7 +632,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -653,7 +654,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
       %>
     </td>
   </tr>
@@ -712,11 +713,11 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>"  style="<%= ("UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) || "CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY")))? "" : " display:none" %>">
         <%= StateSelect.getHtml("address" + acount + "state") %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>"  style="<%= (!"UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) && !"CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY")))? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
     </td>
@@ -740,7 +741,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -806,14 +807,14 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) || "CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY")))? "" : " display:none" %>">
         <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) && !"CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY"))) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -835,7 +836,7 @@
           update('address<%= acount %>country','<%= acount %>');
         </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -894,14 +895,14 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) || "CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY")))? "" : " display:none" %>">
         <%= StateSelect.getHtml("address" + acount + "state") %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
-        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) && !"CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY"))) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>" >
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -923,7 +924,7 @@
         update('address<%= acount %>country','<%= acount %>');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>
@@ -983,13 +984,14 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state11" ID="state11">
+      <span name="state11" ID="state11" style="<%= ("UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) || "CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY")))? "" : " display:none" %>">
         <%= StateSelect.getHtml("address1state") %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state21" ID="state21" style="display:none">
-        <input type="text" size="25" name="<%= "address1otherState" %>">
+      <span name="state21" ID="state21" style="<%= (!"UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) && !"CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY"))) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address1otherState" %>" >
       </span>
+      <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
   <tr>
@@ -1011,7 +1013,7 @@
       update('address1country','1');
     </script>
     <%
-      CountrySelect = new CountrySelect();
+      CountrySelect = new CountrySelect(systemStatus);
      %>
     </td>
   </tr>
@@ -1063,13 +1065,14 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state12" ID="state12">
+      <span name="state12" ID="state12" style="<%= ("UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) || "CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY")))? "" : " display:none" %>">
         <%= StateSelect.getHtml("address2state") %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state22" ID="state22" style="display:none">
-        <input type="text" size="25" name="<%= "address2otherState" %>">
+      <span name="state22" ID="state22" style="<%= (!"UNITED STATES".equals(applicationPrefs.get("SYSTEM.COUNTRY")) && !"CANADA".equals(applicationPrefs.get("SYSTEM.COUNTRY"))) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address2otherState" %>" >
       </span>
+      <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
   <tr>
@@ -1085,12 +1088,13 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address2country', '2');\"");%>
       <%= CountrySelect.getHtml("address2country", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       <script type="text/javascript">
         update('address2country','2');
       </script>
       <%
-        CountrySelect = new CountrySelect();
+        CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
   </tr>

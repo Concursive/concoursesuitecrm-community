@@ -15,21 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
-import java.io.*;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Contains a list of Parameter objects and can be used for initially building
- *  the list.
+ * Contains a list of Parameter objects and can be used for initially building
+ * the list.
  *
- *@author     matt rajkowski
- *@created    June 6, 2003
- *@version    $Id: ProcessParameterList.java,v 1.2 2003/06/19 20:50:05
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProcessParameterList.java,v 1.2 2003/06/19 20:50:05
+ *          mrajkowski Exp $
+ * @created June 6, 2003
  */
 public class ProcessParameterList extends ArrayList {
   private int processId = -1;
@@ -37,15 +39,16 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Constructor for the ProcessParameterList object
+   * Constructor for the ProcessParameterList object
    */
-  public ProcessParameterList() { }
+  public ProcessParameterList() {
+  }
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameterList object
+   * Sets the componentId attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setProcessId(int tmp) {
     this.processId = tmp;
@@ -53,9 +56,9 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameterList object
+   * Sets the enabled attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -63,9 +66,9 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameterList object
+   * Sets the enabled attribute of the ComponentParameterList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -73,9 +76,9 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Gets the componentId attribute of the ComponentParameterList object
+   * Gets the componentId attribute of the ComponentParameterList object
    *
-   *@return    The componentId value
+   * @return The componentId value
    */
   public int getProcessId() {
     return processId;
@@ -83,9 +86,9 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the ComponentParameterList object
+   * Gets the enabled attribute of the ComponentParameterList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -93,10 +96,10 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Builds a list of parameters from a database using selected filters
+   * Builds a list of parameters from a database using selected filters
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
@@ -109,7 +112,8 @@ public class ProcessParameterList extends ArrayList {
         "WHERE id > 0 ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY param_name ");
-    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -122,9 +126,9 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Adds filters to the WHERE clause of the database query
+   * Adds filters to the WHERE clause of the database query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -140,11 +144,11 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Adds database parameters based on selected filters
+   * Adds database parameters based on selected filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -159,10 +163,10 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Inserts the list of parameters into a database
+   * Inserts the list of parameters into a database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     boolean autoCommit = db.getAutoCommit();
@@ -193,10 +197,10 @@ public class ProcessParameterList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator itr = this.iterator();

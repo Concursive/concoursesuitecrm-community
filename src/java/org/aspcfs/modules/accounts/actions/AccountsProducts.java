@@ -49,18 +49,18 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    April 23, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created April 23, 2004
  */
 public final class AccountsProducts extends CFSModule {
   /**
-   *  Displays a list of customer Products
+   * Displays a list of customer Products
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     /*
@@ -77,14 +77,17 @@ public final class AccountsProducts extends CFSModule {
       thisOrg = addOrganization(context, db);
 
       CustomerProductList customerProductList = new CustomerProductList();
-      PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchCustomerProductListInfo");
-      searchListInfo.setLink("AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
+      PagedListInfo searchListInfo = this.getPagedListInfo(
+          context, "SearchCustomerProductListInfo");
+      searchListInfo.setLink(
+          "AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
       customerProductList.setPagedListInfo(searchListInfo);
       customerProductList.setOrgId(thisOrg.getOrgId());
       customerProductList.setBuildFileList(true);
       customerProductList.setBuildProductCatalog(true);
       customerProductList.buildList(db);
-      context.getRequest().setAttribute("CustomerProductList", customerProductList);
+      context.getRequest().setAttribute(
+          "CustomerProductList", customerProductList);
 
     } catch (Exception e) {
       errorMessage = e;
@@ -101,12 +104,11 @@ public final class AccountsProducts extends CFSModule {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     /*
@@ -162,10 +164,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSVGDetails(ActionContext context) {
     Exception errorMessage = null;
@@ -187,11 +189,14 @@ public final class AccountsProducts extends CFSModule {
       CustomerProduct customerProduct = new CustomerProduct(db, adId);
       context.getRequest().setAttribute("CustomerProduct", customerProduct);
 
-      FileItem thisItem = new FileItem(db, itemId, customerProduct.getId(), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
+      FileItem thisItem = new FileItem(
+          db, itemId, customerProduct.getId(), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
       thisItem.buildVersionList(db);
       //TODO: replace the version 1.0 with a constant
-      FileItemVersion svgVersion = thisItem.getVersion(Double.parseDouble("1.0"));
-      String filePath = this.getPath(context, "accounts") + getDatePath(svgVersion.getModified()) + svgVersion.getFilename();
+      FileItemVersion svgVersion = thisItem.getVersion(
+          Double.parseDouble("1.0"));
+      String filePath = this.getPath(context, "accounts") + getDatePath(
+          svgVersion.getModified()) + svgVersion.getFilename();
       File svgFile = new File(filePath);
       SVGUtils svg = new SVGUtils(svgFile.toURL().toString());
       Vector textItems = svg.getTextValues();
@@ -208,10 +213,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
     /*
@@ -339,8 +344,10 @@ public final class AccountsProducts extends CFSModule {
             isSvgFile = true;
 
             File svgFile = new File(newFileInfo.getLocalFile().getPath());
-            File imageFile = new File(newFileInfo.getLocalFile().getPath() + "FS");
-            File thumbnailFile = new File(newFileInfo.getLocalFile().getPath() + "TH");
+            File imageFile = new File(
+                newFileInfo.getLocalFile().getPath() + "FS");
+            File thumbnailFile = new File(
+                newFileInfo.getLocalFile().getPath() + "TH");
             SVGUtils svg = new SVGUtils(svgFile.toURL().toString());
             /*
              *  Process the SVG being uploaded and determine if there are any broken
@@ -358,7 +365,8 @@ public final class AccountsProducts extends CFSModule {
              */
             svg.saveAsJPEG(imageFile);
             String filename = newFileInfo.getClientFileName();
-            filename = filename.substring(0, filename.indexOf(thisItem.getExtension()));
+            filename = filename.substring(
+                0, filename.indexOf(thisItem.getExtension()));
             filename += ".jpeg";
             thisItem.setClientFilename(filename);
             thisItem.setFilename(newFileInfo.getRealFilename() + "FS");
@@ -374,17 +382,23 @@ public final class AccountsProducts extends CFSModule {
             thisItem.setVersion(1.2d);
             thisItem.setSize((int) thumbnailFile.length());
             recordInserted = thisItem.insertVersion(db);
-            context.getRequest().setAttribute("uploadMsg", "You have successfully uploaded the following svg");
+            context.getRequest().setAttribute(
+                "uploadMsg", "You have successfully uploaded the following svg");
 
           }
-          context.getRequest().setAttribute("orgId", Integer.toString(thisOrg.getOrgId()));
-          context.getRequest().setAttribute("adId", Integer.toString(customerProduct.getId()));
-          context.getRequest().setAttribute("fid", Integer.toString(thisItem.getId()));
+          context.getRequest().setAttribute(
+              "orgId", Integer.toString(thisOrg.getOrgId()));
+          context.getRequest().setAttribute(
+              "adId", Integer.toString(customerProduct.getId()));
+          context.getRequest().setAttribute(
+              "fid", Integer.toString(thisItem.getId()));
         }
       } else {
         recordInserted = false;
         HashMap errors = new HashMap();
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         processErrors(context, errors);
         context.getRequest().setAttribute("subject", subject);
         context.getRequest().setAttribute("folderId", folderId);
@@ -408,10 +422,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandOnlineTool(ActionContext context) {
     Connection db = null;
@@ -435,8 +449,10 @@ public final class AccountsProducts extends CFSModule {
         }
       }
 
-      FileItemVersion svgVersion = targetFile.getVersion(Double.parseDouble("1.0"));
-      String svgFilePath = this.getPath(context, "accounts") + getDatePath(svgVersion.getModified()) + svgVersion.getFilename();
+      FileItemVersion svgVersion = targetFile.getVersion(
+          Double.parseDouble("1.0"));
+      String svgFilePath = this.getPath(context, "accounts") + getDatePath(
+          svgVersion.getModified()) + svgVersion.getFilename();
       File svgFile = new File(svgFilePath);
       SVGUtils svg = new SVGUtils(svgFile.toURL().toString());
       Vector textItems = svg.getTextValues();
@@ -456,10 +472,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandStreamAdImage(ActionContext context) {
     Connection db = null;
@@ -489,8 +505,10 @@ public final class AccountsProducts extends CFSModule {
           break;
         }
       }
-      FileItemVersion svgVersion = targetFile.getVersion(Double.parseDouble("1.0"));
-      String svgFilePath = this.getPath(context, "accounts") + getDatePath(svgVersion.getModified()) + svgVersion.getFilename();
+      FileItemVersion svgVersion = targetFile.getVersion(
+          Double.parseDouble("1.0"));
+      String svgFilePath = this.getPath(context, "accounts") + getDatePath(
+          svgVersion.getModified()) + svgVersion.getFilename();
       File svgFile = new File(svgFilePath);
       SVGUtils svg = new SVGUtils(svgFile.toURL().toString());
       Enumeration e = context.getRequest().getParameterNames();
@@ -499,7 +517,8 @@ public final class AccountsProducts extends CFSModule {
       while (e.hasMoreElements()) {
         String param = (String) e.nextElement();
         if (param.startsWith("text")) {
-          String value = (String) context.getRequest().getParameter("text" + k);
+          String value = (String) context.getRequest().getParameter(
+              "text" + k);
           if (value == null) {
             value = "";
           }
@@ -521,10 +540,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     boolean recordDeleted = false;
@@ -544,8 +563,10 @@ public final class AccountsProducts extends CFSModule {
       DependencyList dependencies = customerProduct.processDependencies(db);
       if (dependencies.canDelete()) {
         htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsProducts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&adId=" + customerProduct.getId() + "&fid=" + itemId + "'");
+        htmlDialog.setHeader(
+            "This object has the following dependencies within Dark Horse CRM:");
+        htmlDialog.addButton(
+            "Delete All", "javascript:window.location.href='AccountsProducts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&adId=" + customerProduct.getId() + "&fid=" + itemId + "'");
       }
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -565,10 +586,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     boolean recordDeleted = false;
@@ -581,7 +602,8 @@ public final class AccountsProducts extends CFSModule {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
       customerProduct = new CustomerProduct(db, Integer.parseInt(adId));
-      recordDeleted = customerProduct.delete(db, Integer.parseInt(itemId), this.getPath(context, "accounts"));
+      recordDeleted = customerProduct.delete(
+          db, Integer.parseInt(itemId), this.getPath(context, "accounts"));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return "SystemError";
@@ -589,22 +611,25 @@ public final class AccountsProducts extends CFSModule {
       this.freeConnection(context, db);
     }
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
       return "DeleteOK";
     }
     processErrors(context, customerProduct.getErrors());
-    context.getRequest().setAttribute("actionError", "Account Products could not be deleted because of referential integrity .");
-    context.getRequest().setAttribute("refreshUrl", "AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
+    context.getRequest().setAttribute(
+        "actionError", "Account Products could not be deleted because of referential integrity .");
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
     return ("DeleteError");
   }
 
 
   /**
-   *  Provides details of a particular customer product and also a list of files
-   *  associated with this product
+   * Provides details of a particular customer product and also a list of files
+   * associated with this product
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     Exception errorMessage = null;
@@ -617,14 +642,17 @@ public final class AccountsProducts extends CFSModule {
     try {
       db = getConnection(context);
       Organization thisOrg = addOrganization(context, db);
-      CustomerProduct customerProduct = new CustomerProduct(db, Integer.parseInt(adId));
+      CustomerProduct customerProduct = new CustomerProduct(
+          db, Integer.parseInt(adId));
 
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.DOCUMENTS_CUSTOMER_PRODUCT);
       documents.setLinkItemId(customerProduct.getId());
 
-      PagedListInfo docListInfo = this.getPagedListInfo(context, "DocListInfo");
-      docListInfo.setLink("AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
+      PagedListInfo docListInfo = this.getPagedListInfo(
+          context, "DocListInfo");
+      docListInfo.setLink(
+          "AccountsProducts.do?command=List&orgId=" + thisOrg.getOrgId());
       documents.setPagedListInfo(docListInfo);
       documents.buildList(db);
       context.getRequest().setAttribute("CustomerProduct", customerProduct);
@@ -644,12 +672,11 @@ public final class AccountsProducts extends CFSModule {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     Exception errorMessage = null;
@@ -664,7 +691,8 @@ public final class AccountsProducts extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(adId), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(adId), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -679,7 +707,8 @@ public final class AccountsProducts extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -690,14 +719,18 @@ public final class AccountsProducts extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("AccountProducts -> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          System.err.println(
+              "AccountProducts -> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", "The requested download no longer exists on the system");
           return (executeCommandSVGDetails(context));
         }
       } else {
-        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        FileItemVersion itemToDownload = thisItem.getVersion(
+            Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -708,8 +741,10 @@ public final class AccountsProducts extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("AccountsProducts -> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          System.err.println(
+              "AccountsProducts -> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", "The requested download no longer exists on the system");
           return (executeCommandSVGDetails(context));
         }
       }
@@ -738,14 +773,15 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewProduct(ActionContext context) {
     Connection db = null;
-    int adId = Integer.parseInt((String) context.getRequest().getParameter("adId"));
+    int adId = Integer.parseInt(
+        (String) context.getRequest().getParameter("adId"));
     CustomerProduct customerProduct = null;
     try {
       db = getConnection(context);
@@ -768,10 +804,10 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandVersionDetails(ActionContext context) {
 
@@ -785,7 +821,8 @@ public final class AccountsProducts extends CFSModule {
       db = getConnection(context);
       Organization thisOrg = addOrganization(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(adId), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), Integer.parseInt(adId), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("OrgDetails", thisOrg);
       context.getRequest().setAttribute("FileItem", thisItem);
@@ -806,18 +843,19 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Organization attribute of the AccountsProducts
-   *  object
+   * Adds a feature to the Organization attribute of the AccountsProducts
+   * object
    *
-   *@param  context           The feature to be added to the Organization
-   *      attribute
-   *@param  db                The feature to be added to the Organization
-   *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the Organization
+   *                attribute
+   * @param db      The feature to be added to the Organization
+   *                attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private Organization addOrganization(ActionContext context, Connection db) throws SQLException {
-    String organizationId = (String) context.getRequest().getParameter("orgId");
+    String organizationId = (String) context.getRequest().getParameter(
+        "orgId");
     if (organizationId == null) {
       organizationId = (String) context.getRequest().getAttribute("orgId");
     }
@@ -826,21 +864,22 @@ public final class AccountsProducts extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Organization attribute of the AccountsProducts
-   *  object
+   * Adds a feature to the Organization attribute of the AccountsProducts
+   * object
    *
-   *@param  context           The feature to be added to the Organization
-   *      attribute
-   *@param  db                The feature to be added to the Organization
-   *      attribute
-   *@param  organizationId    The feature to be added to the Organization
-   *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context        The feature to be added to the Organization
+   *                       attribute
+   * @param db             The feature to be added to the Organization
+   *                       attribute
+   * @param organizationId The feature to be added to the Organization
+   *                       attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private Organization addOrganization(ActionContext context, Connection db, String organizationId) throws SQLException {
     context.getRequest().setAttribute("orgId", organizationId);
-    Organization thisOrganization = new Organization(db, Integer.parseInt(organizationId));
+    Organization thisOrganization = new Organization(
+        db, Integer.parseInt(organizationId));
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
     return thisOrganization;
   }

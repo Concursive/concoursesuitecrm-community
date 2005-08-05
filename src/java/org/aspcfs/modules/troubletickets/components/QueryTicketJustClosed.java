@@ -15,24 +15,25 @@
  */
 package org.aspcfs.modules.troubletickets.components;
 
-import org.aspcfs.controller.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.ComponentInterface;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 import org.aspcfs.modules.troubletickets.base.Ticket;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: QueryTicketJustClosed.java,v 1.3 2003/01/14 21:23:13 akhi_m
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: QueryTicketJustClosed.java,v 1.3 2003/01/14 21:23:13 akhi_m
+ *          Exp $
+ * @created January 14, 2003
  */
 public class QueryTicketJustClosed extends ObjectHookComponent implements ComponentInterface {
 
   /**
-   *  Gets the description attribute of the QueryTicketJustClosed object
+   * Gets the description attribute of the QueryTicketJustClosed object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Was the ticket just closed?";
@@ -40,10 +41,10 @@ public class QueryTicketJustClosed extends ObjectHookComponent implements Compon
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     Ticket thisTicket = (Ticket) context.getThisObject();

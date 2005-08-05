@@ -29,16 +29,20 @@ public class ProjectManagementAccounts extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-accounts-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("accounts").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("accounts").toLowerCase());
       // Setup a paged list
-      PagedListInfo projectAccountsInfo = this.getPagedListInfo(context, "projectAccountsInfo");
-      projectAccountsInfo.setLink("ProjectManagementAccounts.do?command=List&pid=" + thisProject.getId());
+      PagedListInfo projectAccountsInfo = this.getPagedListInfo(
+          context, "projectAccountsInfo");
+      projectAccountsInfo.setLink(
+          "ProjectManagementAccounts.do?command=List&pid=" + thisProject.getId());
       projectAccountsInfo.setItemsPerPage(0);
       // Load the list of Accounts
       OrganizationList organizationList = new OrganizationList();
@@ -71,12 +75,15 @@ public class ProjectManagementAccounts extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-accounts-manage")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-accounts-manage")) {
         return "PermissionError";
       }
-      ProjectUtils.addAccount(db, Integer.parseInt(projectId), Integer.parseInt(orgId));
+      ProjectUtils.addAccount(
+          db, Integer.parseInt(projectId), Integer.parseInt(orgId));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -97,12 +104,15 @@ public class ProjectManagementAccounts extends CFSModule {
     try {
       db = getConnection(context);
       // Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-accounts-manage")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-accounts-manage")) {
         return "PermissionError";
       }
-      ProjectUtils.removeAccount(db, Integer.parseInt(projectId), Integer.parseInt(orgId));
+      ProjectUtils.removeAccount(
+          db, Integer.parseInt(projectId), Integer.parseInt(orgId));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

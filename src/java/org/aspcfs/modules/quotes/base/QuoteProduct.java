@@ -18,22 +18,22 @@ package org.aspcfs.modules.quotes.base;
 import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.products.base.ProductCatalogPricing;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.products.configurator.OptionConfigurator;
 import org.aspcfs.modules.products.base.ProductOptionConfigurator;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import org.aspcfs.utils.DatabaseUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.servlet.http.HttpServletRequest;
 
 /**
- *  This represents a product which is associated with a quote
+ * This represents a product which is associated with a quote
  *
- *@author     ananth
- *@created    March 24, 2004
- *@version    $Id: QuoteProduct.java,v 1.4.12.4 2005/01/03 18:42:26 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: QuoteProduct.java,v 1.4.12.4 2005/01/03 18:42:26 mrajkowski
+ *          Exp $
+ * @created March 24, 2004
  */
 public class QuoteProduct extends GenericBean {
   private int id = -1;
@@ -60,9 +60,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteProduct object
+   * Sets the id attribute of the QuoteProduct object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -70,9 +70,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteProduct object
+   * Sets the id attribute of the QuoteProduct object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -80,9 +80,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteProduct object
+   * Sets the quoteId attribute of the QuoteProduct object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -90,9 +90,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteProduct object
+   * Sets the quoteId attribute of the QuoteProduct object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -100,9 +100,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the QuoteProduct object
+   * Sets the productId attribute of the QuoteProduct object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -110,9 +110,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the QuoteProduct object
+   * Sets the productId attribute of the QuoteProduct object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -120,9 +120,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the quantity attribute of the QuoteProduct object
+   * Sets the quantity attribute of the QuoteProduct object
    *
-   *@param  tmp  The new quantity value
+   * @param tmp The new quantity value
    */
   public void setQuantity(int tmp) {
     this.quantity = tmp;
@@ -130,9 +130,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the quantity attribute of the QuoteProduct object
+   * Sets the quantity attribute of the QuoteProduct object
    *
-   *@param  tmp  The new quantity value
+   * @param tmp The new quantity value
    */
   public void setQuantity(String tmp) {
     this.quantity = Integer.parseInt(tmp);
@@ -140,9 +140,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the QuoteProduct object
+   * Sets the priceCurrency attribute of the QuoteProduct object
    *
-   *@param  tmp  The new priceCurrency value
+   * @param tmp The new priceCurrency value
    */
   public void setPriceCurrency(int tmp) {
     this.priceCurrency = tmp;
@@ -150,9 +150,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the QuoteProduct object
+   * Sets the priceCurrency attribute of the QuoteProduct object
    *
-   *@param  tmp  The new priceCurrency value
+   * @param tmp The new priceCurrency value
    */
   public void setPriceCurrency(String tmp) {
     this.priceCurrency = Integer.parseInt(tmp);
@@ -160,9 +160,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the priceAmount attribute of the QuoteProduct object
+   * Sets the priceAmount attribute of the QuoteProduct object
    *
-   *@param  tmp  The new priceAmount value
+   * @param tmp The new priceAmount value
    */
   public void setPriceAmount(double tmp) {
     this.priceAmount = tmp;
@@ -170,9 +170,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrency attribute of the QuoteProduct object
+   * Sets the recurringCurrency attribute of the QuoteProduct object
    *
-   *@param  tmp  The new recurringCurrency value
+   * @param tmp The new recurringCurrency value
    */
   public void setRecurringCurrency(int tmp) {
     this.recurringCurrency = tmp;
@@ -180,9 +180,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the recurringCurrency attribute of the QuoteProduct object
+   * Sets the recurringCurrency attribute of the QuoteProduct object
    *
-   *@param  tmp  The new recurringCurrency value
+   * @param tmp The new recurringCurrency value
    */
   public void setRecurringCurrency(String tmp) {
     this.recurringCurrency = Integer.parseInt(tmp);
@@ -190,9 +190,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the recurringAmount attribute of the QuoteProduct object
+   * Sets the recurringAmount attribute of the QuoteProduct object
    *
-   *@param  tmp  The new recurringAmount value
+   * @param tmp The new recurringAmount value
    */
   public void setRecurringAmount(double tmp) {
     this.recurringAmount = tmp;
@@ -200,9 +200,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the recurringType attribute of the QuoteProduct object
+   * Sets the recurringType attribute of the QuoteProduct object
    *
-   *@param  tmp  The new recurringType value
+   * @param tmp The new recurringType value
    */
   public void setRecurringType(int tmp) {
     this.recurringType = tmp;
@@ -210,9 +210,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the recurringType attribute of the QuoteProduct object
+   * Sets the recurringType attribute of the QuoteProduct object
    *
-   *@param  tmp  The new recurringType value
+   * @param tmp The new recurringType value
    */
   public void setRecurringType(String tmp) {
     this.recurringType = Integer.parseInt(tmp);
@@ -220,9 +220,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the extendedPrice attribute of the QuoteProduct object
+   * Sets the extendedPrice attribute of the QuoteProduct object
    *
-   *@param  tmp  The new extendedPrice value
+   * @param tmp The new extendedPrice value
    */
   public void setExtendedPrice(double tmp) {
     this.extendedPrice = tmp;
@@ -230,9 +230,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the totalPrice attribute of the QuoteProduct object
+   * Sets the totalPrice attribute of the QuoteProduct object
    *
-   *@param  tmp  The new totalPrice value
+   * @param tmp The new totalPrice value
    */
   public void setTotalPrice(double tmp) {
     this.totalPrice = tmp;
@@ -240,9 +240,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the estimatedDeliveryDate attribute of the QuoteProduct object
+   * Sets the estimatedDeliveryDate attribute of the QuoteProduct object
    *
-   *@param  tmp  The new estimatedDeliveryDate value
+   * @param tmp The new estimatedDeliveryDate value
    */
   public void setEstimatedDeliveryDate(Timestamp tmp) {
     this.estimatedDeliveryDate = tmp;
@@ -250,9 +250,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the estimatedDeliveryDate attribute of the QuoteProduct object
+   * Sets the estimatedDeliveryDate attribute of the QuoteProduct object
    *
-   *@param  tmp  The new estimatedDeliveryDate value
+   * @param tmp The new estimatedDeliveryDate value
    */
   public void setEstimatedDeliveryDate(String tmp) {
     this.estimatedDeliveryDate = DatabaseUtils.parseTimestamp(tmp);
@@ -260,9 +260,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the QuoteProduct object
+   * Sets the statusId attribute of the QuoteProduct object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -270,9 +270,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the QuoteProduct object
+   * Sets the statusId attribute of the QuoteProduct object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -280,9 +280,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the QuoteProduct object
+   * Sets the statusDate attribute of the QuoteProduct object
    *
-   *@param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(Timestamp tmp) {
     this.statusDate = tmp;
@@ -290,9 +290,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the QuoteProduct object
+   * Sets the statusDate attribute of the QuoteProduct object
    *
-   *@param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(String tmp) {
     this.statusDate = DatabaseUtils.parseTimestamp(tmp);
@@ -300,9 +300,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the buildProductOptions attribute of the QuoteProduct object
+   * Sets the buildProductOptions attribute of the QuoteProduct object
    *
-   *@param  tmp  The new buildProductOptions value
+   * @param tmp The new buildProductOptions value
    */
   public void setBuildProductOptions(boolean tmp) {
     this.buildProductOptions = tmp;
@@ -310,9 +310,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the buildProductOptions attribute of the QuoteProduct object
+   * Sets the buildProductOptions attribute of the QuoteProduct object
    *
-   *@param  tmp  The new buildProductOptions value
+   * @param tmp The new buildProductOptions value
    */
   public void setBuildProductOptions(String tmp) {
     this.buildProductOptions = DatabaseUtils.parseBoolean(tmp);
@@ -320,9 +320,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the productOptionList attribute of the QuoteProduct object
+   * Sets the productOptionList attribute of the QuoteProduct object
    *
-   *@param  tmp  The new productOptionList value
+   * @param tmp The new productOptionList value
    */
   public void setProductOptionList(QuoteProductOptionList tmp) {
     this.productOptionList = tmp;
@@ -330,9 +330,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the productCatalog attribute of the QuoteProduct object
+   * Sets the productCatalog attribute of the QuoteProduct object
    *
-   *@param  tmp  The new productCatalog value
+   * @param tmp The new productCatalog value
    */
   public void setProductCatalog(ProductCatalog tmp) {
     this.productCatalog = tmp;
@@ -340,9 +340,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the buildProduct attribute of the QuoteProduct object
+   * Sets the buildProduct attribute of the QuoteProduct object
    *
-   *@param  tmp  The new buildProduct value
+   * @param tmp The new buildProduct value
    */
   public void setBuildProduct(boolean tmp) {
     this.buildProduct = tmp;
@@ -350,9 +350,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the buildProduct attribute of the QuoteProduct object
+   * Sets the buildProduct attribute of the QuoteProduct object
    *
-   *@param  tmp  The new buildProduct value
+   * @param tmp The new buildProduct value
    */
   public void setBuildProduct(String tmp) {
     this.buildProduct = DatabaseUtils.parseBoolean(tmp);
@@ -360,9 +360,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the buildProduct attribute of the QuoteProduct object
+   * Gets the buildProduct attribute of the QuoteProduct object
    *
-   *@return    The buildProduct value
+   * @return The buildProduct value
    */
   public boolean getBuildProduct() {
     return buildProduct;
@@ -370,9 +370,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the productCatalog attribute of the QuoteProduct object
+   * Gets the productCatalog attribute of the QuoteProduct object
    *
-   *@return    The productCatalog value
+   * @return The productCatalog value
    */
   public ProductCatalog getProductCatalog() {
     return productCatalog;
@@ -380,9 +380,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteProduct object
+   * Gets the id attribute of the QuoteProduct object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -390,9 +390,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteProduct object
+   * Gets the quoteId attribute of the QuoteProduct object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -400,9 +400,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the productId attribute of the QuoteProduct object
+   * Gets the productId attribute of the QuoteProduct object
    *
-   *@return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -410,9 +410,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the quantity attribute of the QuoteProduct object
+   * Gets the quantity attribute of the QuoteProduct object
    *
-   *@return    The quantity value
+   * @return The quantity value
    */
   public int getQuantity() {
     return quantity;
@@ -420,9 +420,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the priceCurrency attribute of the QuoteProduct object
+   * Gets the priceCurrency attribute of the QuoteProduct object
    *
-   *@return    The priceCurrency value
+   * @return The priceCurrency value
    */
   public int getPriceCurrency() {
     return priceCurrency;
@@ -430,9 +430,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the priceAmount attribute of the QuoteProduct object
+   * Gets the priceAmount attribute of the QuoteProduct object
    *
-   *@return    The priceAmount value
+   * @return The priceAmount value
    */
   public double getPriceAmount() {
     return priceAmount;
@@ -440,9 +440,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the recurringCurrency attribute of the QuoteProduct object
+   * Gets the recurringCurrency attribute of the QuoteProduct object
    *
-   *@return    The recurringCurrency value
+   * @return The recurringCurrency value
    */
   public int getRecurringCurrency() {
     return recurringCurrency;
@@ -450,9 +450,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the recurringAmount attribute of the QuoteProduct object
+   * Gets the recurringAmount attribute of the QuoteProduct object
    *
-   *@return    The recurringAmount value
+   * @return The recurringAmount value
    */
   public double getRecurringAmount() {
     return recurringAmount;
@@ -460,9 +460,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the recurringType attribute of the QuoteProduct object
+   * Gets the recurringType attribute of the QuoteProduct object
    *
-   *@return    The recurringType value
+   * @return The recurringType value
    */
   public int getRecurringType() {
     return recurringType;
@@ -470,9 +470,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the extendedPrice attribute of the QuoteProduct object
+   * Gets the extendedPrice attribute of the QuoteProduct object
    *
-   *@return    The extendedPrice value
+   * @return The extendedPrice value
    */
   public double getExtendedPrice() {
     return extendedPrice;
@@ -480,9 +480,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the totalPrice attribute of the QuoteProduct object
+   * Gets the totalPrice attribute of the QuoteProduct object
    *
-   *@return    The totalPrice value
+   * @return The totalPrice value
    */
   public double getTotalPrice() {
     totalPrice = ((double) this.getQuantity()) * (this.getPriceAmount() - this.getExtendedPrice());
@@ -496,9 +496,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the estimatedDeliveryDate attribute of the QuoteProduct object
+   * Gets the estimatedDeliveryDate attribute of the QuoteProduct object
    *
-   *@return    The estimatedDeliveryDate value
+   * @return The estimatedDeliveryDate value
    */
   public Timestamp getEstimatedDeliveryDate() {
     return estimatedDeliveryDate;
@@ -506,9 +506,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the QuoteProduct object
+   * Gets the statusId attribute of the QuoteProduct object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -516,9 +516,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the statusDate attribute of the QuoteProduct object
+   * Gets the statusDate attribute of the QuoteProduct object
    *
-   *@return    The statusDate value
+   * @return The statusDate value
    */
   public Timestamp getStatusDate() {
     return statusDate;
@@ -526,9 +526,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the buildProductOptions attribute of the QuoteProduct object
+   * Gets the buildProductOptions attribute of the QuoteProduct object
    *
-   *@return    The buildProductOptions value
+   * @return The buildProductOptions value
    */
   public boolean getBuildProductOptions() {
     return buildProductOptions;
@@ -536,9 +536,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the productOptionList attribute of the QuoteProduct object
+   * Gets the productOptionList attribute of the QuoteProduct object
    *
-   *@return    The productOptionList value
+   * @return The productOptionList value
    */
   public QuoteProductOptionList getProductOptionList() {
     return productOptionList;
@@ -546,9 +546,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the estimatedDelivery attribute of the QuoteProduct object
+   * Gets the estimatedDelivery attribute of the QuoteProduct object
    *
-   *@return    The estimatedDelivery value
+   * @return The estimatedDelivery value
    */
   public String getEstimatedDelivery() {
     return estimatedDelivery;
@@ -556,9 +556,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the estimatedDelivery attribute of the QuoteProduct object
+   * Sets the estimatedDelivery attribute of the QuoteProduct object
    *
-   *@param  tmp  The new estimatedDelivery value
+   * @param tmp The new estimatedDelivery value
    */
   public void setEstimatedDelivery(String tmp) {
     this.estimatedDelivery = tmp;
@@ -566,9 +566,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the comment attribute of the QuoteProduct object
+   * Gets the comment attribute of the QuoteProduct object
    *
-   *@return    The comment value
+   * @return The comment value
    */
   public String getComment() {
     return comment;
@@ -576,9 +576,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Sets the comment attribute of the QuoteProduct object
+   * Sets the comment attribute of the QuoteProduct object
    *
-   *@param  tmp  The new comment value
+   * @param tmp The new comment value
    */
   public void setComment(String tmp) {
     this.comment = tmp;
@@ -586,17 +586,18 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteProduct object
+   * Constructor for the QuoteProduct object
    */
-  public QuoteProduct() { }
+  public QuoteProduct() {
+  }
 
 
   /**
-   *  Constructor for the QuoteProduct object
+   * Constructor for the QuoteProduct object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteProduct(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -604,10 +605,10 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteProduct object
+   * Constructor for the QuoteProduct object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteProduct(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -615,11 +616,11 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -630,8 +631,7 @@ public class QuoteProduct extends GenericBean {
         "SELECT qp.* " +
         "FROM quote_product qp " +
         "LEFT JOIN product_catalog pctlg ON (qp.product_id = pctlg.product_id) " +
-        "WHERE qp.item_id = ? "
-        );
+        "WHERE qp.item_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -652,10 +652,10 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //quote_product table
@@ -679,10 +679,10 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildProduct(Connection db) throws SQLException {
     productCatalog = new ProductCatalog(db, this.getProductId());
@@ -691,10 +691,10 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildProductOptions(Connection db) throws SQLException {
     productOptionList = new QuoteProductOptionList();
@@ -705,23 +705,28 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "quote_product_item_id_seq");
     sql.append(
-        " INSERT INTO quote_product(quote_id, product_id, " +
+        " INSERT INTO quote_product(" + (id > -1 ? "item_id, " : "") + "quote_id, product_id, " +
         " quantity, price_currency, price_amount, recurring_currency, " +
         " recurring_amount, recurring_type, extended_price, " +
         " total_price, estimated_delivery_date, status_id, status_date, estimated_delivery, comment)");
 
-    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    sql.append(
+        "VALUES(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, this.getQuoteId());
     pst.setInt(++i, this.getProductId());
     pst.setInt(++i, this.getQuantity());
@@ -739,19 +744,19 @@ public class QuoteProduct extends GenericBean {
     pst.setString(++i, this.getComment());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "quote_product_item_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "quote_product_item_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  optionList        Description of the Parameter
-   *@param  request           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param optionList Description of the Parameter
+   * @param request    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, QuoteProductOptionList optionList, HttpServletRequest request) throws SQLException {
     boolean status = false;
@@ -771,7 +776,8 @@ public class QuoteProduct extends GenericBean {
         status = option.insert(db);
 
         OptionConfigurator configurator =
-            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+                db, option.getConfiguratorId());
         configurator.queryProperties(db, option.getOptionId(), false);
         configurator.saveQuoteOption(db, option.getId(), request);
       }
@@ -793,11 +799,11 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -819,7 +825,8 @@ public class QuoteProduct extends GenericBean {
       productOptionList = null;
 
       // delete the quote product
-      PreparedStatement pst = db.prepareStatement(" DELETE FROM quote_product WHERE item_id = ?");
+      PreparedStatement pst = db.prepareStatement(
+          " DELETE FROM quote_product WHERE item_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -841,11 +848,11 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -860,7 +867,8 @@ public class QuoteProduct extends GenericBean {
       }
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
-      sql.append(" UPDATE quote_product " +
+      sql.append(
+          " UPDATE quote_product " +
           " SET quantity = ? , " +
           "     price_currency = ?, " +
           "     price_amount = ?, " +
@@ -912,12 +920,12 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  request           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, HttpServletRequest request) throws SQLException {
     int resultCount = 0;
@@ -936,7 +944,8 @@ public class QuoteProduct extends GenericBean {
       while (i.hasNext()) {
         QuoteProductOption thisOption = (QuoteProductOption) i.next();
         OptionConfigurator configurator =
-            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, thisOption.getConfiguratorId());
+            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+                db, thisOption.getConfiguratorId());
 
         configurator.queryProperties(db, thisOption.getOptionId(), false);
         configurator.queryQuoteProperties(db, thisOption.getId());
@@ -964,9 +973,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneParams attribute of the QuoteProduct class
+   * Gets the timeZoneParams attribute of the QuoteProduct class
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -977,9 +986,9 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the QuoteProduct class
+   * Gets the numberParams attribute of the QuoteProduct class
    *
-   *@return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -992,11 +1001,11 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param quoteId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void copyQuoteProduct(Connection db, int quoteId) throws SQLException {
     boolean commit = false;
@@ -1021,13 +1030,13 @@ public class QuoteProduct extends GenericBean {
       copyProduct.setComment(this.getComment());
       copyProduct.setEstimatedDelivery(this.getEstimatedDelivery());
       copyProduct.insert(db);
-      
+
       Iterator optionIterator = (Iterator) this.getProductOptionList().iterator();
       while (optionIterator.hasNext()) {
         QuoteProductOption option = (QuoteProductOption) optionIterator.next();
         option.copyQuoteProductOption(db, copyProduct.getId());
       }
-      
+
       if (commit) {
         db.commit();
       }
@@ -1045,10 +1054,10 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPricing(Connection db) throws SQLException {
     if (this.getProductCatalog() == null && this.getProductId() != -1) {
@@ -1059,7 +1068,8 @@ public class QuoteProduct extends GenericBean {
       throw new SQLException("Product ID not provided");
     }
     if (this.getProductCatalog().getActivePrice() == null) {
-      throw new SQLException("The selected product does not have an enabled price");
+      throw new SQLException(
+          "The selected product does not have an enabled price");
     }
     ProductCatalogPricing price = (ProductCatalogPricing) this.getProductCatalog().getActivePrice();
     this.setPriceAmount(price.getPriceAmount());
@@ -1071,11 +1081,11 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int clone(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1096,7 +1106,8 @@ public class QuoteProduct extends GenericBean {
         while (iterator.hasNext()) {
           QuoteProductOption option = (QuoteProductOption) iterator.next();
           OptionConfigurator configurator =
-              (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+              (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+                  db, option.getConfiguratorId());
           option.setItemId(this.getId());
           configurator.queryProperties(db, option.getOptionId(), false);
           configurator.queryQuoteProperties(db, option.getId());

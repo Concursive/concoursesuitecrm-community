@@ -24,41 +24,51 @@
   var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, productId, categoryId, parentCatId, view) {
+  function displayMenu(loc, id, productId, categoryId, parentCatId, view, trashed) {
     thisProductId = productId;
     thisCategoryId = categoryId;
     thisParentCatId = parentCatId;
     thisView = view;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCatalog", "down", 0, 0, 170, getHeight("menuCatalogTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
-  function updateMenu() {
-    if (thisView == 'PRODUCT') {
-      showSpan('menuViewProduct');
-      showSpan('menuModifyProduct');
-      showSpan('menuCloneProduct');
-      showSpan('menuMoveProduct');
-      showSpan('menuDeleteProduct');
-      hideSpan('menuRenameCategory');
-      hideSpan('menuMoveCategory');
-      hideSpan('menuDeleteCategory');
-    } else if (thisView == 'CATEGORY') {
-      showSpan('menuRenameCategory');
-      showSpan('menuMoveCategory');
-      showSpan('menuDeleteCategory');
-      hideSpan('menuViewProduct');
+
+  function updateMenu(trashed) {
+    if (trashed == 'true'){
       hideSpan('menuModifyProduct');
       hideSpan('menuCloneProduct');
       hideSpan('menuMoveProduct');
       hideSpan('menuDeleteProduct');
+      hideSpan('menuRenameCategory');
+      hideSpan('menuMoveCategory');
+      hideSpan('menuDeleteCategory');
+    } else {
+      if (thisView == 'PRODUCT') {
+        showSpan('menuViewProduct');
+        showSpan('menuModifyProduct');
+        showSpan('menuCloneProduct');
+        showSpan('menuMoveProduct');
+        showSpan('menuDeleteProduct');
+        hideSpan('menuRenameCategory');
+        hideSpan('menuMoveCategory');
+        hideSpan('menuDeleteCategory');
+      } else if (thisView == 'CATEGORY') {
+        showSpan('menuRenameCategory');
+        showSpan('menuMoveCategory');
+        showSpan('menuDeleteCategory');
+        hideSpan('menuViewProduct');
+        hideSpan('menuModifyProduct');
+        hideSpan('menuCloneProduct');
+        hideSpan('menuMoveProduct');
+        hideSpan('menuDeleteProduct');
+      }
     }
   }
-  
+
   //Product Category Functions
   function renameCategory() {
     window.location.href = 'ProductCategories.do?command=Modify&catId=' + thisCategoryId + '&categoryId=' + thisParentCatId + '&moduleId=<%= permissionCategory.getId() %>';

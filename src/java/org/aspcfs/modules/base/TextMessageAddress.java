@@ -22,11 +22,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Represents an email address.
+ * Represents an email address.
  *
- *@author     kailash
- *@created    January 11, 2005
- *@version    $Id$
+ * @author kailash
+ * @version $Id$
+ * @created January 11, 2005
  */
 public class TextMessageAddress {
 
@@ -47,9 +47,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the isContact attribute of the TextMessageAddress object
+   * Sets the isContact attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new isContact value
+   * @param tmp The new isContact value
    */
   public void setIsContact(boolean tmp) {
     this.isContact = tmp;
@@ -57,9 +57,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the id attribute of the TextMessageAddress object
+   * Sets the id attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -67,9 +67,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the id attribute of the TextMessageAddress object
+   * Sets the id attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -77,9 +77,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the orgId attribute of the TextMessageAddress object
+   * Sets the orgId attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -87,9 +87,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the orgId attribute of the TextMessageAddress object
+   * Sets the orgId attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -97,9 +97,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the contactId attribute of the TextMessageAddress object
+   * Sets the contactId attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -107,9 +107,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the contactId attribute of the TextMessageAddress object
+   * Sets the contactId attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -117,9 +117,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the type attribute of the TextMessageAddress object
+   * Sets the type attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -127,9 +127,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the type attribute of the TextMessageAddress object
+   * Sets the type attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -137,9 +137,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the typeName attribute of the TextMessageAddress object
+   * Sets the typeName attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new typeName value
+   * @param tmp The new typeName value
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -147,9 +147,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the textMessageAddress attribute of the TextMessageAddress object
+   * Sets the textMessageAddress attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new textMessageAddress value
+   * @param tmp The new textMessageAddress value
    */
   public void setTextMessageAddress(String tmp) {
     this.textMessageAddress = tmp;
@@ -157,9 +157,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the enteredBy attribute of the TextMessageAddress object
+   * Sets the enteredBy attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -167,9 +167,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the enteredBy attribute of the TextMessageAddress object
+   * Sets the enteredBy attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -177,9 +177,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TextMessageAddress object
+   * Sets the modifiedBy attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -187,9 +187,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TextMessageAddress object
+   * Sets the modifiedBy attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -197,9 +197,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the enabled attribute of the TextMessageAddress object
+   * Sets the enabled attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -207,9 +207,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the enabled attribute of the TextMessageAddress object
+   * Sets the enabled attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -217,9 +217,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the entered attribute of the TextMessageAddress object
+   * Sets the entered attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -227,9 +227,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the entered attribute of the TextMessageAddress object
+   * Sets the entered attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -237,9 +237,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the modified attribute of the TextMessageAddress object
+   * Sets the modified attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -247,9 +247,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the modified attribute of the TextMessageAddress object
+   * Sets the modified attribute of the TextMessageAddress object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -257,10 +257,10 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the primaryTextMessageAddress attribute of the TextMessageAddress
-   *  object
+   * Sets the primaryTextMessageAddress attribute of the TextMessageAddress
+   * object
    *
-   *@param  tmp  The new primaryTextMessageAddress value
+   * @param tmp The new primaryTextMessageAddress value
    */
   public void setPrimaryTextMessageAddress(boolean tmp) {
     this.primaryTextMessageAddress = tmp;
@@ -268,10 +268,10 @@ public class TextMessageAddress {
 
 
   /**
-   *  Sets the primaryTextMessageAddress attribute of the TextMessageAddress
-   *  object
+   * Sets the primaryTextMessageAddress attribute of the TextMessageAddress
+   * object
    *
-   *@param  tmp  The new primaryTextMessageAddress value
+   * @param tmp The new primaryTextMessageAddress value
    */
   public void setPrimaryTextMessageAddress(String tmp) {
     this.primaryTextMessageAddress = DatabaseUtils.parseBoolean(tmp);
@@ -279,9 +279,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the isContact attribute of the TextMessageAddress object
+   * Gets the isContact attribute of the TextMessageAddress object
    *
-   *@return    The isContact value
+   * @return The isContact value
    */
   public boolean getIsContact() {
     return isContact;
@@ -289,9 +289,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the id attribute of the TextMessageAddress object
+   * Gets the id attribute of the TextMessageAddress object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -299,9 +299,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the orgId attribute of the TextMessageAddress object
+   * Gets the orgId attribute of the TextMessageAddress object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -309,9 +309,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the contactId attribute of the TextMessageAddress object
+   * Gets the contactId attribute of the TextMessageAddress object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -319,9 +319,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the type attribute of the TextMessageAddress object
+   * Gets the type attribute of the TextMessageAddress object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -329,9 +329,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the typeName attribute of the TextMessageAddress object
+   * Gets the typeName attribute of the TextMessageAddress object
    *
-   *@return    The typeName value
+   * @return The typeName value
    */
   public String getTypeName() {
     return typeName;
@@ -339,9 +339,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the textMessageAddress attribute of the TextMessageAddress object
+   * Gets the textMessageAddress attribute of the TextMessageAddress object
    *
-   *@return    The textMessageAddress value
+   * @return The textMessageAddress value
    */
   public String getTextMessageAddress() {
     return textMessageAddress;
@@ -349,9 +349,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the enteredBy attribute of the TextMessageAddress object
+   * Gets the enteredBy attribute of the TextMessageAddress object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -359,9 +359,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the modifiedBy attribute of the TextMessageAddress object
+   * Gets the modifiedBy attribute of the TextMessageAddress object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -369,9 +369,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the enabled attribute of the TextMessageAddress object
+   * Gets the enabled attribute of the TextMessageAddress object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -379,9 +379,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the entered attribute of the TextMessageAddress object
+   * Gets the entered attribute of the TextMessageAddress object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -389,9 +389,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the modified attribute of the TextMessageAddress object
+   * Gets the modified attribute of the TextMessageAddress object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -399,10 +399,10 @@ public class TextMessageAddress {
 
 
   /**
-   *  Gets the primaryTextMessageAddress attribute of the TextMessageAddress
-   *  object
+   * Gets the primaryTextMessageAddress attribute of the TextMessageAddress
+   * object
    *
-   *@return    The primaryTextMessageAddress value
+   * @return The primaryTextMessageAddress value
    */
   public boolean getPrimaryTextMessageAddress() {
     return primaryTextMessageAddress;
@@ -410,23 +410,24 @@ public class TextMessageAddress {
 
 
   /**
-   *  If an textMessageAddress address is filled in, and a type is selected, then the email
-   *  address is valid.
+   * If an textMessageAddress address is filled in, and a type is selected, then the email
+   * address is valid.
    *
-   *@return    The Valid value
-   *@since     1.5
+   * @return The Valid value
+   * @since 1.5
    */
   public boolean isValid() {
-    return (type > -1 && textMessageAddress != null && !textMessageAddress.trim().equals(""));
+    return (type > -1 && textMessageAddress != null && !textMessageAddress.trim().equals(
+        ""));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.4
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.4
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("address_id"));
@@ -457,7 +458,8 @@ public class TextMessageAddress {
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
     if (isContact) {
-      this.setPrimaryTextMessageAddress(rs.getBoolean("primary_textmessage_address"));
+      this.setPrimaryTextMessageAddress(
+          rs.getBoolean("primary_textmessage_address"));
     }
 
     if (modifiedBy == -1) {
@@ -467,21 +469,23 @@ public class TextMessageAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of Parameter
-   *@param  parseItem  Description of Parameter
-   *@since             1.4
+   * @param request   Description of Parameter
+   * @param parseItem Description of Parameter
+   * @since 1.4
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
-    
+
     this.setType(request.getParameter("textmessage" + parseItem + "type"));
     if (request.getParameter("textmessage" + parseItem + "id") != null) {
       this.setId(request.getParameter("textmessage" + parseItem + "id"));
     }
-    this.setTextMessageAddress(request.getParameter("textmessage" + parseItem + "address"));
+    this.setTextMessageAddress(
+        request.getParameter("textmessage" + parseItem + "address"));
     if (request.getParameter("textmessage" + parseItem + "delete") != null) {
-      String action = request.getParameter("textmessage" + parseItem + "delete").toLowerCase();
+      String action = request.getParameter(
+          "textmessage" + parseItem + "delete").toLowerCase();
       if (action.equals("on")) {
         this.setEnabled(false);
       }
@@ -490,9 +494,9 @@ public class TextMessageAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     return (

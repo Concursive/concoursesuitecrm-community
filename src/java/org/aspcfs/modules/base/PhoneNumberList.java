@@ -15,19 +15,21 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
+
 /**
- *  Contains a list of phone numbers... currently used to build the list from
- *  the database with any of the parameters to limit the results.
+ * Contains a list of phone numbers... currently used to build the list from
+ * the database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
- *@created    August 31, 2001
- *@version    $Id: PhoneNumberList.java,v 1.2 2001/09/04 15:06:16 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: PhoneNumberList.java,v 1.2 2001/09/04 15:06:16 mrajkowski Exp
+ *          $
+ * @created August 31, 2001
  */
 public class PhoneNumberList extends Vector {
 
@@ -38,10 +40,10 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Sets the PagedListInfo attribute of the AddressList object
+   * Sets the PagedListInfo attribute of the AddressList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since       1.1
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
    */
   protected void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -49,10 +51,10 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Sets the OrgId attribute of the AddressList object
+   * Sets the OrgId attribute of the AddressList object
    *
-   *@param  tmp  The new OrgId value
-   *@since       1.1
+   * @param tmp The new OrgId value
+   * @since 1.1
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -60,10 +62,9 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Sets the ContactId attribute of the PhoneNumberList object
+   * Sets the ContactId attribute of the PhoneNumberList object
    *
-   *@param  tmp  The new ContactId value
-   *@since
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -71,10 +72,9 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Sets the Type attribute of the PhoneNumberList object
+   * Sets the Type attribute of the PhoneNumberList object
    *
-   *@param  tmp  The new Type value
-   *@since
+   * @param tmp The new Type value
    */
   protected void setType(int tmp) {
     this.type = tmp;
@@ -82,11 +82,10 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Gets the PhoneNumber attribute of the PhoneNumberList object
+   * Gets the PhoneNumber attribute of the PhoneNumberList object
    *
-   *@param  thisType  Description of Parameter
-   *@return           The PhoneNumber value
-   *@since
+   * @param thisType Description of Parameter
+   * @return The PhoneNumber value
    */
   public String getPhoneNumber(String thisType) {
     Iterator i = this.iterator();
@@ -101,10 +100,10 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Gets the phoneNumber attribute of the PhoneNumberList object
+   * Gets the phoneNumber attribute of the PhoneNumberList object
    *
-   *@param  thisType  Description of the Parameter
-   *@return           The phoneNumber value
+   * @param thisType Description of the Parameter
+   * @return The phoneNumber value
    */
   public String getPhoneNumber(int thisType) {
     Iterator i = this.iterator();
@@ -119,10 +118,10 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Gets the extension attribute of the PhoneNumberList object
+   * Gets the extension attribute of the PhoneNumberList object
    *
-   *@param  tmpNumber  Description of the Parameter
-   *@return            The extension value
+   * @param tmpNumber Description of the Parameter
+   * @return The extension value
    */
   public String getExtension(String tmpNumber) {
     Iterator i = this.iterator();
@@ -138,10 +137,10 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Returns the phone number that is marked as primary or 
+   * Returns the phone number that is marked as primary or
    * returns the only (or last) phone number in the list.
    *
-   *@return    The primaryPhoneNumber value
+   * @return The primaryPhoneNumber value
    */
   public String getPrimaryPhoneNumber() {
     Iterator i = this.iterator();
@@ -152,16 +151,16 @@ public class PhoneNumberList extends Vector {
         break;
       }
     }
-    return ((thisNumber == null)? "": thisNumber.getPhoneNumber());
+    return ((thisNumber == null) ? "" : thisNumber.getPhoneNumber());
   }
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.1
+   * @param sqlFilter Description of Parameter
+   * @since 1.1
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -180,13 +179,13 @@ public class PhoneNumberList extends Vector {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

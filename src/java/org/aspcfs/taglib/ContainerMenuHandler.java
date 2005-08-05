@@ -146,7 +146,8 @@ public class ContainerMenuHandler extends TagSupport {
               "ContainerMenuHandlerStyle", "SIDETABS");
         }
         if (pageContext.getRequest().getParameter("container") != null) {
-          hideContainer = "false".equals(pageContext.getRequest().getParameter("container"));
+          hideContainer = "false".equals(
+              pageContext.getRequest().getParameter("container"));
         }
       }
       // Load the container data from XML
@@ -193,7 +194,8 @@ public class ContainerMenuHandler extends TagSupport {
       }
       if (style == SIDE_TABS) {
         this.pageContext.getOut().write(
-            "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n" +
+            "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td width=\"100%\">\n" +
+            "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" height=\"100%\">\n" +
             "  <tr>\n" +
             "    <td width=\"100%\">" +
             "      <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" +
@@ -215,7 +217,7 @@ public class ContainerMenuHandler extends TagSupport {
             "    </td>\n" +
             "  </tr>\n" +
             "  <tr>\n" +
-            "    <td class=\"containerBackSide\">");
+            "    <td class=\"containerBackSide\" height=\"100%\">");
       } else if (style == SUB_TABS) {
         // Draw the label
         this.pageContext.getOut().write(
@@ -241,81 +243,82 @@ public class ContainerMenuHandler extends TagSupport {
         if (containerMenu.containsKey(this.name)) {
           LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
           if (submenuItems.size() > 0) {
-            this.pageContext.getOut().write(
-                "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"conSubs\">\n" +
-                "  <tr>\n");
-            // Draw the menu tabs
-            Iterator i = submenuItems.iterator();
-            while (i.hasNext()) {
-              SubmenuItem thisItem = (SubmenuItem) i.next();
-              if (thisItem.getPermission() == null ||
-                  (thisItem.getPermission() != null && thisItem.getPermission().equals(
-                      "")) ||
-                  (thisUser != null && systemStatus != null &&
-                  systemStatus.hasPermission(
-                      thisUser.getUserId(), thisItem.getPermission()))) {
-                Template linkText = new Template(thisItem.getLink());
-                linkText.setParseElements(params);
-                if (thisItem.getName().equals(selected)) {
-                  // Selected tab
-                  this.pageContext.getOut().write(
-                      "<td class=\"conSubOn\" nowrap>");
-                  this.pageContext.getOut().write(
-                      "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                  this.pageContext.getOut().write(thisItem.getLongHtml());
-                  this.pageContext.getOut().write("</a>");
-                  this.pageContext.getOut().write("</td>");
-                } else {
-                  // Unselected Tabs
-                  this.pageContext.getOut().write(
-                      "<td class=\"conSubOff\" nowrap>");
-                  this.pageContext.getOut().write(
-                      "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                  this.pageContext.getOut().write(thisItem.getLongHtml());
-                  this.pageContext.getOut().write("</a>");
-                  this.pageContext.getOut().write("</td>");
+            if (!hideContainer) {
+              this.pageContext.getOut().write(
+                  "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"conSubs\">\n" +
+                  "  <tr>\n");
+              // Draw the menu tabs
+              Iterator i = submenuItems.iterator();
+              while (i.hasNext()) {
+                SubmenuItem thisItem = (SubmenuItem) i.next();
+                if (thisItem.getPermission() == null ||
+                    (thisItem.getPermission() != null && thisItem.getPermission().equals(
+                        "")) ||
+                    (thisUser != null && systemStatus != null &&
+                    systemStatus.hasPermission(
+                        thisUser.getUserId(), thisItem.getPermission()))) {
+                  Template linkText = new Template(thisItem.getLink());
+                  linkText.setParseElements(params);
+                  if (thisItem.getName().equals(selected)) {
+                    // Selected tab
+                    this.pageContext.getOut().write(
+                        "<td class=\"conSubOn\" nowrap>");
+                    this.pageContext.getOut().write(
+                        "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                    this.pageContext.getOut().write(thisItem.getLongHtml());
+                    this.pageContext.getOut().write("</a>");
+                    this.pageContext.getOut().write("</td>");
+                  } else {
+                    // Unselected Tabs
+                    this.pageContext.getOut().write(
+                        "<td class=\"conSubOff\" nowrap>");
+                    this.pageContext.getOut().write(
+                        "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                    this.pageContext.getOut().write(thisItem.getLongHtml());
+                    this.pageContext.getOut().write("</a>");
+                    this.pageContext.getOut().write("</td>");
+                  }
                 }
               }
-            }
-            this.pageContext.getOut().write("  </tr>\n");
-            this.pageContext.getOut().write("  <tr>\n");
-
-            // Draw the focus line
-            i = submenuItems.iterator();
-            while (i.hasNext()) {
-              SubmenuItem thisItem = (SubmenuItem) i.next();
-              if (thisItem.getPermission() == null ||
-                  (thisItem.getPermission() != null && thisItem.getPermission().equals(
-                      "")) ||
-                  (thisUser != null && systemStatus != null &&
-                  systemStatus.hasPermission(
-                      thisUser.getUserId(), thisItem.getPermission()))) {
-                Template linkText = new Template(thisItem.getLink());
-                linkText.setParseElements(params);
-                if (thisItem.getName().equals(selected)) {
-                  // Selected tab
-                  this.pageContext.getOut().write(
-                      "<td class=\"conSubLine\" nowrap>");
-                  this.pageContext.getOut().write(
-                      "<img src=\"images/blank.gif\" border=\"0\" />");
-                  this.pageContext.getOut().write("</td>");
-                } else {
-                  // Unselected Tabs
-                  this.pageContext.getOut().write("<td nowrap>");
-                  this.pageContext.getOut().write(
-                      "<img src=\"images/blank.gif\" border=\"0\" />");
-                  this.pageContext.getOut().write("</td>");
+              this.pageContext.getOut().write("  </tr>\n");
+              this.pageContext.getOut().write("  <tr>\n");
+  
+              // Draw the focus line
+              i = submenuItems.iterator();
+              while (i.hasNext()) {
+                SubmenuItem thisItem = (SubmenuItem) i.next();
+                if (thisItem.getPermission() == null ||
+                    (thisItem.getPermission() != null && thisItem.getPermission().equals(
+                        "")) ||
+                    (thisUser != null && systemStatus != null &&
+                    systemStatus.hasPermission(
+                        thisUser.getUserId(), thisItem.getPermission()))) {
+                  Template linkText = new Template(thisItem.getLink());
+                  linkText.setParseElements(params);
+                  if (thisItem.getName().equals(selected)) {
+                    // Selected tab
+                    this.pageContext.getOut().write(
+                        "<td class=\"conSubLine\" nowrap>");
+                    this.pageContext.getOut().write(
+                        "<img src=\"images/blank.gif\" border=\"0\" />");
+                    this.pageContext.getOut().write("</td>");
+                  } else {
+                    // Unselected Tabs
+                    this.pageContext.getOut().write("<td nowrap>");
+                    this.pageContext.getOut().write(
+                        "<img src=\"images/blank.gif\" border=\"0\" />");
+                    this.pageContext.getOut().write("</td>");
+                  }
                 }
               }
+              this.pageContext.getOut().write("  </tr>\n");
+              this.pageContext.getOut().write("</table>\n");
             }
-            this.pageContext.getOut().write("  </tr>\n");
-            this.pageContext.getOut().write("</table>\n");
           }
         }
       } else if (style == TABS) {
         // Draw header for tabs
-        this.pageContext.getOut().write(
-            "<div class=\"tabs\" id=\"toptabs\">");
+        this.pageContext.getOut().write("<div class=\"tabs\" id=\"toptabs\">");
         this.pageContext.getOut().write(
             "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
         this.pageContext.getOut().write("<tr>");
@@ -387,8 +390,8 @@ public class ContainerMenuHandler extends TagSupport {
     if (style == SIDE_TABS && hideContainer) {
       try {
         this.pageContext.getOut().write(
-          "</td>\n" +
-          "<td class=\"containerRight\" height=\"100%\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" />");
+            "</td>\n" +
+            "<td class=\"containerRight\" height=\"100%\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" />");
       } catch (Exception e) {
 
       }
@@ -494,6 +497,7 @@ public class ContainerMenuHandler extends TagSupport {
           this.pageContext.getOut().write(
               "<tr><td class=\"sidetabBottom\" height=\"100%\" nowrap>&nbsp;</td><td class=\"sidetabBottom-mid\">&nbsp;</td><td><span height=\"100%\">&nbsp;</span></td></tr>");
           this.pageContext.getOut().write("</table>");
+          this.pageContext.getOut().write("</td></tr></table>");
         }
       }
     } catch (Exception e) {

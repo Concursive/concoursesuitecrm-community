@@ -31,45 +31,47 @@
  */
 package com.isavvix.tools;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.util.*;
 import java.text.SimpleDateFormat;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
- *  This class provides methods for parsing a HTML multi-part form. Each method
- *  returns a HashMap which contains keys for all parameters sent from the web
- *  browser. The corresponding values are either type "String" or "FileInfo"
- *  depending on the type of data in the corresponding part. <P>
+ * This class provides methods for parsing a HTML multi-part form. Each method
+ * returns a HashMap which contains keys for all parameters sent from the web
+ * browser. The corresponding values are either type "String" or "FileInfo"
+ * depending on the type of data in the corresponding part. <P>
+ * <p/>
+ * Refer to http://www.ietf.org/rfc/rfc1867.txt<P>
+ * <p/>
+ * The following is a sample InputStream expected by the methods in this class:
+ * <PRE>
+ * -----------------------------7ce23a18680
+ * Content-Disposition: form-data; name="SomeTextField1"
+ * on
+ * -----------------------------7ce23a18680
+ * Content-Disposition: form-data; name="LocalFile1"; filename="C:\temp\testit.c"
+ * Content-Type: text/plain
+ * #include <stdlib.h>
+ * int main(int argc, char **argv)
+ * {
+ * printf("Testing\n");
+ * return 0;
+ * }
+ * -----------------------------7ce23a18680--
+ * </PRE>
  *
- *  Refer to http://www.ietf.org/rfc/rfc1867.txt<P>
- *
- *  The following is a sample InputStream expected by the methods in this class:
- *  <PRE>
- *-----------------------------7ce23a18680
- *Content-Disposition: form-data; name="SomeTextField1"
- *on
- *-----------------------------7ce23a18680
- *Content-Disposition: form-data; name="LocalFile1"; filename="C:\temp\testit.c"
- *Content-Type: text/plain
- *#include <stdlib.h>
- *int main(int argc, char **argv)
- *{
- *printf("Testing\n");
- *return 0;
- *}
- *-----------------------------7ce23a18680--
- *</PRE>
- *
- *@author     Anil Hemrajani
- *@created    December 6, 2001
- *@version    $Id: HttpMultiPartParser.java,v 1.2 2002/04/23 18:39:44 mrajkowski
- *      Exp $
- *@see        com.isavvix.tools.FileInfo
+ * @author Anil Hemrajani
+ * @version $Id: HttpMultiPartParser.java,v 1.2 2002/04/23 18:39:44 mrajkowski
+ *          Exp $
+ * @created December 6, 2001
+ * @see com.isavvix.tools.FileInfo
  */
 public class HttpMultiPartParser {
-  private final String lineSeparator = System.getProperty("line.separator", "\n");
+  private final String lineSeparator = System.getProperty(
+      "line.separator", "\n");
   private final String fs = System.getProperty("file.separator");
   private final int ONE_MB = 1024 * 1024 * 1;
   private boolean useUniqueName = false;
@@ -80,9 +82,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Sets the useUniqueName attribute of the HttpMultiPartParser object
+   * Sets the useUniqueName attribute of the HttpMultiPartParser object
    *
-   *@param  tmp  The new useUniqueName value
+   * @param tmp The new useUniqueName value
    */
   public void setUseUniqueName(boolean tmp) {
     this.useUniqueName = tmp;
@@ -90,9 +92,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Sets the UsePathParam attribute of the HttpMultiPartParser object
+   * Sets the UsePathParam attribute of the HttpMultiPartParser object
    *
-   *@param  tmp  The new UsePathParam value
+   * @param tmp The new UsePathParam value
    */
   public void setUsePathParam(boolean tmp) {
     this.usePathParam = tmp;
@@ -100,9 +102,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Sets the useDateForFolder attribute of the HttpMultiPartParser object
+   * Sets the useDateForFolder attribute of the HttpMultiPartParser object
    *
-   *@param  tmp  The new useDateForFolder value
+   * @param tmp The new useDateForFolder value
    */
   public void setUseDateForFolder(boolean tmp) {
     this.useDateForFolder = tmp;
@@ -110,9 +112,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Sets the Version attribute of the HttpMultiPartParser object
+   * Sets the Version attribute of the HttpMultiPartParser object
    *
-   *@param  tmp  The new Version value
+   * @param tmp The new Version value
    */
   public void setVersion(double tmp) {
     this.version = tmp;
@@ -120,9 +122,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Sets the extensionId attribute of the HttpMultiPartParser object
+   * Sets the extensionId attribute of the HttpMultiPartParser object
    *
-   *@param  tmp  The new extensionId value
+   * @param tmp The new extensionId value
    */
   public void setExtensionId(int tmp) {
     this.extensionId = tmp;
@@ -130,9 +132,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the useUniqueName attribute of the HttpMultiPartParser object
+   * Gets the useUniqueName attribute of the HttpMultiPartParser object
    *
-   *@return    The useUniqueName value
+   * @return The useUniqueName value
    */
   public boolean getUseUniqueName() {
     return useUniqueName;
@@ -140,9 +142,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the UsePathParam attribute of the HttpMultiPartParser object
+   * Gets the UsePathParam attribute of the HttpMultiPartParser object
    *
-   *@return    The UsePathParam value
+   * @return The UsePathParam value
    */
   public boolean getUsePathParam() {
     return usePathParam;
@@ -150,9 +152,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the useDateForFolder attribute of the HttpMultiPartParser object
+   * Gets the useDateForFolder attribute of the HttpMultiPartParser object
    *
-   *@return    The useDateForFolder value
+   * @return The useDateForFolder value
    */
   public boolean getUseDateForFolder() {
     return useDateForFolder;
@@ -160,9 +162,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the Version attribute of the HttpMultiPartParser object
+   * Gets the Version attribute of the HttpMultiPartParser object
    *
-   *@return    The Version value
+   * @return The Version value
    */
   public double getVersion() {
     return version;
@@ -170,9 +172,9 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the extensionId attribute of the HttpMultiPartParser object
+   * Gets the extensionId attribute of the HttpMultiPartParser object
    *
-   *@return    The extensionId value
+   * @return The extensionId value
    */
   public int getExtensionId() {
     return extensionId;
@@ -180,50 +182,50 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Parses the InputStream, separates the various parts and returns them as
-   *  key=value pairs in a HashMap. Any incoming files are saved in directory
-   *  "saveInDir" using the client's file name; the file information is stored
-   *  as java.io.File object in the HashMap ("value" part).
+   * Parses the InputStream, separates the various parts and returns them as
+   * key=value pairs in a HashMap. Any incoming files are saved in directory
+   * "saveInDir" using the client's file name; the file information is stored
+   * as java.io.File object in the HashMap ("value" part).
    *
-   *@param  saveInDir                     Description of Parameter
-   *@param  request                       Description of the Parameter
-   *@return                               Description of the Returned Value
-   *@exception  IllegalArgumentException  Description of Exception
-   *@exception  IOException               Description of Exception
+   * @param saveInDir Description of Parameter
+   * @param request   Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws IllegalArgumentException Description of Exception
+   * @throws IOException              Description of Exception
    */
   public HashMap parseData(HttpServletRequest request, String saveInDir)
-       throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     return processData(request, saveInDir);
   }
 
 
   /**
-   *  Parses the InputStream, separates the various parts and returns them as
-   *  key=value pairs in a HashMap. Any incoming files are saved as byte arrays;
-   *  the file information is stored as java.io.File object in the HashMap
-   *  ("value" part).
+   * Parses the InputStream, separates the various parts and returns them as
+   * key=value pairs in a HashMap. Any incoming files are saved as byte arrays;
+   * the file information is stored as java.io.File object in the HashMap
+   * ("value" part).
    *
-   *@param  request                       Description of the Parameter
-   *@return                               Description of the Returned Value
-   *@exception  IllegalArgumentException  Description of Exception
-   *@exception  IOException               Description of Exception
+   * @param request Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws IllegalArgumentException Description of Exception
+   * @throws IOException              Description of Exception
    */
   public HashMap parseData(HttpServletRequest request)
-       throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     return processData(request, null);
   }
 
 
   /**
-   *  Convenience method to read HTTP header lines
+   * Convenience method to read HTTP header lines
    *
-   *@param  sis                     Description of Parameter
-   *@param  stripNextLineCharacter  Description of the Parameter
-   *@return                         The Line value
-   *@exception  IOException         Description of Exception
+   * @param sis                    Description of Parameter
+   * @param stripNextLineCharacter Description of the Parameter
+   * @return The Line value
+   * @throws IOException Description of Exception
    */
   private synchronized String getLine(ServletInputStream sis, boolean stripNextLineCharacter)
-       throws IOException {
+      throws IOException {
     byte b[] = new byte[1024];
     int read = sis.readLine(b, 0, b.length);
     int index;
@@ -243,28 +245,28 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the line attribute of the HttpMultiPartParser object
+   * Gets the line attribute of the HttpMultiPartParser object
    *
-   *@param  sis              Description of the Parameter
-   *@return                  The line value
-   *@exception  IOException  Description of the Exception
+   * @param sis Description of the Parameter
+   * @return The line value
+   * @throws IOException Description of the Exception
    */
   private synchronized String getLine(ServletInputStream sis)
-       throws IOException {
+      throws IOException {
     return getLine(sis, true);
   }
 
 
   /**
-   *  Concats the directory and file names.
+   * Concats the directory and file names.
    *
-   *@param  dir                           Description of Parameter
-   *@param  fileName                      Description of Parameter
-   *@return                               The FileName value
-   *@exception  IllegalArgumentException  Description of Exception
+   * @param dir      Description of Parameter
+   * @param fileName Description of Parameter
+   * @return The FileName value
+   * @throws IllegalArgumentException Description of Exception
    */
   private String getFileName(String dir, String fileName)
-       throws IllegalArgumentException {
+      throws IllegalArgumentException {
     String path = null;
     if (dir == null || fileName == null) {
       throw new IllegalArgumentException("dir or fileName is null");
@@ -290,11 +292,11 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Gets the fileName attribute of the HttpMultiPartParser object
+   * Gets the fileName attribute of the HttpMultiPartParser object
    *
-   *@param  fileName                      Description of the Parameter
-   *@return                               The fileName value
-   *@exception  IllegalArgumentException  Description of the Exception
+   * @param fileName Description of the Parameter
+   * @return The fileName value
+   * @throws IllegalArgumentException Description of the Exception
    */
   private String getFileName(String fileName) throws IllegalArgumentException {
     if (fileName == null) {
@@ -316,16 +318,16 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  saveInDir                     Description of Parameter
-   *@param  request                       Description of the Parameter
-   *@return                               Description of the Returned Value
-   *@exception  IllegalArgumentException  Description of Exception
-   *@exception  IOException               Description of Exception
+   * @param saveInDir Description of Parameter
+   * @param request   Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws IllegalArgumentException Description of Exception
+   * @throws IOException              Description of Exception
    */
   private HashMap processData(HttpServletRequest request, String saveInDir)
-       throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     String contentType = request.getHeader("Content-type");
     if ((contentType == null) || (!contentType.startsWith("multipart/"))) {
       throw new IllegalArgumentException("Not a multipart message");
@@ -333,7 +335,8 @@ public class HttpMultiPartParser {
     int boundaryIndex = contentType.indexOf("boundary=");
     String boundary = contentType.substring(boundaryIndex + 9);
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("HttpMultiPartParser-> Request boundary: " + boundary);
+      System.out.println(
+          "HttpMultiPartParser-> Request boundary: " + boundary);
     }
     ServletInputStream is = request.getInputStream();
     if (is == null) {
@@ -359,9 +362,10 @@ public class HttpMultiPartParser {
     //First line should be the boundary
     line = getLine(is);
     if (line == null || !line.startsWith(boundary)) {
-      throw new IOException("Boundary not found;"
-           + " boundary = " + boundary
-           + ", line = " + line);
+      throw new IOException(
+          "Boundary not found;"
+          + " boundary = " + boundary
+          + ", line = " + line);
     }
     //Continue with the rest of the lines
     while (line != null) {
@@ -476,7 +480,8 @@ public class HttpMultiPartParser {
           return dataTable;
         }
         String paramValue = line;
-        while ((line = getLine(is, false)) != null && !line.startsWith(boundary)) {
+        while ((line = getLine(is, false)) != null && !line.startsWith(
+            boundary)) {
           paramValue += line;
         }
         dataTable.put(paramName, paramValue);
@@ -506,7 +511,8 @@ public class HttpMultiPartParser {
           f.mkdirs();
           //If specified, store files using a unique name, based on date
           if (useUniqueName) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyyMMddHHmmssSSS");
             filenameToUse = formatter.format(new java.util.Date());
             if (fileCount > 1) {
               filenameToUse += String.valueOf(fileCount);
@@ -514,14 +520,16 @@ public class HttpMultiPartParser {
           } else {
             filenameToUse = fileInfo.getClientFileName();
           }
-          fileInfo.setClientFileName(getFileName(fileInfo.getClientFileName()));
+          fileInfo.setClientFileName(
+              getFileName(fileInfo.getClientFileName()));
           //Append a version id for record keeping and uniqueness, prevents
           //multiple uploads from overwriting each other
           filenameToUse +=
               (version == -1 ? "" : "^" + version) +
               (extensionId == -1 ? "" : "-" + extensionId);
           //Create the file to a file
-          os = new FileOutputStream(path = getFileName(tmpPath, filenameToUse));
+          os = new FileOutputStream(
+              path = getFileName(tmpPath, filenameToUse));
         } else {
           //Store the file in memory
           os = new ByteArrayOutputStream(ONE_MB);
@@ -592,11 +600,11 @@ public class HttpMultiPartParser {
 
 
   /**
-   *  Compares boundary string to byte array
+   * Compares boundary string to byte array
    *
-   *@param  boundary  Description of Parameter
-   *@param  ba        Description of Parameter
-   *@return           Description of the Returned Value
+   * @param boundary Description of Parameter
+   * @param ba       Description of Parameter
+   * @return Description of the Returned Value
    */
   private boolean compareBoundary(String boundary, byte ba[]) {
     byte b;

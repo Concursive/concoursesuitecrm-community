@@ -26,6 +26,7 @@ import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.http.HttpSession;
@@ -36,11 +37,11 @@ import java.sql.ResultSet;
 import java.util.Hashtable;
 
 /**
- *  The Login module.
+ * The Login module.
  *
- *@author     mrajkowski
- *@created    July 9, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 9, 2001
  */
 public final class Login extends CFSModule {
 
@@ -48,14 +49,15 @@ public final class Login extends CFSModule {
 
 
   /**
-   *  Processes the user login
+   * Processes the user login
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String executeCommandLogin(ActionContext context) {
-    ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     //Process the login request
     LoginBean loginBean = (LoginBean) context.getFormBean();
     String username = loginBean.getUsername();
@@ -71,7 +73,8 @@ public final class Login extends CFSModule {
     gk.setDriver(gkDriver);
     //Prepare the database connection
     ConnectionPool sqlDriver =
-        (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+        (ConnectionPool) context.getServletContext().getAttribute(
+            "ConnectionPool");
     if (sqlDriver == null) {
       loginBean.setMessage("Connection pool missing!");
       return "LoginRetry";
@@ -80,7 +83,9 @@ public final class Login extends CFSModule {
     ConnectionElement ce = null;
     //Connect to the gatekeeper, validate this host and get new connection info
     try {
-      if ("true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE"))) {
+      if ("true".equals(
+          (String) context.getServletContext().getAttribute(
+              "WEBSERVER.ASPMODE"))) {
         //Scan for the virtual host
         db = sqlDriver.getConnection(gk);
         SiteList siteList = new SiteList();
@@ -96,7 +101,8 @@ public final class Login extends CFSModule {
           ce.setDbName(thisSite.getDatabaseName());
           ce.setDriver(thisSite.getDatabaseDriver());
         } else {
-          loginBean.setMessage("* Access denied: Host does not exist (" +
+          loginBean.setMessage(
+              "* Access denied: Host does not exist (" +
               serverName + ")");
         }
       } else {
@@ -132,23 +138,32 @@ public final class Login extends CFSModule {
         continueId = true;
       } else {
         //A good place to initialize this SystemStatus, must be done before getting a user
-        thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+        thisSystem = SecurityHook.retrieveSystemStatus(
+            context.getServletContext(), db, ce);
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
+          System.out.println(
+              "Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
         }
         // BEGIN DHV CODE ONLY
         //License check
         try {
-          File keyFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-          File inputFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
+          File keyFile = new File(
+              getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+          File inputFile = new File(
+              getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
           if (keyFile.exists() && inputFile.exists()) {
-            java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-            org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
+            java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
+                getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+            org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
+                org.aspcfs.utils.PrivateString.decrypt(
+                    key, StringUtils.loadText(
+                        getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
             //The edition will be shown
-            String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+            String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
+                xml.getFirstChild("text2"));
             PreparedStatement pst = db.prepareStatement(
                 "SELECT count(*) AS user_count " +
-                "FROM access a, role r " +
+                "FROM access a, \"role\" r " +
                 "WHERE a.user_id > 0 " +
                 "AND a.role_id > 0 " +
                 "AND a.role_id = r.role_id " +
@@ -158,20 +173,24 @@ public final class Login extends CFSModule {
             pst.setBoolean(2, true);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-              if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
+              if (rs.getInt("user_count") <= Integer.parseInt(
+                  lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
                 continueId = true;
               } else {
-                loginBean.setMessage("* Access denied: License error");
+                loginBean.setMessage(
+                    "* " + thisSystem.getLabel("login.msg.licenseError"));
               }
             }
             rs.close();
             pst.close();
             userId2 = lpd.substring(7);
           } else {
-            loginBean.setMessage("* Access denied: License not found");
+            loginBean.setMessage(
+                "* " + thisSystem.getLabel("login.msg.licenseNotFound"));
           }
         } catch (Exception e) {
-          loginBean.setMessage("* Access denied: License is not up-to-date");
+          loginBean.setMessage(
+              "* " + thisSystem.getLabel("login.msg.licenseNotUptoDate"));
         }
         // END DHV CODE ONLY
       }
@@ -180,24 +199,28 @@ public final class Login extends CFSModule {
       if (continueId) {
         // END DHV CODE ONLY
         PreparedStatement pst = db.prepareStatement(
-            "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.role " +
-            "FROM access a, role r " +
+            "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.\"role\" " +
+            "FROM access a, \"role\" r " +
             "WHERE a.role_id = r.role_id " +
-            "AND lower(a.username) = ? " +
+            "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
             "AND a.enabled = ? ");
         pst.setString(1, username.toLowerCase());
         pst.setBoolean(2, true);
         ResultSet rs = pst.executeQuery();
         if (!rs.next()) {
-          loginBean.setMessage("* Access denied: Invalid login information.");
+          loginBean.setMessage(
+              "* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
         } else {
           String pw = rs.getString("password");
-          if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))) {
-            loginBean.setMessage("* Access denied: Invalid login information.");
+          if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute(
+              "GlobalPWInfo").equals(password))) {
+            loginBean.setMessage(
+                "* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
           } else {
             java.sql.Date expDate = rs.getDate("expires");
             if (expDate != null && now.after(expDate)) {
-              loginBean.setMessage("* Access denied: Account Expired.");
+              loginBean.setMessage(
+                  "* " + thisSystem.getLabel("login.msg.accountExpired"));
             } else {
               aliasId = rs.getInt("alias");
               userId = rs.getInt("user_id");
@@ -223,7 +246,8 @@ public final class Login extends CFSModule {
           User userRecord = thisSystem.getUser(thisUser.getUserId());
           if (userRecord != null) {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("Login-> Retrieved user from memory: " + userRecord.getUsername());
+              System.out.println(
+                  "Login-> Retrieved user from memory: " + userRecord.getUsername());
             }
             thisUser.setIdRange(userRecord.getIdRange());
             thisUser.setUserRecord(userRecord);
@@ -231,13 +255,17 @@ public final class Login extends CFSModule {
             //anymore due to the single-session manager below
             userRecord.setIp(context.getIpAddress());
             userRecord.updateLogin(db);
+            userRecord.checkWebdavAccess(
+                db, context.getRequest().getParameter("password"));
           }
           if (!thisSystem.hasPermissions()) {
-            System.out.println("Login-> This system does not have any permissions loaded!");
+            System.out.println(
+                "Login-> This system does not have any permissions loaded!");
           }
         } else {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("Login-> Fatal: User not found in this System!");
+            System.out.println(
+                "Login-> Fatal: User not found in this System!");
           }
         }
       } else {
@@ -274,7 +302,8 @@ public final class Login extends CFSModule {
     } else {
       //Check to see if user is already logged in.
       //If not then add them to the valid users list
-      SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       SessionManager sessionManager = thisSystem.getSessionManager();
       if (sessionManager.isUserLoggedIn(userId)) {
         UserSession thisSession = sessionManager.getUserSession(userId);
@@ -291,7 +320,8 @@ public final class Login extends CFSModule {
       //  return "LicenseError";
       //}
       // END DHV CODE ONLY
-      context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
+      context.getSession().setMaxInactiveInterval(
+          thisSystem.getSessionTimeout());
       sessionManager.addUser(context, userId);
     }
     // TODO: Replace this so it does not need to be maintained
@@ -308,11 +338,11 @@ public final class Login extends CFSModule {
 
 
   /**
-   *  Confirms if the user wants to ovreride previous session or not.<br>
-   *  and informs Session Manager accordingly.
+   * Confirms if the user wants to ovreride previous session or not.<br>
+   * and informs Session Manager accordingly.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandLoginConfirm(ActionContext context) {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
@@ -321,8 +351,10 @@ public final class Login extends CFSModule {
     }
     String action = context.getRequest().getParameter("override");
     if ("yes".equals(action)) {
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(thisUser.getConnectionElement().getUrl());
-      context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+          "SystemStatus")).get(thisUser.getConnectionElement().getUrl());
+      context.getSession().setMaxInactiveInterval(
+          systemStatus.getSessionTimeout());
       //replace userSession in SessionManager HashMap & reset timeout
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Invalidating old Session");
@@ -332,9 +364,11 @@ public final class Login extends CFSModule {
       // TODO: Replace this so it does not need to be maintained
       // NOTE: Make sure to update this similar code in the previous method
       if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
-        ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+        ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+            "applicationPrefs");
         if (applicationPrefs.isUpgradeable()) {
-          if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
+          if (thisUser.getRoleId() == 1 || "Administrator".equals(
+              thisUser.getRole())) {
             return "PerformUpgradeOK";
           } else {
             return "UpgradeCheck";
@@ -355,11 +389,11 @@ public final class Login extends CFSModule {
 
 
   /**
-   *  Used for invalidating a user session
+   * Used for invalidating a user session
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String executeCommandLogout(ActionContext context) {
     HttpSession oldSession = context.getRequest().getSession(false);

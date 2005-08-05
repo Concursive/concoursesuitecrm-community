@@ -15,20 +15,25 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Contains TicketCategory items for displaying to the user
+ * Contains TicketCategory items for displaying to the user
  *
- *@author     chris
- *@created    December 11, 2001
- *@version    $Id: TicketCategoryList.java,v 1.2 2002/03/25 19:12:22 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: TicketCategoryList.java,v 1.2 2002/03/25 19:12:22 mrajkowski
+ *          Exp $
+ * @created December 11, 2001
  */
 public class TicketCategoryList extends Vector {
   HtmlSelect catListSelect = new HtmlSelect();
@@ -41,18 +46,16 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Constructor for the TicketCategoryList object
-   *
-   *@since
+   * Constructor for the TicketCategoryList object
    */
-  public TicketCategoryList() { }
+  public TicketCategoryList() {
+  }
 
 
   /**
-   *  Sets the PagedListInfo attribute of the TicketCategoryList object
+   * Sets the PagedListInfo attribute of the TicketCategoryList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -60,10 +63,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the HtmlJsEvent attribute of the TicketCategoryList object
+   * Sets the HtmlJsEvent attribute of the TicketCategoryList object
    *
-   *@param  HtmlJsEvent  The new HtmlJsEvent value
-   *@since
+   * @param HtmlJsEvent The new HtmlJsEvent value
    */
   public void setHtmlJsEvent(String HtmlJsEvent) {
     this.HtmlJsEvent = HtmlJsEvent;
@@ -71,10 +73,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the CatListSelect attribute of the TicketCategoryList object
+   * Sets the CatListSelect attribute of the TicketCategoryList object
    *
-   *@param  catListSelect  The new CatListSelect value
-   *@since
+   * @param catListSelect The new CatListSelect value
    */
   public void setCatListSelect(HtmlSelect catListSelect) {
     this.catListSelect = catListSelect;
@@ -82,10 +83,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategoryList object
+   * Sets the ParentCode attribute of the TicketCategoryList object
    *
-   *@param  tmp  The new ParentCode value
-   *@since
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -93,10 +93,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategoryList object
+   * Sets the ParentCode attribute of the TicketCategoryList object
    *
-   *@param  tmp  The new ParentCode value
-   *@since
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -104,10 +103,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the CatLevel attribute of the TicketCategoryList object
+   * Sets the CatLevel attribute of the TicketCategoryList object
    *
-   *@param  catLevel  The new CatLevel value
-   *@since
+   * @param catLevel The new CatLevel value
    */
   public void setCatLevel(int catLevel) {
     this.catLevel = catLevel;
@@ -115,10 +113,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the CatLevel attribute of the TicketCategoryList object
+   * Sets the CatLevel attribute of the TicketCategoryList object
    *
-   *@param  catLevel  The new CatLevel value
-   *@since
+   * @param catLevel The new CatLevel value
    */
   public void setCatLevel(String catLevel) {
     this.catLevel = Integer.parseInt(catLevel);
@@ -126,9 +123,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the enabledState attribute of the TicketCategoryList object
+   * Sets the enabledState attribute of the TicketCategoryList object
    *
-   *@param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -136,9 +133,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the includeDisabled attribute of the TicketCategoryList object
+   * Sets the includeDisabled attribute of the TicketCategoryList object
    *
-   *@param  includeDisabled  The new includeDisabled value
+   * @param includeDisabled The new includeDisabled value
    */
   public void setIncludeDisabled(boolean includeDisabled) {
     this.includeDisabled = includeDisabled;
@@ -146,9 +143,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the includeDisabled attribute of the TicketCategoryList object
+   * Gets the includeDisabled attribute of the TicketCategoryList object
    *
-   *@return    The includeDisabled value
+   * @return The includeDisabled value
    */
   public boolean getIncludeDisabled() {
     return includeDisabled;
@@ -156,10 +153,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the CatListSelect attribute of the TicketCategoryList object
+   * Gets the CatListSelect attribute of the TicketCategoryList object
    *
-   *@return    The CatListSelect value
-   *@since
+   * @return The CatListSelect value
    */
   public HtmlSelect getCatListSelect() {
     return catListSelect;
@@ -167,10 +163,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the HtmlJsEvent attribute of the TicketCategoryList object
+   * Gets the HtmlJsEvent attribute of the TicketCategoryList object
    *
-   *@return    The HtmlJsEvent value
-   *@since
+   * @return The HtmlJsEvent value
    */
   public String getHtmlJsEvent() {
     return HtmlJsEvent;
@@ -178,11 +173,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the TicketCategoryList object
+   * Gets the HtmlSelect attribute of the TicketCategoryList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since
+   * @param selectName Description of Parameter
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -190,10 +184,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the CatLevel attribute of the TicketCategoryList object
+   * Gets the CatLevel attribute of the TicketCategoryList object
    *
-   *@return    The CatLevel value
-   *@since
+   * @return The CatLevel value
    */
   public int getCatLevel() {
     return catLevel;
@@ -201,10 +194,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the PagedListInfo attribute of the TicketCategoryList object
+   * Gets the PagedListInfo attribute of the TicketCategoryList object
    *
-   *@return    The PagedListInfo value
-   *@since
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -212,10 +204,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the ParentCode attribute of the TicketCategoryList object
+   * Gets the ParentCode attribute of the TicketCategoryList object
    *
-   *@return    The ParentCode value
-   *@since
+   * @return The ParentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -223,9 +214,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the enabledState attribute of the TicketCategoryList object
+   * Gets the enabledState attribute of the TicketCategoryList object
    *
-   *@return    The enabledState value
+   * @return The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -233,12 +224,11 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the TicketCategoryList object
+   * Gets the HtmlSelect attribute of the TicketCategoryList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     Iterator i = this.iterator();
@@ -275,11 +265,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -302,7 +291,8 @@ public class TicketCategoryList extends Vector {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -315,7 +305,8 @@ public class TicketCategoryList extends Vector {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND tc.id < ? ");
         items = prepareFilter(pst);
@@ -346,22 +337,15 @@ public class TicketCategoryList extends Vector {
         "tc.* " +
         "FROM ticket_category tc " +
         "WHERE tc.id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       TicketCategory thisCat = new TicketCategory(rs);
       this.addElement(thisCat);
     }
@@ -371,10 +355,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -393,12 +376,11 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -416,10 +398,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Returns just an HtmlSelect object without generating the Html output
+   * Returns just an HtmlSelect object without generating the Html output
    *
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect(int defaultKey) {
     HtmlSelect catListSelect = new HtmlSelect();
@@ -433,7 +415,8 @@ public class TicketCategoryList extends Vector {
         if (catListSelect.getSelectSize() > 1) {
           HashMap colorAttribute = new HashMap();
           colorAttribute.put("style", "color: red");
-          catListSelect.addItem(thisCat.getId(), elementText, colorAttribute, false);
+          catListSelect.addItem(
+              thisCat.getId(), elementText, colorAttribute, false);
         } else {
           elementText += "*";
           catListSelect.addItem(thisCat.getId(), elementText);
@@ -445,10 +428,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the idFromValue attribute of the TicketCategoryList object
+   * Gets the idFromValue attribute of the TicketCategoryList object
    *
-   *@param  value  Description of the Parameter
-   *@return        The idFromValue value
+   * @param value Description of the Parameter
+   * @return The idFromValue value
    */
   public int getIdFromValue(String value) {
     Iterator i = this.iterator();

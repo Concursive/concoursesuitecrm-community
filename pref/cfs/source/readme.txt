@@ -1,7 +1,7 @@
-Centric CRM Open Source Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
+Centric CRM Community Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM 3.0
+Centric CRM 3.1
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
@@ -13,7 +13,7 @@ the LICENSE file. If you did not receive a copy of the CPL, you may download
 it from http://www.centriccrm.com. Compiling or using this software
 signifies your acceptance of the  Centric Public License.
 
-Copyright(c) 2004-2005 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+Copyright(c) 2000-2005 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
 rights reserved. This material cannot be distributed without written
 permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
 this material for internal use is hereby granted, provided that the above
@@ -50,13 +50,13 @@ Centric CRM there.
 
 You will need to have the following software installed in order to compile:
 
-  Sun J2SE SDK 1.4 or 1.5
+  Sun J2SE SDK 1.4 or 5.0/1.5
   http://java.sun.com
 
   Apache Ant 1.6
   http://ant.apache.org
 
-  Apache Tomcat 5.0 (j2se 1.4) or 5.5 (j2se 1.5)
+  Apache Tomcat 5.0 (J2SE 1.4) or 5.5 (J2RE 5.0/1.5)
   http://jakarta.apache.org/tomcat
 
 You will also need a database server installed.  The following are supported:
@@ -79,11 +79,13 @@ distributed separately and include:
   commons-digester.jar
   commons-logging-api.jar
   commons-logging.jar
+  DaffodilDB_402_Common.jar
+  DaffodilDB_402_Embedded.jar
   iText.jar
   jasperreports-0.6.4.jar
   jcommon-0.9.6.jar
   jfreechart-0.9.21.jar
-  jtds-1.0.1.jar
+  jtds-1.1.jar
   log4j-1.2.9.jar
   lucene-1.4.2.jar
   mail.jar
@@ -91,6 +93,7 @@ distributed separately and include:
   poi-2.5-final-20040302.jar
   poi-scratchpad-2.5-final-20040302.jar
   postgresql-8.0-310.jdbc3.jar
+  quartz-1.4.5.jar
   tm-extractors-0.4.jar
   xercesMinimal.jar
   
@@ -120,10 +123,13 @@ Ant by defining ANT_OPTS.
 
 * You must have Tomcat installed and CATALINA_HOME defined in your envionment
 which points to the tomcat directory.  Also specify the environment variable
-CATALINA_OPTS=-Djava.awt.headless=true on Linux/Unix.
+CATALINA_OPTS=-Djava.awt.headless=true on Linux/Unix.  You should run Tomcat
+with additional memory by setting this in Tomcat's startup script.
 
   $ export CATALINA_HOME=/usr/local/tomcat
   $ export CATALINA_OPTS=-Djava.awt.headless=true
+  $ export JAVA_OPTS="-Xms256m -Xmx256m"
+
 
 ----------------------------------------------------------------------------
 | BUILD PROCESS                                                            |
@@ -150,14 +156,24 @@ Once changes have been made, you can try ant again:
 This time you should end up with a .war file.
 
 Before using the .war file, you must install the database using ant.  All of
-the source SQL scripts have been included.  Make sure you either create a
-database in PostgreSQL or MS SQL, configure the build.properties file
-accordingly, then execute ant with:
+the source SQL scripts have been included.  If you are using Daffodil DB then
+you do not need an existing database.  If you are using a database server,
+then you must create a centric_crm database before installing the database.
+
+To create the database schema and install the default data, edit the
+build.properties file by uncommenting the database of choice, then execute ant
+with:
 
   $ ant installdb
 
 Ant will ask for the database name, and use the URL and driver from the
 build.properties file.  The database will be fully created.
+
+Daffodil DB requires additional steps.
+
+  $ ant installdb2
+  $ ant installdb3
+
 
 Now you can drop the Tomcat .war in place and begin the web-based 
 configuration steps of Centric CRM.
@@ -177,6 +193,7 @@ Project Name                      License
 Batik                             Apache Software License
 Bean Shell                        LGPL
 Bouncy Castle Crypto API          Bouncy Castle Open Source License
+DaffodilDB (One$DB Embedded)      LGPL
 gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
@@ -194,7 +211,10 @@ Lucene                            Apache Software License
 NekoHTML                          Apache style
 PDFBox                            BSD
 POI                               Apache Software License
+PostgreSQL JDBC Driver            BSD
+Quartz                            OpenSymphony Software License
 Team Elements Project Management  Team Elements, LLC Commercial License
+TinyMCE                           LGPL
 TMExtractors                      Apache style
 Xerces                            Apache Software License
 Ximian Icons                      LGPL

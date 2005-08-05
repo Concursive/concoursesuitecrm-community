@@ -15,25 +15,24 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.DateFormat;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
- *  A collection of Ticket objects, can also be used for querying and filtering
- *  the tickets that are included in the list.
+ * A collection of Ticket objects, can also be used for querying and filtering
+ * the tickets that are included in the list.
  *
- * @author     chris
- * @created    December 5, 2001
- * @version    $Id: TicketList.java,v 1.31.12.1 2004/01/30 16:35:15 kbhoopal Exp
- *      $
+ * @author chris
+ * @version $Id: TicketList.java,v 1.31.12.1 2004/01/30 16:35:15 kbhoopal Exp
+ *          $
+ * @created December 5, 2001
  */
 public class TicketList extends ArrayList implements SyncableList {
   //sync api
@@ -49,6 +48,7 @@ public class TicketList extends ArrayList implements SyncableList {
   private boolean onlyClosed = false;
   private int id = -1;
   private int orgId = -1;
+  private int contactId = -1;
   private int serviceContractId = -1;
   private int assetId = -1;
   private int department = -1;
@@ -74,19 +74,21 @@ public class TicketList extends ArrayList implements SyncableList {
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
 
+  private java.sql.Timestamp trashedDate = null;
+  private boolean includeOnlyTrashed = false;
+
 
   /**
-   *  Constructor for the TicketList object
-   *
-   * @since
+   * Constructor for the TicketList object
    */
-  public TicketList() { }
+  public TicketList() {
+  }
 
 
   /**
-   *  Sets the lastAnchor attribute of the TicketList object
+   * Sets the lastAnchor attribute of the TicketList object
    *
-   * @param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -94,9 +96,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the TicketList object
+   * Sets the lastAnchor attribute of the TicketList object
    *
-   * @param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     try {
@@ -108,9 +110,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the TicketList object
+   * Sets the nextAnchor attribute of the TicketList object
    *
-   * @param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -118,9 +120,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the TicketList object
+   * Sets the nextAnchor attribute of the TicketList object
    *
-   * @param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     try {
@@ -132,9 +134,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the TicketList object
+   * Sets the syncType attribute of the TicketList object
    *
-   * @param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -142,10 +144,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the Id attribute of the TicketList object
+   * Sets the Id attribute of the TicketList object
    *
-   * @param  id  The new Id value
-   * @since
+   * @param id The new Id value
    */
   public void setId(int id) {
     this.id = id;
@@ -153,10 +154,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the Id attribute of the TicketList object
+   * Sets the Id attribute of the TicketList object
    *
-   * @param  id  The new Id value
-   * @since
+   * @param id The new Id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -164,9 +164,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the assignedTo attribute of the TicketList object
+   * Sets the assignedTo attribute of the TicketList object
    *
-   * @param  assignedTo  The new assignedTo value
+   * @param assignedTo The new assignedTo value
    */
   public void setAssignedTo(int assignedTo) {
     this.assignedTo = assignedTo;
@@ -174,9 +174,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the assignedTo attribute of the TicketList object
+   * Sets the assignedTo attribute of the TicketList object
    *
-   * @param  assignedTo  The new assignedTo value
+   * @param assignedTo The new assignedTo value
    */
   public void setAssignedTo(String assignedTo) {
     this.assignedTo = Integer.parseInt(assignedTo);
@@ -184,9 +184,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the excludeAssignedTo attribute of the TicketList object
+   * Sets the excludeAssignedTo attribute of the TicketList object
    *
-   * @param  tmp  The new excludeAssignedTo value
+   * @param tmp The new excludeAssignedTo value
    */
   public void setExcludeAssignedTo(int tmp) {
     this.excludeAssignedTo = tmp;
@@ -194,9 +194,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the excludeAssignedTo attribute of the TicketList object
+   * Sets the excludeAssignedTo attribute of the TicketList object
    *
-   * @param  tmp  The new excludeAssignedTo value
+   * @param tmp The new excludeAssignedTo value
    */
   public void setExcludeAssignedTo(String tmp) {
     this.excludeAssignedTo = Integer.parseInt(tmp);
@@ -204,9 +204,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the onlyAssigned attribute of the TicketList object
+   * Sets the onlyAssigned attribute of the TicketList object
    *
-   * @param  tmp  The new onlyAssigned value
+   * @param tmp The new onlyAssigned value
    */
   public void setOnlyAssigned(boolean tmp) {
     this.onlyAssigned = tmp;
@@ -214,9 +214,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the onlyAssigned attribute of the TicketList object
+   * Sets the onlyAssigned attribute of the TicketList object
    *
-   * @param  tmp  The new onlyAssigned value
+   * @param tmp The new onlyAssigned value
    */
   public void setOnlyAssigned(String tmp) {
     this.onlyAssigned = DatabaseUtils.parseBoolean(tmp);
@@ -224,9 +224,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the onlyUnassigned attribute of the TicketList object
+   * Sets the onlyUnassigned attribute of the TicketList object
    *
-   * @param  tmp  The new onlyUnassigned value
+   * @param tmp The new onlyUnassigned value
    */
   public void setOnlyUnassigned(boolean tmp) {
     this.onlyUnassigned = tmp;
@@ -234,20 +234,19 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the onlyUnassigned attribute of the TicketList object
+   * Sets the onlyUnassigned attribute of the TicketList object
    *
-   * @param  tmp  The new onlyUnassigned value
+   * @param tmp The new onlyUnassigned value
    */
   public void setOnlyUnassigned(String tmp) {
     this.onlyUnassigned = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Sets the unassignedToo attribute of the TicketList object
+   * Sets the unassignedToo attribute of the TicketList object
    *
-   * @param  unassignedToo  The new unassignedToo value
+   * @param unassignedToo The new unassignedToo value
    */
   public void setUnassignedToo(boolean unassignedToo) {
     this.unassignedToo = unassignedToo;
@@ -255,9 +254,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the severity attribute of the TicketList object
+   * Sets the severity attribute of the TicketList object
    *
-   * @param  tmp  The new severity value
+   * @param tmp The new severity value
    */
   public void setSeverity(int tmp) {
     this.severity = tmp;
@@ -265,9 +264,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the priority attribute of the TicketList object
+   * Sets the priority attribute of the TicketList object
    *
-   * @param  tmp  The new priority value
+   * @param tmp The new priority value
    */
   public void setPriority(int tmp) {
     this.priority = tmp;
@@ -275,9 +274,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the severity attribute of the TicketList object
+   * Sets the severity attribute of the TicketList object
    *
-   * @param  tmp  The new severity value
+   * @param tmp The new severity value
    */
   public void setSeverity(String tmp) {
     this.severity = Integer.parseInt(tmp);
@@ -285,9 +284,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the projectId attribute of the TicketList object
+   * Sets the projectId attribute of the TicketList object
    *
-   * @param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -295,9 +294,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the forProjectUser attribute of the TicketList object
+   * Sets the forProjectUser attribute of the TicketList object
    *
-   * @param  tmp  The new forProjectUser value
+   * @param tmp The new forProjectUser value
    */
   public void setForProjectUser(int tmp) {
     this.forProjectUser = tmp;
@@ -305,9 +304,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the forProjectUser attribute of the TicketList object
+   * Sets the forProjectUser attribute of the TicketList object
    *
-   * @param  tmp  The new forProjectUser value
+   * @param tmp The new forProjectUser value
    */
   public void setForProjectUser(String tmp) {
     this.forProjectUser = Integer.parseInt(tmp);
@@ -315,9 +314,29 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the customerProductId attribute of the TicketList object
+   * Sets the productId attribute of the TicketList object
    *
-   * @param  tmp  The new customerProductId value
+   * @param tmp The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   * Sets the productId attribute of the TicketList object
+   *
+   * @param tmp The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the customerProductId attribute of the TicketList object
+   *
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(int tmp) {
     this.customerProductId = tmp;
@@ -325,9 +344,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the customerProductId attribute of the TicketList object
+   * Sets the customerProductId attribute of the TicketList object
    *
-   * @param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
@@ -335,9 +354,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the TicketList object
+   * Sets the alertRangeStart attribute of the TicketList object
    *
-   * @param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
@@ -345,9 +364,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the TicketList object
+   * Sets the alertRangeStart attribute of the TicketList object
    *
-   * @param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
@@ -355,9 +374,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the TicketList object
+   * Sets the alertRangeEnd attribute of the TicketList object
    *
-   * @param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -365,9 +384,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the TicketList object
+   * Sets the alertRangeEnd attribute of the TicketList object
    *
-   * @param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
@@ -375,9 +394,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the alertRangeStart attribute of the TicketList object
+   * Gets the alertRangeStart attribute of the TicketList object
    *
-   * @return    The alertRangeStart value
+   * @return The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -385,9 +404,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the alertRangeEnd attribute of the TicketList object
+   * Gets the alertRangeEnd attribute of the TicketList object
    *
-   * @return    The alertRangeEnd value
+   * @return The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -395,9 +414,19 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the customerProductId attribute of the TicketList object
+   * Gets the productId attribute of the TicketList object
    *
-   * @return    The customerProductId value
+   * @return The productId value
+   */
+  public int getProductId() {
+    return productId;
+  }
+
+
+  /**
+   * Gets the customerProductId attribute of the TicketList object
+   *
+   * @return The customerProductId value
    */
   public int getCustomerProductId() {
     return customerProductId;
@@ -405,9 +434,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the onlyWithProducts attribute of the TicketList object
+   * Sets the onlyWithProducts attribute of the TicketList object
    *
-   * @param  tmp  The new onlyWithProducts value
+   * @param tmp The new onlyWithProducts value
    */
   public void setOnlyWithProducts(boolean tmp) {
     this.onlyWithProducts = tmp;
@@ -415,9 +444,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the hasEstimatedResolutionDate attribute of the TicketList object
+   * Sets the hasEstimatedResolutionDate attribute of the TicketList object
    *
-   * @param  tmp  The new hasEstimatedResolutionDate value
+   * @param tmp The new hasEstimatedResolutionDate value
    */
   public void setHasEstimatedResolutionDate(boolean tmp) {
     this.hasEstimatedResolutionDate = tmp;
@@ -425,9 +454,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the hasEstimatedResolutionDate attribute of the TicketList object
+   * Sets the hasEstimatedResolutionDate attribute of the TicketList object
    *
-   * @param  tmp  The new hasEstimatedResolutionDate value
+   * @param tmp The new hasEstimatedResolutionDate value
    */
   public void setHasEstimatedResolutionDate(String tmp) {
     this.hasEstimatedResolutionDate = DatabaseUtils.parseBoolean(tmp);
@@ -435,9 +464,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the tableName attribute of the TicketList object
+   * Gets the tableName attribute of the TicketList object
    *
-   * @return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -445,9 +474,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the TicketList object
+   * Gets the uniqueField attribute of the TicketList object
    *
-   * @return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -455,9 +484,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the priority attribute of the TicketList object
+   * Sets the priority attribute of the TicketList object
    *
-   * @param  tmp  The new priority value
+   * @param tmp The new priority value
    */
   public void setPriority(String tmp) {
     this.priority = Integer.parseInt(tmp);
@@ -465,9 +494,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the searchText attribute of the TicketList object
+   * Sets the searchText attribute of the TicketList object
    *
-   * @param  searchText  The new searchText value
+   * @param searchText The new searchText value
    */
   public void setSearchText(String searchText) {
     this.searchText = searchText;
@@ -475,9 +504,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the accountOwnerIdRange attribute of the TicketList object
+   * Sets the accountOwnerIdRange attribute of the TicketList object
    *
-   * @param  accountOwnerIdRange  The new accountOwnerIdRange value
+   * @param accountOwnerIdRange The new accountOwnerIdRange value
    */
   public void setAccountOwnerIdRange(String accountOwnerIdRange) {
     this.accountOwnerIdRange = accountOwnerIdRange;
@@ -485,10 +514,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the OrgId attribute of the TicketList object
+   * Sets the OrgId attribute of the TicketList object
    *
-   * @param  orgId  The new OrgId value
-   * @since
+   * @param orgId The new OrgId value
    */
   public void setOrgId(int orgId) {
     this.orgId = orgId;
@@ -496,10 +524,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the OrgId attribute of the TicketList object
+   * Sets the OrgId attribute of the TicketList object
    *
-   * @param  orgId  The new OrgId value
-   * @since
+   * @param orgId The new OrgId value
    */
   public void setOrgId(String orgId) {
     this.orgId = Integer.parseInt(orgId);
@@ -507,9 +534,29 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the serviceContractId attribute of the TicketList object
+   * Sets the contactId attribute of the TicketList object
    *
-   * @param  tmp  The new serviceContractId value
+   * @param tmp The new contactId value
+   */
+  public void setContactId(int tmp) {
+    this.contactId = tmp;
+  }
+
+
+  /**
+   * Sets the contactId attribute of the TicketList object
+   *
+   * @param tmp The new contactId value
+   */
+  public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the serviceContractId attribute of the TicketList object
+   *
+   * @param tmp The new serviceContractId value
    */
   public void setServiceContractId(int tmp) {
     this.serviceContractId = tmp;
@@ -517,9 +564,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the serviceContractId attribute of the TicketList object
+   * Sets the serviceContractId attribute of the TicketList object
    *
-   * @param  tmp  The new serviceContractId value
+   * @param tmp The new serviceContractId value
    */
   public void setServiceContractId(String tmp) {
     this.serviceContractId = Integer.parseInt(tmp);
@@ -527,9 +574,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the assetId attribute of the TicketList object
+   * Sets the assetId attribute of the TicketList object
    *
-   * @param  tmp  The new assetId value
+   * @param tmp The new assetId value
    */
   public void setAssetId(int tmp) {
     this.assetId = tmp;
@@ -537,9 +584,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the assetId attribute of the TicketList object
+   * Sets the assetId attribute of the TicketList object
    *
-   * @param  tmp  The new assetId value
+   * @param tmp The new assetId value
    */
   public void setAssetId(String tmp) {
     this.assetId = Integer.parseInt(tmp);
@@ -547,10 +594,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the PagedListInfo attribute of the TicketList object
+   * Sets the PagedListInfo attribute of the TicketList object
    *
-   * @param  tmp  The new PagedListInfo value
-   * @since
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -558,10 +604,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the EnteredBy attribute of the TicketList object
+   * Sets the EnteredBy attribute of the TicketList object
    *
-   * @param  tmp  The new EnteredBy value
-   * @since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -569,9 +614,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the description attribute of the TicketList object
+   * Gets the description attribute of the TicketList object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -579,9 +624,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the description attribute of the TicketList object
+   * Sets the description attribute of the TicketList object
    *
-   * @param  description  The new description value
+   * @param description The new description value
    */
   public void setDescription(String description) {
     this.description = description;
@@ -589,9 +634,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the minutesOlderThan attribute of the TicketList object
+   * Sets the minutesOlderThan attribute of the TicketList object
    *
-   * @param  tmp  The new minutesOlderThan value
+   * @param tmp The new minutesOlderThan value
    */
   public void setMinutesOlderThan(int tmp) {
     this.minutesOlderThan = tmp;
@@ -599,9 +644,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the minutesOlderThan attribute of the TicketList object
+   * Sets the minutesOlderThan attribute of the TicketList object
    *
-   * @param  tmp  The new minutesOlderThan value
+   * @param tmp The new minutesOlderThan value
    */
   public void setMinutesOlderThan(String tmp) {
     this.minutesOlderThan = Integer.parseInt(tmp);
@@ -609,9 +654,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the onlyClosed attribute of the TicketList object
+   * Sets the onlyClosed attribute of the TicketList object
    *
-   * @param  onlyClosed  The new onlyClosed value
+   * @param onlyClosed The new onlyClosed value
    */
   public void setOnlyClosed(boolean onlyClosed) {
     this.onlyClosed = onlyClosed;
@@ -619,10 +664,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the OnlyOpen attribute of the TicketList object
+   * Sets the OnlyOpen attribute of the TicketList object
    *
-   * @param  onlyOpen  The new OnlyOpen value
-   * @since
+   * @param onlyOpen The new OnlyOpen value
    */
   public void setOnlyOpen(boolean onlyOpen) {
     this.onlyOpen = onlyOpen;
@@ -630,10 +674,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the Department attribute of the TicketList object
+   * Sets the Department attribute of the TicketList object
    *
-   * @param  department  The new Department value
-   * @since
+   * @param department The new Department value
    */
   public void setDepartment(int department) {
     this.department = department;
@@ -641,9 +684,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the assignedTo attribute of the TicketList object
+   * Gets the assignedTo attribute of the TicketList object
    *
-   * @return    The assignedTo value
+   * @return The assignedTo value
    */
   public int getAssignedTo() {
     return assignedTo;
@@ -651,9 +694,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the excludeAssignedTo attribute of the TicketList object
+   * Gets the excludeAssignedTo attribute of the TicketList object
    *
-   * @return    The excludeAssignedTo value
+   * @return The excludeAssignedTo value
    */
   public int getExcludeAssignedTo() {
     return excludeAssignedTo;
@@ -661,9 +704,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the onlyAssigned attribute of the TicketList object
+   * Gets the onlyAssigned attribute of the TicketList object
    *
-   * @return    The onlyAssigned value
+   * @return The onlyAssigned value
    */
   public boolean getOnlyAssigned() {
     return onlyAssigned;
@@ -671,9 +714,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the onlyUnassigned attribute of the TicketList object
+   * Gets the onlyUnassigned attribute of the TicketList object
    *
-   * @return    The onlyUnassigned value
+   * @return The onlyUnassigned value
    */
   public boolean getOnlyUnassigned() {
     return onlyUnassigned;
@@ -681,9 +724,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the unassignedToo attribute of the TicketList object
+   * Gets the unassignedToo attribute of the TicketList object
    *
-   * @return    The unassignedToo value
+   * @return The unassignedToo value
    */
   public boolean getUnassignedToo() {
     return unassignedToo;
@@ -691,9 +734,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the severity attribute of the TicketList object
+   * Gets the severity attribute of the TicketList object
    *
-   * @return    The severity value
+   * @return The severity value
    */
   public int getSeverity() {
     return severity;
@@ -701,9 +744,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the priority attribute of the TicketList object
+   * Gets the priority attribute of the TicketList object
    *
-   * @return    The priority value
+   * @return The priority value
    */
   public int getPriority() {
     return priority;
@@ -711,9 +754,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the searchText attribute of the TicketList object
+   * Gets the searchText attribute of the TicketList object
    *
-   * @return    The searchText value
+   * @return The searchText value
    */
   public String getSearchText() {
     return searchText;
@@ -721,9 +764,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the accountOwnerIdRange attribute of the TicketList object
+   * Gets the accountOwnerIdRange attribute of the TicketList object
    *
-   * @return    The accountOwnerIdRange value
+   * @return The accountOwnerIdRange value
    */
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
@@ -731,9 +774,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the onlyClosed attribute of the TicketList object
+   * Gets the onlyClosed attribute of the TicketList object
    *
-   * @return    The onlyClosed value
+   * @return The onlyClosed value
    */
   public boolean getOnlyClosed() {
     return onlyClosed;
@@ -741,10 +784,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the OrgId attribute of the TicketList object
+   * Gets the OrgId attribute of the TicketList object
    *
-   * @return    The OrgId value
-   * @since
+   * @return The OrgId value
    */
   public int getOrgId() {
     return orgId;
@@ -752,9 +794,19 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the serviceContractId attribute of the TicketList object
+   * Gets the contactId attribute of the TicketList object
    *
-   * @return    The serviceContractId value
+   * @return The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
+
+
+  /**
+   * Gets the serviceContractId attribute of the TicketList object
+   *
+   * @return The serviceContractId value
    */
   public int getServiceContractId() {
     return serviceContractId;
@@ -762,9 +814,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the assetId attribute of the TicketList object
+   * Gets the assetId attribute of the TicketList object
    *
-   * @return    The assetId value
+   * @return The assetId value
    */
   public int getAssetId() {
     return assetId;
@@ -772,10 +824,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the Id attribute of the TicketList object
+   * Gets the Id attribute of the TicketList object
    *
-   * @return    The Id value
-   * @since
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -783,10 +834,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the OnlyOpen attribute of the TicketList object
+   * Gets the OnlyOpen attribute of the TicketList object
    *
-   * @return    The OnlyOpen value
-   * @since
+   * @return The OnlyOpen value
    */
   public boolean getOnlyOpen() {
     return onlyOpen;
@@ -794,10 +844,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the Department attribute of the TicketList object
+   * Gets the Department attribute of the TicketList object
    *
-   * @return    The Department value
-   * @since
+   * @return The Department value
    */
   public int getDepartment() {
     return department;
@@ -805,9 +854,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the hasEstimatedResolutionDate attribute of the TicketList object
+   * Gets the hasEstimatedResolutionDate attribute of the TicketList object
    *
-   * @return    The hasEstimatedResolutionDate value
+   * @return The hasEstimatedResolutionDate value
    */
   public boolean getHasEstimatedResolutionDate() {
     return hasEstimatedResolutionDate;
@@ -815,9 +864,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the TicketList object
+   * Gets the pagedListInfo attribute of the TicketList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -825,9 +874,9 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the forProjectUser attribute of the TicketList object
+   * Gets the forProjectUser attribute of the TicketList object
    *
-   * @return    The forProjectUser value
+   * @return The forProjectUser value
    */
   public int getForProjectUser() {
     return forProjectUser;
@@ -835,11 +884,70 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Sets the trashedDate attribute of the TicketList object
    *
-   * @param  db                Description of Parameter
-   * @exception  SQLException  Description of Exception
-   * @since
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the TicketList object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the TicketList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(boolean tmp) {
+    this.includeOnlyTrashed = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyTrashed attribute of the TicketList object
+   *
+   * @param tmp The new includeOnlyTrashed value
+   */
+  public void setIncludeOnlyTrashed(String tmp) {
+    this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the TicketList object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Gets the includeOnlyTrashed attribute of the TicketList object
+   *
+   * @return The includeOnlyTrashed value
+   */
+  public boolean getIncludeOnlyTrashed() {
+    return includeOnlyTrashed;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -857,7 +965,8 @@ public class TicketList extends ArrayList implements SyncableList {
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -867,13 +976,31 @@ public class TicketList extends ArrayList implements SyncableList {
       }
       rs.close();
       pst.close();
+      // Declare default sort, if unset
+      pagedListInfo.setDefaultSort("t.entered", null);
       //Determine the offset, based on the filter, for the first record to show
-      if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+      if (pagedListInfo.getMode() == PagedListInfo.DETAILS_VIEW && id > 0) {
+        String direction = null;
+        if ("desc".equalsIgnoreCase(pagedListInfo.getSortOrder())) {
+          direction = ">";
+        } else {
+          direction = "<";
+        }
+        String sqlSubCount =
+            "AND " +
+            (pagedListInfo.getColumnToSortBy().equals("t.problem") ? DatabaseUtils.convertToVarChar(
+                db, pagedListInfo.getColumnToSortBy()) : pagedListInfo.getColumnToSortBy()) + " " +
+            direction + " " +
+            "(SELECT " + (pagedListInfo.getColumnToSortBy().equals(
+                "t.problem") ? DatabaseUtils.convertToVarChar(
+                    db, pagedListInfo.getColumnToSortBy()) : pagedListInfo.getColumnToSortBy()) + " " +
+            "FROM ticket t WHERE ticketid = ?) ";
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND t.problem < ? ");
+            sqlSubCount);
         items = prepareFilter(pst);
-        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        pst.setInt(++items, id);
         rs = pst.executeQuery();
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
@@ -882,8 +1009,7 @@ public class TicketList extends ArrayList implements SyncableList {
         rs.close();
         pst.close();
       }
-      //Determine column to sort by
-      pagedListInfo.setDefaultSort("t.entered", null);
+      //Determine the offset
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY t.entered ");
@@ -916,7 +1042,8 @@ public class TicketList extends ArrayList implements SyncableList {
         "a.onsite_service_model AS assetonsiteservicemodel , " +
         "pc.sku AS productsku , " +
         "pc.product_name AS productname, " +
-        "tlp.project_id " +
+        "tlp.project_id, " +
+        "proj.title as projectname " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -928,21 +1055,16 @@ public class TicketList extends ArrayList implements SyncableList {
         "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
         "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
         "LEFT JOIN ticketlink_project tlp ON (t.ticketid = tlp.ticket_id) " +
+        "LEFT JOIN projects proj ON (tlp.project_id = proj.project_id) " +
         "WHERE t.ticketid > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Ticket thisTicket = new Ticket(rs);
       this.add(thisTicket);
     }
@@ -961,11 +1083,11 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of Parameter
-   * @param  basePath          Description of the Parameter
-   * @exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param basePath Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator tickets = this.iterator();
@@ -977,12 +1099,12 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -998,13 +1120,13 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
     int total = 0;
@@ -1021,12 +1143,12 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   * @param  sqlFilter  Description of Parameter
-   * @param  db         Description of the Parameter
-   * @since             1.2
+   * @param sqlFilter Description of Parameter
+   * @param db        Description of the Parameter
+   * @since 1.2
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (enteredBy > -1) {
@@ -1034,19 +1156,13 @@ public class TicketList extends ArrayList implements SyncableList {
     }
     if (description != null) {
       if (description.indexOf("%") >= 0) {
-        if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
-          sqlFilter.append(
-              "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?)) ");
-        } else {
-          sqlFilter.append("AND lower(t.problem) like lower(?) ");
-        }
+        sqlFilter.append(
+            "AND (" + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.convertToVarChar(
+                db, "t.problem") + ") LIKE " + DatabaseUtils.toLowerCase(db) + "(?)) ");
       } else {
-        if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
-          sqlFilter.append(
-              "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) = LOWER(?)) ");
-        } else {
-          sqlFilter.append("AND lower(t.problem) = lower(?) ");
-        }
+        sqlFilter.append(
+            "AND (" + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.convertToVarChar(
+                db, "t.problem") + ") = " + DatabaseUtils.toLowerCase(db) + "(?)) ");
       }
     }
     if (onlyOpen) {
@@ -1056,10 +1172,15 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.closed IS NOT NULL ");
     }
     if (id > -1) {
-      sqlFilter.append("AND t.ticketid = ? ");
+      if (pagedListInfo.getMode() != PagedListInfo.DETAILS_VIEW) {
+        sqlFilter.append("AND t.ticketid = ? ");
+      }
     }
     if (orgId > -1) {
       sqlFilter.append("AND t.org_id = ? ");
+    }
+    if (contactId > -1) {
+      sqlFilter.append("AND t.contact_id = ? ");
     }
     if (serviceContractId > -1) {
       sqlFilter.append("AND t.link_contract_id = ? ");
@@ -1069,7 +1190,8 @@ public class TicketList extends ArrayList implements SyncableList {
     }
     if (department > -1) {
       if (unassignedToo) {
-        sqlFilter.append("AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
+        sqlFilter.append(
+            "AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
       } else {
         sqlFilter.append("AND t.department_code = ? ");
       }
@@ -1084,7 +1206,8 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.assigned_to > 0 AND t.assigned_to IS NOT NULL ");
     }
     if (onlyUnassigned) {
-      sqlFilter.append("AND (t.assigned_to IS NULL OR t.assigned_to = 0 OR t.assigned_to = -1) ");
+      sqlFilter.append(
+          "AND (t.assigned_to IS NULL OR t.assigned_to = 0 OR t.assigned_to = -1) ");
     }
     if (severity > 0) {
       sqlFilter.append("AND t.scode = ? ");
@@ -1093,7 +1216,8 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.pri_code = ? ");
     }
     if (accountOwnerIdRange != null) {
-      sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
+      sqlFilter.append(
+          "AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
     if (productId != -1) {
       sqlFilter.append("AND t.product_id = ? ");
@@ -1105,14 +1229,17 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.product_id IS NOT NULL ");
     }
     if (projectId > 0) {
-      sqlFilter.append("AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id = ?) ");
+      sqlFilter.append(
+          "AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id = ?) ");
     }
     if (forProjectUser > -1) {
-      sqlFilter.append("AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+      sqlFilter.append(
+          "AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           "AND status IS NULL)) ");
     }
     if ((projectId == -1) && (forProjectUser == -1)) {
-      sqlFilter.append("AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
+      sqlFilter.append(
+          "AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
     }
 
     //Sync API
@@ -1138,33 +1265,39 @@ public class TicketList extends ArrayList implements SyncableList {
         sqlFilter.append("AND t.entered <= ? ");
       }
     }
-    if (searchText != null && !(searchText.equals(""))) {
-      if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
-        sqlFilter.append(
-            "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?) OR " +
-            "LOWER(CONVERT(VARCHAR(2000),t.comment)) LIKE LOWER(?) OR " +
-            "LOWER(CONVERT(VARCHAR(2000),t.solution)) LIKE LOWER(?) ) ");
-      } else {
-        sqlFilter.append(
-            "AND ( LOWER(t.problem) LIKE LOWER(?) OR " +
-            "LOWER(t.comment) LIKE LOWER(?) OR " +
-            "LOWER(t.solution) LIKE LOWER(?) ) ");
-      }
+    if (searchText != null && !searchText.equals("")) {
+      sqlFilter.append(
+          "AND (" + DatabaseUtils.toLowerCase(
+              db, DatabaseUtils.convertToVarChar(db, "t.problem")) + " LIKE " + DatabaseUtils.toLowerCase(
+                  db, "?") + " OR " +
+          DatabaseUtils.toLowerCase(
+              db, DatabaseUtils.convertToVarChar(db, "t.comment")) + " LIKE " + DatabaseUtils.toLowerCase(
+                  db, "?") + " OR " +
+          DatabaseUtils.toLowerCase(
+              db, DatabaseUtils.convertToVarChar(db, "t.solution")) + " LIKE " + DatabaseUtils.toLowerCase(
+                  db, "?") + ") ");
     }
     if (hasEstimatedResolutionDate == true) {
       sqlFilter.append("AND t.est_resolution_date IS NOT NULL ");
+    }
+    if (includeOnlyTrashed) {
+      sqlFilter.append("AND t.trashed_date IS NOT NULL ");
+    } else if (trashedDate != null) {
+      sqlFilter.append("AND t.trashed_date = ? ");
+    } else {
+      sqlFilter.append("AND t.trashed_date IS NULL ");
     }
   }
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   * @param  pst               Description of Parameter
-   * @return                   Description of the Returned Value
-   * @exception  SQLException  Description of Exception
-   * @since                    1.2
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.2
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -1175,10 +1308,15 @@ public class TicketList extends ArrayList implements SyncableList {
       pst.setString(++i, description);
     }
     if (id > -1) {
-      pst.setInt(++i, id);
+      if (pagedListInfo.getMode() != PagedListInfo.DETAILS_VIEW) {
+        pst.setInt(++i, id);
+      }
     }
     if (orgId > -1) {
       pst.setInt(++i, orgId);
+    }
+    if (contactId > -1) {
+      pst.setInt(++i, contactId);
     }
     if (serviceContractId > -1) {
       pst.setInt(++i, serviceContractId);
@@ -1249,28 +1387,36 @@ public class TicketList extends ArrayList implements SyncableList {
       if (minutesOlderThan > 0) {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, minutesOlderThan - (2 * minutesOlderThan));
-        java.sql.Timestamp adjustedDate = new java.sql.Timestamp(now.getTimeInMillis());
+        java.sql.Timestamp adjustedDate = new java.sql.Timestamp(
+            now.getTimeInMillis());
         pst.setTimestamp(++i, adjustedDate);
       }
     }
 
-    if (searchText != null && !(searchText.equals(""))) {
+    if (searchText != null && !searchText.equals("")) {
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
+    }
+    if (includeOnlyTrashed) {
+      // do nothing
+    } else if (trashedDate != null) {
+      pst.setTimestamp(++i, trashedDate);
+    } else {
+      // do nothing
     }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  moduleId          Description of the Parameter
-   * @param  itemId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param moduleId Description of the Parameter
+   * @param itemId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
@@ -1309,11 +1455,11 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Each ticket in a project has its own unique count
+   * Each ticket in a project has its own unique count
    *
-   * @param  db                Description of the Parameter
-   * @param  projectId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void insertProjectTicketCount(Connection db, int projectId) throws SQLException {
     // Every new project needs a project_ticket_count record
@@ -1328,13 +1474,13 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Creates a hashmap of the number of tickets based on the estimated
-   *  resolution date
+   * Creates a hashmap of the number of tickets based on the estimated
+   * resolution date
    *
-   * @param  db                Description of the Parameter
-   * @param  timeZone          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param timeZone Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
 
@@ -1354,14 +1500,16 @@ public class TicketList extends ArrayList implements SyncableList {
         "WHERE ticketid > -1 ");
 
     sqlTail.append("GROUP BY est_resolution_date ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
       Timestamp estRes = rs.getTimestamp("est_resolution_date");
       String estResolutionDate = null;
       if (estRes != null) {
-        estResolutionDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, estRes);
+        estResolutionDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, estRes);
         int thisCount = rs.getInt("nocols");
         if (events.containsKey(estResolutionDate)) {
           int tmpCount = ((Integer) events.get(estResolutionDate)).intValue();
@@ -1377,11 +1525,11 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Each ticket in a project has its own unique count
+   * Each ticket in a project has its own unique count
    *
-   * @param  db                Description of the Parameter
-   * @param  projectId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void deleteProjectTicketCount(Connection db, int projectId) throws SQLException {
     // Every new project needs a project_ticket_count record
@@ -1392,5 +1540,25 @@ public class TicketList extends ArrayList implements SyncableList {
     pst.execute();
     pst.close();
   }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      Ticket tmpTicket = (Ticket) itr.next();
+      tmpTicket.updateStatus(db, toTrash, tmpUserId);
+    }
+    return true;
+  }
+
 }
 

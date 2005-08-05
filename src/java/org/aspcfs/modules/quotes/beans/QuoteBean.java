@@ -15,22 +15,18 @@
  */
 package org.aspcfs.modules.quotes.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.troubletickets.base.*;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
- *  This bean is used to capture the fields modified by the designer
+ * This bean is used to capture the fields modified by the designer
  *
- *@author     partha
- *@created    May 4, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created May 4, 2004
  */
 public class QuoteBean extends GenericBean {
   private int id = -1;
@@ -39,15 +35,16 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteBean object
+   * Constructor for the QuoteBean object
    */
-  public QuoteBean() { }
+  public QuoteBean() {
+  }
 
 
   /**
-   *  Sets the id attribute of the QuoteBean object
+   * Sets the id attribute of the QuoteBean object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -55,9 +52,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteBean object
+   * Sets the id attribute of the QuoteBean object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -65,9 +62,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the QuoteBean object
+   * Sets the notes attribute of the QuoteBean object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -75,9 +72,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Sets the expiryDate attribute of the QuoteBean object
+   * Sets the expiryDate attribute of the QuoteBean object
    *
-   *@param  tmp  The new expiryDate value
+   * @param tmp The new expiryDate value
    */
   public void setExpiryDate(Timestamp tmp) {
     this.expiryDate = tmp;
@@ -85,9 +82,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Sets the expiryDate attribute of the QuoteBean object
+   * Sets the expiryDate attribute of the QuoteBean object
    *
-   *@param  tmp  The new expiryDate value
+   * @param tmp The new expiryDate value
    */
   public void setExpiryDate(String tmp) {
     this.expiryDate = DateUtils.parseTimestampString(tmp);
@@ -95,9 +92,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteBean object
+   * Gets the id attribute of the QuoteBean object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -105,9 +102,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the QuoteBean object
+   * Gets the notes attribute of the QuoteBean object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -115,9 +112,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Gets the expiryDate attribute of the QuoteBean object
+   * Gets the expiryDate attribute of the QuoteBean object
    *
-   *@return    The expiryDate value
+   * @return The expiryDate value
    */
   public Timestamp getExpiryDate() {
     return expiryDate;
@@ -125,9 +122,9 @@ public class QuoteBean extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneParams attribute of the QuoteBean class
+   * Gets the timeZoneParams attribute of the QuoteBean class
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
 

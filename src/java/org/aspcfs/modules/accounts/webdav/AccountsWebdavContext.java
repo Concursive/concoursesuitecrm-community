@@ -21,22 +21,24 @@ import com.zeroio.webdav.context.ModuleContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 
+import javax.naming.NamingException;
+import java.io.FileNotFoundException;
 import java.sql.*;
 
 /**
- *  AccountsWebdavContext represents a Module Context which has name-object
- *  bindings. A bound object represents an Organization.
+ * AccountsWebdavContext represents a Module Context which has name-object
+ * bindings. A bound object represents an Organization.
  *
- *@author     ananth
- *@created    November 3, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id: AccountsWebdavContext.java,v 1.2.6.1 2005/05/10 18:01:53
+ *          ananth Exp $
+ * @created November 3, 2004
  */
 public class AccountsWebdavContext
-     extends BaseWebdavContext implements ModuleContext {
+    extends BaseWebdavContext implements ModuleContext {
 
   private final static String ACCOUNTS = "accounts";
   private int linkModuleId = Constants.DOCUMENTS_ACCOUNTS;
-  private String contextName = null;
   private String fileLibraryPath = null;
   private String permission = "accounts-view";
   //Permissions for this context
@@ -44,9 +46,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Sets the userId attribute of the AccountsWebdavContext object
+   * Sets the userId attribute of the AccountsWebdavContext object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -54,9 +56,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Sets the userId attribute of the AccountsWebdavContext object
+   * Sets the userId attribute of the AccountsWebdavContext object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -64,9 +66,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Gets the userId attribute of the AccountsWebdavContext object
+   * Gets the userId attribute of the AccountsWebdavContext object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -74,9 +76,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Sets the linkModuleId attribute of the AccountsWebdavContext object
+   * Sets the linkModuleId attribute of the AccountsWebdavContext object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -84,9 +86,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Sets the linkModuleId attribute of the AccountsWebdavContext object
+   * Sets the linkModuleId attribute of the AccountsWebdavContext object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -94,19 +96,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Sets the contextName attribute of the AccountsWebdavContext object
+   * Sets the fileLibraryPath attribute of the AccountsWebdavContext object
    *
-   *@param  tmp  The new contextName value
-   */
-  public void setContextName(String tmp) {
-    this.contextName = tmp;
-  }
-
-
-  /**
-   *  Sets the fileLibraryPath attribute of the AccountsWebdavContext object
-   *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -114,9 +106,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Sets the permission attribute of the AccountsWebdavContext object
+   * Sets the permission attribute of the AccountsWebdavContext object
    *
-   *@param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -124,9 +116,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Gets the linkModuleId attribute of the AccountsWebdavContext object
+   * Gets the linkModuleId attribute of the AccountsWebdavContext object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -134,19 +126,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Gets the contextName attribute of the AccountsWebdavContext object
+   * Gets the fileLibraryPath attribute of the AccountsWebdavContext object
    *
-   *@return    The contextName value
-   */
-  public String getContextName() {
-    return contextName;
-  }
-
-
-  /**
-   *  Gets the fileLibraryPath attribute of the AccountsWebdavContext object
-   *
-   *@return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -154,9 +136,9 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Gets the permission attribute of the AccountsWebdavContext object
+   * Gets the permission attribute of the AccountsWebdavContext object
    *
-   *@return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -164,16 +146,17 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Constructor for the AccountsWebdavContext object
+   * Constructor for the AccountsWebdavContext object
    */
-  public AccountsWebdavContext() { }
+  public AccountsWebdavContext() {
+  }
 
 
   /**
-   *  Constructor for the AccountsWebdavContext object
+   * Constructor for the AccountsWebdavContext object
    *
-   *@param  name          Description of the Parameter
-   *@param  linkModuleId  Description of the Parameter
+   * @param name         Description of the Parameter
+   * @param linkModuleId Description of the Parameter
    */
   public AccountsWebdavContext(String name, int linkModuleId) {
     this.contextName = name;
@@ -182,38 +165,39 @@ public class AccountsWebdavContext
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  fileLibraryPath   Description of the Parameter
-   *@param  thisSystem        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param userId          Description of the Parameter
+   * @param fileLibraryPath Description of the Parameter
+   * @param thisSystem      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(SystemStatus thisSystem, Connection db, int userId, String fileLibraryPath) throws SQLException {
     this.fileLibraryPath = fileLibraryPath;
     this.userId = userId;
     bindings.clear();
-    if (hasPermission(thisSystem, userId, "accounts-view")) {
+    if (hasPermission(thisSystem, userId, "accounts-accounts-view")) {
       populateBindings(db);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void populateBindings(Connection db) throws SQLException {
     if (linkModuleId == -1) {
       throw new SQLException("Module ID not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-      "SELECT org_id, name, entered, modified " +
-      "FROM organization " +
-      "WHERE org_id > 0");
+        "SELECT org_id, name, entered, modified " +
+        "FROM organization " +
+        "WHERE org_id > 0 " +
+        "AND trashed_date IS NULL ");
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       ItemContext item = new ItemContext();
@@ -222,12 +206,65 @@ public class AccountsWebdavContext
       item.setLinkItemId(rs.getInt("org_id"));
       item.setPath(fileLibraryPath + ACCOUNTS + fs);
       item.setUserId(userId);
-      item.setPermission("accounts-accounts-documents-view");
+      item.setPermission("accounts-accounts-documents");
       bindings.put(item.getContextName(), item);
       Timestamp entered = rs.getTimestamp("entered");
       Timestamp modified = rs.getTimestamp("modified");
-      buildProperties(item.getContextName(), entered, modified, new Integer(0));
+      buildProperties(
+          item.getContextName(), entered, modified, new Integer(0));
     }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db         Description of the Parameter
+   * @param folderName Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException          Description of the Exception
+   * @throws NamingException       Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   */
+  public boolean createSubcontext(SystemStatus thisSystem, Connection db, String folderName) throws SQLException,
+      FileNotFoundException, NamingException {
+    //Not allowed
+    return false;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param object Description of the Parameter
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+  public boolean bind(SystemStatus thisSystem, Connection db, Object object) throws SQLException, NamingException {
+    //binding an object at root context not allowed
+    System.out.println("binding an object with Accounts context not allowed");
+    throw new NamingException(
+        "Binding an object with Accounts context not allowed..");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db          Description of the Parameter
+   * @param contextName Description of the Parameter
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+  public void unbind(SystemStatus thisSystem, Connection db, String contextName) throws SQLException, NamingException {
+    //Not allowed
+    System.out.println(
+        "Unbinding folder at accounts context not allowed....returning false");
+    throw new NamingException("Unbinding at accounts context not allowed...");
   }
 }
 

@@ -15,39 +15,38 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class UserPermissionList extends Vector {
-
   private int roleId = -1;
 
 
   /**
-   *  Constructor for the UserPermissionList object
+   * Constructor for the UserPermissionList object
    */
-  public UserPermissionList() { }
+  public UserPermissionList() {
+  }
 
 
   /**
-   *  Constructor for the UserPermissionList object
+   * Constructor for the UserPermissionList object
    *
-   *@param  db                Description of the Parameter
-   *@param  roleId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param roleId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public UserPermissionList(Connection db, int roleId) throws SQLException {
     this.roleId = roleId;
@@ -56,10 +55,10 @@ public class UserPermissionList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -80,10 +79,11 @@ public class UserPermissionList extends Vector {
         "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
         "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
 
-    sqlOrder.append("ORDER BY role_id, c.level, p.level ");
+    sqlOrder.append("ORDER BY role_id, c.\"level\", p.\"level\" ");
 
     createFilter(sqlFilter);
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -100,9 +100,9 @@ public class UserPermissionList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -115,11 +115,11 @@ public class UserPermissionList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

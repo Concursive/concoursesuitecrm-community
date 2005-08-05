@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
@@ -43,8 +44,17 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
   <%@ include file="accounts_ticket_header_include.jsp" %>
-  <% String param2 = "id=" + TicketDetails.getId(); %>
+    <table border="0" cellpadding="4" cellspacing="0" width="100%">
+      <tr class="subtab">
+        <td>
+          <% String documentLink = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+          <zeroio:folderHierarchy module="AccountsTickets" link="<%= documentLink %>" showLastLink="true"/> >
+          <%= FileItem.getSubject() %>
+        </td>
+      </tr>
+    </table>
   <dhv:formMessage />
   <%@ include file="../troubletickets/documents_addversion_include.jsp" %>
   <p align="center">
@@ -55,6 +65,7 @@
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
   <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+</dhv:container>
 </dhv:container>
 </form>
 </body>

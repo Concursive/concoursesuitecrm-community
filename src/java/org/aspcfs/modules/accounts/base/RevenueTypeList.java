@@ -15,18 +15,21 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.Vector;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
+import java.util.Vector;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class RevenueTypeList extends Vector {
   private String jsEvent = "";
@@ -36,16 +39,17 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Constructor for the RevenueTypeList object
+   * Constructor for the RevenueTypeList object
    */
-  public RevenueTypeList() { }
+  public RevenueTypeList() {
+  }
 
 
   /**
-   *  Constructor for the RevenueTypeList object
+   * Constructor for the RevenueTypeList object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public RevenueTypeList(Connection db) throws SQLException {
     buildList(db);
@@ -53,9 +57,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Sets the size attribute of the RevenueTypeList object
+   * Sets the size attribute of the RevenueTypeList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(int size) {
     this.size = size;
@@ -63,9 +67,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Sets the multiple attribute of the RevenueTypeList object
+   * Sets the multiple attribute of the RevenueTypeList object
    *
-   *@param  multiple  The new multiple value
+   * @param multiple The new multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
@@ -73,9 +77,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Sets the jsEvent attribute of the RevenueTypeList object
+   * Sets the jsEvent attribute of the RevenueTypeList object
    *
-   *@param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -83,9 +87,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Sets the defaultKey attribute of the RevenueTypeList object
+   * Sets the defaultKey attribute of the RevenueTypeList object
    *
-   *@param  tmp  The new defaultKey value
+   * @param tmp The new defaultKey value
    */
   public void setDefaultKey(int tmp) {
     this.defaultKey = tmp;
@@ -93,9 +97,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Sets the defaultKey attribute of the RevenueTypeList object
+   * Sets the defaultKey attribute of the RevenueTypeList object
    *
-   *@param  tmp  The new defaultKey value
+   * @param tmp The new defaultKey value
    */
   public void setDefaultKey(String tmp) {
     this.defaultKey = Integer.parseInt(tmp);
@@ -103,9 +107,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the size attribute of the RevenueTypeList object
+   * Gets the size attribute of the RevenueTypeList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -113,9 +117,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the multiple attribute of the RevenueTypeList object
+   * Gets the multiple attribute of the RevenueTypeList object
    *
-   *@return    The multiple value
+   * @return The multiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -123,9 +127,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the jsEvent attribute of the RevenueTypeList object
+   * Gets the jsEvent attribute of the RevenueTypeList object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -133,9 +137,9 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the defaultKey attribute of the RevenueTypeList object
+   * Gets the defaultKey attribute of the RevenueTypeList object
    *
-   *@return    The defaultKey value
+   * @return The defaultKey value
    */
   public int getDefaultKey() {
     return defaultKey;
@@ -143,10 +147,10 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the htmlSelect attribute of the RevenueTypeList object
+   * Gets the htmlSelect attribute of the RevenueTypeList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, defaultKey);
@@ -154,11 +158,11 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the htmlSelect attribute of the RevenueTypeList object
+   * Gets the htmlSelect attribute of the RevenueTypeList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     LookupList revenueTypeSelect = new LookupList();
@@ -168,11 +172,11 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Gets the lookupList attribute of the RevenueTypeList object
+   * Gets the lookupList attribute of the RevenueTypeList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The lookupList value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The lookupList value
    */
   public LookupList getLookupList(String selectName, int defaultKey) {
     LookupList revenueTypeSelect = new LookupList();
@@ -185,9 +189,11 @@ public class RevenueTypeList extends Vector {
       RevenueType thisRevenueType = (RevenueType) i.next();
 
       if (thisRevenueType.getEnabled() == true) {
-        revenueTypeSelect.appendItem(thisRevenueType.getId(), thisRevenueType.getDescription());
+        revenueTypeSelect.appendItem(
+            thisRevenueType.getId(), thisRevenueType.getDescription());
       } else if (thisRevenueType.getEnabled() == false && thisRevenueType.getId() == defaultKey) {
-        revenueTypeSelect.appendItem(thisRevenueType.getId(), thisRevenueType.getDescription() + " (X)");
+        revenueTypeSelect.appendItem(
+            thisRevenueType.getId(), thisRevenueType.getDescription() + " (X)");
       }
     }
 
@@ -196,10 +202,10 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Adds a feature to the Item attribute of the RevenueTypeList object
+   * Adds a feature to the Item attribute of the RevenueTypeList object
    *
-   *@param  key   The feature to be added to the Item attribute
-   *@param  name  The feature to be added to the Item attribute
+   * @param key  The feature to be added to the Item attribute
+   * @param name The feature to be added to the Item attribute
    */
   public void addItem(int key, String name) {
     RevenueType thisRevenueType = new RevenueType();
@@ -210,15 +216,15 @@ public class RevenueTypeList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT * FROM lookup_revenue_types WHERE code > -1 ");
-    sql.append("ORDER BY level, description ");
+    sql.append("ORDER BY \"level\", description ");
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(sql.toString());
     while (rs.next()) {

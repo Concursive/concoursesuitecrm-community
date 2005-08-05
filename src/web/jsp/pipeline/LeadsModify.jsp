@@ -19,9 +19,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="hasQuotes" class="java.lang.String" scope="request" />
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script type="text/javascript">
 function reopenOpportunity(id) {
   if (id == '<%= opportunityHeader.getId() %>') {
@@ -103,6 +107,61 @@ function reopenOpportunity(id) {
             <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
           </td>
         </tr>
+        <dhv:permission name="accounts-accounts-contacts-move-view">
+        <tr class="containerBody">
+          <td nowrap valign="top" class="formLabel">
+            <dhv:label name="account.opportunities.associateWith">Associate With</dhv:label>
+          </td>
+          <td>
+            <table cellspacing="0" cellpadding="0" border="0" class="empty">
+                <tr>
+                    <td>
+                      <input type="radio" name="type" value="org" <dhv:evaluate if="<%=opportunityHeader.getAccountLink() > -1 || "org".equals(request.getParameter("type")) %>">checked</dhv:evaluate>>
+                    </td>
+                    <td>
+                      <dhv:label name="account.account.colon">Account:</dhv:label>&nbsp;
+                    </td>
+                    <td>
+                      <div id="changeaccount">
+                        <% if(opportunityHeader.getAccountLink() != -1) {%>
+                          <%= toHtml(opportunityHeader.getAccountName()) %>
+                        <%} else {%>
+                          <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+                        <%}%>
+                      </div>
+                    </td>
+                    <td>
+                      <input type="hidden" name="accountLink" id="accountLink" value="<%= opportunityHeader.getAccountLink() %>">&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
+                      &nbsp;[<a href="<%= "javascript:document.forms['modifyOpp'].type[0].checked='t';popAccountsListSingle('accountLink','changeaccount');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+                    </td>
+                  </tr>
+             </table>
+            <table border="0" cellspacing="0" cellpadding="0" class="empty">
+              <tr>
+                <td>
+                  <input type="radio" name="type" value="contact" <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter("type"))%>">checked</dhv:evaluate>>
+                </td>
+                <td>
+                  <dhv:label name="account.contact.colon">Contact:</dhv:label>&nbsp;
+                </td>
+                <td>
+                  <div id="changecontact">
+                    <% if(String.valueOf(opportunityHeader.getContactLink()).equals("-1")) {%>
+                      <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+                    <%} else {%>
+                      &nbsp;<%= toHtml(opportunityHeader.getContactName()) %>
+                    <%}%>
+                  </div>
+                </td>
+                <td>
+                  <input type="hidden" name="contactLink" id="contactLink" value="<%= opportunityHeader.getContactLink() %>">
+                  &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','reset=true&filters="+ ("true".equals(hasQuotes) ? "":"mycontacts|") +"accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        </dhv:permission>
       </table>
       &nbsp;
       <br />

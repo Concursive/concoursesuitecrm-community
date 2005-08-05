@@ -15,19 +15,23 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Mathur
- * @created    Februagetry 24, 2003
- * @version    $Id: ViewpointList.java,v 1.4 2004/09/16 19:24:00 mrajkowski Exp
- *      $
+ * @author Mathur
+ * @version $Id: ViewpointList.java,v 1.4 2004/09/16 19:24:00 mrajkowski Exp
+ *          $
+ * @created Februagetry 24, 2003
  */
 public class ViewpointList extends ArrayList {
   private int enteredBy = -1;
@@ -39,9 +43,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ViewpointList object
+   * Sets the enteredBy attribute of the ViewpointList object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -49,9 +53,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Sets the userId attribute of the ViewpointList object
+   * Sets the userId attribute of the ViewpointList object
    *
-   * @param  userId  The new userId value
+   * @param userId The new userId value
    */
   public void setUserId(int userId) {
     this.userId = userId;
@@ -59,9 +63,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Sets the vpUserId attribute of the ViewpointList object
+   * Sets the vpUserId attribute of the ViewpointList object
    *
-   * @param  vpUserId  The new vpUserId value
+   * @param vpUserId The new vpUserId value
    */
   public void setVpUserId(int vpUserId) {
     this.vpUserId = vpUserId;
@@ -69,9 +73,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ViewpointList object
+   * Sets the pagedListInfo attribute of the ViewpointList object
    *
-   * @param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -79,9 +83,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the ViewpointList object
+   * Sets the buildResources attribute of the ViewpointList object
    *
-   * @param  buildResources  The new buildResources value
+   * @param buildResources The new buildResources value
    */
   public void setBuildResources(boolean buildResources) {
     this.buildResources = buildResources;
@@ -89,9 +93,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Sets the includeEnabledOnly attribute of the ViewpointList object
+   * Sets the includeEnabledOnly attribute of the ViewpointList object
    *
-   * @param  includeEnabledOnly  The new includeEnabledOnly value
+   * @param includeEnabledOnly The new includeEnabledOnly value
    */
   public void setIncludeEnabledOnly(boolean includeEnabledOnly) {
     this.includeEnabledOnly = includeEnabledOnly;
@@ -99,9 +103,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Gets the includeEnabledOnly attribute of the ViewpointList object
+   * Gets the includeEnabledOnly attribute of the ViewpointList object
    *
-   * @return    The includeEnabledOnly value
+   * @return The includeEnabledOnly value
    */
   public boolean getIncludeEnabledOnly() {
     return includeEnabledOnly;
@@ -109,9 +113,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Gets the buildResources attribute of the ViewpointList object
+   * Gets the buildResources attribute of the ViewpointList object
    *
-   * @return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -119,9 +123,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the ViewpointList object
+   * Gets the enteredBy attribute of the ViewpointList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -129,9 +133,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Gets the userId attribute of the ViewpointList object
+   * Gets the userId attribute of the ViewpointList object
    *
-   * @return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -139,9 +143,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Gets the vpUserId attribute of the ViewpointList object
+   * Gets the vpUserId attribute of the ViewpointList object
    *
-   * @return    The vpUserId value
+   * @return The vpUserId value
    */
   public int getVpUserId() {
     return vpUserId;
@@ -149,9 +153,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ViewpointList object
+   * Gets the pagedListInfo attribute of the ViewpointList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -159,10 +163,10 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -198,9 +202,10 @@ public class ViewpointList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(c.namelast) < ? ");
+            "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -231,21 +236,14 @@ public class ViewpointList extends ArrayList {
         "FROM viewpoint vp " +
         "LEFT JOIN contact c ON c.user_id = vp.vp_user_id " +
         "WHERE vp.viewpoint_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Viewpoint thisViewpoint = new Viewpoint(rs);
       this.add(thisViewpoint);
     }
@@ -264,9 +262,9 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -288,11 +286,11 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -314,12 +312,10 @@ public class ViewpointList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
    */
   public int checkForDuplicates(int id) {
     int result = 0;
@@ -334,5 +330,4 @@ public class ViewpointList extends ArrayList {
   }
 
 }
-
 

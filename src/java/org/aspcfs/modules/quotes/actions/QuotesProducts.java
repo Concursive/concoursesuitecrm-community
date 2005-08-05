@@ -1,41 +1,42 @@
 package org.aspcfs.modules.quotes.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.products.base.ProductCatalogPricing;
+import org.aspcfs.modules.products.base.ProductOptionConfigurator;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
 import org.aspcfs.modules.quotes.base.Quote;
 import org.aspcfs.modules.quotes.base.QuoteProduct;
-import org.aspcfs.modules.quotes.base.QuoteProductOption;
 import org.aspcfs.modules.quotes.base.QuoteProductBean;
-import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.quotes.base.QuoteProductOption;
 import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.modules.products.configurator.OptionConfigurator;
-import org.aspcfs.modules.products.base.ProductOptionConfigurator;
 
 import java.sql.Connection;
 import java.util.Iterator;
 
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    July 13, 2004
- *@version    $Id: QuotesProducts.java,v 1.1.6.1 2004/10/19 20:19:03 mrajkowski
- *      Exp $
+ * @author partha
+ * @version $Id: QuotesProducts.java,v 1.1.6.1 2004/10/19 20:19:03 mrajkowski
+ *          Exp $
+ * @created July 13, 2004
  */
 public final class QuotesProducts extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     String action = context.getAction().getActionName();
@@ -45,18 +46,21 @@ public final class QuotesProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
-    String quoteProductIdString = (String) context.getRequest().getParameter("quoteProductId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
+    String quoteProductIdString = (String) context.getRequest().getParameter(
+        "quoteProductId");
     int quoteId = Integer.parseInt(quoteIdString);
     int quoteProductId = Integer.parseInt(quoteProductIdString);
     Quote quote = null;
@@ -89,23 +93,28 @@ public final class QuotesProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
-    String quoteProductIdString = (String) context.getRequest().getParameter("quoteProductId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
+    String quoteProductIdString = (String) context.getRequest().getParameter(
+        "quoteProductId");
     String quantity = (String) context.getRequest().getParameter("quantity");
-    String priceAmount = (String) context.getRequest().getParameter("priceAmount");
+    String priceAmount = (String) context.getRequest().getParameter(
+        "priceAmount");
     String comment = (String) context.getRequest().getParameter("comment");
-    String estimatedDelivery = (String) context.getRequest().getParameter("estimatedDelivery");
-    
+    String estimatedDelivery = (String) context.getRequest().getParameter(
+        "estimatedDelivery");
+
     QuoteProductBean bean = (QuoteProductBean) context.getFormBean();
     java.sql.Timestamp estimatedDeliveryDate = bean.getEstimatedDeliveryDate();
     boolean isValid = false;
@@ -140,8 +149,9 @@ public final class QuotesProducts extends CFSModule {
       while (i.hasNext()) {
         QuoteProductOption thisOption = (QuoteProductOption) i.next();
         OptionConfigurator configurator =
-                                (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, thisOption.getConfiguratorId());
-                                
+            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(
+                db, thisOption.getConfiguratorId());
+
         configurator.queryProperties(db, thisOption.getOptionId(), false);
         if (!configurator.validateUserInput(context.getRequest())) {
           if (configurator.hasUserInput(context.getRequest())) {
@@ -163,7 +173,9 @@ public final class QuotesProducts extends CFSModule {
     }
     if (resultCount <= 0 || !isValid) {
       SystemStatus systemStatus = this.getSystemStatus(context);
-      context.getRequest().setAttribute("actionError", systemStatus.getLabel("quoteProduct.option.validation.actionError"));
+      context.getRequest().setAttribute(
+          "actionError", systemStatus.getLabel(
+              "quoteProduct.option.validation.actionError"));
       return "ModifyOK";
     }
     return "SaveOK";
@@ -171,17 +183,20 @@ public final class QuotesProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCreateForm(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit")) && !hasPermission(context,"admin-sysconfig-products-add")) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit")) && !hasPermission(
+            context, "admin-sysconfig-products-add")) {
       return ("PermissionError");
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     int quoteId = Integer.parseInt(quoteIdString);
     Quote quote = null;
     Connection db = null;
@@ -189,13 +204,18 @@ public final class QuotesProducts extends CFSModule {
       db = getConnection(context);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList currencySelect = systemStatus.getLookupList(db, "lookup_currency");
-      currencySelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      LookupList currencySelect = systemStatus.getLookupList(
+          db, "lookup_currency");
+      currencySelect.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CurrencySelect", currencySelect);
 
-      LookupList recurringTypeSelect = systemStatus.getLookupList(db, "lookup_recurring_type");
-      recurringTypeSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("RecurringTypeSelect", recurringTypeSelect);
+      LookupList recurringTypeSelect = systemStatus.getLookupList(
+          db, "lookup_recurring_type");
+      recurringTypeSelect.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute(
+          "RecurringTypeSelect", recurringTypeSelect);
 
       quote = new Quote();
       quote.setBuildProducts(true);
@@ -221,17 +241,20 @@ public final class QuotesProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCreate(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit")) && !hasPermission(context,"admin-sysconfig-products-add")) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit")) && !hasPermission(
+            context, "admin-sysconfig-products-add")) {
       return ("PermissionError");
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     int quoteId = Integer.parseInt(quoteIdString);
     Quote quote = null;
     boolean productInserted = false;
@@ -286,14 +309,16 @@ public final class QuotesProducts extends CFSModule {
     } catch (Exception e) {
       try {
         db.rollback();
-      } catch (Exception e1) {}
+      } catch (Exception e1) {
+      }
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
       return ("SystemError");
     } finally {
       try {
         db.setAutoCommit(true);
-      } catch (Exception e2) {}
+      } catch (Exception e2) {
+      }
       this.freeConnection(context, db);
     }
     if (!itemInserted || !isValid) {
@@ -304,18 +329,21 @@ public final class QuotesProducts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
-    String quoteProductIdString = (String) context.getRequest().getParameter("quoteProductId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
+    String quoteProductIdString = (String) context.getRequest().getParameter(
+        "quoteProductId");
     int quoteId = Integer.parseInt(quoteIdString);
     int quoteProductId = Integer.parseInt(quoteProductIdString);
     Quote quote = null;

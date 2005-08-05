@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -23,6 +23,7 @@
 <jsp:useBean id="CampaignList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="AccountContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -43,7 +44,13 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+<dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+    <dhv:permission name="accounts-accounts-contacts-messages-view">
+      <a href="AccountContactsMessages.do?command=PrepareMessage&contactId=<%= ContactDetails.getId() %>"><dhv:label name="actionList.newMessage">New Message</dhv:label></a>
+    </dhv:permission>
+  </dhv:evaluate>
+<br /><br />
     <table width="100%" border="0">
       <tr>
         <td align="left">
@@ -61,11 +68,11 @@
     </table>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
+        <th width="45%" ><strong><dhv:label name="accounts.accounts_calls_list.Subject">Subject</dhv:label></strong></th>
         <th width="20%" nowrap>
-          <a href="Contacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %>"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
-          <%= AccountContactMessageListInfo.getSortIcon("c.name") %>
+          <a href="Contacts.do?command=ViewMessages&column=msg.name&contactId=<%= ContactDetails.getId() %>"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
+          <%= AccountContactMessageListInfo.getSortIcon("msg.name") %>
         </th>
-        <th width="45%" ><strong><dhv:label name="accounts.accounts_contacts_messages_details.MessageSubject">Message Subject</dhv:label></strong></th>
         <th width="20%" nowrap>
           <a href="Contacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %>"><strong><dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label></strong></a>
           <%= AccountContactMessageListInfo.getSortIcon("active_date") %>
@@ -82,25 +89,29 @@
         rowid = (rowid != 1?1:2);
         Campaign campaign = (Campaign)j.next();
   %>
-      <tr class="containerBody">
-        <td class="row<%= rowid %>">
-          <a href="Contacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%>">
+      <tr class="row<%= rowid %>">
+        <td>
+          <a href="Contacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%>"><%= toHtml(campaign.getSubject()) %></a>
+        </td>
+        <td>
           <% if(campaign.getMessageName() != null && !"".equals(campaign.getMessageName())) {%>
             <%= toHtml(campaign.getMessageName()) %>
           <%} else {%>
             <dhv:label name="account.noNameAvailable.quotes">"No name available"</dhv:label>
           <%}%>
-          </a><font color="red">
+          <font color="red">
 <% if(("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))) {%>
   <dhv:label name="account.canceled.brackets">(Canceled)</dhv:label>
 <%} else {%>
 <%}%></font>
         </td>
-        <td class="row<%= rowid %>"><%= toHtml(campaign.getMessageSubject()) %></td>
-        <td valign="top" align="left" nowrap class="row<%= rowid %>">
-          <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
+        <td valign="top" align="left" nowrap>
+          <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" timeZone="<%= campaign.getActiveDateTimeZone() %>" dateOnly="true" showTimeZone="true" default="&nbsp;"/>
+          <% if(!User.getTimeZone().equals(campaign.getActiveDateTimeZone())){%>
+            <br /><zeroio:tz timestamp="<%= campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <%}%>
         </td>
-        <td valign="top" nowrap class="row<%= rowid %>">
+        <td valign="top" nowrap>
           <%=toHtml(campaign.getStatus())%>
         </td>
       </tr>

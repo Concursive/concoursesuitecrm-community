@@ -15,18 +15,22 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import java.sql.*;
-import java.util.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  This represents a list of Order Payments
+ * This represents a list of Order Payments
  *
- *@author     ananth
- *@created    March 19, 2004
- *@version    $Id: OrderPaymentList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: OrderPaymentList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *          Exp $
+ * @created March 19, 2004
  */
 public class OrderPaymentList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -39,9 +43,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the orderId attribute of the OrderPaymentList object
+   * Sets the orderId attribute of the OrderPaymentList object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -49,9 +53,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the orderId attribute of the OrderPaymentList object
+   * Sets the orderId attribute of the OrderPaymentList object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -59,9 +63,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the paymentMethodId attribute of the OrderPaymentList object
+   * Sets the paymentMethodId attribute of the OrderPaymentList object
    *
-   *@param  tmp  The new paymentMethodId value
+   * @param tmp The new paymentMethodId value
    */
   public void setPaymentMethodId(int tmp) {
     this.paymentMethodId = tmp;
@@ -69,9 +73,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the paymentMethodId attribute of the OrderPaymentList object
+   * Sets the paymentMethodId attribute of the OrderPaymentList object
    *
-   *@param  tmp  The new paymentMethodId value
+   * @param tmp The new paymentMethodId value
    */
   public void setPaymentMethodId(String tmp) {
     this.paymentMethodId = Integer.parseInt(tmp);
@@ -79,9 +83,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the OrderPaymentList object
+   * Sets the pagedListInfo attribute of the OrderPaymentList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -89,9 +93,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the orderItemId attribute of the OrderPaymentList object
+   * Sets the orderItemId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(int tmp) {
     this.orderItemId = tmp;
@@ -99,9 +103,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the orderItemId attribute of the OrderPaymentList object
+   * Sets the orderItemId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(String tmp) {
     this.orderItemId = Integer.parseInt(tmp);
@@ -109,9 +113,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderPaymentList object
+   * Sets the statusId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -119,9 +123,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderPaymentList object
+   * Sets the statusId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -129,9 +133,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the historyId attribute of the OrderPaymentList object
+   * Sets the historyId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new historyId value
+   * @param tmp The new historyId value
    */
   public void setHistoryId(int tmp) {
     this.historyId = tmp;
@@ -139,9 +143,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the historyId attribute of the OrderPaymentList object
+   * Sets the historyId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new historyId value
+   * @param tmp The new historyId value
    */
   public void setHistoryId(String tmp) {
     this.historyId = Integer.parseInt(tmp);
@@ -149,9 +153,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Sets the status attribute of the OrderPaymentList object
+   * Sets the status attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -159,9 +163,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the status attribute of the OrderPaymentList object
+   * Gets the status attribute of the OrderPaymentList object
    *
-   * @return    The status value
+   * @return The status value
    */
   public String getStatus() {
     return status;
@@ -169,9 +173,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the orderItemId attribute of the OrderPaymentList object
+   * Gets the orderItemId attribute of the OrderPaymentList object
    *
-   * @return    The orderItemId value
+   * @return The orderItemId value
    */
   public int getOrderItemId() {
     return orderItemId;
@@ -179,9 +183,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the statusId attribute of the OrderPaymentList object
+   * Gets the statusId attribute of the OrderPaymentList object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -189,9 +193,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the historyId attribute of the OrderPaymentList object
+   * Gets the historyId attribute of the OrderPaymentList object
    *
-   * @return    The historyId value
+   * @return The historyId value
    */
   public int getHistoryId() {
     return historyId;
@@ -199,9 +203,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the orderId attribute of the OrderPaymentList object
+   * Gets the orderId attribute of the OrderPaymentList object
    *
-   *@return    The orderId value
+   * @return The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -209,9 +213,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the paymentMethodId attribute of the OrderPaymentList object
+   * Gets the paymentMethodId attribute of the OrderPaymentList object
    *
-   *@return    The paymentMethodId value
+   * @return The paymentMethodId value
    */
   public int getPaymentMethodId() {
     return paymentMethodId;
@@ -219,9 +223,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the OrderPaymentList object
+   * Gets the pagedListInfo attribute of the OrderPaymentList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -229,16 +233,17 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Constructor for the OrderPaymentList object
+   * Constructor for the OrderPaymentList object
    */
-  public OrderPaymentList() { }
+  public OrderPaymentList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -305,23 +310,16 @@ public class OrderPaymentList extends ArrayList {
         " FROM order_payment op " +
         " LEFT JOIN lookup_payment_status ps " +
         " ON ( op.status_id = ps.code ) " +
-        " WHERE op.payment_id > -1 "
-        );
+        " WHERE op.payment_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       OrderPayment thisPayment = new OrderPayment(rs);
       this.add(thisPayment);
     }
@@ -331,9 +329,9 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -361,11 +359,11 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -392,10 +390,10 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator iterator = this.iterator();

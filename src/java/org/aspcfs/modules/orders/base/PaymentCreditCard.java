@@ -23,12 +23,12 @@ import java.security.Key;
 import java.sql.*;
 
 /**
- *  This represents a Payment's Credit Card
+ * This represents a Payment's Credit Card
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id: PaymentCreditCard.java,v 1.2 2004/05/04 15:52:27 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: PaymentCreditCard.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *          Exp $
+ * @created March 18, 2004
  */
 public class PaymentCreditCard extends GenericBean {
   private int id = -1;
@@ -51,9 +51,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the orderId attribute of the PaymentCreditCard object
+   * Sets the orderId attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -61,9 +61,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the orderId attribute of the PaymentCreditCard object
+   * Sets the orderId attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -71,9 +71,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the orderId attribute of the PaymentCreditCard object
+   * Gets the orderId attribute of the PaymentCreditCard object
    *
-   *@return    The orderId value
+   * @return The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -81,9 +81,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the PaymentCreditCard object
+   * Sets the id attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -91,9 +91,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the PaymentCreditCard object
+   * Sets the id attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -101,9 +101,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the cardType attribute of the PaymentCreditCard object
+   * Sets the cardType attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new cardType value
+   * @param tmp The new cardType value
    */
   public void setCardType(int tmp) {
     this.cardType = tmp;
@@ -111,9 +111,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the cardType attribute of the PaymentCreditCard object
+   * Sets the cardType attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new cardType value
+   * @param tmp The new cardType value
    */
   public void setCardType(String tmp) {
     this.cardType = Integer.parseInt(tmp);
@@ -121,9 +121,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the cardNumber attribute of the PaymentCreditCard object
+   * Sets the cardNumber attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new cardNumber value
+   * @param tmp The new cardNumber value
    */
   public void setCardNumber(String tmp) {
     this.cardNumber = tmp;
@@ -131,9 +131,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the cardSecurityCode attribute of the PaymentCreditCard object
+   * Sets the cardSecurityCode attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new cardSecurityCode value
+   * @param tmp The new cardSecurityCode value
    */
   public void setCardSecurityCode(String tmp) {
     this.cardSecurityCode = tmp;
@@ -141,9 +141,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the expirationMonth attribute of the PaymentCreditCard object
+   * Sets the expirationMonth attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new expirationMonth value
+   * @param tmp The new expirationMonth value
    */
   public void setExpirationMonth(int tmp) {
     this.expirationMonth = tmp;
@@ -151,9 +151,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the expirationMonth attribute of the PaymentCreditCard object
+   * Sets the expirationMonth attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new expirationMonth value
+   * @param tmp The new expirationMonth value
    */
   public void setExpirationMonth(String tmp) {
     this.expirationMonth = Integer.parseInt(tmp);
@@ -161,9 +161,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the expirationYear attribute of the PaymentCreditCard object
+   * Sets the expirationYear attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new expirationYear value
+   * @param tmp The new expirationYear value
    */
   public void setExpirationYear(int tmp) {
     this.expirationYear = tmp;
@@ -171,9 +171,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the expirationYear attribute of the PaymentCreditCard object
+   * Sets the expirationYear attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new expirationYear value
+   * @param tmp The new expirationYear value
    */
   public void setExpirationYear(String tmp) {
     this.expirationYear = Integer.parseInt(tmp);
@@ -181,9 +181,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the nameOnCard attribute of the PaymentCreditCard object
+   * Sets the nameOnCard attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new nameOnCard value
+   * @param tmp The new nameOnCard value
    */
   public void setNameOnCard(String tmp) {
     this.nameOnCard = tmp;
@@ -191,9 +191,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the companyNameOnCard attribute of the PaymentCreditCard object
+   * Sets the companyNameOnCard attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new companyNameOnCard value
+   * @param tmp The new companyNameOnCard value
    */
   public void setCompanyNameOnCard(String tmp) {
     this.companyNameOnCard = tmp;
@@ -201,9 +201,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the PaymentCreditCard object
+   * Sets the enteredBy attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -211,9 +211,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the PaymentCreditCard object
+   * Sets the enteredBy attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -221,9 +221,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the PaymentCreditCard object
+   * Sets the entered attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -231,9 +231,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the PaymentCreditCard object
+   * Sets the entered attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -241,9 +241,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the PaymentCreditCard object
+   * Sets the modifiedBy attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -251,9 +251,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the PaymentCreditCard object
+   * Sets the modifiedBy attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -261,9 +261,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the PaymentCreditCard object
+   * Sets the modified attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -271,9 +271,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the PaymentCreditCard object
+   * Sets the modified attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -281,9 +281,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the publicKey attribute of the PaymentCreditCard object
+   * Sets the publicKey attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new publicKey value
+   * @param tmp The new publicKey value
    */
   public void setPublicKey(Key tmp) {
     this.publicKey = tmp;
@@ -291,9 +291,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the publicKey attribute of the PaymentCreditCard object
+   * Gets the publicKey attribute of the PaymentCreditCard object
    *
-   *@return    The publicKey value
+   * @return The publicKey value
    */
   public Key getPublicKey() {
     return publicKey;
@@ -301,9 +301,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Sets the privateKey attribute of the PaymentCreditCard object
+   * Sets the privateKey attribute of the PaymentCreditCard object
    *
-   *@param  tmp  The new privateKey value
+   * @param tmp The new privateKey value
    */
   public void setPrivateKey(Key tmp) {
     this.privateKey = tmp;
@@ -311,9 +311,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the privateKey attribute of the PaymentCreditCard object
+   * Gets the privateKey attribute of the PaymentCreditCard object
    *
-   *@return    The privateKey value
+   * @return The privateKey value
    */
   public Key getPrivateKey() {
     return privateKey;
@@ -321,20 +321,19 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the PaymentCreditCard object
+   * Gets the id attribute of the PaymentCreditCard object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
   }
 
 
-
   /**
-   *  Gets the cardType attribute of the PaymentCreditCard object
+   * Gets the cardType attribute of the PaymentCreditCard object
    *
-   *@return    The cardType value
+   * @return The cardType value
    */
   public int getCardType() {
     return cardType;
@@ -342,9 +341,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the cardNumber attribute of the PaymentCreditCard object
+   * Gets the cardNumber attribute of the PaymentCreditCard object
    *
-   *@return    The cardNumber value
+   * @return The cardNumber value
    */
   public String getCardNumber() {
     return cardNumber;
@@ -352,9 +351,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the encryptedCardNumber attribute of the PaymentCreditCard object
+   * Gets the encryptedCardNumber attribute of the PaymentCreditCard object
    *
-   *@return    The encryptedCardNumber value
+   * @return The encryptedCardNumber value
    */
   public String getEncryptedCardNumber() {
     return PrivateString.encryptAsymmetric(publicKey, this.getCardNumber());
@@ -362,9 +361,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the cardSecurityCode attribute of the PaymentCreditCard object
+   * Gets the cardSecurityCode attribute of the PaymentCreditCard object
    *
-   *@return    The cardSecurityCode value
+   * @return The cardSecurityCode value
    */
   public String getCardSecurityCode() {
     return cardSecurityCode;
@@ -372,9 +371,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the expirationMonth attribute of the PaymentCreditCard object
+   * Gets the expirationMonth attribute of the PaymentCreditCard object
    *
-   *@return    The expirationMonth value
+   * @return The expirationMonth value
    */
   public int getExpirationMonth() {
     return expirationMonth;
@@ -382,9 +381,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the expirationYear attribute of the PaymentCreditCard object
+   * Gets the expirationYear attribute of the PaymentCreditCard object
    *
-   *@return    The expirationYear value
+   * @return The expirationYear value
    */
   public int getExpirationYear() {
     return expirationYear;
@@ -392,9 +391,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the nameOnCard attribute of the PaymentCreditCard object
+   * Gets the nameOnCard attribute of the PaymentCreditCard object
    *
-   *@return    The nameOnCard value
+   * @return The nameOnCard value
    */
   public String getNameOnCard() {
     return nameOnCard;
@@ -402,9 +401,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the companyNameOnCard attribute of the PaymentCreditCard object
+   * Gets the companyNameOnCard attribute of the PaymentCreditCard object
    *
-   *@return    The companyNameOnCard value
+   * @return The companyNameOnCard value
    */
   public String getCompanyNameOnCard() {
     return companyNameOnCard;
@@ -412,9 +411,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the PaymentCreditCard object
+   * Gets the enteredBy attribute of the PaymentCreditCard object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -422,9 +421,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the PaymentCreditCard object
+   * Gets the entered attribute of the PaymentCreditCard object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -432,9 +431,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the PaymentCreditCard object
+   * Gets the modifiedBy attribute of the PaymentCreditCard object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -442,9 +441,9 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the PaymentCreditCard object
+   * Gets the modified attribute of the PaymentCreditCard object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -452,17 +451,18 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Constructor for the PaymentCreditCard object
+   * Constructor for the PaymentCreditCard object
    */
-  public PaymentCreditCard() { }
+  public PaymentCreditCard() {
+  }
 
 
   /**
-   *  Constructor for the PaymentCreditCard object
+   * Constructor for the PaymentCreditCard object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public PaymentCreditCard(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -470,10 +470,10 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Constructor for the PaymentCreditCard object
+   * Constructor for the PaymentCreditCard object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public PaymentCreditCard(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -481,11 +481,11 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -497,8 +497,7 @@ public class PaymentCreditCard extends GenericBean {
         "		     pc.expiration_month, pc.expiration_year, pc.name_on_card, pc.company_name_on_card, " +
         "	       pc.entered, pc.enteredby, pc.modified, pc.modifiedby, pc.order_id " +
         " FROM payment_creditcard pc " +
-        " WHERE pc.creditcard_id = ? "
-        );
+        " WHERE pc.creditcard_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -513,10 +512,10 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //payment_creditcard table
@@ -541,20 +540,22 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-
+    id = DatabaseUtils.getNextSeq(db, "payment_creditcard_creditcard_id_seq");
     StringBuffer sql = new StringBuffer();
     sql.append(
         " INSERT INTO payment_creditcard(card_type, card_number, card_security_code, " +
-        " 	expiration_month, expiration_year, name_on_card, company_name_on_card, "
-        );
+        " 	expiration_month, expiration_year, name_on_card, company_name_on_card, ");
+    if (id > -1) {
+      sql.append("creditcard_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -564,6 +565,9 @@ public class PaymentCreditCard extends GenericBean {
     }
     sql.append("modifiedby, order_id )");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -581,7 +585,9 @@ public class PaymentCreditCard extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getExpirationYear());
     pst.setString(++i, this.getNameOnCard());
     pst.setString(++i, this.getCompanyNameOnCard());
-
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -593,25 +599,27 @@ public class PaymentCreditCard extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getOrderId());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "payment_creditcard_creditcard_id_seq");
+    id = DatabaseUtils.getCurrVal(
+        db, "payment_creditcard_creditcard_id_seq", id);
     result = true;
     return result;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Credit Card ID not specified");
     }
     // delete the credit card info
-    PreparedStatement pst = db.prepareStatement("DELETE FROM payment_creditcard WHERE creditcard_id = ? ");
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM payment_creditcard WHERE creditcard_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -620,11 +628,11 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;

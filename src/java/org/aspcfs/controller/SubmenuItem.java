@@ -18,11 +18,11 @@ package org.aspcfs.controller;
 import org.aspcfs.utils.StringUtils;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    August 8, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created August 8, 2001
  */
 public class SubmenuItem {
 
@@ -44,18 +44,19 @@ public class SubmenuItem {
 
 
   /**
-   *  Constructor for the SubmenuItem object
+   * Constructor for the SubmenuItem object
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public SubmenuItem() { }
+  public SubmenuItem() {
+  }
 
 
   /**
-   *  Constructor for the SubmenuItem object, copies an existing submenu item
+   * Constructor for the SubmenuItem object, copies an existing submenu item
    *
-   *@param  otherItem  Description of Parameter
-   *@since             1.2
+   * @param otherItem Description of Parameter
+   * @since 1.2
    */
   public SubmenuItem(SubmenuItem otherItem) {
     this.setName(new String(otherItem.getName()));
@@ -75,9 +76,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the isActive attribute of the SubmenuItem object
+   * Gets the isActive attribute of the SubmenuItem object
    *
-   *@return    The isActive value
+   * @return The isActive value
    */
   public boolean getIsActive() {
     return isActive;
@@ -85,9 +86,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the isActive attribute of the SubmenuItem object
+   * Sets the isActive attribute of the SubmenuItem object
    *
-   *@param  isActive  The new isActive value
+   * @param isActive The new isActive value
    */
   public void setIsActive(boolean isActive) {
     this.isActive = isActive;
@@ -95,10 +96,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the Name attribute of the SubmenuItem object
+   * Sets the Name attribute of the SubmenuItem object
    *
-   *@param  tmp  The new Name value
-   *@since       1.0
+   * @param tmp The new Name value
+   * @since 1.0
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -106,9 +107,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the graphicWidth attribute of the SubmenuItem object
+   * Gets the graphicWidth attribute of the SubmenuItem object
    *
-   *@return    The graphicWidth value
+   * @return The graphicWidth value
    */
   public String getGraphicWidth() {
     return graphicWidth;
@@ -116,9 +117,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the graphicHeight attribute of the SubmenuItem object
+   * Gets the graphicHeight attribute of the SubmenuItem object
    *
-   *@return    The graphicHeight value
+   * @return The graphicHeight value
    */
   public String getGraphicHeight() {
     return graphicHeight;
@@ -126,9 +127,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the graphicOn attribute of the SubmenuItem object
+   * Gets the graphicOn attribute of the SubmenuItem object
    *
-   *@return    The graphicOn value
+   * @return The graphicOn value
    */
   public String getGraphicOn() {
     return graphicOn;
@@ -136,9 +137,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the graphicOff attribute of the SubmenuItem object
+   * Gets the graphicOff attribute of the SubmenuItem object
    *
-   *@return    The graphicOff value
+   * @return The graphicOff value
    */
   public String getGraphicOff() {
     return graphicOff;
@@ -146,9 +147,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the graphicRollover attribute of the SubmenuItem object
+   * Gets the graphicRollover attribute of the SubmenuItem object
    *
-   *@return    The graphicRollover value
+   * @return The graphicRollover value
    */
   public String getGraphicRollover() {
     return graphicRollover;
@@ -156,9 +157,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the graphicWidth attribute of the SubmenuItem object
+   * Sets the graphicWidth attribute of the SubmenuItem object
    *
-   *@param  tmp  The new graphicWidth value
+   * @param tmp The new graphicWidth value
    */
   public void setGraphicWidth(String tmp) {
     this.graphicWidth = tmp;
@@ -166,9 +167,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the graphicHeight attribute of the SubmenuItem object
+   * Sets the graphicHeight attribute of the SubmenuItem object
    *
-   *@param  tmp  The new graphicHeight value
+   * @param tmp The new graphicHeight value
    */
   public void setGraphicHeight(String tmp) {
     this.graphicHeight = tmp;
@@ -176,9 +177,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the graphicOn attribute of the SubmenuItem object
+   * Sets the graphicOn attribute of the SubmenuItem object
    *
-   *@param  tmp  The new graphicOn value
+   * @param tmp The new graphicOn value
    */
   public void setGraphicOn(String tmp) {
     this.graphicOn = tmp;
@@ -186,9 +187,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the graphicOff attribute of the SubmenuItem object
+   * Sets the graphicOff attribute of the SubmenuItem object
    *
-   *@param  tmp  The new graphicOff value
+   * @param tmp The new graphicOff value
    */
   public void setGraphicOff(String tmp) {
     this.graphicOff = tmp;
@@ -196,9 +197,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the graphicRollover attribute of the SubmenuItem object
+   * Sets the graphicRollover attribute of the SubmenuItem object
    *
-   *@param  tmp  The new graphicRollover value
+   * @param tmp The new graphicRollover value
    */
   public void setGraphicRollover(String tmp) {
     this.graphicRollover = tmp;
@@ -206,10 +207,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the Html attribute of the SubmenuItem object
+   * Sets the Html attribute of the SubmenuItem object
    *
-   *@param  tmp  The new Html value
-   *@since       1.2
+   * @param tmp The new Html value
+   * @since 1.2
    */
   public void setLongHtml(String tmp) {
     this.longHtml = tmp;
@@ -217,22 +218,21 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the ShortHtml attribute of the SubmenuItem object
+   * Sets the ShortHtml attribute of the SubmenuItem object
    *
-   *@param  tmp  The new ShortHtml value
-   *@since       1.2
+   * @param tmp The new ShortHtml value
+   * @since 1.2
    */
   public void setShortHtml(String tmp) {
     this.shortHtml = tmp;
   }
 
 
-
   /**
-   *  Sets the AlternateName attribute of the SubmenuItem object
+   * Sets the AlternateName attribute of the SubmenuItem object
    *
-   *@param  tmp  The new AlternateName value
-   *@since       1.0
+   * @param tmp The new AlternateName value
+   * @since 1.0
    */
   public void setAlternateName(String tmp) {
     this.alternateName = tmp;
@@ -240,10 +240,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the Link attribute of the SubmenuItem object
+   * Sets the Link attribute of the SubmenuItem object
    *
-   *@param  tmp  The new Link value
-   *@since       1.0
+   * @param tmp The new Link value
+   * @since 1.0
    */
   public void setLink(String tmp) {
     this.link = tmp;
@@ -251,10 +251,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the HtmlClass attribute of the SubmenuItem object
+   * Sets the HtmlClass attribute of the SubmenuItem object
    *
-   *@param  tmp  The new HtmlClass value
-   *@since       1.0
+   * @param tmp The new HtmlClass value
+   * @since 1.0
    */
   public void setHtmlClass(String tmp) {
     this.htmlClass = tmp;
@@ -262,10 +262,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Sets the Permission attribute of the SubmenuItem object
+   * Sets the Permission attribute of the SubmenuItem object
    *
-   *@param  tmp  The new Permission value
-   *@since       1.0
+   * @param tmp The new Permission value
+   * @since 1.0
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -273,10 +273,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the Html attribute of the SubmenuItem object
+   * Gets the Html attribute of the SubmenuItem object
    *
-   *@return    The Html value
-   *@since     1.0
+   * @return The Html value
+   * @since 1.0
    */
   public String getHtml() {
     if (link == null || link.equals("")) {
@@ -289,10 +289,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the Html attribute of the SubmenuItem object
+   * Gets the Html attribute of the SubmenuItem object
    *
-   *@return    The Html value
-   *@since     1.2
+   * @return The Html value
+   * @since 1.2
    */
   public String getLongHtml() {
     return longHtml;
@@ -300,23 +300,22 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the ShortHtml attribute of the SubmenuItem object
+   * Gets the ShortHtml attribute of the SubmenuItem object
    *
-   *@return    The ShortHtml value
-   *@since     1.2
+   * @return The ShortHtml value
+   * @since 1.2
    */
   public String getShortHtml() {
     return shortHtml;
   }
 
 
-
   /**
-   *  Gets the AlternateHtml attribute of the SubmenuItem object
+   * Gets the AlternateHtml attribute of the SubmenuItem object
    *
-   *@param  systemStatus  Description of the Parameter
-   *@return               The AlternateHtml value
-   *@since                1.0
+   * @param systemStatus Description of the Parameter
+   * @return The AlternateHtml value
+   * @since 1.0
    */
   public String getAlternateHtml(SystemStatus systemStatus) {
     String value = systemStatus.getSubMenuProperty(shortHtml);
@@ -343,10 +342,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Adds a feature to the Space attribute of the SubmenuItem object
+   * Adds a feature to the Space attribute of the SubmenuItem object
    *
-   *@param  count  The feature to be added to the Space attribute
-   *@return        Description of the Return Value
+   * @param count The feature to be added to the Space attribute
+   * @return Description of the Return Value
    */
   private String addSpace(int count) {
     StringBuffer sb = new StringBuffer();
@@ -358,9 +357,9 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the imageHtml attribute of the SubmenuItem object
+   * Gets the imageHtml attribute of the SubmenuItem object
    *
-   *@return    The imageHtml value
+   * @return The imageHtml value
    */
   public String getImageHtml() {
     if (link == null || link.equals("")) {
@@ -372,10 +371,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the Name attribute of the SubmenuItem object
+   * Gets the Name attribute of the SubmenuItem object
    *
-   *@return    The Name value
-   *@since     1.0
+   * @return The Name value
+   * @since 1.0
    */
   public String getName() {
     return name;
@@ -383,10 +382,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the AlternateName attribute of the SubmenuItem object
+   * Gets the AlternateName attribute of the SubmenuItem object
    *
-   *@return    The AlternateName value
-   *@since     1.0
+   * @return The AlternateName value
+   * @since 1.0
    */
   public String getAlternateName() {
     return alternateName;
@@ -394,10 +393,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the Link attribute of the SubmenuItem object
+   * Gets the Link attribute of the SubmenuItem object
    *
-   *@return    The Link value
-   *@since     1.0
+   * @return The Link value
+   * @since 1.0
    */
   public String getLink() {
     return link;
@@ -405,10 +404,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the HtmlClass attribute of the SubmenuItem object
+   * Gets the HtmlClass attribute of the SubmenuItem object
    *
-   *@return    The HtmlClass value
-   *@since     1.0
+   * @return The HtmlClass value
+   * @since 1.0
    */
   public String getHtmlClass() {
     return htmlClass;
@@ -416,10 +415,10 @@ public class SubmenuItem {
 
 
   /**
-   *  Gets the Permission attribute of the SubmenuItem object
+   * Gets the Permission attribute of the SubmenuItem object
    *
-   *@return    The Permission value
-   *@since     1.0
+   * @return The Permission value
+   * @since 1.0
    */
   public String getPermission() {
     return permission;
@@ -427,11 +426,11 @@ public class SubmenuItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisPermission  Description of Parameter
-   *@return                 Description of the Returned Value
-   *@since                  1.0
+   * @param thisPermission Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public boolean hasPermission(String thisPermission) {
     return (permission.equals(thisPermission));

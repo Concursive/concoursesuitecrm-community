@@ -1,3 +1,5 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ page import="org.aspcfs.modules.system.base.ApplicationVersion" %>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%
@@ -14,6 +16,9 @@
     upgrade.forward(request, response);
   }
   // END DHV CODE ONLY
+  //During login, check the application locale if needed
+  //RequestDispatcher login = getServletContext().getRequestDispatcher("/Login.do?command=Login");
+  //login.forward(request, response);
   String scheme = request.getScheme();
   // If SSL is configured, but this user isn't using SSL, then go to the welcome page
   if ("true".equals((String) getServletConfig().getServletContext().getAttribute("ForceSSL")) && 

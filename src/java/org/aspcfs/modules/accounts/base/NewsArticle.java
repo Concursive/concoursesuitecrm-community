@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    August 3, 2001
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created August 3, 2001
  */
 public class NewsArticle extends GenericBean {
 
@@ -38,26 +41,31 @@ public class NewsArticle extends GenericBean {
   protected String dateCreated = "";
   protected String url = "";
 
-  protected SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
+  protected SimpleDateFormat shortDateFormat = new SimpleDateFormat(
+      "M/d/yyyy");
   protected SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h:mm a");
-  protected SimpleDateFormat shortDateTimeFormat = new SimpleDateFormat("M/d/yyyy h:mm a");
-  protected SimpleDateFormat longDateTimeFormat = new SimpleDateFormat("MMMMM d, yyyy hh:mm a");
-  protected SimpleDateFormat longDateFormat = new SimpleDateFormat("MMMMM d, yyyy");
+  protected SimpleDateFormat shortDateTimeFormat = new SimpleDateFormat(
+      "M/d/yyyy h:mm a");
+  protected SimpleDateFormat longDateTimeFormat = new SimpleDateFormat(
+      "MMMMM d, yyyy hh:mm a");
+  protected SimpleDateFormat longDateFormat = new SimpleDateFormat(
+      "MMMMM d, yyyy");
   protected SimpleDateFormat longTimeFormat = new SimpleDateFormat("hh:mm a");
 
 
   /**
-   *  Constructor for the NewsArticle object
+   * Constructor for the NewsArticle object
    */
-  public NewsArticle() { }
+  public NewsArticle() {
+  }
 
 
   /**
-   *  Constructor for the NewsArticle object
+   * Constructor for the NewsArticle object
    *
-   *@param  db                Description of the Parameter
-   *@param  newsId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param newsId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public NewsArticle(Connection db, String newsId) throws SQLException {
     queryRecord(db, Integer.parseInt(newsId));
@@ -65,11 +73,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Constructor for the Contact object
+   * Constructor for the Contact object
    *
-   *@param  db                Description of the Parameter
-   *@param  newsId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param newsId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public NewsArticle(Connection db, int newsId) throws SQLException {
     queryRecord(db, newsId);
@@ -77,10 +85,10 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Constructor for the NewsArticle object
+   * Constructor for the NewsArticle object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
    */
   public NewsArticle(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -88,11 +96,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newsId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param newsId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int newsId) throws SQLException {
     if (newsId < 0) {
@@ -101,7 +109,7 @@ public class NewsArticle extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT n.* " +
-    //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
+        //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
         "FROM news n " +
         "LEFT JOIN organization o ON (n.org_id = o.org_id) " +
         "WHERE n.rec_id = ? ");
@@ -121,9 +129,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the ErrorMessage attribute of the NewsArticle object
+   * Sets the ErrorMessage attribute of the NewsArticle object
    *
-   *@param  tmp  The new ErrorMessage value
+   * @param tmp The new ErrorMessage value
    */
   public void setErrorMessage(String tmp) {
     this.errorMessage = tmp;
@@ -131,9 +139,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the url attribute of the NewsArticle object
+   * Sets the url attribute of the NewsArticle object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -141,9 +149,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the Base attribute of the NewsArticle object
+   * Sets the Base attribute of the NewsArticle object
    *
-   *@param  tmp  The new Base value
+   * @param tmp The new Base value
    */
   public void setBase(String tmp) {
     this.base = tmp;
@@ -151,9 +159,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the recId attribute of the NewsArticle object
+   * Sets the recId attribute of the NewsArticle object
    *
-   *@param  tmp  The new recId value
+   * @param tmp The new recId value
    */
   public void setRecId(int tmp) {
     this.recId = tmp;
@@ -161,9 +169,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the NewsArticle object
+   * Sets the orgId attribute of the NewsArticle object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -171,9 +179,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the Headline attribute of the NewsArticle object
+   * Sets the Headline attribute of the NewsArticle object
    *
-   *@param  tmp  The new Headline value
+   * @param tmp The new Headline value
    */
   public void setHeadline(String tmp) {
     this.headline = tmp;
@@ -181,9 +189,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the DateEntered attribute of the NewsArticle object
+   * Sets the DateEntered attribute of the NewsArticle object
    *
-   *@param  tmp  The new DateEntered value
+   * @param tmp The new DateEntered value
    */
   public void setDateEntered(String tmp) {
     this.dateEntered = tmp;
@@ -191,9 +199,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the DateCreated attribute of the NewsArticle object
+   * Sets the DateCreated attribute of the NewsArticle object
    *
-   *@param  tmp  The new DateCreated value
+   * @param tmp The new DateCreated value
    */
   public void setDateCreated(String tmp) {
     this.dateCreated = tmp;
@@ -201,9 +209,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the recId attribute of the NewsArticle object
+   * Gets the recId attribute of the NewsArticle object
    *
-   *@return    The recId value
+   * @return The recId value
    */
   public int getRecId() {
     return recId;
@@ -211,9 +219,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the NewsArticle object
+   * Gets the orgId attribute of the NewsArticle object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -221,9 +229,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the ErrorMessage attribute of the NewsArticle object
+   * Gets the ErrorMessage attribute of the NewsArticle object
    *
-   *@return    The ErrorMessage value
+   * @return The ErrorMessage value
    */
   public String getErrorMessage() {
     return errorMessage;
@@ -231,9 +239,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the Base attribute of the NewsArticle object
+   * Gets the Base attribute of the NewsArticle object
    *
-   *@return    The Base value
+   * @return The Base value
    */
   public String getBase() {
     return base;
@@ -241,9 +249,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the Headline attribute of the NewsArticle object
+   * Gets the Headline attribute of the NewsArticle object
    *
-   *@return    The Headline value
+   * @return The Headline value
    */
   public String getHeadline() {
     return headline;
@@ -251,9 +259,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the DateEntered attribute of the NewsArticle object
+   * Gets the DateEntered attribute of the NewsArticle object
    *
-   *@return    The DateEntered value
+   * @return The DateEntered value
    */
   public String getDateEntered() {
     return dateEntered;
@@ -261,9 +269,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the DateCreated attribute of the NewsArticle object
+   * Gets the DateCreated attribute of the NewsArticle object
    *
-   *@return    The DateCreated value
+   * @return The DateCreated value
    */
   public String getDateCreated() {
     return dateCreated;
@@ -271,9 +279,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the DateCreated attribute of the NewsArticle object
+   * Gets the DateCreated attribute of the NewsArticle object
    *
-   *@return    The DateCreated value
+   * @return The DateCreated value
    */
   public String getUrl() {
     return url;
@@ -281,10 +289,10 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     recId = rs.getInt("rec_id");

@@ -15,21 +15,19 @@
  */
 package org.aspcfs.modules.products.configurator;
 
-import org.aspcfs.utils.DatabaseUtils;
 
-import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    August 31, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created August 31, 2004
  */
 public class ColorConfigurator extends LookupListConfigurator {
 
   /**
-   *  Constructor for the ColorConfigurator object
+   * Constructor for the ColorConfigurator object
    */
   public ColorConfigurator() {
     // set the name

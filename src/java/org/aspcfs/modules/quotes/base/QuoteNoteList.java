@@ -1,29 +1,29 @@
 package org.aspcfs.modules.quotes.base;
 
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    May 18, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created May 18, 2004
  */
 public class QuoteNoteList extends ArrayList implements SyncableList {
   //sync api
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String tableName = "quote_notes";
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String uniqueField = "notes_id";
   private Timestamp lastAnchor = null;
@@ -41,9 +41,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the QuoteNoteList object
+   * Sets the pagedListInfo attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -51,9 +51,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the id attribute of the QuoteNoteList object
+   * Sets the id attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -61,9 +61,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the id attribute of the QuoteNoteList object
+   * Sets the id attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -71,9 +71,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteNoteList object
+   * Sets the quoteId attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -81,9 +81,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteNoteList object
+   * Sets the quoteId attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -91,9 +91,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the notes attribute of the QuoteNoteList object
+   * Sets the notes attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -101,9 +101,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the enteredBy attribute of the QuoteNoteList object
+   * Sets the enteredBy attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -111,9 +111,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the enteredBy attribute of the QuoteNoteList object
+   * Sets the enteredBy attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -121,9 +121,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the QuoteNoteList object
+   * Sets the modifiedBy attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -131,9 +131,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the QuoteNoteList object
+   * Sets the modifiedBy attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -141,9 +141,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the buildResources attribute of the QuoteNoteList object
+   * Sets the buildResources attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -151,9 +151,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the buildResources attribute of the QuoteNoteList object
+   * Sets the buildResources attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -161,9 +161,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the QuoteNoteList object
+   * Sets the lastAnchor attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -171,9 +171,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the QuoteNoteList object
+   * Sets the lastAnchor attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -181,9 +181,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the QuoteNoteList object
+   * Sets the nextAnchor attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -191,9 +191,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the QuoteNoteList object
+   * Sets the nextAnchor attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -201,9 +201,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the QuoteNoteList object
+   * Sets the syncType attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -211,9 +211,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the QuoteNoteList object
+   * Sets the syncType attribute of the QuoteNoteList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -221,9 +221,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the QuoteNoteList object
+   * Gets the pagedListInfo attribute of the QuoteNoteList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -231,9 +231,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the id attribute of the QuoteNoteList object
+   * Gets the id attribute of the QuoteNoteList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -241,9 +241,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteNoteList object
+   * Gets the quoteId attribute of the QuoteNoteList object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -251,9 +251,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the notes attribute of the QuoteNoteList object
+   * Gets the notes attribute of the QuoteNoteList object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -261,9 +261,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the enteredBy attribute of the QuoteNoteList object
+   * Gets the enteredBy attribute of the QuoteNoteList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -271,9 +271,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the QuoteNoteList object
+   * Gets the modifiedBy attribute of the QuoteNoteList object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -281,9 +281,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the buildResources attribute of the QuoteNoteList object
+   * Gets the buildResources attribute of the QuoteNoteList object
    *
-   *@return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -291,9 +291,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the QuoteNoteList object
+   * Gets the lastAnchor attribute of the QuoteNoteList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public Timestamp getLastAnchor() {
     return lastAnchor;
@@ -301,9 +301,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the QuoteNoteList object
+   * Gets the nextAnchor attribute of the QuoteNoteList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public Timestamp getNextAnchor() {
     return nextAnchor;
@@ -311,9 +311,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the syncType attribute of the QuoteNoteList object
+   * Gets the syncType attribute of the QuoteNoteList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -321,9 +321,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the tableName attribute of the QuoteNoteList object
+   * Gets the tableName attribute of the QuoteNoteList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -331,9 +331,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the QuoteNoteList object
+   * Gets the uniqueField attribute of the QuoteNoteList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -341,16 +341,17 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Constructor for the QuoteNoteList object
+   * Constructor for the QuoteNoteList object
    */
-  public QuoteNoteList() throws SQLException { }
+  public QuoteNoteList() throws SQLException {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -364,8 +365,7 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
         " FROM quote_notes n " +
-        " WHERE n.notes_id > -1 "
-        );
+        " WHERE n.notes_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -406,23 +406,16 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
     sqlSelect.append(
         " n.* " +
         " FROM quote_notes n " +
-        " WHERE n.notes_id > -1 "
-        );
+        " WHERE n.notes_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       QuoteNote thisQuoteNote = new QuoteNote(rs);
       this.add(thisQuoteNote);
     }
@@ -432,9 +425,9 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -477,11 +470,11 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -521,20 +514,20 @@ public class QuoteNoteList extends ArrayList implements SyncableList {
     }
     return i;
   }
-  
+
   public String getAllNotes() throws SQLException {
     StringBuffer result = new StringBuffer("");
     Iterator iterator = (Iterator) this.iterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       QuoteNote note = (QuoteNote) iterator.next();
-      result.append("\n"+note.getNotes());
+      result.append("\n" + note.getNotes());
     }
     return result.toString();
   }
-  
+
   public void delete(Connection db) throws SQLException {
     Iterator iterator = (Iterator) this.iterator();
-    while(iterator.hasNext()){
+    while (iterator.hasNext()) {
       QuoteNote note = (QuoteNote) iterator.next();
       note.delete(db);
     }

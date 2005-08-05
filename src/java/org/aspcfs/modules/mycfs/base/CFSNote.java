@@ -15,57 +15,57 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.contacts.base.Contact;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactHistory;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris price
- *@created    February 21, 2002
- *@version
+ * @author chris price
+ * @created February 21, 2002
  */
 public class CFSNote extends GenericBean {
 
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int CALL = 1;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int NEW = 0;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int READ = 1;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int OLD = 2;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int DELETE = 3;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int SENDER = 1;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static int RECIPIENT = 2;
 
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public String sentToList = "";
   private int id = -1;
@@ -86,7 +86,7 @@ public class CFSNote extends GenericBean {
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   protected HashMap recipientList;
 
@@ -95,16 +95,17 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Constructor for the CFSNote object
+   * Constructor for the CFSNote object
    */
-  public CFSNote() { }
+  public CFSNote() {
+  }
 
 
   /**
-   *  Constructor for the CFSNote object
+   * Constructor for the CFSNote object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public CFSNote(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -112,13 +113,13 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Constructor for the CFSNote object
+   * Constructor for the CFSNote object
    *
-   *@param  db                Description of Parameter
-   *@param  noteId            Description of Parameter
-   *@param  myId              Description of the Parameter
-   *@param  listView          Description of the Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param noteId   Description of Parameter
+   * @param myId     Description of the Parameter
+   * @param listView Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public CFSNote(Connection db, String noteId, int myId, String listView) throws SQLException {
     queryRecord(db, Integer.parseInt(noteId), myId, listView);
@@ -126,13 +127,13 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Constructor for the CFSNote object
+   * Constructor for the CFSNote object
    *
-   *@param  db                Description of Parameter
-   *@param  noteId            Description of Parameter
-   *@param  myId              Description of the Parameter
-   *@param  listView          Description of the Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param noteId   Description of Parameter
+   * @param myId     Description of the Parameter
+   * @param listView Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public CFSNote(Connection db, int noteId, int myId, String listView) throws SQLException {
     queryRecord(db, noteId, myId, listView);
@@ -140,13 +141,13 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  noteId            Description of the Parameter
-   *@param  myId              Description of the Parameter
-   *@param  listView          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param noteId   Description of the Parameter
+   * @param myId     Description of the Parameter
+   * @param listView Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int noteId, int myId, String listView) throws SQLException {
     if (noteId == -1) {
@@ -181,11 +182,10 @@ public class CFSNote extends GenericBean {
   }
 
 
-
   /**
-   *  Sets the sentName attribute of the CFSNote object
+   * Sets the sentName attribute of the CFSNote object
    *
-   *@param  sentName  The new sentName value
+   * @param sentName The new sentName value
    */
   public void setSentName(String sentName) {
     this.sentName = sentName;
@@ -193,9 +193,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the CFSNote object
+   * Sets the type attribute of the CFSNote object
    *
-   *@param  type  The new type value
+   * @param type The new type value
    */
   public void setType(int type) {
     this.type = type;
@@ -203,9 +203,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the CFSNote object
+   * Sets the type attribute of the CFSNote object
    *
-   *@param  type  The new type value
+   * @param type The new type value
    */
   public void setType(String type) {
     this.type = Integer.parseInt(type);
@@ -213,9 +213,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the CFSNote object
+   * Sets the modified attribute of the CFSNote object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -223,21 +223,21 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the CFSNote object
+   * Sets the modified attribute of the CFSNote object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     java.util.Date tmpDate = new java.util.Date();
     modified = new java.sql.Timestamp(tmpDate.getTime());
-    modified = modified.valueOf(tmp);
+    modified = Timestamp.valueOf(tmp);
   }
 
 
   /**
-   *  Sets the entered attribute of the CFSNote object
+   * Sets the entered attribute of the CFSNote object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -245,9 +245,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the CFSNote object
+   * Sets the id attribute of the CFSNote object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -255,9 +255,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the subject attribute of the CFSNote object
+   * Sets the subject attribute of the CFSNote object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -265,9 +265,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the body attribute of the CFSNote object
+   * Sets the body attribute of the CFSNote object
    *
-   *@param  tmp  The new body value
+   * @param tmp The new body value
    */
   public void setBody(String tmp) {
     this.body = tmp;
@@ -275,9 +275,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the replyId attribute of the CFSNote object
+   * Sets the replyId attribute of the CFSNote object
    *
-   *@param  tmp  The new replyId value
+   * @param tmp The new replyId value
    */
   public void setReplyId(int tmp) {
     this.replyId = tmp;
@@ -285,9 +285,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the CFSNote object
+   * Sets the status attribute of the CFSNote object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -295,9 +295,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the CFSNote object
+   * Sets the enteredBy attribute of the CFSNote object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -305,9 +305,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the CFSNote object
+   * Sets the modifiedBy attribute of the CFSNote object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -315,9 +315,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the viewed attribute of the CFSNote object
+   * Sets the viewed attribute of the CFSNote object
    *
-   *@param  tmp  The new viewed value
+   * @param tmp The new viewed value
    */
   public void setViewed(java.sql.Timestamp tmp) {
     this.viewed = tmp;
@@ -325,9 +325,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the sent attribute of the CFSNote object
+   * Sets the sent attribute of the CFSNote object
    *
-   *@param  tmp  The new sent value
+   * @param tmp The new sent value
    */
   public void setSent(java.sql.Timestamp tmp) {
     this.sent = tmp;
@@ -335,9 +335,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the CFSNote object
+   * Sets the enabled attribute of the CFSNote object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -345,9 +345,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the sentTo attribute of the CFSNote object
+   * Sets the sentTo attribute of the CFSNote object
    *
-   *@param  sentTo  The new sentTo value
+   * @param sentTo The new sentTo value
    */
   public void setSentTo(int sentTo) {
     this.sentTo = sentTo;
@@ -355,20 +355,19 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the sentTo attribute of the CFSNote object
+   * Sets the sentTo attribute of the CFSNote object
    *
-   *@param  sentTo  The new sentTo value
+   * @param sentTo The new sentTo value
    */
   public void setSentTo(String sentTo) {
     this.sentTo = Integer.parseInt(sentTo);
   }
 
 
-
   /**
-   *  Sets the DeleteFlag attribute of the CFSNote object
+   * Sets the DeleteFlag attribute of the CFSNote object
    *
-   *@param  deleteFlag  The new deleteFlag value
+   * @param deleteFlag The new deleteFlag value
    */
 
   public void setDeleteFlag(boolean deleteFlag) {
@@ -377,42 +376,39 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Sets the CurrentView attribute of the CFSNote object
+   * Sets the CurrentView attribute of the CFSNote object
    *
-   *@param  currentView  The new currentView value
+   * @param currentView The new currentView value
    */
   public void setCurrentView(String currentView) {
     this.currentView = currentView;
   }
 
 
-
   /**
-   *  Sets the actionId attribute of the CFSNote object
+   * Sets the actionId attribute of the CFSNote object
    *
-   *@param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
   }
 
 
-
   /**
-   *  Sets the actionId attribute of the CFSNote object
+   * Sets the actionId attribute of the CFSNote object
    *
-   *@param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
   }
 
 
-
   /**
-   *  Gets the actionId attribute of the CFSNote object
+   * Gets the actionId attribute of the CFSNote object
    *
-   *@return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -420,9 +416,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the recipientList attribute of the CFSNote object
+   * Gets the recipientList attribute of the CFSNote object
    *
-   *@return    The recipientList value
+   * @return The recipientList value
    */
   public HashMap getRecipientList() {
     return recipientList;
@@ -430,11 +426,11 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the RecipientList attribute of the CFSNote object
+   * Gets the RecipientList attribute of the CFSNote object
    *
-   *@param  db                Description of the Parameter
-   *@return                   The RecipientList value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The RecipientList value
+   * @throws SQLException Description of the Exception
    */
   public HashMap buildRecipientList(Connection db) throws SQLException {
     sentToList = "";
@@ -450,7 +446,8 @@ public class CFSNote extends GenericBean {
         pst.setInt(1, this.getId());
         ResultSet rs = pst.executeQuery();
         while (rs.next()) {
-          String recipient = Contact.getNameFirstLast(rs.getString("sent_namefirst"), rs.getString("sent_namelast"));
+          String recipient = Contact.getNameFirstLast(
+              rs.getString("sent_namefirst"), rs.getString("sent_namelast"));
           Integer status = new Integer(rs.getInt("status"));
           recipients.put(recipient, status);
         }
@@ -466,9 +463,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the sentName attribute of the CFSNote object
+   * Gets the sentName attribute of the CFSNote object
    *
-   *@return    The sentName value
+   * @return The sentName value
    */
   public String getSentName() {
     return sentName;
@@ -476,9 +473,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the statusText attribute of the CFSNote object
+   * Gets the statusText attribute of the CFSNote object
    *
-   *@return    The statusText value
+   * @return The statusText value
    */
   public String getStatusText() {
     if (status == 0) {
@@ -494,10 +491,10 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the statusColor of the CFSNote object
+   * Gets the statusColor of the CFSNote object
    *
-   *@param  noteStatus  Description of the Parameter
-   *@return             The statusColor value
+   * @param noteStatus Description of the Parameter
+   * @return The statusColor value
    */
   public String getStatusColor(int noteStatus) {
     if (noteStatus == 0) {
@@ -513,10 +510,10 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the statusText of the CFSNote object
+   * Gets the statusText of the CFSNote object
    *
-   *@param  noteStatus  Description of the Parameter
-   *@return             The statusText value
+   * @param noteStatus Description of the Parameter
+   * @return The statusText value
    */
   public String getStatusText(int noteStatus) {
     if (noteStatus == 0) {
@@ -532,9 +529,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the CFSNote object
+   * Gets the type attribute of the CFSNote object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -542,9 +539,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the CFSNote object
+   * Gets the entered attribute of the CFSNote object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -552,9 +549,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the CFSNote object
+   * Gets the enteredString attribute of the CFSNote object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -566,13 +563,14 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the CFSNote object
+   * Gets the enteredDateTimeString attribute of the CFSNote object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -580,9 +578,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the CFSNote object
+   * Gets the id attribute of the CFSNote object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -590,9 +588,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the subject attribute of the CFSNote object
+   * Gets the subject attribute of the CFSNote object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -600,9 +598,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the body attribute of the CFSNote object
+   * Gets the body attribute of the CFSNote object
    *
-   *@return    The body value
+   * @return The body value
    */
   public String getBody() {
     return body;
@@ -610,9 +608,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the replyId attribute of the CFSNote object
+   * Gets the replyId attribute of the CFSNote object
    *
-   *@return    The replyId value
+   * @return The replyId value
    */
   public int getReplyId() {
     return replyId;
@@ -620,9 +618,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the CFSNote object
+   * Gets the status attribute of the CFSNote object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -630,9 +628,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the CFSNote object
+   * Gets the enteredBy attribute of the CFSNote object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -640,9 +638,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the CFSNote object
+   * Gets the modifiedBy attribute of the CFSNote object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -650,9 +648,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the viewed attribute of the CFSNote object
+   * Gets the viewed attribute of the CFSNote object
    *
-   *@return    The viewed value
+   * @return The viewed value
    */
   public java.sql.Timestamp getViewed() {
     return viewed;
@@ -660,9 +658,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the sent attribute of the CFSNote object
+   * Gets the sent attribute of the CFSNote object
    *
-   *@return    The sent value
+   * @return The sent value
    */
   public java.sql.Timestamp getSent() {
     return sent;
@@ -670,9 +668,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the CFSNote object
+   * Gets the enabled attribute of the CFSNote object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -680,9 +678,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the sentTo attribute of the CFSNote object
+   * Gets the sentTo attribute of the CFSNote object
    *
-   *@return    The sentTo value
+   * @return The sentTo value
    */
   public int getSentTo() {
     return sentTo;
@@ -690,9 +688,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the CFSNote object
+   * Gets the modified attribute of the CFSNote object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public String getModified() {
     return modified.toString();
@@ -700,9 +698,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the CFSNote object
+   * Gets the modifiedString attribute of the CFSNote object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     try {
@@ -714,13 +712,14 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the CFSNote object
+   * Gets the modifiedDateTimeString attribute of the CFSNote object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -728,9 +727,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the DeleteFlag attribute of the CFSNote object
+   * Gets the DeleteFlag attribute of the CFSNote object
    *
-   *@return    The DeleteFlag value
+   * @return The DeleteFlag value
    */
   public boolean getDeleteFlag() {
     return deleteFlag;
@@ -738,9 +737,9 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Gets the CurrentView attribute of the CFSNote object
+   * Gets the CurrentView attribute of the CFSNote object
    *
-   *@return    The CurrentView value
+   * @return The CurrentView value
    */
   public String getCurrentView() {
     return currentView;
@@ -748,22 +747,26 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
+      id = DatabaseUtils.getNextSeq(db, "cfsinbox_message_id_seq");
       sql.append(
           "INSERT INTO cfsinbox_message " +
-          "(enteredby, modifiedby, body, reply_id, type, delete_flag) " +
-          "VALUES (?, ?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "enteredby, modifiedby, body, reply_id, type, delete_flag) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getBody());
@@ -772,7 +775,7 @@ public class CFSNote extends GenericBean {
       pst.setBoolean(++i, this.getDeleteFlag());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "cfsinbox_message_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "cfsinbox_message_id_seq", id);
       this.update(db, true);
       if (actionId > 0) {
         updateLog(db);
@@ -789,11 +792,11 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateLog(Connection db) throws SQLException {
     boolean commit = true;
@@ -827,12 +830,12 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  isUser            Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db     Description of Parameter
+   * @param isUser Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insertLink(Connection db, boolean isUser) throws SQLException {
     try {
@@ -865,11 +868,11 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -890,16 +893,15 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  myId              Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db   Description of Parameter
+   * @param myId Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
 
   public boolean delete(Connection db, int myId) throws SQLException {
-
     try {
       PreparedStatement pst = null;
       ResultSet rs = null;
@@ -939,6 +941,8 @@ public class CFSNote extends GenericBean {
       /*
        *  sender & recipient(s) have marked messages to be deleted
        */
+      ContactHistory.deleteObject(
+          db, OrganizationHistory.CFSNOTE, this.getId());
       if ((outboxCount == 0 && inboxCount == 1) || (outboxCount == 1 && inboxCount == 0)) {
         st.executeUpdate(
             "DELETE FROM cfsinbox_messagelink " +
@@ -984,11 +988,11 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int updateStatus(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1017,12 +1021,12 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  override          Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param override Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -1063,10 +1067,10 @@ public class CFSNote extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
 
@@ -1089,7 +1093,8 @@ public class CFSNote extends GenericBean {
       viewed = rs.getTimestamp("viewed");
 
       //contact table
-      sentName = rs.getString("sent_namefirst") + " " + rs.getString("sent_namelast");
+      sentName = rs.getString("sent_namefirst") + " " + rs.getString(
+          "sent_namelast");
     } else {
       //outbox case
       this.setId(rs.getInt("id"));

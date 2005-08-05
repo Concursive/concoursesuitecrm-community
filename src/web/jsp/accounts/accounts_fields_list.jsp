@@ -34,7 +34,6 @@
 <script language="JavaScript" type="text/javascript">
   loadImages('select');
 </script>
-<form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -105,14 +104,14 @@
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
     <tr class="containerBody">
-      <td width="8" valign="center" nowrap class="row<%= rowid %>">
-        <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-        <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-         <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-        </dhv:evaluate>
-      </td>
+      <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+        <td width="8" valign="center" nowrap class="row<%= rowid %>">
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+          <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
+          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        </td>
+      </dhv:evaluate>
       <td align="left" width="100%" nowrap class="row<%= rowid %>">
         <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
       </td>
@@ -152,4 +151,3 @@
   </table>
 <%}%>
 </dhv:container>
-</form>

@@ -24,12 +24,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    October 28, 2004
- *@version    $Id: QuoteCondition.java,v 1.1.2.2 2004/11/12 21:42:18 partha Exp
- *      $
+ * @author partha
+ * @version $Id: QuoteCondition.java,v 1.1.2.2 2004/11/12 21:42:18 partha Exp
+ *          $
+ * @created October 28, 2004
  */
 public class QuoteCondition extends GenericBean {
   private int id = -1;
@@ -40,9 +40,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteCondition object
+   * Gets the id attribute of the QuoteCondition object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -50,9 +50,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteCondition object
+   * Sets the id attribute of the QuoteCondition object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -60,9 +60,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteCondition object
+   * Sets the id attribute of the QuoteCondition object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -70,9 +70,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteCondition object
+   * Gets the quoteId attribute of the QuoteCondition object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -80,9 +80,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteCondition object
+   * Sets the quoteId attribute of the QuoteCondition object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -90,9 +90,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteCondition object
+   * Sets the quoteId attribute of the QuoteCondition object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -100,9 +100,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Gets the conditionId attribute of the QuoteCondition object
+   * Gets the conditionId attribute of the QuoteCondition object
    *
-   *@return    The conditionId value
+   * @return The conditionId value
    */
   public int getConditionId() {
     return conditionId;
@@ -110,9 +110,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the conditionId attribute of the QuoteCondition object
+   * Sets the conditionId attribute of the QuoteCondition object
    *
-   *@param  tmp  The new conditionId value
+   * @param tmp The new conditionId value
    */
   public void setConditionId(int tmp) {
     this.conditionId = tmp;
@@ -120,9 +120,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the conditionId attribute of the QuoteCondition object
+   * Sets the conditionId attribute of the QuoteCondition object
    *
-   *@param  tmp  The new conditionId value
+   * @param tmp The new conditionId value
    */
   public void setConditionId(String tmp) {
     this.conditionId = Integer.parseInt(tmp);
@@ -130,9 +130,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Gets the conditionName attribute of the QuoteCondition object
+   * Gets the conditionName attribute of the QuoteCondition object
    *
-   *@return    The conditionName value
+   * @return The conditionName value
    */
   public String getConditionName() {
     return conditionName;
@@ -140,9 +140,9 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Sets the conditionName attribute of the QuoteCondition object
+   * Sets the conditionName attribute of the QuoteCondition object
    *
-   *@param  tmp  The new conditionName value
+   * @param tmp The new conditionName value
    */
   public void setConditionName(String tmp) {
     this.conditionName = tmp;
@@ -150,16 +150,17 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteCondition object
+   * Constructor for the QuoteCondition object
    */
-  public QuoteCondition() { }
+  public QuoteCondition() {
+  }
 
 
   /**
-   *  Constructor for the QuoteCondition object
+   * Constructor for the QuoteCondition object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteCondition(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -167,11 +168,11 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteCondition object
+   * Constructor for the QuoteCondition object
    *
-   *@param  db                Description of the Parameter
-   *@param  mapId             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param mapId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteCondition(Connection db, int mapId) throws SQLException {
     queryRecord(db, mapId);
@@ -179,11 +180,11 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -197,8 +198,7 @@ public class QuoteCondition extends GenericBean {
         "FROM quote_condition AS qc " +
         "LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
         "LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        "WHERE qc.map_id = ? "
-        );
+        "WHERE qc.map_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
@@ -215,12 +215,12 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  qId               Description of the Parameter
-   *@param  cId               Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param qId Description of the Parameter
+   * @param cId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int qId, int cId) throws SQLException {
     if (qId == -1 || cId == -1) {
@@ -235,8 +235,7 @@ public class QuoteCondition extends GenericBean {
         "LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
         "LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
         "WHERE qc.condition_id = ? " +
-        "AND qc.quote_id = ? "
-        );
+        "AND qc.quote_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, cId);
@@ -254,10 +253,10 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     //quote_condition table
@@ -271,35 +270,39 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (quoteId == -1 || conditionId == -1) {
       return false;
     }
     int i = 0;
+    id = DatabaseUtils.getNextSeq(db, "quote_condition_map_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO quote_condition (quote_id, condition_id ) " +
-        "VALUES (?,?) ");
+        "INSERT INTO quote_condition (" + (id > -1 ? "map_id, " : "") + "quote_id, condition_id ) " +
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, this.getQuoteId());
     pst.setInt(++i, this.getConditionId());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "quote_condition_map_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "quote_condition_map_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -312,7 +315,8 @@ public class QuoteCondition extends GenericBean {
         db.setAutoCommit(false);
       }
       PreparedStatement pst = null;
-      pst = db.prepareStatement("DELETE FROM quote_condition WHERE map_id = ?");
+      pst = db.prepareStatement(
+          "DELETE FROM quote_condition WHERE map_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -334,28 +338,38 @@ public class QuoteCondition extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  description       Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param description Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int insertLookup(Connection db, String description) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("INSERT INTO lookup_quote_condition (description) VALUES (?)");
-    pst.setString(1, description);
+    int tempId = DatabaseUtils.getNextSeq(
+        db, "lookup_quote_condition_code_seq");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO lookup_quote_condition " +
+        "(" + (tempId > -1 ? "code, " : "") + "description) " +
+        "VALUES (" + (tempId > -1 ? "?," : "") + "?)");
+    if (tempId > -1) {
+      pst.setInt(++i, tempId);
+    }
+    pst.setString(++i, description);
     pst.execute();
     pst.close();
-    return DatabaseUtils.getCurrVal(db, "lookup_quote_condition_code_seq");
+    return DatabaseUtils.getCurrVal(
+        db, "lookup_quote_condition_code_seq", tempId);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param quoteId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void copyQuoteCondition(Connection db, int quoteId) throws SQLException {
     QuoteCondition copy = new QuoteCondition();

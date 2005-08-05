@@ -15,79 +15,79 @@
 package org.jcrontab.data;
 
 /**
- *  This interface says which methods a DataSource should have in order to be
- *  compatible with the DataFactory
+ * This interface says which methods a DataSource should have in order to be
+ * compatible with the DataFactory
  *
- *@author     Israel Olalla
- *@created    November, 2002
- *@version    $Id$
+ * @author Israel Olalla
+ * @version $Id$
+ * @created November, 2002
  */
 
 public interface DataSource {
   /**
-   *  returns the only valid DataSource of this kind
+   * returns the only valid DataSource of this kind
    *
-   *@return    DataSource
+   * @return DataSource
    */
   abstract DataSource getInstance();
 
 
   /**
-   *  searches the CrontabEntryBean from the DataSource
+   * searches the CrontabEntryBean from the DataSource
    *
-   *@param  ceb         Description of the Parameter
-   *@return             CrontabEntryBean
-   *@throws  Exception
+   * @param ceb Description of the Parameter
+   * @return CrontabEntryBean
+   * @throws Exception
    */
   abstract CrontabEntryBean find(CrontabEntryBean ceb) throws Exception;
 
 
   /**
-   *  Gets all the CrontabEntryBean from the DataSource
+   * Gets all the CrontabEntryBean from the DataSource
    *
-   *@return             CrontabEntryBean[]
-   *@throws  Exception
+   * @return CrontabEntryBean[]
+   * @throws Exception
    */
   abstract CrontabEntryBean[] findAll() throws Exception;
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  cp             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param cp Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   abstract CrontabEntryBean[] findAll(Object cp) throws Exception;
 
 
   /**
-   *  stores CrontabEntryBean in the DataSource
+   * stores CrontabEntryBean in the DataSource
    *
-   *@param  ceb                        Description of the Parameter
-   *@exception  DataNotFoundException  Description of the Exception
-   *@throws  Exception
+   * @param ceb Description of the Parameter
+   * @throws DataNotFoundException Description of the Exception
+   * @throws Exception
    */
   abstract void store(CrontabEntryBean ceb) throws Exception,
       DataNotFoundException;
 
 
   /**
-   *  stores CrontabEntryBean in the DataSource
+   * stores CrontabEntryBean in the DataSource
    *
-   *@param  ceb                        Description of the Parameter
-   *@exception  DataNotFoundException  Description of the Exception
-   *@throws  Exception
+   * @param ceb Description of the Parameter
+   * @throws DataNotFoundException Description of the Exception
+   * @throws Exception
    */
   abstract void store(CrontabEntryBean[] ceb) throws Exception,
       DataNotFoundException;
 
 
   /**
-   *  removes CrontabEntryBean from the DataSource
+   * removes CrontabEntryBean from the DataSource
    *
-   *@param  ceb         Description of the Parameter
-   *@throws  Exception
+   * @param ceb Description of the Parameter
+   * @throws Exception
    */
   abstract void remove(CrontabEntryBean[] ceb) throws Exception;
 }

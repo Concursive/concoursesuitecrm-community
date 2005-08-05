@@ -16,16 +16,17 @@
 package org.aspcfs.utils.formatter;
 
 import org.aspcfs.modules.base.PhoneNumber;
+
 import java.util.Locale;
 
 /**
- *  Takes a phone number and formats the various fields to make the records
- *  consistent and presentable.
+ * Takes a phone number and formats the various fields to make the records
+ * consistent and presentable.
  *
- *@author     matt rajkowski
- *@created    March 5, 2003
- *@version    $Id: PhoneNumberFormatter.java,v 1.1.2.2 2003/03/06 17:49:29
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: PhoneNumberFormatter.java,v 1.1.2.2 2003/03/06 17:49:29
+ *          mrajkowski Exp $
+ * @created March 5, 2003
  */
 public class PhoneNumberFormatter {
 
@@ -33,13 +34,14 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Constructor for the PhoneNumberFormatter object
+   * Constructor for the PhoneNumberFormatter object
    */
-  public PhoneNumberFormatter() { }
+  public PhoneNumberFormatter() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void config() {
 
@@ -47,10 +49,10 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Tries to format phone number for the given Locale
+   * Tries to format phone number for the given Locale
    *
-   *@param  thisNumber  Description of the Parameter
-   *@param  locale      Description of the Parameter
+   * @param thisNumber Description of the Parameter
+   * @param locale     Description of the Parameter
    */
   public void format(PhoneNumber thisNumber, Locale locale) {
     if (locale != null) {
@@ -64,9 +66,9 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Formats a phone number for US/Canada
+   * Formats a phone number for US/Canada
    *
-   *@param  thisNumber  Description of the Parameter
+   * @param thisNumber Description of the Parameter
    */
   public void format(PhoneNumber thisNumber) {
     String[] number = new String[]{thisNumber.getNumber(), null};
@@ -92,10 +94,10 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  number  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param number Description of the Parameter
+   * @return Description of the Return Value
    */
   private String formatNumber(String number) {
     String tmpNum = extractNumbers(number);
@@ -125,9 +127,9 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisNumber  Description of the Parameter
+   * @param thisNumber Description of the Parameter
    */
   public void formatInternational(PhoneNumber thisNumber) {
     String[] number = new String[]{thisNumber.getNumber(), null};
@@ -151,10 +153,10 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Gets the mostlyNumbers attribute of the PhoneNumberFormatter object
+   * Gets the mostlyNumbers attribute of the PhoneNumberFormatter object
    *
-   *@param  number  Description of the Parameter
-   *@return         The mostlyNumbers value
+   * @param number Description of the Parameter
+   * @return The mostlyNumbers value
    */
   private boolean isMostlyNumbers(String number) {
     boolean result = true;
@@ -168,10 +170,10 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public final static String extractNumbers(String tmp) {
     StringBuffer sb = new StringBuffer();
@@ -187,15 +189,17 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  number  Description of the Parameter
-   *@param  check   Description of the Parameter
+   * @param number Description of the Parameter
+   * @param check  Description of the Parameter
    */
   private void extractExtension(String[] number, String check) {
     if (number[0].toLowerCase().indexOf(check) > -1) {
-      number[1] = number[0].substring(number[0].toLowerCase().indexOf(check) + check.length()).trim();
-      number[0] = number[0].substring(0, number[0].toLowerCase().indexOf(check)).trim();
+      number[1] = number[0].substring(
+          number[0].toLowerCase().indexOf(check) + check.length()).trim();
+      number[0] = number[0].substring(
+          0, number[0].toLowerCase().indexOf(check)).trim();
     }
   }
 }

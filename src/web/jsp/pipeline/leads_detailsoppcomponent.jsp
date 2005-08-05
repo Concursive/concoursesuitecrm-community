@@ -22,6 +22,10 @@
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+<jsp:useBean id="environmentSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="competitorsSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="compellingEventSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="budgetSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -168,6 +172,47 @@ function reopenOpportunity(id) {
         <zeroio:tz timestamp="<%= LeadsComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
+    <dhv:evaluate if="<%= environmentSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.environment">Environment</dhv:label>
+      </td>
+      <td>
+      <zeroio:debug value="<%= "JSP:: the environment is "+ LeadsComponentDetails.getEnvironment() %>"/>
+      <%= toHtml(environmentSelect.getSelectedValue(LeadsComponentDetails.getEnvironment())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= competitorsSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.competitors">Competitors</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(competitorsSelect.getSelectedValue(LeadsComponentDetails.getCompetitors())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= compellingEventSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="pipeline.compellingEvent">Compelling Event</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(compellingEventSelect.getSelectedValue(LeadsComponentDetails.getCompellingEvent())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= budgetSelect.getEnabledElementCount() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="project.budget">Budget</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(budgetSelect.getSelectedValue(LeadsComponentDetails.getBudget())) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.EstCommission">Est. Commission</dhv:label>

@@ -24,19 +24,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    June 10, 2004
- *@version    $Id: MaintenanceItemsExistScriptlet.java,v 1.2 2004/06/22 19:40:22
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: MaintenanceItemsExistScriptlet.java,v 1.2 2004/06/22 19:40:22
+ *          mrajkowski Exp $
+ * @created June 10, 2004
  */
 public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforeReportInit() throws JRScriptletException {
     //System.out.println("call beforeReportInit");
@@ -44,9 +44,9 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterReportInit() throws JRScriptletException {
     //System.out.println("call afterReportInit");
@@ -54,9 +54,9 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforePageInit() throws JRScriptletException {
     //System.out.println("call   beforePageInit : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
@@ -64,9 +64,9 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterPageInit() throws JRScriptletException {
     //System.out.println("call   afterPageInit  : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
@@ -74,9 +74,9 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforeColumnInit() throws JRScriptletException {
     //System.out.println("call     beforeColumnInit");
@@ -84,9 +84,9 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterColumnInit() throws JRScriptletException {
     //System.out.println("call     afterColumnInit");
@@ -94,19 +94,20 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  groupName                 Description of the Parameter
-   *@exception  JRScriptletException  Description of the Exception
+   * @param groupName Description of the Parameter
+   * @throws JRScriptletException Description of the Exception
    */
-  public void beforeGroupInit(String groupName) throws JRScriptletException { }
+  public void beforeGroupInit(String groupName) throws JRScriptletException {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  groupName                 Description of the Parameter
-   *@exception  JRScriptletException  Description of the Exception
+   * @param groupName Description of the Parameter
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterGroupInit(String groupName) throws JRScriptletException {
     /*
@@ -127,9 +128,9 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforeDetailEval() throws JRScriptletException {
     //System.out.println("        detail");
@@ -137,21 +138,22 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
-  public void afterDetailEval() throws JRScriptletException { }
+  public void afterDetailEval() throws JRScriptletException {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                        Description of the Parameter
-   *@param  id                        Description of the Parameter
-   *@return                           Description of the Return Value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public static boolean maintenanceItemsExist(Connection db, int id) throws SQLException, JRScriptletException {
     boolean exists = false;
@@ -160,8 +162,7 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
         "SELECT count(*) AS recordcount " +
         "FROM ticket_sun_form tsf, trouble_asset_replacement tar " +
         "WHERE tar.link_form_id = tsf.form_id " +
-        "AND tsf.link_ticket_id = ? "
-        );
+        "AND tsf.link_ticket_id = ? ");
 
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();

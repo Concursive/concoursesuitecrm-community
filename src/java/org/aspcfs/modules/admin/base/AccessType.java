@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import org.aspcfs.utils.web.LookupElement;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.communications.base.Message;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.web.LookupElement;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
- *  Represents Access Type for a component
+ * Represents Access Type for a component
  *
- *@author     Mathur
- *@created    June 25, 2003
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created June 25, 2003
  */
 public class AccessType extends LookupElement {
   //link module ids (format is mmddyyhhmm: if month is single digit do not add 0 in front)
@@ -44,27 +47,28 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *Constructor for the AccessType object
+   * Constructor for the AccessType object
    */
-  public AccessType() { }
+  public AccessType() {
+  }
 
 
   /**
-   *Constructor for the AccessType object
+   * Constructor for the AccessType object
    *
-   *@param  db                         Description of the Parameter
-   *@param  code                       Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param db   Description of the Parameter
+   * @param code Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public AccessType(Connection db, int code) throws java.sql.SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccessType-> Retrieving ID: " + code + " from lookup_access_types ");
+      System.out.println(
+          "AccessType-> Retrieving ID: " + code + " from lookup_access_types ");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT code, link_module_id, description, default_item, level, enabled, rule_id " +
+        "SELECT code, link_module_id, description, default_item, \"level\", enabled, rule_id " +
         "FROM lookup_access_types " +
-        "WHERE code = ? "
-        );
+        "WHERE code = ? ");
     pst.setInt(1, code);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -79,10 +83,10 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *Constructor for the AccessType object
+   * Constructor for the AccessType object
    *
-   *@param  rs                         Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public AccessType(ResultSet rs) throws java.sql.SQLException {
     build(rs);
@@ -90,9 +94,9 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *  Sets the ruleId attribute of the AccessType object
+   * Sets the ruleId attribute of the AccessType object
    *
-   *@param  ruleId  The new ruleId value
+   * @param ruleId The new ruleId value
    */
   public void setRuleId(int ruleId) {
     this.ruleId = ruleId;
@@ -100,9 +104,9 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *  Sets the linkModuleId attribute of the AccessType object
+   * Sets the linkModuleId attribute of the AccessType object
    *
-   *@param  linkModuleId  The new linkModuleId value
+   * @param linkModuleId The new linkModuleId value
    */
   public void setLinkModuleId(int linkModuleId) {
     this.linkModuleId = linkModuleId;
@@ -110,9 +114,9 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *  Gets the ruleId attribute of the AccessType object
+   * Gets the ruleId attribute of the AccessType object
    *
-   *@return    The ruleId value
+   * @return The ruleId value
    */
   public int getRuleId() {
     return ruleId;
@@ -120,9 +124,9 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *  Gets the linkModuleId attribute of the AccessType object
+   * Gets the linkModuleId attribute of the AccessType object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -130,10 +134,10 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *  Returns the linkModuleId given  a instance of an object
+   * Returns the linkModuleId given  a instance of an object
    *
-   *@param  obj  Description of the Parameter
-   *@return      The linkModuleId value
+   * @param obj Description of the Parameter
+   * @return The linkModuleId value
    */
   public static int getLinkModuleId(Object obj) {
     if (obj instanceof Contact) {
@@ -151,10 +155,10 @@ public class AccessType extends LookupElement {
 
 
   /**
-   *  Build the Access Type record
+   * Build the Access Type record
    *
-   *@param  rs                         Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public void build(ResultSet rs) throws java.sql.SQLException {
     code = rs.getInt("code");

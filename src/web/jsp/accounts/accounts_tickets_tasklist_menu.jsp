@@ -23,22 +23,32 @@
   var thisTaskId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, ticId, taskId) {
+  function displayMenu(loc, id, orgId, ticId, taskId, trashed) {
     thisOrgId = orgId;
     thisTicId = ticId;
     thisTaskId = taskId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuModify');
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuModify');
+      showSpan('menuDelete');
+    }
+  }
   //Menu link functions
   function details() {
     popURL('AccountTicketTasks.do?command=Details&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
   }
-  
+
   function modify() {
     popURL('AccountTicketTasks.do?command=Modify&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
   }
@@ -51,7 +61,7 @@
   <div id="menuTaskContent">
     <table id="menuTaskTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-tickets-tasks-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+      <tr id="menuView" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -61,7 +71,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-tasks-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -71,7 +81,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-tasks-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTask()">
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTask()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

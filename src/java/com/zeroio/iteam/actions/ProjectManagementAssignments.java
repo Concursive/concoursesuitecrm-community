@@ -27,21 +27,20 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    November 28, 2001
- *@version    $Id: ProjectManagementAssignments.java,v 1.12.134.1 2004/03/19
- *      21:00:50 rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: ProjectManagementAssignments.java,v 1.12.134.1 2004/03/19
+ *          21:00:50 rvasista Exp $
+ * @created November 28, 2001
  */
 public final class ProjectManagementAssignments extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandAdd(ActionContext context) {
     Connection db = null;
@@ -51,13 +50,16 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_add").toLowerCase());
       //Load team member drop-down list
       thisProject.buildTeamMemberList(db);
       java.util.Iterator i = thisProject.getTeam().iterator();
@@ -77,7 +79,8 @@ public final class ProjectManagementAssignments extends CFSModule {
       context.getRequest().setAttribute("StatusList", statusList);
       //Load status percent drop-down list
       HtmlPercentList statusPercentList = new HtmlPercentList();
-      context.getRequest().setAttribute("StatusPercentList", statusPercentList);
+      context.getRequest().setAttribute(
+          "StatusPercentList", statusPercentList);
       //Load LOE drop-down list
       LookupList loeList = new LookupList(db, "lookup_project_loe");
       context.getRequest().setAttribute("LoeList", loeList);
@@ -97,11 +100,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
@@ -115,24 +117,28 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       //Process the assignment
       thisAssignment.setModifiedBy(getUserId(context));
       thisAssignment.setProjectId(thisProject.getId());
       //Check permissions
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify") &&
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify") &&
           !hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
       }
       // Only assign to users of the project
-      if (thisAssignment.getUserAssignedId() > -1 && !TeamMemberList.isOnTeam(db, thisProject.getId(), thisAssignment.getUserAssignedId())) {
+      if (thisAssignment.getUserAssignedId() > -1 && !TeamMemberList.isOnTeam(
+          db, thisProject.getId(), thisAssignment.getUserAssignedId())) {
         return "PermissionError";
       }
       if (thisAssignment.getId() > 0) {
         //Check user permissions
-        TeamMember currentMember = new TeamMember(db, thisProject.getId(), getUserId(context));
-        if (thisAssignment.getUserAssignedId() != getUserId(context) && 
+        TeamMember currentMember = new TeamMember(
+            db, thisProject.getId(), getUserId(context));
+        if (thisAssignment.getUserAssignedId() != getUserId(context) &&
             currentMember.getRoleId() > TeamMember.PROJECT_LEAD) {
           return "PermissionError";
         }
@@ -148,7 +154,8 @@ public final class ProjectManagementAssignments extends CFSModule {
           }
         }
       } else {
-        if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-plan-outline-modify")) {
           return "PermissionError";
         }
         thisAssignment.setEnteredBy(getUserId(context));
@@ -197,10 +204,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     Connection db = null;
@@ -210,15 +217,18 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_details").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_details").toLowerCase());
       //Load the assignment
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      Assignment thisAssignment = new Assignment(
+          db, Integer.parseInt(assignmentId), thisProject.getId());
       context.getRequest().setAttribute("Assignment", thisAssignment);
       //Load priority drop-down list
       LookupList priorityList = new LookupList(db, "lookup_project_priority");
@@ -228,7 +238,8 @@ public final class ProjectManagementAssignments extends CFSModule {
       context.getRequest().setAttribute("StatusList", statusList);
       //Load status percent drop-down list
       HtmlPercentList statusPercentList = new HtmlPercentList();
-      context.getRequest().setAttribute("StatusPercentList", statusPercentList);
+      context.getRequest().setAttribute(
+          "StatusPercentList", statusPercentList);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -244,10 +255,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Connection db = null;
@@ -258,17 +269,21 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       //Check permissions
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify") &&
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify") &&
           !hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_add").toLowerCase());
       //Load the assignment
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      Assignment thisAssignment = new Assignment(
+          db, Integer.parseInt(assignmentId), thisProject.getId());
       context.getRequest().setAttribute("Assignment", thisAssignment);
       //Check user permissions
       if (!hasModifyAccess(context, db, thisProject, thisAssignment)) {
@@ -293,7 +308,8 @@ public final class ProjectManagementAssignments extends CFSModule {
       context.getRequest().setAttribute("StatusList", statusList);
       //Load status percent drop-down list
       HtmlPercentList statusPercentList = new HtmlPercentList();
-      context.getRequest().setAttribute("StatusPercentList", statusPercentList);
+      context.getRequest().setAttribute(
+          "StatusPercentList", statusPercentList);
       //Load LOE drop-down
       LookupList loeList = new LookupList(db, "lookup_project_loe");
       context.getRequest().setAttribute("LoeList", loeList);
@@ -312,10 +328,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddFolder(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -323,13 +339,16 @@ public final class ProjectManagementAssignments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_folder_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_folder_add").toLowerCase());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -346,10 +365,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveFolder(ActionContext context) {
     Connection db = null;
@@ -363,13 +382,16 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_add").toLowerCase());
       //Process the folder
       thisFolder.setModifiedBy(getUserId(context));
       if (thisFolder.getId() > 0) {
@@ -421,10 +443,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
@@ -433,18 +455,23 @@ public final class ProjectManagementAssignments extends CFSModule {
     boolean recordDeleted = false;
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
 
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      Assignment thisAssignment = new Assignment(
+          db, Integer.parseInt(assignmentId), thisProject.getId());
       recordDeleted = thisAssignment.delete(db);
       indexDeleteItem(context, thisAssignment);
       if (!recordDeleted) {
         SystemStatus systemStatus = this.getSystemStatus(context);
-        thisAssignment.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.assignmentDoesNotExist"));
+        thisAssignment.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.assignmentDoesNotExist"));
         processErrors(context, thisAssignment.getErrors());
       }
     } catch (Exception e) {
@@ -458,10 +485,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -470,14 +497,18 @@ public final class ProjectManagementAssignments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
-      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
+      Requirement thisRequirement = new Requirement(
+          db, Integer.parseInt(requirementId), thisProject.getId());
       thisRequirement.buildFolderHierarchy(db);
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      Assignment thisAssignment = new Assignment(
+          db, Integer.parseInt(assignmentId), thisProject.getId());
       context.getRequest().setAttribute("project", thisProject);
       context.getRequest().setAttribute("requirement", thisRequirement);
       context.getRequest().setAttribute("assignment", thisAssignment);
@@ -492,10 +523,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     Exception errorMessage = null;
@@ -508,13 +539,16 @@ public final class ProjectManagementAssignments extends CFSModule {
       checkReturnPage(context);
       db = getConnection(context);
       //Load the project and permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
       //Load the assignment
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      Assignment thisAssignment = new Assignment(
+          db, Integer.parseInt(assignmentId), thisProject.getId());
       thisAssignment.updateFolderId(db, Integer.parseInt(newFolderId));
     } catch (Exception e) {
       errorMessage = e;
@@ -531,10 +565,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteFolder(ActionContext context) {
     Exception errorMessage = null;
@@ -546,16 +580,21 @@ public final class ProjectManagementAssignments extends CFSModule {
     boolean recordDeleted = false;
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
-      AssignmentFolder thisFolder = new AssignmentFolder(db, Integer.parseInt(folderId), thisProject.getId());
+      AssignmentFolder thisFolder = new AssignmentFolder(
+          db, Integer.parseInt(folderId), thisProject.getId());
       recordDeleted = thisFolder.delete(db);
       if (!recordDeleted) {
         SystemStatus systemStatus = this.getSystemStatus(context);
-        thisFolder.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.folderDeletion"));
+        thisFolder.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.folderDeletion"));
         processErrors(context, thisFolder.getErrors());
       } else {
         indexDeleteItem(context, thisFolder);
@@ -576,10 +615,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyFolder(ActionContext context) {
     Exception errorMessage = null;
@@ -592,15 +631,19 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_folder_add").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_folder_add").toLowerCase());
       //Load the folder
-      AssignmentFolder thisFolder = new AssignmentFolder(db, Integer.parseInt(folderId), thisProject.getId());
+      AssignmentFolder thisFolder = new AssignmentFolder(
+          db, Integer.parseInt(folderId), thisProject.getId());
       context.getRequest().setAttribute("assignmentFolder", thisFolder);
     } catch (Exception e) {
       errorMessage = e;
@@ -622,10 +665,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandFolderDetails(ActionContext context) {
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -634,15 +677,18 @@ public final class ProjectManagementAssignments extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_folder_details").toLowerCase());
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_folder_details").toLowerCase());
       //Load the folder
-      AssignmentFolder thisFolder = new AssignmentFolder(db, Integer.parseInt(folderId), thisProject.getId());
+      AssignmentFolder thisFolder = new AssignmentFolder(
+          db, Integer.parseInt(folderId), thisProject.getId());
       context.getRequest().setAttribute("assignmentFolder", thisFolder);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -652,6 +698,7 @@ public final class ProjectManagementAssignments extends CFSModule {
     }
     String popUp = context.getRequest().getParameter("popup");
     if (popUp != null && !"null".equals(popUp)) {
+      context.getRequest().setAttribute("popup", "true");
       return ("PopupDetailsOK");
     } else {
       return ("ProjectCenterOK");
@@ -660,9 +707,9 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private static void checkReturnPage(ActionContext context) {
     String returnPage = (String) context.getRequest().getParameter("return");
@@ -686,10 +733,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public synchronized String executeCommandMoveItem(ActionContext context) {
     Connection db = null;
@@ -703,9 +750,11 @@ public final class ProjectManagementAssignments extends CFSModule {
       //this.checkReturnPage(context);
       db = getConnection(context);
       //Load the project and permissions
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify")) {
         return "PermissionError";
       }
       //Configure the item to be moved
@@ -742,21 +791,23 @@ public final class ProjectManagementAssignments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  thisProject       Description of the Parameter
-   *@param  thisAssignment    Description of the Parameter
-   *@return                   Description of the Return Value
+   * @param context        Description of the Parameter
+   * @param db             Description of the Parameter
+   * @param thisProject    Description of the Parameter
+   * @param thisAssignment Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean hasModifyAccess(ActionContext context, Connection db, Project thisProject, Assignment thisAssignment) throws SQLException {
     //See if the team member has access to perform an assignment action
-    TeamMember thisMember = (TeamMember) context.getRequest().getAttribute("currentMember");
+    TeamMember thisMember = (TeamMember) context.getRequest().getAttribute(
+        "currentMember");
     if (thisMember == null) {
       try {
         //Load from project
-        thisMember = new TeamMember(db, thisProject.getId(), this.getUserId(context));
+        thisMember = new TeamMember(
+            db, thisProject.getId(), this.getUserId(context));
       } catch (Exception notValid) {
         //Create a guest
         thisMember = new TeamMember();
@@ -769,9 +820,10 @@ public final class ProjectManagementAssignments extends CFSModule {
     //Check the permission
     return (thisAssignment.getUserAssignedId() == getUserId(context) || thisMember.getRoleId() <= TeamMember.PROJECT_LEAD);
   }
-  
+
   /**
    * Prepares the list of notes for the specified assignment
+   *
    * @param context
    * @return
    */
@@ -786,28 +838,41 @@ public final class ProjectManagementAssignments extends CFSModule {
     // Assignment exists
     try {
       db = getConnection(context);
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify") &&
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-plan-outline-modify") &&
           !hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("project", thisProject);
       // Check assignment details
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      Assignment thisAssignment = new Assignment(
+          db, Integer.parseInt(assignmentId), thisProject.getId());
       context.getRequest().setAttribute("assignment", thisAssignment);
       // Get the notes
       AssignmentNoteList assignmentNoteList = new AssignmentNoteList();
       assignmentNoteList.setAssignmentId(thisAssignment.getId());
       assignmentNoteList.buildList(db);
-      context.getRequest().setAttribute("assignmentNoteList", assignmentNoteList);
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute(
+          "assignmentNoteList", assignmentNoteList);
+      context.getRequest().setAttribute(
+          "IncludeSection", ("assignments_notes").toLowerCase());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    return "ShowNotesOK";
+    String popUp = context.getRequest().getParameter("popup");
+    if (popUp != null && !"null".equals(popUp)) {
+      context.getRequest().setAttribute("popup", "true");
+      return "ShowNotesOK";
+    } else {
+      return "ProjectCenterOK";
+    }
   }
 }
 

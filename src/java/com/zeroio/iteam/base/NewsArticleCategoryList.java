@@ -6,6 +6,7 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.HtmlSelect;
 
@@ -17,12 +18,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Contains a collection of news articles
+ * Contains a collection of news articles
  *
- *@author     matt rajkowski
- *@created    June 23, 2003
- *@version    $Id: NewsArticleCategoryList.java,v 1.1.2.1 2004/08/26 15:54:32
- *      matt Exp $
+ * @author matt rajkowski
+ * @version $Id: NewsArticleCategoryList.java,v 1.1.2.1 2004/08/26 15:54:32
+ *          matt Exp $
+ * @created June 23, 2003
  */
 public class NewsArticleCategoryList extends ArrayList {
   private int projectId = -1;
@@ -31,15 +32,16 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Constructor for the NewsArticleCategoryList object
+   * Constructor for the NewsArticleCategoryList object
    */
-  public NewsArticleCategoryList() { }
+  public NewsArticleCategoryList() {
+  }
 
 
   /**
-   *  Gets the projectId attribute of the NewsArticleCategoryList object
+   * Gets the projectId attribute of the NewsArticleCategoryList object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -47,9 +49,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the NewsArticleCategoryList object
+   * Sets the projectId attribute of the NewsArticleCategoryList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -57,9 +59,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the NewsArticleCategoryList object
+   * Sets the projectId attribute of the NewsArticleCategoryList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -67,9 +69,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the NewsArticleCategoryList object
+   * Gets the enabled attribute of the NewsArticleCategoryList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -77,9 +79,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the NewsArticleCategoryList object
+   * Sets the enabled attribute of the NewsArticleCategoryList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -87,9 +89,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the NewsArticleCategoryList object
+   * Sets the enabled attribute of the NewsArticleCategoryList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -97,9 +99,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the includeId attribute of the NewsArticleCategoryList object
+   * Gets the includeId attribute of the NewsArticleCategoryList object
    *
-   *@return    The includeId value
+   * @return The includeId value
    */
   public int getIncludeId() {
     return includeId;
@@ -107,9 +109,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the includeId attribute of the NewsArticleCategoryList object
+   * Sets the includeId attribute of the NewsArticleCategoryList object
    *
-   *@param  tmp  The new includeId value
+   * @param tmp The new includeId value
    */
   public void setIncludeId(int tmp) {
     this.includeId = tmp;
@@ -117,9 +119,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the includeId attribute of the NewsArticleCategoryList object
+   * Sets the includeId attribute of the NewsArticleCategoryList object
    *
-   *@param  tmp  The new includeId value
+   * @param tmp The new includeId value
    */
   public void setIncludeId(String tmp) {
     this.includeId = Integer.parseInt(tmp);
@@ -127,10 +129,10 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -140,7 +142,7 @@ public class NewsArticleCategoryList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     //Set the order
-    sqlOrder.append("ORDER BY c.project_id, c.level, c.category_name ");
+    sqlOrder.append("ORDER BY c.project_id, c.\"level\", c.category_name ");
     createFilter(sqlFilter);
     //Need to build a base SQL statement for returning records
     sqlSelect.append("SELECT ");
@@ -148,7 +150,8 @@ public class NewsArticleCategoryList extends ArrayList {
         "c.* " +
         "FROM project_news_category c " +
         "WHERE c.category_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -161,9 +164,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (projectId > 0) {
@@ -180,11 +183,11 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -204,10 +207,10 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the valueFromId attribute of the NewsArticleCategoryList object
+   * Gets the valueFromId attribute of the NewsArticleCategoryList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The valueFromId value
+   * @param id Description of the Parameter
+   * @return The valueFromId value
    */
   public String getValueFromId(int id) {
     Iterator i = this.iterator();
@@ -222,15 +225,15 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the NewsArticleCategoryList object
+   * Gets the htmlSelect attribute of the NewsArticleCategoryList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  selectedId  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param selectedId Description of the Parameter
+   * @return The htmlSelect value
    */
-  public String getHtmlSelect(String selectName, int selectedId) {
+  public String getHtmlSelect(SystemStatus thisSystem, String selectName, int selectedId) {
     HtmlSelect thisSelect = new HtmlSelect();
-    thisSelect.addItem(-1, "-- None --");
+    thisSelect.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
     Iterator i = this.iterator();
     while (i.hasNext()) {
       NewsArticleCategory thisCategory = (NewsArticleCategory) i.next();
@@ -243,9 +246,9 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the NewsArticleCategoryList object
+   * Gets the htmlSelect attribute of the NewsArticleCategoryList object
    *
-   *@return    The htmlSelect value
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect() {
     HtmlSelect thisSelect = new HtmlSelect();
@@ -261,12 +264,12 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  params            Description of the Parameter
-   *@param  names             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param params Description of the Parameter
+   * @param names  Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateValues(Connection db, String[] params, String[] names) throws SQLException {
 
@@ -322,17 +325,17 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  level             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param id    Description of the Parameter
+   * @param level Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateLevel(Connection db, int id, int level) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news_category " +
-        "SET level = ? " +
+        "SET \"level\" = ? " +
         "WHERE category_id = ? ");
     int i = 0;
     pst.setInt(++i, level);
@@ -343,12 +346,12 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  name              Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db   Description of the Parameter
+   * @param id   Description of the Parameter
+   * @param name Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateName(Connection db, int id, String name) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -364,11 +367,11 @@ public class NewsArticleCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int projectId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

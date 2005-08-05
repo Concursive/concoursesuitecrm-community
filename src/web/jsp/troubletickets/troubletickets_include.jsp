@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -33,6 +33,7 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
@@ -244,7 +245,7 @@
     </td>
     <td valign="center">
 	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
-      <%= ContactList.getEmptyHtmlSelect("contactId") %>
+      <%= ContactList.getEmptyHtmlSelect(systemStatus, "contactId") %>
 	<%} else {%>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 	<%}%>
@@ -555,4 +556,6 @@
 </table>
 <input type="hidden" name="modified" value="<%=  TicketDetails.getModified() %>" />
 <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
+<input type="hidden" name="statusId" value="<%=  TicketDetails.getStatusId() %>" />
+<input type="hidden" name="trashedDate" value="<%=  TicketDetails.getTrashedDate() %>" />
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

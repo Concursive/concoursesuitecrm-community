@@ -15,31 +15,34 @@
  */
 package com.zeroio.iteam.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id: FileDownloadLogList.java,v 1.1 2003/01/15 15:52:57 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: FileDownloadLogList.java,v 1.1 2003/01/15 15:52:57 mrajkowski
+ *          Exp $
+ * @created January 15, 2003
  */
 public class FileDownloadLogList extends ArrayList {
 
   /**
-   *  Constructor for the FileDownloadLogList object
+   * Constructor for the FileDownloadLogList object
    */
-  public FileDownloadLogList() { }
+  public FileDownloadLogList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

@@ -15,24 +15,21 @@
  */
 package org.aspcfs.modules.servicecontracts.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    December 31, 2003
- *@version    $Id: ServiceContract.java,v 1.1.2.2 2004/01/08 18:50:49 kbhoopal
- *      Exp $
+ * @author kbhoopal
+ * @version $Id: ServiceContract.java,v 1.1.2.2 2004/01/08 18:50:49 kbhoopal
+ *          Exp $
+ * @created December 31, 2003
  */
 public class ServiceContractHours extends GenericBean {
 
@@ -48,16 +45,17 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Constructor for the ServiceContractHours object
+   * Constructor for the ServiceContractHours object
    */
-  public ServiceContractHours() { }
+  public ServiceContractHours() {
+  }
 
 
   /**
-   *  Constructor for the ServiceContractHours object
+   * Constructor for the ServiceContractHours object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ServiceContractHours(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -65,9 +63,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ServiceContractHours object
+   * Sets the id attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -75,9 +73,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ServiceContractHours object
+   * Sets the id attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -85,9 +83,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the serviceContractId attribute of the ServiceContractHours object
+   * Sets the serviceContractId attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new serviceContractId value
+   * @param tmp The new serviceContractId value
    */
   public void setServiceContractId(int tmp) {
     this.serviceContractId = tmp;
@@ -95,9 +93,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the serviceContractId attribute of the ServiceContractHours object
+   * Sets the serviceContractId attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new serviceContractId value
+   * @param tmp The new serviceContractId value
    */
   public void setServiceContractId(String tmp) {
     this.serviceContractId = Integer.parseInt(tmp);
@@ -105,9 +103,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentHours attribute of the ServiceContractHours object
+   * Sets the adjustmentHours attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new adjustmentHours value
+   * @param tmp The new adjustmentHours value
    */
   public void setAdjustmentHours(double tmp) {
     this.adjustmentHours = tmp;
@@ -115,9 +113,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentHours attribute of the ServiceContractHours object
+   * Sets the adjustmentHours attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new adjustmentHours value
+   * @param tmp The new adjustmentHours value
    */
   public void setAdjustmentHours(String tmp) {
     this.adjustmentHours = Double.parseDouble(tmp);
@@ -125,9 +123,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentReason attribute of the ServiceContractHours object
+   * Sets the adjustmentReason attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new adjustmentReason value
+   * @param tmp The new adjustmentReason value
    */
   public void setAdjustmentReason(int tmp) {
     this.adjustmentReason = tmp;
@@ -135,9 +133,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentReason attribute of the ServiceContractHours object
+   * Sets the adjustmentReason attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new adjustmentReason value
+   * @param tmp The new adjustmentReason value
    */
   public void setAdjustmentReason(String tmp) {
     this.adjustmentReason = Integer.parseInt(tmp);
@@ -145,9 +143,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the adjustmentNotes attribute of the ServiceContractHours object
+   * Sets the adjustmentNotes attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new adjustmentNotes value
+   * @param tmp The new adjustmentNotes value
    */
   public void setAdjustmentNotes(String tmp) {
     this.adjustmentNotes = tmp;
@@ -155,9 +153,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ServiceContractHours object
+   * Sets the entered attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -165,9 +163,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ServiceContractHours object
+   * Sets the entered attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -175,9 +173,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ServiceContractHours object
+   * Sets the enteredBy attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -185,9 +183,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ServiceContractHours object
+   * Sets the enteredBy attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -195,9 +193,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ServiceContractHours object
+   * Sets the modified attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -205,9 +203,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ServiceContractHours object
+   * Sets the modified attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -215,9 +213,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ServiceContractHours object
+   * Sets the modifiedBy attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -225,9 +223,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ServiceContractHours object
+   * Sets the modifiedBy attribute of the ServiceContractHours object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -235,9 +233,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ServiceContractHours object
+   * Gets the id attribute of the ServiceContractHours object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -245,9 +243,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the serviceContractId attribute of the ServiceContractHours object
+   * Gets the serviceContractId attribute of the ServiceContractHours object
    *
-   *@return    The serviceContractId value
+   * @return The serviceContractId value
    */
   public int getServiceContractId() {
     return serviceContractId;
@@ -255,9 +253,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the adjustmentHours attribute of the ServiceContractHours object
+   * Gets the adjustmentHours attribute of the ServiceContractHours object
    *
-   *@return    The adjustmentHours value
+   * @return The adjustmentHours value
    */
   public double getAdjustmentHours() {
     return round(adjustmentHours, 2);
@@ -265,9 +263,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the adjustmentReason attribute of the ServiceContractHours object
+   * Gets the adjustmentReason attribute of the ServiceContractHours object
    *
-   *@return    The adjustmentReason value
+   * @return The adjustmentReason value
    */
   public int getAdjustmentReason() {
     return adjustmentReason;
@@ -275,9 +273,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the adjustmentNotes attribute of the ServiceContractHours object
+   * Gets the adjustmentNotes attribute of the ServiceContractHours object
    *
-   *@return    The adjustmentNotes value
+   * @return The adjustmentNotes value
    */
   public String getAdjustmentNotes() {
     return adjustmentNotes;
@@ -285,9 +283,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ServiceContractHours object
+   * Gets the entered attribute of the ServiceContractHours object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -295,9 +293,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the ServiceContractHours object
+   * Gets the enteredBy attribute of the ServiceContractHours object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -305,9 +303,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the ServiceContractHours object
+   * Gets the modified attribute of the ServiceContractHours object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -315,9 +313,9 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ServiceContractHours object
+   * Gets the modifiedBy attribute of the ServiceContractHours object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -325,10 +323,10 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -348,10 +346,10 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -371,50 +369,51 @@ public class ServiceContractHours extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     int resultCount = -1;
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "service_contract_hours_history_id_seq");
     sql.append(
         "INSERT INTO service_contract_hours " +
-        "(link_contract_id, " +
+        "(" + (id > -1 ? "history_id, " : "") + "link_contract_id, " +
         "adjustment_hours, " +
         "adjustment_reason, " +
         "adjustment_notes, " +
         "enteredby , " +
         "modifiedby ) " +
         "VALUES " +
-        "(?,?,?,?,?,?)");
-
+        "(" + (id > -1 ? "?," : "") + "?,?,?,?,?,?)");
     pst = db.prepareStatement(sql.toString());
-
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, serviceContractId);
     pst.setDouble(++i, adjustmentHours);
     DatabaseUtils.setInt(pst, ++i, adjustmentReason);
     pst.setString(++i, adjustmentNotes);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
-
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "service_contract_hours_history_id_seq");
+    id = DatabaseUtils.getCurrVal(
+        db, "service_contract_hours_history_id_seq", id);
     pst.close();
-
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("history_id");

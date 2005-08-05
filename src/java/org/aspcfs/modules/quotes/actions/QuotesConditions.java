@@ -28,24 +28,25 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    October 29, 2004
- *@version    $Id: QuotesConditions.java,v 1.1.2.3 2004/11/08 18:35:49 partha
- *      Exp $
+ * @author partha
+ * @version $Id: QuotesConditions.java,v 1.1.2.3 2004/11/08 18:35:49 partha
+ *          Exp $
+ * @created October 29, 2004
  */
 public final class QuotesConditions extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPopupSelector(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -57,57 +58,67 @@ public final class QuotesConditions extends CFSModule {
     if (type != null && !"".equals(type)) {
       context.getRequest().setAttribute("type", type);
     }
-    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "QuoteConditionSelectorInfo");
+    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(
+        context, "QuoteConditionSelectorInfo");
     String tableName = context.getRequest().getParameter("table");
     HashMap selectedList = new HashMap();
-    HashMap finalElementList = (HashMap) context.getSession().getAttribute("finalElements");
-    if (context.getRequest().getParameter("previousSelection") != null) {
-      int j = 0;
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
-      StringTokenizer st1 = new StringTokenizer(context.getRequest().getParameter("previousSelectionDisplay"), "|");
-      while (st.hasMoreTokens()) {
-        selectedList.put(new Integer(st.nextToken()), st1.nextToken());
-        j++;
-      }
-    } else {
-      //get selected list from the session
-      selectedList = (HashMap) context.getSession().getAttribute("selectedElements");
-    }
-    if (context.getRequest().getParameter("displayFieldId") != null) {
-      displayFieldId = context.getRequest().getParameter("displayFieldId");
-    }
-    //Flush the selectedList if its a new selection
-    if (context.getRequest().getParameter("flushtemplist") != null) {
-      if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase("true")) {
-        if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter("previousSelection") == null) {
-          selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalElements")).clone();
-        }
-      }
-    }
-    int rowCount = 1;
-    while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
-      int elementId = 0;
-      String elementValue = "";
-      elementId = Integer.parseInt(context.getRequest().getParameter("hiddenelementid" + rowCount));
-      if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
-        if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
-          elementValue = context.getRequest().getParameter("elementvalue" + rowCount);
-        }
-        if (selectedList.get(new Integer(elementId)) == null) {
-          selectedList.put(new Integer(elementId), elementValue);
-        } else {
-          selectedList.remove(new Integer(elementId));
-          selectedList.put(new Integer(elementId), elementValue);
+    try {
+      HashMap finalElementList = (HashMap) context.getSession().getAttribute(
+          "finalElements");
+      if (context.getRequest().getParameter("previousSelection") != null) {
+        int j = 0;
+        StringTokenizer st = new StringTokenizer(
+            context.getRequest().getParameter("previousSelection"), "|");
+        StringTokenizer st1 = new StringTokenizer(
+            context.getRequest().getParameter("previousSelectionDisplay"), "|");
+        while (st.hasMoreTokens()) {
+          selectedList.put(new Integer(st.nextToken()), st1.nextToken());
+          j++;
         }
       } else {
-        selectedList.remove(new Integer(elementId));
+        //get selected list from the session
+        selectedList = (HashMap) context.getSession().getAttribute(
+            "selectedElements");
       }
-      rowCount++;
-    }
-    context.getSession().setAttribute("selectedElements", selectedList);
-    context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
-    context.getRequest().setAttribute("Table", tableName);
-    try {
+      if (context.getRequest().getParameter("displayFieldId") != null) {
+        displayFieldId = context.getRequest().getParameter("displayFieldId");
+      }
+      //Flush the selectedList if its a new selection
+      if (context.getRequest().getParameter("flushtemplist") != null) {
+        if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase(
+            "true")) {
+          if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter(
+              "previousSelection") == null) {
+            selectedList = (HashMap) ((HashMap) context.getSession().getAttribute(
+                "finalElements")).clone();
+          }
+        }
+      }
+      int rowCount = 1;
+      while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
+        int elementId = 0;
+        String elementValue = "";
+        elementId = Integer.parseInt(
+            context.getRequest().getParameter("hiddenelementid" + rowCount));
+        if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
+          if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
+            elementValue = context.getRequest().getParameter(
+                "elementvalue" + rowCount);
+          }
+          if (selectedList.get(new Integer(elementId)) == null) {
+            selectedList.put(new Integer(elementId), elementValue);
+          } else {
+            selectedList.remove(new Integer(elementId));
+            selectedList.put(new Integer(elementId), elementValue);
+          }
+        } else {
+          selectedList.remove(new Integer(elementId));
+        }
+        rowCount++;
+      }
+      context.getSession().setAttribute("selectedElements", selectedList);
+      context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
+      context.getRequest().setAttribute("Table", tableName);
       db = this.getConnection(context);
       if (quoteId != null && !"".equals(quoteId.trim())) {
         Quote quote = new Quote(db, Integer.parseInt(quoteId));
@@ -115,7 +126,8 @@ public final class QuotesConditions extends CFSModule {
       }
 
       if (context.getRequest().getParameter("finalsubmit") != null) {
-        if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase("true")) {
+        if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase(
+            "true")) {
           context.getSession().removeAttribute("selectedElements");
           context.getSession().removeAttribute("finalElements");
           if (displayFieldId != null && !"".equals(displayFieldId)) {
@@ -143,18 +155,19 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  finalSelections   Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context         Description of the Parameter
+   * @param db              Description of the Parameter
+   * @param finalSelections Description of the Parameter
+   * @param quoteId         Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public String saveFinalConditions(ActionContext context, Connection db, HashMap finalSelections, String quoteId) throws SQLException {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     QuoteConditionList oldConditions = new QuoteConditionList();
@@ -185,14 +198,15 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     String quoteId = (String) context.getRequest().getParameter("quoteId");
@@ -216,19 +230,21 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     boolean isValid = false;
     String quoteId = (String) context.getRequest().getParameter("quoteId");
-    String description = (String) context.getRequest().getParameter("description");
+    String description = (String) context.getRequest().getParameter(
+        "description");
     boolean recordInserted = false;
     int conditionId = -1;
     Quote quote = null;
@@ -269,18 +285,19 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  finalSelections   Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context         Description of the Parameter
+   * @param db              Description of the Parameter
+   * @param finalSelections Description of the Parameter
+   * @param quoteId         Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public String saveFinalRemarks(ActionContext context, Connection db, HashMap finalSelections, String quoteId) throws SQLException {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     QuoteRemarkList oldRemarks = new QuoteRemarkList();
@@ -311,14 +328,15 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddRemark(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     String quoteId = (String) context.getRequest().getParameter("quoteId");
@@ -342,18 +360,20 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveRemark(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     String quoteId = (String) context.getRequest().getParameter("quoteId");
-    String description = (String) context.getRequest().getParameter("description");
+    String description = (String) context.getRequest().getParameter(
+        "description");
     boolean isValid = false;
     int remarkId = -1;
     boolean recordInserted = false;
@@ -395,25 +415,28 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveCondition(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     String quoteId = (String) context.getRequest().getParameter("quoteId");
-    String conditionId = (String) context.getRequest().getParameter("conditionId");
+    String conditionId = (String) context.getRequest().getParameter(
+        "conditionId");
     String orgId = (String) context.getRequest().getParameter("orgId");
     String headerId = (String) context.getRequest().getParameter("headerId");
     Connection db = null;
     try {
       db = getConnection(context);
       QuoteCondition quoteCondition = new QuoteCondition();
-      quoteCondition.queryRecord(db, Integer.parseInt(quoteId), Integer.parseInt(conditionId));
+      quoteCondition.queryRecord(
+          db, Integer.parseInt(quoteId), Integer.parseInt(conditionId));
       quoteCondition.delete(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -432,14 +455,15 @@ public final class QuotesConditions extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveRemark(ActionContext context) {
-    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
-          || hasPermission(context, "leads-opportunities-edit"))) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
+        context, "accounts-quotes-edit")
+        || hasPermission(context, "leads-opportunities-edit"))) {
       return ("PermissionError");
     }
     String quoteId = (String) context.getRequest().getParameter("quoteId");
@@ -449,7 +473,8 @@ public final class QuotesConditions extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      QuoteRemark quoteRemark = new QuoteRemark(db, Integer.parseInt(quoteId), Integer.parseInt(remarkId));
+      QuoteRemark quoteRemark = new QuoteRemark(
+          db, Integer.parseInt(quoteId), Integer.parseInt(remarkId));
       quoteRemark.delete(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

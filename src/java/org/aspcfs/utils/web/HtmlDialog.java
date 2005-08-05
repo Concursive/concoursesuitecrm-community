@@ -15,32 +15,31 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.text.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 /**
- *  HtmlDialog.java creates a pop up dialog box and can be either extended or
- *  used as is for a dialog with the user, specifically it is best used for a
- *  dialog which conveys certain dependencies or relationships. <p>
+ * HtmlDialog.java creates a pop up dialog box and can be either extended or
+ * used as is for a dialog with the user, specifically it is best used for a
+ * dialog which conveys certain dependencies or relationships. <p>
+ * <p/>
+ * Usage :<p>
+ * <p/>
+ * DependencyList thisList = thisTask.processDependencies(db);
+ * htmlDialog.addMessage(thisList.getHtmlString()); <br>
+ * if (htmlDialog.getRelationships().size() == 0) {
+ * htmlDialog.setTitle("Confirm"); htmlDialog.setDeleteUrl("MyTasks.do?command=Delete&id=)
+ * }<br>
+ * else { <br>
+ * htmlDialog.setTitle("Confirm");<br>
+ * htmlDialog.setHeader("Are you sure you want to delete this item:");<br>
+ * htmlDialog.addButton("Delete All", "MyTasks.do?command=Delete&id=");<br>
+ * } <p>
  *
- *  Usage :<p>
- *
- *  DependencyList thisList = thisTask.processDependencies(db);
- *  htmlDialog.addMessage(thisList.getHtmlString()); <br>
- *  if (htmlDialog.getRelationships().size() == 0) {
- *  htmlDialog.setTitle("Confirm"); htmlDialog.setDeleteUrl("MyTasks.do?command=Delete&id=)
- *  }<br>
- *  else { <br>
- *  htmlDialog.setTitle("Confirm");<br>
- *  htmlDialog.setHeader("Are you sure you want to delete this item:");<br>
- *  htmlDialog.addButton("Delete All", "MyTasks.do?command=Delete&id=");<br>
- *  } <p>
- *
- *
- *
- *@author     akhi_m
- *@created    August 22, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created August 22, 2002
  */
 public class HtmlDialog {
 
@@ -64,15 +63,16 @@ public class HtmlDialog {
 
 
   /**
-   *  Constructor for the HtmlDialog object
+   * Constructor for the HtmlDialog object
    */
-  public HtmlDialog() { }
+  public HtmlDialog() {
+  }
 
 
   /**
-   *  Sets the text attribute of the HtmlDialog object
+   * Sets the text attribute of the HtmlDialog object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -80,9 +80,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the buttons attribute of the HtmlDialog object
+   * Sets the buttons attribute of the HtmlDialog object
    *
-   *@param  tmp  The new buttons value
+   * @param tmp The new buttons value
    */
   public void setButtons(LinkedHashMap tmp) {
     this.buttons = tmp;
@@ -90,9 +90,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the showAndConfirm attribute of the HtmlDialog object
+   * Sets the showAndConfirm attribute of the HtmlDialog object
    *
-   *@param  tmp  The new showAndConfirm value
+   * @param tmp The new showAndConfirm value
    */
   public void setShowAndConfirm(boolean tmp) {
     this.showAndConfirm = tmp;
@@ -100,9 +100,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the header attribute of the HtmlDialog object
+   * Sets the header attribute of the HtmlDialog object
    *
-   *@param  header  The new header value
+   * @param header The new header value
    */
   public void setHeader(String header) {
     this.header = header;
@@ -110,9 +110,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the links attribute of the HtmlDialog object
+   * Sets the links attribute of the HtmlDialog object
    *
-   *@param  links  The new links value
+   * @param links The new links value
    */
   public void setLinks(LinkedHashMap links) {
     this.links = links;
@@ -120,10 +120,10 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the size attribute of the HtmlDialog object
+   * Sets the size attribute of the HtmlDialog object
    *
-   *@param  height  The new size value
-   *@param  width   The new size value
+   * @param height The new size value
+   * @param width  The new size value
    */
   public void setSize(int height, int width) {
     this.height = height;
@@ -132,9 +132,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the deleteUrl attribute of the HtmlDialog object
+   * Sets the deleteUrl attribute of the HtmlDialog object
    *
-   *@param  deleteUrl  The new deleteUrl value
+   * @param deleteUrl The new deleteUrl value
    */
   public void setDeleteUrl(String deleteUrl) {
     this.deleteUrl = deleteUrl;
@@ -142,9 +142,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the title attribute of the HtmlDialog object
+   * Sets the title attribute of the HtmlDialog object
    *
-   *@param  title  The new title value
+   * @param title The new title value
    */
   public void setTitle(String title) {
     this.title = title;
@@ -152,9 +152,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Sets the message attribute of the HtmlDialog object
+   * Sets the message attribute of the HtmlDialog object
    *
-   *@param  message  The new message value
+   * @param message The new message value
    */
   public void setMessage(StringBuffer message) {
     this.message = message;
@@ -162,9 +162,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the message attribute of the HtmlDialog object
+   * Gets the message attribute of the HtmlDialog object
    *
-   *@return    The message value
+   * @return The message value
    */
   public StringBuffer getMessage() {
     return message;
@@ -172,9 +172,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the title attribute of the HtmlDialog object
+   * Gets the title attribute of the HtmlDialog object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -182,9 +182,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the deleteUrl attribute of the HtmlDialog object
+   * Gets the deleteUrl attribute of the HtmlDialog object
    *
-   *@return    The deleteUrl value
+   * @return The deleteUrl value
    */
   public String getDeleteUrl() {
     return deleteUrl;
@@ -192,9 +192,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the height attribute of the HtmlDialog object
+   * Gets the height attribute of the HtmlDialog object
    *
-   *@return    The height value
+   * @return The height value
    */
   public int getHeight() {
     return height;
@@ -202,20 +202,19 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the width attribute of the HtmlDialog object
+   * Gets the width attribute of the HtmlDialog object
    *
-   *@return    The width value
+   * @return The width value
    */
   public int getWidth() {
     return width;
   }
 
 
-
   /**
-   *  Gets the links attribute of the HtmlDialog object
+   * Gets the links attribute of the HtmlDialog object
    *
-   *@return    The links value
+   * @return The links value
    */
   public LinkedHashMap getLinks() {
     return links;
@@ -223,9 +222,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the header attribute of the HtmlDialog object
+   * Gets the header attribute of the HtmlDialog object
    *
-   *@return    The header value
+   * @return The header value
    */
   public String getHeader() {
     return header;
@@ -233,9 +232,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the text attribute of the HtmlDialog object
+   * Gets the text attribute of the HtmlDialog object
    *
-   *@return    The text value
+   * @return The text value
    */
   public String getText() {
     return text;
@@ -243,9 +242,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the buttons attribute of the HtmlDialog object
+   * Gets the buttons attribute of the HtmlDialog object
    *
-   *@return    The buttons value
+   * @return The buttons value
    */
   public LinkedHashMap getButtons() {
     return buttons;
@@ -253,9 +252,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the showAndConfirm attribute of the HtmlDialog object
+   * Gets the showAndConfirm attribute of the HtmlDialog object
    *
-   *@return    The showAndConfirm value
+   * @return The showAndConfirm value
    */
   public boolean getShowAndConfirm() {
     return showAndConfirm;
@@ -263,9 +262,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the synchFrameCounter attribute of the HtmlDialog object
+   * Gets the synchFrameCounter attribute of the HtmlDialog object
    *
-   *@return    The synchFrameCounter value
+   * @return The synchFrameCounter value
    */
   public int getSynchFrameCounter() {
     return synchFrameCounter;
@@ -273,9 +272,9 @@ public class HtmlDialog {
 
 
   /**
-   *  Adds a feature to the Message attribute of the HtmlDialog object
+   * Adds a feature to the Message attribute of the HtmlDialog object
    *
-   *@param  msg  The feature to be added to the Message attribute
+   * @param msg The feature to be added to the Message attribute
    */
   public void addMessage(String msg) {
     if (message == null) {
@@ -286,28 +285,33 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the buttonString attribute of the HtmlDialog object
+   * Gets the buttonString attribute of the HtmlDialog object
    *
-   *@return    The buttonString value
+   * @return The buttonString value
    */
   public String getButtonString() {
-    Set s = buttons.keySet();
-    Iterator i = s.iterator();
     StringBuffer buttonString = new StringBuffer();
-    buttonString.append("&nbsp;");
-    while (i.hasNext()) {
-      Object id = i.next();
-      Object st = buttons.get(id);
-      buttonString.append("<input type=\"button\" name=\"" + id.toString() + "\" value=\"" + id.toString() + "\" onClick=\"" + st.toString() + "\" />");
+    try {
+      Set s = buttons.keySet();
+      Iterator i = s.iterator();
+      buttonString.append("&nbsp;");
+      while (i.hasNext()) {
+        Object id = i.next();
+        Object st = buttons.get(id);
+        buttonString.append(
+            "<input type=\"button\" name=\"" + id.toString() + "\" value=\"" + id.toString() + "\" onClick=\"" + st.toString() + "\" />");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return buttonString.toString();
   }
 
 
   /**
-   *  Gets the linkString attribute of the HtmlDialog object
+   * Gets the linkString attribute of the HtmlDialog object
    *
-   *@return    The linkString value
+   * @return The linkString value
    */
   public String getLinkString() {
     Set s = links.keySet();
@@ -325,10 +329,10 @@ public class HtmlDialog {
 
 
   /**
-   *  Adds a feature to the Button attribute of the HtmlDialog object
+   * Adds a feature to the Button attribute of the HtmlDialog object
    *
-   *@param  displayName  The feature to be added to the Button attribute
-   *@param  action       The feature to be added to the Button attribute
+   * @param displayName The feature to be added to the Button attribute
+   * @param action      The feature to be added to the Button attribute
    */
   public void addButton(String displayName, String action) {
     buttons.put(displayName, action);
@@ -336,29 +340,30 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the frameHtml attribute of the HtmlDialog object
+   * Gets the frameHtml attribute of the HtmlDialog object
    *
-   *@param  frameId  Description of the Parameter
-   *@return          The frameHtml value
+   * @param frameId Description of the Parameter
+   * @return The frameHtml value
    */
   public String getFrameHtml(int frameId) {
     StringBuffer htmlString = new StringBuffer();
 
     switch (frameId) {
-        case HtmlDialog.TOP:
-          htmlString.append("<strong>" + this.getHeader() + "</strong>");
-          break;
-        case HtmlDialog.MIDDLE:
-          if (this.getMessage() != null) {
-            htmlString.append("<table align=\"center\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"94%\"");
-            htmlString.append("<tr><td valign=\"center\">");
-            htmlString.append(this.getMessage().toString());
-            htmlString.append("</td></tr></table>");
-          }
-          break;
-        case HtmlDialog.BOTTOM:
-          htmlString.append("<center>" + this.getButtonString() + "</center>");
-          break;
+      case HtmlDialog.TOP:
+        htmlString.append("<strong>" + this.getHeader() + "</strong>");
+        break;
+      case HtmlDialog.MIDDLE:
+        if (this.getMessage() != null) {
+          htmlString.append(
+              "<table align=\"center\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"94%\"");
+          htmlString.append("<tr><td valign=\"center\">");
+          htmlString.append(this.getMessage().toString());
+          htmlString.append("</td></tr></table>");
+        }
+        break;
+      case HtmlDialog.BOTTOM:
+        htmlString.append("<center>" + this.getButtonString() + "</center>");
+        break;
     }
     decrementSynchFrameCounter();
     return htmlString.toString();
@@ -366,7 +371,7 @@ public class HtmlDialog {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   private synchronized void decrementSynchFrameCounter() {
     --synchFrameCounter;

@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a Permission item
+ * Represents a Permission item
  *
- *@author     mrajkowski
- *@created    September 20, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created September 20, 2001
  */
 public class Permission extends GenericBean {
 
@@ -48,16 +49,17 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Constructor for the Permission object
+   * Constructor for the Permission object
    */
-  public Permission() { }
+  public Permission() {
+  }
 
 
   /**
-   *  Constructor for the Permission object
+   * Constructor for the Permission object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Permission(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -65,11 +67,11 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Constructor for the Permission object
+   * Constructor for the Permission object
    *
-   *@param  db                Description of the Parameter
-   *@param  permissionId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param permissionId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Permission(Connection db, int permissionId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -91,9 +93,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Permission object
+   * Sets the id attribute of the Permission object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -101,9 +103,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Permission object
+   * Sets the id attribute of the Permission object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -111,9 +113,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Permission object
+   * Sets the categoryId attribute of the Permission object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -121,9 +123,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Permission object
+   * Sets the categoryId attribute of the Permission object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -131,9 +133,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the categoryName attribute of the Permission object
+   * Sets the categoryName attribute of the Permission object
    *
-   *@param  tmp  The new categoryName value
+   * @param tmp The new categoryName value
    */
   public void setCategoryName(String tmp) {
     this.categoryName = tmp;
@@ -141,9 +143,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the permissionLevel attribute of the Permission object
+   * Sets the permissionLevel attribute of the Permission object
    *
-   *@param  tmp  The new permissionLevel value
+   * @param tmp The new permissionLevel value
    */
   public void setPermissionLevel(int tmp) {
     this.permissionLevel = tmp;
@@ -151,9 +153,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the permissionLevel attribute of the Permission object
+   * Sets the permissionLevel attribute of the Permission object
    *
-   *@param  tmp  The new permissionLevel value
+   * @param tmp The new permissionLevel value
    */
   public void setPermissionLevel(String tmp) {
     this.permissionLevel = Integer.parseInt(tmp);
@@ -161,9 +163,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Permission object
+   * Sets the name attribute of the Permission object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -171,9 +173,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the add attribute of the Permission object
+   * Sets the add attribute of the Permission object
    *
-   *@param  tmp  The new add value
+   * @param tmp The new add value
    */
   public void setAdd(boolean tmp) {
     this.add = tmp;
@@ -181,9 +183,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the add attribute of the Permission object
+   * Sets the add attribute of the Permission object
    *
-   *@param  tmp  The new add value
+   * @param tmp The new add value
    */
   public void setAdd(String tmp) {
     this.add = DatabaseUtils.parseBoolean(tmp);
@@ -191,9 +193,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the view attribute of the Permission object
+   * Sets the view attribute of the Permission object
    *
-   *@param  tmp  The new view value
+   * @param tmp The new view value
    */
   public void setView(boolean tmp) {
     this.view = tmp;
@@ -201,9 +203,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the view attribute of the Permission object
+   * Sets the view attribute of the Permission object
    *
-   *@param  tmp  The new view value
+   * @param tmp The new view value
    */
   public void setView(String tmp) {
     this.view = DatabaseUtils.parseBoolean(tmp);
@@ -211,9 +213,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the edit attribute of the Permission object
+   * Sets the edit attribute of the Permission object
    *
-   *@param  tmp  The new edit value
+   * @param tmp The new edit value
    */
   public void setEdit(boolean tmp) {
     this.edit = tmp;
@@ -221,9 +223,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the edit attribute of the Permission object
+   * Sets the edit attribute of the Permission object
    *
-   *@param  tmp  The new edit value
+   * @param tmp The new edit value
    */
   public void setEdit(String tmp) {
     this.edit = DatabaseUtils.parseBoolean(tmp);
@@ -231,9 +233,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the delete attribute of the Permission object
+   * Sets the delete attribute of the Permission object
    *
-   *@param  tmp  The new delete value
+   * @param tmp The new delete value
    */
   public void setDelete(boolean tmp) {
     this.delete = tmp;
@@ -241,9 +243,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the delete attribute of the Permission object
+   * Sets the delete attribute of the Permission object
    *
-   *@param  tmp  The new delete value
+   * @param tmp The new delete value
    */
   public void setDelete(String tmp) {
     this.delete = DatabaseUtils.parseBoolean(tmp);
@@ -251,9 +253,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Permission object
+   * Sets the description attribute of the Permission object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -261,9 +263,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Permission object
+   * Sets the enabled attribute of the Permission object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -271,9 +273,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Permission object
+   * Sets the enabled attribute of the Permission object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -281,9 +283,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the active attribute of the Permission object
+   * Sets the active attribute of the Permission object
    *
-   *@param  tmp  The new active value
+   * @param tmp The new active value
    */
   public void setActive(boolean tmp) {
     this.active = tmp;
@@ -291,9 +293,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the active attribute of the Permission object
+   * Sets the active attribute of the Permission object
    *
-   *@param  tmp  The new active value
+   * @param tmp The new active value
    */
   public void setActive(String tmp) {
     this.active = DatabaseUtils.parseBoolean(tmp);
@@ -301,9 +303,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the viewpoints attribute of the Permission object
+   * Sets the viewpoints attribute of the Permission object
    *
-   *@param  tmp  The new viewpoints value
+   * @param tmp The new viewpoints value
    */
   public void setViewpoints(boolean tmp) {
     this.viewpoints = tmp;
@@ -311,9 +313,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Sets the viewpoints attribute of the Permission object
+   * Sets the viewpoints attribute of the Permission object
    *
-   *@param  tmp  The new viewpoints value
+   * @param tmp The new viewpoints value
    */
   public void setViewpoints(String tmp) {
     this.viewpoints = DatabaseUtils.parseBoolean(tmp);
@@ -321,9 +323,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Permission object
+   * Gets the id attribute of the Permission object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -331,9 +333,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the Permission object
+   * Gets the categoryId attribute of the Permission object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -341,9 +343,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the categoryName attribute of the Permission object
+   * Gets the categoryName attribute of the Permission object
    *
-   *@return    The categoryName value
+   * @return The categoryName value
    */
   public String getCategoryName() {
     return categoryName;
@@ -351,9 +353,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the permissionLevel attribute of the Permission object
+   * Gets the permissionLevel attribute of the Permission object
    *
-   *@return    The permissionLevel value
+   * @return The permissionLevel value
    */
   public int getPermissionLevel() {
     return permissionLevel;
@@ -361,9 +363,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the Permission object
+   * Gets the name attribute of the Permission object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -371,9 +373,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the add attribute of the Permission object
+   * Gets the add attribute of the Permission object
    *
-   *@return    The add value
+   * @return The add value
    */
   public boolean getAdd() {
     if (enabled) {
@@ -385,9 +387,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the view attribute of the Permission object
+   * Gets the view attribute of the Permission object
    *
-   *@return    The view value
+   * @return The view value
    */
   public boolean getView() {
     if (enabled) {
@@ -399,9 +401,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the edit attribute of the Permission object
+   * Gets the edit attribute of the Permission object
    *
-   *@return    The edit value
+   * @return The edit value
    */
   public boolean getEdit() {
     if (enabled) {
@@ -413,9 +415,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the delete attribute of the Permission object
+   * Gets the delete attribute of the Permission object
    *
-   *@return    The delete value
+   * @return The delete value
    */
   public boolean getDelete() {
     if (enabled) {
@@ -427,9 +429,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Permission object
+   * Gets the description attribute of the Permission object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -437,9 +439,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Permission object
+   * Gets the enabled attribute of the Permission object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -447,9 +449,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the active attribute of the Permission object
+   * Gets the active attribute of the Permission object
    *
-   *@return    The active value
+   * @return The active value
    */
   public boolean getActive() {
     return active;
@@ -457,9 +459,9 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Gets the viewpoints attribute of the Permission object
+   * Gets the viewpoints attribute of the Permission object
    *
-   *@return    The viewpoints value
+   * @return The viewpoints value
    */
   public boolean getViewpoints() {
     return viewpoints;
@@ -467,10 +469,10 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //permission table
@@ -493,17 +495,18 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of the Parameter
-   *@param  parseItem  Description of the Parameter
+   * @param request   Description of the Parameter
+   * @param parseItem Description of the Parameter
    */
   protected void buildRecord(HttpServletRequest request, int parseItem) {
     if (request.getParameter("permission" + parseItem + "id") != null) {
       this.setId(request.getParameter("permission" + parseItem + "id"));
     }
     if (request.getParameter("permission" + parseItem + "enabled") != null) {
-      String action = request.getParameter("permission" + parseItem + "enabled").toLowerCase();
+      String action = request.getParameter(
+          "permission" + parseItem + "enabled").toLowerCase();
       this.setEnabled(action.equals("on"));
     }
     if (request.getParameter("permission" + parseItem + "add") != null) {
@@ -522,7 +525,8 @@ public class Permission extends GenericBean {
       this.setEnabled(true);
     }
     if (request.getParameter("permission" + parseItem + "delete") != null) {
-      String action = request.getParameter("permission" + parseItem + "delete").toLowerCase();
+      String action = request.getParameter(
+          "permission" + parseItem + "delete").toLowerCase();
       this.setDelete(DatabaseUtils.parseBoolean(action));
       this.setEnabled(true);
     }
@@ -530,19 +534,23 @@ public class Permission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "permission_permission_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO permission (category_id, permission, permission_view, " +
+        "INSERT INTO permission (" + (id > -1 ? "permission_id, " : "") + "category_id, permission, permission_view, " +
         "permission_add, permission_edit, permission_delete, " +
-        "description, level, enabled, active, viewpoints) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "description, \"level\", enabled, active, viewpoints) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, categoryId);
     pst.setString(++i, name);
     pst.setBoolean(++i, view);
@@ -555,10 +563,10 @@ public class Permission extends GenericBean {
     pst.setBoolean(++i, active);
     pst.setBoolean(++i, viewpoints);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "permission_permission_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "permission_permission_id_seq", id);
     return true;
   }
-  
+
   public static int lookupId(Connection db, String name) throws SQLException {
     if (name == null) {
       throw new SQLException("Invalid Permission Name");

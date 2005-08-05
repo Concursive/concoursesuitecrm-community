@@ -31,6 +31,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
@@ -124,7 +125,8 @@
     }
   }
   
-  <% if(!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null){ %>
+  <% if((!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null) ||
+  !((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null)){ %>
   function toggleSpan(cb, tag) {
     var form = document.addCall;
     if (cb.checked) {
@@ -250,9 +252,17 @@ function reopenOpportunity(id) {
         <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
       <% }else{ %>
         <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
-        <br>
-        <%-- include pending activity form --%>
-        <%@ include file="../contacts/call_followup_include.jsp" %>
+          <br />
+          <%-- include pending activity form --%>
+          <%@ include file="../contacts/call_followup_include.jsp" %>
+          <%--Add the javascript to toggle the followupInclude. --%>
+          <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+            <script type="text/javascript">
+              var form1 = document.addCall;
+              form1.hasFollowup.checked = true;
+              form1.hasFollowup.disabled = true;
+            </script>
+          </dhv:evaluate>
         </span>
     <%
         }
@@ -276,6 +286,7 @@ function reopenOpportunity(id) {
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
   <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
+  <input type="hidden" name="oppHeaderId" value="<%= CallDetails.getOppHeaderId() %>">
   <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
   <input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>" >

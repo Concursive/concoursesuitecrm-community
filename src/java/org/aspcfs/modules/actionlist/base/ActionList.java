@@ -25,11 +25,11 @@ import java.sql.*;
 import java.text.DateFormat;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     akhi_m
- * @created    April 18, 2003
- * @version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created April 18, 2003
  */
 public class ActionList extends GenericBean {
   private int id = -1;
@@ -49,17 +49,18 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Constructor for the ActionList object
+   * Constructor for the ActionList object
    */
-  public ActionList() { }
+  public ActionList() {
+  }
 
 
   /**
-   *  Constructor for the ActionList object
+   * Constructor for the ActionList object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActionList(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -67,10 +68,10 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Constructor for the ActionList object
+   * Constructor for the ActionList object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActionList(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -78,9 +79,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ActionList object
+   * Sets the id attribute of the ActionList object
    *
-   * @param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -88,9 +89,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ActionList object
+   * Sets the id attribute of the ActionList object
    *
-   * @param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -98,9 +99,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the ActionList object
+   * Sets the description attribute of the ActionList object
    *
-   * @param  description  The new description value
+   * @param description The new description value
    */
   public void setDescription(String description) {
     this.description = description;
@@ -108,9 +109,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the ActionList object
+   * Sets the owner attribute of the ActionList object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -118,9 +119,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the ActionList object
+   * Sets the owner attribute of the ActionList object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -128,9 +129,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the ActionList object
+   * Sets the completeDate attribute of the ActionList object
    *
-   * @param  completeDate  The new completeDate value
+   * @param completeDate The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp completeDate) {
     this.completeDate = completeDate;
@@ -138,9 +139,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the total attribute of the ActionList object
+   * Sets the total attribute of the ActionList object
    *
-   * @param  total  The new total value
+   * @param total The new total value
    */
   public void setTotal(int total) {
     this.total = total;
@@ -148,9 +149,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the totalComplete attribute of the ActionList object
+   * Sets the totalComplete attribute of the ActionList object
    *
-   * @param  totalComplete  The new totalComplete value
+   * @param totalComplete The new totalComplete value
    */
   public void setTotalComplete(int totalComplete) {
     this.totalComplete = totalComplete;
@@ -158,9 +159,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the total attribute of the ActionList object
+   * Gets the total attribute of the ActionList object
    *
-   * @return    The total value
+   * @return The total value
    */
   public int getTotal() {
     return total;
@@ -168,9 +169,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the totalComplete attribute of the ActionList object
+   * Gets the totalComplete attribute of the ActionList object
    *
-   * @return    The totalComplete value
+   * @return The totalComplete value
    */
   public int getTotalComplete() {
     return totalComplete;
@@ -178,9 +179,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the completeDateString attribute of the ActionList object
+   * Gets the completeDateString attribute of the ActionList object
    *
-   * @return    The completeDateString value
+   * @return The completeDateString value
    */
   public String getCompleteDateString() {
     String tmp = "";
@@ -193,9 +194,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ActionList object
+   * Sets the linkModuleId attribute of the ActionList object
    *
-   * @param  linkModuleId  The new linkModuleId value
+   * @param linkModuleId The new linkModuleId value
    */
   public void setLinkModuleId(int linkModuleId) {
     this.linkModuleId = linkModuleId;
@@ -203,9 +204,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ActionList object
+   * Sets the linkModuleId attribute of the ActionList object
    *
-   * @param  linkModuleId  The new linkModuleId value
+   * @param linkModuleId The new linkModuleId value
    */
   public void setLinkModuleId(String linkModuleId) {
     this.linkModuleId = Integer.parseInt(linkModuleId);
@@ -213,9 +214,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionList object
+   * Sets the enteredBy attribute of the ActionList object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -223,9 +224,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionList object
+   * Sets the modifiedBy attribute of the ActionList object
    *
-   * @param  modifiedBy  The new modifiedBy value
+   * @param modifiedBy The new modifiedBy value
    */
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
@@ -233,9 +234,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ActionList object
+   * Sets the modified attribute of the ActionList object
    *
-   * @param  modified  The new modified value
+   * @param modified The new modified value
    */
   public void setModified(java.sql.Timestamp modified) {
     this.modified = modified;
@@ -243,9 +244,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ActionList object
+   * Sets the modified attribute of the ActionList object
    *
-   * @param  modified  The new modified value
+   * @param modified The new modified value
    */
   public void setModified(String modified) {
     this.modified = DatabaseUtils.parseTimestamp(modified);
@@ -253,9 +254,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the ActionList object
+   * Sets the complete attribute of the ActionList object
    *
-   * @param  complete  The new complete value
+   * @param complete The new complete value
    */
   public void setComplete(boolean complete) {
     this.complete = complete;
@@ -263,9 +264,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the ActionList object
+   * Sets the complete attribute of the ActionList object
    *
-   * @param  complete  The new complete value
+   * @param complete The new complete value
    */
   public void setComplete(String complete) {
     this.complete = DatabaseUtils.parseBoolean(complete);
@@ -273,9 +274,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the ownerContactId attribute of the ActionList object
+   * Sets the ownerContactId attribute of the ActionList object
    *
-   * @param  ownerContactId  The new ownerContactId value
+   * @param ownerContactId The new ownerContactId value
    */
   public void setOwnerContactId(int ownerContactId) {
     this.ownerContactId = ownerContactId;
@@ -283,9 +284,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the ownerContactId attribute of the ActionList object
+   * Sets the ownerContactId attribute of the ActionList object
    *
-   * @param  ownerContactId  The new ownerContactId value
+   * @param ownerContactId The new ownerContactId value
    */
   public void setOwnerContactId(String ownerContactId) {
     this.ownerContactId = Integer.parseInt(ownerContactId);
@@ -293,9 +294,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the ownerContactId attribute of the ActionList object
+   * Gets the ownerContactId attribute of the ActionList object
    *
-   * @return    The ownerContactId value
+   * @return The ownerContactId value
    */
   public int getOwnerContactId() {
     return ownerContactId;
@@ -303,9 +304,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the complete attribute of the ActionList object
+   * Gets the complete attribute of the ActionList object
    *
-   * @return    The complete value
+   * @return The complete value
    */
   public boolean getComplete() {
     return complete;
@@ -313,9 +314,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the ActionList object
+   * Gets the modifiedString attribute of the ActionList object
    *
-   * @return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -328,9 +329,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ActionList object
+   * Sets the entered attribute of the ActionList object
    *
-   * @param  entered  The new entered value
+   * @param entered The new entered value
    */
   public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
@@ -338,9 +339,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the ActionList object
+   * Gets the enteredString attribute of the ActionList object
    *
-   * @return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -353,9 +354,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ActionList object
+   * Sets the enabled attribute of the ActionList object
    *
-   * @param  enabled  The new enabled value
+   * @param enabled The new enabled value
    */
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
@@ -363,9 +364,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ActionList object
+   * Sets the enabled attribute of the ActionList object
    *
-   * @param  enabled  The new enabled value
+   * @param enabled The new enabled value
    */
   public void setEnabled(String enabled) {
     this.enabled = DatabaseUtils.parseBoolean(enabled);
@@ -373,9 +374,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ActionList object
+   * Gets the id attribute of the ActionList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -383,9 +384,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the ActionList object
+   * Gets the description attribute of the ActionList object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -393,9 +394,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the ActionList object
+   * Gets the owner attribute of the ActionList object
    *
-   * @return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -403,9 +404,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the ActionList object
+   * Gets the completeDate attribute of the ActionList object
    *
-   * @return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -413,9 +414,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the linkModuleId attribute of the ActionList object
+   * Gets the linkModuleId attribute of the ActionList object
    *
-   * @return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -423,9 +424,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionList object
+   * Gets the enteredBy attribute of the ActionList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -433,9 +434,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActionList object
+   * Gets the modifiedBy attribute of the ActionList object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -443,9 +444,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the ActionList object
+   * Gets the modified attribute of the ActionList object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -453,9 +454,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ActionList object
+   * Gets the entered attribute of the ActionList object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -463,9 +464,9 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the ActionList object
+   * Gets the enabled attribute of the ActionList object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -473,11 +474,11 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the ownerValid attribute of the ActionList object
+   * Gets the ownerValid attribute of the ActionList object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The ownerValid value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The ownerValid value
+   * @throws SQLException Description of the Exception
    */
   public boolean isOwnerValid(Connection db) throws SQLException {
     if (owner == -1 && ownerContactId != -1) {
@@ -492,11 +493,11 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -522,21 +523,24 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
       int i = 0;
+      id = DatabaseUtils.getNextSeq(db, "action_list_code_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO action_list " +
-          "(description, owner, link_module_id, enteredby, modifiedby, enabled) " +
-          "VALUES (?, ?, ?, ?, ?, ? ) "
-          );
+          "(" + (id > -1 ? "action_id, " : "") + "description, owner, link_module_id, enteredby, modifiedby, enabled) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getOwner());
       pst.setInt(++i, this.getLinkModuleId());
@@ -544,7 +548,7 @@ public class ActionList extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.setBoolean(++i, this.getEnabled());
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "action_list_code_seq");
+      this.id = DatabaseUtils.getCurrVal(db, "action_list_code_seq", id);
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -558,11 +562,11 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int count = 0;
@@ -577,8 +581,7 @@ public class ActionList extends GenericBean {
           "UPDATE action_list " +
           "SET modifiedby = ?, description = ?, " +
           "modified = CURRENT_TIMESTAMP, completedate = ?, owner = ? " +
-          "WHERE action_id = ? AND modified = ? "
-          );
+          "WHERE action_id = ? AND modified = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       if (previousList.getCompleteDate() != null && this.getComplete()) {
@@ -605,11 +608,11 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -637,11 +640,11 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deleteRelationships(Connection db) throws SQLException {
     boolean commit = true;
@@ -652,15 +655,13 @@ public class ActionList extends GenericBean {
       }
       PreparedStatement pst = db.prepareStatement(
           "DELETE from action_item_log " +
-          "WHERE item_id IN (SELECT item_id from action_item where action_id = ? ) "
-          );
+          "WHERE item_id IN (SELECT item_id from action_item where action_id = ? ) ");
       pst.setInt(1, this.getId());
       pst.execute();
 
       pst = db.prepareStatement(
           "DELETE from action_item " +
-          "WHERE action_id = ? "
-          );
+          "WHERE action_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
 
@@ -682,11 +683,11 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
@@ -696,8 +697,7 @@ public class ActionList extends GenericBean {
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) as total " +
           "FROM action_item " +
-          "WHERE action_id = ? "
-          );
+          "WHERE action_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -720,10 +720,10 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTotal(Connection db) throws SQLException {
     if (id == -1) {
@@ -744,10 +744,10 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTotalComplete(Connection db) throws SQLException {
     if (id == -1) {
@@ -768,10 +768,10 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("action_id");
@@ -791,12 +791,12 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newOwner          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;

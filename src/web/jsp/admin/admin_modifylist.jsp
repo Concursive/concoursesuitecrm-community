@@ -17,12 +17,15 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,java.text.*,java.text.DateFormat,org.aspcfs.utils.*" %>
+<%@ page import="org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
 <jsp:useBean id="category" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
@@ -66,12 +69,12 @@
         </tr>
         <tr>
           <td valign="center">
-            <input type="text" name="newValue" value="" size="25" maxlength="300">
+            <input type="text" name="newValue" id="newValue" value="" size="25" maxlength="300">
           </td>
         </tr>
         <tr>
           <td valign="center">
-            <input type="button" name="addButton" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:addValues()">
+            <input type="button" name="addButton" id="addButton" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:addValues()">
           </td>
         </tr>
       </table>
@@ -98,10 +101,37 @@
             <input type="button" value="<dhv:label name="button.sort">Sort</dhv:label>" onclick="javascript:sortSelect(document.modifyList.selectedList)">
           </td>
         </tr>
+        <tr>
+          <td valign="center">
+          <input type="button" value="<dhv:label name="accounts.Rename">Rename</dhv:label>" onclick="javascript:editValues();">
+          </td>
+        </tr>
+
       </table>
     </td>
     <td width="50%">
+    <%
+    int count = 0;
+    HtmlSelect itemListSelect = SelectedList.getHtmlSelectObj(0);
+    itemListSelect.setSelectSize(10);
+    Iterator i = SelectedList.iterator();
+    if (i.hasNext()) {
+      while (i.hasNext()) {
+          LookupElement thisElement = (LookupElement) i.next();
+          if (!thisElement.isGroup()) {
+     %>
+          <script>itemList[<%= count %>] = new category(<%= thisElement.getCode() %>, "<%= thisElement.getDescription() %>", '<%= thisElement.getEnabled() ? "true" : "false" %>');</script>
+     <% 
+         count++;
+         }
+        }%>
+      <% SelectedList.setJsEvent("onChange=\"javascript:resetOptions();\""); %>
       <%= SelectedList.getHtmlSelect("selectedList",0) %>
+    <% }else{%>
+      <select name="selectedList" multiple id="selectedList" size="10" onChange="javascript:resetOptions();">
+        <option value="-1"><dhv:label name="admin.itemList">--------Item List-------</dhv:label></option>
+        </select>
+    <%}%>
     </td>
   </tr>
   <tr>

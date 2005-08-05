@@ -42,13 +42,12 @@
     }
   }
 </script>
-<form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="Contacts" mainMenuItem="true">Contacts</dhv:label></a> >
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContacts.do?command=FolderList&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> > 
@@ -77,7 +76,9 @@
   if (CategoryList.size() > 0) {
 %>
   &nbsp;<br>
-  <dhv:evaluate if="<%= (!Category.getReadOnly()) %>"><dhv:permission name="contacts-external_contacts-folders-add"><a href="ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
+  <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !Category.getReadOnly()) %>">
+    <dhv:permission name="contacts-external_contacts-folders-add"><a href="ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a><br>&nbsp;<br></dhv:permission>
+  </dhv:evaluate>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
@@ -110,7 +111,10 @@
       <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('select<%= count %>','menuField','<%= ContactDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuField');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>">
+            <a href="javascript:displayMenu('select<%= count %>','menuField','<%= ContactDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuField');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= (!ContactDetails.getEnabled() || ContactDetails.isTrashed() ) %>">&nbsp;</dhv:evaluate>
         </td>
       </dhv:evaluate>
       <td align="left" width="100%" nowrap>
@@ -147,4 +151,3 @@
   </table>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
 </dhv:container>
-</form>

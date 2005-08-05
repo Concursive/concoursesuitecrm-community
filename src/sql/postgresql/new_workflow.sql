@@ -144,6 +144,7 @@ CREATE TABLE business_process_hook (
   id INTEGER DEFAULT nextval('business_process_ho_hook_id_seq') NOT NULL PRIMARY KEY,
   trigger_id INTEGER NOT NULL REFERENCES business_process_hook_triggers,
   process_id INTEGER NOT NULL REFERENCES business_process,
-  enabled BOOLEAN DEFAULT false
+  enabled BOOLEAN DEFAULT false,
+  priority INTEGER NOT NULL DEFAULT 0
 );
 

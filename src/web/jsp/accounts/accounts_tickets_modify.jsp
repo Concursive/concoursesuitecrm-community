@@ -136,22 +136,31 @@
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountstickets" selected="details" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
-    <% if (TicketDetails.getClosed() != null) { %>
-          <input type="submit" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
-        <% if ("list".equals(request.getParameter("return"))) {%>
-          <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
-        <%} else {%>
-          <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'" />
-        <%}%>
-    <%} else {%>
-          <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
-        <% if ("list".equals(request.getParameter("return"))) {%>
-          <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
-        <%} else {%>
-          <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'" />
-        <%}%>
+     <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>" >
+          <dhv:permission name="accounts-accounts-tickets-edit">
+            <input type="submit" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
+           </dhv:permission>
+           <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
+            <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
+           </dhv:evaluate>
+           <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
+            <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'" />
+           </dhv:evaluate>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= TicketDetails.getClosed() == null %>" >
+          <dhv:permission name="accounts-accounts-tickets-edit">
+            <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
+          </dhv:permission>
+           <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
+            <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
+           </dhv:evaluate>
+           <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
+            <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'" />
+           </dhv:evaluate>
           <%= showAttribute(request, "closedError") %>
-    <%}%>
+       </dhv:evaluate>
+      </dhv:evaluate>
     <br />
     <dhv:formMessage />
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -469,25 +478,37 @@
       </tr>
      </table>
     &nbsp;<br>
-    <% if (TicketDetails.getClosed() != null) { %>
+   <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
+    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>" >
+        <dhv:permission name="accounts-accounts-tickets-edit">
           <input type="submit" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
-        <% if ("list".equals(request.getParameter("return"))) {%>
+         </dhv:permission>
+         <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
-        <%} else {%>
+         </dhv:evaluate>
+         <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'" />
-        <%}%>
-    <%} else {%>
+         </dhv:evaluate>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= TicketDetails.getClosed() == null %>" >
+        <dhv:permission name="accounts-accounts-tickets-edit">
           <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
-        <% if ("list".equals(request.getParameter("return"))) {%>
+        </dhv:permission>
+         <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
-        <%} else {%>
+         </dhv:evaluate>
+         <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'" />
-        <%}%>
-    <%}%>
+         </dhv:evaluate>
+        <%= showAttribute(request, "closedError") %>
+     </dhv:evaluate>
+    </dhv:evaluate>
     <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
     <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
     <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
     <input type="hidden" name="companyName" value="<%= toHtml(TicketDetails.getCompanyName()) %>">
+    <input type="hidden" name="statusId" value="<%=  TicketDetails.getStatusId() %>" />
+    <input type="hidden" name="trashedDate" value="<%=  TicketDetails.getTrashedDate() %>" />
     <input type="hidden" name="close" value="">
     <input type="hidden" name="refresh" value="-1">
     <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />

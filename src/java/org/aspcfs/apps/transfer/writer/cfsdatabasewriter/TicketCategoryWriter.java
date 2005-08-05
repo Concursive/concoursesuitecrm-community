@@ -15,26 +15,23 @@
  */
 package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
-import com.darkhorseventures.database.*;
-import org.aspcfs.apps.transfer.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.utils.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import java.sql.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 17, 2002
- *@version    $Id: TicketCategoryWriter.java,v 1.7 2003/09/26 19:08:41
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: TicketCategoryWriter.java,v 1.7 2003/09/26 19:08:41
+ *          mrajkowski Exp $
+ * @created September 17, 2002
  */
 public class TicketCategoryWriter implements DataWriter {
   private ConnectionPool sqlDriver = null;
@@ -52,9 +49,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Sets the driver attribute of the TicketCategoryWriter object
+   * Sets the driver attribute of the TicketCategoryWriter object
    *
-   *@param  tmp  The new driver value
+   * @param tmp The new driver value
    */
   public void setDriver(String tmp) {
     this.driver = tmp;
@@ -62,9 +59,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Sets the url attribute of the TicketCategoryWriter object
+   * Sets the url attribute of the TicketCategoryWriter object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -72,9 +69,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Sets the user attribute of the TicketCategoryWriter object
+   * Sets the user attribute of the TicketCategoryWriter object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(String tmp) {
     this.user = tmp;
@@ -82,9 +79,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Sets the pass attribute of the TicketCategoryWriter object
+   * Sets the pass attribute of the TicketCategoryWriter object
    *
-   *@param  tmp  The new pass value
+   * @param tmp The new pass value
    */
   public void setPass(String tmp) {
     this.pass = tmp;
@@ -92,18 +89,18 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Sets the autoCommit attribute of the TicketCategoryWriter object
+   * Sets the autoCommit attribute of the TicketCategoryWriter object
    *
-   *@param  flag  The new autoCommit value
+   * @param flag The new autoCommit value
    */
   public void setAutoCommit(boolean flag) {
   }
 
 
   /**
-   *  Gets the driver attribute of the TicketCategoryWriter object
+   * Gets the driver attribute of the TicketCategoryWriter object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     return driver;
@@ -111,9 +108,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the url attribute of the TicketCategoryWriter object
+   * Gets the url attribute of the TicketCategoryWriter object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -121,9 +118,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the user attribute of the TicketCategoryWriter object
+   * Gets the user attribute of the TicketCategoryWriter object
    *
-   *@return    The user value
+   * @return The user value
    */
   public String getUser() {
     return user;
@@ -131,9 +128,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the pass attribute of the TicketCategoryWriter object
+   * Gets the pass attribute of the TicketCategoryWriter object
    *
-   *@return    The pass value
+   * @return The pass value
    */
   public String getPass() {
     return pass;
@@ -141,9 +138,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the version attribute of the CFSHttpXMLWriter object
+   * Gets the version attribute of the CFSHttpXMLWriter object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -151,9 +148,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the name attribute of the CFSHttpXMLWriter object
+   * Gets the name attribute of the CFSHttpXMLWriter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Ticket Category Writer";
@@ -161,9 +158,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the description attribute of the CFSHttpXMLWriter object
+   * Gets the description attribute of the CFSHttpXMLWriter object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Inserts data directly into a Centric CRM database";
@@ -171,9 +168,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the lastResponse attribute of the TicketCategoryWriter object
+   * Gets the lastResponse attribute of the TicketCategoryWriter object
    *
-   *@return    The lastResponse value
+   * @return The lastResponse value
    */
   public String getLastResponse() {
     return null;
@@ -181,9 +178,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Gets the configured attribute of the CFSHttpXMLWriter object
+   * Gets the configured attribute of the CFSHttpXMLWriter object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     if (url == null) {
@@ -195,8 +192,7 @@ public class TicketCategoryWriter implements DataWriter {
       sqlDriver = new ConnectionPool();
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(1);
-      ConnectionElement thisElement = new ConnectionElement(
-          url, user, pass);
+      ConnectionElement thisElement = new ConnectionElement(url, user, pass);
       thisElement.setDriver(driver);
       db = sqlDriver.getConnection(thisElement);
     } catch (SQLException e) {
@@ -208,59 +204,64 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of Parameter
-   *@return         Description of the Return Value
+   * @param record Description of Parameter
+   * @return Description of the Return Value
    */
   public boolean save(DataRecord record) {
     try {
+      int parentId = -1;
+      parentId = DatabaseUtils.getNextSeq(db, "ticket_category_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO ticket_category " +
-          "(cat_level, parent_cat_code, description, level, enabled) " +
+          "(" + (parentId > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled) " +
           "VALUES " +
-          "(?, ?, ?, ?, ?) ");
+          "(" + (parentId > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       int i = 0;
+      if (parentId > -1) {
+        pst.setInt(++i, parentId);
+      }
       int catLevel = Integer.parseInt(record.getValue("catLevel"));
       pst.setInt(++i, catLevel);
       switch (catLevel) {
-          case 0:
-            pst.setInt(++i, 0);
-            break;
-          case 1:
-            pst.setInt(++i, level0Id);
-            break;
-          case 2:
-            pst.setInt(++i, level1Id);
-            break;
-          case 3:
-            pst.setInt(++i, level2Id);
-            break;
-          default:
-            break;
+        case 0:
+          pst.setInt(++i, 0);
+          break;
+        case 1:
+          pst.setInt(++i, level0Id);
+          break;
+        case 2:
+          pst.setInt(++i, level1Id);
+          break;
+        case 3:
+          pst.setInt(++i, level2Id);
+          break;
+        default:
+          break;
       }
       pst.setString(++i, record.getValue("description"));
       pst.setInt(++i, level++);
       pst.setBoolean(++i, true);
       pst.execute();
       pst.close();
-
-      int parentId = DatabaseUtils.getCurrVal(db, "ticket_category_id_seq");
+      parentId = DatabaseUtils.getCurrVal(
+          db, "ticket_category_id_seq", parentId);
       switch (catLevel) {
-          case 0:
-            level0Id = parentId;
-            break;
-          case 1:
-            level1Id = parentId;
-            break;
-          case 2:
-            level2Id = parentId;
-            break;
-          case 3:
-            level3Id = parentId;
-            break;
-          default:
-            break;
+        case 0:
+          level0Id = parentId;
+          break;
+        case 1:
+          level1Id = parentId;
+          break;
+        case 2:
+          level2Id = parentId;
+          break;
+        case 3:
+          level3Id = parentId;
+          break;
+        default:
+          break;
       }
 
     } catch (Exception ex) {
@@ -272,9 +273,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean commit() {
     return true;
@@ -282,9 +283,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean rollback() {
     return true;
@@ -292,10 +293,10 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean load(DataRecord record) {
     return false;
@@ -303,9 +304,9 @@ public class TicketCategoryWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean close() {
     if (db != null) {

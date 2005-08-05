@@ -15,22 +15,27 @@
  */
 package org.aspcfs.controller.objectHookManager;
 
-import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.apps.workFlowManager.BusinessProcess;
+import org.aspcfs.apps.workFlowManager.BusinessProcessList;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
+import org.aspcfs.apps.workFlowManager.WorkflowManager;
+
+import java.util.*;
 
 /**
- *  A class that coordinates running business processes in a thread with the
- *  WorkflowManager.<p>
+ * A class that coordinates running business processes in a thread with the
+ * WorkflowManager.<p>
+ * <p/>
+ * A business process can be triggered in 3 ways:<br>
+ * 1. Inserting, updating, deleting, or selecting a hooked object triggers a
+ * business process<br>
+ * 2. A cron event triggers a business process<br>
+ * 3. An event manually triggers a business process
  *
- *  A business process can be triggered in 3 ways:<br>
- *  1. Inserting, updating, deleting, or selecting a hooked object triggers a
- *  business process<br>
- *  2. A cron event triggers a business process<br>
- *  3. An event manually triggers a business process
- *
- *@author     matt rajkowski
- *@created    October 14, 2002
- *@version    $Id: ObjectHook.java,v 1.2.2.4 2002/11/12 19:10:57 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ObjectHook.java,v 1.2.2.4 2002/11/12 19:10:57 mrajkowski Exp
+ *          $
+ * @created October 14, 2002
  */
 public class ObjectHook extends Thread {
 
@@ -43,9 +48,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Sets the objectHookList attribute of the ObjectHook object
+   * Sets the objectHookList attribute of the ObjectHook object
    *
-   *@param  tmp  The new objectHookList value
+   * @param tmp The new objectHookList value
    */
   public void setObjectHookList(ObjectHookList tmp) {
     this.objectHookList = tmp;
@@ -53,9 +58,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Sets the businessProcessList attribute of the ObjectHook object
+   * Sets the businessProcessList attribute of the ObjectHook object
    *
-   *@param  tmp  The new businessProcessList value
+   * @param tmp The new businessProcessList value
    */
   public void setBusinessProcessList(BusinessProcessList tmp) {
     this.businessProcessList = tmp;
@@ -63,9 +68,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Sets the actionId attribute of the ObjectHook object
+   * Sets the actionId attribute of the ObjectHook object
    *
-   *@param  tmp  The new actionId value
+   * @param tmp The new actionId value
    */
   public void setActionId(int tmp) {
     this.actionId = tmp;
@@ -73,9 +78,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Sets the manager attribute of the ObjectHook object
+   * Sets the manager attribute of the ObjectHook object
    *
-   *@param  tmp  The new manager value
+   * @param tmp The new manager value
    */
   public void setManager(WorkflowManager tmp) {
     this.manager = tmp;
@@ -83,9 +88,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Sets the businessProcess attribute of the ObjectHook object
+   * Sets the businessProcess attribute of the ObjectHook object
    *
-   *@param  tmp  The new businessProcess value
+   * @param tmp The new businessProcess value
    */
   public void setBusinessProcess(String tmp) {
     this.businessProcess = tmp;
@@ -93,9 +98,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Gets the businessProcessList attribute of the ObjectHook object
+   * Gets the businessProcessList attribute of the ObjectHook object
    *
-   *@return    The businessProcessList value
+   * @return The businessProcessList value
    */
   public BusinessProcessList getBusinessProcessList() {
     return businessProcessList;
@@ -103,9 +108,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Gets the objectHookList attribute of the ObjectHook object
+   * Gets the objectHookList attribute of the ObjectHook object
    *
-   *@return    The objectHookList value
+   * @return The objectHookList value
    */
   public ObjectHookList getObjectHookList() {
     return objectHookList;
@@ -113,9 +118,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Gets the actionId attribute of the ObjectHook object
+   * Gets the actionId attribute of the ObjectHook object
    *
-   *@return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -123,9 +128,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Gets the manager attribute of the ObjectHook object
+   * Gets the manager attribute of the ObjectHook object
    *
-   *@return    The manager value
+   * @return The manager value
    */
   public WorkflowManager getManager() {
     return manager;
@@ -133,9 +138,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Gets the businessProcess attribute of the ObjectHook object
+   * Gets the businessProcess attribute of the ObjectHook object
    *
-   *@return    The businessProcess value
+   * @return The businessProcess value
    */
   public String getBusinessProcess() {
     return businessProcess;
@@ -143,9 +148,9 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Constructor for the ObjectHook object
+   * Constructor for the ObjectHook object
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public ObjectHook(ComponentContext context) {
     this.context = context;
@@ -153,7 +158,7 @@ public class ObjectHook extends Thread {
 
 
   /**
-   *  Main processing method for the ObjectHook object
+   * Main processing method for the ObjectHook object
    */
   public void run() {
     try {
@@ -167,18 +172,76 @@ public class ObjectHook extends Thread {
         ObjectHookActionList actionList =
             (ObjectHookActionList) objectHookList.get(context.getClassName());
         if (actionList != null) {
-          ObjectHookAction thisAction =
-              (ObjectHookAction) actionList.get(new Integer(actionId));
-          if (thisAction != null && thisAction.getEnabled()) {
-            businessProcess = thisAction.getProcessName();
+          boolean applicationActions = true;
+          HashMap orderedAppActionKeys = new HashMap();
+          HashMap orderedUserActionKeys = new HashMap();
+          Iterator iterator = actionList.values().iterator();
+          while (iterator.hasNext()) {
+            ObjectHookAction thisAction = (ObjectHookAction) iterator.next();
+            if (thisAction != null && thisAction.getApplication() && thisAction.getTypeId() == actionId && thisAction.getEnabled()) {
+              orderedAppActionKeys.put(
+                  new Integer(thisAction.getPriority()), "" + thisAction.getApplication() + "|" + thisAction.getPriority() + "|" + thisAction.getTypeId());
+            }
+            if (thisAction != null && !thisAction.getApplication() && thisAction.getTypeId() == actionId && thisAction.getEnabled()) {
+              orderedUserActionKeys.put(
+                  new Integer(thisAction.getPriority()), "" + thisAction.getApplication() + "|" + thisAction.getPriority() + "|" + thisAction.getTypeId());
+            }
+          }
+          ArrayList applKeySet = new ArrayList(
+              (Set) orderedAppActionKeys.keySet());
+          Object[] array = applKeySet.toArray();
+          Arrays.sort(array);
+          for (int i = 0; i < array.length; i++) {
+            ObjectHookAction thisAction = (ObjectHookAction) actionList.get(
+                (String) orderedAppActionKeys.get(array[i]));
+            businessProcess = null;
+            if (thisAction != null && thisAction.getEnabled() && thisAction.getTypeId() == actionId && thisAction.getApplication()) {
+              businessProcess = thisAction.getProcessName();
+            }
+            //Execute the specified business process
+            if (businessProcess != null) {
+              context.setProcessName(businessProcess);
+              if (businessProcessList != null) {
+                BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(
+                    businessProcess);
+                if (thisProcess != null) {
+                  context.setProcess(thisProcess);
+                  manager.execute(context);
+                }
+              }
+            }
+          }
+          //Run the user BusinessProcesses
+          applicationActions = false;
+          applKeySet = new ArrayList((Set) orderedUserActionKeys.keySet());
+          array = applKeySet.toArray();
+          Arrays.sort(array);
+          for (int i = 0; i < array.length; i++) {
+            ObjectHookAction thisAction = (ObjectHookAction) actionList.get(
+                (String) orderedUserActionKeys.get(array[i]));
+            businessProcess = null;
+            if (thisAction != null && thisAction.getEnabled() && thisAction.getTypeId() == actionId && !thisAction.getApplication()) {
+              businessProcess = thisAction.getProcessName();
+            }
+            //Execute the specified business process
+            if (businessProcess != null) {
+              context.setProcessName(businessProcess);
+              if (businessProcessList != null) {
+                BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(
+                    businessProcess);
+                if (thisProcess != null) {
+                  context.setProcess(thisProcess);
+                  manager.execute(context);
+                }
+              }
+            }
           }
         }
-      }
-      //Execute the specified business process
-      if (businessProcess != null) {
+      } else {
         context.setProcessName(businessProcess);
         if (businessProcessList != null) {
-          BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(businessProcess);
+          BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(
+              businessProcess);
           if (thisProcess != null) {
             context.setProcess(thisProcess);
             manager.execute(context);

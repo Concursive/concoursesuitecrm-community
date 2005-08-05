@@ -48,9 +48,9 @@ Client #1 Configures its internal clock
 <?xml version="1.0" standalone="yes"?>
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
   </authentication>
   <transaction id="1">
     <syncClient action="getDateTime"/>
@@ -65,9 +65,9 @@ Client #1 Logs into the server
 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
   </authentication>
   <transaction id="2">
     <meta>
@@ -88,9 +88,9 @@ Client #1 Registers its device
 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
   </authentication>
   <transaction id="3">
     <meta>
@@ -114,9 +114,9 @@ Client #1 Prepares for Synchronization
 <?xml version="1.0" standalone="yes"?>
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
     <clientId>*PUT CLIENT ID HERE*</clientId>
     <lastAnchor/>
     <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
@@ -181,9 +181,9 @@ and limit.
 ** EXAMPLE -- LOOK AT THE OBJECT API BELOW FOR ACTUAL USAGE **
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
     <clientId>*INSERT CLIENT ID*</clientId>
     <lastAnchor>*INSERT LAST ANCHOR OR NULL*</lastAnchor>
     <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
@@ -215,9 +215,9 @@ get the new offset. So:
 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
     <clientId>*PUT CLIENT ID HERE*</clientId>
     <lastAnchor/>
     <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
@@ -241,9 +241,9 @@ Client #1 Ends Synchronization
 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code>
+    <systemId>4</systemId>
     <clientId>*PUT CLIENT ID HERE*</clientId>
     <lastAnchor/>
     <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
@@ -257,9 +257,9 @@ Client #1 Ends Synchronization
 ** Object Properties **
 
   <authentication>
-    <id>ds21.darkhorseventures.com</id> 
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id> 
+    <code>XXXXX</code>
+    <systemId>4</systemId>
     <clientId>93</clientId>
     <lastAnchor/>
     <nextAnchor>2002-5-2 20:12:26</nextAnchor>
@@ -274,7 +274,7 @@ Client #1 Ends Synchronization
       <property>createStatement</property>
     </meta>
     <tableList action="select">
-      <systemId>2</systemId>
+      <systemId>4</systemId>
       <buildCreateStatementsOnly>true</buildCreateStatementsOnly>
     </tableList>
   </transaction>
@@ -287,7 +287,7 @@ Client #1 Ends Synchronization
       <property>syncItem</property>
     </meta>
     <tableList action="select">
-      <systemId>2</systemId>
+      <systemId>4</systemId>
       <buildSyncElementsOnly>true</buildSyncElementsOnly>
     </tableList>
   </transaction>
@@ -444,7 +444,7 @@ Client #1 Ends Synchronization
   ** Connecting to the following address will kick off the processing on the
   ** server:
   
-  http://ds21.darkhorseventures.com/ProcessFTP.do
+  http://www.your_crm_server.com/ProcessFTP.do
   
 
 ...Client inserts a vehicle with options and ad runs (MUST HAVE
@@ -453,9 +453,9 @@ SYNC'D ALL TABLES FIRST):
 <?xml version="1.0" standalone="yes"?> 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code> 
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code> 
+    <systemId>4</systemId>
     <clientId>*PUT YOUR ID HERE*</clientId>
     <lastAnchor/>
     <nextAnchor>2002-04-27 14:30:30</nextAnchor>
@@ -522,9 +522,9 @@ SYNC'D ALL TABLES FIRST):
 <?xml version="1.0" standalone="yes"?> 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code> 
-    <systemId>2</systemId>
+    <id>www.your_crm_server.com</id>
+    <code>XXXXX</code> 
+    <systemId>4</systemId>
     <clientId>*PUT YOUR ID HERE*</clientId>
     <lastAnchor/>
     <nextAnchor>2002-04-27 14:30:30</nextAnchor>

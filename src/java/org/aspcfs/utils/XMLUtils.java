@@ -37,12 +37,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Provides essential methods for working with XML. XMLUtils is also a class
- *  representing an XML document.
+ * Provides essential methods for working with XML. XMLUtils is also a class
+ * representing an XML document.
  *
- *@author     matt rajkowski
- *@created    April 10, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created April 10, 2002
  */
 public class XMLUtils {
 
@@ -52,11 +52,11 @@ public class XMLUtils {
 
 
   /**
-   *  Constructs an XML Document from either a Text String or a Text Document.
+   * Constructs an XML Document from either a Text String or a Text Document.
    *
-   *@param  info           Description of the Parameter
-   *@param  parseXML       Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param info     Description of the Parameter
+   * @param parseXML Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public XMLUtils(String info, boolean parseXML) throws Exception {
     if (parseXML) {
@@ -68,11 +68,11 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  name           Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public static Document createDocument(String name) throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -85,10 +85,10 @@ public class XMLUtils {
 
 
   /**
-   *  Constructor for the XMLUtils object
+   * Constructor for the XMLUtils object
    *
-   *@param  xmlData        Description of Parameter
-   *@exception  Exception  Description of Exception
+   * @param xmlData Description of Parameter
+   * @throws Exception Description of Exception
    */
   public XMLUtils(String xmlData) throws Exception {
     this.parseXML(xmlData);
@@ -96,10 +96,10 @@ public class XMLUtils {
 
 
   /**
-   *  Constructor for the XMLUtils object
+   * Constructor for the XMLUtils object
    *
-   *@param  request        Description of Parameter
-   *@exception  Exception  Description of Exception
+   * @param request Description of Parameter
+   * @throws Exception Description of Exception
    */
   public XMLUtils(HttpServletRequest request) throws Exception {
     StringBuffer data = new StringBuffer();
@@ -125,10 +125,10 @@ public class XMLUtils {
 
 
   /**
-   *  Constructor for the XMLUtils object
+   * Constructor for the XMLUtils object
    *
-   *@param  xmlFile        Description of Parameter
-   *@exception  Exception  Description of Exception
+   * @param xmlFile Description of Parameter
+   * @throws Exception Description of Exception
    */
   public XMLUtils(File xmlFile) throws Exception {
     this.parseXML(xmlFile);
@@ -136,11 +136,11 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the firstChild attribute of the XMLUtils class
+   * Gets the firstChild attribute of the XMLUtils class
    *
-   *@param  document  Description of Parameter
-   *@param  name      Description of Parameter
-   *@return           The firstChild value
+   * @param document Description of Parameter
+   * @param name     Description of Parameter
+   * @return The firstChild value
    */
   public static Element getFirstChild(Document document, String name) {
     Element element = document.getDocumentElement();
@@ -149,11 +149,11 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the firstChild attribute of the XMLUtils class
+   * Gets the firstChild attribute of the XMLUtils class
    *
-   *@param  e     Description of Parameter
-   *@param  name  Description of Parameter
-   *@return       The firstChild value
+   * @param e    Description of Parameter
+   * @param name Description of Parameter
+   * @return The firstChild value
    */
   public static Element getFirstChild(Element e, String name) {
     NodeList nl = e.getChildNodes();
@@ -170,11 +170,11 @@ public class XMLUtils {
 
 
   /**
-   *  Gets all of the children of the XML node, regardless of name, and adds
-   *  them to the specified array
+   * Gets all of the children of the XML node, regardless of name, and adds
+   * them to the specified array
    *
-   *@param  e            Description of Parameter
-   *@param  elementList  Description of Parameter
+   * @param e           Description of Parameter
+   * @param elementList Description of Parameter
    */
   public static void getAllChildren(Element e, AbstractList elementList) {
     NodeList nl = e.getChildNodes();
@@ -188,18 +188,19 @@ public class XMLUtils {
 
 
   /**
-   *  Gets all of the children of the XML node, with a specific name, and adds
-   *  them to the specified array
+   * Gets all of the children of the XML node, with a specific name, and adds
+   * them to the specified array
    *
-   *@param  e            Description of Parameter
-   *@param  name         Description of Parameter
-   *@param  elementList  Description of Parameter
+   * @param e           Description of Parameter
+   * @param name        Description of Parameter
+   * @param elementList Description of Parameter
    */
   public static void getAllChildren(Element e, String name, AbstractList elementList) {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(name)) {
+      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+          name)) {
         elementList.add((Element) n);
       }
     }
@@ -207,17 +208,18 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the allChildrenText attribute of the XMLUtils class
+   * Gets the allChildrenText attribute of the XMLUtils class
    *
-   *@param  e         Description of Parameter
-   *@param  name      Description of Parameter
-   *@param  textList  Description of Parameter
+   * @param e        Description of Parameter
+   * @param name     Description of Parameter
+   * @param textList Description of Parameter
    */
   public static void getAllChildrenText(Element e, String name, AbstractList textList) {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(name)) {
+      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+          name)) {
         String nodeText = getNodeText((Element) n);
         if (nodeText != null) {
           textList.add(nodeText);
@@ -228,17 +230,18 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the firstElement attribute of the XMLUtils class
+   * Gets the firstElement attribute of the XMLUtils class
    *
-   *@param  e     Description of Parameter
-   *@param  name  Description of Parameter
-   *@return       The firstElement value
+   * @param e    Description of Parameter
+   * @param name Description of Parameter
+   * @return The firstElement value
    */
   public static Element getFirstElement(Element e, String name) {
     NodeList nl = e.getElementsByTagName(name);
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(name)) {
+      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+          name)) {
         return (Element) n;
       }
     }
@@ -247,18 +250,19 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the elements attribute of the XMLUtils class
+   * Gets the elements attribute of the XMLUtils class
    *
-   *@param  e     Description of Parameter
-   *@param  name  Description of Parameter
-   *@return       The elements value
+   * @param e    Description of Parameter
+   * @param name Description of Parameter
+   * @return The elements value
    */
   public static ArrayList getElements(Element e, String name) {
     ArrayList list = new ArrayList();
     NodeList nl = e.getElementsByTagName(name);
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(name)) {
+      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(
+          name)) {
         list.add((Element) n);
       }
     }
@@ -267,11 +271,11 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the node text of the specified element, can be TEXT or CDATA,
-   *  returned as a String
+   * Gets the node text of the specified element, can be TEXT or CDATA,
+   * returned as a String
    *
-   *@param  element  Description of Parameter
-   *@return          The nodeText value
+   * @param element Description of Parameter
+   * @return The nodeText value
    */
   public static String getNodeText(Node element) {
     if (element == null) {
@@ -290,17 +294,17 @@ public class XMLUtils {
 
 
   /**
-   *  Populates the specified object with all of the child nodes of the
-   *  specified element, returning a hashmap of all of the invalid
-   *  fields/values.<p>
+   * Populates the specified object with all of the child nodes of the
+   * specified element, returning a hashmap of all of the invalid
+   * fields/values.<p>
+   * <p/>
+   * If a child called "data" is specified, then all of the children of "data"
+   * will be called by "set"ChildName(string) on the object. If the field
+   * cannot be set, then the field and value are put in a HashMap.
    *
-   *  If a child called "data" is specified, then all of the children of "data"
-   *  will be called by "set"ChildName(string) on the object. If the field
-   *  cannot be set, then the field and value are put in a HashMap.
-   *
-   *@param  target   Description of Parameter
-   *@param  element  Description of Parameter
-   *@return          HashMap of field names and values that could not be set
+   * @param target  Description of Parameter
+   * @param element Description of Parameter
+   * @return HashMap of field names and values that could not be set
    */
   public static HashMap populateObject(Object target, Element element) {
     if (target != null && element != null) {
@@ -315,8 +319,10 @@ public class XMLUtils {
           if (ObjectUtils.setParam(target, param, value)) {
             //The value was set successfully
             if (System.getProperty("DEBUG") != null) {
-              String displayParam = param.substring(0, 1).toUpperCase() + param.substring(1);
-              System.out.println("XMLUtils-> set" + displayParam + "(" + value + ")");
+              String displayParam = param.substring(0, 1).toUpperCase() + param.substring(
+                  1);
+              System.out.println(
+                  "XMLUtils-> set" + displayParam + "(" + value + ")");
             }
             //For synchronization, if an object is populated and a lookup will need
             //to be done for the client id, then the lookup attribute will exist
@@ -327,7 +333,8 @@ public class XMLUtils {
               //The value is a TransactionContext parameter to be used by other
               //TransactionItems during processing, so add it to the ignoredList
               if (System.getProperty("DEBUG") != null) {
-                System.out.println("XMLUtils-> set" + param + "(" + value + ") **CONTEXT");
+                System.out.println(
+                    "XMLUtils-> set" + param + "(" + value + ") **CONTEXT");
               }
               ignoredProperties.put(param, value);
             }
@@ -335,7 +342,8 @@ public class XMLUtils {
             //The value was not set successfully, so add it to the ignored list,
             //however the value may be processed later under certain conditions
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("XMLUtils-> set" + param + "(" + value + ") **IGNORED");
+              System.out.println(
+                  "XMLUtils-> set" + param + "(" + value + ") **IGNORED");
             }
             ignoredProperties.put(param, value);
           }
@@ -348,11 +356,11 @@ public class XMLUtils {
 
 
   /**
-   *  Converts a String to an XML String by replacing invalid characters with
-   *  the XML equivalent
+   * Converts a String to an XML String by replacing invalid characters with
+   * the XML equivalent
    *
-   *@param  s  Description of Parameter
-   *@return    Description of the Returned Value
+   * @param s Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String toXMLValue(String s) {
     if (s != null) {
@@ -368,11 +376,11 @@ public class XMLUtils {
 
 
   /**
-   *  Converts an XML String by replacing XML characters with the String
-   *  equivalent
+   * Converts an XML String by replacing XML characters with the String
+   * equivalent
    *
-   *@param  xml  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param xml Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toString(String xml) {
     if (xml != null) {
@@ -388,10 +396,10 @@ public class XMLUtils {
 
 
   /**
-   *  Convert XML to a string using the default encoding, UTF-8
+   * Convert XML to a string using the default encoding, UTF-8
    *
-   *@param  node  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param node Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toString(Node node) {
     return toString(node, "UTF-8");
@@ -399,12 +407,12 @@ public class XMLUtils {
 
 
   /**
-   *  Convert the XML to a string representation using the specified encoding.
-   *  Properties are based on: http://www.ietf.org/rfc/rfc2278.txt
+   * Convert the XML to a string representation using the specified encoding.
+   * Properties are based on: http://www.ietf.org/rfc/rfc2278.txt
    *
-   *@param  node      Description of Parameter
-   *@param  encoding  Description of the Parameter
-   *@return           Description of the Returned Value
+   * @param node     Description of Parameter
+   * @param encoding Description of the Parameter
+   * @return Description of the Returned Value
    */
   public static String toString(Node node, String encoding) {
     try {
@@ -431,10 +439,10 @@ public class XMLUtils {
 
 
   /**
-   *  Output the XML to System.out
+   * Output the XML to System.out
    *
-   *@param  node  Description of Parameter
-   *@return       Description of the Returned Value
+   * @param node Description of Parameter
+   * @return Description of the Returned Value
    */
   public static boolean debug(Node node) {
     try {
@@ -452,9 +460,9 @@ public class XMLUtils {
 
 
   /**
-   *  Sets the cacheXML attribute of the XMLUtils object
+   * Sets the cacheXML attribute of the XMLUtils object
    *
-   *@param  tmp  The new cacheXML value
+   * @param tmp The new cacheXML value
    */
   public void setCacheXML(boolean tmp) {
     cacheXML = tmp;
@@ -462,9 +470,9 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the document attribute of the XMLUtils object
+   * Gets the document attribute of the XMLUtils object
    *
-   *@return    The document value
+   * @return The document value
    */
   public Document getDocument() {
     return document;
@@ -472,9 +480,9 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the documentElement attribute of the XMLUtils object
+   * Gets the documentElement attribute of the XMLUtils object
    *
-   *@return    The documentElement value
+   * @return The documentElement value
    */
   public Element getDocumentElement() {
     return document.getDocumentElement();
@@ -482,9 +490,9 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the xMLString attribute of the XMLUtils object
+   * Gets the xMLString attribute of the XMLUtils object
    *
-   *@return    The xMLString value
+   * @return The xMLString value
    */
   public String getXMLString() {
     if (XMLString == null) {
@@ -495,10 +503,10 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the firstChild attribute of the XMLUtils object
+   * Gets the firstChild attribute of the XMLUtils object
    *
-   *@param  name  Description of Parameter
-   *@return       The firstChild value
+   * @param name Description of Parameter
+   * @return The firstChild value
    */
   public Element getFirstChild(String name) {
     return getFirstChild(this.document, name);
@@ -506,17 +514,19 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the firstElement attribute of the XMLUtils object
+   * Gets the firstElement attribute of the XMLUtils object
    *
-   *@param  name  Description of the Parameter
-   *@return       The firstElement value
+   * @param name Description of the Parameter
+   * @return The firstElement value
    */
   public Element getFirstElement(String name) {
     return getFirstElement(this.getDocumentElement(), name);
   }
 
-  /** Locate a specific element based on its name and the value of one of its
+  /**
+   * Locate a specific element based on its name and the value of one of its
    * attributes.
+   *
    * @param mappings
    * @param nodeName
    * @param attributeName
@@ -538,9 +548,9 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String toString() {
     return XMLUtils.toString(document);
@@ -548,10 +558,10 @@ public class XMLUtils {
 
 
   /**
-   *  Turns a String with XML into an XML document
+   * Turns a String with XML into an XML document
    *
-   *@param  xmlToParse     Description of Parameter
-   *@exception  Exception  Description of Exception
+   * @param xmlToParse Description of Parameter
+   * @throws Exception Description of Exception
    */
   private void parseXML(String xmlToParse) throws Exception {
     StringReader strXML = new StringReader(xmlToParse);
@@ -564,10 +574,10 @@ public class XMLUtils {
 
 
   /**
-   *  Builds an XML document from the specified File object
+   * Builds an XML document from the specified File object
    *
-   *@param  xmlFileToParse  Description of Parameter
-   *@exception  Exception   Description of Exception
+   * @param xmlFileToParse Description of Parameter
+   * @throws Exception Description of Exception
    */
   private void parseXML(File xmlFileToParse) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

@@ -15,39 +15,37 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.Permission;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class PermissionList extends Vector {
 
-  private String emptyHtmlSelectRecord = null;
-  private int userId = -1;
   private String currentCategory = "!new";
   private boolean viewpointsOnly = false;
 
 
   /**
-   *  Constructor for the PermissionList object
+   * Constructor for the PermissionList object
    */
-  public PermissionList() { }
+  public PermissionList() {
+  }
 
 
   /**
-   *  Constructor for the PermissionList object
+   * Constructor for the PermissionList object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public PermissionList(Connection db) throws SQLException {
     buildList(db);
@@ -55,9 +53,9 @@ public class PermissionList extends Vector {
 
 
   /**
-   *  Sets the viewpointsOnly attribute of the PermissionList object
+   * Sets the viewpointsOnly attribute of the PermissionList object
    *
-   *@param  viewpointsOnly  The new viewpointsOnly value
+   * @param viewpointsOnly The new viewpointsOnly value
    */
   public void setViewpointsOnly(boolean viewpointsOnly) {
     this.viewpointsOnly = viewpointsOnly;
@@ -65,9 +63,9 @@ public class PermissionList extends Vector {
 
 
   /**
-   *  Gets the viewpointsOnly attribute of the PermissionList object
+   * Gets the viewpointsOnly attribute of the PermissionList object
    *
-   *@return    The viewpointsOnly value
+   * @return The viewpointsOnly value
    */
   public boolean getViewpointsOnly() {
     return viewpointsOnly;
@@ -75,10 +73,10 @@ public class PermissionList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -87,7 +85,6 @@ public class PermissionList extends Vector {
     int items = -1;
 
     StringBuffer sqlSelect = new StringBuffer();
-    StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
@@ -97,9 +94,10 @@ public class PermissionList extends Vector {
         "FROM permission p, permission_category c " +
         "WHERE p.category_id = c.category_id ");
     createFilter(sqlFilter);
-    sqlOrder.append("ORDER BY c.level, p.level ");
+    sqlOrder.append("ORDER BY c.\"level\", c.category, p.\"level\" ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -113,9 +111,9 @@ public class PermissionList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -132,11 +130,11 @@ public class PermissionList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -151,10 +149,10 @@ public class PermissionList extends Vector {
 
 
   /**
-   *  Gets the newCategory attribute of the PermissionList object
+   * Gets the newCategory attribute of the PermissionList object
    *
-   *@param  thisCategory  Description of the Parameter
-   *@return               The newCategory value
+   * @param thisCategory Description of the Parameter
+   * @return The newCategory value
    */
   public boolean isNewCategory(String thisCategory) {
     if (thisCategory.equals(currentCategory)) {

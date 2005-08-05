@@ -15,42 +15,67 @@
  */
 package org.aspcfs.utils;
 
-import java.util.*;
-import java.sql.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.apps.common.ReportConstants;
-import org.aspcfs.modules.system.base.*;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Map;
 
 /**
- *  Utilities to work with the sites that have been installed on the system
+ * Utilities to work with the sites that have been installed on the system
  *
- *@author     matt rajkowski
- *@created    October 3, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created October 3, 2003
  */
 public class SiteUtils {
 
   /**
-   *  Generates a list of sites depending on the configuration parameters
-   *  specified, generally a build.properties file config
+   * Generates a list of sites depending on the configuration parameters
+   * specified, generally a build.properties file config
    *
-   *@param  config  Description of the Parameter
-   *@return         The siteList value
+   * @return The siteList value
    */
-  public static SiteList getSiteList(HashMap config) {
+  public static SiteList getSiteList(ApplicationPrefs prefs, ConnectionPool cp) {
+    return SiteUtils.getSiteList(prefs.getPrefs(), cp);
+  }
+
+  /**
+   * Generates a list of sites depending on the configuration parameters
+   * specified, generally a build.properties file config
+   *
+   * @param config Description of the Parameter
+   * @return The siteList value
+   */
+  public static SiteList getSiteList(Map config) {
+    return getSiteList(config, null);
+  }
+
+  public static SiteList getSiteList(Map config, ConnectionPool cp) {
+    Connection dbSites = null;
     SiteList siteList = new SiteList();
     String appCode = (String) config.get("GATEKEEPER.APPCODE");
     String baseName = (String) config.get("GATEKEEPER.URL");
     String dbUser = (String) config.get("GATEKEEPER.USER");
     String dbPass = (String) config.get("GATEKEEPER.PASSWORD");
+    String driver = (String) config.get("GATEKEEPER.DRIVER");
     try {
       if ("true".equals((String) config.get("WEBSERVER.ASPMODE"))) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("SiteUtils-> Processing site list: " + (String) config.get("GATEKEEPER.DRIVER"));
+        if (cp != null) {
+          ConnectionElement ce = new ConnectionElement(
+              baseName, dbUser, dbPass);
+          ce.setDriver(driver);
+          dbSites = cp.getConnection(ce);
+        } else {
+          //Build list of sites to process
+          Class.forName(driver);
+          dbSites = DriverManager.getConnection(baseName, dbUser, dbPass);
         }
-        //Build list of sites to process
-        Class.forName((String) config.get("GATEKEEPER.DRIVER"));
-        Connection dbSites = DriverManager.getConnection(
-            baseName, dbUser, dbPass);
         siteList.setSiteCode(appCode);
         siteList.setEnabled(ReportConstants.TRUE);
         siteList.buildList(dbSites);
@@ -62,13 +87,19 @@ public class SiteUtils {
         thisSite.setDatabaseUrl((String) config.get("GATEKEEPER.URL"));
         thisSite.setDatabaseName((String) config.get("GATEKEEPER.DATABASE"));
         thisSite.setDatabaseUsername((String) config.get("GATEKEEPER.USER"));
-        thisSite.setDatabasePassword((String) config.get("GATEKEEPER.PASSWORD"));
+        thisSite.setDatabasePassword(
+            (String) config.get("GATEKEEPER.PASSWORD"));
         thisSite.setSiteCode((String) config.get("GATEKEEPER.APPCODE"));
         thisSite.setVirtualHost((String) config.get("WEBSERVER.URL"));
+        thisSite.setLanguage((String) config.get("SYSTEM.LANGUAGE"));
         siteList.add(thisSite);
       }
     } catch (Exception e) {
       return null;
+    } finally {
+      if (cp != null) {
+        cp.free(dbSites);
+      }
     }
     return siteList;
   }

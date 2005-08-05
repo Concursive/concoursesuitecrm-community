@@ -31,19 +31,19 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    February 16, 2004
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created February 16, 2004
  */
 public final class AssetSelector extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListAssets(ActionContext context) {
 
@@ -53,15 +53,18 @@ public final class AssetSelector extends CFSModule {
     String listType = context.getRequest().getParameter("listType");
     AssetList assetList = null;
     AssetList finalAssets = null;
-    ArrayList selectedList = (ArrayList) context.getSession().getAttribute("SelectedAssets");
+    ArrayList selectedList = (ArrayList) context.getSession().getAttribute(
+        "SelectedAssets");
     int tmpContractId = -1;
     SystemStatus systemStatus = this.getSystemStatus(context);
-    if (selectedList == null || "true".equals(context.getRequest().getParameter("reset"))) {
+    if (selectedList == null || "true".equals(
+        context.getRequest().getParameter("reset"))) {
       selectedList = new ArrayList();
     }
 
     if (context.getRequest().getParameter("previousSelection") != null) {
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("previousSelection"), "|");
       while (st.hasMoreTokens()) {
         selectedList.add(String.valueOf(st.nextToken()));
       }
@@ -74,7 +77,8 @@ public final class AssetSelector extends CFSModule {
 
       if ("list".equals(listType)) {
         while (context.getRequest().getParameter("hiddenAssetId" + rowCount) != null) {
-          int assetId = Integer.parseInt(context.getRequest().getParameter("hiddenAssetId" + rowCount));
+          int assetId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAssetId" + rowCount));
           if (context.getRequest().getParameter("asset" + rowCount) != null) {
             if (!selectedList.contains(String.valueOf(assetId))) {
               selectedList.add(String.valueOf(assetId));
@@ -86,11 +90,14 @@ public final class AssetSelector extends CFSModule {
         }
       }
 
-      if ("true".equals((String) context.getRequest().getParameter("finalsubmit"))) {
+      if ("true".equals(
+          (String) context.getRequest().getParameter("finalsubmit"))) {
         //Handle single selection case
         if ("single".equals(listType)) {
-          rowCount = Integer.parseInt(context.getRequest().getParameter("rowcount"));
-          int assetId = Integer.parseInt(context.getRequest().getParameter("hiddenAssetId" + rowCount));
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          int assetId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAssetId" + rowCount));
           selectedList.clear();
           selectedList.add(String.valueOf(assetId));
         }
@@ -104,16 +111,18 @@ public final class AssetSelector extends CFSModule {
           finalAssets.add(thisAsset);
         }
       }
-      
+
       LookupList assetStatusList = new LookupList(db, "lookup_asset_status");
-      assetStatusList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      assetStatusList.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("assetStatusList", assetStatusList);
 
       buildCategories(context, db, null);
 
-      try{
-        tmpContractId = Integer.parseInt(context.getRequest().getParameter("contractId"));
-      }catch(Exception e){
+      try {
+        tmpContractId = Integer.parseInt(
+            context.getRequest().getParameter("contractId"));
+      } catch (Exception e) {
         tmpContractId = -1;
       }
       assetList.setServiceContractId(tmpContractId);
@@ -139,30 +148,40 @@ public final class AssetSelector extends CFSModule {
   }
 
 
-
   /**
-   *  Sets the parameters attribute of the AccountSelector object
+   * Sets the parameters attribute of the AccountSelector object
    *
-   *@param  context              The new parameters value
-   *@param  assetList            The new parameters value
+   * @param context   The new parameters value
+   * @param assetList The new parameters value
    */
   private void setParameters(AssetList assetList, ActionContext context) {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+    //Check if a text-based filter was entered
+    String serialNumberLabel = thisSystem.getLabel(
+        "accounts.accountasset_include.SerialNumber");
+    String contractNumberLabel = thisSystem.getLabel(
+        "accounts.accountasset_include.ServiceContractNumber");
 
     String serialNumber = context.getRequest().getParameter("serialNumber");
-    String contractNumber = context.getRequest().getParameter("contractNumber");
+    String contractNumber = context.getRequest().getParameter(
+        "contractNumber");
+
     if (serialNumber != null) {
-      if (!"Serial Number".equals(serialNumber) && !"".equals(serialNumber.trim())) {
+      if (!serialNumberLabel.equals(serialNumber) && !"".equals(
+          serialNumber.trim())) {
         assetList.setSerialNumber("%" + serialNumber + "%");
       }
     }
     if (contractNumber != null) {
-      if (!"Service Contract Number".equals(contractNumber) && !"".equals(contractNumber.trim())) {
+      if (!contractNumberLabel.equals(contractNumber) && !"".equals(
+          contractNumber.trim())) {
         assetList.setServiceContractNumber("%" + contractNumber + "%");
         assetList.setServiceContractId(-1);
       }
     }
 
-    PagedListInfo assetListInfo = this.getPagedListInfo(context, "AssetListInfo");
+    PagedListInfo assetListInfo = this.getPagedListInfo(
+        context, "AssetListInfo");
     //filter for departments & project teams
     if (!assetListInfo.hasListFilters()) {
       assetListInfo.addFilter(1, "0");
@@ -170,18 +189,19 @@ public final class AssetSelector extends CFSModule {
     //add filters
     FilterList filters = new FilterList();
     filters.setSource(Constants.ASSETS);
-    filters.build(context.getRequest());
+    filters.build(thisSystem, context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
     //  set Filter for retrieving contracts depending on type of asset
     String firstFilter = filters.getFirstFilter(assetListInfo.getListView());
-    if("allassets".equals(firstFilter)){
+    if ("allassets".equals(firstFilter)) {
       assetList.setAllAssets(true);
-    }else{
+    } else {
       assetList.setAllAssets(false);
     }
-    
+
     String orgId = context.getRequest().getParameter("orgId");
-    assetListInfo.setLink("AssetSelector.do?command=ListAssets&orgId=" + orgId);
+    assetListInfo.setLink(
+        "AssetSelector.do?command=ListAssets&orgId=" + orgId);
     assetList.setPagedListInfo(assetListInfo);
     assetList.setOrgId(Integer.parseInt(orgId));
 
@@ -190,20 +210,24 @@ public final class AssetSelector extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  thisAsset         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param context   Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param thisAsset Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildCategories(ActionContext context, Connection db, Asset thisAsset) throws SQLException {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+
     CategoryList categoryList1 = new CategoryList("asset_category");
     categoryList1.setCatLevel(0);
     categoryList1.setParentCode(0);
     categoryList1.buildList(db);
-    categoryList1.setHtmlJsEvent("onChange=\"javascript:updateCategoryList('1');\"");
-    categoryList1.getCatListSelect().addItem(-1, "Undetermined");
+    categoryList1.setHtmlJsEvent(
+        "onChange=\"javascript:updateCategoryList('1');\"");
+    categoryList1.getCatListSelect().addItem(
+        -1, thisSystem.getLabel("accounts.assets.category.undetermined"));
     context.getRequest().setAttribute("categoryList1", categoryList1);
 
     CategoryList categoryList2 = new CategoryList("asset_category");
@@ -214,8 +238,10 @@ public final class AssetSelector extends CFSModule {
       categoryList2.setParentCode(thisAsset.getLevel1());
       categoryList2.buildList(db);
     }
-    categoryList2.setHtmlJsEvent("onChange=\"javascript:updateCategoryList('2');\"");
-    categoryList2.getCatListSelect().addItem(-1, "Undetermined");
+    categoryList2.setHtmlJsEvent(
+        "onChange=\"javascript:updateCategoryList('2');\"");
+    categoryList2.getCatListSelect().addItem(
+        -1, thisSystem.getLabel("accounts.assets.category.undetermined"));
     context.getRequest().setAttribute("categoryList2", categoryList2);
 
     CategoryList categoryList3 = new CategoryList("asset_category");
@@ -226,7 +252,8 @@ public final class AssetSelector extends CFSModule {
       categoryList3.setParentCode(thisAsset.getLevel2());
       categoryList3.buildList(db);
     }
-    categoryList3.getCatListSelect().addItem(-1, "Undetermined");
+    categoryList3.getCatListSelect().addItem(
+        -1, thisSystem.getLabel("accounts.assets.category.undetermined"));
     context.getRequest().setAttribute("categoryList3", categoryList3);
   }
 }

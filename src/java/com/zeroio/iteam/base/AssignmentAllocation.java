@@ -21,12 +21,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    October 29, 2004
- *@version    $Id: AssignmentAllocation.java,v 1.3 2004/10/29 05:14:39 matt Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: AssignmentAllocation.java,v 1.3 2004/10/29 05:14:39 matt Exp
+ *          $
+ * @created October 29, 2004
  */
 public class AssignmentAllocation {
 
@@ -42,9 +42,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the valid attribute of the AssignmentAllocation object
+   * Gets the valid attribute of the AssignmentAllocation object
    *
-   *@return    The valid value
+   * @return The valid value
    */
   public boolean getValid() {
     return valid;
@@ -52,9 +52,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the valid attribute of the AssignmentAllocation object
+   * Sets the valid attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new valid value
+   * @param tmp The new valid value
    */
   public void setValid(boolean tmp) {
     this.valid = tmp;
@@ -62,9 +62,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the startDate attribute of the AssignmentAllocation object
+   * Gets the startDate attribute of the AssignmentAllocation object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public Timestamp getStartDate() {
     return startDate;
@@ -72,9 +72,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the startDate attribute of the AssignmentAllocation object
+   * Sets the startDate attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(Timestamp tmp) {
     this.startDate = tmp;
@@ -82,9 +82,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the endDate attribute of the AssignmentAllocation object
+   * Gets the endDate attribute of the AssignmentAllocation object
    *
-   *@return    The endDate value
+   * @return The endDate value
    */
   public Timestamp getEndDate() {
     return endDate;
@@ -92,9 +92,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the endDate attribute of the AssignmentAllocation object
+   * Sets the endDate attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(Timestamp tmp) {
     this.endDate = tmp;
@@ -102,9 +102,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the totalHours attribute of the AssignmentAllocation object
+   * Gets the totalHours attribute of the AssignmentAllocation object
    *
-   *@return    The totalHours value
+   * @return The totalHours value
    */
   public double getTotalHours() {
     return totalHours;
@@ -112,9 +112,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the totalHours attribute of the AssignmentAllocation object
+   * Sets the totalHours attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new totalHours value
+   * @param tmp The new totalHours value
    */
   public void setTotalHours(double tmp) {
     this.totalHours = tmp;
@@ -122,9 +122,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the percentComplete attribute of the AssignmentAllocation object
+   * Gets the percentComplete attribute of the AssignmentAllocation object
    *
-   *@return    The percentComplete value
+   * @return The percentComplete value
    */
   public int getPercentComplete() {
     return percentComplete;
@@ -132,9 +132,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the percentComplete attribute of the AssignmentAllocation object
+   * Sets the percentComplete attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new percentComplete value
+   * @param tmp The new percentComplete value
    */
   public void setPercentComplete(int tmp) {
     this.percentComplete = tmp;
@@ -142,9 +142,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the estimatedDailyHours attribute of the AssignmentAllocation object
+   * Gets the estimatedDailyHours attribute of the AssignmentAllocation object
    *
-   *@return    The estimatedDailyHours value
+   * @return The estimatedDailyHours value
    */
   public HashMap getEstimatedDailyHours() {
     return estimatedDailyHours;
@@ -152,9 +152,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the estimatedDailyHours attribute of the AssignmentAllocation object
+   * Sets the estimatedDailyHours attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new estimatedDailyHours value
+   * @param tmp The new estimatedDailyHours value
    */
   public void setEstimatedDailyHours(HashMap tmp) {
     this.estimatedDailyHours = tmp;
@@ -162,9 +162,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Gets the actualDailyHours attribute of the AssignmentAllocation object
+   * Gets the actualDailyHours attribute of the AssignmentAllocation object
    *
-   *@return    The actualDailyHours value
+   * @return The actualDailyHours value
    */
   public HashMap getActualDailyHours() {
     return actualDailyHours;
@@ -172,9 +172,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Sets the actualDailyHours attribute of the AssignmentAllocation object
+   * Sets the actualDailyHours attribute of the AssignmentAllocation object
    *
-   *@param  tmp  The new actualDailyHours value
+   * @param tmp The new actualDailyHours value
    */
   public void setActualDailyHours(HashMap tmp) {
     this.actualDailyHours = tmp;
@@ -182,9 +182,9 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Constructor for the AssignmentAllocation object
+   * Constructor for the AssignmentAllocation object
    *
-   *@param  assignment  Description of the Parameter
+   * @param assignment Description of the Parameter
    */
   public AssignmentAllocation(Assignment assignment, DailyTimesheetList timesheet) {
     // raw data
@@ -219,7 +219,7 @@ public class AssignmentAllocation {
           avgPerDay = totalHours / numberOfDays;
         }
         // plot the days
-        for (int i = 0; i < numberOfDays; ) {
+        for (int i = 0; i < numberOfDays;) {
           if (timesheet.isWorkable(startCal)) {
             i++;
             add(startCal, avgPerDay);
@@ -239,7 +239,7 @@ public class AssignmentAllocation {
             numberOfDays = (totalHours / 8);
           }
           double avgPerDay = totalHours / numberOfDays;
-          for (int i = 0; i < numberOfDays; ) {
+          for (int i = 0; i < numberOfDays;) {
             if (timesheet.isWorkable(endCal)) {
               i++;
               add(endCal, avgPerDay);
@@ -284,7 +284,8 @@ public class AssignmentAllocation {
     int count = 0;
     Calendar startCal = Calendar.getInstance();
     startCal.setTimeInMillis(startDate.getTime());
-    while (startCal.getTime().before(endDate) || startCal.getTime().equals(endDate)) {
+    while (startCal.getTime().before(endDate) || startCal.getTime().equals(
+        endDate)) {
       if (timesheet.isWorkable(startCal)) {
         ++count;
       }
@@ -295,15 +296,16 @@ public class AssignmentAllocation {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  cal      Description of the Parameter
-   *@param  average  Description of the Parameter
+   * @param cal     Description of the Parameter
+   * @param average Description of the Parameter
    */
   public void add(Calendar cal, double average) {
     SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
     formatter.applyPattern("M/d/yyyy");
-    estimatedDailyHours.put(formatter.format(cal.getTime()), new Double(average));
+    estimatedDailyHours.put(
+        formatter.format(cal.getTime()), new Double(average));
   }
 }
 

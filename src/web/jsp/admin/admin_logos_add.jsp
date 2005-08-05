@@ -82,6 +82,11 @@
 	}
 </script>
 <dhv:formMessage showSpace="false"/>
+<table class="note" cellspacing="0">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><dhv:label name="admin.logos.uploadNote.text">NOTE: The logo file being uploaded should be in one of the following formats. *.gif *.jpg *.jpeg *.tiff *.png *.bmp *.wmf</dhv:label></td></tr>
+</table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

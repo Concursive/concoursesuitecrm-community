@@ -15,22 +15,24 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Hashtable;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.Constants;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    March 26, 2002
- *@version    $Id: SearchCriteriaListList.java,v 1.10 2003/03/07 14:13:39
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: SearchCriteriaListList.java,v 1.10 2003/03/07 14:13:39
+ *          mrajkowski Exp $
+ * @created March 26, 2002
  */
 public class SearchCriteriaListList extends ArrayList {
   //Properties to filter the resulting list
@@ -49,15 +51,16 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Constructor for the SearchCriteriaListList object
+   * Constructor for the SearchCriteriaListList object
    */
-  public SearchCriteriaListList() { }
+  public SearchCriteriaListList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the SearchCriteriaListList object
+   * Sets the pagedListInfo attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -65,9 +68,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the SearchCriteriaListList object
+   * Sets the owner attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -75,9 +78,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the SearchCriteriaListList object
+   * Sets the owner attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -85,9 +88,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the ownerIdRange attribute of the SearchCriteriaListList object
+   * Sets the ownerIdRange attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new ownerIdRange value
+   * @param tmp The new ownerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -95,9 +98,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the tableName attribute of the SearchCriteriaListList object
+   * Gets the tableName attribute of the SearchCriteriaListList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -105,9 +108,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the uniqueField attribute of the SearchCriteriaListList object
+   * Gets the uniqueField attribute of the SearchCriteriaListList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -115,9 +118,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the SearchCriteriaListList object
+   * Gets the lastAnchor attribute of the SearchCriteriaListList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -125,9 +128,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the SearchCriteriaListList object
+   * Gets the nextAnchor attribute of the SearchCriteriaListList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -135,9 +138,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the syncType attribute of the SearchCriteriaListList object
+   * Gets the syncType attribute of the SearchCriteriaListList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -145,9 +148,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the SearchCriteriaListList object
+   * Sets the lastAnchor attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -155,9 +158,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the SearchCriteriaListList object
+   * Sets the nextAnchor attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -165,9 +168,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the syncType attribute of the SearchCriteriaListList object
+   * Sets the syncType attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -175,9 +178,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the campaignId attribute of the SearchCriteriaListList object
+   * Sets the campaignId attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -185,9 +188,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the campaignId attribute of the SearchCriteriaListList object
+   * Sets the campaignId attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
@@ -195,9 +198,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the buildCriteria attribute of the SearchCriteriaListList object
+   * Sets the buildCriteria attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new buildCriteria value
+   * @param tmp The new buildCriteria value
    */
   public void setBuildCriteria(boolean tmp) {
     this.buildCriteria = tmp;
@@ -205,9 +208,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Sets the buildCriteria attribute of the SearchCriteriaListList object
+   * Sets the buildCriteria attribute of the SearchCriteriaListList object
    *
-   *@param  tmp  The new buildCriteria value
+   * @param tmp The new buildCriteria value
    */
   public void setBuildCriteria(String tmp) {
     this.buildCriteria = DatabaseUtils.parseBoolean(tmp);
@@ -215,9 +218,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the SearchCriteriaListList object
+   * Gets the pagedListInfo attribute of the SearchCriteriaListList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -225,9 +228,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the SearchCriteriaListList object
+   * Gets the owner attribute of the SearchCriteriaListList object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -235,10 +238,10 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -258,7 +261,8 @@ public class SearchCriteriaListList extends ArrayList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -270,9 +274,10 @@ public class SearchCriteriaListList extends ArrayList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(name) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -299,20 +304,14 @@ public class SearchCriteriaListList extends ArrayList {
         "scl.* " +
         "FROM saved_criterialist scl " +
         "WHERE scl.id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       SearchCriteriaList thisList = new SearchCriteriaList(rs);
       this.add(thisList);
     }
@@ -329,11 +328,11 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.3
+   * @param sqlFilter Description of Parameter
+   * @since 1.3
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -349,19 +348,20 @@ public class SearchCriteriaListList extends ArrayList {
       sqlFilter.append("AND scl.owner IN (" + ownerIdRange + ") ");
     }
     if (campaignId != -1) {
-      sqlFilter.append("AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = ?) ");
+      sqlFilter.append(
+          "AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = ?) ");
     }
   }
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.3
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.3
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -379,10 +379,10 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  listB  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param listB Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean containsItem(SearchCriteriaList listB) {
     //Similar to contains, but will find copies as well
@@ -398,9 +398,9 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  listB  Description of the Parameter
+   * @param listB Description of the Parameter
    */
   public void removeItem(SearchCriteriaList listB) {
     Iterator i = this.iterator();

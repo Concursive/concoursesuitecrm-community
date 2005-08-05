@@ -42,19 +42,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    November 19, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created November 19, 2004
  */
 public final class LeadsQuotes extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandQuoteList(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -64,18 +64,24 @@ public final class LeadsQuotes extends CFSModule {
     OpportunityHeader thisHeader = null;
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
     //Get Viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     //Check parameters
     if (context.getRequest().getParameter("headerId") != null) {
-      headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
+      headerId = Integer.parseInt(
+          context.getRequest().getParameter("headerId"));
     } else {
-      headerId = Integer.parseInt((String) context.getRequest().getAttribute("headerId"));
+      headerId = Integer.parseInt(
+          (String) context.getRequest().getAttribute("headerId"));
     }
     Connection db = null;
     QuoteList quotes = new QuoteList();
-    PagedListInfo quoteListInfo = this.getPagedListInfo(context, "LeadsQuoteListInfo", "qe.group_id", "desc");
-    quoteListInfo.setLink("LeadsQuotes.do?command=QuoteList&headerId=" + headerId + RequestUtils.addLinkParams(context.getRequest(), "viewSource"));
+    PagedListInfo quoteListInfo = this.getPagedListInfo(
+        context, "LeadsQuoteListInfo", "qe.group_id", "desc");
+    quoteListInfo.setLink(
+        "LeadsQuotes.do?command=QuoteList&headerId=" + headerId + RequestUtils.addLinkParams(
+            context.getRequest(), "viewSource"));
     quotes.setPagedListInfo(quoteListInfo);
     try {
       db = this.getConnection(context);
@@ -86,12 +92,16 @@ public final class LeadsQuotes extends CFSModule {
       //Generate the quote list
       quoteListInfo.setSearchCriteria(quotes, context);
       quotes.setHeaderId(headerId);
+      if (thisHeader.isTrashed()) {
+        quotes.setIncludeOnlyTrashed(true);
+      }
       quotes.buildList(db);
       context.getRequest().setAttribute("quoteList", quotes);
       addRecentItem(context, thisHeader);
       //build the lookup lists
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_quote_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_quote_status");
       statusSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("quoteStatusList", statusSelect);
       return ("QuoteListOK");
@@ -105,16 +115,17 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-view"))) {
       return ("PermissionError");
     }
-    addModuleBean(context, "View Opportunity Quotes", "View Opportunity Quote Details");
+    addModuleBean(
+        context, "View Opportunity Quotes", "View Opportunity Quote Details");
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
@@ -135,7 +146,8 @@ public final class LeadsQuotes extends CFSModule {
     ProductOptionValuesList valuesList = null;
     OpportunityHeader thisHeader = null;
     //Get Viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     Organization thisOrganization = null;
     try {
@@ -146,7 +158,8 @@ public final class LeadsQuotes extends CFSModule {
       quote.queryRecord(db, Integer.parseInt(quoteId));
       quote.retrieveTicket(db);
       if (quote.getHeaderId() == -1) {
-        context.getRequest().setAttribute("actionError",
+        context.getRequest().setAttribute(
+            "actionError",
             "Quote unrelated to the current Opportunity");
         return "UserError";
       }
@@ -194,13 +207,15 @@ public final class LeadsQuotes extends CFSModule {
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
       if (quote.getLogoFileId() > 0) {
-				FileItem thisItem = new FileItem(db, quote.getLogoFileId() , Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
-				context.getRequest().setAttribute("fileItem", thisItem);
-			}
+        FileItem thisItem = new FileItem(
+            db, quote.getLogoFileId(), Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
+        context.getRequest().setAttribute("fileItem", thisItem);
+      }
     } catch (Exception errorMessage) {
       errorMessage.printStackTrace();
       context.getRequest().setAttribute("Error", errorMessage);
@@ -215,20 +230,22 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRemoveProduct(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     String quoteName = (String) context.getRequest().getParameter("quoteId");
-    String productName = (String) context.getRequest().getParameter("productId");
+    String productName = (String) context.getRequest().getParameter(
+        "productId");
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
@@ -255,10 +272,10 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveNotes(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-view"))) {
@@ -266,11 +283,14 @@ public final class LeadsQuotes extends CFSModule {
     }
     boolean isValid = false;
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     int quoteId = -1;
+    int recordCount = -1;
     OpportunityHeader header = null;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     StringBuffer oldNotes = new StringBuffer("");
     User user = this.getUser(context, this.getUserId(context));
     String version = (String) context.getRequest().getParameter("version");
@@ -280,6 +300,7 @@ public final class LeadsQuotes extends CFSModule {
     int orgId = user.getContact().getOrgId();
     QuoteNote quoteNote = null;
     Quote quote = null;
+    Quote previousQuote = null;
     Quote notes = (Quote) context.getFormBean();
     if (notes == null) {
       notes = new Quote();
@@ -295,7 +316,8 @@ public final class LeadsQuotes extends CFSModule {
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
       context.getRequest().setAttribute("quote", quote);
-      
+      previousQuote = new Quote(db, quoteId);
+
       header = new OpportunityHeader();
       header.queryRecord(db, quote.getHeaderId());
       context.getRequest().setAttribute("opportunityHeader", header);
@@ -320,17 +342,22 @@ public final class LeadsQuotes extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
       if (quote.getStatusId() == list.getIdFromValue("Rejected by customer")) {
         quote.setStatusId(list.getIdFromValue("Pending customer acceptance"));
-        Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+        Timestamp currentTimestamp = new Timestamp(
+            Calendar.getInstance().getTimeInMillis());
         quote.setIssuedDate(currentTimestamp);
         quote.setStatusDate(currentTimestamp);
         //update the quote
         isValid = isValid && this.validateObject(context, db, quote);
         if (isValid) {
-          quote.update(db);
+          recordCount = quote.update(db);
+        }
+        if (recordCount == 1) {
+          this.processUpdateHook(context, previousQuote, quote);
         }
       }
 
@@ -352,24 +379,26 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSubmit(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
     int quoteId = -1;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     Quote quote = null;
     Connection db = null;
     Quote quoteBean = (Quote) context.getFormBean();
@@ -395,31 +424,34 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
       return ("PermissionError");
     }
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
     Quote quote = null;
-    int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
+    int quoteId = Integer.parseInt(
+        (String) context.getRequest().getParameter("quoteId"));
     Connection db = null;
     try {
       db = getConnection(context);
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
-      context.getRequest().setAttribute("refreshUrl", "LeadsQuotes.do?command=QuoteList&headerId=" + quote.getHeaderId());
+      context.getRequest().setAttribute(
+          "refreshUrl", "LeadsQuotes.do?command=QuoteList&headerId=" + quote.getHeaderId());
       quote.delete(db);
     } catch (Exception e) {
       e.printStackTrace();
@@ -433,10 +465,10 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
@@ -466,16 +498,21 @@ public final class LeadsQuotes extends CFSModule {
       htmlDialog.setTitle("Centric CRM: Quote Management");
       DependencyList dependencies = quote.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (quote.getOrderId(db) != -1) {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-        htmlDialog.setHeader(systemStatus.getLabel("quotes.deleteRelatedOrdersFirst"));
-        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        htmlDialog.setHeader(
+            systemStatus.getLabel("quotes.deleteRelatedOrdersFirst"));
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       } else {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='LeadsQuotes.do?command=Delete&quoteId=" + quote.getId() + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='LeadsQuotes.do?command=Delete&quoteId=" + quote.getId() + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -489,17 +526,18 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyForm(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
@@ -509,7 +547,8 @@ public final class LeadsQuotes extends CFSModule {
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
     }
-    String quoteIdString = (String) context.getRequest().getAttribute("quoteId");
+    String quoteIdString = (String) context.getRequest().getAttribute(
+        "quoteId");
     if (quoteIdString == null || "".equals(quoteIdString)) {
       quoteIdString = (String) context.getRequest().getParameter("quoteId");
     }
@@ -523,7 +562,8 @@ public final class LeadsQuotes extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
@@ -533,23 +573,28 @@ public final class LeadsQuotes extends CFSModule {
 
       int headerId = quote.getHeaderId();
       if (headerId != -1) {
-        OpportunityHeader opportunityHeader = new OpportunityHeader(db, headerId);
-        context.getRequest().setAttribute("opportunityHeader", opportunityHeader);
+        OpportunityHeader opportunityHeader = new OpportunityHeader(
+            db, headerId);
+        context.getRequest().setAttribute(
+            "opportunityHeader", opportunityHeader);
       }
       ContactList contactList = new ContactList();
       contactList.setOrgId(quote.getOrgId());
+      contactList.setIncludeEnabled(Constants.UNDEFINED);
+      contactList.setDefaultContactId(quote.getContactId());
       contactList.buildList(db);
       context.getRequest().setAttribute("contactList", contactList);
 
       Organization orgDetails = new Organization(db, quote.getOrgId());
       context.getRequest().setAttribute("OrgDetails", orgDetails);
 
-			//Create a list for selection of a logo file
-			FileItemList itemList = new FileItemList();
-			itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
-			itemList.setLinkItemId(Constants.QUOTES);
-			itemList.buildList(db);
-			context.getRequest().setAttribute("fileItemList", itemList);
+      //Create a list for selection of a logo file
+      FileItemList itemList = new FileItemList();
+      itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
+      itemList.setLinkItemId(Constants.QUOTES);
+      itemList.buildList(db);
+      context.getRequest().setAttribute("fileItemList", itemList);
+      context.getRequest().setAttribute("systemStatus", systemStatus);
     } catch (Exception e) {
       // Go through the SystemError process
       e.printStackTrace();
@@ -563,17 +608,18 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
@@ -589,13 +635,15 @@ public final class LeadsQuotes extends CFSModule {
     if (orgIdString != null && !"".equals(orgIdString)) {
       orgId = Integer.parseInt(orgIdString);
     }
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String quoteIdString = (String) context.getRequest().getParameter(
+        "quoteId");
     int quoteId = -1;
     if (quoteIdString != null && !"".equals(quoteIdString)) {
       quoteId = Integer.parseInt(quoteIdString);
     }
     int resultCount = -1;
     Quote quote = null;
+    Quote previousQuote = null;
     Quote quoteBean = (Quote) context.getFormBean();
     User user = this.getUser(context, this.getUserId(context));
     String printQuote = (String) context.getRequest().getAttribute("canPrint");
@@ -613,12 +661,14 @@ public final class LeadsQuotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = new Quote(db, quoteId);
+      previousQuote = new Quote(db, quoteId);
 
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
       //Retrieve the contact id from the bean
@@ -640,12 +690,15 @@ public final class LeadsQuotes extends CFSModule {
       quote.setCloseIt(quoteBean.getCloseIt());
       quote.setClosed(quoteBean.getClosed());
       quote.setSubmitAction(quoteBean.getSubmitAction());
-			quote.setShowTotal(quoteBean.getShowTotal());
-			quote.setLogoFileId(quoteBean.getLogoFileId());
+      quote.setShowTotal(quoteBean.getShowTotal());
+      quote.setLogoFileId(quoteBean.getLogoFileId());
       quote.setModifiedBy(user.getId());
       isValid = this.validateObject(context, db, quoteBean);
       if (isValid) {
         resultCount = quote.update(db);
+      }
+      if (resultCount == 1) {
+        this.processUpdateHook(context, previousQuote, quote);
       }
       Organization orgDetails = new Organization(db, orgId);
       context.getRequest().setAttribute("OrgDetails", orgDetails);
@@ -665,18 +718,20 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddQuote(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-add"))) {
       return ("PermissionError");
     }
     boolean isValid = false;
+    boolean recordInserted = false;
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
 
     String module = context.getRequest().getParameter("module");
@@ -705,7 +760,8 @@ public final class LeadsQuotes extends CFSModule {
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
       int contactId = quote.getContactId();
@@ -721,9 +777,12 @@ public final class LeadsQuotes extends CFSModule {
       isValid = this.validateObject(context, db, quote);
       if (isValid) {
         quote.createNewGroup(db);
-        quote.insert(db);
+        recordInserted = quote.insert(db);
         String quoteId = "" + quote.getId();
         context.getRequest().setAttribute("quoteId", quoteId);
+      }
+      if (recordInserted) {
+        this.processInsertHook(context, quote);
       }
     } catch (Exception e) {
       // Go through the SystemError process
@@ -741,20 +800,22 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddQuoteForm(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-add"))) {
       return ("PermissionError");
     }
     //Get viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     int headerId = -1;
-    String headerIdString = (String) context.getRequest().getParameter("headerId");
+    String headerIdString = (String) context.getRequest().getParameter(
+        "headerId");
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
     context.getRequest().setAttribute("IncludePage", includePage);
@@ -771,20 +832,23 @@ public final class LeadsQuotes extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("quoteDeliveryList", list2);
 
       OpportunityHeader opportunityHeader = new OpportunityHeader();
       opportunityHeader.queryRecord(db, headerId);
-      context.getRequest().setAttribute("opportunityHeader", opportunityHeader);
+      context.getRequest().setAttribute(
+          "opportunityHeader", opportunityHeader);
 
       //Create the list of contacts
       ContactList contactList = new ContactList();
       if (opportunityHeader.getAccountLink() != -1) {
         contactList.setOrgId(opportunityHeader.getAccountLink());
       } else {
-        Contact oppContact = new Contact(db, opportunityHeader.getContactLink());
+        Contact oppContact = new Contact(
+            db, opportunityHeader.getContactLink());
         if (oppContact.getOrgId() != -1) {
           contactList.setOrgId(oppContact.getOrgId());
         }
@@ -793,7 +857,9 @@ public final class LeadsQuotes extends CFSModule {
         contactList.buildList(db);
       } else {
         HashMap errors = new HashMap();
-        errors.put("actionError", systemStatus.getLabel("object.validation.opportunities.quotes.noQuotesForGeneralContacts"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.opportunities.quotes.noQuotesForGeneralContacts"));
         processErrors(context, errors);
       }
       context.getRequest().setAttribute("contactList", contactList);
@@ -806,7 +872,8 @@ public final class LeadsQuotes extends CFSModule {
         quote.setOrgId(opportunityHeader.getAccountLink());
         quote.setName(opportunityHeader.getAccountName());
       } else {
-        Contact oppContact = new Contact(db, opportunityHeader.getContactLink());
+        Contact oppContact = new Contact(
+            db, opportunityHeader.getContactLink());
         if (oppContact.getOrgId() != -1) {
           quote.setOrgId(oppContact.getOrgId());
           quote.setName(oppContact.getOrgName());
@@ -819,11 +886,12 @@ public final class LeadsQuotes extends CFSModule {
 //      quote.setStatusId(list.getIdFromValue("Incomplete"));
       context.getRequest().setAttribute("quoteBean", quote);
 
-			FileItemList itemList = new FileItemList();
-			itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
-			itemList.setLinkItemId(Constants.QUOTES);
-			itemList.buildList(db);
-			context.getRequest().setAttribute("fileItemList", itemList);
+      FileItemList itemList = new FileItemList();
+      itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
+      itemList.setLinkItemId(Constants.QUOTES);
+      itemList.buildList(db);
+      context.getRequest().setAttribute("fileItemList", itemList);
+      context.getRequest().setAttribute("systemStatus", systemStatus);
     } catch (Exception e) {
       // Go through the SystemError process
       e.printStackTrace();
@@ -837,17 +905,18 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-add"))) {
       return ("PermissionError");
     }
     //Get Viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
@@ -879,6 +948,7 @@ public final class LeadsQuotes extends CFSModule {
       quote.setStatusId(list.getIdFromValue("Incomplete"));
       quote = oldQuote.addVersion(db, quote);
       quote.queryRecord(db, quote.getId());
+      this.processUpdateHook(context, oldQuote, quote);
       String quoteIdString = String.valueOf(quote.getId());
       context.getRequest().setAttribute("quoteId", quoteIdString);
     } catch (Exception e) {
@@ -894,17 +964,18 @@ public final class LeadsQuotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewHistory(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-view"))) {
       return ("PermissionError");
     }
     //Get Viewpoints if any
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
     String version = (String) context.getRequest().getParameter("version");
     if (version != null && !"".equals(version)) {
       context.getRequest().setAttribute("version", version);
@@ -923,14 +994,15 @@ public final class LeadsQuotes extends CFSModule {
       OpportunityHeader header = new OpportunityHeader();
       header.queryRecord(db, quote.getHeaderId());
       context.getRequest().setAttribute("opportunityHeader", header);
-      
+
       Organization orgDetails = new Organization(db, quote.getOrgId());
       context.getRequest().setAttribute("OrgDetails", orgDetails);
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
-      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      LookupList list2 = systemStatus.getLookupList(
+          db, "lookup_quote_delivery");
       context.getRequest().setAttribute("quoteDeliveryList", list2);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);

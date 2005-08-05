@@ -15,19 +15,23 @@
  */
 package org.aspcfs.modules.service.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  A SyncClient represents a uniquely identifiable system that is performing
- *  synchronization with the server. The server maintains specific information
- *  about clients as well.
+ * A SyncClient represents a uniquely identifiable system that is performing
+ * synchronization with the server. The server maintains specific information
+ * about clients as well.
  *
- *@author     matt rajkowski
- *@created    April 10, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created April 10, 2002
  */
 public class SyncClient extends GenericBean {
 
@@ -42,30 +46,28 @@ public class SyncClient extends GenericBean {
   private boolean enabled = false;
   private String code = null;
 
-
   /**
-   *  Constructor for the SyncClient object
+   * Constructor for the SyncClient object
    */
-  public SyncClient() { }
-
+  public SyncClient() {
+  }
 
   /**
-   *  Constructor for the SyncClient object
+   * Constructor for the SyncClient object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public SyncClient(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
-
   /**
-   *  Constructor for the SyncClient object
+   * Constructor for the SyncClient object
    *
-   *@param  db                Description of Parameter
-   *@param  clientId          Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param clientId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public SyncClient(Connection db, int clientId) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -91,13 +93,12 @@ public class SyncClient extends GenericBean {
     }
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean checkNormalSync(Connection db) throws SQLException {
     boolean result = false;
@@ -129,13 +130,12 @@ public class SyncClient extends GenericBean {
     return result;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateSyncAnchor(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -152,279 +152,255 @@ public class SyncClient extends GenericBean {
     return true;
   }
 
-
   /**
-   *  Sets the id attribute of the SyncClient object
+   * Sets the id attribute of the SyncClient object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
   }
 
-
   /**
-   *  Sets the id attribute of the SyncClient object
+   * Sets the id attribute of the SyncClient object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
 
-
   /**
-   *  Sets the type attribute of the SyncClient object
+   * Sets the type attribute of the SyncClient object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = tmp;
   }
 
-
   /**
-   *  Sets the version attribute of the SyncClient object
+   * Sets the version attribute of the SyncClient object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(String tmp) {
     this.version = tmp;
   }
 
-
   /**
-   *  Sets the entered attribute of the SyncClient object
+   * Sets the entered attribute of the SyncClient object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
   }
 
-
   /**
-   *  Sets the enteredBy attribute of the SyncClient object
+   * Sets the enteredBy attribute of the SyncClient object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
 
-
   /**
-   *  Sets the enteredBy attribute of the SyncClient object
+   * Sets the enteredBy attribute of the SyncClient object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
 
-
   /**
-   *  Sets the modified attribute of the SyncClient object
+   * Sets the modified attribute of the SyncClient object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
   }
 
-
   /**
-   *  Sets the modifiedBy attribute of the SyncClient object
+   * Sets the modifiedBy attribute of the SyncClient object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
 
-
   /**
-   *  Sets the modifiedBy attribute of the SyncClient object
+   * Sets the modifiedBy attribute of the SyncClient object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
-
   /**
-   *  Sets the anchor attribute of the SyncClient object
+   * Sets the anchor attribute of the SyncClient object
    *
-   *@param  tmp  The new anchor value
+   * @param tmp The new anchor value
    */
   public void setAnchor(java.sql.Timestamp tmp) {
     this.anchor = tmp;
   }
 
-
   /**
-   *  Gets the id attribute of the SyncClient object
+   * Gets the id attribute of the SyncClient object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
   }
 
-
   /**
-   *  Gets the type attribute of the SyncClient object
+   * Gets the type attribute of the SyncClient object
    *
-   *@return    The type value
+   * @return The type value
    */
   public String getType() {
     return type;
   }
 
-
   /**
-   *  Gets the version attribute of the SyncClient object
+   * Gets the version attribute of the SyncClient object
    *
-   *@return    The version value
+   * @return The version value
    */
   public String getVersion() {
     return version;
   }
 
-
   /**
-   *  Gets the entered attribute of the SyncClient object
+   * Gets the entered attribute of the SyncClient object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
   }
 
-
   /**
-   *  Gets the enteredBy attribute of the SyncClient object
+   * Gets the enteredBy attribute of the SyncClient object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
   }
 
-
   /**
-   *  Gets the modified attribute of the SyncClient object
+   * Gets the modified attribute of the SyncClient object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
   }
 
-
   /**
-   *  Gets the modifiedBy attribute of the SyncClient object
+   * Gets the modifiedBy attribute of the SyncClient object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
   }
 
-
   /**
-   *  Gets the anchor attribute of the SyncClient object
+   * Gets the anchor attribute of the SyncClient object
    *
-   *@return    The anchor value
+   * @return The anchor value
    */
   public java.sql.Timestamp getAnchor() {
     return anchor;
   }
 
-
   /**
-   *  Gets the enabled attribute of the SyncClient object
+   * Gets the enabled attribute of the SyncClient object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
   }
 
-
   /**
-   *  Sets the enabled attribute of the SyncClient object
+   * Sets the enabled attribute of the SyncClient object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
   }
 
-
   /**
-   *  Sets the enabled attribute of the SyncClient object
+   * Sets the enabled attribute of the SyncClient object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
-
   /**
-   *  Gets the code attribute of the SyncClient object
+   * Gets the code attribute of the SyncClient object
    *
-   *@return    The code value
+   * @return The code value
    */
   public String getCode() {
     return code;
   }
 
-
   /**
-   *  Sets the code attribute of the SyncClient object
+   * Sets the code attribute of the SyncClient object
    *
-   *@param  tmp  The new code value
+   * @param tmp The new code value
    */
   public void setCode(String tmp) {
     this.code = tmp;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql =
+    id = DatabaseUtils.getNextSeq(db, "sync_client_client_id_seq");
+    PreparedStatement pst = db.prepareStatement(
         "INSERT INTO sync_client " +
-        "(type, version, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?) ";
+        "(" + (id > -1 ? "client_id, " : "") + "type, version, enteredby, modifiedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setString(++i, type);
     pst.setString(++i, version);
     pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getEnteredBy());
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "sync_client_client_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "sync_client_client_id_seq", id);
     return true;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
@@ -444,21 +420,22 @@ public class SyncClient extends GenericBean {
     pst.close();
 
     if (recordCount == 0) {
-      errors.put("actionError", "Sync Client could not be deleted because it no longer exists.");
+      errors.put(
+          "actionError",
+          "Sync Client could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
     }
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     if (this.getId() == -1) {
@@ -486,12 +463,11 @@ public class SyncClient extends GenericBean {
     return resultCount;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("client_id");
@@ -507,4 +483,3 @@ public class SyncClient extends GenericBean {
   }
 
 }
-

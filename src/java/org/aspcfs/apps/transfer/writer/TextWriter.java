@@ -15,18 +15,22 @@
  */
 package org.aspcfs.apps.transfer.writer;
 
-import org.aspcfs.apps.transfer.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.utils.*;
-import java.io.*;
+import org.aspcfs.apps.transfer.DataField;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 15, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created January 15, 2003
  */
 public class TextWriter implements DataWriter {
   private String lastResponse = null;
@@ -40,9 +44,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the filename attribute of the TextWriter object
+   * Sets the filename attribute of the TextWriter object
    *
-   *@param  tmp  The new filename value
+   * @param tmp The new filename value
    */
   public void setFilename(String tmp) {
     this.filename = tmp;
@@ -50,9 +54,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the overwrite attribute of the TextWriter object
+   * Sets the overwrite attribute of the TextWriter object
    *
-   *@param  tmp  The new overwrite value
+   * @param tmp The new overwrite value
    */
   public void setOverwrite(boolean tmp) {
     this.overwrite = tmp;
@@ -60,9 +64,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the overwrite attribute of the TextWriter object
+   * Sets the overwrite attribute of the TextWriter object
    *
-   *@param  tmp  The new overwrite value
+   * @param tmp The new overwrite value
    */
   public void setOverwrite(String tmp) {
     this.overwrite = "true".equals(tmp);
@@ -70,9 +74,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the fieldSeparator attribute of the TextWriter object
+   * Sets the fieldSeparator attribute of the TextWriter object
    *
-   *@param  tmp  The new fieldSeparator value
+   * @param tmp The new fieldSeparator value
    */
   public void setFieldSeparator(String tmp) {
     this.fieldSeparator = tmp;
@@ -80,9 +84,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the showColumnNames attribute of the TextWriter object
+   * Sets the showColumnNames attribute of the TextWriter object
    *
-   *@param  tmp  The new showColumnNames value
+   * @param tmp The new showColumnNames value
    */
   public void setShowColumnNames(boolean tmp) {
     this.showColumnNames = tmp;
@@ -90,9 +94,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the showColumnNames attribute of the TextWriter object
+   * Sets the showColumnNames attribute of the TextWriter object
    *
-   *@param  tmp  The new showColumnNames value
+   * @param tmp The new showColumnNames value
    */
   public void setShowColumnNames(String tmp) {
     this.showColumnNames = "true".equals(tmp);
@@ -100,17 +104,18 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Sets the autoCommit attribute of the TextWriter object
+   * Sets the autoCommit attribute of the TextWriter object
    *
-   *@param  flag  The new autoCommit value
+   * @param flag The new autoCommit value
    */
-  public void setAutoCommit(boolean flag) { }
+  public void setAutoCommit(boolean flag) {
+  }
 
 
   /**
-   *  Gets the version attribute of the TextWriter object
+   * Gets the version attribute of the TextWriter object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -118,9 +123,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the name attribute of the TextWriter object
+   * Gets the name attribute of the TextWriter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Text Writer";
@@ -128,9 +133,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the description attribute of the TextWriter object
+   * Gets the description attribute of the TextWriter object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Generates a text representation of data as specified";
@@ -138,9 +143,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the lastResponse attribute of the TextWriter object
+   * Gets the lastResponse attribute of the TextWriter object
    *
-   *@return    The lastResponse value
+   * @return The lastResponse value
    */
   public String getLastResponse() {
     return lastResponse;
@@ -148,9 +153,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the filename attribute of the TextWriter object
+   * Gets the filename attribute of the TextWriter object
    *
-   *@return    The filename value
+   * @return The filename value
    */
   public String getFilename() {
     return filename;
@@ -158,9 +163,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the overwrite attribute of the TextWriter object
+   * Gets the overwrite attribute of the TextWriter object
    *
-   *@return    The overwrite value
+   * @return The overwrite value
    */
   public boolean getOverwrite() {
     return overwrite;
@@ -168,9 +173,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the fieldSeparator attribute of the TextWriter object
+   * Gets the fieldSeparator attribute of the TextWriter object
    *
-   *@return    The fieldSeparator value
+   * @return The fieldSeparator value
    */
   public String getFieldSeparator() {
     return fieldSeparator;
@@ -178,9 +183,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the showColumnNames attribute of the TextWriter object
+   * Gets the showColumnNames attribute of the TextWriter object
    *
-   *@return    The showColumnNames value
+   * @return The showColumnNames value
    */
   public boolean getShowColumnNames() {
     return showColumnNames;
@@ -188,9 +193,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Gets the configured attribute of the TextWriter object
+   * Gets the configured attribute of the TextWriter object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     if (filename == null) {
@@ -198,7 +203,8 @@ public class TextWriter implements DataWriter {
     }
 
     try {
-      out = new PrintWriter(new BufferedWriter(new FileWriter(filename, !overwrite)));
+      out = new PrintWriter(
+          new BufferedWriter(new FileWriter(filename, !overwrite)));
     } catch (IOException io) {
       io.printStackTrace(System.out);
       return false;
@@ -208,10 +214,10 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean save(DataRecord record) {
     ++recordCount;
@@ -248,9 +254,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean commit() {
     return false;
@@ -258,9 +264,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean rollback() {
     return false;
@@ -268,10 +274,10 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean load(DataRecord record) {
     return false;
@@ -279,9 +285,9 @@ public class TextWriter implements DataWriter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean close() {
     if (out != null) {

@@ -15,17 +15,22 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 15, 2003
- *@version    $Id: TabbedMenuHandler.java,v 1.1.2.1 2004/03/19 21:00:49 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: TabbedMenuHandler.java,v 1.1.2.1 2004/03/19 21:00:49 rvasista
+ *          Exp $
+ * @created June 15, 2003
  */
 public class TabbedMenuHandler extends TagSupport {
 
@@ -33,12 +38,34 @@ public class TabbedMenuHandler extends TagSupport {
   private String url;
   private String key;
   private String value;
+  private String display;
+  private String type;
 
 
   /**
-   *  Sets the text attribute of the TabbedMenuHandler object
+   * Sets the display attribute of the TabbedMenuHandler object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new display value
+   */
+  public void setDisplay(String tmp) {
+    this.display = tmp;
+  }
+
+
+  /**
+   * Sets the type attribute of the TabbedMenuHandler object
+   *
+   * @param tmp The new type value
+   */
+  public void setType(String tmp) {
+    this.type = tmp;
+  }
+
+
+  /**
+   * Sets the text attribute of the TabbedMenuHandler object
+   *
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -46,9 +73,9 @@ public class TabbedMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the url attribute of the TabbedMenuHandler object
+   * Sets the url attribute of the TabbedMenuHandler object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -56,9 +83,9 @@ public class TabbedMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the key attribute of the TabbedMenuHandler object
+   * Sets the key attribute of the TabbedMenuHandler object
    *
-   *@param  tmp  The new key value
+   * @param tmp The new key value
    */
   public void setKey(String tmp) {
     this.key = tmp.toLowerCase();
@@ -66,9 +93,9 @@ public class TabbedMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the TabbedMenuHandler object
+   * Sets the value attribute of the TabbedMenuHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp.toLowerCase();
@@ -76,12 +103,23 @@ public class TabbedMenuHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+        "ConnectionElement");
+    if (ce == null) {
+      System.out.println("TabbedMenuHandler-> ConnectionElement is null");
+    }
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl());
+    if (systemStatus == null) {
+      System.out.println("TabbedMenuHandler-> SystemStatus is null");
+    }
+
     JspWriter out = this.pageContext.getOut();
     String tag = "td";
     if (key.indexOf(",") > -1) {
@@ -97,7 +135,25 @@ public class TabbedMenuHandler extends TagSupport {
     }
     try {
       out.write("<" + tag + " nowrap>");
-      out.write("<a href=\"" + url + "\">" + text + "</a>");
+      if (systemStatus != null) {
+        /**
+         If the 'text' value being displayed is the same as the 'display' value, then get the
+         translated version based on type to display the final tab value
+         */
+        if (type != null && display != null) {
+          if (display.equals(text) && systemStatus.getLabel(type) != null) {
+            //User has no preference for this tab's display in the database. Display translated version.
+            out.write(
+                "<a href=\"" + url + "\">" + systemStatus.getLabel(type) + "</a>");
+          } else {
+            out.write("<a href=\"" + url + "\">" + text + "</a>");
+          }
+        } else {
+          out.write("<a href=\"" + url + "\">" + text + "</a>");
+        }
+      } else {
+        out.write("<a href=\"" + url + "\">" + text + "</a>");
+      }
       out.write("</" + tag + ">");
     } catch (Exception e) {
     }
@@ -106,9 +162,9 @@ public class TabbedMenuHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

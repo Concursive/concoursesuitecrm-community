@@ -23,6 +23,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="typeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script type="text/javascript">
 function checkForm(form) {
@@ -51,7 +52,7 @@ function checkForm(form) {
     <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
-    <td><%= typeSelect.getHtmlSelectDefaultNone("typeId") %><font color="red">*</font> <%= showAttribute(request, "typeIdError") %></td>
+    <td><%= typeSelect.getHtmlSelectDefaultNone(systemStatus, "typeId") %><font color="red">*</font> <%= showAttribute(request, "typeIdError") %></td>
   </tr>
   <tr>
     <td class="formLabel">

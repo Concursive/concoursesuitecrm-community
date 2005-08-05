@@ -15,16 +15,15 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 
 /**
- *  Signifies a dependency of an item with the other.<br>
- *  e.g Accounts -- Contacts; Tickets -- Contacts .
+ * Signifies a dependency of an item with the other.<br>
+ * e.g Accounts -- Contacts; Tickets -- Contacts .
  *
- *@author     Mathur
- *@created    December 18, 2002
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created December 18, 2002
  */
 public class Dependency extends GenericBean {
   private String name = null;
@@ -33,9 +32,9 @@ public class Dependency extends GenericBean {
 
 
   /**
-   *  Sets the title attribute of the Dependency object
+   * Sets the title attribute of the Dependency object
    *
-   *@param  name  The new name value
+   * @param name The new name value
    */
   public void setName(String name) {
     this.name = name;
@@ -43,9 +42,9 @@ public class Dependency extends GenericBean {
 
 
   /**
-   *  Sets the canDelete attribute of the Dependency object
+   * Sets the canDelete attribute of the Dependency object
    *
-   *@param  canDelete  The new canDelete value
+   * @param canDelete The new canDelete value
    */
   public void setCanDelete(boolean canDelete) {
     this.canDelete = canDelete;
@@ -53,9 +52,9 @@ public class Dependency extends GenericBean {
 
 
   /**
-   *  Sets the count attribute of the Dependency object
+   * Sets the count attribute of the Dependency object
    *
-   *@param  count  The new count value
+   * @param count The new count value
    */
   public void setCount(int count) {
     this.count = count;
@@ -63,9 +62,9 @@ public class Dependency extends GenericBean {
 
 
   /**
-   *  Gets the title attribute of the Dependency object
+   * Gets the title attribute of the Dependency object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getName() {
     return name;
@@ -73,9 +72,9 @@ public class Dependency extends GenericBean {
 
 
   /**
-   *  Gets the canDelete attribute of the Dependency object
+   * Gets the canDelete attribute of the Dependency object
    *
-   *@return    The canDelete value
+   * @return The canDelete value
    */
   public boolean getCanDelete() {
     return canDelete;
@@ -83,9 +82,9 @@ public class Dependency extends GenericBean {
 
 
   /**
-   *  Gets the count attribute of the Dependency object
+   * Gets the count attribute of the Dependency object
    *
-   *@return    The count value
+   * @return The count value
    */
   public int getCount() {
     return count;

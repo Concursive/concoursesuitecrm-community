@@ -15,18 +15,24 @@
  */
 package org.aspcfs.apps.users;
 
-import org.aspcfs.modules.system.base.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import java.lang.reflect.*;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.AppUtils;
+import org.aspcfs.utils.SiteUtils;
+
+import java.lang.reflect.Constructor;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    December 8, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created December 8, 2004
  */
 public class UserCleanup {
 
@@ -38,9 +44,9 @@ public class UserCleanup {
 
 
   /**
-   *  Commandline startup
+   * Commandline startup
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void main(String args[]) {
     if (args.length == 0) {
@@ -56,9 +62,9 @@ public class UserCleanup {
 
 
   /**
-   *  jcrontab startup
+   * jcrontab startup
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void doTask(String args[]) {
     if (args.length == 0) {
@@ -75,9 +81,9 @@ public class UserCleanup {
 
 
   /**
-   *  process the expired/disabled users
+   * process the expired/disabled users
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   private void execute(String args[]) {
     String filename = args[0];
@@ -108,7 +114,8 @@ public class UserCleanup {
             try {
               //Construct the object, which executes the task
               Class thisClass = Class.forName((String) classes.next());
-              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), Class.forName("java.lang.String")};
+              Class[] paramClass = new Class[]{Class.forName(
+                  "java.sql.Connection"), Class.forName("java.lang.String")};
               Constructor constructor = thisClass.getConstructor(paramClass);
               Object[] paramObject = new Object[]{db, args[1]};
               Object theTask = constructor.newInstance(paramObject);

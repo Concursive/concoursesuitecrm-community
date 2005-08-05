@@ -25,12 +25,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    August 31, 2004
- *@version    $Id: OptionProperty.java,v 1.1.4.1 2004/10/18 19:56:27 mrajkowski
- *      Exp $
+ * @author ananth
+ * @version $Id: OptionProperty.java,v 1.1.4.1 2004/10/18 19:56:27 mrajkowski
+ *          Exp $
+ * @created August 31, 2004
  */
 public class OptionProperty extends GenericBean {
   public final static int LISTSELECT = 1;
@@ -50,9 +50,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the isRequired attribute of the OptionProperty object
+   * Gets the isRequired attribute of the OptionProperty object
    *
-   *@return    The isRequired value
+   * @return The isRequired value
    */
   public boolean getIsRequired() {
     return isRequired;
@@ -60,9 +60,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the isRequired attribute of the OptionProperty object
+   * Sets the isRequired attribute of the OptionProperty object
    *
-   *@param  tmp  The new isRequired value
+   * @param tmp The new isRequired value
    */
   public void setIsRequired(boolean tmp) {
     this.isRequired = tmp;
@@ -70,9 +70,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the isRequired attribute of the OptionProperty object
+   * Sets the isRequired attribute of the OptionProperty object
    *
-   *@param  tmp  The new isRequired value
+   * @param tmp The new isRequired value
    */
   public void setIsRequired(String tmp) {
     this.isRequired = DatabaseUtils.parseBoolean(tmp);
@@ -80,9 +80,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the OptionProperty object
+   * Gets the type attribute of the OptionProperty object
    *
-   *@return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -90,9 +90,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the OptionProperty object
+   * Sets the type attribute of the OptionProperty object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -100,9 +100,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the OptionProperty object
+   * Sets the type attribute of the OptionProperty object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -110,9 +110,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the errorMsg attribute of the OptionProperty object
+   * Sets the errorMsg attribute of the OptionProperty object
    *
-   *@param  tmp  The new errorMsg value
+   * @param tmp The new errorMsg value
    */
   public void setErrorMsg(String tmp) {
     this.errorMsg = tmp;
@@ -120,9 +120,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the errorMsg attribute of the OptionProperty object
+   * Gets the errorMsg attribute of the OptionProperty object
    *
-   *@return    The errorMsg value
+   * @return The errorMsg value
    */
   public String getErrorMsg() {
     return errorMsg;
@@ -130,9 +130,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the note attribute of the OptionProperty object
+   * Sets the note attribute of the OptionProperty object
    *
-   *@param  tmp  The new note value
+   * @param tmp The new note value
    */
   public void setNote(String tmp) {
     this.note = tmp;
@@ -140,9 +140,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the note attribute of the OptionProperty object
+   * Gets the note attribute of the OptionProperty object
    *
-   *@return    The note value
+   * @return The note value
    */
   public String getNote() {
     return note;
@@ -150,9 +150,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the isForPrompting attribute of the OptionProperty object
+   * Sets the isForPrompting attribute of the OptionProperty object
    *
-   *@param  tmp  The new isForPrompting value
+   * @param tmp The new isForPrompting value
    */
   public void setIsForPrompting(boolean tmp) {
     this.isForPrompting = tmp;
@@ -160,9 +160,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the isForPrompting attribute of the OptionProperty object
+   * Sets the isForPrompting attribute of the OptionProperty object
    *
-   *@param  tmp  The new isForPrompting value
+   * @param tmp The new isForPrompting value
    */
   public void setIsForPrompting(String tmp) {
     this.isForPrompting = DatabaseUtils.parseBoolean(tmp);
@@ -170,9 +170,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the isForPrompting attribute of the OptionProperty object
+   * Gets the isForPrompting attribute of the OptionProperty object
    *
-   *@return    The isForPrompting value
+   * @return The isForPrompting value
    */
   public boolean getIsForPrompting() {
     return isForPrompting;
@@ -180,9 +180,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the OptionProperty object
+   * Sets the name attribute of the OptionProperty object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -190,9 +190,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the value attribute of the OptionProperty object
+   * Sets the value attribute of the OptionProperty object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -200,9 +200,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Sets the display attribute of the OptionProperty object
+   * Sets the display attribute of the OptionProperty object
    *
-   *@param  tmp  The new display value
+   * @param tmp The new display value
    */
   public void setDisplay(String tmp) {
     this.display = tmp;
@@ -210,9 +210,9 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the OptionProperty object
+   * Gets the name attribute of the OptionProperty object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -220,19 +220,19 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the value attribute of the OptionProperty object
+   * Gets the value attribute of the OptionProperty object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
-    return value;
+    return (!"-1".equals(value) ? value : "");
   }
 
 
   /**
-   *  Gets the display attribute of the OptionProperty object
+   * Gets the display attribute of the OptionProperty object
    *
-   *@return    The display value
+   * @return The display value
    */
   public String getDisplay() {
     return display;
@@ -240,16 +240,17 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Constructor for the OptionProperty object
+   * Constructor for the OptionProperty object
    */
-  public OptionProperty() { }
+  public OptionProperty() {
+  }
 
 
   /**
-   *  Constructor for the OptionProperty object
+   * Constructor for the OptionProperty object
    *
-   *@param  name   Description of the Parameter
-   *@param  value  Description of the Parameter
+   * @param name  Description of the Parameter
+   * @param value Description of the Parameter
    */
   public OptionProperty(String name, String value) {
     this.name = name;
@@ -258,12 +259,12 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Constructor for the OptionProperty object
+   * Constructor for the OptionProperty object
    *
-   *@param  name     Description of the Parameter
-   *@param  value    Description of the Parameter
-   *@param  display  Description of the Parameter
-   *@param  prompt   Description of the Parameter
+   * @param name    Description of the Parameter
+   * @param value   Description of the Parameter
+   * @param display Description of the Parameter
+   * @param prompt  Description of the Parameter
    */
   public OptionProperty(String name, String value, String display, boolean prompt) {
     this.name = name;
@@ -274,11 +275,11 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param request Description of the Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void prepareContext(Connection db, HttpServletRequest request) throws SQLException {
     /*
@@ -292,43 +293,51 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the html attribute of the OptionProperty object
+   * Gets the html attribute of the OptionProperty object
    *
-   *@param  request  Description of the Parameter
-   *@return          The html value
+   * @param request Description of the Parameter
+   * @return The html value
    */
   public String getHtml(HttpServletRequest request) {
     if (name.startsWith("text_")) {
       //Text Field
       int defaultSize = 25;
-      return table("<input type=\"text\" size=\"" + defaultSize + "\" " +
+      return table(
+          "<input type=\"text\" size=\"" + defaultSize + "\" " +
           "name=\"" + name + "\" " +
           "value=\"" + HTTPUtils.toHtmlValue(value) + "\" />");
     } else if (name.startsWith("number_")) {
       int defaultSize = 10;
-      return table("<input type=\"text\" size=\"" + defaultSize + "\" " +
-          "name=\"" + name + "\" value=\"" + HTTPUtils.toHtmlValue(value) + "\" />");
+      return table(
+          "<input type=\"text\" size=\"" + defaultSize + "\" " +
+          "name=\"" + name + "\" value=\"" + (!"-1".equals(value) ? HTTPUtils.toHtmlValue(
+              value) : "") + "\" />");
     } else if (name.startsWith("lookup_")) {
-      return table("<textarea cols=\"28\" rows=\"5\" name=\"" + name + "\" wrap=\"SOFT\">" + value + "</textarea>");
+      return table(
+          "<textarea cols=\"28\" rows=\"5\" name=\"" + name + "\" wrap=\"SOFT\">" + value + "</textarea>");
     } else if (name.startsWith("boolean_")) {
-      return table("<input type=\"checkbox\" name=\"chk" + name + "\" onclick=\"javascript:setField('" + name + "', document.paramForm.chk" + name + ".checked, 'paramForm');\"" + (value != null && Boolean.valueOf(value).booleanValue() ? "checked" : "") + " >" + 
-                          "<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value != null && Boolean.valueOf(value).booleanValue() ? "true" : "false") + "\">");
+      return table(
+          "<input type=\"checkbox\" name=\"chk" + name + "\" onclick=\"javascript:setField('" + name + "', document.paramForm.chk" + name + ".checked, 'paramForm');\"" + (value != null && Boolean.valueOf(
+              value).booleanValue() ? "checked" : "") + " >" +
+          "<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value != null && Boolean.valueOf(
+              value).booleanValue() ? "true" : "false") + "\">");
     } else if (name.startsWith("double_")) {
       //Text Field for float input
       int defaultSize = 7;
-      return table("<input type=\"text\" size=\"" + defaultSize + "\" " +
+      return table(
+          "<input type=\"text\" size=\"" + defaultSize + "\" " +
           "name=\"" + name + "\" " +
           "value=\"" + HTTPUtils.toHtmlValue(value) + "\" />");
-    } 
+    }
     return "Property Not Supported";
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  html  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param html Description of the Parameter
+   * @return Description of the Return Value
    */
   private String table(String html) {
     return "<table cellspacing=\"1\" cellpadding=\"1\" border=\"0\">" +
@@ -342,45 +351,53 @@ public class OptionProperty extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the OptionProperty object
+   * Gets the valid attribute of the OptionProperty object
    *
-   *@param  systemStatus  Description of the Parameter
-   *@return               The valid value
+   * @param systemStatus Description of the Parameter
+   * @return The valid value
    */
   public boolean isValid(SystemStatus systemStatus) {
     if (name.startsWith("text_")) {
       if ((value == null || value.trim().equals("")) && isRequired) {
-        errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.required") : "Text value cannot be empty");
+        errorMsg = (systemStatus != null ? systemStatus.getLabel(
+            "object.validation.required") : "Text value cannot be empty");
       }
     } else if (name.startsWith("number_")) {
       try {
         if (value != null && !"".equals(value.trim())) {
           int n = Integer.parseInt(value);
           if (n < 0) {
-            errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.valueCanNotBeNegative") : "Value cannot be negative");
+            errorMsg = (systemStatus != null ? systemStatus.getLabel(
+                "object.validation.valueCanNotBeNegative") : "Value cannot be negative");
           }
         } else if (isRequired) {
-          errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.incorrectNumberFormat") : "Integer value required");
-        } 
+          errorMsg = (systemStatus != null ? systemStatus.getLabel(
+              "object.validation.incorrectNumberFormat") : "Integer value required");
+        }
       } catch (NumberFormatException nfe) {
-        errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.incorrectNumberFormat") : "Integer value required");
+        errorMsg = (systemStatus != null ? systemStatus.getLabel(
+            "object.validation.incorrectNumberFormat") : "Integer value required");
       }
     } else if (name.startsWith("lookup_")) {
       if ((value == null || value.trim().equals("")) && isRequired) {
-        errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.atleastOneItemToBeSpecified") : "At least one item needs to be specified");
+        errorMsg = (systemStatus != null ? systemStatus.getLabel(
+            "object.validation.atleastOneItemToBeSpecified") : "At least one item needs to be specified");
       }
     } else if (name.startsWith("double_")) {
       try {
         if (value != null || !"".equals(value.trim())) {
           double val = Double.parseDouble(value);
           if (val < 0) {
-            errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.incorrectNumberFormat") : "float error");
+            errorMsg = (systemStatus != null ? systemStatus.getLabel(
+                "object.validation.incorrectNumberFormat") : "float error");
           }
         } else if (isRequired) {
-          errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.incorrectNumberFormat") : "float error");
+          errorMsg = (systemStatus != null ? systemStatus.getLabel(
+              "object.validation.incorrectNumberFormat") : "float error");
         }
       } catch (NumberFormatException nfe) {
-        errorMsg = (systemStatus != null ? systemStatus.getLabel("object.validation.incorrectNumberFormat") : "float error");
+        errorMsg = (systemStatus != null ? systemStatus.getLabel(
+            "object.validation.incorrectNumberFormat") : "float error");
       }
     }
     return (errorMsg == null);

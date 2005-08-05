@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="account_type"
+		 name="account_type_subreport"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
@@ -17,7 +17,10 @@
 		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="2" />
+	<property name="ireport.scriptlethandling" value="0" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
 	<parameter name="acct_id" isForPrompting="false" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT
 lat.description as type_desc,
@@ -25,7 +28,8 @@ o.org_id
 FROM organization o
 LEFT JOIN account_type_levels atl ON (o.org_id = atl.org_id) 
 LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
-WHERE o.org_id = $P{acct_id}]]></queryString>
+WHERE o.org_id = $P{acct_id}
+AND o.trashed_date IS NULL]]></queryString>
 	<field name="type_desc" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<variable name="acct_type" class="java.lang.String" resetType="Group" resetGroup="account" calculation="Nothing">
@@ -42,7 +46,8 @@ $V{acct_type} + ($V{acct_type}.length() > 0 ? ", " : "") + ($F{type_desc} != nul
 			</groupHeader>
 			<groupFooter>
 			<band height="20"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
 						mode="Opaque"
 						x="1"
 						y="1"
@@ -57,8 +62,9 @@ $V{acct_type} + ($V{acct_type}.length() > 0 ? ", " : "") + ($F{type_desc} != nul
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$V{acct_type}]]></textFieldExpression>
 				</textField>

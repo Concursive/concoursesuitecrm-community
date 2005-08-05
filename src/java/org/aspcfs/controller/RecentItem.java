@@ -15,14 +15,14 @@
  */
 package org.aspcfs.controller;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
- *  Represents an item in the RecentItems list
+ * Represents an item in the RecentItems list
  *
- *@author     mrajkowski
- *@created    December 19, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created December 19, 2001
  */
 public class RecentItem implements Serializable {
 
@@ -56,20 +56,21 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Constructor for the RecentItem object
+   * Constructor for the RecentItem object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public RecentItem() { }
+  public RecentItem() {
+  }
 
 
   /**
-   *  Constructor for the RecentItem object
+   * Constructor for the RecentItem object
    *
-   *@param  type         Description of Parameter
-   *@param  displayText  Description of Parameter
-   *@param  url          Description of Parameter
-   *@since               1.1
+   * @param type        Description of Parameter
+   * @param displayText Description of Parameter
+   * @param url         Description of Parameter
+   * @since 1.1
    */
   public RecentItem(int type, String displayText, String url) {
     this.type = type;
@@ -79,10 +80,10 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Sets the Type attribute of the RecentItem object
+   * Sets the Type attribute of the RecentItem object
    *
-   *@param  tmp  The new Type value
-   *@since       1.1
+   * @param tmp The new Type value
+   * @since 1.1
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -90,10 +91,10 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Sets the DisplayText attribute of the RecentItem object
+   * Sets the DisplayText attribute of the RecentItem object
    *
-   *@param  tmp  The new DisplayText value
-   *@since       1.1
+   * @param tmp The new DisplayText value
+   * @since 1.1
    */
   public void setDisplayText(String tmp) {
     this.displayText = tmp;
@@ -101,10 +102,10 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Sets the Url attribute of the RecentItem object
+   * Sets the Url attribute of the RecentItem object
    *
-   *@param  tmp  The new Url value
-   *@since       1.1
+   * @param tmp The new Url value
+   * @since 1.1
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -112,10 +113,10 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Gets the Type attribute of the RecentItem object
+   * Gets the Type attribute of the RecentItem object
    *
-   *@return    The Type value
-   *@since     1.1
+   * @return The Type value
+   * @since 1.1
    */
   public int getType() {
     return type;
@@ -123,10 +124,10 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Gets the DisplayText attribute of the RecentItem object
+   * Gets the DisplayText attribute of the RecentItem object
    *
-   *@return    The DisplayText value
-   *@since     1.1
+   * @return The DisplayText value
+   * @since 1.1
    */
   public String getDisplayText() {
     return displayText;
@@ -134,10 +135,10 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Gets the Url attribute of the RecentItem object
+   * Gets the Url attribute of the RecentItem object
    *
-   *@return    The Url value
-   *@since     1.1
+   * @return The Url value
+   * @since 1.1
    */
   public String getUrl() {
     return url;
@@ -145,16 +146,16 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Builds and returns the Html link for accessing this item.<p>
+   * Builds and returns the Html link for accessing this item.<p>
+   * <p/>
+   * An item is made up of the following:<br>
+   * - DisplayLabel: Anything that precedes the display text... including text
+   * or a graphic<br>
+   * - URL: The link for accessing the item<br>
+   * - DisplayText: Information that explains what the RecentItem is
    *
-   *  An item is made up of the following:<br>
-   *  - DisplayLabel: Anything that precedes the display text... including text
-   *  or a graphic<br>
-   *  - URL: The link for accessing the item<br>
-   *  - DisplayText: Information that explains what the RecentItem is
-   *
-   *@return    The Html value
-   *@since     1.1
+   * @return The Html value
+   * @since 1.1
    */
   public String getHtml() {
     return "<b>" + getDisplayLabel() + "</b><a href=\"" + url + "\"><u>" + displayText + "</u></a>";
@@ -162,33 +163,33 @@ public class RecentItem implements Serializable {
 
 
   /**
-   *  Gets the DisplayLabel attribute of the RecentItem object
+   * Gets the DisplayLabel attribute of the RecentItem object
    *
-   *@return    The DisplayLabel value
-   *@since     1.1
+   * @return The DisplayLabel value
+   * @since 1.1
    */
   private String getDisplayLabel() {
     switch (type) {
-        case ACCOUNT:
-          return ACCOUNT_TEXT;
-        case CONTACT:
-          return CONTACT_TEXT;
-        case EMPLOYEE:
-          return EMPLOYEE_TEXT;
-        case OPPORTUNITY:
-          return OPPORTUNITY_TEXT;
-        case CAMPAIGN:
-          return CAMPAIGN_TEXT;
-        case PROJECT:
-          return PROJECT_TEXT;
-        case TICKET:
-          return TICKET_TEXT;
-        case USER:
-          return USER_TEXT;
-        case COMPONENT:
-          return COMPONENT_TEXT;
-        default:
-          return "";
+      case ACCOUNT:
+        return ACCOUNT_TEXT;
+      case CONTACT:
+        return CONTACT_TEXT;
+      case EMPLOYEE:
+        return EMPLOYEE_TEXT;
+      case OPPORTUNITY:
+        return OPPORTUNITY_TEXT;
+      case CAMPAIGN:
+        return CAMPAIGN_TEXT;
+      case PROJECT:
+        return PROJECT_TEXT;
+      case TICKET:
+        return TICKET_TEXT;
+      case USER:
+        return USER_TEXT;
+      case COMPONENT:
+        return COMPONENT_TEXT;
+      default:
+        return "";
     }
   }
 }

@@ -40,10 +40,12 @@
   </tr>
 </table>
 <br>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
 <zeroio:permission name="project-discussion-messages-reply">
 <img src="images/icons/16_add_comment.gif" border="0" align="absmiddle">
 <a href="ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>"><dhv:label name="project.postReply">Post Reply</dhv:label></a><br>
 </zeroio:permission>
+</dhv:evaluate>
 <dhv:pagedListStatus label="Replies" title="<%= showError(request, "actionError") %>" object="projectIssueRepliesInfo"/>
 <%
   int rowid = 1;
@@ -76,27 +78,29 @@
             </dhv:evaluate>
           </td>
           <td valign="top" align="right" nowrap>
-            <%-- Quote this message --%>
-            <zeroio:permission name="project-discussion-messages-reply">
-              <img src="images/icons/16_add_comment.gif" border="0" align="absmiddle" />
-              <a href="ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>&quote=true"><dhv:label name="project.quoteThisMessage">Quote this message</dhv:label></a>
-            </zeroio:permission>
-            <%-- Edit Topic: Either have permission to make changes, or you are the user that wrote the article --%>
-            <zeroio:permission name="project-discussion-topics-edit">
-              <img src="images/icons/16_edit_comment.gif" border="0" align="absmiddle" />
-              <a href="ProjectManagementIssues.do?command=Edit&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>"><dhv:label name="project.editTopic">Edit topic</dhv:label></a>
-            </zeroio:permission>
-            <zeroio:permission name="project-discussion-topics-edit" if="none">
-              <dhv:evaluate if="<%= Issue.getEnteredBy() == User.getUserId() %>">
+            <dhv:evaluate if="<%= !Project.isTrashed() %>" >
+              <%-- Quote this message --%>
+              <zeroio:permission name="project-discussion-messages-reply">
+                <img src="images/icons/16_add_comment.gif" border="0" align="absmiddle" />
+                <a href="ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>&quote=true"><dhv:label name="project.quoteThisMessage">Quote this message</dhv:label></a>
+              </zeroio:permission>
+              <%-- Edit Topic: Either have permission to make changes, or you are the user that wrote the article --%>
+              <zeroio:permission name="project-discussion-topics-edit">
                 <img src="images/icons/16_edit_comment.gif" border="0" align="absmiddle" />
                 <a href="ProjectManagementIssues.do?command=Edit&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>"><dhv:label name="project.editTopic">Edit topic</dhv:label></a>
-              </dhv:evaluate>
-            </zeroio:permission>
-            <%-- Delete Topic --%>
-            <zeroio:permission name="project-discussion-topics-delete">
-              <img src="images/icons/16_delete_comment.gif" border="0" align="absmiddle" />
-              <a href="javascript:confirmDelete('ProjectManagementIssues.do?command=Delete&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>');"><dhv:label name="project.deleteTopic">Delete topic</dhv:label></a>
-            </zeroio:permission>
+              </zeroio:permission>
+              <zeroio:permission name="project-discussion-topics-edit" if="none">
+                <dhv:evaluate if="<%= Issue.getEnteredBy() == User.getUserId() %>">
+                  <img src="images/icons/16_edit_comment.gif" border="0" align="absmiddle" />
+                  <a href="ProjectManagementIssues.do?command=Edit&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>"><dhv:label name="project.editTopic">Edit topic</dhv:label></a>
+                </dhv:evaluate>
+              </zeroio:permission>
+              <%-- Delete Topic --%>
+              <zeroio:permission name="project-discussion-topics-delete">
+                <img src="images/icons/16_delete_comment.gif" border="0" align="absmiddle" />
+                <a href="javascript:confirmDelete('ProjectManagementIssues.do?command=Delete&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>');"><dhv:label name="project.deleteTopic">Delete topic</dhv:label></a>
+              </zeroio:permission>
+            </dhv:evaluate>
             &nbsp;
           </td>
         </tr>

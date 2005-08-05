@@ -15,18 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a key=value pair preference that will be used for either a
- *  BusinessProcess definition or a BusinessProcess component.
+ * Represents a key=value pair preference that will be used for either a
+ * BusinessProcess definition or a BusinessProcess component.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: ComponentParameter.java,v 1.3 2003/01/13 21:41:16 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ComponentParameter.java,v 1.3 2003/01/13 21:41:16 mrajkowski
+ *          Exp $
+ * @created November 11, 2002
  */
 public class ComponentParameter {
 
@@ -41,16 +46,17 @@ public class ComponentParameter {
 
 
   /**
-   *  Constructor for the ComponentParameter object
+   * Constructor for the ComponentParameter object
    */
-  public ComponentParameter() { }
+  public ComponentParameter() {
+  }
 
 
   /**
-   *  Constructor for the ComponentParameter object
+   * Constructor for the ComponentParameter object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ComponentParameter(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -58,9 +64,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Constructor for the ComponentParameter object
+   * Constructor for the ComponentParameter object
    *
-   *@param  parameterElement  Description of the Parameter
+   * @param parameterElement Description of the Parameter
    */
   public ComponentParameter(Element parameterElement) {
     this.setName((String) parameterElement.getAttribute("name"));
@@ -77,9 +83,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the id attribute of the ComponentParameter object
+   * Sets the id attribute of the ComponentParameter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -87,9 +93,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the id attribute of the ComponentParameter object
+   * Sets the id attribute of the ComponentParameter object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -97,9 +103,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameter object
+   * Sets the componentId attribute of the ComponentParameter object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(int tmp) {
     this.componentId = tmp;
@@ -107,9 +113,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameter object
+   * Sets the componentId attribute of the ComponentParameter object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(String tmp) {
     this.componentId = Integer.parseInt(tmp);
@@ -117,9 +123,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the parameterId attribute of the ComponentParameter object
+   * Sets the parameterId attribute of the ComponentParameter object
    *
-   *@param  tmp  The new parameterId value
+   * @param tmp The new parameterId value
    */
   public void setParameterId(int tmp) {
     this.parameterId = tmp;
@@ -127,9 +133,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the parameterId attribute of the ComponentParameter object
+   * Sets the parameterId attribute of the ComponentParameter object
    *
-   *@param  tmp  The new parameterId value
+   * @param tmp The new parameterId value
    */
   public void setParameterId(String tmp) {
     this.parameterId = Integer.parseInt(tmp);
@@ -137,9 +143,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the name attribute of the ComponentParameter object
+   * Sets the name attribute of the ComponentParameter object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -147,9 +153,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the value attribute of the ComponentParameter object
+   * Sets the value attribute of the ComponentParameter object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -157,9 +163,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameter object
+   * Sets the enabled attribute of the ComponentParameter object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -167,19 +173,20 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the enabled attribute of the ComponentParameter object
+   * Sets the enabled attribute of the ComponentParameter object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
-    this.enabled = (DatabaseUtils.parseBoolean(tmp) || tmp == null || "".equals(tmp));
+    this.enabled = (DatabaseUtils.parseBoolean(tmp) || tmp == null || "".equals(
+        tmp));
   }
 
 
   /**
-   *  Gets the id attribute of the ComponentParameter object
+   * Gets the id attribute of the ComponentParameter object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -187,9 +194,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the componentId attribute of the ComponentParameter object
+   * Gets the componentId attribute of the ComponentParameter object
    *
-   *@return    The componentId value
+   * @return The componentId value
    */
   public int getComponentId() {
     return componentId;
@@ -197,9 +204,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the parameterId attribute of the ComponentParameter object
+   * Gets the parameterId attribute of the ComponentParameter object
    *
-   *@return    The parameterId value
+   * @return The parameterId value
    */
   public int getParameterId() {
     return parameterId;
@@ -207,9 +214,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the name attribute of the ComponentParameter object
+   * Gets the name attribute of the ComponentParameter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -217,9 +224,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the value attribute of the ComponentParameter object
+   * Gets the value attribute of the ComponentParameter object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -227,9 +234,9 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the enabled attribute of the ComponentParameter object
+   * Gets the enabled attribute of the ComponentParameter object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -237,10 +244,10 @@ public class ComponentParameter {
 
 
   /**
-   *  Populates this object from a database recordset
+   * Populates this object from a database recordset
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //business_process_component_parameter
@@ -255,10 +262,10 @@ public class ComponentParameter {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     //Parameters must be registered in the library, no dupes per component
@@ -273,25 +280,30 @@ public class ComponentParameter {
       parameterId = libraryParam.getId();
     }
     //Insert the parameter
+    int i = 0;
+    id = DatabaseUtils.getNextSeq(db, "business_process_comp_pa_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO business_process_component_parameter " +
-        "(component_id, parameter_id, param_value, enabled) VALUES " +
-        "(?, ?, ?, ?) ");
-    pst.setInt(1, componentId);
-    pst.setInt(2, parameterId);
-    pst.setString(3, value);
-    pst.setBoolean(4, enabled);
+        "(" + (id > -1 ? "id, " : "") + "component_id, parameter_id, param_value, enabled) VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, componentId);
+    pst.setInt(++i, parameterId);
+    pst.setString(++i, value);
+    pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "business_process_comp_pa_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "business_process_comp_pa_id_seq", id);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
 

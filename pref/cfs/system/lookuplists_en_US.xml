@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 - we assume enabled=true
 
@@ -404,9 +405,11 @@
       <record><![CDATA[Other]]></record>
     </lookup>
     <lookup table="lookup_im_services">
-      <record><![CDATA[AOL Instant Messenger]]></record>
-      <record><![CDATA[Jabber Instant Messenger]]></record>
-      <record><![CDATA[MSN Instant Messenger]]></record>
+      <record><![CDATA[AIM]]></record>
+      <record><![CDATA[Jabber]]></record>
+      <record><![CDATA[MSN]]></record>
+      <record><![CDATA[ICQ]]></record>
+      <record><![CDATA[Yahoo]]></record>
     </lookup>
     <lookup table="lookup_industry">
       <record><![CDATA[Automotive]]></record>
@@ -943,5 +946,13 @@
       <record LUID="2005022714"><![CDATA[Technical]]></record>
       <record LUID="2005022715"><![CDATA[Order]]></record>
       <record LUID="2005022717"><![CDATA[Other]]></record>
-    </lookup>            
+    </lookup>
+    <lookup table="lookup_opportunity_environment">
+    </lookup>
+    <lookup table="lookup_opportunity_competitors">
+    </lookup>
+    <lookup table="lookup_opportunity_event_compelling">
+    </lookup>
+    <lookup table="lookup_opportunity_budget">
+    </lookup>
 </lookupLists>

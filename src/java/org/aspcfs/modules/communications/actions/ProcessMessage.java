@@ -15,34 +15,31 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.communications.base.Message;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.Template;
+
+import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 15, 2003
- *@version    $Id: ProcessMessage.java,v 1.8 2004/03/23 14:04:47 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: ProcessMessage.java,v 1.8 2004/03/23 14:04:47 mrajkowski Exp
+ *          $
+ * @created January 15, 2003
  */
 public final class ProcessMessage extends CFSModule {
 
   /**
-   *  This action is used for displaying a message to a logged in user
+   * This action is used for displaying a message to a logged in user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     Connection db = null;
@@ -61,14 +58,21 @@ public final class ProcessMessage extends CFSModule {
         template.setText(thisMessage.getMessageText());
         String value = template.getValue("surveyId");
         if (value != null) {
-          template.addParseElement("${surveyId=" + value + "}", "- Survey not available by fax -");
+          template.addParseElement(
+              "${surveyId=" + value + "}", "- Survey not available by fax -");
         }
         //NOTE: The following items are the same as the Notifier.java items
-        template.addParseElement("${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
-        template.addParseElement("${firstname}", StringUtils.toHtml(thisContact.getNameFirst()));
-        template.addParseElement("${lastname}", StringUtils.toHtml(thisContact.getNameLast()));
-        template.addParseElement("${company}", StringUtils.toHtml(thisContact.getCompany()));
-        template.addParseElement("${department}", StringUtils.toHtml(thisContact.getDepartmentName()));
+        template.addParseElement(
+            "${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
+        template.addParseElement(
+            "${firstname}", StringUtils.toHtml(thisContact.getNameFirst()));
+        template.addParseElement(
+            "${lastname}", StringUtils.toHtml(thisContact.getNameLast()));
+        template.addParseElement(
+            "${company}", StringUtils.toHtml(thisContact.getCompany()));
+        template.addParseElement(
+            "${department}", StringUtils.toHtml(
+                thisContact.getDepartmentName()));
         thisMessage.setMessageText(template.getParsedText());
       }
       context.getRequest().setAttribute("Message", thisMessage);

@@ -13,7 +13,6 @@
 <jsp:useBean id="documentsSearchBean" class="org.aspcfs.modules.documents.beans.DocumentsSearchBean" scope="session" />
 <jsp:useBean id="searchBeanInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-
 <%!
   public static String selected(SearchBean search, int scope, int section) {
     if (search.getScope() == scope && search.getSection() == section) {
@@ -22,8 +21,27 @@
     return "";
   }
 %>
+<script language="JavaScript">
+  function checkForm(form) {
+    var formTest = true;
+    var messageText = "";
+    //Check required fields
+    if (form.query.value == "") {
+      messageText += label("description.required","- Description is a required field\r\n");
+      formTest = false;
+    }
+    if (formTest == false) {
+      messageText = label("Form.not.submitted","The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
+      alert(messageText);
+      form.query.focus();
+      return false;
+    } else {
+      return true;
+    }
+  }
+</script>
 <body onLoad="document.search.query.focus()">
-<form name="search" action="DocumentManagementSearch.do?auto-populate=true" method="post">
+<form name="search" action="DocumentManagementSearch.do?auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -69,6 +87,7 @@
     </td>
     <td>
       <input type="text" size="30" name="query" value="<%= toHtmlValue(documentsSearchBean.getQuery()) %>" />
+      <font color="red">*</font>
     </td>
   </tr>
 </table>

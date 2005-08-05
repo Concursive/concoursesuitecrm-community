@@ -14,22 +14,22 @@ import java.sql.Connection;
 import java.util.Iterator;
 
 /**
- *  The CFS Company Directory module.
+ * The CFS Company Directory module.
  *
- * @author     esther
- * @created    July 28, 2004
- * @version    $Id: CompanyDirectoryProjects.java,v 1.9 2004/07/28 19:02:11 esther
- *      Exp $
+ * @author esther
+ * @version $Id: CompanyDirectoryProjects.java,v 1.9 2004/07/28 19:02:11 esther
+ *          Exp $
+ * @created July 28, 2004
  */
 public final class CompanyDirectoryProjects extends CFSModule {
 
   /**
-   *  This method retrieves a list of employees from the database and populates
-   *  a Vector of the employees retrieved.
+   * This method retrieves a list of employees from the database and populates
+   * a Vector of the employees retrieved.
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.0
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String executeCommandList(ActionContext context) {
     if (getUserId(context) < 0) {
@@ -43,26 +43,34 @@ public final class CompanyDirectoryProjects extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact contactDetails = new Contact(db, Integer.parseInt(employeeId));
+      contactDetails.checkUserAccount(db);
       context.getRequest().setAttribute("ContactDetails", contactDetails);
       //PagedList Info
       ProjectList projects = new ProjectList();
-      PagedListInfo companyDirectoryProjectsInfo = this.getPagedListInfo(context, "CompanyDirectoryProjectsInfo");
-      companyDirectoryProjectsInfo.setLink("CompanyDirectoryProjects.do?command=List&empid="+employeeId +
-            RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+      PagedListInfo companyDirectoryProjectsInfo = this.getPagedListInfo(
+          context, "CompanyDirectoryProjectsInfo");
+      companyDirectoryProjectsInfo.setLink(
+          "CompanyDirectoryProjects.do?command=List&empid=" + employeeId +
+          RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId"));
       companyDirectoryProjectsInfo.setItemsPerPage(0);
       projects.setPagedListInfo(companyDirectoryProjectsInfo);
       //Project Info
       projects.setGroupId(-1);
-      projects.setProjectsForUser(contactDetails.getUserId());
-      projects.setIncludeGuestProjects(true);
-      projects.setPortalState(Constants.FALSE);
-      projects.setBuildOverallProgress(true);
-      projects.buildList(db);
+      if (contactDetails.hasAccount()) {
+        projects.setProjectsForUser(contactDetails.getUserId());
+        projects.setIncludeGuestProjects(true);
+        projects.setPortalState(Constants.FALSE);
+        projects.setBuildOverallProgress(true);
+        projects.buildList(db);
+      }
       // See which projects this user has access to...
       Iterator i = projects.iterator();
       while (i.hasNext()) {
         Project thisProject = (Project) i.next();
-        thisProject.setHasAccess(TeamMemberList.isOnTeam(db, thisProject.getId(), getUserId(context)));
+        thisProject.setHasAccess(
+            TeamMemberList.isOnTeam(
+                db, thisProject.getId(), getUserId(context)));
       }
       context.getRequest().setAttribute("projectList", projects);
     } catch (Exception errorMessage) {

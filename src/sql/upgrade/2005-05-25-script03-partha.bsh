@@ -1,0 +1,54 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+import java.util.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.communications.base.*;
+
+print("Inserting new contact history for all Email as Campaign...");
+ContactHistory history = null;
+CampaignList campaigns = new CampaignList();
+  campaigns.setActive(CampaignList.TRUE);
+  campaigns.buildList(db);
+  print(" the total number of campaigns in the system are "+ campaigns.size());
+  Iterator iterator = (Iterator) campaigns.iterator();
+  while (iterator.hasNext()) {
+    Campaign campaign = (Campaign) iterator.next();
+    RecipientList recipients = new RecipientList();
+    recipients.setCampaignId(campaign.getId());
+    recipients.buildList(db);
+    print(" the total number of recipients for the campaign are "+recipients.size());
+    Iterator secondIterator = (Iterator) recipients.iterator();
+    while (secondIterator.hasNext()) {
+      Recipient recipient = (Recipient) secondIterator.next();
+      Contact contact = new Contact(db, recipient.getContactId());
+      if (contact.getEnabled()) {
+        history = new ContactHistory();
+        history.setContactId(recipient.getContactId());
+        history.setLinkObjectId(OrganizationHistory.CAMPAIGN);
+        history.setLinkItemId(campaign.getId());
+        history.queryRecord(db);
+        if (history.getId() == -1) {
+          history.setLevel(10);
+          history.setModifiedBy(campaign.getModifiedBy());
+          history.setEnteredBy(campaign.getEnteredBy());
+          history.setEntered(campaign.getEntered());
+          history.setModified(campaign.getModified());
+          history.setEnabled(true);
+          history.setStatus("INSERT");
+          history.setType("Message");
+          history.setDescription("Subject: "+campaign.getSubject());
+          history.insert(db);
+          print("Contact History inserted for Campaign ID --> "+campaign.getId() +" with description --> "+history.getDescription());
+        } else {
+          print("history already exists for Campaign ID --> "+campaign.getId());
+        }
+      }
+    }
+  }
+
+print("Completed inserting contact history");
+
+

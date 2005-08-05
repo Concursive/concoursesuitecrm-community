@@ -85,6 +85,7 @@ function reopenContact(id) {
   <%}%>
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <input type="hidden" name="oppHeaderId" value="<%= PreviousCallDetails.getOppHeaderId() %>">
   <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">
     <input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
   </dhv:evaluate>

@@ -259,7 +259,8 @@ CREATE TABLE organization (
   import_id INT,
   status_id INT,
   alertdate_timezone VARCHAR(255),
-  contract_end_timezone VARCHAR(255)
+  contract_end_timezone VARCHAR(255),
+  trashed_date TIMESTAMP(3)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -281,8 +282,6 @@ CREATE TABLE contact (
   birthdate DATE,
   notes TEXT,
   site INT,
-  imname VARCHAR(30),
-  imservice INT,
   locale INT,
   employee_id varchar(80) UNIQUE,
   employmenttype INT,
@@ -308,7 +307,11 @@ CREATE TABLE contact (
   source INT REFERENCES lookup_contact_source(code),
   rating INT REFERENCES lookup_contact_rating(code),
   comments VARCHAR(255) NULL,
-  conversion_date TIMESTAMP(3) NULL
+  conversion_date TIMESTAMP(3) NULL,
+  additional_names VARCHAR(255),
+  nickname VARCHAR(80),
+  role VARCHAR(255),
+  trashed_date TIMESTAMP(3)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
@@ -807,5 +810,6 @@ CREATE TABLE relationship (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
+  modifiedby INT NOT NULL,
+  trashed_date TIMESTAMP(3)
 );

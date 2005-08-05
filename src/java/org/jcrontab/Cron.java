@@ -14,23 +14,24 @@
 
 package org.jcrontab;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Vector;
 import org.jcrontab.data.CalendarBuilder;
 import org.jcrontab.data.CrontabEntryBean;
 import org.jcrontab.data.CrontabEntryDAO;
 import org.jcrontab.data.DataNotFoundException;
 import org.jcrontab.log.Log;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Vector;
+
 /**
- *  This class represents the Thread that loads the information from the DAO's
- *  and maintains the list of events to execute by the Crontab.
+ * This class represents the Thread that loads the information from the DAO's
+ * and maintains the list of events to execute by the Crontab.
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public class Cron extends Thread {
@@ -54,39 +55,41 @@ public class Cron extends Thread {
   private static CalendarBuilder calb = null;
 
   /**
-   *  Used to lookup the time this class was loaded in the System object. Value
-   *  is the fully qualified classname + ".load-time"
+   * Used to lookup the time this class was loaded in the System object. Value
+   * is the fully qualified classname + ".load-time"
    *
-   *@see    #myClassLoadTime
+   * @see #myClassLoadTime
    */
   private final static String LOAD_TIME_PROPERTY = Cron.class.getName() + ".load-time";
 
   /**
-   *  This is a mechanism to avoid multiple instances of this _class_ being
-   *  loaded at the same time. In some environments, like Weblogic for instance,
-   *  an application can be reloaded at run time. By remembering the value when
-   *  the class is instantiated and comparing it to the current value from
-   *  System.getProperty({@link #LOAD_TIME_PROPERTY}) we can determine whether
-   *  the class has been reloaded. The {@link #run}() method needs to check
-   *  {@link #isClassReloaded} to see whether it should continue processing.
+   * This is a mechanism to avoid multiple instances of this _class_ being
+   * loaded at the same time. In some environments, like Weblogic for instance,
+   * an application can be reloaded at run time. By remembering the value when
+   * the class is instantiated and comparing it to the current value from
+   * System.getProperty({@link #LOAD_TIME_PROPERTY}) we can determine whether
+   * the class has been reloaded. The {@link #run}() method needs to check
+   * {@link #isClassReloaded} to see whether it should continue processing.
    *
-   *@see    #LOAD_TIME_PROPERTY
-   *@see    #isClassReloaded
+   * @see #LOAD_TIME_PROPERTY
+   * @see #isClassReloaded
    */
   private long myClassLoadTime;
 
   static {
-    System.setProperty(LOAD_TIME_PROPERTY, String.valueOf(System.currentTimeMillis()));
+    System.setProperty(
+        LOAD_TIME_PROPERTY, String.valueOf(System.currentTimeMillis()));
   }
 
 
   /**
-   *  Constructor of a Cron. This one doesn't receive any parameters to make it
-   *  easier to build an instance of Cron
+   * Constructor of a Cron. This one doesn't receive any parameters to make it
+   * easier to build an instance of Cron
    */
   public Cron() {
     // Remember the time the class was loaded.
-    this.myClassLoadTime = Long.parseLong(System.getProperty(LOAD_TIME_PROPERTY));
+    this.myClassLoadTime = Long.parseLong(
+        System.getProperty(LOAD_TIME_PROPERTY));
     crontab = Crontab.getInstance();
     iFrec = 3600;
     calb = new CalendarBuilder();
@@ -94,30 +97,33 @@ public class Cron extends Thread {
 
 
   /**
-   *  Constructor of a Cron
+   * Constructor of a Cron
    *
-   *@param  cront                     Crontab The Crontab that the cron must
-   *      call to generate new tasks
-   *@param  iTimeTableGenerationFrec  int Frecuency of generation of new time
-   *      table entries.
+   * @param cront                    Crontab The Crontab that the cron must
+   *                                 call to generate new tasks
+   * @param iTimeTableGenerationFrec int Frecuency of generation of new time
+   *                                 table entries.
    */
   public Cron(Crontab cront, int iTimeTableGenerationFrec) {
     // Remember the time the class was loaded.
-    this.myClassLoadTime = Long.parseLong(System.getProperty(LOAD_TIME_PROPERTY));
+    this.myClassLoadTime = Long.parseLong(
+        System.getProperty(LOAD_TIME_PROPERTY));
     crontab = cront;
     iFrec = iTimeTableGenerationFrec * 60;
   }
 
 
   /**
-   *  Checks whether this class has been reloaded since this instance was
-   *  instantiated.
+   * Checks whether this class has been reloaded since this instance was
+   * instantiated.
    *
-   *@return    true if the class has been reloaded, false if all is okay
+   * @return true if the class has been reloaded, false if all is okay
    */
   private boolean isClassReloaded() {
-    if (this.myClassLoadTime != Long.parseLong(System.getProperty(LOAD_TIME_PROPERTY))) {
-      Log.info("This class has been reloaded, so I am a runaway daemon. Canceling.");
+    if (this.myClassLoadTime != Long.parseLong(
+        System.getProperty(LOAD_TIME_PROPERTY))) {
+      Log.info(
+          "This class has been reloaded, so I am a runaway daemon. Canceling.");
       return true;
     } else {
       return false;
@@ -126,8 +132,8 @@ public class Cron extends Thread {
 
 
   /**
-   *  Runs the Cron Thread. This method is the method called by the crontab
-   *  class. this method is inherited from Thread Class
+   * Runs the Cron Thread. This method is the method called by the crontab
+   * class. this method is inherited from Thread Class
    */
   public void run() {
     if (System.getProperty("DEBUG") != null) {
@@ -176,7 +182,8 @@ public class Cron extends Thread {
         counter = 0;
       } else {
         // Else, then tell the crontab to create the new task
-        crontab.newTask(nextEv.getClassName(), nextEv.getMethodName(),
+        crontab.newTask(
+            nextEv.getClassName(), nextEv.getMethodName(),
             nextEv.getExtraInfo(), nextEv.getConnectionContext());
       }
     }
@@ -184,10 +191,10 @@ public class Cron extends Thread {
 
 
   /**
-   *  This method waits until the next minute to synxhonize the Cron activity
-   *  eith the system clock
+   * This method waits until the next minute to synxhonize the Cron activity
+   * eith the system clock
    *
-   *@deprecated
+   * @deprecated
    */
   private void waitNextMinute() {
     // Waits until the next minute
@@ -217,9 +224,7 @@ public class Cron extends Thread {
 
 
   /**
-   *  Tell The system that should stop
-   *
-   *@throws  Exception
+   * Tell The system that should stop
    */
   public static void stopInTheNextMinute() {
     shouldRun = false;
@@ -227,11 +232,11 @@ public class Cron extends Thread {
 
 
   /**
-   *  Loads the CrontabEntryBeans from the DAO
+   * Loads the CrontabEntryBeans from the DAO
    *
-   *@return             CrontabEntryBean[] the resultant array of
-   *      CrontabEntryBean
-   *@throws  Exception
+   * @return CrontabEntryBean[] the resultant array of
+   *         CrontabEntryBean
+   * @throws Exception
    */
   private static CrontabEntryBean[] readCrontab(Object cp) throws Exception {
     crontabEntryArray = CrontabEntryDAO.getInstance().findAll(cp);
@@ -240,10 +245,10 @@ public class Cron extends Thread {
 
 
   /**
-   *  Generates new time table entries (for new events). IN fact this method
-   *  does more or less everything, this method tells the DAO to look for
-   *  CrontabEntryArray, generates the CrontabBeans and puts itself as the last
-   *  event to generate again the list of events. Nice Method. :-)
+   * Generates new time table entries (for new events). IN fact this method
+   * does more or less everything, this method tells the DAO to look for
+   * CrontabEntryArray, generates the CrontabBeans and puts itself as the last
+   * event to generate again the list of events. Nice Method. :-)
    */
   public void generateEvents() {
     // This loads the info from the DAO
@@ -258,7 +263,8 @@ public class Cron extends Thread {
       cal.setTime(new Date((System.currentTimeMillis())));
       for (int i = 0; i < iFrec; i++) {
         for (int j = 0; j < crontabEntryArray.length; j++) {
-          if (crontabEntryArray[j].equals(cal) && shouldRunToday(crontabEntryArray[j].getBusinessDays())) {
+          if (crontabEntryArray[j].equals(cal) && shouldRunToday(
+              crontabEntryArray[j].getBusinessDays())) {
             CrontabBean ev = new CrontabBean();
             ev.setId(j);
             ev.setCalendar(cal);
@@ -266,7 +272,8 @@ public class Cron extends Thread {
             ev.setClassName(crontabEntryArray[j].getClassName());
             ev.setMethodName(crontabEntryArray[j].getMethodName());
             ev.setExtraInfo(crontabEntryArray[j].getExtraInfo());
-            ev.setConnectionContext(crontabEntryArray[j].getConnectionContext());
+            ev.setConnectionContext(
+                crontabEntryArray[j].getConnectionContext());
             lista1.add(ev);
           }
         }
@@ -286,9 +293,11 @@ public class Cron extends Thread {
     } catch (Exception e) {
       // Rounds the calendar to this minute
       Calendar cal = Calendar.getInstance();
-      cal.setTime(new Date(((long)
+      cal.setTime(
+          new Date(
+              ((long)
           (System.currentTimeMillis() / 60000))
-           * 60000));
+          * 60000));
       // Adds to the calendar the iFrec Minutes
       cal.add(Calendar.SECOND, iFrec);
       CrontabBean ev = new CrontabBean();
@@ -310,11 +319,11 @@ public class Cron extends Thread {
 
 
   /**
-   *  This method says if this CrontabEntryBean should run or not
+   * This method says if this CrontabEntryBean should run or not
    *
-   *@param  should      Description of the Parameter
-   *@return             Description of the Return Value
-   *@throws  Exception
+   * @param should Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception
    */
   private boolean shouldRunToday(boolean should) throws Exception {
     if (!Crontab.getInstance().isHoliday()) {

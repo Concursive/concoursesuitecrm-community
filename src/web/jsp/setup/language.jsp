@@ -38,9 +38,8 @@
       <dhv:label name="setup.chooseLanguageToContinue.colon">Choose a language to continue:</dhv:label><br />
       <br />
       <% HtmlSelect selectLanguage = HtmlSelectLanguage.getSelect("language", "None Selected");
-         selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml("language", "None Selected") %><font color="red">*</font><br />
-      <br />
-      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
+         selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml("language", "None Selected") %>
+      <input type="submit" value=">"/><br />
     </td>
   </tr>
 </table>

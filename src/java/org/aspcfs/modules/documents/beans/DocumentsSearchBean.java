@@ -2,14 +2,14 @@
  */
 package org.aspcfs.modules.documents.beans;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.SearchBean;
 
 /**
- *  Contains the properties of a search form
+ * Contains the properties of a search form
  *
- *@author     matt rajkowski
- *@created    May 17, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 17, 2004
  */
 public class DocumentsSearchBean extends SearchBean {
   public final static int UNDEFINED = -1;
@@ -24,15 +24,16 @@ public class DocumentsSearchBean extends SearchBean {
 
 
   /**
-   *  Constructor for the SearchBean object
+   * Constructor for the SearchBean object
    */
-  public DocumentsSearchBean() { }
+  public DocumentsSearchBean() {
+  }
 
 
   /**
-   *  Sets the scope attribute of the SearchBean object
+   * Sets the scope attribute of the SearchBean object
    *
-   *@param  tmp  The new scope value
+   * @param tmp The new scope value
    */
   public void setScope(String tmp) {
     // scope
@@ -55,9 +56,9 @@ public class DocumentsSearchBean extends SearchBean {
 
 
   /**
-   *  Gets the projectId attribute of the SearchBean object
+   * Gets the projectId attribute of the SearchBean object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getDocumentStoreId() {
     return documentStoreId;
@@ -65,9 +66,9 @@ public class DocumentsSearchBean extends SearchBean {
 
 
   /**
-   *  Sets the projectId attribute of the SearchBean object
+   * Sets the projectId attribute of the SearchBean object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setDocumentStoreId(int tmp) {
     this.documentStoreId = tmp;
@@ -75,9 +76,9 @@ public class DocumentsSearchBean extends SearchBean {
 
 
   /**
-   *  Sets the projectId attribute of the SearchBean object
+   * Sets the projectId attribute of the SearchBean object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setDocumentStoreId(String tmp) {
     this.documentStoreId = Integer.parseInt(tmp);

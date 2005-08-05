@@ -16,7 +16,6 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -27,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id: IssueCategoryList.java,v 1.3.134.2 2004/04/08 14:55:53
- *      rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: IssueCategoryList.java,v 1.3.134.2 2004/04/08 14:55:53
+ *          rvasista Exp $
+ * @created January 15, 2003
  */
 public class IssueCategoryList extends ArrayList {
 
@@ -43,15 +42,16 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Constructor for the IssueCategoryList object
+   * Constructor for the IssueCategoryList object
    */
-  public IssueCategoryList() { }
+  public IssueCategoryList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the IssueCategoryList object
+   * Sets the pagedListInfo attribute of the IssueCategoryList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -59,9 +59,9 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the IssueCategoryList object
+   * Sets the projectId attribute of the IssueCategoryList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -69,9 +69,9 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the IssueCategoryList object
+   * Sets the enabled attribute of the IssueCategoryList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -79,9 +79,9 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the IssueCategoryList object
+   * Sets the enabled attribute of the IssueCategoryList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -89,9 +89,9 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the project attribute of the IssueCategoryList object
+   * Sets the project attribute of the IssueCategoryList object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -99,10 +99,10 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -120,7 +120,8 @@ public class IssueCategoryList extends ArrayList {
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -146,20 +147,14 @@ public class IssueCategoryList extends ArrayList {
         "* " +
         "FROM project_issues_categories c " +
         "WHERE c.category_id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       IssueCategory thisCategory = new IssueCategory(rs);
       thisCategory.setProject(project);
       thisCategory.setProjectId(projectId);
@@ -171,10 +166,10 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator i = this.iterator();
@@ -186,10 +181,10 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
-   *@param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (projectId > -1) {
@@ -202,11 +197,11 @@ public class IssueCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

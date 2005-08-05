@@ -15,15 +15,17 @@
  */
 package org.aspcfs.apps.test;
 
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+
 import java.sql.*;
-import com.darkhorseventures.database.*;
 
 /**
- *  Application to test threaded connections
+ * Application to test threaded connections
  *
- *@author     mrajkowski
- *@created    July 10, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 10, 2001
  */
 public class Database {
 
@@ -32,13 +34,14 @@ public class Database {
 
 
   /**
-   *  Constructor for the Database object
+   * Constructor for the Database object
    */
-  public Database() { }
+  public Database() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public synchronized void runTests() {
     java.util.Date startDate = new java.util.Date();
@@ -79,10 +82,12 @@ public class Database {
 
       connectionsToExecute = 50;
       for (int i = 0; i < connectionsToExecute; i++) {
-        ConnectionThread p = new ConnectionThread("cdb_ds21", sqlDriver, i, "D");
+        ConnectionThread p = new ConnectionThread(
+            "cdb_ds21", sqlDriver, i, "D");
         p.start();
 
-        ConnectionThread q = new ConnectionThread("cdb_ds21", sqlDriver, i, "B");
+        ConnectionThread q = new ConnectionThread(
+            "cdb_ds21", sqlDriver, i, "B");
         q.start();
 
 //        ConnectionThread r = new ConnectionThread("cdb_ds21", sqlDriver, i, "C");
@@ -117,9 +122,7 @@ public class Database {
 
 
   /**
-   *  Description of the Method
-   *
-   *@since
+   * Description of the Method
    */
   public synchronized void endThreads() {
     notifyAll();
@@ -127,9 +130,9 @@ public class Database {
 
 
   /**
-   *  The main program for the Database class
+   * The main program for the Database class
    *
-   *@param  args  The command line arguments
+   * @param args The command line arguments
    */
   public static void main(String[] args) {
     Database thisApp = new Database();
@@ -138,11 +141,11 @@ public class Database {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     mrajkowski
-   *@created    July 10, 2001
-   *@version    $Id$
+   * @author mrajkowski
+   * @version $Id$
+   * @created July 10, 2001
    */
   class ConnectionThread extends Thread {
 
@@ -153,12 +156,12 @@ public class Database {
 
 
     /**
-     *  Constructor for the ConnectionThread object
+     * Constructor for the ConnectionThread object
      *
-     *@param  tmp        Description of the Parameter
-     *@param  sqlDriver  Description of the Parameter
-     *@param  runCount   Description of the Parameter
-     *@param  item       Description of the Parameter
+     * @param tmp       Description of the Parameter
+     * @param sqlDriver Description of the Parameter
+     * @param runCount  Description of the Parameter
+     * @param item      Description of the Parameter
      */
     ConnectionThread(String tmp, ConnectionPool sqlDriver, int runCount, String item) {
       this.database = tmp;
@@ -169,9 +172,7 @@ public class Database {
 
 
     /**
-     *  Main processing method for the ConnectionThread object
-     *
-     *@since
+     * Main processing method for the ConnectionThread object
      */
     public void run() {
       try {

@@ -23,20 +23,20 @@ import org.aspcfs.modules.actions.CFSModule;
 import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    April 28, 2003
- *@version    $Id: ProjectManagementIssueCategories.java,v 1.2 2003/05/07
- *      20:39:03 matt Exp $
+ * @author mrajkowski
+ * @version $Id: ProjectManagementIssueCategories.java,v 1.2 2003/05/07
+ *          20:39:03 matt Exp $
+ * @created April 28, 2003
  */
 public final class ProjectManagementIssueCategories extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
@@ -45,13 +45,16 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project (for access)
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-add")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-discussion-forums-add")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", "issues_categories_add");
+      context.getRequest().setAttribute(
+          "IncludeSection", "issues_categories_add");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -67,10 +70,10 @@ public final class ProjectManagementIssueCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEdit(ActionContext context) {
     Exception errorMessage = null;
@@ -81,15 +84,19 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project (for access)
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-edit")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-discussion-forums-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", "issues_categories_add");
+      context.getRequest().setAttribute(
+          "IncludeSection", "issues_categories_add");
       //Load the category
-      IssueCategory thisCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+      IssueCategory thisCategory = new IssueCategory(
+          db, Integer.parseInt(categoryId), thisProject.getId());
       context.getRequest().setAttribute("IssueCategory", thisCategory);
     } catch (Exception e) {
       errorMessage = e;
@@ -106,10 +113,10 @@ public final class ProjectManagementIssueCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
@@ -121,7 +128,8 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", "issues_add");
@@ -129,7 +137,8 @@ public final class ProjectManagementIssueCategories extends CFSModule {
       IssueCategory thisCategory = (IssueCategory) context.getFormBean();
       thisCategory.setModifiedBy(getUserId(context));
       if (thisCategory.getId() > 0) {
-        if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-edit")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-discussion-forums-edit")) {
           return "PermissionError";
         }
         isValid = this.validateObject(context, db, thisCategory);
@@ -138,7 +147,8 @@ public final class ProjectManagementIssueCategories extends CFSModule {
           indexAddItem(context, thisCategory);
         }
       } else {
-        if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-add")) {
+        if (!hasProjectAccess(
+            context, db, thisProject, "project-discussion-forums-add")) {
           return "PermissionError";
         }
         thisCategory.setProjectId(thisProject.getId());
@@ -166,10 +176,10 @@ public final class ProjectManagementIssueCategories extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -180,15 +190,17 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      Project thisProject = loadProject(
+          db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
-      if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-delete")) {
+      if (!hasProjectAccess(
+          context, db, thisProject, "project-discussion-forums-delete")) {
         return "PermissionError";
       }
       //Load the issue category
-      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
-      String filePath = this.getPath(context, "projects");
-      issueCategory.delete(db, filePath);
+      IssueCategory issueCategory = new IssueCategory(
+          db, Integer.parseInt(categoryId), thisProject.getId());
+      issueCategory.delete(db, this.getDbNamePath(context));
       indexDeleteItem(context, issueCategory);
     } catch (Exception e) {
       errorMessage = e;

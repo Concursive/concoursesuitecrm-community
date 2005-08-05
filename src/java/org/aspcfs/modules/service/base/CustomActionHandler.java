@@ -15,28 +15,29 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  An interface for processing custom sync api actions.
+ * An interface for processing custom sync api actions.
  *
- *@author     matt rajkowski
- *@created    April 29, 2003
- *@version    $Id: CustomActionHandler.java,v 1.2 2003/05/08 13:50:18 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: CustomActionHandler.java,v 1.2 2003/05/08 13:50:18 mrajkowski
+ *          Exp $
+ * @created April 29, 2003
  */
 public interface CustomActionHandler {
 
   /**
-   *  The sync API will execute the process method when an "execute" action is
-   *  called
+   * The sync API will execute the process method when an "execute" action is
+   * called
    *
-   *@param  packetContext     Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  values            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param packetContext Description of the Parameter
+   * @param db            Description of the Parameter
+   * @param values        Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(PacketContext packetContext, Connection db, HashMap values) throws SQLException;
 

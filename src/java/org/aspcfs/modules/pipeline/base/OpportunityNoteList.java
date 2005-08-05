@@ -15,36 +15,37 @@
  */
 package org.aspcfs.modules.pipeline.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.NoteList;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Contains a list of email addresses... currently used to build the list from
- *  the database with any of the parameters to limit the results.
+ * Contains a list of email addresses... currently used to build the list from
+ * the database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: OpportunityNoteList.java,v 1.5 2004/09/13 19:01:29 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: OpportunityNoteList.java,v 1.5 2004/09/13 19:01:29 mrajkowski
+ *          Exp $
+ * @created January 14, 2003
  */
 public class OpportunityNoteList extends NoteList {
 
   /**
-   *  Constructor for the OpportunityNoteList object
+   * Constructor for the OpportunityNoteList object
    */
-  public OpportunityNoteList() { }
+  public OpportunityNoteList() {
+  }
 
 
   /**
-   *  Constructor for the OpportunityNoteList object
+   * Constructor for the OpportunityNoteList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public OpportunityNoteList(HttpServletRequest request) {
     int i = 0;
@@ -59,10 +60,10 @@ public class OpportunityNoteList extends NoteList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -85,7 +86,8 @@ public class OpportunityNoteList extends NoteList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -98,9 +100,10 @@ public class OpportunityNoteList extends NoteList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(subject) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(subject) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -138,15 +141,7 @@ public class OpportunityNoteList extends NoteList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       OpportunityNote thisNote = new OpportunityNote(rs);
       this.addElement(thisNote);
     }

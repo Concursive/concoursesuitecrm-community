@@ -29,23 +29,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id: ProjectIndexer.java,v 1.2 2004/07/21 19:00:43 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ProjectIndexer.java,v 1.2 2004/07/21 19:00:43 mrajkowski Exp
+ *          $
+ * @created May 27, 2004
  */
 public class ProjectIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -75,29 +75,39 @@ public class ProjectIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  project          Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param project  Description of the Parameter
+   * @param modified Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, Project project, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "project"));
-    document.add(Field.Keyword("projectKeyId", String.valueOf(project.getId())));
+    document.add(
+        Field.Keyword("projectKeyId", String.valueOf(project.getId())));
     document.add(Field.Keyword("projectId", String.valueOf(project.getId())));
+    document.add(
+        Field.Text(
+            "trashed", ((project.getTrashedDate() != null) ? "Trashed" : "")));
     document.add(Field.Text("title", project.getTitle()));
-    document.add(Field.Text("contents",
-        project.getTitle() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            project.getTitle() + " " +
         project.getShortDescription() + " " +
         project.getRequestedBy() + " " +
         project.getRequestedByDept()));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(project.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(project.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
@@ -107,22 +117,23 @@ public class ProjectIndexer implements Indexer {
 
 
   /**
-   *  Gets the searchTerm attribute of the ProjectIndexer class
+   * Gets the searchTerm attribute of the ProjectIndexer class
    *
-   *@param  project  Description of the Parameter
-   *@return          The searchTerm value
+   * @param project Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(Project project) {
-    Term searchTerm = new Term("projectKeyId", String.valueOf(project.getId()));
+    Term searchTerm = new Term(
+        "projectKeyId", String.valueOf(project.getId()));
     return searchTerm;
   }
 
 
   /**
-   *  Gets the deleteTerm attribute of the ProjectIndexer class
+   * Gets the deleteTerm attribute of the ProjectIndexer class
    *
-   *@param  project  Description of the Parameter
-   *@return          The deleteTerm value
+   * @param project Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(Project project) {
     Term searchTerm = new Term("projectId", String.valueOf(project.getId()));

@@ -15,15 +15,17 @@
  */
 package com.zeroio.utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 19, 2004
- *@version    $Id: SearchHTMLUtils.java,v 1.2 2004/07/21 19:00:46 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: SearchHTMLUtils.java,v 1.2 2004/07/21 19:00:46 mrajkowski Exp
+ *          $
+ * @created June 19, 2004
  */
 public class SearchHTMLUtils {
 
@@ -33,11 +35,11 @@ public class SearchHTMLUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  terms    Description of the Parameter
-   *@param  content  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param terms   Description of the Parameter
+   * @param content Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String highlightText(ArrayList terms, String content) {
     HashMap positions = new HashMap();
@@ -70,15 +72,22 @@ public class SearchHTMLUtils {
         int endWord = findEndWord(body, pos + term.length());
         // Store the longest block
         if (positions.containsKey(new Integer(beginWord))) {
-          HighlightElement tmp = (HighlightElement) positions.get(new Integer(beginWord));
+          HighlightElement tmp = (HighlightElement) positions.get(
+              new Integer(beginWord));
           if (endWord > tmp.getEndWord()) {
-            positions.put(new Integer(beginWord), new HighlightElement(beginWord, pos, pos + term.length() - 1, endWord));
+            positions.put(
+                new Integer(beginWord), new HighlightElement(
+                    beginWord, pos, pos + term.length() - 1, endWord));
           }
         } else {
-          positions.put(new Integer(beginWord), new HighlightElement(beginWord, pos, pos + term.length() - 1, endWord));
+          positions.put(
+              new Integer(beginWord), new HighlightElement(
+                  beginWord, pos, pos + term.length() - 1, endWord));
         }
         // Store the highlight
-        highlights.put(new Integer(pos), new HighlightElement(beginWord, pos, pos + term.length() - 1, endWord));
+        highlights.put(
+            new Integer(pos), new HighlightElement(
+                beginWord, pos, pos + term.length() - 1, endWord));
         if (low == -1 || beginWord < low) {
           low = beginWord;
         }
@@ -103,7 +112,8 @@ public class SearchHTMLUtils {
       // Step through the content, looking for highlighted items
       if (positions.containsKey(thisPosition)) {
         // See if an item has output around here
-        HighlightElement element = (HighlightElement) positions.get(thisPosition);
+        HighlightElement element = (HighlightElement) positions.get(
+            thisPosition);
         // Determine when printing will start
         if (startWord == -1 || (startWord != -1 && element.getBeginWord() > startWord)) {
           startWord = element.getBeginWord();
@@ -115,7 +125,8 @@ public class SearchHTMLUtils {
       }
       if (highlights.containsKey(thisPosition)) {
         // See if an item has highlighting around here
-        HighlightElement element = (HighlightElement) highlights.get(thisPosition);
+        HighlightElement element = (HighlightElement) highlights.get(
+            thisPosition);
         // Determine when highlighting will start
         if (startHighlight == -1 || element.getStart() > startHighlight) {
           startHighlight = element.getStart();
@@ -161,11 +172,11 @@ public class SearchHTMLUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pos   Description of the Parameter
-   *@param  body  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param pos  Description of the Parameter
+   * @param body Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int findBeginWord(String body, int pos) {
     if (pos < MAX_CHARS) {
@@ -205,11 +216,11 @@ public class SearchHTMLUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  body  Description of the Parameter
-   *@param  pos   Description of the Parameter
-   *@return       Description of the Return Value
+   * @param body Description of the Parameter
+   * @param pos  Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int findEndWord(String body, int pos) {
     if (pos + MAX_CHARS > body.length()) {

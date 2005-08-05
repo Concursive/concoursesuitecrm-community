@@ -29,21 +29,21 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Allows a client to upload a file using HTTP/S for any of the modules...
- *  requires authentication
+ * Allows a client to upload a file using HTTP/S for any of the modules...
+ * requires authentication
  *
- *@author     matt rajkowski
- *@created    October 9, 2002
- *@version    $Id: ProcessDocument.java,v 1.4 2003/01/13 22:01:24 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ProcessDocument.java,v 1.4 2003/01/13 22:01:24 mrajkowski Exp
+ *          $
+ * @created October 9, 2002
  */
 public final class ProcessDocument extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
 
@@ -69,14 +69,19 @@ public final class ProcessDocument extends CFSModule {
       db = auth.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       if (db == null) {
-        errors.put("authError", systemStatus.getLabel("object.validation.noAuthorization"));
+        errors.put(
+            "authError", systemStatus.getLabel(
+                "object.validation.noAuthorization"));
       } else {
         //For the user's filelibrary path
-        context.getSession().setAttribute("ConnectionElement", auth.getConnectionElement(context));
+        context.getSession().setAttribute(
+            "ConnectionElement", auth.getConnectionElement(context));
       }
       String type = (String) parts.get("type");
       if (type == null) {
-        errors.put("typeError", systemStatus.getLabel("object.validation.objectTypeRequired"));
+        errors.put(
+            "typeError", systemStatus.getLabel(
+                "object.validation.objectTypeRequired"));
       }
       String id = null;
       String newFilePath = null;
@@ -87,11 +92,15 @@ public final class ProcessDocument extends CFSModule {
         linkModuleId = Constants.DOCUMENTS_TICKETS;
       }
       if (id == null) {
-        errors.put("idError", systemStatus.getLabel("object.validation.objectIdNotSpecified"));
+        errors.put(
+            "idError", systemStatus.getLabel(
+                "object.validation.objectIdNotSpecified"));
       }
       String enteredBy = (String) parts.get("enteredBy");
       if (enteredBy == null) {
-        errors.put("enteredByError", systemStatus.getLabel("object.validation.required"));
+        errors.put(
+            "enteredByError", systemStatus.getLabel(
+                "object.validation.required"));
       }
 
       String subject = (String) parts.get("subject");
@@ -113,13 +122,16 @@ public final class ProcessDocument extends CFSModule {
           uploadedFile.delete();
         } else {
           //Move the file from tmp to the generated 'type' path
-          String finalFilePath = newFilePath + getDatePath(newFileInfo.getRealFilename());
+          String finalFilePath = newFilePath + getDatePath(
+              newFileInfo.getRealFilename());
           File renamedPath = new File(finalFilePath);
           renamedPath.mkdirs();
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("ProcessDocument-> Final path: " + finalFilePath);
+            System.out.println(
+                "ProcessDocument-> Final path: " + finalFilePath);
           }
-          File renamedFile = new File(finalFilePath + newFileInfo.getRealFilename());
+          File renamedFile = new File(
+              finalFilePath + newFileInfo.getRealFilename());
           uploadedFile.renameTo(renamedFile);
 
           //Insert record into database
@@ -141,7 +153,9 @@ public final class ProcessDocument extends CFSModule {
         }
       } else {
         recordInserted = false;
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", errorMessage);

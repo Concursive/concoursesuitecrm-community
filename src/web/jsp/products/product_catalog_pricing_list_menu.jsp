@@ -22,27 +22,32 @@
   var thisType = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, priceId, type) {
+  function displayMenu(loc, id, priceId, type, trashed) {
     thisPriceId = priceId;
     thisType = type;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuPricing", "down", 0, 0, 170, getHeight("menuPricingTable"));
     }
 	  return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
-  function updateMenu() {
-    if (thisType == 'active') {
-      showSpan('menuDisable');
+
+  function updateMenu(trashed) {
+    if (trashed == 'true'){
       hideSpan('menuEnable');
-    } else if (thisType == 'inactive') {
-      //showSpan('menuEnable');
       hideSpan('menuDisable');
+    } else {
+      if (thisType == 'active') {
+        showSpan('menuDisable');
+        hideSpan('menuEnable');
+      } else if (thisType == 'inactive') {
+        showSpan('menuEnable');
+        hideSpan('menuDisable');
+      }
     }
   }
-  
+
   function details() {
 		window.location.href='ProductCatalogPricings.do?command=PricingDetails&productId=<%= productCatalog.getId() %>&pricingId=' + thisPriceId + '&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= productCategory.getId() %>';
 	}
@@ -82,7 +87,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          <dhv:label name="button.disable">Diasble</dhv:label>
+          <dhv:label name="button.disable">Disable</dhv:label>
         </td>
       </tr>
       </dhv:permission>

@@ -24,6 +24,7 @@
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="POST" name="inputForm" action="ProjectManagementFiles.do?command=Update" onSubmit="return checkFileForm(this);">
 <script language="JavaScript">
   function checkFileForm(form) {
     if (form.dosubmit.value == "false") {
@@ -49,7 +50,6 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="ProjectManagementFiles.do?command=Update" onSubmit="return checkFileForm(this);">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>

@@ -15,22 +15,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id: FileItemVersionList.java,v 1.3.130.1 2004/03/19 21:00:50
- *      rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: FileItemVersionList.java,v 1.3.130.1 2004/03/19 21:00:50
+ *          rvasista Exp $
+ * @created January 15, 2003
  */
 public class FileItemVersionList extends ArrayList {
 
@@ -43,15 +43,16 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Constructor for the FileItemVersionList object
+   * Constructor for the FileItemVersionList object
    */
-  public FileItemVersionList() { }
+  public FileItemVersionList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the FileItemList object
+   * Sets the pagedListInfo attribute of the FileItemList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -59,9 +60,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the FileItemVersionList object
+   * Sets the itemId attribute of the FileItemVersionList object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -69,9 +70,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Gets the itemId attribute of the FileItemVersionList object
+   * Gets the itemId attribute of the FileItemVersionList object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -79,9 +80,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the FileItemList object
+   * Sets the owner attribute of the FileItemList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -89,9 +90,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Sets the ownerIdRange attribute of the FileItemList object
+   * Sets the ownerIdRange attribute of the FileItemList object
    *
-   *@param  tmp  The new ownerIdRange value
+   * @param tmp The new ownerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -99,9 +100,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Sets the enteredRangeStart attribute of the FileItemVersionList object
+   * Sets the enteredRangeStart attribute of the FileItemVersionList object
    *
-   *@param  tmp  The new enteredRangeStart value
+   * @param tmp The new enteredRangeStart value
    */
   public void setEnteredRangeStart(java.sql.Timestamp tmp) {
     this.enteredRangeStart = tmp;
@@ -109,9 +110,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Sets the enteredRangeEnd attribute of the FileItemVersionList object
+   * Sets the enteredRangeEnd attribute of the FileItemVersionList object
    *
-   *@param  tmp  The new enteredRangeEnd value
+   * @param tmp The new enteredRangeEnd value
    */
   public void setEnteredRangeEnd(java.sql.Timestamp tmp) {
     this.enteredRangeEnd = tmp;
@@ -119,9 +120,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the FileItemList object
+   * Gets the pagedListInfo attribute of the FileItemList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -129,9 +130,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the FileItemList object
+   * Gets the owner attribute of the FileItemList object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -139,9 +140,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Gets the ownerIdRange attribute of the FileItemList object
+   * Gets the ownerIdRange attribute of the FileItemList object
    *
-   *@return    The ownerIdRange value
+   * @return The ownerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -149,10 +150,10 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Generates a list of matching FileItems
+   * Generates a list of matching FileItems
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -186,9 +187,10 @@ public class FileItemVersionList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(subject) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(subject) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -217,20 +219,14 @@ public class FileItemVersionList extends ArrayList {
         "v.* " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       FileItemVersion thisItem = new FileItemVersion(rs);
       this.add(thisItem);
     }
@@ -240,9 +236,9 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -270,11 +266,11 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -295,11 +291,11 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
@@ -309,7 +305,8 @@ public class FileItemVersionList extends ArrayList {
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -322,21 +319,22 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public long queryFileSize(Connection db) throws SQLException {
     long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(size) AS recordsize " +
+        "SELECT SUM(\"size\") AS recordsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -349,17 +347,17 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  ownerId           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param ownerId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static long queryOwnerSize(Connection db, int ownerId) throws SQLException {
     long recordSize = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT SUM(size) AS recordsize " +
+        "SELECT SUM(\"size\") AS recordsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 " +
         "AND v.enteredby = ? ");
@@ -375,11 +373,11 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int queryDownloadCount(Connection db) throws SQLException {
     int downloadCount = 0;
@@ -389,7 +387,8 @@ public class FileItemVersionList extends ArrayList {
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -402,21 +401,22 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int queryDownloadSize(Connection db) throws SQLException {
     int downloadSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(downloads * size) AS downloadsize " +
+        "SELECT SUM(downloads * \"size\") AS downloadsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

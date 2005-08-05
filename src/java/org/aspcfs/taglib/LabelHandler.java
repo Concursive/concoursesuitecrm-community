@@ -16,8 +16,9 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.Template;
 
 import javax.servlet.jsp.tagext.TagSupport;
@@ -26,13 +27,13 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 /**
- *  This Class evaluates whether a SystemStatus preference exists for the
- *  supplied label.
+ * This Class evaluates whether a SystemStatus preference exists for the
+ * supplied label.
  *
- *@author     Matt Rajkowski
- *@created    February 25, 2002
- *@version    $Id: LabelHandler.java,v 1.3.180.2 2004/08/30 14:13:43 mrajkowski
- *      Exp $
+ * @author Matt Rajkowski
+ * @version $Id: LabelHandler.java,v 1.3.180.2 2004/08/30 14:13:43 mrajkowski
+ *          Exp $
+ * @created February 25, 2002
  */
 public class LabelHandler extends TagSupport {
   private String labelName = null;
@@ -41,10 +42,10 @@ public class LabelHandler extends TagSupport {
   private boolean subMenuItem = false;
 
   /**
-   *  Sets the Name attribute of the LabelHandler object
+   * Sets the Name attribute of the LabelHandler object
    *
-   *@param  tmp  The new Name value
-   *@since       1.1
+   * @param tmp The new Name value
+   * @since 1.1
    */
   public final void setName(String tmp) {
     labelName = tmp;
@@ -60,9 +61,9 @@ public class LabelHandler extends TagSupport {
 
 
   /**
-   *  Sets the param attribute of the LabelHandler object
+   * Sets the param attribute of the LabelHandler object
    *
-   *@param  tmp  The new params value
+   * @param tmp The new params value
    */
   public void setParam(String tmp) {
     params = new HashMap();
@@ -77,24 +78,27 @@ public class LabelHandler extends TagSupport {
 
 
   /**
-   *  Checks to see if the SystemStatus has a preference set for this label. If
-   *  so, the found label will be used, otherwise the body tag will be used.
+   * Checks to see if the SystemStatus has a preference set for this label. If
+   * so, the found label will be used, otherwise the body tag will be used.
    *
-   *@return                   Description of the Returned Value
-   *@since                    1.1
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public final int doStartTag() {
     String newLabel = null;
 
     // Use the system status if available
-    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+        "ConnectionElement");
     if (ce == null) {
-      ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute("applicationPrefs");
+      ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute(
+          "applicationPrefs");
       if (prefs != null) {
         newLabel = prefs.getLabel(labelName);
       }
     } else {
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus == null) {
         System.out.println("LabelHandler-> SystemStatus is null");
       }
@@ -118,7 +122,7 @@ public class LabelHandler extends TagSupport {
     // Output the label value, else output the body of the tag
     if (newLabel != null) {
       try {
-        this.pageContext.getOut().write(newLabel);
+        this.pageContext.getOut().write(StringUtils.toHtmlChars(newLabel));
         return SKIP_BODY;
       } catch (java.io.IOException e) {
         //Nowhere to output

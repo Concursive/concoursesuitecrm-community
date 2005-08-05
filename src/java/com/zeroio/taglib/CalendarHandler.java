@@ -16,24 +16,26 @@
 
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.sql.Timestamp;
-import java.sql.Date;
-import org.aspcfs.utils.*;
-import java.text.*;
-import java.util.Locale;
 import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.utils.web.HtmlSelectTimeZone; 
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.HtmlSelectTimeZone;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
- *  This Class outs a calendar field based on the user's locale information for
- *  the current UserBean session.
+ * This Class outs a calendar field based on the user's locale information for
+ * the current UserBean session.
  *
- *@author     matt rajkowski
- *@created    July 21, 2004
- *@version    $Id: CalendarHandler.java,v 1.1 2004/07/21 19:00:43 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: CalendarHandler.java,v 1.1 2004/07/21 19:00:43 mrajkowski Exp
+ *          $
+ * @created July 21, 2004
  */
 public class CalendarHandler extends TagSupport {
 
@@ -47,9 +49,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the dateFormat attribute of the CalendarHandler object
+   * Sets the dateFormat attribute of the CalendarHandler object
    *
-   *@param  dateFormat  The new dateFormat value
+   * @param dateFormat The new dateFormat value
    */
   public void setDateFormat(int dateFormat) {
     this.dateFormat = dateFormat;
@@ -57,9 +59,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the dateFormat attribute of the CalendarHandler object
+   * Sets the dateFormat attribute of the CalendarHandler object
    *
-   *@param  dateFormat  The new dateFormat value
+   * @param dateFormat The new dateFormat value
    */
   public void setDateFormat(String dateFormat) {
     this.dateFormat = Integer.parseInt(dateFormat);
@@ -67,9 +69,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the form attribute of the CalendarHandler object
+   * Sets the form attribute of the CalendarHandler object
    *
-   *@param  tmp  The new form value
+   * @param tmp The new form value
    */
   public void setForm(String tmp) {
     this.form = tmp;
@@ -77,9 +79,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the field attribute of the CalendarHandler object
+   * Sets the field attribute of the CalendarHandler object
    *
-   *@param  tmp  The new field value
+   * @param tmp The new field value
    */
   public void setField(String tmp) {
     this.field = tmp;
@@ -87,9 +89,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the timeZone attribute of the CalendarHandler object
+   * Sets the timeZone attribute of the CalendarHandler object
    *
-   *@param  tmp  The new timeZone value
+   * @param tmp The new timeZone value
    */
   public void setTimeZone(String tmp) {
     timeZone = tmp;
@@ -97,9 +99,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the timestamp attribute of the CalendarHandler object
+   * Sets the timestamp attribute of the CalendarHandler object
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(String tmp) {
     this.setTimestamp(DatabaseUtils.parseDateToTimestamp(tmp));
@@ -107,9 +109,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the timestamp attribute of the CalendarHandler object
+   * Sets the timestamp attribute of the CalendarHandler object
    *
-   *@param  tmp  The new timestamp value
+   * @param tmp The new timestamp value
    */
   public void setTimestamp(java.sql.Timestamp tmp) {
     timestamp = tmp;
@@ -117,9 +119,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the hidden attribute of the CalendarHandler object
+   * Sets the hidden attribute of the CalendarHandler object
    *
-   *@param  tmp  The new hidden value
+   * @param tmp The new hidden value
    */
   public void setHidden(boolean tmp) {
     this.hidden = tmp;
@@ -127,9 +129,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the showTimeZone attribute of the CalendarHandler object
+   * Sets the showTimeZone attribute of the CalendarHandler object
    *
-   *@param  tmp  The new showTimeZone value
+   * @param tmp The new showTimeZone value
    */
   public void setShowTimeZone(boolean tmp) {
     this.showTimeZone = tmp;
@@ -137,9 +139,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the showTimeZone attribute of the CalendarHandler object
+   * Sets the showTimeZone attribute of the CalendarHandler object
    *
-   *@param  tmp  The new showTimeZone value
+   * @param tmp The new showTimeZone value
    */
   public void setShowTimeZone(String tmp) {
     this.showTimeZone = DatabaseUtils.parseBoolean(tmp);
@@ -147,9 +149,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Sets the hidden attribute of the CalendarHandler object
+   * Sets the hidden attribute of the CalendarHandler object
    *
-   *@param  tmp  The new hidden value
+   * @param tmp The new hidden value
    */
   public void setHidden(String tmp) {
     this.hidden = DatabaseUtils.parseBoolean(tmp);
@@ -157,10 +159,10 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     String dateString = "";
@@ -169,7 +171,8 @@ public class CalendarHandler extends TagSupport {
     try {
       Locale locale = null;
       // Retrieve the user's timezone from their session
-      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
+          "User");
       if (thisUser != null) {
         if (timeZone == null) {
           timeZone = thisUser.getUserRecord().getTimeZone();
@@ -185,7 +188,8 @@ public class CalendarHandler extends TagSupport {
         //Format the specified value with the retrieved timezone
         SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
             dateFormat, locale);
-        formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
+        formatter.applyPattern(
+            DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
 
         //set the timezone
         if (timeZone != null) {
@@ -209,8 +213,9 @@ public class CalendarHandler extends TagSupport {
         String toWriteOut = "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
             "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
             "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>";
-        if (showTimeZone){
-          toWriteOut = toWriteOut + "&nbsp;" + HtmlSelectTimeZone.getSelect(field +"TimeZone", timeZone).getHtml();
+        if (showTimeZone) {
+          toWriteOut = toWriteOut + "&nbsp;" + HtmlSelectTimeZone.getSelect(
+              field + "TimeZone", timeZone).getHtml();
         }
         this.pageContext.getOut().write(toWriteOut);
       } else {
@@ -224,9 +229,9 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

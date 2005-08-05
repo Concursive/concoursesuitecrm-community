@@ -15,41 +15,36 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import javax.servlet.*;
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.base.CustomField;
-import org.aspcfs.utils.web.CustomColumn;
 import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.utils.Template;
-import org.aspcfs.controller.SubmenuItem;
-import org.aspcfs.utils.web.CustomForm;
-import org.aspcfs.utils.web.HtmlButton;
+import org.w3c.dom.Element;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.util.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris price
- *@created    June 12, 2002
- *@version    $Id: CustomFormList.java,v 1.2 2002/08/27 19:28:31 mrajkowski Exp
- *      $
+ * @author chris price
+ * @version $Id: CustomFormList.java,v 1.2 2002/08/27 19:28:31 mrajkowski Exp
+ *          $
+ * @created June 12, 2002
  */
 public class CustomFormList extends HashMap {
 
   /**
-   *  Constructor for the CustomFormList object
+   * Constructor for the CustomFormList object
    */
-  public CustomFormList() { }
+  public CustomFormList() {
+  }
 
 
   /**
-   *  Constructor for the CustomFormList object
+   * Constructor for the CustomFormList object
    *
-   *@param  context  Description of the Parameter
-   *@param  fn       Description of the Parameter
+   * @param context Description of the Parameter
+   * @param fn      Description of the Parameter
    */
   public CustomFormList(ServletContext context, String fn) {
     loadXML(context, fn);
@@ -57,11 +52,11 @@ public class CustomFormList extends HashMap {
 
 
   /**
-   *  Loads the given XML file & builds the CustomForm object from the XML
+   * Loads the given XML file & builds the CustomForm object from the XML
    *
-   *@param  context  Description of the Parameter
-   *@param  file     Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @param file    Description of the Parameter
+   * @return Description of the Return Value
    */
   private LinkedHashMap loadXML(ServletContext context, String file) {
     LinkedHashMap form = new LinkedHashMap();
@@ -74,7 +69,8 @@ public class CustomFormList extends HashMap {
       while (list.hasNext()) {
         Element f = (Element) list.next();
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CustomFormList-> Form Added: " + f.getAttribute("name"));
+          System.out.println(
+              "CustomFormList-> Form Added: " + f.getAttribute("name"));
         }
         CustomForm newForm = this.buildForm(f);
         this.put(newForm.getName(), newForm);
@@ -87,12 +83,12 @@ public class CustomFormList extends HashMap {
 
 
   /**
-   *  Builds the CustomForm object from the XML<br>
-   *  CustomForm follows a strict heirarchy : tabs --> groups --> rows -->
-   *  columns --> fields
+   * Builds the CustomForm object from the XML<br>
+   * CustomForm follows a strict heirarchy : tabs --> groups --> rows -->
+   * columns --> fields
    *
-   *@param  container  XML element containing the representation of the form
-   *@return            The populated CustomForm
+   * @param container XML element containing the representation of the form
+   * @return The populated CustomForm
    */
   private CustomForm buildForm(Element container) {
     CustomForm thisForm = new CustomForm();
@@ -105,7 +101,8 @@ public class CustomFormList extends HashMap {
     Iterator buttons = buttonElements.iterator();
     while (buttons.hasNext()) {
       Element button = (Element) buttons.next();
-      thisForm.getButtonList().put(button.getAttribute("text"), button.getAttribute("link"));
+      thisForm.getButtonList().put(
+          button.getAttribute("text"), button.getAttribute("link"));
     }
     //Tabs
     LinkedList tabList = new LinkedList();
@@ -178,10 +175,10 @@ public class CustomFormList extends HashMap {
 
 
   /**
-   *  Sets the Attributes of a CustomField from XML element
+   * Sets the Attributes of a CustomField from XML element
    *
-   *@param  field      XML element representing the field
-   *@param  thisField  CustomField
+   * @param field     XML element representing the field
+   * @param thisField CustomField
    */
   private void processField(Element field, CustomField thisField) {
     thisField.setName(field.getAttribute("name"));
@@ -200,7 +197,8 @@ public class CustomFormList extends HashMap {
     thisField.setTextAsCode(field.getAttribute("textAsCode"));
     thisField.setLookupList(field.getAttribute("lookupList"));
 
-    StringTokenizer st = new StringTokenizer(field.getAttribute("parameters"), "^");
+    StringTokenizer st = new StringTokenizer(
+        field.getAttribute("parameters"), "^");
 
     if (st.hasMoreTokens()) {
       while (st.hasMoreTokens()) {

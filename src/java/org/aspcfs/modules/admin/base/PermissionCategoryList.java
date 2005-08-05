@@ -15,23 +15,26 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
- *  Contains a list of PermissionCategory objects, the list can be generated
- *  based on specified filters
+ * Contains a list of PermissionCategory objects, the list can be generated
+ * based on specified filters
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id: PermissionCategoryList.java,v 1.7.24.1 2003/09/15 20:58:21
- *      mrajkowski Exp $
+ * @author Mathur
+ * @version $Id: PermissionCategoryList.java,v 1.7.24.1 2003/09/15 20:58:21
+ *          mrajkowski Exp $
+ * @created January 13, 2003
  */
 public class PermissionCategoryList extends Vector {
 
@@ -50,15 +53,16 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Constructor for the PermissionCategoryList object
+   * Constructor for the PermissionCategoryList object
    */
-  public PermissionCategoryList() { }
+  public PermissionCategoryList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the PermissionCategoryList object
+   * Sets the pagedListInfo attribute of the PermissionCategoryList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -66,10 +70,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the PermissionCategoryList
-   *  object
+   * Sets the emptyHtmlSelectRecord attribute of the PermissionCategoryList
+   * object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -77,9 +81,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the PermissionCategoryList object
+   * Gets the pagedListInfo attribute of the PermissionCategoryList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -87,10 +91,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the PermissionCategoryList
-   *  object
+   * Gets the emptyHtmlSelectRecord attribute of the PermissionCategoryList
+   * object
    *
-   *@return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -98,9 +102,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the tableName attribute of the PermissionCategoryList object
+   * Gets the tableName attribute of the PermissionCategoryList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -108,9 +112,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the uniqueField attribute of the PermissionCategoryList object
+   * Gets the uniqueField attribute of the PermissionCategoryList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -118,9 +122,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the lastAnchor attribute of the PermissionCategoryList object
+   * Gets the lastAnchor attribute of the PermissionCategoryList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -128,9 +132,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the nextAnchor attribute of the PermissionCategoryList object
+   * Gets the nextAnchor attribute of the PermissionCategoryList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -138,9 +142,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the syncType attribute of the PermissionCategoryList object
+   * Gets the syncType attribute of the PermissionCategoryList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -148,9 +152,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the lastAnchor attribute of the PermissionCategoryList object
+   * Sets the lastAnchor attribute of the PermissionCategoryList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -158,9 +162,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the nextAnchor attribute of the PermissionCategoryList object
+   * Sets the nextAnchor attribute of the PermissionCategoryList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -168,9 +172,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the syncType attribute of the PermissionCategoryList object
+   * Sets the syncType attribute of the PermissionCategoryList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -178,9 +182,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the enabledState attribute of the PermissionCategoryList object
+   * Sets the enabledState attribute of the PermissionCategoryList object
    *
-   *@param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -188,9 +192,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the activeState attribute of the PermissionCategoryList object
+   * Sets the activeState attribute of the PermissionCategoryList object
    *
-   *@param  tmp  The new activeState value
+   * @param tmp The new activeState value
    */
   public void setActiveState(int tmp) {
     this.activeState = tmp;
@@ -198,9 +202,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the enabledState attribute of the PermissionCategoryList object
+   * Gets the enabledState attribute of the PermissionCategoryList object
    *
-   *@return    The enabledState value
+   * @return The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -208,9 +212,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the activeState attribute of the PermissionCategoryList object
+   * Gets the activeState attribute of the PermissionCategoryList object
    *
-   *@return    The activeState value
+   * @return The activeState value
    */
   public int getActiveState() {
     return activeState;
@@ -218,10 +222,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the customizableModulesOnly attribute of the PermissionCategoryList
-   *  object
+   * Gets the customizableModulesOnly attribute of the PermissionCategoryList
+   * object
    *
-   *@return    The customizableModulesOnly value
+   * @return The customizableModulesOnly value
    */
   public boolean getCustomizableModulesOnly() {
     return customizableModulesOnly;
@@ -229,10 +233,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the customizableModulesOnly attribute of the PermissionCategoryList
-   *  object
+   * Sets the customizableModulesOnly attribute of the PermissionCategoryList
+   * object
    *
-   *@param  customizableModulesOnly  The new customizableModulesOnly value
+   * @param customizableModulesOnly The new customizableModulesOnly value
    */
   public void setCustomizableModulesOnly(boolean customizableModulesOnly) {
     this.customizableModulesOnly = customizableModulesOnly;
@@ -240,10 +244,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the modulesWithReportsOnly attribute of the PermissionCategoryList
-   *  object
+   * Gets the modulesWithReportsOnly attribute of the PermissionCategoryList
+   * object
    *
-   *@return    The modulesWithReportsOnly value
+   * @return The modulesWithReportsOnly value
    */
   public boolean getModulesWithReportsOnly() {
     return modulesWithReportsOnly;
@@ -251,10 +255,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the modulesWithReportsOnly attribute of the PermissionCategoryList
-   *  object
+   * Sets the modulesWithReportsOnly attribute of the PermissionCategoryList
+   * object
    *
-   *@param  tmp  The new modulesWithReportsOnly value
+   * @param tmp The new modulesWithReportsOnly value
    */
   public void setModulesWithReportsOnly(boolean tmp) {
     this.modulesWithReportsOnly = tmp;
@@ -262,10 +266,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Sets the modulesWithReportsOnly attribute of the PermissionCategoryList
-   *  object
+   * Sets the modulesWithReportsOnly attribute of the PermissionCategoryList
+   * object
    *
-   *@param  tmp  The new modulesWithReportsOnly value
+   * @param tmp The new modulesWithReportsOnly value
    */
   public void setModulesWithReportsOnly(String tmp) {
     this.modulesWithReportsOnly = DatabaseUtils.parseBoolean(tmp);
@@ -273,10 +277,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -296,7 +300,8 @@ public class PermissionCategoryList extends Vector {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -309,9 +314,10 @@ public class PermissionCategoryList extends Vector {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(pc.category) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pc.category) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -340,22 +346,15 @@ public class PermissionCategoryList extends Vector {
         "* " +
         "FROM permission_category pc " +
         "WHERE pc.category_id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       PermissionCategory thisCategory = new PermissionCategory(rs);
       this.add(thisCategory);
     }
@@ -365,9 +364,9 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (enabledState != -1) {
@@ -389,11 +388,11 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -419,10 +418,10 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the htmlSelect attribute of the PermissionCategoryList object
+   * Gets the htmlSelect attribute of the PermissionCategoryList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -430,11 +429,11 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   *  Gets the htmlSelect attribute of the PermissionCategoryList object
+   * Gets the htmlSelect attribute of the PermissionCategoryList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect categoryListSelect = new HtmlSelect();

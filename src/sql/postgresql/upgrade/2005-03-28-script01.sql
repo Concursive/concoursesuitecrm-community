@@ -1,6 +1,5 @@
 -- Missing key
-ALTER TABLE ONLY project_news
-    ADD CONSTRAINT project_news_pkey PRIMARY KEY (news_id);
+--ALTER TABLE ONLY project_news ADD CONSTRAINT project_news_pkey PRIMARY KEY (news_id);
 
 -- Existing options not functional
 DELETE FROM quote_product_option_integer;

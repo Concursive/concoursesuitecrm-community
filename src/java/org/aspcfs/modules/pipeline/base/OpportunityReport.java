@@ -15,32 +15,32 @@
  */
 package org.aspcfs.modules.pipeline.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.pipeline.beans.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationReport;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.text.*;
-import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.admin.base.UserList;
-import com.zeroio.iteam.base.FileItemList;
-import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Report;
+import org.aspcfs.modules.base.ReportRow;
+import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
- *  Takes a list of opportunities and formats them for output using the
- *  specified parameters.
+ * Takes a list of opportunities and formats them for output using the
+ * specified parameters.
  *
- *@author     chris
- *@created    March 7, 2002
- *@version    $Id: OpportunityReport.java,v 1.12 2003/03/07 14:41:52 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: OpportunityReport.java,v 1.12 2003/03/07 14:41:52 mrajkowski
+ *          Exp $
+ * @created March 7, 2002
  */
 public class OpportunityReport extends OpportunityList {
   protected Report rep = new Report();
@@ -64,15 +64,16 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Constructor for the OpportunityReport object
+   * Constructor for the OpportunityReport object
    */
-  public OpportunityReport() { }
+  public OpportunityReport() {
+  }
 
 
   /**
-   *  Sets the rep attribute of the OpportunityReport object
+   * Sets the rep attribute of the OpportunityReport object
    *
-   *@param  tmp  The new rep value
+   * @param tmp The new rep value
    */
   public void setRep(Report tmp) {
     this.rep = tmp;
@@ -80,9 +81,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the delimiter attribute of the OpportunityReport object
+   * Sets the delimiter attribute of the OpportunityReport object
    *
-   *@param  tmp  The new delimiter value
+   * @param tmp The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -90,9 +91,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the header attribute of the OpportunityReport object
+   * Sets the header attribute of the OpportunityReport object
    *
-   *@param  tmp  The new header value
+   * @param tmp The new header value
    */
   public void setHeader(String tmp) {
     this.header = tmp;
@@ -100,9 +101,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the tdFormat attribute of the OpportunityReport object
+   * Sets the tdFormat attribute of the OpportunityReport object
    *
-   *@param  tmp  The new tdFormat value
+   * @param tmp The new tdFormat value
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
@@ -110,9 +111,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the rep attribute of the OpportunityReport object
+   * Gets the rep attribute of the OpportunityReport object
    *
-   *@return    The rep value
+   * @return The rep value
    */
   public Report getRep() {
     return rep;
@@ -120,9 +121,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the delimiter attribute of the OpportunityReport object
+   * Gets the delimiter attribute of the OpportunityReport object
    *
-   *@return    The delimiter value
+   * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -130,9 +131,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the header attribute of the OpportunityReport object
+   * Gets the header attribute of the OpportunityReport object
    *
-   *@return    The header value
+   * @return The header value
    */
   public String getHeader() {
     return header;
@@ -140,9 +141,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the tdFormat attribute of the OpportunityReport object
+   * Gets the tdFormat attribute of the OpportunityReport object
    *
-   *@return    The tdFormat value
+   * @return The tdFormat value
    */
   public String getTdFormat() {
     return tdFormat;
@@ -150,9 +151,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the filePath attribute of the OpportunityReport object
+   * Gets the filePath attribute of the OpportunityReport object
    *
-   *@return    The filePath value
+   * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -160,9 +161,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the thisItem attribute of the OpportunityReport object
+   * Gets the thisItem attribute of the OpportunityReport object
    *
-   *@return    The thisItem value
+   * @return The thisItem value
    */
   public FileItem getThisItem() {
     return thisItem;
@@ -170,9 +171,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the filePath attribute of the OpportunityReport object
+   * Sets the filePath attribute of the OpportunityReport object
    *
-   *@param  tmp  The new filePath value
+   * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -180,9 +181,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the thisItem attribute of the OpportunityReport object
+   * Sets the thisItem attribute of the OpportunityReport object
    *
-   *@param  tmp  The new thisItem value
+   * @param tmp The new thisItem value
    */
   public void setThisItem(FileItem tmp) {
     this.thisItem = tmp;
@@ -190,9 +191,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the subject attribute of the OpportunityReport object
+   * Gets the subject attribute of the OpportunityReport object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -200,9 +201,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the enteredBy attribute of the OpportunityReport object
+   * Gets the enteredBy attribute of the OpportunityReport object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -210,9 +211,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the OpportunityReport object
+   * Gets the modifiedBy attribute of the OpportunityReport object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -220,9 +221,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the subject attribute of the OpportunityReport object
+   * Sets the subject attribute of the OpportunityReport object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -230,9 +231,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the enteredBy attribute of the OpportunityReport object
+   * Sets the enteredBy attribute of the OpportunityReport object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -240,9 +241,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the OpportunityReport object
+   * Sets the modifiedBy attribute of the OpportunityReport object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -250,9 +251,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the orgReportJoin attribute of the OpportunityReport object
+   * Gets the orgReportJoin attribute of the OpportunityReport object
    *
-   *@return    The orgReportJoin value
+   * @return The orgReportJoin value
    */
   public OrganizationReport getOrgReportJoin() {
     return orgReportJoin;
@@ -260,9 +261,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the joinOrgs attribute of the OpportunityReport object
+   * Gets the joinOrgs attribute of the OpportunityReport object
    *
-   *@return    The joinOrgs value
+   * @return The joinOrgs value
    */
   public boolean getJoinOrgs() {
     return joinOrgs;
@@ -270,9 +271,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the orgReportJoin attribute of the OpportunityReport object
+   * Sets the orgReportJoin attribute of the OpportunityReport object
    *
-   *@param  tmp  The new orgReportJoin value
+   * @param tmp The new orgReportJoin value
    */
   public void setOrgReportJoin(OrganizationReport tmp) {
     this.orgReportJoin = tmp;
@@ -280,9 +281,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the joinOrgs attribute of the OpportunityReport object
+   * Sets the joinOrgs attribute of the OpportunityReport object
    *
-   *@param  tmp  The new joinOrgs value
+   * @param tmp The new joinOrgs value
    */
   public void setJoinOrgs(boolean tmp) {
     this.joinOrgs = tmp;
@@ -290,9 +291,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the limitId attribute of the OpportunityReport object
+   * Gets the limitId attribute of the OpportunityReport object
    *
-   *@return    The limitId value
+   * @return The limitId value
    */
   public int getLimitId() {
     return limitId;
@@ -300,9 +301,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the limitId attribute of the OpportunityReport object
+   * Sets the limitId attribute of the OpportunityReport object
    *
-   *@param  limitId  The new limitId value
+   * @param limitId The new limitId value
    */
   public void setLimitId(int limitId) {
     this.limitId = limitId;
@@ -310,9 +311,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the criteria attribute of the OpportunityReport object
+   * Gets the criteria attribute of the OpportunityReport object
    *
-   *@return    The criteria value
+   * @return The criteria value
    */
   public ArrayList getCriteria() {
     return criteria;
@@ -320,9 +321,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the criteria attribute of the OpportunityReport object
+   * Sets the criteria attribute of the OpportunityReport object
    *
-   *@param  criteriaString  The new criteria value
+   * @param criteriaString The new criteria value
    */
   public void setCriteria(String[] criteriaString) {
     if (criteriaString != null) {
@@ -335,9 +336,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the params attribute of the OpportunityReport object
+   * Gets the params attribute of the OpportunityReport object
    *
-   *@return    The params value
+   * @return The params value
    */
   public String[] getParams() {
     return params;
@@ -345,9 +346,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the params attribute of the OpportunityReport object
+   * Sets the params attribute of the OpportunityReport object
    *
-   *@param  params  The new params value
+   * @param params The new params value
    */
   public void setParams(String[] params) {
     this.params = params;
@@ -355,9 +356,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Gets the filenameToUse attribute of the OpportunityReport object
+   * Gets the filenameToUse attribute of the OpportunityReport object
    *
-   *@return    The filenameToUse value
+   * @return The filenameToUse value
    */
   public String getFilenameToUse() {
     return filenameToUse;
@@ -365,9 +366,9 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Sets the filenameToUse attribute of the OpportunityReport object
+   * Sets the filenameToUse attribute of the OpportunityReport object
    *
-   *@param  filenameToUse  The new filenameToUse value
+   * @param filenameToUse The new filenameToUse value
    */
   public void setFilenameToUse(String filenameToUse) {
     this.filenameToUse = filenameToUse;
@@ -375,7 +376,7 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildReportBaseInfo() {
     rep.setDelimitedCharacter(delimiter);
@@ -386,7 +387,7 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildReportHeaders() {
     if (joinOrgs) {
@@ -462,11 +463,11 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReportData(Connection db, ActionContext context) throws SQLException {
     this.buildList(db);
@@ -497,7 +498,8 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getComponent().getId());
           }
           if (param.equals("type")) {
-            thisRow.addCell(oppBean.getComponent().getTypes().valuesAsString());
+            thisRow.addCell(
+                oppBean.getComponent().getTypes().valuesAsString());
           }
           if (param.equals("description")) {
             thisRow.addCell(oppBean.getComponent().getDescription());
@@ -513,7 +515,9 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getHeader().getContactName());
           }
           if (param.equals("owner")) {
-            thisRow.addCell(UserList.retrieveUserContact(context, oppBean.getComponent().getOwner()).getNameLastFirst());
+            thisRow.addCell(
+                UserList.retrieveUserContact(
+                    context, oppBean.getComponent().getOwner()).getNameLastFirst());
           }
           if (param.equals("amount1")) {
             thisRow.addCell(String.valueOf(oppBean.getComponent().getLow()));
@@ -531,7 +535,8 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getComponent().getStageDateString());
           }
           if (param.equals("probability")) {
-            thisRow.addCell(String.valueOf(oppBean.getComponent().getCloseProb()));
+            thisRow.addCell(
+                String.valueOf(oppBean.getComponent().getCloseProb()));
           }
           if (param.equals("revenueStart")) {
             thisRow.addCell(oppBean.getComponent().getCloseDateString());
@@ -543,19 +548,24 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getComponent().getAlertDateString());
           }
           if (param.equals("commission")) {
-            thisRow.addCell(String.valueOf(oppBean.getComponent().getCommission()));
+            thisRow.addCell(
+                String.valueOf(oppBean.getComponent().getCommission()));
           }
           if (param.equals("entered")) {
             thisRow.addCell(oppBean.getComponent().getEnteredString());
           }
           if (param.equals("enteredBy")) {
-            thisRow.addCell(UserList.retrieveUserContact(context, oppBean.getComponent().getEnteredBy()).getNameLastFirst());
+            thisRow.addCell(
+                UserList.retrieveUserContact(
+                    context, oppBean.getComponent().getEnteredBy()).getNameLastFirst());
           }
           if (param.equals("modified")) {
             thisRow.addCell(oppBean.getComponent().getModifiedString());
           }
           if (param.equals("modifiedBy")) {
-            thisRow.addCell(UserList.retrieveUserContact(context, oppBean.getComponent().getModifiedBy()).getNameLastFirst());
+            thisRow.addCell(
+                UserList.retrieveUserContact(
+                    context, oppBean.getComponent().getModifiedBy()).getNameLastFirst());
           }
         }
         rep.addRow(thisRow);
@@ -566,11 +576,11 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReportFull(Connection db, ActionContext context) throws SQLException {
     buildReportBaseInfo();
@@ -580,11 +590,11 @@ public class OpportunityReport extends OpportunityList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

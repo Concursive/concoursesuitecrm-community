@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -22,8 +22,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
-<dhv:label name="Settings">Settings</dhv:label>
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
+<dhv:label name="myitems.settings">Settings</dhv:label>
 </td>
 </tr>
 </table>
@@ -50,7 +50,7 @@
   </tr>
   </dhv:permission>
   <tr>
-    <td><a href="MyCFSWebdav.do?command=MyCFSWebdav"><dhv:label name="calendar.activateWebFolderAccess">Activate Web Folder Access</dhv:label></a></td>
+    <td><a href="MyCFSWebdav.do?command=MyCFSWebdav"><dhv:label name="calendar.accessWebFolders">Accessing Web Folders</dhv:label></a></td>
   </tr>
 </table>
 <br>

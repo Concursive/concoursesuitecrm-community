@@ -30,13 +30,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- *  CalendarBean maintains all the users setting on his home page's calendar
- *  view like date,alerts etc so his view is maintained whenever he returns to
- *  home page in that session.
+ * CalendarBean maintains all the users setting on his home page's calendar
+ * view like date,alerts etc so his view is maintained whenever he returns to
+ * home page in that session.
  *
- *@author     akhi_m
- *@created    September 9, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created September 9, 2002
  */
 public class CalendarBean {
 
@@ -58,15 +58,16 @@ public class CalendarBean {
 
 
   /**
-   *  Constructor for the CalendarBean object
+   * Constructor for the CalendarBean object
    */
-  public CalendarBean() { }
+  public CalendarBean() {
+  }
 
 
   /**
-   *  Constructor for the CalendarBean object
+   * Constructor for the CalendarBean object
    *
-   *@param  locale  Description of the Parameter
+   * @param locale Description of the Parameter
    */
   public CalendarBean(Locale locale) {
     cal = Calendar.getInstance(locale);
@@ -78,9 +79,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the view attribute of the CalendarBean object
+   * Sets the view attribute of the CalendarBean object
    *
-   *@param  calendarDetailsView  The new calendarDetailsView value
+   * @param calendarDetailsView The new calendarDetailsView value
    */
   public void setCalendarDetailsView(String calendarDetailsView) {
     this.calendarDetailsView = calendarDetailsView;
@@ -88,9 +89,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the daySelected attribute of the CalendarBean object
+   * Sets the daySelected attribute of the CalendarBean object
    *
-   *@param  daySelected  The new daySelected value
+   * @param daySelected The new daySelected value
    */
   public void setDaySelected(int daySelected) {
     this.daySelected = daySelected;
@@ -98,9 +99,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the calendarView attribute of the CalendarBean object
+   * Sets the calendarView attribute of the CalendarBean object
    *
-   *@param  calendarView  The new calendarView value
+   * @param calendarView The new calendarView value
    */
   public void setCalendarView(String calendarView) {
     this.calendarView = calendarView;
@@ -108,9 +109,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the selectedUserId attribute of the CalendarBean object
+   * Sets the selectedUserId attribute of the CalendarBean object
    *
-   *@param  selectedUserId  The new selectedUserId value
+   * @param selectedUserId The new selectedUserId value
    */
   public void setSelectedUserId(int selectedUserId) {
     this.selectedUserId = selectedUserId;
@@ -118,9 +119,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the selectedUserName attribute of the CalendarBean object
+   * Sets the selectedUserName attribute of the CalendarBean object
    *
-   *@param  selectedUserName  The new selectedUserName value
+   * @param selectedUserName The new selectedUserName value
    */
   public void setSelectedUserName(String selectedUserName) {
     this.selectedUserName = selectedUserName;
@@ -128,9 +129,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the primaryYear attribute of the CalendarBean object
+   * Sets the primaryYear attribute of the CalendarBean object
    *
-   *@param  primaryYear  The new primaryYear value
+   * @param primaryYear The new primaryYear value
    */
   public void setPrimaryYear(int primaryYear) {
     this.primaryYear = primaryYear;
@@ -138,9 +139,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the timeZone attribute of the CalendarBean object
+   * Sets the timeZone attribute of the CalendarBean object
    *
-   *@param  timeZone  The new timeZone value
+   * @param timeZone The new timeZone value
    */
   public void setTimeZone(TimeZone timeZone) {
     this.timeZone = timeZone;
@@ -148,9 +149,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the timeZone attribute of the CalendarBean object
+   * Gets the timeZone attribute of the CalendarBean object
    *
-   *@return    The timeZone value
+   * @return The timeZone value
    */
   public TimeZone getTimeZone() {
     return timeZone;
@@ -158,9 +159,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the primaryYear attribute of the CalendarBean object
+   * Gets the primaryYear attribute of the CalendarBean object
    *
-   *@return    The primaryYear value
+   * @return The primaryYear value
    */
   public int getPrimaryYear() {
     return primaryYear;
@@ -168,9 +169,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the monthSelected attribute of the CalendarBean object
+   * Sets the monthSelected attribute of the CalendarBean object
    *
-   *@param  monthSelected  The new monthSelected value
+   * @param monthSelected The new monthSelected value
    */
   public void setMonthSelected(int monthSelected) {
     this.monthSelected = monthSelected;
@@ -178,20 +179,19 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the yearSelected attribute of the CalendarBean object
+   * Sets the yearSelected attribute of the CalendarBean object
    *
-   *@param  yearSelected  The new yearSelected value
+   * @param yearSelected The new yearSelected value
    */
   public void setYearSelected(int yearSelected) {
     this.yearSelected = yearSelected;
   }
 
 
-
   /**
-   *  Sets the startMonthOfWeek attribute of the CalendarBean object
+   * Sets the startMonthOfWeek attribute of the CalendarBean object
    *
-   *@param  startMonthOfWeek  The new startMonthOfWeek value
+   * @param startMonthOfWeek The new startMonthOfWeek value
    */
   public void setStartMonthOfWeek(int startMonthOfWeek) {
     this.startMonthOfWeek = startMonthOfWeek;
@@ -199,9 +199,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the startDayOfWeek attribute of the CalendarBean object
+   * Sets the startDayOfWeek attribute of the CalendarBean object
    *
-   *@param  startDayOfWeek  The new startDayOfWeek value
+   * @param startDayOfWeek The new startDayOfWeek value
    */
   public void setStartDayOfWeek(int startDayOfWeek) {
     this.startDayOfWeek = startDayOfWeek;
@@ -209,9 +209,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the agendaView attribute of the CalendarBean object
+   * Sets the agendaView attribute of the CalendarBean object
    *
-   *@param  agendaView  The new agendaView value
+   * @param agendaView The new agendaView value
    */
   public void setAgendaView(boolean agendaView) {
     this.agendaView = agendaView;
@@ -219,10 +219,10 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the selectedUserName attribute of the CalendarBean object
+   * Sets the selectedUserName attribute of the CalendarBean object
    *
-   *@param  db                The new selectedUserName value
-   *@exception  SQLException  Description of the Exception
+   * @param db The new selectedUserName value
+   * @throws SQLException Description of the Exception
    */
   public void setSelectedUserName(Connection db) throws SQLException {
     int thisContactId = (new User(db, selectedUserId)).getContactId();
@@ -231,22 +231,20 @@ public class CalendarBean {
   }
 
 
-
   /**
-   *  Gets the selectedUserName attribute of the CalendarBean object
+   * Gets the selectedUserName attribute of the CalendarBean object
    *
-   *@return    The selectedUserName value
+   * @return The selectedUserName value
    */
   public String getSelectedUserName() {
     return selectedUserName;
   }
 
 
-
   /**
-   *  Sets the alertTypes attribute of the CalendarBean object
+   * Sets the alertTypes attribute of the CalendarBean object
    *
-   *@param  alertTypes  The new alertTypes value
+   * @param alertTypes The new alertTypes value
    */
   public void setAlertTypes(ArrayList alertTypes) {
     this.alertTypes = alertTypes;
@@ -254,9 +252,9 @@ public class CalendarBean {
 
 
   /**
-   *  Sets the primaryMonth attribute of the CalendarBean object
+   * Sets the primaryMonth attribute of the CalendarBean object
    *
-   *@param  primaryMonth  The new primaryMonth value
+   * @param primaryMonth The new primaryMonth value
    */
   public void setPrimaryMonth(int primaryMonth) {
     this.primaryMonth = primaryMonth;
@@ -264,9 +262,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the primaryMonth attribute of the CalendarBean object
+   * Gets the primaryMonth attribute of the CalendarBean object
    *
-   *@return    The primaryMonth value
+   * @return The primaryMonth value
    */
   public int getPrimaryMonth() {
     return primaryMonth;
@@ -274,11 +272,11 @@ public class CalendarBean {
 
 
   /**
-   *  Adds a feature to the AlertType attribute of the CalendarBean object
+   * Adds a feature to the AlertType attribute of the CalendarBean object
    *
-   *@param  alert        The feature to be added to the AlertType attribute
-   *@param  className    The feature to be added to the AlertType attribute
-   *@param  displayName  The feature to be added to the AlertType attribute
+   * @param alert       The feature to be added to the AlertType attribute
+   * @param className   The feature to be added to the AlertType attribute
+   * @param displayName The feature to be added to the AlertType attribute
    */
   public void addAlertType(String alert, String className, String displayName) {
     this.alertTypes.add(new AlertType(alert, className, displayName));
@@ -286,20 +284,19 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the alertTypes attribute of the CalendarBean object
+   * Gets the alertTypes attribute of the CalendarBean object
    *
-   *@return    The alertTypes value
+   * @return The alertTypes value
    */
   public ArrayList getAlertTypes() {
     return alertTypes;
   }
 
 
-
   /**
-   *  Gets the agendaView attribute of the CalendarBean object
+   * Gets the agendaView attribute of the CalendarBean object
    *
-   *@return    The agendaView value
+   * @return The agendaView value
    */
   public boolean isAgendaView() {
     return agendaView;
@@ -307,9 +304,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the startMonthOfWeek attribute of the CalendarBean object
+   * Gets the startMonthOfWeek attribute of the CalendarBean object
    *
-   *@return    The startMonthOfWeek value
+   * @return The startMonthOfWeek value
    */
   public int getStartMonthOfWeek() {
     return startMonthOfWeek;
@@ -317,9 +314,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the startDayOfWeek attribute of the CalendarBean object
+   * Gets the startDayOfWeek attribute of the CalendarBean object
    *
-   *@return    The startDayOfWeek value
+   * @return The startDayOfWeek value
    */
   public int getStartDayOfWeek() {
     return startDayOfWeek;
@@ -327,9 +324,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the monthSelected attribute of the CalendarBean object
+   * Gets the monthSelected attribute of the CalendarBean object
    *
-   *@return    The monthSelected value
+   * @return The monthSelected value
    */
   public int getMonthSelected() {
     return monthSelected;
@@ -337,9 +334,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the yearSelected attribute of the CalendarBean object
+   * Gets the yearSelected attribute of the CalendarBean object
    *
-   *@return    The yearSelected value
+   * @return The yearSelected value
    */
   public int getYearSelected() {
     return yearSelected;
@@ -347,9 +344,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the calendarView attribute of the CalendarBean object
+   * Gets the calendarView attribute of the CalendarBean object
    *
-   *@return    The calendarView value
+   * @return The calendarView value
    */
   public String getCalendarView() {
     return calendarView;
@@ -357,9 +354,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the userId attribute of the CalendarBean object
+   * Gets the userId attribute of the CalendarBean object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getSelectedUserId() {
     return selectedUserId;
@@ -367,20 +364,19 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the daySelected attribute of the CalendarBean object
+   * Gets the daySelected attribute of the CalendarBean object
    *
-   *@return    The daySelected value
+   * @return The daySelected value
    */
   public int getDaySelected() {
     return daySelected;
   }
 
 
-
   /**
-   *  Gets the calendarDetailsView attribute of the CalendarBean object
+   * Gets the calendarDetailsView attribute of the CalendarBean object
    *
-   *@return    The calendarDetailsView value
+   * @return The calendarDetailsView value
    */
   public String getCalendarDetailsView() {
     return calendarDetailsView;
@@ -388,9 +384,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the startOfWeekDate attribute of the CalendarBean object
+   * Gets the startOfWeekDate attribute of the CalendarBean object
    *
-   *@return    The startOfWeekDate value
+   * @return The startOfWeekDate value
    */
   public java.util.Date getStartOfWeekDate() {
     Calendar thisCal = Calendar.getInstance();
@@ -400,9 +396,9 @@ public class CalendarBean {
 
 
   /**
-   *  Gets the endOfWeekDate attribute of the CalendarBean object
+   * Gets the endOfWeekDate attribute of the CalendarBean object
    *
-   *@return    The endOfWeekDate value
+   * @return The endOfWeekDate value
    */
   public java.util.Date getEndOfWeekDate() {
     Calendar thisCal = Calendar.getInstance();
@@ -413,11 +409,11 @@ public class CalendarBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db, ActionContext context) throws SQLException {
     HttpServletRequest request = context.getRequest();
@@ -426,7 +422,8 @@ public class CalendarBean {
     UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
     String tZone = thisUser.getUserRecord().getTimeZone();
 
-    if (tZone != null && (timeZone == null || (timeZone != null && !timeZone.hasSameRules(TimeZone.getTimeZone(tZone))))) {
+    if (tZone != null && (timeZone == null || (timeZone != null && !timeZone.hasSameRules(
+        TimeZone.getTimeZone(tZone))))) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("CalendarBean-> Setting timezone to " + tZone);
       }
@@ -470,24 +467,27 @@ public class CalendarBean {
     }
 
     if (request.getParameter("startMonthOfWeek") != null) {
-      startMonthOfWeek = Integer.parseInt(request.getParameter("startMonthOfWeek"));
+      startMonthOfWeek = Integer.parseInt(
+          request.getParameter("startMonthOfWeek"));
     }
 
     if (request.getParameter("startDayOfWeek") != null) {
-      startDayOfWeek = Integer.parseInt(request.getParameter("startDayOfWeek"));
+      startDayOfWeek = Integer.parseInt(
+          request.getParameter("startDayOfWeek"));
     }
 
     if (this.getSelectedUserId() == -1) {
-      this.setSelectedUserId(((UserBean) context.getSession().getAttribute("User")).getUserId());
+      this.setSelectedUserId(
+          ((UserBean) context.getSession().getAttribute("User")).getUserId());
       this.setSelectedUserName(db);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  viewChanged  Description of the Parameter
+   * @param viewChanged Description of the Parameter
    */
   public void resetParams(String viewChanged) {
     if (viewChanged.equalsIgnoreCase("month")) {

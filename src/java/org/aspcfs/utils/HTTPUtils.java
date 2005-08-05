@@ -19,27 +19,27 @@ import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 /**
- *  Utilities for working with HTTP
+ * Utilities for working with HTTP
  *
- *@author     matt rajkowski
- *@created    August 29, 2002
- *@version    $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
+ *          $
+ * @created August 29, 2002
  */
 public class HTTPUtils {
 
   /**
-   *  Generates acceptable html text when displaying in HTML, especially useful
-   *  within a table cell because a cell should not be left empty
+   * Generates acceptable html text when displaying in HTML, especially useful
+   * within a table cell because a cell should not be left empty
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toHtml(String s) {
     if (s != null) {
@@ -55,11 +55,11 @@ public class HTTPUtils {
 
 
   /**
-   *  Generates acceptable default html text when using an input field on an
-   *  html form
+   * Generates acceptable default html text when using an input field on an
+   * html form
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param s Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String toHtmlValue(String s) {
     if (s != null) {
@@ -79,14 +79,14 @@ public class HTTPUtils {
 
 
   /**
-   *  Sends a string to the specified URL, intended for communicating with web
-   *  servers. Use the SSLMessage for secure communication with a server
-   *  application.
+   * Sends a string to the specified URL, intended for communicating with web
+   * servers. Use the SSLMessage for secure communication with a server
+   * application.
    *
-   *@param  address                  Description of the Parameter
-   *@param  xmlPacket                Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  java.io.IOException  Description of the Exception
+   * @param address   Description of the Parameter
+   * @param xmlPacket Description of the Parameter
+   * @return Description of the Return Value
+   * @throws java.io.IOException Description of the Exception
    */
   public static String sendPacket(String address, String xmlPacket) throws java.io.IOException {
     Exception errorMessage = null;
@@ -104,21 +104,24 @@ public class HTTPUtils {
       //Override the default certificates
       if (conn instanceof HttpsURLConnection) {
         ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
-        ((HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifier());
+        ((HttpsURLConnection) conn).setHostnameVerifier(
+            new HttpsHostnameVerifier());
       }
       //Backwards compatible if something sets the old system property
       if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(factory);
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifierDeprecated());
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+            factory);
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+            new HttpsHostnameVerifierDeprecated());
       }
       ((HttpURLConnection) conn).setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
       conn.setDoInput(true);
       conn.setDoOutput(true);
-      PrintWriter outStream = new PrintWriter(conn.getOutputStream());
-      //Make the socket connection
-      outStream.println(xmlPacket);
-      outStream.close();
+      OutputStreamWriter out = new OutputStreamWriter(
+          conn.getOutputStream(), "UTF8");
+      out.write(xmlPacket);
+      out.close();
       return (retrieveHtml(conn));
     } catch (java.net.MalformedURLException e) {
       errorMessage = e;
@@ -137,11 +140,11 @@ public class HTTPUtils {
 
 
   /**
-   *  Returns the text received from a web post
+   * Returns the text received from a web post
    *
-   *@param  http                     Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  java.io.IOException  Description of the Exception
+   * @param http Description of the Parameter
+   * @return Description of the Return Value
+   * @throws java.io.IOException Description of the Exception
    */
   public static String retrieveHtml(URLConnection http) throws java.io.IOException {
     StringBuffer htmlOutput = new StringBuffer();
@@ -157,12 +160,12 @@ public class HTTPUtils {
 
 
   /**
-   *  Downloads a URL into a postscript file. Currently uses html2ps, but for
-   *  Windows compatibility may need to use htmldoc after testing.
+   * Downloads a URL into a postscript file. Currently uses html2ps, but for
+   * Windows compatibility may need to use htmldoc after testing.
    *
-   *@param  url           Description of the Parameter
-   *@param  baseFilename  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param url          Description of the Parameter
+   * @param baseFilename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int convertUrlToPostscriptFile(String url, String baseFilename) {
     Process process;
@@ -193,17 +196,18 @@ public class HTTPUtils {
       process = runtime.exec(command);
       return (process.waitFor());
     } catch (Exception e) {
-      System.err.println("HTTPUtils-> urlToPostscriptFile error: " + e.toString());
+      System.err.println(
+          "HTTPUtils-> urlToPostscriptFile error: " + e.toString());
       return (1);
     }
   }
 
 
   /**
-   *  Connects to a web server and gets the Server header field
+   * Connects to a web server and gets the Server header field
    *
-   *@param  address  Description of the Parameter
-   *@return          The serverName value
+   * @param address Description of the Parameter
+   * @return The serverName value
    */
   public static String getServerName(String address) {
     try {
@@ -220,12 +224,15 @@ public class HTTPUtils {
       //Override the default certificates
       if (conn instanceof HttpsURLConnection) {
         ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
-        ((HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifier());
+        ((HttpsURLConnection) conn).setHostnameVerifier(
+            new HttpsHostnameVerifier());
       }
       //Backwards compatible if something sets the old system property
       if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(factory);
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifierDeprecated());
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+            factory);
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+            new HttpsHostnameVerifierDeprecated());
       }
       if (conn instanceof HttpURLConnection) {
         HttpURLConnection httpConnection = (HttpURLConnection) conn;

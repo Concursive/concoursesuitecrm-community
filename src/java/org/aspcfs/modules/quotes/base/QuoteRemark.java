@@ -24,11 +24,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    November 1, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created November 1, 2004
  */
 public class QuoteRemark extends GenericBean {
   private int id = -1;
@@ -39,9 +39,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QuoteRemark object
+   * Gets the id attribute of the QuoteRemark object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -49,9 +49,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteRemark object
+   * Sets the id attribute of the QuoteRemark object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -59,9 +59,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QuoteRemark object
+   * Sets the id attribute of the QuoteRemark object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -69,9 +69,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Gets the quoteId attribute of the QuoteRemark object
+   * Gets the quoteId attribute of the QuoteRemark object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -79,9 +79,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteRemark object
+   * Sets the quoteId attribute of the QuoteRemark object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -89,9 +89,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the QuoteRemark object
+   * Sets the quoteId attribute of the QuoteRemark object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -99,9 +99,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Gets the remarkId attribute of the QuoteRemark object
+   * Gets the remarkId attribute of the QuoteRemark object
    *
-   *@return    The remarkId value
+   * @return The remarkId value
    */
   public int getRemarkId() {
     return remarkId;
@@ -109,9 +109,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the remarkId attribute of the QuoteRemark object
+   * Sets the remarkId attribute of the QuoteRemark object
    *
-   *@param  tmp  The new remarkId value
+   * @param tmp The new remarkId value
    */
   public void setRemarkId(int tmp) {
     this.remarkId = tmp;
@@ -119,9 +119,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the remarkId attribute of the QuoteRemark object
+   * Sets the remarkId attribute of the QuoteRemark object
    *
-   *@param  tmp  The new remarkId value
+   * @param tmp The new remarkId value
    */
   public void setRemarkId(String tmp) {
     this.remarkId = Integer.parseInt(tmp);
@@ -129,9 +129,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Gets the remarkName attribute of the QuoteRemark object
+   * Gets the remarkName attribute of the QuoteRemark object
    *
-   *@return    The remarkName value
+   * @return The remarkName value
    */
   public String getRemarkName() {
     return remarkName;
@@ -139,9 +139,9 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Sets the remarkName attribute of the QuoteRemark object
+   * Sets the remarkName attribute of the QuoteRemark object
    *
-   *@param  tmp  The new remarkName value
+   * @param tmp The new remarkName value
    */
   public void setRemarkName(String tmp) {
     this.remarkName = tmp;
@@ -149,16 +149,17 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteRemark object
+   * Constructor for the QuoteRemark object
    */
-  public QuoteRemark() { }
+  public QuoteRemark() {
+  }
 
 
   /**
-   *  Constructor for the QuoteRemark object
+   * Constructor for the QuoteRemark object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteRemark(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -166,11 +167,11 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Constructor for the QuoteRemark object
+   * Constructor for the QuoteRemark object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QuoteRemark(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -184,8 +185,7 @@ public class QuoteRemark extends GenericBean {
         "FROM quote_remark AS qr " +
         "LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
         "LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        "WHERE qr.map_id = ? "
-        );
+        "WHERE qr.map_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
@@ -214,8 +214,7 @@ public class QuoteRemark extends GenericBean {
         "LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
         "LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
         "WHERE qr.remark_id = ? " +
-        "AND qr.quote_id = ? "
-        );
+        "AND qr.quote_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, cId);
@@ -233,10 +232,10 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     //quote_condition table
@@ -250,35 +249,40 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (quoteId == -1 || remarkId == -1) {
       return false;
     }
     int i = 0;
+    id = DatabaseUtils.getNextSeq(db, "quote_remark_map_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO quote_remark (quote_id, remark_id ) " +
-        "VALUES (?,?) ");
+        "INSERT INTO quote_remark " +
+        "(" + (id > -1 ? "map_id, " : "") + "quote_id, remark_id ) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, this.getQuoteId());
     pst.setInt(++i, this.getRemarkId());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "quote_remark_map_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "quote_remark_map_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -313,21 +317,30 @@ public class QuoteRemark extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  description       Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param description Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int insertLookup(Connection db, String description) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("INSERT INTO lookup_quote_remarks (description) VALUES (?)");
-    pst.setString(1, description);
+    int tempId = DatabaseUtils.getNextSeq(db, "lookup_quote_remarks_code_seq");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO lookup_quote_remarks " +
+        "(" + (tempId > -1 ? "code, " : "") + "description) " +
+        "VALUES (" + (tempId > -1 ? "?," : "") + "?)");
+    if (tempId > -1) {
+      pst.setInt(++i, tempId);
+    }
+    pst.setString(++i, description);
     pst.execute();
     pst.close();
-    return DatabaseUtils.getCurrVal(db, "lookup_quote_remarks_code_seq");
+    return DatabaseUtils.getCurrVal(
+        db, "lookup_quote_remarks_code_seq", tempId);
   }
-  
+
   public void copyQuoteRemark(Connection db, int quoteId) throws SQLException {
     QuoteRemark copy = new QuoteRemark();
     copy.setQuoteId(quoteId);

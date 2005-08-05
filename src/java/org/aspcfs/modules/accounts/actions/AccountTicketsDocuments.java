@@ -46,19 +46,19 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  Implements Documents under Account Tickets 
+ * Implements Documents under Account Tickets
  *
- *@author     Mathur
- *@created    June 13, 2003
- *@version    $id: exp$
+ * @author Mathur
+ * @version $id: exp$
+ * @created June 13, 2003
  */
 public final class AccountTicketsDocuments extends CFSModule {
 
   /**
-   *  View All documents for a particular Ticket
+   * View All documents for a particular Ticket
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-documents-view")) {
@@ -69,7 +69,7 @@ public final class AccountTicketsDocuments extends CFSModule {
       folderId = (String) context.getRequest().getAttribute("folderId");
     }
     Connection db = null;
-    String orgId = context.getRequest().getParameter("orgId"); 
+    String orgId = context.getRequest().getParameter("orgId");
     try {
       db = getConnection(context);
       //Load the ticket and the organization
@@ -77,7 +77,8 @@ public final class AccountTicketsDocuments extends CFSModule {
 
       //Build the folder list
       FileFolderList folders = new FileFolderList();
-      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(folderId)) {
+      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(
+          folderId)) {
         folders.setTopLevelOnly(true);
       } else {
         folders.setParentId(Integer.parseInt(folderId));
@@ -91,7 +92,8 @@ public final class AccountTicketsDocuments extends CFSModule {
 
       //Load the documents
       FileItemList documents = new FileItemList();
-      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(folderId)) {
+      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(
+          folderId)) {
         documents.setTopLevelOnly(true);
       } else {
         documents.setFolderId(Integer.parseInt(folderId));
@@ -113,10 +115,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Add a document under a Ticket
+   * Add a document under a Ticket
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
@@ -132,6 +134,9 @@ public final class AccountTicketsDocuments extends CFSModule {
         context.getRequest().setAttribute("folderId", folderId);
       }
       addModuleBean(context, "View Accounts", "Upload Document");
+
+      //Build array of folder trails
+      ProjectManagementFileFolders.buildHierarchy(db, context);
       return ("AddOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -143,10 +148,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Upload a document
+   * Upload a document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-documents-edit")) {
@@ -201,9 +206,13 @@ public final class AccountTicketsDocuments extends CFSModule {
         recordInserted = false;
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
-          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+          errors.put(
+              "subjectError", systemStatus.getLabel(
+                  "object.validation.required"));
         }
         processErrors(context, errors);
       }
@@ -221,10 +230,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Show form for adding a Version to an existing Ticket Document
+   * Show form for adding a Version to an existing Ticket Document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
@@ -248,8 +257,12 @@ public final class AccountTicketsDocuments extends CFSModule {
       //Load the ticket and the organization
       int ticketId = addTicket(context, db);
       //Load the file
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisFile = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       context.getRequest().setAttribute("FileItem", thisFile);
+
+      //Build array of folder trails
+      ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -266,10 +279,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Upload a Version to an existing Ticket Document
+   * Upload a Version to an existing Ticket Document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
@@ -324,9 +337,13 @@ public final class AccountTicketsDocuments extends CFSModule {
         recordInserted = false;
         HashMap errors = new HashMap();
         SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
-          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+          errors.put(
+              "subjectError", systemStatus.getLabel(
+                  "object.validation.required"));
         }
         processErrors(context, errors);
       }
@@ -345,10 +362,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Show Ticket Document Details
+   * Show Ticket Document Details
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
 
@@ -370,9 +387,11 @@ public final class AccountTicketsDocuments extends CFSModule {
       //Load the ticket and the organization
       int ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
-      if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId) && !"".equals(folderId)) {
+      if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId) && !"".equals(
+          folderId)) {
         //Build array of folder trails
         ProjectManagementFileFolders.buildHierarchy(db, context);
       }
@@ -395,10 +414,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Download Ticket Document
+   * Download Ticket Document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     Exception errorMessage = null;
@@ -413,7 +432,8 @@ public final class AccountTicketsDocuments extends CFSModule {
       db = getConnection(context);
       //Load the ticket and the organization
       ticketId = addTicket(context, db);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -428,7 +448,8 @@ public final class AccountTicketsDocuments extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "tickets") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "tickets") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -443,14 +464,19 @@ public final class AccountTicketsDocuments extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("TroubleTicketsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "TroubleTicketsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       } else {
-        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        FileItemVersion itemToDownload = thisItem.getVersion(
+            Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "tickets") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "tickets") + getDatePath(
+            itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -465,8 +491,11 @@ public final class AccountTicketsDocuments extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("TroubleTicketsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
+          System.err.println(
+              "TroubleTicketsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -495,10 +524,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Modify a Ticket Document
+   * Modify a Ticket Document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
 
@@ -509,6 +538,10 @@ public final class AccountTicketsDocuments extends CFSModule {
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
+    String folderId = context.getRequest().getParameter("folderId");
+    if (folderId != null) {
+      context.getRequest().setAttribute("folderId", folderId);
+    }
 
     Connection db = null;
     try {
@@ -516,10 +549,13 @@ public final class AccountTicketsDocuments extends CFSModule {
       //Load the ticket and the organization
       int ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
+      //Build array of folder trails
+      ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -537,10 +573,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Update a Ticket Document
+   * Update a Ticket Document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
 
@@ -553,7 +589,8 @@ public final class AccountTicketsDocuments extends CFSModule {
     boolean isValid = false;
     String itemId = (String) context.getRequest().getParameter("fid");
     String subject = (String) context.getRequest().getParameter("subject");
-    String filename = (String) context.getRequest().getParameter("clientFilename");
+    String filename = (String) context.getRequest().getParameter(
+        "clientFilename");
 
     Connection db = null;
     int ticketId = -1;
@@ -562,7 +599,8 @@ public final class AccountTicketsDocuments extends CFSModule {
       //Load the ticket and the organization
       ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       isValid = this.validateObject(context, db, thisItem);
@@ -586,10 +624,10 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Delete a Ticket Document
+   * Delete a Ticket Document
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
 
@@ -608,7 +646,8 @@ public final class AccountTicketsDocuments extends CFSModule {
       //Load the ticket and the organization
       int ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       recordDeleted = thisItem.delete(db, this.getPath(context, "tickets"));
     } catch (Exception e) {
       errorMessage = e;
@@ -631,12 +670,12 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Add Ticket object
+   * Add Ticket object
    *
-   *@param  context           The feature to be added to the Ticket attribute
-   *@param  db                The feature to be added to the Ticket attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the Ticket attribute
+   * @param db      The feature to be added to the Ticket attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addTicket(ActionContext context, Connection db) throws SQLException {
     String ticketId = (String) context.getRequest().getParameter("tId");
@@ -648,20 +687,21 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Add Ticket object
+   * Add Ticket object
    *
-   *@param  context           The feature to be added to the Ticket attribute
-   *@param  db                The feature to be added to the Ticket attribute
-   *@param  ticketId          The feature to be added to the Ticket attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context  The feature to be added to the Ticket attribute
+   * @param db       The feature to be added to the Ticket attribute
+   * @param ticketId The feature to be added to the Ticket attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
     context.getRequest().setAttribute("tId", ticketId);
     Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
     context.getRequest().setAttribute("TicketDetails", thisTicket);
     //also add the organization
-    context.getRequest().setAttribute("OrgDetails", new Organization(db, thisTicket.getOrgId()));
+    context.getRequest().setAttribute(
+        "OrgDetails", new Organization(db, thisTicket.getOrgId()));
     return thisTicket.getId();
   }
 
@@ -676,7 +716,8 @@ public final class AccountTicketsDocuments extends CFSModule {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
       //Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
       //Load the folders
@@ -701,13 +742,15 @@ public final class AccountTicketsDocuments extends CFSModule {
     }
     Connection db = null;
     //Parameters
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("fid");
     try {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
       //Load the file
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
+      FileItem thisItem = new FileItem(
+          db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
       thisItem.updateFolderId(db, Integer.parseInt(newFolderId));
       return "PopupCloseOK";

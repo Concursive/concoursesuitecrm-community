@@ -48,11 +48,11 @@
 	}
 	
 	function checkForm(form) {
-		formTest = true;
+		var flag = true;
 		message = "";
 		if (checkNullString(form.name.value)) {
 			message += label("check.quote.product.name","- Please specify the product name\r\n");
-			formTest = false;
+			flag = false;
 		}
     if (checkNullString(form.priceAmount.value)) {
       message += label("check.priceamount.blank","- The price can not be blank\r\n");

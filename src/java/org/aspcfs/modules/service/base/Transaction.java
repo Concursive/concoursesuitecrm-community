@@ -15,23 +15,25 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.util.*;
-import org.w3c.dom.*;
-import java.sql.*;
-import org.aspcfs.controller.objectHookManager.ObjectHookManager;
-import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  A Transaction is an array of TransactionItems. When a system requests a
- *  transaction to be performed on an object -- for example, inserting records
- *  -- a Transaction is built from XML.<p>
+ * A Transaction is an array of TransactionItems. When a system requests a
+ * transaction to be performed on an object -- for example, inserting records
+ * -- a Transaction is built from XML.<p>
+ * <p/>
+ * After the object is built, the transaction items can be executed.
  *
- *  After the object is built, the transaction items can be executed.
- *
- *@author     matt rajkowski
- *@created    April 10, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created April 10, 2002
  */
 public class Transaction extends ArrayList {
 
@@ -43,15 +45,16 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Constructor for the Transaction object
+   * Constructor for the Transaction object
    */
-  public Transaction() { }
+  public Transaction() {
+  }
 
 
   /**
-   *  Sets the id attribute of the Transaction object
+   * Sets the id attribute of the Transaction object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     id = tmp;
@@ -59,9 +62,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the Transaction object
+   * Sets the id attribute of the Transaction object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     try {
@@ -73,9 +76,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Sets the packetContext attribute of the Transaction object
+   * Sets the packetContext attribute of the Transaction object
    *
-   *@param  tmp  The new packetContext value
+   * @param tmp The new packetContext value
    */
   public void setPacketContext(PacketContext tmp) {
     packetContext = tmp;
@@ -83,9 +86,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the Transaction object
+   * Gets the id attribute of the Transaction object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -93,9 +96,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Gets the errorMessage attribute of the Transaction object
+   * Gets the errorMessage attribute of the Transaction object
    *
-   *@return    The errorMessage value
+   * @return The errorMessage value
    */
   public String getErrorMessage() {
     return errorMessage.toString();
@@ -103,9 +106,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Gets the recordList attribute of the Transaction object
+   * Gets the recordList attribute of the Transaction object
    *
-   *@return    The recordList value
+   * @return The recordList value
    */
   public RecordList getRecordList() {
     return recordList;
@@ -113,9 +116,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Builds a list of TransactionItems from XML
+   * Builds a list of TransactionItems from XML
    *
-   *@param  transactionElement  Description of Parameter
+   * @param transactionElement Description of Parameter
    */
   public void build(Element transactionElement) {
     if (transactionElement.hasAttributes()) {
@@ -126,7 +129,8 @@ public class Transaction extends ArrayList {
     Iterator i = objectElements.iterator();
     while (i.hasNext()) {
       Element objectElement = (Element) i.next();
-      TransactionItem thisItem = new TransactionItem(objectElement, packetContext.getObjectMap());
+      TransactionItem thisItem = new TransactionItem(
+          objectElement, packetContext.getObjectMap());
       thisItem.setPacketContext(packetContext);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
@@ -144,10 +148,10 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Mapping attribute of the Transaction object
+   * Adds a feature to the Mapping attribute of the Transaction object
    *
-   *@param  key    The feature to be added to the Mapping attribute
-   *@param  value  The feature to be added to the Mapping attribute
+   * @param key   The feature to be added to the Mapping attribute
+   * @param value The feature to be added to the Mapping attribute
    */
   public void addMapping(String key, SyncTable value) {
     packetContext.getObjectMap().put(key, value);
@@ -155,9 +159,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Transaction attribute of the Transaction object
+   * Adds a feature to the Transaction attribute of the Transaction object
    *
-   *@param  tmp  The feature to be added to the Transaction attribute
+   * @param tmp The feature to be added to the Transaction attribute
    */
   public void addTransaction(TransactionItem tmp) {
     this.add(tmp);
@@ -165,12 +169,12 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Executes all of the TransactionItems in the array
+   * Executes all of the TransactionItems in the array
    *
-   *@param  db                Description of Parameter
-   *@param  dbLookup          Description of the Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param dbLookup Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int execute(Connection db, Connection dbLookup) throws SQLException {
     Exception exception = null;
@@ -197,9 +201,11 @@ public class Transaction extends ArrayList {
         //If the item allows its key to be shared with other items, then add it
         //to the transactionContext
         if (thisItem.getShareKey()) {
-          String keyName = ((SyncTable) packetContext.getObjectMap().get(thisItem.getName())).getKey();
+          String keyName = ((SyncTable) packetContext.getObjectMap().get(
+              thisItem.getName())).getKey();
           if (keyName != null) {
-            transactionContext.getPropertyMap().put(thisItem.getName() + "." + keyName,
+            transactionContext.getPropertyMap().put(
+                thisItem.getName() + "." + keyName,
                 ObjectUtils.getParam(thisItem.getObject(), keyName));
           }
         }
@@ -226,9 +232,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean hasError() {
     return (errorMessage.length() > 0);
@@ -236,9 +242,9 @@ public class Transaction extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp  Description of Parameter
+   * @param tmp Description of Parameter
    */
   public void appendErrorMessage(String tmp) {
     if (tmp != null) {

@@ -15,34 +15,43 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
-import java.util.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-import javax.xml.parsers.*;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 /**
- *  Useful methods that applications can use
+ * Useful methods that applications can use
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 15, 2003
  */
 public class AppUtils {
 
   /**
-   *  Parses either an XML preferences file or a key-value preferences file
+   * Parses either an XML preferences file or a key-value preferences file
    *
-   *@param  filename  Description of the Parameter
-   *@param  config    Description of the Parameter
-   *@return           Description of the Return Value
+   * @param filename Description of the Parameter
+   * @param config   Description of the Parameter
+   * @return Description of the Return Value
    */
-  public static boolean loadConfig(String filename, HashMap config) {
+  public static boolean loadConfig(String filename, Map config) {
     if (filename.endsWith(".xml")) {
       File file = new File(filename);
       if (file == null) {
-        System.err.println("AppUtils-> Configuration file not found: " + filename);
+        System.err.println(
+            "AppUtils-> Configuration file not found: " + filename);
         return false;
       }
       try {
@@ -90,17 +99,17 @@ public class AppUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  file                              Description of the Parameter
-   *@return                                   Description of the Return Value
-   *@exception  FactoryConfigurationError     Description of the Exception
-   *@exception  ParserConfigurationException  Description of the Exception
-   *@exception  SAXException                  Description of the Exception
-   *@exception  IOException                   Description of the Exception
+   * @param file Description of the Parameter
+   * @return Description of the Return Value
+   * @throws FactoryConfigurationError    Description of the Exception
+   * @throws ParserConfigurationException Description of the Exception
+   * @throws SAXException                 Description of the Exception
+   * @throws IOException                  Description of the Exception
    */
   private static Document parseDocument(File file)
-       throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
+      throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     Document document = builder.parse(file);

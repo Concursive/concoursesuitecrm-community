@@ -65,7 +65,8 @@ CREATE TABLE document_store(
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  trashed_date TIMESTAMP(3)
 );
 
 --

@@ -15,20 +15,28 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  A BusinessProcessComponent is a definition of where and when a class will be
- *  executed within a BusinessProcess hierarchy.
+ * A BusinessProcessComponent is a definition of where and when a class will be
+ * executed within a BusinessProcess hierarchy.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: BusinessProcessComponent.java,v 1.3 2003/01/13 21:41:16
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: BusinessProcessComponent.java,v 1.3 2003/01/13 21:41:16
+ *          mrajkowski Exp $
+ * @created November 11, 2002
  */
 public class BusinessProcessComponent {
 
@@ -50,16 +58,17 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Constructor for the BusinessProcessComponent object
+   * Constructor for the BusinessProcessComponent object
    */
-  public BusinessProcessComponent() { }
+  public BusinessProcessComponent() {
+  }
 
 
   /**
-   *  Constructor for the BusinessProcessComponent object
+   * Constructor for the BusinessProcessComponent object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public BusinessProcessComponent(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -67,9 +76,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Constructor for the BusinessProcessComponent object
+   * Constructor for the BusinessProcessComponent object
    *
-   *@param  componentElement  Description of the Parameter
+   * @param componentElement Description of the Parameter
    */
   public BusinessProcessComponent(Element componentElement) {
     //Set the base data
@@ -82,14 +91,17 @@ public class BusinessProcessComponent {
     this.setDescription((String) componentElement.getAttribute("description"));
     this.setEnabled((String) componentElement.getAttribute("enabled"));
     //Add the parameters
-    Element parameters = XMLUtils.getFirstElement(componentElement, "parameters");
+    Element parameters = XMLUtils.getFirstElement(
+        componentElement, "parameters");
     if (parameters != null) {
       ArrayList parameterNodes = XMLUtils.getElements(parameters, "parameter");
       Iterator parameterElements = parameterNodes.iterator();
       while (parameterElements.hasNext()) {
         Element parameterElement = (Element) parameterElements.next();
-        String parameterEnabled = (String) parameterElement.getAttribute("enabled");
-        ComponentParameter thisParameter = new ComponentParameter(parameterElement);
+        String parameterEnabled = (String) parameterElement.getAttribute(
+            "enabled");
+        ComponentParameter thisParameter = new ComponentParameter(
+            parameterElement);
         if (this.parameters == null) {
           this.parameters = new ComponentParameterList();
         }
@@ -100,9 +112,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the id attribute of the BusinessProcessComponent object
+   * Sets the id attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -110,9 +122,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the id attribute of the BusinessProcessComponent object
+   * Sets the id attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = DatabaseUtils.parseInt(tmp, -1);
@@ -120,9 +132,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the parentId attribute of the BusinessProcessComponent object
+   * Sets the parentId attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -130,9 +142,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the parentId attribute of the BusinessProcessComponent object
+   * Sets the parentId attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = DatabaseUtils.parseInt(tmp, 0);
@@ -140,9 +152,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the parentResult attribute of the BusinessProcessComponent object
+   * Sets the parentResult attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new parentResult value
+   * @param tmp The new parentResult value
    */
   public void setParentResult(int tmp) {
     this.parentResult = tmp;
@@ -150,9 +162,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the parentResult attribute of the BusinessProcessComponent object
+   * Sets the parentResult attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new parentResult value
+   * @param tmp The new parentResult value
    */
   public void setParentResult(String tmp) {
     if ("false".equals(tmp)) {
@@ -166,9 +178,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the processId attribute of the BusinessProcessComponent object
+   * Sets the processId attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(int tmp) {
     this.processId = tmp;
@@ -176,9 +188,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the processId attribute of the BusinessProcessComponent object
+   * Sets the processId attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(String tmp) {
     this.processId = Integer.parseInt(tmp);
@@ -186,9 +198,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the componentId attribute of the BusinessProcessComponent object
+   * Sets the componentId attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(int tmp) {
     this.componentId = tmp;
@@ -196,9 +208,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the processType attribute of the BusinessProcessComponent object
+   * Sets the processType attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new processType value
+   * @param tmp The new processType value
    */
   public void setProcessType(int tmp) {
     this.processType = tmp;
@@ -206,9 +218,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the processType attribute of the BusinessProcessComponent object
+   * Sets the processType attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new processType value
+   * @param tmp The new processType value
    */
   public void setProcessType(String tmp) {
     this.processType = Integer.parseInt(tmp);
@@ -216,9 +228,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the componentId attribute of the BusinessProcessComponent object
+   * Sets the componentId attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(String tmp) {
     this.componentId = Integer.parseInt(tmp);
@@ -226,9 +238,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the name attribute of the BusinessProcessComponent object
+   * Sets the name attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -236,9 +248,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the className attribute of the BusinessProcessComponent object
+   * Sets the className attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new className value
+   * @param tmp The new className value
    */
   public void setClassName(String tmp) {
     this.className = tmp;
@@ -246,9 +258,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the description attribute of the BusinessProcessComponent object
+   * Sets the description attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -256,9 +268,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the enabled attribute of the BusinessProcessComponent object
+   * Sets the enabled attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -266,19 +278,20 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the enabled attribute of the BusinessProcessComponent object
+   * Sets the enabled attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
-    this.enabled = (DatabaseUtils.parseBoolean(tmp) || tmp == null || "".equals(tmp));
+    this.enabled = (DatabaseUtils.parseBoolean(tmp) || tmp == null || "".equals(
+        tmp));
   }
 
 
   /**
-   *  Sets the parameters attribute of the BusinessProcessComponent object
+   * Sets the parameters attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new parameters value
+   * @param tmp The new parameters value
    */
   public void setParameters(ComponentParameterList tmp) {
     this.parameters = tmp;
@@ -286,9 +299,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the parent attribute of the BusinessProcessComponent object
+   * Sets the parent attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new parent value
+   * @param tmp The new parent value
    */
   public void setParent(BusinessProcessComponent tmp) {
     this.parent = tmp;
@@ -296,9 +309,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Sets the children attribute of the BusinessProcessComponent object
+   * Sets the children attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new children value
+   * @param tmp The new children value
    */
   public void setChildren(HashMap tmp) {
     this.children = tmp;
@@ -306,9 +319,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the id attribute of the BusinessProcessComponent object
+   * Gets the id attribute of the BusinessProcessComponent object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -316,9 +329,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the parentId attribute of the BusinessProcessComponent object
+   * Gets the parentId attribute of the BusinessProcessComponent object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -326,9 +339,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the parentResult attribute of the BusinessProcessComponent object
+   * Gets the parentResult attribute of the BusinessProcessComponent object
    *
-   *@return    The parentResult value
+   * @return The parentResult value
    */
   public int getParentResult() {
     return parentResult;
@@ -336,9 +349,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the processId attribute of the BusinessProcessComponent object
+   * Gets the processId attribute of the BusinessProcessComponent object
    *
-   *@return    The processId value
+   * @return The processId value
    */
   public int getProcessId() {
     return processId;
@@ -346,9 +359,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the componentId attribute of the BusinessProcessComponent object
+   * Gets the componentId attribute of the BusinessProcessComponent object
    *
-   *@return    The componentId value
+   * @return The componentId value
    */
   public int getComponentId() {
     return componentId;
@@ -356,9 +369,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the processType attribute of the BusinessProcessComponent object
+   * Gets the processType attribute of the BusinessProcessComponent object
    *
-   *@return    The processType value
+   * @return The processType value
    */
   public int getProcessType() {
     return processType;
@@ -366,9 +379,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the name attribute of the BusinessProcessComponent object
+   * Gets the name attribute of the BusinessProcessComponent object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -376,9 +389,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the className attribute of the BusinessProcessComponent object
+   * Gets the className attribute of the BusinessProcessComponent object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;
@@ -386,9 +399,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the description attribute of the BusinessProcessComponent object
+   * Gets the description attribute of the BusinessProcessComponent object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -396,9 +409,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the enabled attribute of the BusinessProcessComponent object
+   * Gets the enabled attribute of the BusinessProcessComponent object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -406,9 +419,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the parameters attribute of the BusinessProcessComponent object
+   * Gets the parameters attribute of the BusinessProcessComponent object
    *
-   *@return    The parameters value
+   * @return The parameters value
    */
   public ComponentParameterList getParameters() {
     return parameters;
@@ -416,9 +429,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the parent attribute of the BusinessProcessComponent object
+   * Gets the parent attribute of the BusinessProcessComponent object
    *
-   *@return    The parent value
+   * @return The parent value
    */
   public BusinessProcessComponent getParent() {
     return parent;
@@ -426,9 +439,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the children attribute of the BusinessProcessComponent object
+   * Gets the children attribute of the BusinessProcessComponent object
    *
-   *@return    The children value
+   * @return The children value
    */
   public HashMap getChildren() {
     if (children == null) {
@@ -439,10 +452,10 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the children attribute of the BusinessProcessComponent object
+   * Gets the children attribute of the BusinessProcessComponent object
    *
-   *@param  result  Description of the Parameter
-   *@return         The children value
+   * @param result Description of the Parameter
+   * @return The children value
    */
   public ArrayList getChildren(boolean result) {
     //Return the components that don't have a resultType and return the correct result ones
@@ -452,7 +465,8 @@ public class BusinessProcessComponent {
       if (indifferent != null) {
         listToReturn.addAll(indifferent);
       }
-      ArrayList matching = (ArrayList) children.get(new Integer(result == true ? Constants.TRUE : Constants.FALSE));
+      ArrayList matching = (ArrayList) children.get(
+          new Integer(result == true ? Constants.TRUE : Constants.FALSE));
       if (matching != null) {
         listToReturn.addAll(matching);
       }
@@ -462,9 +476,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Gets the allChildren attribute of the BusinessProcessComponent object
+   * Gets the allChildren attribute of the BusinessProcessComponent object
    *
-   *@return    The allChildren value
+   * @return The allChildren value
    */
   public ArrayList getAllChildren() {
     ArrayList listToReturn = new ArrayList();
@@ -480,9 +494,9 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Returns whether this component has any associated parameters
+   * Returns whether this component has any associated parameters
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasParameters() {
     return (parameters != null && parameters.size() > 0);
@@ -490,16 +504,17 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Adds a feature to the Child attribute of the BusinessProcessComponent
-   *  object
+   * Adds a feature to the Child attribute of the BusinessProcessComponent
+   * object
    *
-   *@param  childComponent  The feature to be added to the Child attribute
+   * @param childComponent The feature to be added to the Child attribute
    */
   public void addChild(BusinessProcessComponent childComponent) {
     if (children == null) {
       children = new HashMap();
     }
-    ArrayList results = (ArrayList) children.get(new Integer(childComponent.getParentResult()));
+    ArrayList results = (ArrayList) children.get(
+        new Integer(childComponent.getParentResult()));
     if (results == null) {
       results = new ArrayList();
       children.put(new Integer(childComponent.getParentResult()), results);
@@ -509,10 +524,10 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Populates this object from a database recordset
+   * Populates this object from a database recordset
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //business_process_component
@@ -530,10 +545,10 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Builds related data for this component
+   * Builds related data for this component
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildResources(Connection db) throws SQLException {
     //Add local parameters to the component
@@ -544,12 +559,12 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Inserts this business process component along with any related data. A
-   *  business process must exist in the library first, so that is seamlessly
-   *  verified and inserted if necessary.
+   * Inserts this business process component along with any related data. A
+   * business process must exist in the library first, so that is seamlessly
+   * verified and inserted if necessary.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     PreparedStatement pst;
@@ -618,12 +633,16 @@ public class BusinessProcessComponent {
     }
     if (doInsert) {
       //Insert the component
+      id = DatabaseUtils.getNextSeq(db, "business_process_compone_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO business_process_component " +
-          "(process_id, component_id, parent_id, parent_result_id, enabled) " +
+          "(" + (id > -1 ? "id, " : "") + "process_id, component_id, parent_id, parent_result_id, enabled) " +
           "VALUES " +
-          "(?, ?, ?, ?, ?)");
+          "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?)");
       int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, processId);
       pst.setInt(++i, componentId);
       if (parent != null) {
@@ -635,7 +654,7 @@ public class BusinessProcessComponent {
       pst.setBoolean(++i, enabled);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "business_process_compone_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "business_process_compone_id_seq", id);
       //Insert component parameters
       if (parameters != null) {
         parameters.setComponentId(id);
@@ -646,10 +665,10 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Deletes this object into a database
+   * Deletes this object into a database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
 
@@ -672,13 +691,14 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Outputs the object for debugging
+   * Outputs the object for debugging
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     StringBuffer sb = new StringBuffer();
-    sb.append("=[Business Process Component]================================\r\n");
+    sb.append(
+        "=[Business Process Component]================================\r\n");
     sb.append(" id: " + id + "\r\n");
     sb.append(" parentId: " + parentId + "\r\n");
     sb.append(" parentResult: " + parentResult + "\r\n");

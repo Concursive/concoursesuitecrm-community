@@ -40,7 +40,8 @@
     </td>
   </tr>
 </table>
-<br>
+<dhv:evaluate if="<%= !Project.isTrashed() %>">
+<br />
 <% if (ticket.getClosed() != null) { %>
 <zeroio:permission name="project-tickets-edit">
   <input type="button" value="<dhv:label name="button.reopen">Re-open</dhv:label>" onClick="javascript:confirmForward('ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>');">
@@ -53,6 +54,7 @@
   <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDelete('ProjectManagementTickets.do?command=Delete&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>');">
 </zeroio:permission>
 <%}%>
+</dhv:evaluate>
 <zeroio:permission name="project-tickets-edit,project-tickets-delete" if="any">
 <br />
 <br />
@@ -247,6 +249,7 @@
     </tr>
   <%}%>
 </table>
+<dhv:evaluate if="<%= !Project.isTrashed() %>">
 &nbsp;<br>
 <% if (ticket.getClosed() != null) { %>
 <zeroio:permission name="project-tickets-edit">
@@ -260,4 +263,5 @@
   <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDelete('ProjectManagementTickets.do?command=Delete&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>');">
 </zeroio:permission>
 <%}%>
+</dhv:evaluate>
 </form>

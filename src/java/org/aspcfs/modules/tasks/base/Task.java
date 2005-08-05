@@ -16,6 +16,8 @@
 package org.aspcfs.modules.tasks.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.webdav.utils.ICalendar;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionlist.base.ActionItemLogList;
 import org.aspcfs.modules.actionlist.base.ActionList;
@@ -23,19 +25,21 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     akhi_m
- * @created    August 15, 2002
- * @version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created August 15, 2002
  */
 public class Task extends GenericBean {
 
@@ -65,6 +69,7 @@ public class Task extends GenericBean {
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp completeDate = null;
   private String dueDateTimeZone = null;
+  private java.sql.Timestamp trashedDate = null;
 
   //other
   private int contactId = -1;
@@ -85,17 +90,18 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
-  public Task() { }
+  public Task() {
+  }
 
 
   /**
-   *  Constructor for the Task object
+   * Constructor for the Task object
    *
-   * @param  db                Description of the Parameter
-   * @param  thisId            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Task(Connection db, int thisId) throws SQLException {
     if (thisId == -1) {
@@ -106,7 +112,7 @@ public class Task extends GenericBean {
         "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
         "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
         "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
-        "t.modifiedby, t.category_id, t.duedate_timezone " +
+        "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date " +
         "FROM task t " +
         "WHERE task_id = ? ");
     int i = 0;
@@ -124,23 +130,21 @@ public class Task extends GenericBean {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Task(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
 
-
   /**
-   *  Sets the entered attribute of the Task object
+   * Sets the entered attribute of the Task object
    *
-   * @param  entered  The new entered value
+   * @param entered The new entered value
    */
   public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
@@ -148,9 +152,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Task object
+   * Sets the entered attribute of the Task object
    *
-   * @param  entered  The new entered value
+   * @param entered The new entered value
    */
   public void setEntered(String entered) {
     this.entered = DatabaseUtils.parseTimestamp(entered);
@@ -158,9 +162,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Task object
+   * Sets the enteredBy attribute of the Task object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -168,9 +172,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Task object
+   * Sets the type attribute of the Task object
    *
-   * @param  type  The new type value
+   * @param type The new type value
    */
   public void setType(int type) {
     this.type = type;
@@ -179,9 +183,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the type attribute of the Task object
+   * Sets the type attribute of the Task object
    *
-   * @param  type  The new type value
+   * @param type The new type value
    */
   public void setType(String type) {
     this.type = Integer.parseInt(type);
@@ -189,9 +193,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the dueDateTimeZone attribute of the Task object
+   * Sets the dueDateTimeZone attribute of the Task object
    *
-   * @param  tmp  The new dueDateTimeZone value
+   * @param tmp The new dueDateTimeZone value
    */
   public void setDueDateTimeZone(String tmp) {
     this.dueDateTimeZone = tmp;
@@ -199,9 +203,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the dueDateTimeZone attribute of the Task object
+   * Gets the dueDateTimeZone attribute of the Task object
    *
-   * @return    The dueDateTimeZone value
+   * @return The dueDateTimeZone value
    */
   public String getDueDateTimeZone() {
     return dueDateTimeZone;
@@ -209,9 +213,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the type attribute of the Task object
+   * Gets the type attribute of the Task object
    *
-   * @return    The type value
+   * @return The type value
    */
   public int getType() {
     return type;
@@ -219,9 +223,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the hasEnabledOwnerAccount attribute of the Task object
+   * Gets the hasEnabledOwnerAccount attribute of the Task object
    *
-   * @return    The hasEnabledOwnerAccount value
+   * @return The hasEnabledOwnerAccount value
    */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
@@ -229,9 +233,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the hasEnabledLinkAccount attribute of the Task object
+   * Gets the hasEnabledLinkAccount attribute of the Task object
    *
-   * @return    The hasEnabledLinkAccount value
+   * @return The hasEnabledLinkAccount value
    */
   public boolean getHasEnabledLinkAccount() {
     return hasEnabledLinkAccount;
@@ -239,9 +243,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledOwnerAccount attribute of the Task object
+   * Sets the hasEnabledOwnerAccount attribute of the Task object
    *
-   * @param  tmp  The new hasEnabledOwnerAccount value
+   * @param tmp The new hasEnabledOwnerAccount value
    */
   public void setHasEnabledOwnerAccount(boolean tmp) {
     this.hasEnabledOwnerAccount = tmp;
@@ -249,9 +253,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledLinkAccount attribute of the Task object
+   * Sets the hasEnabledLinkAccount attribute of the Task object
    *
-   * @param  tmp  The new hasEnabledLinkAccount value
+   * @param tmp The new hasEnabledLinkAccount value
    */
   public void setHasEnabledLinkAccount(boolean tmp) {
     this.hasEnabledLinkAccount = tmp;
@@ -259,9 +263,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Task object
+   * Sets the enteredBy attribute of the Task object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(String enteredBy) {
     this.enteredBy = Integer.parseInt(enteredBy);
@@ -269,20 +273,19 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Task object
+   * Sets the description attribute of the Task object
    *
-   * @param  description  The new description value
+   * @param description The new description value
    */
   public void setDescription(String description) {
     this.description = description;
   }
 
 
-
   /**
-   *  Sets the priority attribute of the Task object
+   * Sets the priority attribute of the Task object
    *
-   * @param  priority  The new priority value
+   * @param priority The new priority value
    */
   public void setPriority(int priority) {
     this.priority = priority;
@@ -290,9 +293,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the priority attribute of the Task object
+   * Sets the priority attribute of the Task object
    *
-   * @param  priority  The new priority value
+   * @param priority The new priority value
    */
   public void setPriority(String priority) {
     this.priority = Integer.parseInt(priority);
@@ -300,20 +303,19 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the dueDate attribute of the Task object
+   * Sets the dueDate attribute of the Task object
    *
-   * @param  dueDate  The new dueDate value
+   * @param dueDate The new dueDate value
    */
   public void setDueDate(java.sql.Timestamp dueDate) {
     this.dueDate = dueDate;
   }
 
 
-
   /**
-   *  Sets the dueDate attribute of the Task object
+   * Sets the dueDate attribute of the Task object
    *
-   * @param  tmp  The new dueDate value
+   * @param tmp The new dueDate value
    */
   public void setDueDate(String tmp) {
     this.dueDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -321,9 +323,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the Task object
+   * Sets the notes attribute of the Task object
    *
-   * @param  notes  The new notes value
+   * @param notes The new notes value
    */
   public void setNotes(String notes) {
     this.notes = notes;
@@ -331,9 +333,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the sharing attribute of the Task object
+   * Sets the sharing attribute of the Task object
    *
-   * @param  sharing  The new sharing value
+   * @param sharing The new sharing value
    */
   public void setSharing(int sharing) {
     this.sharing = sharing;
@@ -341,10 +343,10 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the sharing attribute of the Task object sharing is set to 1 if
-   *  bussiness else for personal set to 0
+   * Sets the sharing attribute of the Task object sharing is set to 1 if
+   * bussiness else for personal set to 0
    *
-   * @param  sharing  The new sharing value
+   * @param sharing The new sharing value
    */
   public void setSharing(String sharing) {
     this.sharing = Integer.parseInt(sharing);
@@ -352,9 +354,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Task object
+   * Sets the modifiedBy attribute of the Task object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -362,9 +364,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Task object
+   * Sets the modifiedBy attribute of the Task object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -372,9 +374,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the Task object
+   * Sets the complete attribute of the Task object
    *
-   * @param  complete  The new complete value
+   * @param complete The new complete value
    */
   public void setComplete(boolean complete) {
     this.complete = complete;
@@ -382,9 +384,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the Task object
+   * Sets the complete attribute of the Task object
    *
-   * @param  complete  The new complete value
+   * @param complete The new complete value
    */
   public void setComplete(String complete) {
     this.complete = DatabaseUtils.parseBoolean(complete);
@@ -392,9 +394,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLOE attribute of the Task object
+   * Sets the estimatedLOE attribute of the Task object
    *
-   * @param  estimatedLOE  The new estimatedLOE value
+   * @param estimatedLOE The new estimatedLOE value
    */
   public void setEstimatedLOE(double estimatedLOE) {
     this.estimatedLOE = estimatedLOE;
@@ -402,9 +404,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLOE attribute of the Task object
+   * Sets the estimatedLOE attribute of the Task object
    *
-   * @param  estimatedLOE  The new estimatedLOE value
+   * @param estimatedLOE The new estimatedLOE value
    */
   public void setEstimatedLOE(String estimatedLOE) {
     this.estimatedLOE = Double.parseDouble(estimatedLOE);
@@ -412,9 +414,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Task object
+   * Sets the owner attribute of the Task object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -422,9 +424,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Task object
+   * Sets the categoryId attribute of the Task object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -432,9 +434,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Task object
+   * Sets the categoryId attribute of the Task object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.setCategoryId(Integer.parseInt(tmp));
@@ -442,20 +444,19 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Task object
+   * Sets the owner attribute of the Task object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
   }
 
 
-
   /**
-   *  Sets the id attribute of the Task object
+   * Sets the id attribute of the Task object
    *
-   * @param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -463,9 +464,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Task object
+   * Sets the id attribute of the Task object
    *
-   * @param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -473,9 +474,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the age attribute of the Task object
+   * Sets the age attribute of the Task object
    *
-   * @param  age  The new age value
+   * @param age The new age value
    */
   public void setAge(int age) {
     this.age = age;
@@ -483,9 +484,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the age attribute of the Task object
+   * Sets the age attribute of the Task object
    *
-   * @param  age  The new age value
+   * @param age The new age value
    */
   public void setAge(String age) {
     this.age = Integer.parseInt(age);
@@ -493,9 +494,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the Task object
+   * Sets the contactId attribute of the Task object
    *
-   * @param  contactId  The new contactId value
+   * @param contactId The new contactId value
    */
   public void setContactId(int contactId) {
     this.contactId = contactId;
@@ -503,9 +504,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the Task object
+   * Sets the contactId attribute of the Task object
    *
-   * @param  contactId  The new contactId value
+   * @param contactId The new contactId value
    */
   public void setContactId(String contactId) {
     this.contactId = Integer.parseInt(contactId);
@@ -513,9 +514,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the contactName attribute of the Task object
+   * Sets the contactName attribute of the Task object
    *
-   * @param  contactName  The new contactName value
+   * @param contactName The new contactName value
    */
   public void setContactName(String contactName) {
     this.contactName = contactName;
@@ -523,9 +524,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the contact attribute of the Task object
+   * Sets the contact attribute of the Task object
    *
-   * @param  contact_id  The new contact value
+   * @param contact_id The new contact value
    */
   public void setContact(String contact_id) {
     this.contactId = Integer.parseInt(contact_id);
@@ -533,9 +534,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the ticketId attribute of the Task object
+   * Sets the ticketId attribute of the Task object
    *
-   * @param  ticketId  The new ticketId value
+   * @param ticketId The new ticketId value
    */
   public void setTicketId(int ticketId) {
     this.ticketId = ticketId;
@@ -543,9 +544,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the ticketId attribute of the Task object
+   * Sets the ticketId attribute of the Task object
    *
-   * @param  ticketId  The new ticketId value
+   * @param ticketId The new ticketId value
    */
   public void setTicketId(String ticketId) {
     this.ticketId = Integer.parseInt(ticketId);
@@ -553,9 +554,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the Task object
+   * Gets the projectId attribute of the Task object
    *
-   * @return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -563,9 +564,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Task object
+   * Sets the projectId attribute of the Task object
    *
-   * @param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -573,9 +574,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Task object
+   * Sets the projectId attribute of the Task object
    *
-   * @param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -583,9 +584,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLOEType attribute of the Task object
+   * Sets the estimatedLOEType attribute of the Task object
    *
-   * @param  estimatedLOEType  The new estimatedLOEType value
+   * @param estimatedLOEType The new estimatedLOEType value
    */
   public void setEstimatedLOEType(int estimatedLOEType) {
     this.estimatedLOEType = estimatedLOEType;
@@ -593,9 +594,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLOEType attribute of the Task object
+   * Sets the estimatedLOEType attribute of the Task object
    *
-   * @param  estimatedLOEType  The new estimatedLOEType value
+   * @param estimatedLOEType The new estimatedLOEType value
    */
   public void setEstimatedLOEType(String estimatedLOEType) {
     this.estimatedLOEType = Integer.parseInt(estimatedLOEType);
@@ -603,9 +604,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the linkDetails attribute of the Task object
+   * Sets the linkDetails attribute of the Task object
    *
-   * @param  linkDetails  The new linkDetails value
+   * @param linkDetails The new linkDetails value
    */
   public void setLinkDetails(TaskLink linkDetails) {
     this.linkDetails = linkDetails;
@@ -613,10 +614,10 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildLinkDetails(Connection db) throws SQLException {
     if (linkDetails == null) {
@@ -629,9 +630,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the linkDetails attribute of the Task object
+   * Gets the linkDetails attribute of the Task object
    *
-   * @return    The linkDetails value
+   * @return The linkDetails value
    */
   public TaskLink getLinkDetails() {
     return linkDetails;
@@ -639,9 +640,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLOEType attribute of the Task object
+   * Gets the estimatedLOEType attribute of the Task object
    *
-   * @return    The estimatedLOEType value
+   * @return The estimatedLOEType value
    */
   public int getEstimatedLOEType() {
     return estimatedLOEType;
@@ -649,9 +650,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the Task object
+   * Sets the completeDate attribute of the Task object
    *
-   * @param  completeDate  The new completeDate value
+   * @param completeDate The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp completeDate) {
     this.completeDate = completeDate;
@@ -659,9 +660,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Task object
+   * Sets the modified attribute of the Task object
    *
-   * @param  modified  The new modified value
+   * @param modified The new modified value
    */
   public void setModified(java.sql.Timestamp modified) {
     this.modified = modified;
@@ -669,9 +670,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Task object
+   * Sets the modified attribute of the Task object
    *
-   * @param  modified  The new modified value
+   * @param modified The new modified value
    */
   public void setModified(String modified) {
     this.modified = DatabaseUtils.parseTimestamp(modified);
@@ -679,9 +680,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the Call object
+   * Sets the actionId attribute of the Call object
    *
-   * @param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
@@ -689,9 +690,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the Call object
+   * Sets the actionId attribute of the Call object
    *
-   * @param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
@@ -699,9 +700,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the actionId attribute of the Task object
+   * Gets the actionId attribute of the Task object
    *
-   * @return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -709,9 +710,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Task object
+   * Gets the modified attribute of the Task object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -719,9 +720,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Task object
+   * Gets the modifiedBy attribute of the Task object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -729,9 +730,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the Task object
+   * Gets the completeDate attribute of the Task object
    *
-   * @return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -739,9 +740,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the completeDateString attribute of the Task object
+   * Gets the completeDateString attribute of the Task object
    *
-   * @return    The completeDateString value
+   * @return The completeDateString value
    */
   public String getCompleteDateString() {
     String tmp = "";
@@ -754,9 +755,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the contact attribute of the Task object
+   * Gets the contact attribute of the Task object
    *
-   * @return    The contact value
+   * @return The contact value
    */
   public Contact getContact() {
     return contact;
@@ -764,9 +765,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the ticket attribute of the Task object
+   * Gets the ticket attribute of the Task object
    *
-   * @return    The ticket value
+   * @return The ticket value
    */
   public Ticket getTicket() {
     return ticket;
@@ -774,9 +775,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the hasLinks attribute of the Task object
+   * Gets the hasLinks attribute of the Task object
    *
-   * @return    The hasLinks value
+   * @return The hasLinks value
    */
   public boolean getHasLinks() {
     return hasLinks;
@@ -784,9 +785,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the ticketId attribute of the Task object
+   * Gets the ticketId attribute of the Task object
    *
-   * @return    The ticketId value
+   * @return The ticketId value
    */
   public int getTicketId() {
     return ticketId;
@@ -794,9 +795,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the contactName attribute of the Task object
+   * Gets the contactName attribute of the Task object
    *
-   * @return    The contactName value
+   * @return The contactName value
    */
   public String getContactName() {
     return contactName;
@@ -804,9 +805,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the contactId attribute of the Task object
+   * Gets the contactId attribute of the Task object
    *
-   * @return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -814,9 +815,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the age attribute of the Task object
+   * Gets the age attribute of the Task object
    *
-   * @return    The age value
+   * @return The age value
    */
   public int getAge() {
     return age;
@@ -824,9 +825,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the age attribute of the Task object
+   * Gets the age attribute of the Task object
    *
-   * @return    The age value
+   * @return The age value
    */
   public String getAgeString() {
     return age + "d";
@@ -834,9 +835,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLOE attribute of the Task object
+   * Gets the estimatedLOE attribute of the Task object
    *
-   * @return    The estimatedLOE value
+   * @return The estimatedLOE value
    */
   public double getEstimatedLOE() {
     return estimatedLOE;
@@ -844,9 +845,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLOEValue attribute of the Task object
+   * Gets the estimatedLOEValue attribute of the Task object
    *
-   * @return    The estimatedLOEValue value
+   * @return The estimatedLOEValue value
    */
   public String getEstimatedLOEValue() {
     String toReturn = String.valueOf(estimatedLOE);
@@ -861,10 +862,10 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
@@ -889,10 +890,10 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledLinkAccount(Connection db) throws SQLException {
     if (this.getContactId() == -1) {
@@ -917,9 +918,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the sharing attribute of the Task object
+   * Gets the sharing attribute of the Task object
    *
-   * @return    The sharing value
+   * @return The sharing value
    */
   public int getSharing() {
     return sharing;
@@ -927,9 +928,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the Task object
+   * Gets the owner attribute of the Task object
    *
-   * @return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -937,9 +938,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the Task object
+   * Gets the categoryId attribute of the Task object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -947,9 +948,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the complete attribute of the Task object
+   * Gets the complete attribute of the Task object
    *
-   * @return    The complete value
+   * @return The complete value
    */
   public boolean getComplete() {
     return complete;
@@ -957,9 +958,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the Task object
+   * Gets the notes attribute of the Task object
    *
-   * @return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -967,9 +968,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the reminderId attribute of the Task object
+   * Gets the reminderId attribute of the Task object
    *
-   * @return    The reminderId value
+   * @return The reminderId value
    */
   public int getReminderId() {
     return reminderId;
@@ -977,20 +978,19 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the dueDate attribute of the Task object
+   * Gets the dueDate attribute of the Task object
    *
-   * @return    The dueDate value
+   * @return The dueDate value
    */
   public java.sql.Timestamp getDueDate() {
     return dueDate;
   }
 
 
-
   /**
-   *  Gets the dueDateString attribute of the Task object
+   * Gets the dueDateString attribute of the Task object
    *
-   * @return    The dueDateString value
+   * @return The dueDateString value
    */
   public String getDueDateString() {
     String tmp = "";
@@ -1003,9 +1003,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Task object
+   * Gets the description attribute of the Task object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -1013,9 +1013,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the priority attribute of the Task object
+   * Gets the priority attribute of the Task object
    *
-   * @return    The priority value
+   * @return The priority value
    */
   public int getPriority() {
     return priority;
@@ -1023,9 +1023,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Task object
+   * Gets the enteredBy attribute of the Task object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1033,9 +1033,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Task object
+   * Gets the entered attribute of the Task object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1043,14 +1043,15 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Task object
+   * Gets the enteredString attribute of the Task object
    *
-   * @return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -1058,9 +1059,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Task object
+   * Gets the id attribute of the Task object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -1068,31 +1069,54 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Gets the trashedDate attribute of the Task object
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the Task object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql = null;
     boolean commit = true;
     try {
       commit = db.getAutoCommit();
       if (commit) {
         db.setAutoCommit(false);
       }
-      sql = "INSERT INTO task " +
-          "(enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, duedate_timezone, estimatedloe, " +
+      id = DatabaseUtils.getNextSeq(db, "task_task_id_seq");
+      PreparedStatement pst = db.prepareStatement(
+          "INSERT INTO task " +
+          "(" + (id > -1 ? "task_id, " : "") + "enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, duedate_timezone, estimatedloe, " +
           (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
           (type == -1 ? "" : "type, ") +
-          "complete, completedate, category_id) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+          "complete, completedate, category_id, trashed_date) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
           (estimatedLOEType == -1 ? "" : "?, ") +
           (type == -1 ? "" : "?, ") +
-          "?, ?, ? ) ";
+          "?, ?, ?, ? ) ");
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getPriority());
@@ -1116,8 +1140,9 @@ public class Task extends GenericBean {
         pst.setTimestamp(++i, null);
       }
       DatabaseUtils.setInt(pst, ++i, categoryId);
+      DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq");
+      this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq", id);
       pst.close();
       if (this.getContactId() > -1) {
         processContacts(db, true);
@@ -1142,12 +1167,11 @@ public class Task extends GenericBean {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateLog(Connection db) throws SQLException {
     boolean commit = true;
@@ -1180,11 +1204,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     String sql = null;
@@ -1200,7 +1224,7 @@ public class Task extends GenericBean {
           "SET modifiedby = ?, priority = ?, description = ?, notes = ?, " +
           "sharing = ?, owner = ?, duedate = ?, duedate_timezone = ?, estimatedloe = ?, " +
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
-          "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, category_id = ? " +
+          "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, category_id = ?, trashed_date = ? " +
           "WHERE task_id = ? AND modified = ? ";
       int i = 0;
       pst = db.prepareStatement(sql);
@@ -1225,6 +1249,7 @@ public class Task extends GenericBean {
         pst.setTimestamp(++i, null);
       }
       DatabaseUtils.setInt(pst, ++i, categoryId);
+      DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       pst.setInt(++i, id);
       pst.setTimestamp(++i, this.getModified());
       count = pst.executeUpdate();
@@ -1246,12 +1271,12 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  linkContacts      Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkContacts Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean processContacts(Connection db, boolean linkContacts) throws SQLException {
     String sql = null;
@@ -1303,16 +1328,17 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
     try {
-      ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId(), Constants.TASK_OBJECT);
+      ActionList actionList = ActionItemLogList.isItemLinked(
+          db, this.getId(), Constants.TASK_OBJECT);
       if (actionList != null) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName(actionList.getDescription());
@@ -1328,11 +1354,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1344,6 +1370,7 @@ public class Task extends GenericBean {
         db.setAutoCommit(false);
       }
       deleteRelationships(db);
+      ContactHistory.deleteObject(db, OrganizationHistory.TASK, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "DELETE from task " +
           "WHERE task_id = ? ");
@@ -1368,11 +1395,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean deleteRelationships(Connection db) throws SQLException {
     boolean commit = true;
@@ -1384,16 +1411,14 @@ public class Task extends GenericBean {
       //Delete contact link
       PreparedStatement pst = db.prepareStatement(
           "DELETE from tasklink_contact " +
-          "WHERE task_id = ? "
-          );
+          "WHERE task_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
       //Delete ticket link
       pst = db.prepareStatement(
           "DELETE from tasklink_ticket " +
-          "WHERE task_id = ? "
-          );
+          "WHERE task_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -1426,10 +1451,10 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     ResultSet rs = null;
@@ -1490,10 +1515,10 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("task_id");
@@ -1517,6 +1542,7 @@ public class Task extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     categoryId = DatabaseUtils.getInt(rs, "category_id");
     dueDateTimeZone = rs.getString("duedate_timezone");
+    trashedDate = rs.getTimestamp("trashed_date");
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);
@@ -1525,11 +1551,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  projectId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertProjectLink(Connection db, int projectId) throws SQLException {
     String sql = "INSERT INTO tasklink_project " +
@@ -1545,11 +1571,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  projectId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void deleteProjectLink(Connection db, int projectId) throws SQLException {
     int i = 0;
@@ -1564,11 +1590,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newCategoryId     Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param newCategoryId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateCategoryId(Connection db, int newCategoryId) throws SQLException {
     int i = 0;
@@ -1584,11 +1610,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  taskId            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param taskId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void markComplete(Connection db, int taskId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1604,11 +1630,11 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  taskId            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param taskId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void markIncomplete(Connection db, int taskId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1624,9 +1650,9 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneParams attribute of the Task class
+   * Gets the timeZoneParams attribute of the Task class
    *
-   * @return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -1636,14 +1662,116 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the Task class
+   * Gets the numberParams attribute of the Task class
    *
-   * @return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("estimatedLOE");
     return thisList;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    boolean commit = true;
+    int resultCount = -1;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE task " +
+        "SET trashed_date = ? , " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+        "modifiedby = ? " +
+        "WHERE task_id = ? ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    if (toTrash) {
+      DatabaseUtils.setTimestamp(
+          pst, ++i, new Timestamp(System.currentTimeMillis()));
+    } else {
+      DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+    }
+    DatabaseUtils.setInt(pst, ++i, tmpUserId);
+    pst.setInt(++i, this.getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
+
+    // Enable/Disable the contact history for the task
+    ContactHistory.trash(db, OrganizationHistory.TASK, this.getId(), !toTrash);
+
+    return (resultCount == 1);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param category Description of the Parameter
+   * @param tz       Description of the Parameter
+   * @param created  Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String generateWebcalEvent(String category, TimeZone tz, Timestamp created) {
+    StringBuffer webcal = new StringBuffer();
+    String CRLF = System.getProperty("line.separator");
+
+    String summary = "";
+    if (description != null) {
+      summary += description;
+    }
+    
+    //write the event
+    webcal.append("BEGIN:VTODO" + CRLF);
+    webcal.append(
+        "UID:www.centriccrm.com-myhomepage-tasks-" + this.getId() + CRLF);
+
+    if (created != null) {
+      webcal.append("DTSTAMP:" + ICalendar.getDateTimeUTC(created) + CRLF);
+    }
+    if (entered != null) {
+      webcal.append("CREATED:" + ICalendar.getDateTimeUTC(entered) + CRLF);
+    }
+    if (summary != null) {
+      webcal.append(ICalendar.foldLine("SUMMARY:" + summary) + CRLF);
+    }
+    if (priority != -1) {
+      webcal.append(
+          "PRIORITY;VALUE=INTEGER:" + ICalendar.getPriority(priority) + CRLF);
+    }
+    if (age != -1) {
+      webcal.append(
+          ICalendar.foldLine("DESCRIPTION:Age: " + this.getAgeString()) + CRLF);
+    }
+    if (category != null) {
+      webcal.append("CATEGORIES:" + category + CRLF);
+    }
+    if (dueDate != null) {
+      webcal.append(
+          "DUE;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(tz, dueDate) + CRLF);
+    }
+    //webcal.append("PERCENT:")
+    if (contactName != null) {
+      webcal.append("CONTACT:" + contactName + CRLF);
+    }
+    if (complete) {
+      webcal.append("STATUS:COMPLETE" + CRLF);
+    } else {
+      webcal.append("STATUS:NEEDS-ACTION" + CRLF);
+    }
+
+    webcal.append("END:VTODO" + CRLF);
+
+    return webcal.toString();
   }
 }
 

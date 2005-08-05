@@ -15,23 +15,24 @@
  */
 package org.aspcfs.modules.service.tasks;
 
-import java.net.*;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
- *  Used for making a connection to a specified url, can be used for executing a
- *  process at the url, testing, debugging, etc.
+ * Used for making a connection to a specified url, can be used for executing a
+ * process at the url, testing, debugging, etc.
  *
- *@author     matt rajkowski
- *@created    May 13, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 13, 2003
  */
 public class GetURL {
 
   /**
-   *  Makes a URL connection with the specified url, retrieves and discards
-   *  content
+   * Makes a URL connection with the specified url, retrieves and discards
+   * content
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void doTask(String args[]) {
     if (args.length == 0) {

@@ -15,25 +15,23 @@
  */
 package com.darkhorseventures.framework.beans;
 
-import java.util.*;
-import java.lang.reflect.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- *  Description of the Interface
+ * Description of the Interface
  *
- *@author     kevin duffey
- *@created    june 1, 2001
- *@version    $Id$
+ * @author kevin duffey
+ * @version $Id$
+ * @created june 1, 2001
  */
 public interface Populate {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  bean             Description of the Parameter
-   *@param  request          Description of the Parameter
-   *@param  nestedAttribute  Description of the Parameter
-   *@param  indexAttribute   Description of the Parameter
+   * @param bean            Description of the Parameter
+   * @param request         Description of the Parameter
+   * @param nestedAttribute Description of the Parameter
+   * @param indexAttribute  Description of the Parameter
    */
   public void populateObject(Object bean, HttpServletRequest request, String nestedAttribute, String indexAttribute);
 }

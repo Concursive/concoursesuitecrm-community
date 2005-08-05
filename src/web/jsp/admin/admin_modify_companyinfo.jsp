@@ -26,6 +26,7 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></SCRIPT>
@@ -237,7 +238,7 @@ Company Information
 				<span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
 					<input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
 				</span>
-				<% StateSelect = new StateSelect(); %>
+				<% StateSelect = new StateSelect(systemStatus); %>
 			</td>
 		</tr>
 		<tr class="containerBody">
@@ -258,7 +259,7 @@ Company Information
         <script type="text/javascript">
           update('address<%= acount %>country','<%= acount %>');
         </script>
-				<% CountrySelect = new CountrySelect(); %>
+				<% CountrySelect = new CountrySelect(systemStatus); %>
 			</td>
 		</tr>
 		<tr class="containerBody">
@@ -322,7 +323,7 @@ Company Information
 				<span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
 					<input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
 				</span>
-				<% StateSelect = new StateSelect(); %>
+				<% StateSelect = new StateSelect(systemStatus); %>
 			</td>
 		</tr>
 		<tr class="containerBody">
@@ -343,7 +344,7 @@ Company Information
         <script type="text/javascript">
           update('address<%= acount %>country','<%= acount %>');
         </script>
-				<% CountrySelect = new CountrySelect(); %>
+				<% CountrySelect = new CountrySelect(systemStatus); %>
 			</td>
 		</tr>
 	</table>

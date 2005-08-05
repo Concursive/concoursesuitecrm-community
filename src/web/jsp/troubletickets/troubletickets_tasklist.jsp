@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -68,9 +68,11 @@
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="tasks" object="TicketDetails" param="<%= param1 %>">
   <%@ include file="ticket_header_include.jsp" %>
-  <dhv:permission name="tickets-tickets-tasks-add">
-    <a href="javascript:popURL('TroubleTicketTasks.do?command=Add&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');"><dhv:label name="quickactions.addTask">Add a Task</dhv:label></a><br><br>
-  </dhv:permission>
+  <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>">
+    <dhv:permission name="tickets-tickets-tasks-add">
+      <a href="javascript:popURL('TroubleTicketTasks.do?command=Add&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');"><dhv:label name="quickactions.addTask">Add a Task</dhv:label></a><br><br>
+    </dhv:permission>
+  </dhv:evaluate>
   <%-- include the tasks created --%>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
@@ -115,7 +117,7 @@
       <td align="center" valign="top">
         <%-- <a href="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>&return=' + escape('MyTasks.do?command=ListTasks') + '&sendUrl='+ escape('MyTasksForward.do?command=SendMessage');">Fwd</a>|--%>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= TicketDetails.getId() %>', '<%= thisTask.getId() %>');"
+       <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= TicketDetails.getId() %>', '<%= thisTask.getId() %>','<%= TicketDetails.isTrashed() %>');"
        onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
       <td nowrap align="center" valign="top">
@@ -172,11 +174,11 @@
           <td valign="top">
             <a href="javascript:popURL('TroubleTicketTasks.do?command=Details&ticketId=<%= TicketDetails.getId() %>&id=<%= thisTask.getId() %>&popup=true','CRM_Task','600','425','yes','yes');"><%= toHtml(thisTask.getDescription()) %></a>&nbsp;
 <% if(thisTask.getContactId()!=-1) {%>
-<% if(!thisTask.getContact().getEmployee()) {%>
-[<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.contact.abbreviation">C</dhv:label></font></a>]
-<%} else {%>
-[<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.employee.abbreviation">E</dhv:label></font></a>]
-<%}%>
+  <% if(!thisTask.getContact().getEmployee()) {%>
+  [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.contact.abbreviation">Contact</dhv:label></font></a>]
+  <%} else {%>
+  [<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.employee.abbreviation">Employee</dhv:label></font></a>]
+  <%}%>
 <%}%>
           </td>
         </tr>
@@ -193,32 +195,39 @@
                 <ul>
                 <tr>
                   <td>
-                    <li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label> &nbsp;<%= thisTask.getContact().getNameLastFirst() %></li>
+                    <table cellpadding="4" cellspacing="0" class="empty"><tr><td valign="top"><li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label></li></td>
+                    <td align="left">&nbsp;<%= thisTask.getContact().getNameLastFirst() %></td></tr></table>
                   </td>
                 </tr>
                 <tr>
-                  <td>
-                    <li>&nbsp;<dhv:label name="account.emails.colon">Email(s):</dhv:label>
+                  <td><table cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+                    <li>&nbsp;<dhv:label name="account.emails.colon">Email(s):</dhv:label></li>
+                    </td><td><table cellpadding="0" cellspacing="0" class="empty">
   <%
                     Iterator i = thisTask.getContact().getEmailAddressList().iterator();
                     while (i.hasNext()) {
                       EmailAddress thisAddress = (EmailAddress)i.next(); %>
-                      &nbsp;<%=thisAddress.getEmail()%>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
+                      <tr><td>
+                        &nbsp;<%=thisAddress.getEmail()%>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
+                      </td></tr>
                     <%}%>
-                    </li>
+                    </table>
+                    </td></tr></table>
                   </td>
                 </tr>
                 <tr>
-                  <td>
-                    <li>&nbsp;<dhv:label name="account.phones.colon">Phone(s):</dhv:label>
-                      &nbsp;
+                  <td><table cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+                    <li>&nbsp;<dhv:label name="account.phones.colon">Phone(s):</dhv:label></li>
+                    </td><td><table cellpadding="0" cellspacing="0" class="empty">
                     <%
                       i = thisTask.getContact().getPhoneNumberList().iterator();
                       while (i.hasNext()) {
                         PhoneNumber phoneNumber = (PhoneNumber)i.next(); %>
+                        <tr><td>
                         &nbsp;<%= phoneNumber.getPhoneNumber()%>(<%=phoneNumber.getTypeName()%>)<br />
+                        </td></tr>
                     <%}%>
-                     </li>
+                     </table></td></tr></table>
                   </td>
                 </tr>
                 </ul>

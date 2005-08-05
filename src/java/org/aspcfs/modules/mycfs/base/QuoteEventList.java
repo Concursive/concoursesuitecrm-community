@@ -15,16 +15,15 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
 import org.aspcfs.modules.quotes.base.Quote;
 import org.aspcfs.modules.quotes.base.QuoteList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    July 16, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created July 16, 2004
  */
 public class QuoteEventList {
   QuoteList todaysQuotes = new QuoteList();
@@ -32,9 +31,9 @@ public class QuoteEventList {
 
 
   /**
-   *  Sets the size attribute of the TaskEventList object
+   * Sets the size attribute of the TaskEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
@@ -42,9 +41,9 @@ public class QuoteEventList {
 
 
   /**
-   *  Sets the todaysQuotes attribute of the QuoteEventList object
+   * Sets the todaysQuotes attribute of the QuoteEventList object
    *
-   *@param  tmp  The new todaysQuotes value
+   * @param tmp The new todaysQuotes value
    */
   public void setTodaysQuotes(QuoteList tmp) {
     this.todaysQuotes = tmp;
@@ -52,9 +51,9 @@ public class QuoteEventList {
 
 
   /**
-   *  Gets the todaysQuotes attribute of the QuoteEventList object
+   * Gets the todaysQuotes attribute of the QuoteEventList object
    *
-   *@return    The todaysQuotes value
+   * @return The todaysQuotes value
    */
   public QuoteList getTodaysQuotes() {
     return todaysQuotes;
@@ -62,9 +61,9 @@ public class QuoteEventList {
 
 
   /**
-   *  Gets the size attribute of the TaskEventList object
+   * Gets the size attribute of the TaskEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -72,9 +71,9 @@ public class QuoteEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the TaskEventList object
+   * Gets the sizeString attribute of the TaskEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);
@@ -82,9 +81,9 @@ public class QuoteEventList {
 
 
   /**
-   *  Adds a feature to the Event attribute of the QuoteEventList object
+   * Adds a feature to the Event attribute of the QuoteEventList object
    *
-   *@param  thisQuote  The feature to be added to the Event attribute
+   * @param thisQuote The feature to be added to the Event attribute
    */
   public void addEvent(Quote thisQuote) {
     if (thisQuote != null) {

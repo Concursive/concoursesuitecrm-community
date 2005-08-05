@@ -110,16 +110,18 @@ function reopenOpportunity(id) {
   <dhv:container name="opportunitiesQuotes" selected="details" object="quote" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
     <%String status = quoteStatusList.getValueFromId(quote.getStatusId());%>
     <%@ include file="../quotes/quotes_header_include.jsp" %>
-    <% if(quote.getClosed() == null){%>
-      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %><%= addLinkParams(request, "viewSource") %>';"/></dhv:permission>
-    <%}%>
-    <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
-    <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
-    <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
-    <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&popup=true','Quotes.do?command=Search', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
-    <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
-    <dhv:permission name="pipeline-opportunities-edit" none="true"><% showAction = 0; %></dhv:permission>
+    <dhv:evaluate if="<%= !quote.isTrashed() %>" >
+      <dhv:evaluate if="<%= quote.getClosed() == null%>" >
+        <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
+        <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %><%= addLinkParams(request, "viewSource") %>';"/></dhv:permission>
+      </dhv:evaluate>
+      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
+      <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
+      <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&popup=true','Quotes.do?command=Search', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-edit" none="true"><% showAction = 0; %></dhv:permission>
+    </dhv:evaluate>
     <br /> <br />
 <%
 // set the Permissions
@@ -140,15 +142,17 @@ String location = "opportunitiesQuotes";
 OpportunityHeader opportunity = opportunityHeader;
 %>
     <%@ include file="../quotes/quotes_details_include.jsp" %>
-    <% if(quote.getClosed() == null){%>
-      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %><%= addLinkParams(request, "viewSource") %>';"/></dhv:permission>
-    <%}%>
-    <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
-    <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
-    <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
-    <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&popup=true','Quotes.do?command=Search', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
-    <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
+    <dhv:evaluate if="<%= !quote.isTrashed() %>" >
+      <dhv:evaluate if="<%= quote.getClosed() == null%>" >
+        <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
+        <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %><%= addLinkParams(request, "viewSource") %>';"/></dhv:permission>
+      </dhv:evaluate>
+      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
+      <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
+      <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&popup=true','Quotes.do?command=Search', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
+    </dhv:evaluate>
     <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   </dhv:container>
 </dhv:container>

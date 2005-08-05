@@ -15,40 +15,43 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import com.darkhorseventures.database.ConnectionElement;
+import com.zeroio.iteam.base.FileItemVersionList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import com.zeroio.iteam.base.*;
-import java.text.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.modules.contacts.base.ContactType;
+import org.aspcfs.modules.contacts.base.ContactTypeList;
 import org.aspcfs.modules.system.base.ApplicationVersion;
 import org.aspcfs.modules.system.base.DatabaseVersion;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.LookupListElement;
+import org.aspcfs.utils.web.LookupListList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.*;
 
 /**
- *  Admin actions
+ * Admin actions
  *
- *@author     chris
- *@created    January 7, 2002
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created January 7, 2002
  */
 public final class Admin extends CFSModule {
 
   /**
-   *  Default action, calls home action.
+   * Default action, calls home action.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -59,10 +62,10 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Home.
+   * Home.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandHome(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -74,10 +77,10 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandManage(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-view")) {
@@ -89,10 +92,10 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Action that prepares system usage data
+   * Action that prepares system usage data
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUsage(ActionContext context) {
     if (!hasPermission(context, "admin-usage-view")) {
@@ -120,6 +123,7 @@ public final class Admin extends CFSModule {
       }
     }
     context.getRequest().setAttribute("rangeSelect", rangeSelect);
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       Calendar cal = Calendar.getInstance();
       //Date Start Range
@@ -131,7 +135,8 @@ public final class Admin extends CFSModule {
       cal.set(Calendar.SECOND, 0);
       cal.set(Calendar.MILLISECOND, 0);
       long startRange = cal.getTimeInMillis();
-      context.getRequest().setAttribute("dateStart", new java.sql.Timestamp(cal.getTimeInMillis()));
+      context.getRequest().setAttribute(
+          "dateStart", new java.sql.Timestamp(cal.getTimeInMillis()));
       //Date End Range
       if (dateStart != null && dateEnd != null && dateEnd.after(dateStart)) {
         cal.setTimeInMillis(dateEnd.getTime());
@@ -141,7 +146,8 @@ public final class Admin extends CFSModule {
       cal.set(Calendar.SECOND, 59);
       cal.set(Calendar.MILLISECOND, 999);
       long endRange = cal.getTimeInMillis();
-      context.getRequest().setAttribute("dateEnd", new java.sql.Timestamp(cal.getTimeInMillis()));
+      context.getRequest().setAttribute(
+          "dateEnd", new java.sql.Timestamp(cal.getTimeInMillis()));
 
       NumberFormat nf = NumberFormat.getInstance();
       db = this.getConnection(context);
@@ -151,20 +157,81 @@ public final class Admin extends CFSModule {
       userList.setEnabled(Constants.TRUE);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
       int userListCount = userList.queryRecordCount(db);
-      usageList.add(nf.format(userListCount) + " user" + StringUtils.addS(userListCount) + " enabled");
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (userListCount == 1) {
+          logEntry = systemStatus.getLabel("admin.usage.userEnabled.text");
+        } else {
+          logEntry = systemStatus.getLabel("admin.usage.usersEnabled.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(userListCount));
+          usageList.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList.add(
+              nf.format(userListCount) + " enabled user" + StringUtils.addS(
+                  userListCount));
+        }
+      } else {
+        usageList.add(
+            nf.format(userListCount) + " enabled user" + StringUtils.addS(
+                userListCount));
+      }
 
       //File count: x size: x
       FileItemVersionList fileList = new FileItemVersionList();
       int fileCount = fileList.queryRecordCount(db);
       long fileSize = fileList.queryFileSize(db);
-      usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " megabyte" + StringUtils.addS(fileSize) + " of storage");
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (fileCount == 1) {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.oneFileStoredDocumentLibraryWithSize.text");
+        } else {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.filesStoredDocumentLibraryWithSize.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(userListCount));
+          map.put("${size}", nf.format(fileSize));
+          usageList.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList.add(
+              nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(
+                  fileSize) + " megabyte" + StringUtils.addS(fileSize) + " of storage");
+        }
+      } else {
+        usageList.add(
+            nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(
+                fileSize) + " megabyte" + StringUtils.addS(fileSize) + " of storage");
+      }
 
       //Logins
       AccessLogList accessLog = new AccessLogList();
       accessLog.setEnteredRangeStart(new java.sql.Timestamp(startRange));
       accessLog.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
       int logins = accessLog.queryRecordCount(db);
-      usageList2.add(nf.format(logins) + " login" + StringUtils.addS(logins));
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (logins == 1) {
+          logEntry = systemStatus.getLabel("admin.usage.login.text");
+        } else {
+          logEntry = systemStatus.getLabel("admin.usage.logins.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(logins));
+          usageList2.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList2.add(
+              nf.format(logins) + " login" + StringUtils.addS(logins));
+        }
+      } else {
+        usageList2.add(
+            nf.format(logins) + " login" + StringUtils.addS(logins));
+      }
 
       //Prepare to get usage for several different actions
       UsageList usage = new UsageList();
@@ -176,28 +243,130 @@ public final class Admin extends CFSModule {
       usage.buildUsage(db);
       long fileUploadCount = usage.getCount();
       long fileUploadSize = usage.getSize();
-      usageList2.add(nf.format(fileUploadCount) + " file" + StringUtils.addS(fileUploadCount) + " uploaded, using " + nf.format(fileUploadSize) + " byte" + StringUtils.addS(fileUploadSize) + " of bandwidth");
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (fileUploadCount == 1) {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.fileUploadedBandwidth.text");
+        } else {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.filesUploadedBandwidth.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(fileUploadCount));
+          map.put("${size}", nf.format(fileUploadSize));
+          usageList2.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList2.add(
+              nf.format(fileUploadCount) + " file" + StringUtils.addS(
+                  fileUploadCount) + " uploaded, using " + nf.format(
+                      fileUploadSize) + " byte" + StringUtils.addS(
+                          fileUploadSize) + " of bandwidth");
+        }
+      } else {
+        usageList2.add(
+            nf.format(fileUploadCount) + " file" + StringUtils.addS(
+                fileUploadCount) + " uploaded, using " + nf.format(
+                    fileUploadSize) + " byte" + StringUtils.addS(
+                        fileUploadSize) + " of bandwidth");
+      }
 
       //Downstream bw: x
       usage.setAction(Constants.USAGE_FILE_DOWNLOAD);
       usage.buildUsage(db);
       long fileDownloadCount = usage.getCount();
       long fileDownloadSize = usage.getSize();
-      usageList2.add(nf.format(fileDownloadCount) + " file" + StringUtils.addS(fileDownloadCount) + " downloaded, using " + nf.format(fileDownloadSize) + " byte" + StringUtils.addS(fileDownloadSize) + " of bandwidth");
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (fileDownloadCount == 1) {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.fileDownloadedBandwidth.text");
+        } else {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.filesDownloadedBandwidth.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(fileDownloadCount));
+          map.put("${size}", nf.format(fileDownloadSize));
+          usageList2.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList2.add(
+              nf.format(fileDownloadCount) + " file" + StringUtils.addS(
+                  fileDownloadCount) + " downloaded, using " + nf.format(
+                      fileDownloadSize) + " byte" + StringUtils.addS(
+                          fileDownloadSize) + " of bandwidth");
+        }
+      } else {
+        usageList2.add(
+            nf.format(fileDownloadCount) + " file" + StringUtils.addS(
+                fileDownloadCount) + " downloaded, using " + nf.format(
+                    fileDownloadSize) + " byte" + StringUtils.addS(
+                        fileDownloadSize) + " of bandwidth");
+      }
 
       //Communications Manager emails
       usage.setAction(Constants.USAGE_COMMUNICATIONS_EMAIL);
       usage.buildUsage(db);
       long emailRecipientCount = usage.getCount();
       long emailSize = usage.getSize();
-      usageList2.add(nf.format(emailRecipientCount) + " email" + StringUtils.addS(emailRecipientCount) + " sent, consisting of " + nf.format(emailSize) + " byte" + StringUtils.addS(emailSize));
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (emailRecipientCount == 1) {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.communicationManagerOneEmail.text");
+        } else {
+          logEntry = systemStatus.getLabel(
+              "admin.usage.communicationManagerEmails.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(emailRecipientCount));
+          map.put("${size}", nf.format(emailSize));
+          usageList2.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList2.add(
+              nf.format(emailRecipientCount) + " email" + StringUtils.addS(
+                  emailRecipientCount) + " sent, consisting of " + nf.format(
+                      emailSize) + " byte" + StringUtils.addS(emailSize));
+        }
+      } else {
+        usageList2.add(
+            nf.format(emailRecipientCount) + " email" + StringUtils.addS(
+                emailRecipientCount) + " sent, consisting of " + nf.format(
+                    emailSize) + " byte" + StringUtils.addS(emailSize));
+      }
 
       //Communications Manager faxes
       usage.setAction(Constants.USAGE_COMMUNICATIONS_FAX);
       usage.buildUsage(db);
       long faxRecipientCount = usage.getCount();
       long faxSize = usage.getSize();
-      usageList2.add(nf.format(faxRecipientCount) + " fax" + StringUtils.addES(faxRecipientCount) + " sent, consisting of  " + nf.format(faxSize) + " byte" + StringUtils.addS(faxSize));
+      if (systemStatus != null) {
+        String logEntry = null;
+        if (faxRecipientCount == 1) {
+          logEntry = systemStatus.getLabel("admin.usage.oneFaxSent.text");
+        } else {
+          logEntry = systemStatus.getLabel("admin.usage.faxsSent.text");
+        }
+        if (logEntry != null) {
+          HashMap map = new HashMap();
+          map.put("${number}", nf.format(faxRecipientCount));
+          map.put("${size}", nf.format(faxSize));
+          usageList2.add(this.getLabel(systemStatus, map, logEntry));
+        } else {
+          usageList2.add(
+              nf.format(faxRecipientCount) + " fax" + StringUtils.addES(
+                  faxRecipientCount) + " sent, consisting of  " + nf.format(
+                      faxSize) + " byte" + StringUtils.addS(faxSize));
+        }
+      } else {
+        usageList2.add(
+            nf.format(faxRecipientCount) + " fax" + StringUtils.addES(
+                faxRecipientCount) + " sent, consisting of  " + nf.format(
+                    faxSize) + " byte" + StringUtils.addS(faxSize));
+      }
 
       context.getRequest().setAttribute("usageList", usageList);
       context.getRequest().setAttribute("usageList2", usageList2);
@@ -220,10 +389,10 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Action that prepares a list of modules that can be configured
+   * Action that prepares a list of modules that can be configured
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandConfig(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-view")) {
@@ -239,7 +408,8 @@ public final class Admin extends CFSModule {
       thisPermCatList.setEnabledState(1);
       thisPermCatList.setCustomizableModulesOnly(true);
       thisPermCatList.buildList(db);
-      context.getRequest().setAttribute("PermissionCategoryList", thisPermCatList);
+      context.getRequest().setAttribute(
+          "PermissionCategoryList", thisPermCatList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -257,11 +427,11 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Action that prepares a list of specific module items that can be
-   *  configured.
+   * Action that prepares a list of specific module items that can be
+   * configured.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfigDetails(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-view")) {
@@ -272,7 +442,8 @@ public final class Admin extends CFSModule {
     String moduleId = context.getRequest().getParameter("moduleId");
     try {
       db = this.getConnection(context);
-      PermissionCategory permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
+      PermissionCategory permCat = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
       return ("ConfigDetailsOK");
     } catch (Exception errorMessage) {
@@ -285,10 +456,10 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Action that prepares a list of the configurable module lookup lists
+   * Action that prepares a list of the configurable module lookup lists
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandEditLists(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-lists-view")) {
@@ -314,10 +485,10 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Action that updates a particular list with the new values
+   * Action that updates a particular list with the new values
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandUpdateList(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-lists-edit")) {
@@ -331,7 +502,8 @@ public final class Admin extends CFSModule {
     String[] params = context.getRequest().getParameterValues("selectedList");
     String[] names = new String[params.length];
     int j = 0;
-    StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
+    StringTokenizer st = new StringTokenizer(
+        context.getRequest().getParameter("selectNames"), "^");
     while (st.hasMoreTokens()) {
       names[j] = (String) st.nextToken();
       j++;
@@ -346,7 +518,9 @@ public final class Admin extends CFSModule {
         LookupElement thisElement = (LookupElement) i.next();
         //still there, stay enabled, don't re-insert it
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
+          System.out.println(
+              "Here: " + thisElement.getCode() + " " + newList.getSelectedValue(
+                  thisElement.getCode()));
         }
         //not there, disable it, leave it
         if (newList.getSelectedValue(thisElement.getCode()).equals("") ||
@@ -359,15 +533,19 @@ public final class Admin extends CFSModule {
         LookupElement thisElement = (LookupElement) k.next();
         if (thisElement.getCode() == 0) {
           int thisCode = -1;
-          if ((thisCode = thisElement.isDisabled(db, tblName)) != -1){
+          if ((thisCode = thisElement.isDisabled(db, tblName)) != -1) {
             thisElement.setCode(thisCode);
             thisElement.enableElement(db, tblName);
             thisElement.setNewOrder(db, tblName);
-          }else{
+          } else {
             thisElement.insertElement(db, tblName);
           }
         } else {
           thisElement.setNewOrder(db, tblName);
+          if (!thisElement.getDescription().equals(
+              compareList.getValueFromId(thisElement.getCode()))) {
+            thisElement.setNewDescription(db, tblName);
+          }
         }
       }
       //invalidate the cache for this list
@@ -379,19 +557,20 @@ public final class Admin extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+    context.getRequest().setAttribute(
+        "moduleId", context.getRequest().getParameter("module"));
     addModuleBean(context, "Configuration", "Configuration");
     return (executeCommandEditLists(context));
   }
 
 
   /**
-   *  Updates the Contact Types list .<br>
-   *  Note : Treated as a special case of Lookup List as it has category &
-   *  userId associated.
+   * Updates the Contact Types list .<br>
+   * Note : Treated as a special case of Lookup List as it has category &
+   * userId associated.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateContactList(ActionContext context) {
     Connection db = null;
@@ -399,7 +578,8 @@ public final class Admin extends CFSModule {
     String[] params = context.getRequest().getParameterValues("selectedList");
     String[] names = new String[params.length];
     int j = 0;
-    StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
+    StringTokenizer st = new StringTokenizer(
+        context.getRequest().getParameter("selectNames"), "^");
     while (st.hasMoreTokens()) {
       names[j] = (String) st.nextToken();
       j++;
@@ -439,17 +619,18 @@ public final class Admin extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+    context.getRequest().setAttribute(
+        "moduleId", context.getRequest().getParameter("module"));
     addModuleBean(context, "Configuration", "Configuration");
     return (executeCommandEditLists(context));
   }
 
 
   /**
-   *  Action that prepares the selected lookup list for modification
+   * Action that prepares the selected lookup list for modification
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandModifyList(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-lists-edit")) {
@@ -463,24 +644,29 @@ public final class Admin extends CFSModule {
     try {
       db = this.getConnection(context);
       moduleId = Integer.parseInt(context.getRequest().getParameter("module"));
-      lookupId = Integer.parseInt(context.getRequest().getParameter("sublist"));
+      lookupId = Integer.parseInt(
+          context.getRequest().getParameter("sublist"));
       permCat = new PermissionCategory(db, moduleId);
-      LookupListElement thisList = new LookupListElement(db, moduleId, lookupId);
-      thisList.buildLookupList(db, this.getUserId(context));
+      LookupListElement thisList = new LookupListElement(
+          db, moduleId, lookupId);
+      thisList.buildLookupList(
+          this.getSystemStatus(context), db, this.getUserId(context));
       selectedList = thisList.getLookupList();
       switch (thisList.getCategoryId()) {
-          case PermissionCategory.PERMISSION_CAT_CONTACTS:
-            if (lookupId == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
-              context.getRequest().setAttribute("category", String.valueOf(ContactType.GENERAL));
-            }
-            break;
-          case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
-            if (lookupId == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
-              context.getRequest().setAttribute("category", String.valueOf(ContactType.ACCOUNT));
-            }
-            break;
-          default:
-            break;
+        case PermissionCategory.PERMISSION_CAT_CONTACTS:
+          if (lookupId == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
+            context.getRequest().setAttribute(
+                "category", String.valueOf(ContactType.GENERAL));
+          }
+          break;
+        case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
+          if (lookupId == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
+            context.getRequest().setAttribute(
+                "category", String.valueOf(ContactType.ACCOUNT));
+          }
+          break;
+        default:
+          break;
       }
       context.getRequest().setAttribute("moduleId", String.valueOf(moduleId));
       context.getRequest().setAttribute("SelectedList", selectedList);
@@ -502,24 +688,32 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Build all the necessarry form elements (lists)
+   * Build all the necessarry form elements (lists)
    *
-   *@param  context           Description of Parameter
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param context Description of Parameter
+   * @param db      Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
-    int moduleId = Integer.parseInt(context.getRequest().getParameter("moduleId"));
+    int moduleId = Integer.parseInt(
+        context.getRequest().getParameter("moduleId"));
     LookupListList thisList = new LookupListList();
     thisList.setUserId(this.getUserId(context));
     thisList.setModuleId(moduleId);
-    thisList.buildList(db);
+    thisList.buildList(this.getSystemStatus(context), db);
     //NOTE: This is a temporary fix to remove an edit list that is not enabled in the system
     //TODO: Lookup lists could be tied to a specific permission
     if (!hasPermission(context, "accounts-accounts-revenue-view")) {
-      thisList.removeList(PermissionCategory.PERMISSION_CAT_ACCOUNTS, PermissionCategory.LOOKUP_ACCOUNTS_REVENUE_TYPE);
+      thisList.removeList(
+          PermissionCategory.PERMISSION_CAT_ACCOUNTS, PermissionCategory.LOOKUP_ACCOUNTS_REVENUE_TYPE);
     }
     context.getRequest().setAttribute("LookupLists", thisList);
+  }
+
+  public String getLabel(SystemStatus systemStatus, HashMap map, String input) {
+    Template template = new Template(input);
+    template.setParseElements(map);
+    return template.getParsedText();
   }
 }
 

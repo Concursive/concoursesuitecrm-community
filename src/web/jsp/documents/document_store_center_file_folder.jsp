@@ -49,7 +49,7 @@
   <tr class="subtab">
     <td>
       <% String documentLink = "DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId="+documentStore.getId(); %>
-      <zeroio:folderHierarchy module="Documents" link="<%= documentLink %>" showLastLink="true"/> >
+      <zeroio:folderHierarchy module="Documents" link="<%= documentLink %>" />
     </td>
   </tr>
 </table>

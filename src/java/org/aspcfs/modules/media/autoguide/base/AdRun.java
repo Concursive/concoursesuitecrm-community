@@ -15,17 +15,21 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import java.sql.*;
-import java.text.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+
 /**
- *  Represents a scheduled date when an ad is going to run, along with details
- *  about the ad
+ * Represents a scheduled date when an ad is going to run, along with details
+ * about the ad
  *
- *@author     matt rajkowski
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class AdRun {
   private int id = -1;
@@ -44,16 +48,17 @@ public class AdRun {
 
 
   /**
-   *  Constructor for the AdRun object
+   * Constructor for the AdRun object
    */
-  public AdRun() { }
+  public AdRun() {
+  }
 
 
   /**
-   *  Constructor for the AdRun object
+   * Constructor for the AdRun object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public AdRun(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -61,11 +66,11 @@ public class AdRun {
 
 
   /**
-   *  Constructor for the AdRun object
+   * Constructor for the AdRun object
    *
-   *@param  db                Description of the Parameter
-   *@param  adRunId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param adRunId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AdRun(Connection db, int adRunId) throws SQLException {
     String sql =
@@ -90,9 +95,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the id attribute of the AdRun object
+   * Sets the id attribute of the AdRun object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -100,9 +105,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the id attribute of the AdRun object
+   * Sets the id attribute of the AdRun object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -110,9 +115,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the inventoryId attribute of the AdRun object
+   * Sets the inventoryId attribute of the AdRun object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
@@ -120,20 +125,19 @@ public class AdRun {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the AdRun object
+   * Sets the accountInventoryId attribute of the AdRun object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(int tmp) {
     setInventoryId(tmp);
   }
 
 
-
   /**
-   *  Sets the inventoryId attribute of the AdRun object
+   * Sets the inventoryId attribute of the AdRun object
    *
-   *@param  tmp  The new inventoryId value
+   * @param tmp The new inventoryId value
    */
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
@@ -141,9 +145,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the AdRun object
+   * Sets the accountInventoryId attribute of the AdRun object
    *
-   *@param  tmp  The new accountInventoryId value
+   * @param tmp The new accountInventoryId value
    */
   public void setAccountInventoryId(String tmp) {
     setInventoryId(tmp);
@@ -151,9 +155,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the runDate attribute of the AdRun object
+   * Sets the runDate attribute of the AdRun object
    *
-   *@param  tmp  The new runDate value
+   * @param tmp The new runDate value
    */
   public void setRunDate(java.sql.Date tmp) {
     this.runDate = tmp;
@@ -161,9 +165,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the runDate attribute of the AdRun object
+   * Sets the runDate attribute of the AdRun object
    *
-   *@param  tmp  The new runDate value
+   * @param tmp The new runDate value
    */
   public void setRunDate(String tmp) {
     boolean success = false;
@@ -187,9 +191,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the adType attribute of the AdRun object
+   * Sets the adType attribute of the AdRun object
    *
-   *@param  tmp  The new adType value
+   * @param tmp The new adType value
    */
   public void setAdTypeId(int tmp) {
     this.adTypeId = tmp;
@@ -197,9 +201,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the adType attribute of the AdRun object
+   * Sets the adType attribute of the AdRun object
    *
-   *@param  tmp  The new adType value
+   * @param tmp The new adType value
    */
   public void setAdType(int tmp) {
     this.adTypeId = tmp;
@@ -207,9 +211,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the adType attribute of the AdRun object
+   * Sets the adType attribute of the AdRun object
    *
-   *@param  tmp  The new adType value
+   * @param tmp The new adType value
    */
   public void setAdType(String tmp) {
     this.adTypeId = Integer.parseInt(tmp);
@@ -217,9 +221,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the adTypeId attribute of the AdRun object
+   * Sets the adTypeId attribute of the AdRun object
    *
-   *@param  tmp  The new adTypeId value
+   * @param tmp The new adTypeId value
    */
   public void setAdTypeId(String tmp) {
     this.adTypeId = Integer.parseInt(tmp);
@@ -227,9 +231,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the adTypeName attribute of the AdRun object
+   * Sets the adTypeName attribute of the AdRun object
    *
-   *@param  tmp  The new adTypeName value
+   * @param tmp The new adTypeName value
    */
   public void setAdTypeName(String tmp) {
     this.adTypeName = tmp;
@@ -237,9 +241,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the includePhoto attribute of the AdRun object
+   * Sets the includePhoto attribute of the AdRun object
    *
-   *@param  tmp  The new includePhoto value
+   * @param tmp The new includePhoto value
    */
   public void setIncludePhoto(boolean tmp) {
     this.includePhoto = tmp;
@@ -247,19 +251,20 @@ public class AdRun {
 
 
   /**
-   *  Sets the includePhoto attribute of the AdRun object
+   * Sets the includePhoto attribute of the AdRun object
    *
-   *@param  tmp  The new includePhoto value
+   * @param tmp The new includePhoto value
    */
   public void setIncludePhoto(String tmp) {
-    this.includePhoto = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.includePhoto = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Sets the completeDate attribute of the AdRun object
+   * Sets the completeDate attribute of the AdRun object
    *
-   *@param  tmp  The new completeDate value
+   * @param tmp The new completeDate value
    */
   public void setCompleteDate(java.sql.Date tmp) {
     this.completeDate = tmp;
@@ -267,9 +272,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the completeDate attribute of the AdRun object
+   * Sets the completeDate attribute of the AdRun object
    *
-   *@param  tmp  The new completeDate value
+   * @param tmp The new completeDate value
    */
   public void setCompleteDate(String tmp) {
     try {
@@ -283,9 +288,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the completedBy attribute of the AdRun object
+   * Sets the completedBy attribute of the AdRun object
    *
-   *@param  tmp  The new completedBy value
+   * @param tmp The new completedBy value
    */
   public void setCompletedBy(int tmp) {
     this.completedBy = tmp;
@@ -293,9 +298,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the completedBy attribute of the AdRun object
+   * Sets the completedBy attribute of the AdRun object
    *
-   *@param  tmp  The new completedBy value
+   * @param tmp The new completedBy value
    */
   public void setCompletedBy(String tmp) {
     this.completedBy = Integer.parseInt(tmp);
@@ -303,9 +308,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the entered attribute of the AdRun object
+   * Sets the entered attribute of the AdRun object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -313,9 +318,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the enteredBy attribute of the AdRun object
+   * Sets the enteredBy attribute of the AdRun object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -323,9 +328,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the enteredBy attribute of the AdRun object
+   * Sets the enteredBy attribute of the AdRun object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -333,9 +338,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the modified attribute of the AdRun object
+   * Sets the modified attribute of the AdRun object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -343,9 +348,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the modifiedBy attribute of the AdRun object
+   * Sets the modifiedBy attribute of the AdRun object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -353,9 +358,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the modifiedBy attribute of the AdRun object
+   * Sets the modifiedBy attribute of the AdRun object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -363,9 +368,9 @@ public class AdRun {
 
 
   /**
-   *  Sets the remove attribute of the AdRun object
+   * Sets the remove attribute of the AdRun object
    *
-   *@param  tmp  The new remove value
+   * @param tmp The new remove value
    */
   public void setRemove(boolean tmp) {
     this.remove = tmp;
@@ -373,19 +378,20 @@ public class AdRun {
 
 
   /**
-   *  Sets the remove attribute of the AdRun object
+   * Sets the remove attribute of the AdRun object
    *
-   *@param  tmp  The new remove value
+   * @param tmp The new remove value
    */
   public void setRemove(String tmp) {
-    this.remove = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.remove = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(
+        tmp));
   }
 
 
   /**
-   *  Gets the completedBy attribute of the AdRun object
+   * Gets the completedBy attribute of the AdRun object
    *
-   *@return    The completedBy value
+   * @return The completedBy value
    */
   public int getCompletedBy() {
     return completedBy;
@@ -393,9 +399,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the id attribute of the AdRun object
+   * Gets the id attribute of the AdRun object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -403,9 +409,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the inventoryId attribute of the AdRun object
+   * Gets the inventoryId attribute of the AdRun object
    *
-   *@return    The inventoryId value
+   * @return The inventoryId value
    */
   public int getInventoryId() {
     return inventoryId;
@@ -413,9 +419,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the accountInventoryId attribute of the AdRun object
+   * Gets the accountInventoryId attribute of the AdRun object
    *
-   *@return    The accountInventoryId value
+   * @return The accountInventoryId value
    */
   public int getAccountInventoryId() {
     return inventoryId;
@@ -423,9 +429,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the runDate attribute of the AdRun object
+   * Gets the runDate attribute of the AdRun object
    *
-   *@return    The runDate value
+   * @return The runDate value
    */
   public java.sql.Date getRunDate() {
     return runDate;
@@ -433,9 +439,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the adTypeId attribute of the AdRun object
+   * Gets the adTypeId attribute of the AdRun object
    *
-   *@return    The adType value
+   * @return The adType value
    */
   public int getAdType() {
     return adTypeId;
@@ -443,9 +449,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the adTypeId attribute of the AdRun object
+   * Gets the adTypeId attribute of the AdRun object
    *
-   *@return    The adTypeId value
+   * @return The adTypeId value
    */
   public int getAdTypeId() {
     return adTypeId;
@@ -453,9 +459,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the adTypeName attribute of the AdRun object
+   * Gets the adTypeName attribute of the AdRun object
    *
-   *@return    The adTypeName value
+   * @return The adTypeName value
    */
   public String getAdTypeName() {
     return adTypeName;
@@ -463,9 +469,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the includePhoto attribute of the AdRun object
+   * Gets the includePhoto attribute of the AdRun object
    *
-   *@return    The includePhoto value
+   * @return The includePhoto value
    */
   public boolean getIncludePhoto() {
     return includePhoto;
@@ -473,9 +479,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the completeDate attribute of the AdRun object
+   * Gets the completeDate attribute of the AdRun object
    *
-   *@return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Date getCompleteDate() {
     return completeDate;
@@ -483,9 +489,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the entered attribute of the AdRun object
+   * Gets the entered attribute of the AdRun object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -493,9 +499,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the enteredBy attribute of the AdRun object
+   * Gets the enteredBy attribute of the AdRun object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -503,9 +509,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the modified attribute of the AdRun object
+   * Gets the modified attribute of the AdRun object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -513,9 +519,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the modifiedBy attribute of the AdRun object
+   * Gets the modifiedBy attribute of the AdRun object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -523,9 +529,9 @@ public class AdRun {
 
 
   /**
-   *  Gets the complete attribute of the AdRun object
+   * Gets the complete attribute of the AdRun object
    *
-   *@return    The complete value
+   * @return The complete value
    */
   public boolean isComplete() {
     return completeDate != null;
@@ -533,23 +539,27 @@ public class AdRun {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void insert(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AdRun-> Inserting new record: InventoryId(" + inventoryId + ")");
+      System.out.println(
+          "AdRun-> Inserting new record: InventoryId(" + inventoryId + ")");
     }
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO autoguide_ad_run (inventory_id, " +
+    id = DatabaseUtils.getNextSeq(db, "autoguide_ad_run_ad_run_id_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO autoguide_ad_run " +
+        "(" + (id > -1 ? "ad_run_id, " : "") + "inventory_id, " +
         "run_date, ad_type, include_photo, complete_date, completedby, " +
         "enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, inventoryId);
     pst.setDate(++i, runDate);
     pst.setInt(++i, adTypeId);
@@ -565,17 +575,16 @@ public class AdRun {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "autoguide_ad_run_ad_run_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "autoguide_ad_run_ad_run_id_seq", id);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -615,10 +624,10 @@ public class AdRun {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void markComplete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -636,11 +645,11 @@ public class AdRun {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  intHierarchyList  Description of the Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db               Description of Parameter
+   * @param intHierarchyList Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public void markIncomplete(Connection db, String intHierarchyList) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -659,10 +668,10 @@ public class AdRun {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -680,10 +689,10 @@ public class AdRun {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("ad_run_id");

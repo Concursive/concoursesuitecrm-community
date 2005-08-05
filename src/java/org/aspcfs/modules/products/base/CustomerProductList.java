@@ -15,20 +15,24 @@
  */
 package org.aspcfs.modules.products.base;
 
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    April 20, 2004
- *@version    $Id: CustomerProductList.java,v 1.1.2.7 2004/05/20 00:05:49 ananth
- *      Exp $
+ * @author ananth
+ * @version $Id: CustomerProductList.java,v 1.1.2.7 2004/05/20 00:05:49 ananth
+ *          Exp $
+ * @created April 20, 2004
  */
 public class CustomerProductList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -47,9 +51,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the historyExists attribute of the CustomerProductList object
+   * Sets the historyExists attribute of the CustomerProductList object
    *
-   *@param  tmp  The new historyExists value
+   * @param tmp The new historyExists value
    */
   public void setHistoryExists(boolean tmp) {
     this.historyExists = tmp;
@@ -57,9 +61,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the historyExists attribute of the CustomerProductList object
+   * Sets the historyExists attribute of the CustomerProductList object
    *
-   *@param  tmp  The new historyExists value
+   * @param tmp The new historyExists value
    */
   public void setHistoryExists(String tmp) {
     this.historyExists = DatabaseUtils.parseBoolean(tmp);
@@ -67,9 +71,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the historyExists attribute of the CustomerProductList object
+   * Gets the historyExists attribute of the CustomerProductList object
    *
-   *@return    The historyExists value
+   * @return The historyExists value
    */
   public boolean getHistoryExists() {
     return historyExists;
@@ -77,9 +81,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the buildProductCatalog attribute of the CustomerProductList object
+   * Sets the buildProductCatalog attribute of the CustomerProductList object
    *
-   *@param  tmp  The new buildProductCatalog value
+   * @param tmp The new buildProductCatalog value
    */
   public void setBuildProductCatalog(boolean tmp) {
     this.buildProductCatalog = tmp;
@@ -87,9 +91,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the buildProductCatalog attribute of the CustomerProductList object
+   * Sets the buildProductCatalog attribute of the CustomerProductList object
    *
-   *@param  tmp  The new buildProductCatalog value
+   * @param tmp The new buildProductCatalog value
    */
   public void setBuildProductCatalog(String tmp) {
     this.buildProductCatalog = DatabaseUtils.parseBoolean(tmp);
@@ -97,9 +101,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the buildProductCatalog attribute of the CustomerProductList object
+   * Gets the buildProductCatalog attribute of the CustomerProductList object
    *
-   *@return    The buildProductCatalog value
+   * @return The buildProductCatalog value
    */
   public boolean getBuildProductCatalog() {
     return buildProductCatalog;
@@ -107,9 +111,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the svgProductsOnly attribute of the CustomerProductList object
+   * Sets the svgProductsOnly attribute of the CustomerProductList object
    *
-   *@param  tmp  The new svgProductsOnly value
+   * @param tmp The new svgProductsOnly value
    */
   public void setSvgProductsOnly(boolean tmp) {
     this.svgProductsOnly = tmp;
@@ -117,9 +121,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the svgProductsOnly attribute of the CustomerProductList object
+   * Sets the svgProductsOnly attribute of the CustomerProductList object
    *
-   *@param  tmp  The new svgProductsOnly value
+   * @param tmp The new svgProductsOnly value
    */
   public void setSvgProductsOnly(String tmp) {
     this.svgProductsOnly = DatabaseUtils.parseBoolean(tmp);
@@ -127,9 +131,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the svgProductsOnly attribute of the CustomerProductList object
+   * Gets the svgProductsOnly attribute of the CustomerProductList object
    *
-   *@return    The svgProductsOnly value
+   * @return The svgProductsOnly value
    */
   public boolean getSvgProductsOnly() {
     return svgProductsOnly;
@@ -137,9 +141,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the matchProduct attribute of the CustomerProductList object
+   * Sets the matchProduct attribute of the CustomerProductList object
    *
-   *@param  tmp  The new matchProduct value
+   * @param tmp The new matchProduct value
    */
   public void setMatchProduct(boolean tmp) {
     this.matchProduct = tmp;
@@ -147,9 +151,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the matchProduct attribute of the CustomerProductList object
+   * Sets the matchProduct attribute of the CustomerProductList object
    *
-   *@param  tmp  The new matchProduct value
+   * @param tmp The new matchProduct value
    */
   public void setMatchProduct(String tmp) {
     this.matchProduct = DatabaseUtils.parseBoolean(tmp);
@@ -157,9 +161,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the matchProduct attribute of the CustomerProductList object
+   * Gets the matchProduct attribute of the CustomerProductList object
    *
-   *@return    The matchProduct value
+   * @return The matchProduct value
    */
   public boolean getMatchProduct() {
     return matchProduct;
@@ -167,9 +171,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the buildHistoryList attribute of the CustomerProductList object
+   * Sets the buildHistoryList attribute of the CustomerProductList object
    *
-   *@param  tmp  The new buildHistoryList value
+   * @param tmp The new buildHistoryList value
    */
   public void setBuildHistoryList(boolean tmp) {
     this.buildHistoryList = tmp;
@@ -177,9 +181,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the buildHistoryList attribute of the CustomerProductList object
+   * Sets the buildHistoryList attribute of the CustomerProductList object
    *
-   *@param  tmp  The new buildHistoryList value
+   * @param tmp The new buildHistoryList value
    */
   public void setBuildHistoryList(String tmp) {
     this.buildHistoryList = DatabaseUtils.parseBoolean(tmp);
@@ -187,9 +191,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the buildHistoryList attribute of the CustomerProductList object
+   * Gets the buildHistoryList attribute of the CustomerProductList object
    *
-   *@return    The buildHistoryList value
+   * @return The buildHistoryList value
    */
   public boolean getBuildHistoryList() {
     return buildHistoryList;
@@ -197,9 +201,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the buildFileList attribute of the CustomerProductList object
+   * Sets the buildFileList attribute of the CustomerProductList object
    *
-   *@param  tmp  The new buildFileList value
+   * @param tmp The new buildFileList value
    */
   public void setBuildFileList(boolean tmp) {
     this.buildFileList = tmp;
@@ -207,9 +211,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the buildFileList attribute of the CustomerProductList object
+   * Sets the buildFileList attribute of the CustomerProductList object
    *
-   *@param  tmp  The new buildFileList value
+   * @param tmp The new buildFileList value
    */
   public void setBuildFileList(String tmp) {
     this.buildFileList = DatabaseUtils.parseBoolean(tmp);
@@ -217,9 +221,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the buildFileList attribute of the CustomerProductList object
+   * Gets the buildFileList attribute of the CustomerProductList object
    *
-   *@return    The buildFileList value
+   * @return The buildFileList value
    */
   public boolean getBuildFileList() {
     return buildFileList;
@@ -227,9 +231,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the productId attribute of the CustomerProductList object
+   * Sets the productId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -237,9 +241,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the productId attribute of the CustomerProductList object
+   * Sets the productId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -247,9 +251,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the productId attribute of the CustomerProductList object
+   * Gets the productId attribute of the CustomerProductList object
    *
-   *@return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -257,9 +261,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the CustomerProductList object
+   * Sets the pagedListInfo attribute of the CustomerProductList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -267,9 +271,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the CustomerProductList object
+   * Sets the orgId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -277,9 +281,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the CustomerProductList object
+   * Sets the orgId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -287,9 +291,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the orderId attribute of the CustomerProductList object
+   * Sets the orderId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -297,9 +301,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the orderId attribute of the CustomerProductList object
+   * Sets the orderId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -307,9 +311,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the orderItemId attribute of the CustomerProductList object
+   * Sets the orderItemId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(int tmp) {
     this.orderItemId = tmp;
@@ -317,9 +321,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the orderItemId attribute of the CustomerProductList object
+   * Sets the orderItemId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(String tmp) {
     this.orderItemId = Integer.parseInt(tmp);
@@ -327,9 +331,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the CustomerProductList object
+   * Sets the statusId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -337,9 +341,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the statusId attribute of the CustomerProductList object
+   * Sets the statusId attribute of the CustomerProductList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -347,9 +351,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the CustomerProductList object
+   * Sets the enabled attribute of the CustomerProductList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -357,9 +361,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the CustomerProductList object
+   * Sets the enabled attribute of the CustomerProductList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -367,9 +371,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the CustomerProductList object
+   * Gets the pagedListInfo attribute of the CustomerProductList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -377,9 +381,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the orgId attribute of the CustomerProductList object
+   * Gets the orgId attribute of the CustomerProductList object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -387,9 +391,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the orderId attribute of the CustomerProductList object
+   * Gets the orderId attribute of the CustomerProductList object
    *
-   *@return    The orderId value
+   * @return The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -397,9 +401,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the orderItemId attribute of the CustomerProductList object
+   * Gets the orderItemId attribute of the CustomerProductList object
    *
-   *@return    The orderItemId value
+   * @return The orderItemId value
    */
   public int getOrderItemId() {
     return orderItemId;
@@ -407,9 +411,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the statusId attribute of the CustomerProductList object
+   * Gets the statusId attribute of the CustomerProductList object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -417,9 +421,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the CustomerProductList object
+   * Gets the enabled attribute of the CustomerProductList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -427,16 +431,17 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomerProductList object
+   * Constructor for the CustomerProductList object
    */
-  public CustomerProductList() { }
+  public CustomerProductList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -499,23 +504,16 @@ public class CustomerProductList extends ArrayList {
         " LEFT JOIN order_product op ON (cp.order_item_id = op.item_id) " +
         " LEFT JOIN order_entry oe ON (cp.order_id = oe.order_id) " +
         " LEFT JOIN quote_entry qe ON (oe.quote_id = qe.quote_id) " +
-        " WHERE cp.customer_product_id > -1 "
-        );
+        " WHERE cp.customer_product_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       CustomerProduct product = new CustomerProduct(rs);
       this.add(product);
     }
@@ -548,9 +546,9 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -579,10 +577,12 @@ public class CustomerProductList extends ArrayList {
       }
     }
     if (svgProductsOnly) {
-      sqlFilter.append("AND cp.customer_product_id IN (SELECT link_item_id FROM project_files WHERE client_filename LIKE '%.svg') ");
+      sqlFilter.append(
+          "AND cp.customer_product_id IN (SELECT link_item_id FROM project_files WHERE client_filename LIKE '%.svg') ");
     }
     if (historyExists) {
-      sqlFilter.append("AND cp.customer_product_id IN (" +
+      sqlFilter.append(
+          "AND cp.customer_product_id IN (" +
           " SELECT customer_product_id FROM (" +
           "   SELECT customer_product_id, count(history_id) as history" +
           "   FROM customer_product_history" +
@@ -593,11 +593,11 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -627,12 +627,12 @@ public class CustomerProductList extends ArrayList {
 
 
   /**
-   *  Gets the customerProductIdFromOrderProductId attribute of the
-   *  CustomerProductList object
+   * Gets the customerProductIdFromOrderProductId attribute of the
+   * CustomerProductList object
    *
-   *@param  id                Description of the Parameter
-   *@return                   The customerProductIdFromOrderProductId value
-   *@exception  SQLException  Description of the Exception
+   * @param id Description of the Parameter
+   * @return The customerProductIdFromOrderProductId value
+   * @throws SQLException Description of the Exception
    */
   public int getCustomerProductIdFromOrderProductId(int id) throws SQLException {
     int result = -1;

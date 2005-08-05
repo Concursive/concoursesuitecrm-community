@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.help.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Represents a list of Help Notes for a page
+ * Represents a list of Help Notes for a page
  *
- *@author     akhi_m
- *@created    July 9, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created July 9, 2003
  */
 public class HelpNoteList extends ArrayList {
 
@@ -42,9 +43,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the HelpNoteList object
+   * Sets the pagedListInfo attribute of the HelpNoteList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -52,9 +53,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpNoteList object
+   * Sets the linkHelpId attribute of the HelpNoteList object
    *
-   *@param  linkHelpId  The new linkHelpId value
+   * @param linkHelpId The new linkHelpId value
    */
   public void setLinkHelpId(int linkHelpId) {
     this.linkHelpId = linkHelpId;
@@ -62,9 +63,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the completeOnly attribute of the HelpNoteList object
+   * Sets the completeOnly attribute of the HelpNoteList object
    *
-   *@param  completeOnly  The new completeOnly value
+   * @param completeOnly The new completeOnly value
    */
   public void setCompleteOnly(boolean completeOnly) {
     this.completeOnly = completeOnly;
@@ -72,9 +73,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpNoteList object
+   * Sets the enteredBy attribute of the HelpNoteList object
    *
-   *@param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -82,9 +83,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the HelpNoteList object
+   * Gets the enteredBy attribute of the HelpNoteList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -92,9 +93,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the ignoreDone attribute of the HelpNoteList object
+   * Sets the ignoreDone attribute of the HelpNoteList object
    *
-   *@param  tmp  The new ignoreDone value
+   * @param tmp The new ignoreDone value
    */
   public void setIgnoreDone(boolean tmp) {
     this.ignoreDone = tmp;
@@ -102,9 +103,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the incompleteOnly attribute of the HelpNoteList object
+   * Sets the incompleteOnly attribute of the HelpNoteList object
    *
-   *@param  tmp  The new incompleteOnly value
+   * @param tmp The new incompleteOnly value
    */
   public void setIncompleteOnly(boolean tmp) {
     this.incompleteOnly = tmp;
@@ -112,9 +113,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the incompleteOnly attribute of the HelpNoteList object
+   * Sets the incompleteOnly attribute of the HelpNoteList object
    *
-   *@param  tmp  The new incompleteOnly value
+   * @param tmp The new incompleteOnly value
    */
   public void setIncompleteOnly(String tmp) {
     this.incompleteOnly = DatabaseUtils.parseBoolean(tmp);
@@ -122,9 +123,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the enabledOnly attribute of the HelpNoteList object
+   * Sets the enabledOnly attribute of the HelpNoteList object
    *
-   *@param  tmp  The new enabledOnly value
+   * @param tmp The new enabledOnly value
    */
   public void setEnabledOnly(boolean tmp) {
     this.enabledOnly = tmp;
@@ -132,9 +133,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the enabledOnly attribute of the HelpNoteList object
+   * Sets the enabledOnly attribute of the HelpNoteList object
    *
-   *@param  tmp  The new enabledOnly value
+   * @param tmp The new enabledOnly value
    */
   public void setEnabledOnly(String tmp) {
     this.enabledOnly = DatabaseUtils.parseBoolean(tmp);
@@ -142,9 +143,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the HelpNoteList object
+   * Gets the pagedListInfo attribute of the HelpNoteList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -152,9 +153,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the linkHelpId attribute of the HelpNoteList object
+   * Gets the linkHelpId attribute of the HelpNoteList object
    *
-   *@return    The linkHelpId value
+   * @return The linkHelpId value
    */
   public int getLinkHelpId() {
     return linkHelpId;
@@ -162,9 +163,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the completeOnly attribute of the HelpNoteList object
+   * Gets the completeOnly attribute of the HelpNoteList object
    *
-   *@return    The completeOnly value
+   * @return The completeOnly value
    */
   public boolean getCompleteOnly() {
     return completeOnly;
@@ -172,9 +173,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the ignoreDone attribute of the HelpNoteList object
+   * Gets the ignoreDone attribute of the HelpNoteList object
    *
-   *@return    The ignoreDone value
+   * @return The ignoreDone value
    */
   public boolean getIgnoreDone() {
     return ignoreDone;
@@ -182,9 +183,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the incompleteOnly attribute of the HelpNoteList object
+   * Gets the incompleteOnly attribute of the HelpNoteList object
    *
-   *@return    The incompleteOnly value
+   * @return The incompleteOnly value
    */
   public boolean getIncompleteOnly() {
     return incompleteOnly;
@@ -192,9 +193,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Gets the enabledOnly attribute of the HelpNoteList object
+   * Gets the enabledOnly attribute of the HelpNoteList object
    *
-   *@return    The enabledOnly value
+   * @return The enabledOnly value
    */
   public boolean getEnabledOnly() {
     return enabledOnly;
@@ -202,10 +203,10 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Builds the list
+   * Builds the list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -241,7 +242,8 @@ public class HelpNoteList extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
           "AND hf.description < ? ");
       items = prepareFilter(pst);
@@ -266,22 +268,15 @@ public class HelpNoteList extends ArrayList {
         "FROM help_notes hf " +
         "WHERE hf.note_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       HelpNote thisNote = new HelpNote(rs);
       this.add(thisNote);
     }
@@ -291,9 +286,9 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Create the filters
+   * Create the filters
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -324,11 +319,11 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
-   *  Sets the filters
+   * Sets the filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
+import java.util.Iterator;
 
 /**
- *  Represents a report that has been queued
+ * Represents a report that has been queued
  *
- *@author     matt rajkowski
- *@created    October 1, 2003
- *@version    $Id: ReportQueue.java,v 1.1.2.2 2003/10/02 21:07:25 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ReportQueue.java,v 1.1.2.2 2003/10/02 21:07:25 mrajkowski Exp
+ *          $
+ * @created October 1, 2003
  */
 public class ReportQueue extends GenericBean {
 
@@ -54,16 +55,17 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Constructor for the ReportQueue object
+   * Constructor for the ReportQueue object
    */
-  public ReportQueue() { }
+  public ReportQueue() {
+  }
 
 
   /**
-   *  Constructor for the ReportQueue object
+   * Constructor for the ReportQueue object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ReportQueue(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -71,11 +73,11 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Constructor for the ReportQueue object
+   * Constructor for the ReportQueue object
    *
-   *@param  db                Description of the Parameter
-   *@param  queueId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param queueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ReportQueue(Connection db, int queueId) throws SQLException {
     queryRecord(db, queueId);
@@ -83,12 +85,12 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Constructor for the ReportQueue object
+   * Constructor for the ReportQueue object
    *
-   *@param  db                Description of the Parameter
-   *@param  queueId           Description of the Parameter
-   *@param  throwException    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param queueId        Description of the Parameter
+   * @param throwException Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ReportQueue(Connection db, int queueId, boolean throwException) throws SQLException {
     throwNotFoundException = throwException;
@@ -97,11 +99,11 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Loads the specified ReportQueue
+   * Loads the specified ReportQueue
    *
-   *@param  db                Description of the Parameter
-   *@param  queueId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param queueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int queueId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -122,9 +124,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ReportQueue object
+   * Sets the id attribute of the ReportQueue object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -132,9 +134,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ReportQueue object
+   * Sets the id attribute of the ReportQueue object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -142,9 +144,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the reportId attribute of the ReportQueue object
+   * Sets the reportId attribute of the ReportQueue object
    *
-   *@param  tmp  The new reportId value
+   * @param tmp The new reportId value
    */
   public void setReportId(int tmp) {
     this.reportId = tmp;
@@ -152,9 +154,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the reportId attribute of the ReportQueue object
+   * Sets the reportId attribute of the ReportQueue object
    *
-   *@param  tmp  The new reportId value
+   * @param tmp The new reportId value
    */
   public void setReportId(String tmp) {
     this.reportId = Integer.parseInt(tmp);
@@ -162,9 +164,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ReportQueue object
+   * Sets the entered attribute of the ReportQueue object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -172,9 +174,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ReportQueue object
+   * Sets the entered attribute of the ReportQueue object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -182,9 +184,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ReportQueue object
+   * Sets the enteredBy attribute of the ReportQueue object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -192,9 +194,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ReportQueue object
+   * Sets the enteredBy attribute of the ReportQueue object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -202,9 +204,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the ReportQueue object
+   * Sets the status attribute of the ReportQueue object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -212,9 +214,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the ReportQueue object
+   * Sets the status attribute of the ReportQueue object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -222,9 +224,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the processed attribute of the ReportQueue object
+   * Sets the processed attribute of the ReportQueue object
    *
-   *@param  tmp  The new processed value
+   * @param tmp The new processed value
    */
   public void setProcessed(Timestamp tmp) {
     this.processed = tmp;
@@ -232,9 +234,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the processed attribute of the ReportQueue object
+   * Sets the processed attribute of the ReportQueue object
    *
-   *@param  tmp  The new processed value
+   * @param tmp The new processed value
    */
   public void setProcessed(String tmp) {
     this.processed = DatabaseUtils.parseTimestamp(tmp);
@@ -242,9 +244,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the filename attribute of the ReportQueue object
+   * Sets the filename attribute of the ReportQueue object
    *
-   *@param  tmp  The new filename value
+   * @param tmp The new filename value
    */
   public void setFilename(String tmp) {
     this.filename = tmp;
@@ -252,9 +254,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the size attribute of the ReportQueue object
+   * Sets the size attribute of the ReportQueue object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(long tmp) {
     this.size = tmp;
@@ -262,9 +264,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ReportQueue object
+   * Sets the enabled attribute of the ReportQueue object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -272,9 +274,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ReportQueue object
+   * Sets the enabled attribute of the ReportQueue object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -282,9 +284,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the position attribute of the ReportQueue object
+   * Sets the position attribute of the ReportQueue object
    *
-   *@param  tmp  The new position value
+   * @param tmp The new position value
    */
   public void setPosition(int tmp) {
     this.position = tmp;
@@ -292,9 +294,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the position attribute of the ReportQueue object
+   * Sets the position attribute of the ReportQueue object
    *
-   *@param  tmp  The new position value
+   * @param tmp The new position value
    */
   public void setPosition(String tmp) {
     this.position = Integer.parseInt(tmp);
@@ -302,9 +304,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the report attribute of the ReportQueue object
+   * Sets the report attribute of the ReportQueue object
    *
-   *@param  tmp  The new report value
+   * @param tmp The new report value
    */
   public void setReport(Report tmp) {
     this.report = tmp;
@@ -312,9 +314,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the throwNotFoundException attribute of the ReportQueue object
+   * Sets the throwNotFoundException attribute of the ReportQueue object
    *
-   *@param  tmp  The new throwNotFoundException value
+   * @param tmp The new throwNotFoundException value
    */
   public void setThrowNotFoundException(boolean tmp) {
     this.throwNotFoundException = tmp;
@@ -322,9 +324,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Sets the throwNotFoundException attribute of the ReportQueue object
+   * Sets the throwNotFoundException attribute of the ReportQueue object
    *
-   *@param  tmp  The new throwNotFoundException value
+   * @param tmp The new throwNotFoundException value
    */
   public void setThrowNotFoundException(String tmp) {
     this.throwNotFoundException = DatabaseUtils.parseBoolean(tmp);
@@ -332,9 +334,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ReportQueue object
+   * Gets the id attribute of the ReportQueue object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -342,9 +344,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the reportId attribute of the ReportQueue object
+   * Gets the reportId attribute of the ReportQueue object
    *
-   *@return    The reportId value
+   * @return The reportId value
    */
   public int getReportId() {
     return reportId;
@@ -352,9 +354,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ReportQueue object
+   * Gets the entered attribute of the ReportQueue object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -362,9 +364,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the ReportQueue object
+   * Gets the enteredBy attribute of the ReportQueue object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -372,20 +374,19 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the ReportQueue object
+   * Gets the status attribute of the ReportQueue object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
   }
 
 
-
   /**
-   *  Gets the processed attribute of the ReportQueue object
+   * Gets the processed attribute of the ReportQueue object
    *
-   *@return    The processed value
+   * @return The processed value
    */
   public Timestamp getProcessed() {
     return processed;
@@ -393,9 +394,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the filename attribute of the ReportQueue object
+   * Gets the filename attribute of the ReportQueue object
    *
-   *@return    The filename value
+   * @return The filename value
    */
   public String getFilename() {
     return filename;
@@ -403,9 +404,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the size attribute of the ReportQueue object
+   * Gets the size attribute of the ReportQueue object
    *
-   *@return    The size value
+   * @return The size value
    */
   public long getSize() {
     return size;
@@ -413,9 +414,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the ReportQueue object
+   * Gets the enabled attribute of the ReportQueue object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -423,9 +424,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the position attribute of the ReportQueue object
+   * Gets the position attribute of the ReportQueue object
    *
-   *@return    The position value
+   * @return The position value
    */
   public int getPosition() {
     return position;
@@ -433,9 +434,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the report attribute of the ReportQueue object
+   * Gets the report attribute of the ReportQueue object
    *
-   *@return    The report value
+   * @return The report value
    */
   public Report getReport() {
     return report;
@@ -443,9 +444,9 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Gets the throwNotFoundException attribute of the ReportQueue object
+   * Gets the throwNotFoundException attribute of the ReportQueue object
    *
-   *@return    The throwNotFoundException value
+   * @return The throwNotFoundException value
    */
   public boolean getThrowNotFoundException() {
     return throwNotFoundException;
@@ -453,10 +454,10 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Populates this object from a resultset
+   * Populates this object from a resultset
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("queue_id");
@@ -472,37 +473,54 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Based on Criteria that has been set, this methods makes a copy and stores
-   *  the settings for running the specified report
+   * Based on Criteria that has been set, this methods makes a copy and stores
+   * the settings for running the specified report
    *
-   *@param  db                Description of the Parameter
-   *@param  criteria          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param criteria Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int insert(Connection db, Criteria criteria) throws SQLException {
     try {
       db.setAutoCommit(false);
       //Insert the new report into the queue
+      int id = DatabaseUtils.getNextSeq(db, "report_queue_queue_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO report_queue " +
-          "(report_id, enteredby) VALUES (?, ?) ");
-      pst.setInt(1, criteria.getReportId());
-      pst.setInt(2, criteria.getOwner());
+          "(" + (id > -1 ? "queue_id, " : "") + "report_id, enteredby) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
+      int i = 0;
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
+      pst.setInt(++i, criteria.getReportId());
+      pst.setInt(++i, criteria.getOwner());
       pst.execute();
       pst.close();
-      int id = DatabaseUtils.getCurrVal(db, "report_queue_queue_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "report_queue_queue_id_seq", id);
       //Insert the criteria for processing the report
+      int rqcId = DatabaseUtils.getNextSeq(
+          db, "report_queue_criteria_criteria_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO report_queue_criteria " +
-          "(queue_id, parameter, value) VALUES (?, ?, ?) ");
-      Iterator i = criteria.getParameters().iterator();
-      while (i.hasNext()) {
-        Parameter param = (Parameter) i.next();
-        pst.setInt(1, id);
-        pst.setString(2, param.getName());
-        pst.setString(3, param.getValue());
+          "(" + (rqcId > -1 ? "criteria_id, " : "") + "queue_id, \"parameter\", value) " +
+          "VALUES (" + (rqcId > -1 ? "?, " : "") + "?, ?, ?) ");
+      Iterator params = criteria.getParameters().iterator();
+      while (params.hasNext()) {
+        Parameter param = (Parameter) params.next();
+        int ip = 0;
+        if (rqcId > -1) {
+          pst.setInt(++ip, rqcId);
+        }
+        pst.setInt(++ip, id);
+        pst.setString(++ip, param.getName());
+        pst.setString(++ip, param.getValue());
         pst.execute();
+        if (rqcId > -1 && params.hasNext()) {
+          rqcId = DatabaseUtils.getNextSeq(
+              db, "report_queue_criteria_criteria_id_seq");
+        }
       }
       pst.close();
       //Get the total number of reports pending
@@ -527,11 +545,11 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Populates the report property when needed, otherwise the report property
-   *  is unset by default
+   * Populates the report property when needed, otherwise the report property
+   * is unset by default
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReport(Connection db) throws SQLException {
     report = new Report(db, reportId);
@@ -539,11 +557,11 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Updates the status of the report during different stages of processing
+   * Updates the status of the report during different stages of processing
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -567,13 +585,13 @@ public class ReportQueue extends GenericBean {
 
 
   /**
-   *  Deletes the ReportQueue reference and the associated file
+   * Deletes the ReportQueue reference and the associated file
    *
-   *@param  db                Description of the Parameter
-   *@param  localFilename     Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param db            Description of the Parameter
+   * @param localFilename Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public boolean delete(Connection db, String localFilename) throws SQLException, IOException {
     if (id == -1) {

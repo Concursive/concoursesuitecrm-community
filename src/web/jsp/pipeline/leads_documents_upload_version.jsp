@@ -96,7 +96,16 @@ function reopenOpportunity(id) {
    String param2 = addLinkParams(request, "viewSource");
 %>      
 <dhv:container name="opportunities" selected="documents" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
-  <dhv:formMessage />
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+        <% String documentLink = "LeadsDocuments.do?command=View&headerId="+opportunityHeader.getId()+addLinkParams(request, "viewSource"); %>
+        <zeroio:folderHierarchy module="Pipeline" link="<%= documentLink %>" showLastLink="true"/> >
+        <%= FileItem.getSubject() %>
+      </td>
+    </tr>
+  </table>
+  <dhv:formMessage showSpace="false"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
@@ -108,7 +117,7 @@ function reopenOpportunity(id) {
     <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
       </td>
       <td>
-        <input type="hidden" name="folderId" value="<%= (folderId != null ? folderId : request.getParameter("folderId")) %>">
+        <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
         <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>"><font color="red">*</font>
       </td>
     </tr>

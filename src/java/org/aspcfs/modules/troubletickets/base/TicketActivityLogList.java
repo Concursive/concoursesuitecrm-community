@@ -15,23 +15,21 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    March 18, 2004
- *@version    $Id: TicketActivityLogList.java,v 1.4 2004/09/01 15:30:26
- *      mrajkowski Exp $
+ * @author kbhoopal
+ * @version $Id: TicketActivityLogList.java,v 1.4 2004/09/01 15:30:26
+ *          mrajkowski Exp $
+ * @created March 18, 2004
  */
 public class TicketActivityLogList extends ArrayList {
 
@@ -41,17 +39,16 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Constructor for the TicketList object
-   *
-   *@since
+   * Constructor for the TicketList object
    */
-  public TicketActivityLogList() { }
+  public TicketActivityLogList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TicketCSSTMMaintenanceList object
+   * Sets the pagedListInfo attribute of the TicketCSSTMMaintenanceList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -59,9 +56,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketCSSTMMaintenanceList object
+   * Sets the id attribute of the TicketCSSTMMaintenanceList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -69,9 +66,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketCSSTMMaintenanceList object
+   * Sets the id attribute of the TicketCSSTMMaintenanceList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -79,9 +76,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Sets the ticketId attribute of the TicketCSSTMMaintenanceList object
+   * Sets the ticketId attribute of the TicketCSSTMMaintenanceList object
    *
-   *@param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
@@ -89,9 +86,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Sets the ticketId attribute of the TicketCSSTMMaintenanceList object
+   * Sets the ticketId attribute of the TicketCSSTMMaintenanceList object
    *
-   *@param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(String tmp) {
     this.ticketId = Integer.parseInt(tmp);
@@ -99,9 +96,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the TicketCSSTMMaintenanceList object
+   * Gets the pagedListInfo attribute of the TicketCSSTMMaintenanceList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -109,9 +106,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the TicketCSSTMMaintenanceList object
+   * Gets the id attribute of the TicketCSSTMMaintenanceList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -119,9 +116,9 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Gets the ticketId attribute of the TicketCSSTMMaintenanceList object
+   * Gets the ticketId attribute of the TicketCSSTMMaintenanceList object
    *
-   *@return    The ticketId value
+   * @return The ticketId value
    */
   public int getTicketId() {
     return ticketId;
@@ -129,19 +126,15 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
-        break;
-      }
       TicketActivityLog thisActivity = this.getObject(rs);
       this.add(thisActivity);
     }
@@ -153,12 +146,12 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -173,7 +166,8 @@ public class TicketActivityLogList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM ticket_csstm_form tcf " +
+        "FROM ticket_csstm_form " +
+        "LEFT JOIN  ticket_activity_item on (link_form_id = form_id) " +
         "WHERE form_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -192,10 +186,10 @@ public class TicketActivityLogList extends ArrayList {
       pst.close();
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("firstdate", null);
+      pagedListInfo.setDefaultSort("entered", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY firstdate ");
+      sqlOrder.append("ORDER BY entered ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -225,11 +219,12 @@ public class TicketActivityLogList extends ArrayList {
         "max(activity_date) as lastdate " +
         "FROM ticket_csstm_form " +
         "LEFT JOIN  ticket_activity_item on (link_form_id = form_id) " +
-        "WHERE form_id > -1 "
-        );
+        "WHERE form_id > -1 ");
 
-    sqlGroup.append("GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc, alert_date_timezone ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlGroup.toString() + sqlOrder.toString());
+    sqlGroup.append(
+        "GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc, alert_date_timezone ");
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlGroup.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
@@ -241,12 +236,12 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@param  db         Description of the Parameter
-   *@since             1.2
+   * @param sqlFilter Description of Parameter
+   * @param db        Description of the Parameter
+   * @since 1.2
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     int i = 0;
@@ -260,13 +255,13 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.2
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -283,11 +278,11 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the TicketCSSTMMaintenanceList object
+   * Gets the object attribute of the TicketCSSTMMaintenanceList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public TicketActivityLog getObject(ResultSet rs) throws SQLException {
     TicketActivityLog thisActivity = new TicketActivityLog(rs);

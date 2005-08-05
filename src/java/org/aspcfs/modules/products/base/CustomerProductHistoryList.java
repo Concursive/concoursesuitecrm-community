@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.products.base;
 
-import java.sql.*;
-import java.util.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Constants;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    April 20, 2004
- *@version    $Id: CustomerProductHistoryList.java,v 1.1.2.6 2004/05/17 19:53:42
- *      partha Exp $
+ * @author ananth
+ * @version $Id: CustomerProductHistoryList.java,v 1.1.2.6 2004/05/17 19:53:42
+ *          partha Exp $
+ * @created April 20, 2004
  */
 public class CustomerProductHistoryList extends ArrayList {
 
@@ -40,9 +42,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the CustomerProductHistoryList object
+   * Sets the orgId attribute of the CustomerProductHistoryList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -50,9 +52,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the CustomerProductHistoryList object
+   * Sets the orgId attribute of the CustomerProductHistoryList object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -60,9 +62,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the orderId attribute of the CustomerProductHistoryList object
+   * Sets the orderId attribute of the CustomerProductHistoryList object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -70,9 +72,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the orderId attribute of the CustomerProductHistoryList object
+   * Sets the orderId attribute of the CustomerProductHistoryList object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -80,10 +82,10 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the customerProductId attribute of the CustomerProductHistoryList
-   *  object
+   * Sets the customerProductId attribute of the CustomerProductHistoryList
+   * object
    *
-   *@param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(int tmp) {
     this.customerProductId = tmp;
@@ -91,10 +93,10 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the customerProductId attribute of the CustomerProductHistoryList
-   *  object
+   * Sets the customerProductId attribute of the CustomerProductHistoryList
+   * object
    *
-   *@param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
@@ -102,9 +104,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the orderItemId attribute of the CustomerProductHistoryList object
+   * Sets the orderItemId attribute of the CustomerProductHistoryList object
    *
-   *@param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(int tmp) {
     this.orderItemId = tmp;
@@ -112,9 +114,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Sets the orderItemId attribute of the CustomerProductHistoryList object
+   * Sets the orderItemId attribute of the CustomerProductHistoryList object
    *
-   *@param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(String tmp) {
     this.orderItemId = Integer.parseInt(tmp);
@@ -122,9 +124,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Gets the orderItemId attribute of the CustomerProductHistoryList object
+   * Gets the orderItemId attribute of the CustomerProductHistoryList object
    *
-   *@return    The orderItemId value
+   * @return The orderItemId value
    */
   public int getOrderItemId() {
     return orderItemId;
@@ -132,9 +134,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Gets the orgId attribute of the CustomerProductHistoryList object
+   * Gets the orgId attribute of the CustomerProductHistoryList object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -142,9 +144,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Gets the orderId attribute of the CustomerProductHistoryList object
+   * Gets the orderId attribute of the CustomerProductHistoryList object
    *
-   *@return    The orderId value
+   * @return The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -152,10 +154,10 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Gets the customerProductId attribute of the CustomerProductHistoryList
-   *  object
+   * Gets the customerProductId attribute of the CustomerProductHistoryList
+   * object
    *
-   *@return    The customerProductId value
+   * @return The customerProductId value
    */
   public int getCustomerProductId() {
     return customerProductId;
@@ -163,16 +165,17 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomerProductHistoryList object
+   * Constructor for the CustomerProductHistoryList object
    */
-  public CustomerProductHistoryList() { }
+  public CustomerProductHistoryList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -237,23 +240,16 @@ public class CustomerProductHistoryList extends ArrayList {
         " LEFT JOIN product_catalog_category_map pccm ON (pc.product_id = pccm.product_id) " +
         " LEFT JOIN product_category pcat ON (pccm.category_id = pcat.category_id) " +
         " LEFT JOIN product_catalog_pricing pcp ON (pc.product_id = pcp.product_id) " +
-        " WHERE cph.history_id > -1 "
-        );
+        " WHERE cph.history_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       CustomerProductHistory productHistory = new CustomerProductHistory(rs);
       this.add(productHistory);
     }
@@ -263,9 +259,9 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -287,10 +283,10 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -302,11 +298,11 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -327,12 +323,12 @@ public class CustomerProductHistoryList extends ArrayList {
 
 
   /**
-   *  Gets the customerProductIdFromOrderProductId attribute of the
-   *  CustomerProductHistoryList object
+   * Gets the customerProductIdFromOrderProductId attribute of the
+   * CustomerProductHistoryList object
    *
-   *@param  id                Description of the Parameter
-   *@return                   The customerProductIdFromOrderProductId value
-   *@exception  SQLException  Description of the Exception
+   * @param id Description of the Parameter
+   * @return The customerProductIdFromOrderProductId value
+   * @throws SQLException Description of the Exception
    */
   public int getCustomerProductIdFromOrderProductId(int id) throws SQLException {
     int result = -1;

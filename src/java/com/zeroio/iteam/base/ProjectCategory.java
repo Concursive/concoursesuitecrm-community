@@ -16,7 +16,6 @@ import java.sql.SQLException;
  * @created December 27, 2004
  */
 public class ProjectCategory extends GenericBean {
-
   private int id = -1;
   private String description = null;
   private boolean enabled = true;
@@ -96,22 +95,25 @@ public class ProjectCategory extends GenericBean {
 
 
   public void insert(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("INSERT INTO lookup_project_category " +
-        "(description, enabled, level) VALUES " +
-        "(?, ?, ?) ");
+    id = DatabaseUtils.getNextSeq(db, "lookup_project_cat_code_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO lookup_project_category " +
+        "(" + (id > -1 ? "code, " : "") + "description, enabled, \"level\") VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
     int i = 0;
     pst.setString(++i, description);
     pst.setBoolean(++i, enabled);
     pst.setInt(++i, level);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "lookup_project_cat_code_seq");
+    id = DatabaseUtils.getCurrVal(db, "lookup_project_cat_code_seq", id);
   }
 
 
   public void update(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("UPDATE lookup_project_category " +
-        "SET description = ?, enabled = ?, level = ? " +
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE lookup_project_category " +
+        "SET description = ?, enabled = ?, \"level\" = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst.setString(++i, description);

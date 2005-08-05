@@ -15,20 +15,23 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.base.CustomField;
+import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.web.*;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.util.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 22, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created October 22, 2002
  */
 public class Group extends TagSupport {
   private String object = null;
@@ -37,9 +40,9 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Sets the object attribute of the Group object
+   * Sets the object attribute of the Group object
    *
-   *@param  tmp  The new object value
+   * @param tmp The new object value
    */
   public void setObject(String tmp) {
     this.object = tmp;
@@ -47,9 +50,9 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Sets the rowClass attribute of the Group object
+   * Sets the rowClass attribute of the Group object
    *
-   *@param  tmp  The new rowClass value
+   * @param tmp The new rowClass value
    */
   public void setRowClass(String tmp) {
     this.rowClass = tmp;
@@ -57,9 +60,9 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Sets the page attribute of the Group object
+   * Sets the page attribute of the Group object
    *
-   *@param  page  The new page value
+   * @param page The new page value
    */
   public void setPage(int page) {
     this.page = page;
@@ -67,9 +70,9 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Gets the page attribute of the Group object
+   * Gets the page attribute of the Group object
    *
-   *@return    The page value
+   * @return The page value
    */
   public int getPage() {
     return page;
@@ -77,9 +80,9 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Gets the name attribute of the Group object
+   * Gets the name attribute of the Group object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getObject() {
     return object;
@@ -87,9 +90,9 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Gets the rowClass attribute of the Group object
+   * Gets the rowClass attribute of the Group object
    *
-   *@return    The rowClass value
+   * @return The rowClass value
    */
   public String getRowClass() {
     return rowClass;
@@ -97,14 +100,28 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public final int doStartTag() throws JspException {
     try {
-      CustomForm thisForm = (CustomForm) pageContext.getRequest().getAttribute(object);
+
+      // Use the system status if available
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
+      SystemStatus systemStatus = null;
+      if (ce != null) {
+        systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
+        if (systemStatus == null) {
+          System.out.println("Group-> SystemStatus is null");
+        }
+      }
+
+      CustomForm thisForm = (CustomForm) pageContext.getRequest().getAttribute(
+          object);
 
       if (thisForm != null) {
         JspWriter out = this.pageContext.getOut();
@@ -116,10 +133,18 @@ public class Group extends TagSupport {
             while (groups.hasNext()) {
               boolean tableClosed = false;
               CustomFormGroup thisGroup = (CustomFormGroup) groups.next();
+              
+              //Translate this group based on the language available
+              if (systemStatus != null) {
+                thisGroup.parseTemplateText(systemStatus);
+              }
+
               if (!thisGroup.getName().equals("")) {
-                out.write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" class=\"details\">");
+                out.write(
+                    "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" class=\"details\">");
               } else {
-                out.write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" >");
+                out.write(
+                    "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" >");
               }
               //TODO : make a Table Class and get header from object attributes
               if (!thisGroup.getName().equals("")) {
@@ -144,7 +169,8 @@ public class Group extends TagSupport {
                   if (!hiddenRow) {
                     thisRow.build();
                     if (System.getProperty("DEBUG") != null) {
-                      System.out.println("Group --> Printing Row " + thisRow.getStartTag());
+                      System.out.println(
+                          "Group --> Printing Row " + thisRow.getStartTag());
                     }
                     out.write(thisRow.getStartTag());
                   }
@@ -163,7 +189,8 @@ public class Group extends TagSupport {
                     if (!hiddenColumn) {
                       thisColumn.build();
                       if (System.getProperty("DEBUG") != null) {
-                        System.out.println("Group --> Printing Column " + thisColumn.getStartTag());
+                        System.out.println(
+                            "Group --> Printing Column " + thisColumn.getStartTag());
                       }
                       out.write(thisColumn.getStartTag());
                     }
@@ -172,12 +199,24 @@ public class Group extends TagSupport {
                     Iterator fields = thisColumn.iterator();
                     while (fields.hasNext()) {
                       CustomField thisField = (CustomField) fields.next();
-                      if (System.getProperty("DEBUG") != null) {
-                        System.out.println("Group --> Printing Field " + thisField.getHtmlElement());
+                      
+                      //Translate this field display text based on the language available
+                      if (systemStatus != null) {
+                        thisField.parseTemplateText(systemStatus);
                       }
-                      out.write(thisField.getHtmlElement() + (thisField.getRequired() ? "<font color=\"red\">*</font>" : ""));
-                      if (pageContext.getRequest().getAttribute(thisField.getName() + "Error") != null){
-                        out.write( "&nbsp;<font color='#006699'>"+ (String)pageContext.getRequest().getAttribute(thisField.getName() + "Error") + "</font>");
+
+                      if (System.getProperty("DEBUG") != null) {
+                        System.out.println(
+                            "Group-> Printing Field " + thisField.getHtmlElement(
+                                systemStatus));
+                      }
+                      out.write(
+                          thisField.getHtmlElement(systemStatus) + (thisField.getRequired() ? "<font color=\"red\">*</font>" : ""));
+                      if (pageContext.getRequest().getAttribute(
+                          thisField.getName() + "Error") != null) {
+                        out.write(
+                            "&nbsp;<font color='#006699'>" + (String) pageContext.getRequest().getAttribute(
+                                thisField.getName() + "Error") + "</font>");
                       }
                     }
                     if (!hiddenColumn) {
@@ -188,7 +227,7 @@ public class Group extends TagSupport {
                     out.write(thisRow.getEndTag());
                   }
                 } else {
-                  processRowList(thisRow, out);
+                  processRowList(systemStatus, thisRow, out);
                 }
               }
               out.write("</table>");
@@ -208,18 +247,19 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  out               Description of the Parameter
-   *@param  listRow           Description of the Parameter
-   *@exception  JspException  Description of the Exception
+   * @param out     Description of the Parameter
+   * @param listRow Description of the Parameter
+   * @throws JspException Description of the Exception
    */
-  private void processRowList(CustomRow listRow, JspWriter out) throws JspException {
+  private void processRowList(SystemStatus thisSystem, CustomRow listRow, JspWriter out) throws JspException {
 
     try {
       Iterator rowList = ((Collection) listRow.getListObject()).iterator();
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Group -> Processing RowList -- > size : " + ((ArrayList) listRow.getListObject()).size());
+        System.out.println(
+            "Group -> Processing RowList -- > size : " + ((ArrayList) listRow.getListObject()).size());
       }
       if (rowList.hasNext()) {
         while (rowList.hasNext()) {
@@ -235,16 +275,24 @@ public class Group extends TagSupport {
             Iterator fields = thisColumn.iterator();
             while (fields.hasNext()) {
               CustomField thisField = (CustomField) (((CustomField) fields.next()).duplicate());
-              thisField.setEnteredValue(ObjectUtils.getParam(tmp, thisField.getName()));
+              
+              //Translate this field display text based on the language available
+              if (thisSystem != null) {
+                thisField.parseTemplateText(thisSystem);
+              }
+
+              thisField.setEnteredValue(
+                  ObjectUtils.getParam(tmp, thisField.getName()));
               processJsEvent(tmp, thisField);
-              out.write(thisField.getHtmlElement());
+              out.write(thisField.getHtmlElement(thisSystem));
             }
             out.write(thisColumn.getEndTag());
           }
           out.write(thisRow.getEndTag());
         }
       } else {
-        out.write("<tr><td colspan=\"3\" align=\"left\"> No Items Found. </td></tr>");
+        out.write(
+            "<tr><td colspan=\"3\" align=\"left\"> No Items Found. </td></tr>");
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -253,21 +301,23 @@ public class Group extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tmp    Description of the Parameter
-   *@param  field  Description of the Parameter
+   * @param tmp   Description of the Parameter
+   * @param field Description of the Parameter
    */
   private void processJsEvent(Object tmp, CustomField field) {
     String jsEvent = (String) field.getJsEvent();
     if (jsEvent != null && !jsEvent.equals("")) {
-      String params = jsEvent.substring(jsEvent.indexOf("(") + 1, jsEvent.lastIndexOf(")"));
+      String params = jsEvent.substring(
+          jsEvent.indexOf("(") + 1, jsEvent.lastIndexOf(")"));
       StringTokenizer st = new StringTokenizer(params, ",");
       StringBuffer values = new StringBuffer();
       while (st.hasMoreTokens()) {
         String param = st.nextToken();
         if (param.startsWith("$")) {
-          values.append("'" + ObjectUtils.getParam(tmp, param.substring(1)) + "'");
+          values.append(
+              "'" + ObjectUtils.getParam(tmp, param.substring(1)) + "'");
 
         } else {
           values.append(param);
@@ -276,16 +326,16 @@ public class Group extends TagSupport {
           values.append(",");
         }
       }
-      field.setJsEvent(jsEvent.substring(0, jsEvent.indexOf("(")) + "(" + values.toString() + ")");
+      field.setJsEvent(
+          jsEvent.substring(0, jsEvent.indexOf("(")) + "(" + values.toString() + ")");
     }
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

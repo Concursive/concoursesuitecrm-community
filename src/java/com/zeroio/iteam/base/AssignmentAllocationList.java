@@ -15,19 +15,20 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    October 29, 2004
- *@version    $Id: AssignmentAllocationList.java,v 1.3 2004/10/29 05:14:39 matt
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AssignmentAllocationList.java,v 1.3 2004/10/29 05:14:39 matt
+ *          Exp $
+ * @created October 29, 2004
  */
 public class AssignmentAllocationList {
 
@@ -40,15 +41,16 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Constructor for the AssignmentAllocationList object
+   * Constructor for the AssignmentAllocationList object
    */
-  public AssignmentAllocationList() { }
+  public AssignmentAllocationList() {
+  }
 
 
   /**
-   *  Gets the projectsForUser attribute of the AssignmentAllocationList object
+   * Gets the projectsForUser attribute of the AssignmentAllocationList object
    *
-   *@return    The projectsForUser value
+   * @return The projectsForUser value
    */
   public int getProjectsForUser() {
     return projectsForUser;
@@ -56,9 +58,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the projectsForUser attribute of the AssignmentAllocationList object
+   * Sets the projectsForUser attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new projectsForUser value
+   * @param tmp The new projectsForUser value
    */
   public void setProjectsForUser(int tmp) {
     this.projectsForUser = tmp;
@@ -66,9 +68,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the projectsForUser attribute of the AssignmentAllocationList object
+   * Sets the projectsForUser attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new projectsForUser value
+   * @param tmp The new projectsForUser value
    */
   public void setProjectsForUser(String tmp) {
     this.projectsForUser = Integer.parseInt(tmp);
@@ -76,9 +78,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Gets the startDate attribute of the AssignmentAllocationList object
+   * Gets the startDate attribute of the AssignmentAllocationList object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public Timestamp getStartDate() {
     return startDate;
@@ -86,9 +88,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the startDate attribute of the AssignmentAllocationList object
+   * Sets the startDate attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(Timestamp tmp) {
     this.startDate = tmp;
@@ -96,9 +98,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the startDate attribute of the AssignmentAllocationList object
+   * Sets the startDate attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -106,9 +108,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Gets the endDate attribute of the AssignmentAllocationList object
+   * Gets the endDate attribute of the AssignmentAllocationList object
    *
-   *@return    The endDate value
+   * @return The endDate value
    */
   public Timestamp getEndDate() {
     return endDate;
@@ -116,9 +118,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the endDate attribute of the AssignmentAllocationList object
+   * Sets the endDate attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(Timestamp tmp) {
     this.endDate = tmp;
@@ -126,9 +128,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the endDate attribute of the AssignmentAllocationList object
+   * Sets the endDate attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(String tmp) {
     this.endDate = DatabaseUtils.parseTimestamp(tmp);
@@ -136,9 +138,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Gets the userList attribute of the AssignmentAllocationList object
+   * Gets the userList attribute of the AssignmentAllocationList object
    *
-   *@return    The userList value
+   * @return The userList value
    */
   public HashMap getUserList() {
     return userList;
@@ -146,9 +148,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the userList attribute of the AssignmentAllocationList object
+   * Sets the userList attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new userList value
+   * @param tmp The new userList value
    */
   public void setUserList(HashMap tmp) {
     this.userList = tmp;
@@ -156,9 +158,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Gets the projectList attribute of the AssignmentAllocationList object
+   * Gets the projectList attribute of the AssignmentAllocationList object
    *
-   *@return    The projectList value
+   * @return The projectList value
    */
   public HashMap getProjectList() {
     return projectList;
@@ -166,9 +168,9 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Sets the projectList attribute of the AssignmentAllocationList object
+   * Sets the projectList attribute of the AssignmentAllocationList object
    *
-   *@param  tmp  The new projectList value
+   * @param tmp The new projectList value
    */
   public void setProjectList(HashMap tmp) {
     this.projectList = tmp;
@@ -176,10 +178,10 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAssignmentList(Connection db) throws SQLException {
     assignmentList = new ArrayList();
@@ -249,10 +251,10 @@ public class AssignmentAllocationList {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildProjectList(Connection db) throws SQLException {
     if (assignmentList == null) {
@@ -268,12 +270,12 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Adds a feature to the Entry attribute of the AssignmentAllocationList
-   *  object
+   * Adds a feature to the Entry attribute of the AssignmentAllocationList
+   * object
    *
-   *@param  rs                The feature to be added to the Entry attribute
-   *@return                   The assignment value
-   *@exception  SQLException  Description of the Exception
+   * @param rs The feature to be added to the Entry attribute
+   * @return The assignment value
+   * @throws SQLException Description of the Exception
    */
   private Assignment getAssignment(ResultSet rs) throws SQLException {
     // retrieve values
@@ -296,30 +298,33 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Adds a feature to the UserEntry attribute of the AssignmentAllocationList
-   *  object
+   * Adds a feature to the UserEntry attribute of the AssignmentAllocationList
+   * object
    *
-   *@param  assignment  The feature to be added to the UserEntry attribute
+   * @param assignment The feature to be added to the UserEntry attribute
    */
   private void addUserEntry(Assignment assignment, Connection db) throws SQLException {
     // for each user, store the user's project allocation
-    AssignmentUserAllocation userMap = getUserMap(assignment.getUserAssignedId(), db);
+    AssignmentUserAllocation userMap = getUserMap(
+        assignment.getUserAssignedId(), db);
     userMap.addEntry(assignment);
     // for each of the user's projects, store the associated user
-    AssignmentProjectAllocation projectMap = userMap.getProjectMap(assignment.getProjectId());
+    AssignmentProjectAllocation projectMap = userMap.getProjectMap(
+        assignment.getProjectId());
     projectMap.addEntry(assignment, userMap.getTimesheet());
   }
 
 
   /**
-   *  Gets the userMap attribute of the AssignmentAllocationList object
+   * Gets the userMap attribute of the AssignmentAllocationList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The userMap value
+   * @param id Description of the Parameter
+   * @return The userMap value
    */
   private AssignmentUserAllocation getUserMap(int id, Connection db) throws SQLException {
     Integer userId = new Integer(id);
-    AssignmentUserAllocation userMap = (AssignmentUserAllocation) userList.get(userId);
+    AssignmentUserAllocation userMap = (AssignmentUserAllocation) userList.get(
+        userId);
     if (userMap == null) {
       userMap = new AssignmentUserAllocation(id);
       // Generate the user's timesheet for display
@@ -335,42 +340,44 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Gets the user attribute of the AssignmentAllocationList object
+   * Gets the user attribute of the AssignmentAllocationList object
    *
-   *@param  userId  Description of the Parameter
-   *@return         The user value
+   * @param userId Description of the Parameter
+   * @return The user value
    */
   public AssignmentUserAllocation getUser(Integer userId) {
     return (AssignmentUserAllocation) userList.get(userId);
   }
 
 
-
   /**
-   *  Adds a feature to the ProjectEntry attribute of the
-   *  AssignmentAllocationList object
+   * Adds a feature to the ProjectEntry attribute of the
+   * AssignmentAllocationList object
    *
-   *@param  assignment  The feature to be added to the ProjectEntry attribute
+   * @param assignment The feature to be added to the ProjectEntry attribute
    */
   private void addProjectEntry(Assignment assignment, Connection db) throws SQLException {
     // for each project, store the project's user allocation
-    AssignmentProjectAllocation projectMap = getProjectMap(assignment.getProjectId());
+    AssignmentProjectAllocation projectMap = getProjectMap(
+        assignment.getProjectId());
     // for each of the project's users, store the associated project
-    AssignmentUserAllocation userMap = projectMap.getUserMap(assignment.getUserAssignedId(), db, startDate, endDate);
+    AssignmentUserAllocation userMap = projectMap.getUserMap(
+        assignment.getUserAssignedId(), db, startDate, endDate);
     userMap.addEntry(assignment);
     projectMap.addEntry(assignment, userMap.getTimesheet());
   }
 
 
   /**
-   *  Gets the projectMap attribute of the AssignmentAllocationList object
+   * Gets the projectMap attribute of the AssignmentAllocationList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The projectMap value
+   * @param id Description of the Parameter
+   * @return The projectMap value
    */
   private AssignmentProjectAllocation getProjectMap(int id) {
     Integer projectId = new Integer(id);
-    AssignmentProjectAllocation projectMap = (AssignmentProjectAllocation) projectList.get(projectId);
+    AssignmentProjectAllocation projectMap = (AssignmentProjectAllocation) projectList.get(
+        projectId);
     if (projectMap == null) {
       projectMap = new AssignmentProjectAllocation(id);
       projectList.put(projectId, projectMap);
@@ -380,10 +387,10 @@ public class AssignmentAllocationList {
 
 
   /**
-   *  Gets the project attribute of the AssignmentAllocationList object
+   * Gets the project attribute of the AssignmentAllocationList object
    *
-   *@param  projectId  Description of the Parameter
-   *@return            The project value
+   * @param projectId Description of the Parameter
+   * @return The project value
    */
   public AssignmentProjectAllocation getProject(Integer projectId) {
     return (AssignmentProjectAllocation) projectList.get(projectId);

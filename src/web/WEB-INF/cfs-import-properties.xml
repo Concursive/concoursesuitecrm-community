@@ -51,6 +51,7 @@
         <property aliases="accesstype,access_type" displayName="Access Type" isForPrompting="false">accessType</property>
         <property aliases="title,author,title_id" displayName="Title">title</property>
         <property aliases="company,company name,company_name,account name" displayName="Company" required="true">company</property>
+        <property aliases="account_number,account number" displayName="Account Number">accountNumber</property>
         <property aliases="salutation" displayName="Salutation">nameSalutation</property>
         <property aliases="full name,full_name" displayName="Full Name (First Last)">nameFull</property>
         <property aliases="first name,first_name,firstname" displayName="First Name">nameFirst</property>

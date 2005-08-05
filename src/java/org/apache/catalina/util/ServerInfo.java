@@ -33,43 +33,44 @@ import java.util.Properties;
 public class ServerInfo {
 
 
-    // ------------------------------------------------------- Static Variables
+  // ------------------------------------------------------- Static Variables
 
 
-    /**
-     * The server information String with which we identify ourselves.
-     */
-    private static String serverInfo = null;
+  /**
+   * The server information String with which we identify ourselves.
+   */
+  private static String serverInfo = null;
 
-    static {
+  static {
 
-        try {
-            InputStream is = ServerInfo.class.getResourceAsStream
-                ("/org/apache/catalina/util/ServerInfo.properties");
-            Properties props = new Properties();
-            props.load(is);
-            is.close();
-            serverInfo = props.getProperty("server.info");
-        } catch (Throwable t) {
-            ;
-        }
-        if (serverInfo == null)
-            serverInfo = "Apache Tomcat";
-
+    try {
+      InputStream is = ServerInfo.class.getResourceAsStream
+          ("/org/apache/catalina/util/ServerInfo.properties");
+      Properties props = new Properties();
+      props.load(is);
+      is.close();
+      serverInfo = props.getProperty("server.info");
+    } catch (Throwable t) {
+      ;
+    }
+    if (serverInfo == null) {
+      serverInfo = "Apache Tomcat";
     }
 
+  }
 
-    // --------------------------------------------------------- Public Methods
+
+  // --------------------------------------------------------- Public Methods
 
 
-    /**
-     * Return the server identification for this version of Tomcat.
-     */
-    public static String getServerInfo() {
+  /**
+   * Return the server identification for this version of Tomcat.
+   */
+  public static String getServerInfo() {
 
-        return (serverInfo);
+    return (serverInfo);
 
-    }
+  }
 
 
 }

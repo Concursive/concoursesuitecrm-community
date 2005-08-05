@@ -54,7 +54,7 @@ function checkForm(form) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>"><dhv:label name="myitems.actionLists">Action Lists</dhv:label></a> >
 <a href="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>"><dhv:label name="actionList.listDetails">List Details</dhv:label></a> >
 <dhv:label name="actionList.addContacts">Add Contacts</dhv:label>

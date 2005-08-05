@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.products.base;
 
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 
 /**
- *  List class for Option Values.
+ * List class for Option Values.
  *
- *@author     partha
- *@created    March 19, 2004
- *@version    $Id: ProductOptionValuesList.java,v 1.1.2.2 2004/03/19 20:46:00
- *      partha Exp $
+ * @author partha
+ * @version $Id: ProductOptionValuesList.java,v 1.1.2.2 2004/03/19 20:46:00
+ *          partha Exp $
+ * @created March 19, 2004
  */
 public class ProductOptionValuesList extends ArrayList {
   //filters
@@ -42,9 +42,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the productId attribute of the ProductOptionValuesList object
+   * Sets the productId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -52,9 +52,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the productId attribute of the ProductOptionValuesList object
+   * Sets the productId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -62,20 +62,19 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Gets the productId attribute of the ProductOptionValuesList object
+   * Gets the productId attribute of the ProductOptionValuesList object
    *
-   *@return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
   }
 
 
-
   /**
-   *  Sets the resultId attribute of the ProductOptionValuesList object
+   * Sets the resultId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new resultId value
+   * @param tmp The new resultId value
    */
   public void setResultId(int tmp) {
     this.resultId = tmp;
@@ -83,9 +82,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the resultId attribute of the ProductOptionValuesList object
+   * Sets the resultId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new resultId value
+   * @param tmp The new resultId value
    */
   public void setResultId(String tmp) {
     this.resultId = Integer.parseInt(tmp);
@@ -93,9 +92,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Gets the resultId attribute of the ProductOptionValuesList object
+   * Gets the resultId attribute of the ProductOptionValuesList object
    *
-   *@return    The resultId value
+   * @return The resultId value
    */
   public int getResultId() {
     return resultId;
@@ -103,9 +102,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ProductOptionValuesList object
+   * Sets the pagedListInfo attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -113,9 +112,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ProductOptionValuesList object
+   * Sets the id attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -123,9 +122,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ProductOptionValuesList object
+   * Sets the id attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -133,9 +132,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the optionId attribute of the ProductOptionValuesList object
+   * Sets the optionId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(int tmp) {
     this.optionId = tmp;
@@ -143,9 +142,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Sets the optionId attribute of the ProductOptionValuesList object
+   * Sets the optionId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new optionId value
+   * @param tmp The new optionId value
    */
   public void setOptionId(String tmp) {
     this.optionId = Integer.parseInt(tmp);
@@ -153,9 +152,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ProductOptionValuesList object
+   * Gets the pagedListInfo attribute of the ProductOptionValuesList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -163,9 +162,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the ProductOptionValuesList object
+   * Gets the id attribute of the ProductOptionValuesList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -173,9 +172,9 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Gets the optionId attribute of the ProductOptionValuesList object
+   * Gets the optionId attribute of the ProductOptionValuesList object
    *
-   *@return    The optionId value
+   * @return The optionId value
    */
   public int getOptionId() {
     return optionId;
@@ -183,16 +182,17 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Constructor for the ProductOptionValuesList object
+   * Constructor for the ProductOptionValuesList object
    */
-  public ProductOptionValuesList() { }
+  public ProductOptionValuesList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -234,20 +234,14 @@ public class ProductOptionValuesList extends ArrayList {
         "poptvalues.* " +
         "FROM product_option_values AS poptvalues " +
         "WHERE poptvalues.value_id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       ProductOptionValues value = new ProductOptionValues(rs);
       this.add(value);
     }
@@ -258,10 +252,10 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator optionValues = this.iterator();
@@ -273,10 +267,10 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
-   *@param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (id > -1) {
@@ -292,11 +286,11 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -314,11 +308,11 @@ public class ProductOptionValuesList extends ArrayList {
 
 
   /**
-   *  Gets the valueFromId attribute of the ProductOptionValuesList object
+   * Gets the valueFromId attribute of the ProductOptionValuesList object
    *
-   * @param  id                Description of the Parameter
-   * @return                   The valueFromId value
-   * @exception  SQLException  Description of the Exception
+   * @param id Description of the Parameter
+   * @return The valueFromId value
+   * @throws SQLException Description of the Exception
    */
   public ProductOptionValues getValueFromId(int id) throws SQLException {
     ProductOptionValues result = null;

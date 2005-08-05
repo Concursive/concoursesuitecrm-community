@@ -15,21 +15,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Represents a list of possible permission categories of a project
+ * Represents a list of possible permission categories of a project
  *
- *@author     matt rajkowski
- *@created    August 11, 2003
- *@version    $Id: PermissionCategoryLookupList.java,v 1.1.2.2 2004/04/08
- *      14:55:53 rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: PermissionCategoryLookupList.java,v 1.1.2.2 2004/04/08
+ *          14:55:53 rvasista Exp $
+ * @created August 11, 2003
  */
 public class PermissionCategoryLookupList extends ArrayList {
 
@@ -37,16 +38,17 @@ public class PermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Constructor for the PermissionCategoryLookupList object
+   * Constructor for the PermissionCategoryLookupList object
    */
-  public PermissionCategoryLookupList() { }
+  public PermissionCategoryLookupList() {
+  }
 
 
   /**
-   *  Sets the includeEnabled attribute of the PermissionCategoryLookupList
-   *  object
+   * Sets the includeEnabled attribute of the PermissionCategoryLookupList
+   * object
    *
-   *@param  tmp  The new includeEnabled value
+   * @param tmp The new includeEnabled value
    */
   public void setIncludeEnabled(int tmp) {
     this.includeEnabled = tmp;
@@ -54,10 +56,10 @@ public class PermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -66,7 +68,7 @@ public class PermissionCategoryLookupList extends ArrayList {
         "FROM lookup_project_permission_category " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY level, description ");
+    sql.append("ORDER BY \"level\", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
@@ -80,9 +82,9 @@ public class PermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -95,11 +97,11 @@ public class PermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -111,10 +113,10 @@ public class PermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();

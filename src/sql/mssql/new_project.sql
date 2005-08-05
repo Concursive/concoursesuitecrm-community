@@ -137,7 +137,8 @@ CREATE TABLE projects (
   calendar_enabled BIT NOT NULL DEFAULT 1,
   calendar_label VARCHAR(50) NULL,
   accounts_enabled BIT NOT NULL DEFAULT 1,
-  accounts_label VARCHAR(50) NULL
+  accounts_label VARCHAR(50) NULL,
+  trashed_date DATETIME
 );
 
 CREATE INDEX "projects_idx"

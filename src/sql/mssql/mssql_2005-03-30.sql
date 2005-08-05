@@ -1907,25 +1907,6 @@ UPDATE permission_category SET enabled = 1, active = 1 WHERE category = 'Project
 
 UPDATE permission SET description = 'Product Catalog Editor' where permission = 'admin-sysconfig-products';
 
-SET IDENTITY_INSERT [permission] ON
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (95, 1, 'accounts-accounts-contacts-move', 1, 0, 0, 0, 'Move contacts to other accounts', 90, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (96, 1, 'accounts-accounts-relationships', 1, 1, 1, 1, 'Relationships', 290, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (97, 1, 'accounts-accounts-contact-updater', 1, 0, 0, 0, 'Request contact information update', 300, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (98, 1, 'accounts-projects', 1, 0, 0, 0, 'Projects', 310, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (99, 2, 'contacts-external-contact-updater', 1, 0, 0, 0, 'Request contact information update', 90, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (100, 9, 'admin-sysconfig-logos', 1, 1, 1, 1, 'Configure Module Logos', 110, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (101, 22, 'sales', 1, 0, 0, 0, 'Access to Leads Module', 10, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (102, 22, 'sales-leads', 1, 1, 1, 1, 'Lead Records', 20, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (103, 22, 'sales-import', 1, 0, 0, 0, 'Access to Import Leads', 30, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (104, 19, 'quotes-quotes', 1, 1, 1, 1, 'Quote Records', 20, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (105, 20, 'orders', 1, 0, 0, 0, 'Access to Orders module', 10, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (106, 20, 'orders-orders', 1, 1, 1, 1, 'Order Records', 20, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (107, 21, 'contacts-internal_contacts-folders', 1, 1, 1, 1, 'Folders', 30, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (108, 21, 'contacts-internal_contacts-projects', 1, 0, 0, 0, 'Projects', 40, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (109, 23, 'documents', 1, 0, 0, 0, 'Access to Documents module', 10, 1, 1, 0);
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints]) VALUES (110, 23, 'documents_documentstore', 1, 1, 1, 1, 'Manage Document Stores', 20, 1, 1, 0);
-SET IDENTITY_INSERT [permission] OFF
-
 UPDATE permission SET permission_add = 0, permission_edit = 0, permission_delete = 0, description = 'Access to Quotes module' where permission = 'quotes';
 
 UPDATE permission SET enabled = 1, active = 1 WHERE permission = 'accounts-quotes';
@@ -1943,30 +1924,6 @@ UPDATE [lookup_delivery_options] SET [level]=30 WHERE [code]=3
 UPDATE [lookup_delivery_options] SET [level]=40 WHERE [code]=4
 UPDATE [lookup_delivery_options] SET [level]=50 WHERE [code]=5
 UPDATE [lookup_delivery_options] SET [level]=60 WHERE [code]=6
-
-SET IDENTITY_INSERT [lookup_lists_lookup] ON
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (25, 22, 228051102, 'lookupList', 'lookup_contact_rating', 10, 'Contact Rating', '20050331 09:20:05.937', 228051100)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (26, 22, 228051103, 'lookupList', 'lookup_contact_source', 20, 'Contact Source', '20050331 09:20:05.937', 228051100)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (27, 17, 1017040901, 'lookupList', 'lookup_product_type', 10, 'Product Types', '20050331 09:20:05.983', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (28, 17, 1017040902, 'lookupList', 'lookup_product_format', 20, 'Product Format Types', '20050331 09:20:06.000', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (29, 17, 1017040903, 'lookupList', 'lookup_product_shipping', 30, 'Product Shipping Types', '20050331 09:20:06.000', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (30, 17, 1017040904, 'lookupList', 'lookup_product_ship_time', 40, 'Product Shipping Times', '20050331 09:20:06.013', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (31, 17, 1017040905, 'lookupList', 'lookup_product_category_type', 50, 'Product Category Types', '20050331 09:20:06.013', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (32, 17, 1017040906, 'lookupList', 'lookup_product_tax', 60, 'Product Tax Types', '20050331 09:20:06.030', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (33, 17, 1017040907, 'lookupList', 'lookup_currency', 70, 'Currency Types', '20050331 09:20:06.030', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (34, 17, 1017040908, 'lookupList', 'lookup_recurring_type', 80, 'Price Recurring Types', '20050331 09:20:06.047', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (35, 17, 1017040909, 'lookupList', 'lookup_product_manufacturer', 90, 'Product Manufacturer Types', '20050331 09:20:06.047', 330041409)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (36, 19, 1123041000, 'lookupList', 'lookup_quote_status', 10, 'Quote Status', '20050331 09:20:06.107', 420041017)
---INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (37, 19, 1123041001, 'lookupList', 'lookup_quote_type', 20, 'Quote Types', '20050331 09:20:06.123', 420041017)
---INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (38, 19, 1123041002, 'lookupList', 'lookup_quote_terms', 30, 'Quote Terms', '20050331 09:20:06.123', 420041017)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (39, 19, 1123041003, 'lookupList', 'lookup_quote_source', 40, 'Quote Source', '20050331 09:20:06.140', 420041017)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (40, 19, 1123041004, 'lookupList', 'lookup_quote_delivery', 50, 'Quote Delivery', '20050331 09:20:06.140', 420041017)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (41, 19, 1123041005, 'lookupList', 'lookup_quote_condition', 60, 'Quote Terms & Conditions', '20050331 09:20:06.153', 420041017)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (42, 19, 1123041006, 'lookupList', 'lookup_quote_remarks', 70, 'Quote Remarks', '20050331 09:20:06.153', 420041017)
-INSERT INTO [lookup_lists_lookup] ([id], [module_id], [lookup_id], [class_name], [table_name], [level], [description], [entered], [category_id]) VALUES (43, 1, 302051030, 'lookupList', 'lookup_industry', 70, 'Industry Types', '20050331 09:20:06.513', 1);
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(44,2,111051354,'lookupList','lookup_textmessage_types',50,'Text Messaging Types','Apr  1 2005  9:44:05:960AM',2)
-SET IDENTITY_INSERT [lookup_lists_lookup] OFF
-
 
 SET IDENTITY_INSERT [lookup_product_conf_result] ON
 INSERT INTO [lookup_product_conf_result] ([code], [description], [default_item], [level], [enabled]) VALUES (1, 'integer', 0, 10, 1)

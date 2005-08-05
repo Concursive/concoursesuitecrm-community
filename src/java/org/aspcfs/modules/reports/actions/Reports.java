@@ -32,20 +32,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Actions for working with Pipeline Management reports. Code originally from
- *  Leads.java.
+ * Actions for working with Pipeline Management reports. Code originally from
+ * Leads.java.
  *
- *@author     matt rajkowski
- *@created    September 12, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 12, 2003
  */
 public final class Reports extends CFSModule {
 
   /**
-   *  Action to forward to another action
+   * Action to forward to another action
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -56,10 +56,10 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action for showing the report queue
+   * Action for showing the report queue
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewQueue(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -95,10 +95,10 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to show the available module report categories
+   * Action to show the available module report categories
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRunReport(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -125,10 +125,10 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to show the list of reports for the specified module category
+   * Action to show the list of reports for the specified module category
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListReports(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -141,7 +141,8 @@ public final class Reports extends CFSModule {
     try {
       db = getConnection(context);
       //Load the selected category
-      PermissionCategory thisCategory = new PermissionCategory(db, Integer.parseInt(categoryId));
+      PermissionCategory thisCategory = new PermissionCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("category", thisCategory);
       //Load the report list
       ReportList reports = new ReportList();
@@ -160,11 +161,11 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to show the user's previously saved criteria for the specified
-   *  report
+   * Action to show the user's previously saved criteria for the specified
+   * report
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCriteriaList(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -178,7 +179,8 @@ public final class Reports extends CFSModule {
     try {
       db = getConnection(context);
       //Load the category
-      PermissionCategory thisCategory = new PermissionCategory(db, Integer.parseInt(categoryId));
+      PermissionCategory thisCategory = new PermissionCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("category", thisCategory);
       //Load the specific report
       Report report = new Report(db, Integer.parseInt(reportId));
@@ -203,10 +205,10 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to delete the user's previously saved criteria
+   * Action to delete the user's previously saved criteria
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteCriteria(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -229,11 +231,11 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to show the available parameters for the specified report. Merges
-   *  previously saved criteria if specified by the user.
+   * Action to show the available parameters for the specified report. Merges
+   * previously saved criteria if specified by the user.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandParameterList(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -248,23 +250,27 @@ public final class Reports extends CFSModule {
     try {
       db = getConnection(context);
       //Load the category
-      PermissionCategory thisCategory = new PermissionCategory(db, Integer.parseInt(categoryId));
+      PermissionCategory thisCategory = new PermissionCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("category", thisCategory);
       //Load the specific report
       Report report = new Report(db, Integer.parseInt(reportId));
       context.getRequest().setAttribute("report", report);
       //Read in the Jasper Report and return the parameters to the user
       String reportPath = getWebInfPath(context, "reports");
-      JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
+      JasperReport jasperReport = JasperReportUtils.getReport(
+          reportPath + report.getFilename());
       //Generate the allowable parameter list
       ParameterList params = new ParameterList();
-      params = (ParameterList)context.getRequest().getAttribute("parameterList");
-      if (params == null){      
+      params = (ParameterList) context.getRequest().getAttribute(
+          "parameterList");
+      if (params == null) {
         params = new ParameterList();
         params.setParameters(jasperReport);
       }
       //Load the criteria if the user selected to base on existing criteria
-      if (criteriaId != null && !criteriaId.equals("-1") && !"".equals(criteriaId)) {
+      if (criteriaId != null && !criteriaId.equals("-1") && !"".equals(
+          criteriaId)) {
         Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
         criteria.buildResources(db);
         params.setParameters(criteria);
@@ -280,6 +286,8 @@ public final class Reports extends CFSModule {
         }
       }
       context.getRequest().setAttribute("parameterList", params);
+      context.getRequest().setAttribute(
+          "systemStatus", this.getSystemStatus(context));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -291,11 +299,11 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Adds the specified report and criteria to the report queue to be processed
-   *  by the ReportRunner.
+   * Adds the specified report and criteria to the report queue to be processed
+   * by the ReportRunner.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandGenerateReport(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -316,38 +324,49 @@ public final class Reports extends CFSModule {
     try {
       db = getConnection(context);
       //Load the category
-      PermissionCategory thisCategory = new PermissionCategory(db, Integer.parseInt(categoryId));
+      PermissionCategory thisCategory = new PermissionCategory(
+          db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("category", thisCategory);
       //Load the specific report
       Report report = new Report(db, Integer.parseInt(reportId));
       context.getRequest().setAttribute("report", report);
       //Read in the Jasper Report and set the parameters
       String reportPath = getWebInfPath(context, "reports");
-      JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
+      JasperReport jasperReport = JasperReportUtils.getReport(
+          reportPath + report.getFilename());
       //Determine the parameters that need to be saved from the jasper report
       params = new ParameterList();
       params.setSystemStatus(systemStatus);
       params.setParameters(jasperReport);
       //Set the user supplied parameters from the request
       toInsert = params.setParameters(context.getRequest());
-      if (toInsert){
+      if (toInsert) {
         //Set the system generated parameters
         //TODO: Move this into ParameterList.java
-        params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
-        params.addParam("path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
-        params.addParam("path_report_images", getPath(context, "report_images"));
+        params.addParam(
+            "user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
+        params.addParam(
+            "path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
+        params.addParam(
+            "path_report_images", getPath(context, "report_images"));
         //Set some database specific parameters
         if (params.getParameter("year_part") != null) {
           Parameter thisParam = params.getParameter("year_part");
-          params.addParam("year_part", DatabaseUtils.getYearPart(db, thisParam.getDescription()));
+          params.addParam(
+              "year_part", DatabaseUtils.getYearPart(
+                  db, thisParam.getDescription()));
         }
         if (params.getParameter("month_part") != null) {
           Parameter thisParam = params.getParameter("month_part");
-          params.addParam("month_part", DatabaseUtils.getMonthPart(db, thisParam.getDescription()));
+          params.addParam(
+              "month_part", DatabaseUtils.getMonthPart(
+                  db, thisParam.getDescription()));
         }
         if (params.getParameter("day_part") != null) {
           Parameter thisParam = params.getParameter("day_part");
-          params.addParam("day_part", DatabaseUtils.getDayPart(db, thisParam.getDescription()));
+          params.addParam(
+              "day_part", DatabaseUtils.getDayPart(
+                  db, thisParam.getDescription()));
         }
         //Populate a criteria record which will be used in the report
         thisCriteria = new Criteria();
@@ -355,19 +374,22 @@ public final class Reports extends CFSModule {
         thisCriteria.setOwner(getUserId(context));
         thisCriteria.setEnteredBy(getUserId(context));
         thisCriteria.setModifiedBy(getUserId(context));
-        thisCriteria.setSubject(context.getRequest().getParameter("criteria_subject"));
+        thisCriteria.setSubject(
+            context.getRequest().getParameter("criteria_subject"));
         thisCriteria.setParameters(params);
         //Determine if criteria should be saved
         thisCriteria.setSave(context.getRequest().getParameter("save"));
         String saveType = context.getRequest().getParameter("saveType");
         if ("overwrite".equals(saveType)) {
-          thisCriteria.setId(Integer.parseInt(context.getRequest().getParameter("criteriaId")));
+          thisCriteria.setId(
+              Integer.parseInt(
+                  context.getRequest().getParameter("criteriaId")));
           thisCriteria.setOverwrite(true);
         } else if ("save".equals(saveType)) {
           thisCriteria.setSave(true);
         }
         //Save the user's criteria for future use
-        if ( thisCriteria.getSave() || thisCriteria.getOverwrite()) {
+        if (thisCriteria.getSave() || thisCriteria.getOverwrite()) {
           isValid = this.validateObject(context, db, thisCriteria);
         }
         if (isValid) {
@@ -387,11 +409,15 @@ public final class Reports extends CFSModule {
         //Insert the report into the queue
         if (isValid || !thisCriteria.getSave() || !thisCriteria.getOverwrite()) {
           int position = ReportQueue.insert(db, thisCriteria);
-          context.getRequest().setAttribute("queuePosition", String.valueOf(position));
+          context.getRequest().setAttribute(
+              "queuePosition", String.valueOf(position));
+          executeJob(context, "reportRunner");
         }
       } else {
         HashMap errors = new HashMap(params.getErrors());
-        errors.put("actionError", systemStatus.getLabel("object.validation.pleaseEnterValidInput"));
+        errors.put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.pleaseEnterValidInput"));
         processErrors(context, errors);
         context.getRequest().setAttribute("parameterList", params);
       }
@@ -410,10 +436,10 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to stream the specified report PDF to the user.
+   * Action to stream the specified report PDF to the user.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandStreamReport(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -436,7 +462,9 @@ public final class Reports extends CFSModule {
     if (queue != null) {
       try {
         FileDownload download = new FileDownload();
-        download.setFullPath(this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
+        download.setFullPath(
+            this.getPath(context, "reports-queue") + getDatePath(
+                queue.getEntered()) + queue.getFilename());
         download.setDisplayName(queue.getReport().getFilename() + ".pdf");
         download.streamContent(context);
       } catch (Exception e) {
@@ -448,10 +476,10 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to download the specified report PDF to the user
+   * Action to download the specified report PDF to the user
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownloadReport(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -474,8 +502,12 @@ public final class Reports extends CFSModule {
     if (queue != null) {
       try {
         FileDownload download = new FileDownload();
-        download.setFullPath(this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
-        download.setDisplayName(queue.getReport().getFilename().substring(0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
+        download.setFullPath(
+            this.getPath(context, "reports-queue") + getDatePath(
+                queue.getEntered()) + queue.getFilename());
+        download.setDisplayName(
+            queue.getReport().getFilename().substring(
+                0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
         download.sendFile(context);
       } catch (Exception e) {
         e.printStackTrace(System.out);
@@ -486,11 +518,11 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to delete the specified report that was previously processed. The
-   *  attached file is also deleted.
+   * Action to delete the specified report that was previously processed. The
+   * attached file is also deleted.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -506,9 +538,13 @@ public final class Reports extends CFSModule {
       ReportQueue queue = new ReportQueue(db, Integer.parseInt(id), false);
       if (queue.getId() != -1) {
         if (queue.getProcessed() != null) {
-          queue.delete(db, this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
+          queue.delete(
+              db, this.getPath(context, "reports-queue") + getDatePath(
+                  queue.getEntered()) + queue.getFilename());
         } else {
-          context.getRequest().setAttribute("actionError",  systemStatus.getLabel("object.validation.actionError.reportDeletion"));
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.reportDeletion"));
         }
       }
     } catch (Exception e) {
@@ -522,11 +558,11 @@ public final class Reports extends CFSModule {
 
 
   /**
-   *  Action to cancel a queued report. If the report is already processing then
-   *  it cannot be canceled.
+   * Action to cancel a queued report. If the report is already processing then
+   * it cannot be canceled.
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCancelReport(ActionContext context) {
     if (!hasPermission(context, "reports-view")) {
@@ -542,9 +578,13 @@ public final class Reports extends CFSModule {
       ReportQueue queue = new ReportQueue(db, Integer.parseInt(id), false);
       if (queue.getId() != -1) {
         if (queue.getProcessed() == null) {
-          queue.delete(db, this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
+          queue.delete(
+              db, this.getPath(context, "reports-queue") + getDatePath(
+                  queue.getEntered()) + queue.getFilename());
         } else {
-          context.getRequest().setAttribute("actionError",  systemStatus.getLabel("object.validation.actionError.reportCancellation"));
+          context.getRequest().setAttribute(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.actionError.reportCancellation"));
         }
       }
     } catch (Exception e) {

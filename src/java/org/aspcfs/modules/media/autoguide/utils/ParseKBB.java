@@ -15,24 +15,32 @@
  */
 package org.aspcfs.modules.media.autoguide.utils;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import org.aspcfs.modules.media.autoguide.base.*;
-import com.darkhorseventures.database.*;
-import java.util.logging.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.modules.media.autoguide.base.Make;
+import org.aspcfs.modules.media.autoguide.base.Model;
+import org.aspcfs.modules.media.autoguide.base.Vehicle;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *  This application is responsible for processing a .csv textfile and importing
- *  into a database.<p>
+ * This application is responsible for processing a .csv textfile and importing
+ * into a database.<p>
+ * <p/>
+ * The file is in either format:<br>
+ * model,make,year1,year2,year3<br>
+ * model,make,year1 year2 year3
  *
- *  The file is in either format:<br>
- *  model,make,year1,year2,year3<br>
- *  model,make,year1 year2 year3
- *
- *@author     matt rajkowski
- *@created    April 18, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created April 18, 2002
  */
 public class ParseKBB {
 
@@ -44,15 +52,16 @@ public class ParseKBB {
 
 
   /**
-   *  Constructor for the ParseKBB object
+   * Constructor for the ParseKBB object
    */
-  public ParseKBB() { }
+  public ParseKBB() {
+  }
 
 
   /**
-   *  The main program for the ParseKBB class
+   * The main program for the ParseKBB class
    *
-   *@param  args  The command line arguments
+   * @param args The command line arguments
    */
   public static void main(String[] args) {
     ParseKBB thisApp = new ParseKBB();
@@ -67,9 +76,9 @@ public class ParseKBB {
 
 
   /**
-   *  Sets the file attribute of the ParseKBB object
+   * Sets the file attribute of the ParseKBB object
    *
-   *@param  tmp  The new file value
+   * @param tmp The new file value
    */
   public void setFile(String tmp) {
     this.file = tmp;
@@ -77,9 +86,9 @@ public class ParseKBB {
 
 
   /**
-   *  Sets the driver attribute of the ParseKBB object
+   * Sets the driver attribute of the ParseKBB object
    *
-   *@param  tmp  The new driver value
+   * @param tmp The new driver value
    */
   public void setDriver(String tmp) {
     this.driver = tmp;
@@ -87,9 +96,9 @@ public class ParseKBB {
 
 
   /**
-   *  Sets the url attribute of the ParseKBB object
+   * Sets the url attribute of the ParseKBB object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -97,9 +106,9 @@ public class ParseKBB {
 
 
   /**
-   *  Sets the user attribute of the ParseKBB object
+   * Sets the user attribute of the ParseKBB object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(String tmp) {
     this.user = tmp;
@@ -107,9 +116,9 @@ public class ParseKBB {
 
 
   /**
-   *  Sets the pass attribute of the ParseKBB object
+   * Sets the pass attribute of the ParseKBB object
    *
-   *@param  tmp  The new pass value
+   * @param tmp The new pass value
    */
   public void setPass(String tmp) {
     this.pass = tmp;
@@ -117,9 +126,9 @@ public class ParseKBB {
 
 
   /**
-   *  Gets the file attribute of the ParseKBB object
+   * Gets the file attribute of the ParseKBB object
    *
-   *@return    The file value
+   * @return The file value
    */
   public String getFile() {
     return file;
@@ -127,9 +136,9 @@ public class ParseKBB {
 
 
   /**
-   *  Gets the driver attribute of the ParseKBB object
+   * Gets the driver attribute of the ParseKBB object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     return driver;
@@ -137,9 +146,9 @@ public class ParseKBB {
 
 
   /**
-   *  Gets the url attribute of the ParseKBB object
+   * Gets the url attribute of the ParseKBB object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -147,9 +156,9 @@ public class ParseKBB {
 
 
   /**
-   *  Gets the user attribute of the ParseKBB object
+   * Gets the user attribute of the ParseKBB object
    *
-   *@return    The user value
+   * @return The user value
    */
   public String getUser() {
     return user;
@@ -157,9 +166,9 @@ public class ParseKBB {
 
 
   /**
-   *  Gets the pass attribute of the ParseKBB object
+   * Gets the pass attribute of the ParseKBB object
    *
-   *@return    The pass value
+   * @return The pass value
    */
   public String getPass() {
     return pass;
@@ -167,7 +176,7 @@ public class ParseKBB {
 
 
   /**
-   *  Connects to the destination database and reads the file
+   * Connects to the destination database and reads the file
    */
   public void process() {
     Logger logger = Logger.getLogger("org.aspcfs.modules.media.autoguide");
@@ -217,11 +226,11 @@ public class ParseKBB {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  line              Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db   Description of Parameter
+   * @param line Description of Parameter
+   * @throws SQLException Description of Exception
    */
   private void processLine(Connection db, String line) throws SQLException {
     Logger logger = Logger.getLogger("org.aspcfs.modules.media.autoguide");

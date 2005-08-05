@@ -20,6 +20,9 @@
 <jsp:useBean id="Recipient" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <jsp:useBean id="refreshUrl" class="java.lang.String" scope="request"/>
+<jsp:useBean id="bcc" class="java.lang.String" scope="request"/>
+<jsp:useBean id="cc" class="java.lang.String" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body onload="window.opener.location=window.opener.location;">
 <p>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -33,6 +36,20 @@
       <%= Recipient.getNameLastFirst() %> (<%= Recipient.getPrimaryEmailAddress() %>)
     </td>
   </tr>
+  <dhv:evaluate if="<%= cc != null && !"".equals(cc) %>">
+  <tr class="row2">
+    <td>
+      <dhv:label name="quotes.cc">CC</dhv:label>: <%= toHtml(cc) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= bcc != null && !"".equals(bcc) %>">
+  <tr class="row2">
+    <td>
+      <dhv:label name="quotes.bcc">BCC</dhv:label>: <%= toHtml(bcc) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
 </table>
 <p>
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">

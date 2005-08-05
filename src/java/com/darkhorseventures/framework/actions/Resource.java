@@ -15,21 +15,20 @@
  */
 package com.darkhorseventures.framework.actions;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
 
 /**
- *  This class represents a single resource that is stored in the <code>Map
- *  </code>for resources resource table. Each resource is the name of a resource
- *  to forward to, and possibly the name of an XSL style-sheet to use to
- *  transform the resource into a specific format, such as HTML, or XML
+ * This class represents a single resource that is stored in the <code>Map
+ * </code>for resources resource table. Each resource is the name of a resource
+ * to forward to, and possibly the name of an XSL style-sheet to use to
+ * transform the resource into a specific format, such as HTML, or XML
  *
- *@author     kevin
- *@created    October 8, 2000
- *@version    $Id$
+ * @author kevin
+ * @version $Id$
+ * @created October 8, 2000
  */
 public class Resource
-     implements Serializable {
+    implements Serializable {
   private String resourceName = "";
   private String resourceXSL = "";
   private String layoutType = null;
@@ -37,11 +36,10 @@ public class Resource
 
 
   /**
-   *  Constructor for the Resource object
+   * Constructor for the Resource object
    *
-   *@param  name  Description of Parameter
-   *@param  xsl   Description of Parameter
-   *@since
+   * @param name Description of Parameter
+   * @param xsl  Description of Parameter
    */
   public Resource(String name, String xsl) {
     resourceName = name;
@@ -50,12 +48,12 @@ public class Resource
 
 
   /**
-   *  Constructor for the Resource object
+   * Constructor for the Resource object
    *
-   *@param  name    Description of Parameter
-   *@param  xsl     Description of Parameter
-   *@param  layout  Description of Parameter
-   *@since          1.1
+   * @param name   Description of Parameter
+   * @param xsl    Description of Parameter
+   * @param layout Description of Parameter
+   * @since 1.1
    */
   public Resource(String name, String xsl, String layout) {
     resourceName = name;
@@ -65,22 +63,19 @@ public class Resource
 
 
   /**
-   *  Return the name of the resource (usually the path/*.jsp JSP page name)
+   * Return the name of the resource (usually the path/*.jsp JSP page name)
    *
-   *@return    The Name value
-   *@since
+   * @return The Name value
    */
   public String getName() {
     return resourceName;
   }
 
 
-
   /**
-   *  Returns the name of the XSL to use (usually the path/*.xsl name)
+   * Returns the name of the XSL to use (usually the path/*.xsl name)
    *
-   *@return    The XSL value
-   *@since
+   * @return The XSL value
    */
   public String getXSL() {
     return resourceXSL;
@@ -88,10 +83,9 @@ public class Resource
 
 
   /**
-   *  Returns the name of the layout to use
+   * Returns the name of the layout to use
    *
-   *@return    The layout value
-   *@since
+   * @return The layout value
    */
   public String getLayout() {
     return layoutType;

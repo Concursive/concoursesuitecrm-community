@@ -30,23 +30,24 @@ import org.aspcfs.utils.web.LookupList;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 //import com.zeroio.controller.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 6, 2004
- *@version    $Id: ProjectManagementTeamList.java,v 1.1.4.1 2004/07/07 15:12:07
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ProjectManagementTeamList.java,v 1.1.4.1 2004/07/07 15:12:07
+ *          mrajkowski Exp $
+ * @created July 6, 2004
  */
 public final class ProjectManagementTeamList extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProjects(ActionContext context) {
     //Parameters
@@ -77,7 +78,8 @@ public final class ProjectManagementTeamList extends CFSModule {
         context.getRequest().setAttribute("departments", departmentList);
         return "MakeDepartmentListOK";
       } else if ("acct".equals(source) && "all".equals(status)) {
-        LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+        LookupList accountTypeList = new LookupList(
+            db, "lookup_account_types");
         accountTypeList.addItem(0, "Without a type");
         context.getRequest().setAttribute("accountTypes", accountTypeList);
         return "MakeAccountTypeListOK";
@@ -92,10 +94,10 @@ public final class ProjectManagementTeamList extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandItems(ActionContext context) {
     //Parameters
@@ -109,7 +111,8 @@ public final class ProjectManagementTeamList extends CFSModule {
       db = getConnection(context);
       if ("my".equals(source) || "all".equals(source)) {
         //Load the project and check permissions
-        Project thisProject = new Project(db, Integer.parseInt(id), this.getUserRange(context));
+        Project thisProject = new Project(
+            db, Integer.parseInt(id), this.getUserRange(context));
         thisProject.buildPermissionList(db);
         //Prepare list of team members
         TeamMemberList team = new TeamMemberList();
@@ -140,32 +143,35 @@ public final class ProjectManagementTeamList extends CFSModule {
         allAccountUsers.buildList(db);
         Iterator itr = allAccountUsers.iterator();
         UserList users = new UserList();
-        
-        while (itr.hasNext()){
-          User thisUser = (User)itr.next();
-          Organization organization = new Organization(db,thisUser.getContact().getOrgId());
+
+        while (itr.hasNext()) {
+          User thisUser = (User) itr.next();
+          Organization organization = new Organization(
+              db, thisUser.getContact().getOrgId());
           
           //Append organization name if this user is not a primary contact of this organization
-          if (organization.getPrimaryContact() !=  null){
-            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()){
-              thisUser.getContact().setNameLast(thisUser.getContact().getNameLast() + " (" +organization.getName() + ")");
+          if (organization.getPrimaryContact() != null) {
+            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()) {
+              thisUser.getContact().setNameLast(
+                  thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
             }
-          }else{
-            thisUser.getContact().setNameLast(thisUser.getContact().getNameLast() + " (" +organization.getName() + ")");
+          } else {
+            thisUser.getContact().setNameLast(
+                thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
           }
           
           //Filter the fetched user list based on the account type of the
           //account to which the user belongs to
           Iterator typesIterator = organization.getTypes().iterator();
           if ((organization.getTypes().size() == 0) &&
-            (Integer.parseInt(id) == 0)){
-                //include if the account does not have a type and "without type" is chosen
-                users.add(thisUser);
-          }else{
-            while (typesIterator.hasNext()){
-              LookupElement lookupElement = (LookupElement)typesIterator.next();
+              (Integer.parseInt(id) == 0)) {
+            //include if the account does not have a type and "without type" is chosen
+            users.add(thisUser);
+          } else {
+            while (typesIterator.hasNext()) {
+              LookupElement lookupElement = (LookupElement) typesIterator.next();
               //include if the account type is one of the chosen types
-              if (lookupElement.getCode() == Integer.parseInt(id)){
+              if (lookupElement.getCode() == Integer.parseInt(id)) {
                 users.add(thisUser);
               }
             }

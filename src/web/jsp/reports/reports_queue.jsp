@@ -158,4 +158,5 @@
   }
 %>
 </table>
-
+<br />
+<input type="button" name="refresh" value="<dhv:label name="reports.refresh">Refresh</dhv:label>" onClick="window.location.href='Reports.do';" />

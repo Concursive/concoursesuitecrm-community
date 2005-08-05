@@ -15,34 +15,39 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.ArrayList;
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 /**
- *  Contains a list of SearchField objects
+ * Contains a list of SearchField objects
  *
- *@author     Wesley S. Gillette
- *@created    November 1, 2001
- *@version    $Id: SearchFieldList.java,v 1.3 2002/04/24 15:39:44 mrajkowski Exp
- *      $
+ * @author Wesley S. Gillette
+ * @version $Id: SearchFieldList.java,v 1.3 2002/04/24 15:39:44 mrajkowski Exp
+ *          $
+ * @created November 1, 2001
  */
 public class SearchFieldList extends ArrayList {
 
   /**
-   *  Constructor for the SearchFieldList object
+   * Constructor for the SearchFieldList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public SearchFieldList() { }
+  public SearchFieldList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public void buildFieldList(Connection db) throws SQLException {
     Statement st = db.createStatement();

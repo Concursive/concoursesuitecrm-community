@@ -46,16 +46,19 @@ function reopen() {
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
-    <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
-    <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
-    <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
-    <%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:check('moveContact','<%= OrgDetails.getId() %>','<%= ContactDetails.getId() %>','&filters=all|my|disabled','<%= ContactDetails.getPrimaryContact() %>')"></dhv:permission>--%>
-    <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
-    <dhv:permission name="accounts-accounts-contacts-move-view"><input type="button" value="<dhv:label name="glpbal.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=MoveToAccount&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
-    <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
+  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
+    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+      <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
+      <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
+      <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
+      <%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:check('moveContact','<%= OrgDetails.getId() %>','<%= ContactDetails.getId() %>','&filters=all|my|disabled','<%= ContactDetails.getPrimaryContact() %>')"></dhv:permission>--%>
+      <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-move-view"><input type="button" value="<dhv:label name="glpbal.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=MoveToAccount&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
+    </dhv:evaluate>
+    <dhv:permission name="accounts-accounts-contacts-view,accounts-accounts-contacts-add,accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
 <%-- TODO: Currently this block appears and hides depending on the content,
      this will need to be changed --%>
 <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) || hasText(ContactDetails.getTypesNameString()) %>">
@@ -75,13 +78,51 @@ function reopen() {
     </td>
   </tr>
   </dhv:evaluate>
-  <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getAdditionalNames()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getAdditionalNames()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getNickname()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getNickname()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+    </td>
+    <td>
+      <zeroio:tz timestamp="<%= ContactDetails.getBirthDate() %>" dateOnly="true"/>
+    </td>
+  </tr>
+  </dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
     </td>
     <td>
       <%= toHtml(ContactDetails.getTitle()) %>
+    </td>
+  </tr>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getRole()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.role">Role</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getRole()) %>
     </td>
   </tr>
   </dhv:evaluate>
@@ -128,6 +169,45 @@ function reopen() {
 <%}%>
 </table>
 <br />
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><dhv:label name="accounts.accounts_add.InstantMessageAddresses">Instant Message Addresses</dhv:label></strong>
+    </th>
+  </tr>
+<%
+  Iterator imAddress = ContactDetails.getInstantMessageAddressList().iterator();
+  if (imAddress.hasNext()) {
+    while (imAddress.hasNext()) {
+      ContactInstantMessageAddress thisInstantMessageAddress = (ContactInstantMessageAddress)imAddress.next();
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <%= toHtml(thisInstantMessageAddress.getAddressIMTypeName()) %>
+    </td>
+    <td>
+      <dhv:evaluate if="<%= hasText(thisInstantMessageAddress.getAddressIM()) %>">
+        <%= toHtml(thisInstantMessageAddress.getAddressIM()) %>
+         (<%= toHtml(thisInstantMessageAddress.getAddressIMServiceName()) %>)
+        <dhv:evaluate if="<%=thisInstantMessageAddress.getPrimaryIM()%>">
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+        </dhv:evaluate>
+      </dhv:evaluate>
+      &nbsp;
+    </td>
+  </tr>
+<%
+    }
+  } else {
+%>
+  <tr class="containerBody">
+    <td>
+      <font color="#9E9E9E"><dhv:label name="contacts.NoInstantMessageAdresses">No instant message addresses entered.</dhv:label></font>
+    </td>
+  </tr>
+<%}%>
+</table>
+<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -274,12 +354,15 @@ function reopen() {
     </td>
   </tr>
 </table>
-<dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
-<%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:check('moveContact','<%=OrgDetails.getId()%>','<%=ContactDetails.getId()%>','&filters=all|my|disabled','<%=ContactDetails.getPrimaryContact()%>')"></dhv:permission>--%>
-<dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-move-view"><input type="button" value="<dhv:label name="glpbal.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=MoveToAccount&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
-  </dhv:container>
+  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+    <dhv:permission name="accounts-accounts-contacts-view,accounts-accounts-contacts-add,accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
+    <%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:check('moveContact','<%=OrgDetails.getId()%>','<%=ContactDetails.getId()%>','&filters=all|my|disabled','<%=ContactDetails.getPrimaryContact()%>')"></dhv:permission>--%>
+    <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-move-view"><input type="button" value="<dhv:label name="glpbal.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=MoveToAccount&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
+  </dhv:evaluate>
+</dhv:container>
 </dhv:container>
 </form>

@@ -28,12 +28,12 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
- *  Represents a list of members of a project
+ * Represents a list of members of a project
  *
- *@author     matt rajkowski
- *@created    July 23, 2001
- *@version    $Id: TeamMemberList.java,v 1.2.134.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: TeamMemberList.java,v 1.2.134.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created July 23, 2001
  */
 public class TeamMemberList extends ArrayList {
 
@@ -54,15 +54,16 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Constructor for the TeamMemberList object
+   * Constructor for the TeamMemberList object
    */
-  public TeamMemberList() { }
+  public TeamMemberList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TeamMemberList object
+   * Sets the pagedListInfo attribute of the TeamMemberList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -70,9 +71,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the TeamMemberList object
+   * Sets the emptyHtmlSelectRecord attribute of the TeamMemberList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -80,9 +81,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the TeamMemberList object
+   * Sets the projectId attribute of the TeamMemberList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -90,9 +91,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the userLevel attribute of the TeamMemberList object
+   * Sets the userLevel attribute of the TeamMemberList object
    *
-   *@param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(int tmp) {
     this.userLevel = tmp;
@@ -100,9 +101,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the userLevel attribute of the TeamMemberList object
+   * Sets the userLevel attribute of the TeamMemberList object
    *
-   *@param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(String tmp) {
     this.userLevel = Integer.parseInt(tmp);
@@ -110,9 +111,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the roleLevel attribute of the TeamMemberList object
+   * Sets the roleLevel attribute of the TeamMemberList object
    *
-   *@param  tmp  The new roleLevel value
+   * @param tmp The new roleLevel value
    */
   public void setRoleLevel(int tmp) {
     this.roleLevel = tmp;
@@ -120,9 +121,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the project attribute of the TeamMemberList object
+   * Sets the project attribute of the TeamMemberList object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -130,9 +131,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the TeamMemberList object
+   * Sets the enteredBy attribute of the TeamMemberList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -140,9 +141,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TeamMemberList object
+   * Sets the modifiedBy attribute of the TeamMemberList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -150,9 +151,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the insertMembers attribute of the TeamMemberList object
+   * Sets the insertMembers attribute of the TeamMemberList object
    *
-   *@param  tmp  The new insertMembers value
+   * @param tmp The new insertMembers value
    */
   public void setInsertMembers(String tmp) {
     insertMembers = tmp;
@@ -160,9 +161,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the deleteMembers attribute of the TeamMemberList object
+   * Sets the deleteMembers attribute of the TeamMemberList object
    *
-   *@param  tmp  The new deleteMembers value
+   * @param tmp The new deleteMembers value
    */
   public void setDeleteMembers(String tmp) {
     deleteMembers = tmp;
@@ -170,9 +171,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the forProjectUser attribute of the TeamMemberList object
+   * Sets the forProjectUser attribute of the TeamMemberList object
    *
-   *@param  tmp  The new forProjectUser value
+   * @param tmp The new forProjectUser value
    */
   public void setForProjectUser(int tmp) {
     this.forProjectUser = tmp;
@@ -180,9 +181,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the employeesOnly attribute of the TeamMemberList object
+   * Sets the employeesOnly attribute of the TeamMemberList object
    *
-   *@param  tmp  The new employeesOnly value
+   * @param tmp The new employeesOnly value
    */
   public void setEmployeesOnly(boolean tmp) {
     this.employeesOnly = tmp;
@@ -190,9 +191,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the employeesOnly attribute of the TeamMemberList object
+   * Sets the employeesOnly attribute of the TeamMemberList object
    *
-   *@param  tmp  The new employeesOnly value
+   * @param tmp The new employeesOnly value
    */
   public void setEmployeesOnly(String tmp) {
     this.employeesOnly = DatabaseUtils.parseBoolean(tmp);
@@ -200,9 +201,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the accountContactsOnly attribute of the TeamMemberList object
+   * Sets the accountContactsOnly attribute of the TeamMemberList object
    *
-   *@param  tmp  The new accountContactsOnly value
+   * @param tmp The new accountContactsOnly value
    */
   public void setAccountContactsOnly(boolean tmp) {
     this.accountContactsOnly = tmp;
@@ -210,9 +211,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the accountContactsOnly attribute of the TeamMemberList object
+   * Sets the accountContactsOnly attribute of the TeamMemberList object
    *
-   *@param  tmp  The new accountContactsOnly value
+   * @param tmp The new accountContactsOnly value
    */
   public void setAccountContactsOnly(String tmp) {
     this.accountContactsOnly = DatabaseUtils.parseBoolean(tmp);
@@ -220,9 +221,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the project attribute of the TeamMemberList object
+   * Gets the project attribute of the TeamMemberList object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -237,10 +238,10 @@ public class TeamMemberList extends ArrayList {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisId  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param thisId Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasUserId(int thisId) {
     Iterator i = this.iterator();
@@ -255,10 +256,10 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -292,7 +293,8 @@ public class TeamMemberList extends ArrayList {
     pst.close();
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
           "AND project_id < ? ");
       items = prepareFilter(pst);
@@ -306,30 +308,24 @@ public class TeamMemberList extends ArrayList {
       pst.close();
     }
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("r.level, namelast", null);
+    pagedListInfo.setDefaultSort("r.\"level\", namelast", null);
     pagedListInfo.appendSqlTail(db, sqlOrder);
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "t.*, r.level " +
+        "t.*, r.\"level\" " +
         "FROM project_team t, contact u, lookup_project_role r " +
         "WHERE t.project_id > -1 " +
         "AND t.user_id = u.user_id " +
         "AND t.userlevel = r.code ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       TeamMember thisTeamMember = new TeamMember(rs);
       thisTeamMember.setProject(project);
       this.add(thisTeamMember);
@@ -340,9 +336,9 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -352,11 +348,13 @@ public class TeamMemberList extends ArrayList {
       sqlFilter.append("AND project_id = ? ");
     }
     if (forProjectUser > -1) {
-      sqlFilter.append("AND project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+      sqlFilter.append(
+          "AND project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           "AND status IS NULL) ");
     }
     if (roleLevel > -1) {
-      sqlFilter.append("AND t.userlevel IN (SELECT code FROM lookup_project_role WHERE level = ?) ");
+      sqlFilter.append(
+          "AND t.userlevel IN (SELECT code FROM lookup_project_role WHERE \"level\" = ?) ");
     }
     if (userId > -1) {
       sqlFilter.append("AND t.user_id = ? ");
@@ -371,11 +369,11 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -396,11 +394,11 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean update(Connection db, int masterUserId, int groupId, ArrayList addedUsers) throws SQLException {
     try {
@@ -490,11 +488,11 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     Iterator team = this.iterator();
@@ -511,10 +509,10 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator team = this.iterator();
@@ -526,13 +524,13 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the onTeam attribute of the TeamMemberList object
+   * Gets the onTeam attribute of the TeamMemberList object
    *
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   The onTeam value
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @return The onTeam value
+   * @throws SQLException Description of the Exception
    */
   public static boolean isOnTeam(Connection db, int projectId, int userId) throws SQLException {
     boolean exists = false;
@@ -554,13 +552,13 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the userRelated attribute of the TeamMemberList class
+   * Gets the userRelated attribute of the TeamMemberList class
    *
-   *@param  db                Description of the Parameter
-   *@param  masterUserId      Description of the Parameter
-   *@param  userIdToCheck     Description of the Parameter
-   *@return                   The userRelated value
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param masterUserId  Description of the Parameter
+   * @param userIdToCheck Description of the Parameter
+   * @return The userRelated value
+   * @throws SQLException Description of the Exception
    */
   public static boolean isUserRelated(Connection db, int masterUserId, int userIdToCheck) throws SQLException {
     boolean exists = false;
@@ -580,7 +578,7 @@ public class TeamMemberList extends ArrayList {
     pst.close();
     return exists;
   }
-  
+
   public TeamMember getTeamMember(int id) {
     Iterator i = this.iterator();
     while (i.hasNext()) {

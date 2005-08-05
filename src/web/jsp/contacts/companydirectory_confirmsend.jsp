@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -33,11 +33,11 @@ function reopenContact(id) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<dhv:label name="module-general-contacts">General Contacts</dhv:label> 
-<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
-<a href="ExternalContacts.do?command=ContactDetails&contactId=<%= request.getParameter("contactId") %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
-<a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
-<dhv:label name="accounts.accounts_contacts_calls_forward.ForwardActivity">Forward Activity</dhv:label>
+  <a href="ExternalContacts.do"><dhv:label name="module-general-contacts">General Contacts</dhv:label></a> >
+  <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+  <a href="ExternalContacts.do?command=ContactDetails&contactId=<%= request.getParameter("contactId") %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+  <a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
+  <dhv:label name="accounts.accounts_contacts_calls_forward.ForwardActivity">Forward Activity</dhv:label>
 </td>
 </tr>
 </table>

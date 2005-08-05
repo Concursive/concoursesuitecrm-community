@@ -15,18 +15,20 @@
  */
 package org.aspcfs.modules.setup.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
- *  Bean to encapsulate the Update action
+ * Bean to encapsulate the Update action
  *
- *@author     mrajkowski
- *@created    November 26, 2003
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created November 26, 2003
  */
 public class UpdateBean extends GenericBean {
 
@@ -39,9 +41,9 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Sets the zlib attribute of the UpdateBean object
+   * Sets the zlib attribute of the UpdateBean object
    *
-   *@param  tmp  The new zlib value
+   * @param tmp The new zlib value
    */
   public void setZlib(String tmp) {
     this.zlib = tmp;
@@ -49,9 +51,9 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Sets the email attribute of the UpdateBean object
+   * Sets the email attribute of the UpdateBean object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -59,9 +61,9 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Sets the profile attribute of the UpdateBean object
+   * Sets the profile attribute of the UpdateBean object
    *
-   *@param  tmp  The new profile value
+   * @param tmp The new profile value
    */
   public void setProfile(String tmp) {
     this.profile = tmp;
@@ -69,9 +71,9 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Sets the text attribute of the UpdateBean object
+   * Sets the text attribute of the UpdateBean object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -79,9 +81,9 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Sets the text2 attribute of the UpdateBean object
+   * Sets the text2 attribute of the UpdateBean object
    *
-   *@param  tmp  The new text2 value
+   * @param tmp The new text2 value
    */
   public void setText2(String tmp) {
     this.text2 = tmp;
@@ -89,9 +91,9 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Sets the ssl attribute of the UpdateBean object
+   * Sets the ssl attribute of the UpdateBean object
    *
-   *@param  tmp  The new ssl value
+   * @param tmp The new ssl value
    */
   public void setSsl(boolean tmp) {
     this.ssl = tmp;
@@ -99,12 +101,13 @@ public class UpdateBean extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                                                     Description of
-   *      the Return Value
-   *@exception  javax.xml.parsers.ParserConfigurationException  Description of
-   *      the Exception
+   * @return Description of
+   *         the Return Value
+   * @throws javax.xml.parsers.ParserConfigurationException
+   *          Description of
+   *          the Exception
    */
   public String toXmlString() throws javax.xml.parsers.ParserConfigurationException {
     //Build an XML document needed for request

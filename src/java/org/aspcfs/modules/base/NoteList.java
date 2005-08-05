@@ -15,42 +15,43 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Vector;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    September 20, 2001
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created September 20, 2001
  */
 public class NoteList extends Vector {
 
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   protected PagedListInfo pagedListInfo = null;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   protected int orgId = -1;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   protected int oppHeaderId = -1;
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   protected int contactId = -1;
 
 
   /**
-   *  Sets the OrgId attribute of the NoteList object
+   * Sets the OrgId attribute of the NoteList object
    *
-   *@param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -58,9 +59,9 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Sets the OppHeaderId attribute of the NoteList object
+   * Sets the OppHeaderId attribute of the NoteList object
    *
-   *@param  tmp  The new OppHeaderId value
+   * @param tmp The new OppHeaderId value
    */
   public void setOppHeaderId(int tmp) {
     this.oppHeaderId = tmp;
@@ -68,9 +69,9 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Sets the ContactId attribute of the NoteList object
+   * Sets the ContactId attribute of the NoteList object
    *
-   *@param  tmp  The new ContactId value
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -78,9 +79,9 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Gets the OrgId attribute of the NoteList object
+   * Gets the OrgId attribute of the NoteList object
    *
-   *@return    The OrgId value
+   * @return The OrgId value
    */
   public int getOrgId() {
     return orgId;
@@ -88,9 +89,9 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Gets the OppHeaderId attribute of the NoteList object
+   * Gets the OppHeaderId attribute of the NoteList object
    *
-   *@return    The OppHeaderId value
+   * @return The OppHeaderId value
    */
   public int getOppHeaderId() {
     return oppHeaderId;
@@ -98,9 +99,9 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Gets the ContactId attribute of the NoteList object
+   * Gets the ContactId attribute of the NoteList object
    *
-   *@return    The ContactId value
+   * @return The ContactId value
    */
   public int getContactId() {
     return contactId;
@@ -108,9 +109,9 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Sets the PagedListInfo attribute of the NoteList object
+   * Sets the PagedListInfo attribute of the NoteList object
    *
-   *@param  tmp  The new PagedListInfo value
+   * @param tmp The new PagedListInfo value
    */
   protected void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -118,10 +119,10 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Gets the NoteBody attribute of the NoteList object
+   * Gets the NoteBody attribute of the NoteList object
    *
-   *@param  thisItem  Description of Parameter
-   *@return           The NoteBody value
+   * @param thisItem Description of Parameter
+   * @return The NoteBody value
    */
   protected String getNoteBody(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
@@ -133,10 +134,10 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Gets the NoteSubject attribute of the NoteList object
+   * Gets the NoteSubject attribute of the NoteList object
    *
-   *@param  thisItem  Description of Parameter
-   *@return           The NoteSubject value
+   * @param thisItem Description of Parameter
+   * @return The NoteSubject value
    */
   protected String getNoteSubject(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
@@ -148,10 +149,10 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Gets the NoteDate attribute of the NoteList object
+   * Gets the NoteDate attribute of the NoteList object
    *
-   *@param  thisItem  Description of Parameter
-   *@return           The NoteDate value
+   * @param thisItem Description of Parameter
+   * @return The NoteDate value
    */
   protected String getNoteDate(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
@@ -163,11 +164,11 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.1
+   * @param sqlFilter Description of Parameter
+   * @since 1.1
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -189,13 +190,13 @@ public class NoteList extends Vector {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

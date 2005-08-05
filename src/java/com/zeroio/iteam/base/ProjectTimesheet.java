@@ -16,12 +16,11 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 /**
- *@author     matt rajkowski
- *@created    December 3, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created December 3, 2004
  */
 public class ProjectTimesheet {
-
   private int id = -1;
   private int timesheetId = -1;
   private int projectId = -1;
@@ -30,9 +29,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Gets the timesheetId attribute of the ProjectTimesheet object
+   * Gets the timesheetId attribute of the ProjectTimesheet object
    *
-   *@return    The timesheetId value
+   * @return The timesheetId value
    */
   public int getTimesheetId() {
     return timesheetId;
@@ -40,9 +39,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the timesheetId attribute of the ProjectTimesheet object
+   * Sets the timesheetId attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new timesheetId value
+   * @param tmp The new timesheetId value
    */
   public void setTimesheetId(int tmp) {
     this.timesheetId = tmp;
@@ -50,9 +49,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the timesheetId attribute of the ProjectTimesheet object
+   * Sets the timesheetId attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new timesheetId value
+   * @param tmp The new timesheetId value
    */
   public void setTimesheetId(String tmp) {
     this.timesheetId = Integer.parseInt(tmp);
@@ -60,9 +59,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Gets the projectId attribute of the ProjectTimesheet object
+   * Gets the projectId attribute of the ProjectTimesheet object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -70,9 +69,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the projectId attribute of the ProjectTimesheet object
+   * Sets the projectId attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -80,9 +79,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the projectId attribute of the ProjectTimesheet object
+   * Sets the projectId attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -90,9 +89,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Gets the hours attribute of the ProjectTimesheet object
+   * Gets the hours attribute of the ProjectTimesheet object
    *
-   *@return    The hours value
+   * @return The hours value
    */
   public double getHours() {
     return hours;
@@ -100,9 +99,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the hours attribute of the ProjectTimesheet object
+   * Sets the hours attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new hours value
+   * @param tmp The new hours value
    */
   public void setHours(double tmp) {
     this.hours = tmp;
@@ -110,9 +109,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the hours attribute of the ProjectTimesheet object
+   * Sets the hours attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new hours value
+   * @param tmp The new hours value
    */
   public void setHours(String tmp) {
     this.hours = Double.parseDouble(tmp);
@@ -120,9 +119,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Gets the dailyTimesheetList attribute of the ProjectTimesheet object
+   * Gets the dailyTimesheetList attribute of the ProjectTimesheet object
    *
-   *@return    The dailyTimesheetList value
+   * @return The dailyTimesheetList value
    */
   public DailyTimesheetList getDailyTimesheetList() {
     if (dailyTimesheetList == null) {
@@ -133,9 +132,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Sets the dailyTimesheetList attribute of the ProjectTimesheet object
+   * Sets the dailyTimesheetList attribute of the ProjectTimesheet object
    *
-   *@param  tmp  The new dailyTimesheetList value
+   * @param tmp The new dailyTimesheetList value
    */
   public void setDailyTimesheetList(DailyTimesheetList tmp) {
     this.dailyTimesheetList = tmp;
@@ -143,16 +142,17 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Constructor for the ProjectTimesheet object
+   * Constructor for the ProjectTimesheet object
    */
-  public ProjectTimesheet() { }
+  public ProjectTimesheet() {
+  }
 
 
   /**
-   *  Constructor for the ProjectTimesheet object
+   * Constructor for the ProjectTimesheet object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ProjectTimesheet(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -160,10 +160,10 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     timesheetId = rs.getInt("timesheet_id");
@@ -173,9 +173,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  hoursAdjustment  Description of the Parameter
+   * @param hoursAdjustment Description of the Parameter
    */
   public void add(double hoursAdjustment) {
     hours += hoursAdjustment;
@@ -183,9 +183,9 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  dailyTimesheet  Description of the Parameter
+   * @param dailyTimesheet Description of the Parameter
    */
   public void add(DailyTimesheet dailyTimesheet) {
     getDailyTimesheetList().add(dailyTimesheet);
@@ -193,10 +193,10 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Gets the hours attribute of the ProjectTimesheet object
+   * Gets the hours attribute of the ProjectTimesheet object
    *
-   *@param  millis  Description of the Parameter
-   *@return         The hours value
+   * @param millis Description of the Parameter
+   * @return The hours value
    */
   public double getHours(long millis) {
     Calendar cal = Calendar.getInstance();
@@ -210,22 +210,27 @@ public class ProjectTimesheet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "timesheet_projects_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO timesheet_projects " +
-        "(timesheet_id, project_id, hours) VALUES (?, ?, ?) ");
+        "(" + (id > -1 ? "id, " : "") + "timesheet_id, project_id, hours) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, timesheetId);
     DatabaseUtils.setInt(pst, ++i, projectId);
     pst.setDouble(++i, hours);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "timesheet_projects_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "timesheet_projects_id_seq", id);
   }
 }
 

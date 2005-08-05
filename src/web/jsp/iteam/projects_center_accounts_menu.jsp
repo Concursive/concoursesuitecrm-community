@@ -23,13 +23,21 @@
   var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId) {
+  function displayMenu(loc, id, orgId, trashed) {
     thisOrgId = orgId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuItem", "down", 0, 0, 170, getHeight("menuItemTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuDelete');
+    }
   }
   //Menu link functions
   function goToAccount() {
@@ -47,7 +55,7 @@
   <div id="menuItemContent">
     <table id="menuItemTable" class="pulldown" width="170" cellspacing="0" cellspacing="0">
     <dhv:permission name="accounts-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuView" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="goToAccount()">
         <th valign="top">
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -58,7 +66,7 @@
       </tr>
     </dhv:permission>
     <zeroio:permission name="project-accounts-manage">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="removeAccount()">
         <th valign="top">
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>

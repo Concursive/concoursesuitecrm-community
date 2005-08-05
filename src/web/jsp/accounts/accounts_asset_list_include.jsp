@@ -55,7 +55,7 @@
         <% int status = -1;%>
         <% status = OrgDetails.getEnabled() ? 1 : 0; %>
       	<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuAsset', '<%=request.getParameter("orgId") %>', '<%= thisAsset.getId() %>');"
+         <a href="javascript:displayMenu('select<%= i %>','menuAsset', '<%=request.getParameter("orgId") %>', '<%= thisAsset.getId() %>','<%=(thisAsset.isTrashed() || OrgDetails.isTrashed())%>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAsset');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="15%" nowrap>

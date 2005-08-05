@@ -15,16 +15,16 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- *  Displays an HTML widget called a Spinner, basically a text field and arrows
- *  to increase and decrease a value
+ * Displays an HTML widget called a Spinner, basically a text field and arrows
+ * to increase and decrease a value
  *
- *@author     matt rajkowski
- *@created    July 23, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 23, 2003
  */
 public class HtmlSpinner extends TagSupport {
 
@@ -35,9 +35,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the name attribute of the HtmlSpinner object
+   * Sets the name attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -45,9 +45,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the HtmlSpinner object
+   * Sets the value attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -55,9 +55,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the HtmlSpinner object
+   * Sets the value attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(int tmp) {
     this.value = String.valueOf(tmp);
@@ -65,9 +65,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the min attribute of the HtmlSpinner object
+   * Sets the min attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new min value
+   * @param tmp The new min value
    */
   public void setMin(int tmp) {
     this.min = tmp;
@@ -75,9 +75,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the min attribute of the HtmlSpinner object
+   * Sets the min attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new min value
+   * @param tmp The new min value
    */
   public void setMin(String tmp) {
     this.min = Integer.parseInt(tmp);
@@ -85,9 +85,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the max attribute of the HtmlSpinner object
+   * Sets the max attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new max value
+   * @param tmp The new max value
    */
   public void setMax(int tmp) {
     this.max = tmp;
@@ -95,9 +95,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Sets the max attribute of the HtmlSpinner object
+   * Sets the max attribute of the HtmlSpinner object
    *
-   *@param  tmp  The new max value
+   * @param tmp The new max value
    */
   public void setMax(String tmp) {
     this.max = Integer.parseInt(tmp);
@@ -105,10 +105,10 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -117,7 +117,8 @@ public class HtmlSpinner extends TagSupport {
       this.pageContext.getOut().write(
           "<script language=\"JavaScript\" type=\"text/javascript\" src=\"javascript/spinner.js\"></script>\n");
       this.pageContext.getOut().write(
-          "<input type=\"text\" name=\"" + name + "\" id=\"" + name + "\" value=\"" + value + "\" size=\"4\" maxlength=\"" + String.valueOf(max).length() + "\"> ");
+          "<input type=\"text\" name=\"" + name + "\" id=\"" + name + "\" value=\"" + value + "\" size=\"4\" maxlength=\"" + String.valueOf(
+              max).length() + "\"> ");
       this.pageContext.getOut().write(
           "<a href=\"javascript:spinLeft('" + name + "');\">" +
           "<img alt=\"Unindent\" src=\"images/icons/stock_left-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/>" +
@@ -134,9 +135,9 @@ public class HtmlSpinner extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

@@ -15,40 +15,45 @@
  */
 package org.aspcfs.controller;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
-import java.sql.*;
-import com.darkhorseventures.database.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.servlets.ControllerGlobalItemsHook;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.mycfs.base.CFSNoteList;
 import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.tasks.base.TaskList;
+
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.*;
 
 /**
- *  Configures globally available items for CFS.
+ * Configures globally available items for CFS.
  *
- *@author     mrajkowski
- *@created    July 9, 2001
- *@version    $Id: GlobalItemsHook.java,v 1.15 2002/12/23 16:12:28 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: GlobalItemsHook.java,v 1.15 2002/12/23 16:12:28 mrajkowski
+ *          Exp $
+ * @created July 9, 2001
  */
 public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
   /**
-   *  Generates all of the HTML for the permissable items.
+   * Generates all of the HTML for the permissable items.
    *
-   *@param  request  Description of Parameter
-   *@param  servlet  Description of the Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param request Description of Parameter
+   * @param servlet Description of the Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String generateItems(Servlet servlet, HttpServletRequest request) {
-    ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute(
+        "ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl());
     UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
-    TimeZone timeZone = TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone());
+    TimeZone timeZone = TimeZone.getTimeZone(
+        thisUser.getUserRecord().getTimeZone());
     int userId = thisUser.getUserId();
     int departmentId = thisUser.getUserRecord().getContact().getDepartment();
     int contactId = thisUser.getUserRecord().getContact().getId();
@@ -101,7 +106,9 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
             "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
             "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
 
-        items.append("<option value='0'>" + systemStatus.getLabel("quickactions.select") + "</option>");
+        items.append(
+            "<option value='0'>" + systemStatus.getLabel(
+                "quickactions.select") + "</option>");
         /*
          *  if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
          *  items.append("<option value='call'>Add a Call</option>");
@@ -113,10 +120,14 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
          *  }
          */
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
-          items.append("<option value='task'>" + systemStatus.getLabel("quickactions.addTask") + "</option>");
+          items.append(
+              "<option value='task'>" + systemStatus.getLabel(
+                  "quickactions.addTask") + "</option>");
         }
         if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
-          items.append("<option value='ticket'>" + systemStatus.getLabel("quickactions.addTicket") + "</option>");
+          items.append(
+              "<option value='ticket'>" + systemStatus.getLabel(
+                  "quickactions.addTicket") + "</option>");
         }
         /*
          *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
@@ -134,7 +145,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     //My Items
     if (systemStatus.hasPermission(userId, "globalitems-myitems-view")) {
-      ConnectionPool sqlDriver = (ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool");
+      ConnectionPool sqlDriver = (ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+          "ConnectionPool");
       Connection db = null;
 
       //Output
@@ -153,7 +165,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         ResultSet rs = null;
 
         //External Contact Calls
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-view")) {
+        if (systemStatus.hasPermission(
+            userId, "contacts-external_contacts-calls-view")) {
           int callCount = 0;
           sql =
               "SELECT COUNT(*) as callcount " +
@@ -163,7 +176,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
               "AND enteredby = ?";
           pst = db.prepareStatement(sql);
           pst.setTimestamp(1, new java.sql.Timestamp(today.getTimeInMillis()));
-          pst.setTimestamp(2, new java.sql.Timestamp(tomorrow.getTimeInMillis()));
+          pst.setTimestamp(
+              2, new java.sql.Timestamp(tomorrow.getTimeInMillis()));
           pst.setInt(3, userId);
           rs = pst.executeQuery();
           if (rs.next()) {
@@ -175,7 +189,9 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (callCount > 0) {
-            items.append("<a href='MyCFS.do?command=Home' class='s'>" + systemStatus.getLabel("myitems.pendingActivities") + "</a> (" + paint(callCount) + ")<br>");
+            items.append(
+                "<a href='MyCFS.do?command=Home' class='s'>" + systemStatus.getLabel(
+                    "myitems.pendingActivities") + "</a> (" + paint(callCount) + ")<br>");
             ++myItems;
           }
         }
@@ -194,13 +210,17 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           if (rs.next()) {
             activityCount = rs.getInt("activitycount");
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("GlobalItemsHook-> Activities: " + activityCount);
+              System.out.println(
+                  "GlobalItemsHook-> Activities: " + activityCount);
             }
           }
           rs.close();
           pst.close();
           if (activityCount > 0) {
-            items.append("<a href='ProjectManagement.do?command=Overview' class='s'>" + systemStatus.getLabel("myitems.assignedActivities") + "</a> (" + paint(activityCount) + ")<br>");
+            items.append(
+                "<a href='ProjectManagement.do?command=Overview' class='s'>" + systemStatus.getLabel(
+                    "myitems.assignedActivities") + "</a> (" + paint(
+                        activityCount) + ")<br>");
             ++myItems;
           }
         }
@@ -209,7 +229,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "tickets-view")) {
           int ticketCount = 0;
           sql =
-            "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ";
+              "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ";
           pst = db.prepareStatement(sql);
           pst.setInt(1, userId);
           rs = pst.executeQuery();
@@ -222,11 +242,38 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (ticketCount > 0) {
-            items.append("<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel("myitems.assignedTickets") + "</a> (" + paint(ticketCount) + ")<br>");
+            items.append(
+                "<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel(
+                    "myitems.assignedTickets") + "</a> (" + paint(ticketCount) + ")<br>");
             ++myItems;
           }
         }
 
+        //Project Tickets Assigned to me
+        if (systemStatus.hasPermission(userId, "tickets-view")) {
+          int ticketCount = 0;
+          sql =
+              "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid IN (SELECT ticket_id FROM ticketlink_project) ";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, userId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            ticketCount = rs.getInt("ticketcount");
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("GlobalItemsHook-> Tickets: " + ticketCount);
+            }
+          }
+          rs.close();
+          pst.close();
+          if (ticketCount > 0) {
+            items.append(
+                "<a href='ProjectManagement.do?' class='s'>" + systemStatus.getLabel(
+                    "myitems.assignedProjectTickets") + "</a> (" + paint(
+                        ticketCount) + ")<br>");
+            ++myItems;
+          }
+        }
+        
         //Tickets Unassigned
         if (systemStatus.hasPermission(userId, "tickets-view")) {
           int ticketCount = 0;
@@ -235,20 +282,25 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
               "FROM ticket " +
               "WHERE (assigned_to = -1 OR assigned_to IS NULL) " +
               "AND closed IS NULL " +
-              "AND (department_code = ? OR department_code in (0, -1))";
+              "AND (department_code = ? OR department_code in (0, -1)) " +
+              "AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ";
           pst = db.prepareStatement(sql);
           pst.setInt(1, departmentId);
           rs = pst.executeQuery();
           if (rs.next()) {
             ticketCount = rs.getInt("ticketcount");
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("GlobalItemsHook-> Tickets (Unassigned): " + ticketCount);
+              System.out.println(
+                  "GlobalItemsHook-> Tickets (Unassigned): " + ticketCount);
             }
           }
           rs.close();
           pst.close();
           if (ticketCount > 0) {
-            items.append("<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel("myitems.unassignedTickets") + "</a> (" + paint(ticketCount) + ")<br>");
+            items.append(
+                "<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel(
+                    "myitems.unassignedTickets") + "</a> (" + paint(
+                        ticketCount) + ")<br>");
             ++myItems;
           }
         }
@@ -270,7 +322,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (inboxCount > 0) {
-            items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>" + systemStatus.getLabel("myitems.inbox") + "</a> (" + paint(inboxCount) + " new)<br>");
+            items.append(
+                "<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>" + systemStatus.getLabel(
+                    "myitems.inbox") + "</a> (" + paint(inboxCount) + " " + systemStatus.getLabel(
+                        "myitems.inbox.new") + ")<br>");
             ++myItems;
           }
         }
@@ -279,14 +334,18 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-view")) {
           int taskCount = TaskList.queryPendingCount(db, userId);
           if (taskCount > 0) {
-            items.append("<a href='MyTasks.do?command=ListTasks' class='s'>" + systemStatus.getLabel("myitems.tasks") + "</a> (" + paint(taskCount) + " incomplete)<br>");
+            items.append(
+                "<a href='MyTasks.do?command=ListTasks' class='s'>" + systemStatus.getLabel(
+                    "myitems.tasks") + "</a> (" + paint(taskCount) + " " + systemStatus.getLabel(
+                        "myitems.tasks.incomplete") + ")<br>");
             ++myItems;
           }
         }
 
         //Default no items
         if (myItems == 0) {
-          items.append(systemStatus.getLabel("myitems.noItems") + "<br />&nbsp;<br />");
+          items.append(
+              systemStatus.getLabel("myitems.noItems") + "<br />&nbsp;<br />");
         }
       } catch (Exception e) {
         System.out.println("GlobalItemsHook Error-> " + e.toString());
@@ -309,7 +368,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "<tr>" +
           "<td>");
 
-      ArrayList recentItems = (ArrayList) request.getSession().getAttribute("RecentItems");
+      ArrayList recentItems = (ArrayList) request.getSession().getAttribute(
+          "RecentItems");
       if (recentItems != null) {
         Iterator i = recentItems.iterator();
         while (i.hasNext()) {
@@ -321,7 +381,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
         }
       } else {
-        items.append(systemStatus.getLabel("myitems.noRecentItems") + "<br>&nbsp;<br>");
+        items.append(
+            systemStatus.getLabel("myitems.noRecentItems") + "<br>&nbsp;<br>");
       }
 
       items.append(
@@ -341,10 +402,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  count  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param count Description of the Parameter
+   * @return Description of the Return Value
    */
   private static String paint(int count) {
     if (count > 0) {

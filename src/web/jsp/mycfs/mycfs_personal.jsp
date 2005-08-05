@@ -28,6 +28,7 @@
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
@@ -44,13 +45,13 @@
     formTest = true;
     message = "";
 <%  for (int i=1; i<=EmployeeBean.getPhoneNumberList().size()+1; i++) { %>
-    <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value) || !checkNullString(form.phone<%= i %>ext.value)) {
+    <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value) || (checkNullString(form.phone<%=i%>number.value) && !checkNullString(form.phone<%= i %>ext.value))) {
       message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
       formTest = false;
     }
 <%  }
     for (int i= 1; i <= EmployeeBean.getPhoneNumberList().size()+1; i++) { %>
-    <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if ((checkNullString(form.phone<%= i %>ext.value) && form.phone<%= i %>ext.value != "")) {
+    <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (checkNullString(form.phone<%= i %>ext.value) && form.phone<%= i %>ext.value != "") {
       message += label("check.phone.ext","- Please enter a valid phone number extension\r\n");
       formTest = false;
     }
@@ -85,7 +86,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <a href="MyCFS.do?command=MyProfile"><dhv:label name="Settings">Settings</dhv:label></a> >
 <dhv:label name="calendar.personalInformation">Personal Information</dhv:label>
 </td>
@@ -277,7 +278,7 @@
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(); %>
+      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr>
@@ -298,7 +299,7 @@
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% CountrySelect = new CountrySelect(); %>
+      <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
   <tr>

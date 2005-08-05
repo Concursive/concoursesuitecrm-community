@@ -18,21 +18,25 @@ package org.aspcfs.modules.pipeline.base;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.CalendarView;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.*;
-import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 2, 2002
- *@version    $Id: OpportunityListScheduledActions.java,v 1.6 2002/12/18
- *      21:05:57 chris Exp $
+ * @author akhi_m
+ * @version $Id: OpportunityListScheduledActions.java,v 1.6 2002/12/18
+ *          21:05:57 chris Exp $
+ * @created October 2, 2002
  */
 public class OpportunityListScheduledActions extends OpportunityComponentList implements ScheduledActions {
 
@@ -42,15 +46,16 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Constructor for the OpportunityListScheduledActions object
+   * Constructor for the OpportunityListScheduledActions object
    */
-  public OpportunityListScheduledActions() { }
+  public OpportunityListScheduledActions() {
+  }
 
 
   /**
-   *  Sets the module attribute of the QuoteListScheduledActions object
+   * Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -58,9 +63,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Sets the context attribute of the QuoteListScheduledActions object
+   * Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -68,9 +73,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Sets the userId attribute of the OpportunityListScheduledActions object
+   * Sets the userId attribute of the OpportunityListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -78,9 +83,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Sets the userId attribute of the OpportunityListScheduledActions object
+   * Sets the userId attribute of the OpportunityListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -88,9 +93,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Gets the context attribute of the QuoteListScheduledActions object
+   * Gets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -98,9 +103,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Gets the module attribute of the QuoteListScheduledActions object
+   * Gets the module attribute of the QuoteListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -108,9 +113,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Gets the userId attribute of the OpportunityListScheduledActions object
+   * Gets the userId attribute of the OpportunityListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -118,17 +123,18 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     try {
 
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("OppListScheduledActions -> Building opportunity alerts");
+        System.out.println(
+            "OppListScheduledActions -> Building opportunity alerts");
       }
       /*
        *  /get the userId
@@ -141,13 +147,16 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       this.setHasAlertDate(true);
       this.buildShortList(db);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("OppListScheduledActions -> size of opps: " + this.size());
+        System.out.println(
+            "OppListScheduledActions -> size of opps: " + this.size());
       }
       Iterator n = this.iterator();
       while (n.hasNext()) {
         OpportunityComponent thisOpp = (OpportunityComponent) n.next();
-        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOpp.getAlertDate());
-        companyCalendar.addEvent(alertDate, CalendarEventList.EVENT_TYPES[2], thisOpp);
+        String alertDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, thisOpp.getAlertDate());
+        companyCalendar.addEvent(
+            alertDate, CalendarEventList.EVENT_TYPES[2], thisOpp);
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Opportunity Calendar Alerts");
@@ -156,11 +165,11 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
 
@@ -184,10 +193,12 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       Iterator i = s.iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[2], dayEvents.get(thisDay));
+        companyCalendar.addEventCount(
+            thisDay, CalendarEventList.EVENT_TYPES[2], dayEvents.get(thisDay));
       }
     } catch (SQLException e) {
-      throw new SQLException("Error Building Opportunity Calendar Alert Counts");
+      throw new SQLException(
+          "Error Building Opportunity Calendar Alert Counts");
     }
   }
 }

@@ -15,16 +15,14 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- *  Represents an invitation to a user to join iTeam
+ * Represents an invitation to a user to join iTeam
  *
- *@author     matt rajkowski
- *@created    October 27, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created October 27, 2003
  */
 public class Invitation {
 
@@ -37,16 +35,17 @@ public class Invitation {
 
 
   /**
-   *  Constructor for the Invitation object
+   * Constructor for the Invitation object
    */
-  public Invitation() { }
+  public Invitation() {
+  }
 
 
   /**
-   *  Constructor for the Invitation object
+   * Constructor for the Invitation object
    *
-   *@param  request  Description of the Parameter
-   *@param  id       Description of the Parameter
+   * @param request Description of the Parameter
+   * @param id      Description of the Parameter
    */
   public Invitation(HttpServletRequest request, int id) {
     email = request.getParameter("email" + id);
@@ -56,9 +55,9 @@ public class Invitation {
 
 
   /**
-   *  Sets the email attribute of the Invitation object
+   * Sets the email attribute of the Invitation object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -66,9 +65,9 @@ public class Invitation {
 
 
   /**
-   *  Sets the firstName attribute of the Invitation object
+   * Sets the firstName attribute of the Invitation object
    *
-   *@param  tmp  The new firstName value
+   * @param tmp The new firstName value
    */
   public void setFirstName(String tmp) {
     this.firstName = tmp;
@@ -76,9 +75,9 @@ public class Invitation {
 
 
   /**
-   *  Sets the lastName attribute of the Invitation object
+   * Sets the lastName attribute of the Invitation object
    *
-   *@param  tmp  The new lastName value
+   * @param tmp The new lastName value
    */
   public void setLastName(String tmp) {
     this.lastName = tmp;
@@ -86,9 +85,9 @@ public class Invitation {
 
 
   /**
-   *  Sets the sentMail attribute of the Invitation object
+   * Sets the sentMail attribute of the Invitation object
    *
-   *@param  tmp  The new sentMail value
+   * @param tmp The new sentMail value
    */
   public void setSentMail(boolean tmp) {
     this.sentMail = tmp;
@@ -96,9 +95,9 @@ public class Invitation {
 
 
   /**
-   *  Gets the email attribute of the Invitation object
+   * Gets the email attribute of the Invitation object
    *
-   *@return    The email value
+   * @return The email value
    */
   public String getEmail() {
     return email;
@@ -106,9 +105,9 @@ public class Invitation {
 
 
   /**
-   *  Gets the firstName attribute of the Invitation object
+   * Gets the firstName attribute of the Invitation object
    *
-   *@return    The firstName value
+   * @return The firstName value
    */
   public String getFirstName() {
     return firstName;
@@ -116,9 +115,9 @@ public class Invitation {
 
 
   /**
-   *  Gets the lastName attribute of the Invitation object
+   * Gets the lastName attribute of the Invitation object
    *
-   *@return    The lastName value
+   * @return The lastName value
    */
   public String getLastName() {
     return lastName;
@@ -126,9 +125,9 @@ public class Invitation {
 
 
   /**
-   *  Gets the sentMail attribute of the Invitation object
+   * Gets the sentMail attribute of the Invitation object
    *
-   *@return    The sentMail value
+   * @return The sentMail value
    */
   public boolean getSentMail() {
     return sentMail;

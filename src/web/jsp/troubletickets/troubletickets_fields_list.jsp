@@ -35,7 +35,6 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
-<form name="details" action="TroubleTicketsFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -150,4 +149,3 @@
 <%}%>
   </table>
 </dhv:container>
-</form>

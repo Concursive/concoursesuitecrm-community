@@ -34,6 +34,7 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -196,7 +197,7 @@
       </td>
       <td>
   <% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
-        <%= ContactList.getEmptyHtmlSelect("contactId") %>
+        <%= ContactList.getEmptyHtmlSelect(systemStatus, "contactId") %>
   <%} else {%>
         <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
   <%}%>

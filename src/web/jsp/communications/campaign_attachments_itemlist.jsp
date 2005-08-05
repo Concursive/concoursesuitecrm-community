@@ -19,7 +19,16 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.utils.web.HtmlSelect"%>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
+  function checkValue() {
+    if (checkNullString(document.getElementById("newitem").value)) {
+      alert(label("check.valid.input","Please enter a valid input"));
+      return false;
+    }
+    return true;
+  }
+  
   function arrayToString(){
     var items = "";
     for(i = 0; i < itemList.length ; i++){
@@ -113,7 +122,13 @@
     }
   }
   function setParentItems(){
-    opener.document.forms['survey'].items.value = arrayToString();
+    var tmpList = document.getElementById("itemSelectId");
+    if (tmpList.length == 0 || tmpList.options[0].value == "-1"){
+      alert (label("required.oneiteminlist","You must have at least one item in this list."));
+    } else {
+      opener.document.forms['survey'].items.value = arrayToString();
+      window.close();
+    }
   }
   function clearSelection(){
     document.getElementById("itemSelectId").selectedIndex =  "-1";
@@ -143,7 +158,7 @@
           <input type="hidden" name="questionid" value="<%=request.getParameter("questionid")%>">
         </td>
         <td nowrap style="text-align: right;" width="12">
-          <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:addValues();" id="addButton">
+          <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:if (checkValue()) {addValues();}" id="addButton">
         </td>
      </tr>
     </table>
@@ -183,7 +198,7 @@
  <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td colspan="2">
-      <input type="button" value="<dhv:label name="global.button.save">Save</dhv:label>" onclick="javascript:setParentItems();javascript:window.close();">&nbsp;
+      <input type="button" value="<dhv:label name="global.button.save">Save</dhv:label>" onclick="javascript:setParentItems();">&nbsp;
       <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">
     </td>
   </tr>

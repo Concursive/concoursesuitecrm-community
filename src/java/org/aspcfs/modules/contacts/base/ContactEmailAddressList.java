@@ -15,8 +15,10 @@
  */
 package org.aspcfs.modules.contacts.base;
 
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.EmailAddressList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +29,13 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 /**
- *  Contains a list of email addresses... currently used to build the list from
- *  the database with any of the parameters to limit the results.
+ * Contains a list of email addresses... currently used to build the list from
+ * the database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
- *@created    January 29, 2003
- *@version    $Id: ContactEmailAddressList.java,v 1.7.34.2 2004/04/08 18:36:20
- *      kbhoopal Exp $
+ * @author mrajkowski
+ * @version $Id: ContactEmailAddressList.java,v 1.7.34.2 2004/04/08 18:36:20
+ *          kbhoopal Exp $
+ * @created January 29, 2003
  */
 public class ContactEmailAddressList extends EmailAddressList {
 
@@ -49,21 +51,23 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Constructor for the ContactEmailAddressList object
+   * Constructor for the ContactEmailAddressList object
    */
-  public ContactEmailAddressList() { }
+  public ContactEmailAddressList() {
+  }
 
 
   /**
-   *  Constructor for the ContactEmailAddressList object
+   * Constructor for the ContactEmailAddressList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public ContactEmailAddressList(HttpServletRequest request) {
     int i = 0;
     int primaryEmail = -1;
     if (request.getParameter("primaryEmail") != null) {
-      primaryEmail = Integer.parseInt((String) request.getParameter("primaryEmail"));
+      primaryEmail = Integer.parseInt(
+          (String) request.getParameter("primaryEmail"));
     }
     while (request.getParameter("email" + (++i) + "type") != null) {
       ContactEmailAddress thisEmailAddress = new ContactEmailAddress();
@@ -79,9 +83,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the tableName attribute of the ContactEmailAddressList object
+   * Gets the tableName attribute of the ContactEmailAddressList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -89,9 +93,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the uniqueField attribute of the ContactEmailAddressList object
+   * Gets the uniqueField attribute of the ContactEmailAddressList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -99,9 +103,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the ContactEmailAddressList object
+   * Gets the lastAnchor attribute of the ContactEmailAddressList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -109,9 +113,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the ContactEmailAddressList object
+   * Gets the nextAnchor attribute of the ContactEmailAddressList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -119,9 +123,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the syncType attribute of the ContactEmailAddressList object
+   * Gets the syncType attribute of the ContactEmailAddressList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -129,10 +133,10 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
-   *  object
+   * Gets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
+   * object
    *
-   *@return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -140,9 +144,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the jsEvent attribute of the ContactEmailAddressList object
+   * Gets the jsEvent attribute of the ContactEmailAddressList object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -150,9 +154,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the ContactEmailAddressList object
+   * Sets the lastAnchor attribute of the ContactEmailAddressList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -160,9 +164,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the ContactEmailAddressList object
+   * Sets the nextAnchor attribute of the ContactEmailAddressList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -170,9 +174,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the syncType attribute of the ContactEmailAddressList object
+   * Sets the syncType attribute of the ContactEmailAddressList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -180,10 +184,10 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
-   *  object
+   * Sets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
+   * object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -191,9 +195,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Sets the jsEvent attribute of the ContactEmailAddressList object
+   * Sets the jsEvent attribute of the ContactEmailAddressList object
    *
-   *@param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -201,10 +205,10 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -218,12 +222,14 @@ public class ContactEmailAddressList extends EmailAddressList {
     StringBuffer sqlOrder = new StringBuffer();
 
     //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
+    sqlSelect.append(
+        "SELECT * " +
         "FROM contact_emailaddress e, lookup_contactemail_types l " +
         "WHERE e.emailaddress_type = l.code ");
 
     //Need to build a base SQL statement for counting records
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
         "FROM contact_emailaddress e, lookup_contactemail_types l " +
         "WHERE e.emailaddress_type = l.code ");
 
@@ -231,7 +237,8 @@ public class ContactEmailAddressList extends EmailAddressList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -244,9 +251,10 @@ public class ContactEmailAddressList extends EmailAddressList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(email) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(email) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -259,9 +267,12 @@ public class ContactEmailAddressList extends EmailAddressList {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", email ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals(
+          "")) {
+        sqlOrder.append(
+            "ORDER BY " + pagedListInfo.getColumnToSortBy() + ", email ");
+        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals(
+            "")) {
           sqlOrder.append(pagedListInfo.getSortOrder() + " ");
         }
       } else {
@@ -276,7 +287,8 @@ public class ContactEmailAddressList extends EmailAddressList {
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -289,10 +301,10 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ContactEmailAddressList object
+   * Gets the htmlSelect attribute of the ContactEmailAddressList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -300,24 +312,25 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   *  Gets the emptyHtmlSelect attribute of the ContactEmailAddressList object
+   * Gets the emptyHtmlSelect attribute of the ContactEmailAddressList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The emptyHtmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The emptyHtmlSelect value
    */
-  public String getEmptyHtmlSelect(String selectName) {
+  public String getEmptyHtmlSelect(SystemStatus thisSystem, String selectName) {
     HtmlSelect emailListSelect = new HtmlSelect();
-    emailListSelect.addItem(-1, "-- None --");
+    emailListSelect.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+
     return emailListSelect.getHtml(selectName);
   }
 
 
   /**
-   *  Gets the htmlSelect attribute of the ContactEmailAddressList object
+   * Gets the htmlSelect attribute of the ContactEmailAddressList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect emailListSelect = new HtmlSelect();
@@ -331,7 +344,8 @@ public class ContactEmailAddressList extends EmailAddressList {
     while (i.hasNext()) {
       ContactEmailAddress thisEmailAddress = (ContactEmailAddress) i.next();
       //emailListSelect.addItem(thisEmailAddress.getId(), thisEmailAddress.getEmail());
-      emailListSelect.addItem(thisEmailAddress.getId(),
+      emailListSelect.addItem(
+          thisEmailAddress.getId(),
           thisEmailAddress.getEmail() + (thisEmailAddress.getPrimaryEmail() ? "*" : ""));
     }
     return emailListSelect.getHtml(selectName, defaultKey);

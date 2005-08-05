@@ -1,5 +1,5 @@
-## These files will be deleted by ant deploy
-## and exist in the CFS_HOME directory
+## These files will be deleted by ant hotdeploy
+## and exist in the CRM_HOME or CFS_HOME directory
 
 ## 2003-12-18 no longer used because of documents tab
 communications/campaign_download.jsp
@@ -93,6 +93,9 @@ css/template0.css
 css/template0-10pt.css
 css/template0-8pt.css
 
-## 2004-04-18 3.0 cleanup
+## 2005-04-18 3.0 cleanup
 communications/campaign_center_js_attachmentlist.jsp
 admin/admin_jsuser_contactlist.jsp
+
+## 2005-06-17 updated driver
+WEB-INF/lib/jtds-1.0.1.jar

@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -30,16 +30,21 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <jsp:useBean id="taskCategoryList" class="org.aspcfs.modules.tasks.base.TaskCategoryList" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%
+  if (clientType.getType() == -1) {
+    clientType.setParameters(request);
+  }
+%>
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
-<jsp:include page="../htmlarea_include.jsp" flush="true"/>
-<body onload="initEditor('intro');">
+  <jsp:include page="../tinymce_include.jsp" flush="true"/>
+  <script language="javascript" type="text/javascript">
+    initEditor('intro');
+  </script>
 </dhv:evaluate>
-<%-- Use applet instead --%>
-<dhv:evaluate if="<%= clientType.showApplet() %>">
 <body onload="document.inputForm.priorityId.focus();">
-</dhv:evaluate>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
@@ -55,6 +60,7 @@
   </dhv:evaluate>
 <%-- Validations --%>
   function checkForm(form) {
+    try { tinyMCE.triggerSave(false); } catch(e) { }
     var formTest = true;
     var messageText = "";
 <dhv:evaluate if="<%= clientType.showApplet() %>">
@@ -85,7 +91,7 @@
     <tr class="subtab">
       <td>
         <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle" />
-        <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
+        <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" type="project.news" object="Project"/></a> >
         <% if(newsArticle.getId() == -1 ) {%>
           <dhv:label name="button.add">Add</dhv:label>
         <%} else {%>
@@ -169,7 +175,7 @@
         Category
       </td>
       <td>
-        <%= newsArticleCategoryList.getHtmlSelect("categoryId", newsArticle.getCategoryId()) %>
+        <%= newsArticleCategoryList.getHtmlSelect(systemStatus, "categoryId", newsArticle.getCategoryId()) %>
         <zeroio:permission name="project-news-add">
           <a href="javascript:popURL('ProjectManagementNews.do?command=EditCategoryList&pid=<%= Project.getId() %>&form=inputForm&field=categoryId&previousId=' + document.inputForm.categoryId.options[document.inputForm.categoryId.selectedIndex].value + '&popup=true','EditList','600','300','yes','yes');">edit list</a>
         </zeroio:permission>
@@ -181,7 +187,7 @@
         Link to List
       </td>
       <td>
-        <%= taskCategoryList.getHtmlSelect("taskCategoryId", newsArticle.getTaskCategoryId()) %>
+        <%= taskCategoryList.getHtmlSelect(systemStatus, "taskCategoryId", newsArticle.getTaskCategoryId()) %>
         <%= showAttribute(request, "taskCategoryIdError") %>
       </td>
     </tr>

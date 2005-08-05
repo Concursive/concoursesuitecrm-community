@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.contacts.base.Contact;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class AccessLog extends GenericBean {
 
@@ -43,16 +43,17 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Constructor for the AccessLog object
+   * Constructor for the AccessLog object
    */
-  public AccessLog() { }
+  public AccessLog() {
+  }
 
 
   /**
-   *  Constructor for the AccessLog object
+   * Constructor for the AccessLog object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AccessLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -60,11 +61,11 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Constructor for the AccessLog object
+   * Constructor for the AccessLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AccessLog(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -72,11 +73,11 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Constructor for the AccessLog object
+   * Constructor for the AccessLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AccessLog(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -84,11 +85,11 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
 
@@ -114,9 +115,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the AccessLog object
+   * Gets the id attribute of the AccessLog object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -124,9 +125,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the userId attribute of the AccessLog object
+   * Gets the userId attribute of the AccessLog object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -134,9 +135,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the username attribute of the AccessLog object
+   * Gets the username attribute of the AccessLog object
    *
-   *@return    The username value
+   * @return The username value
    */
   public String getUsername() {
     return username;
@@ -144,9 +145,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the ip attribute of the AccessLog object
+   * Gets the ip attribute of the AccessLog object
    *
-   *@return    The ip value
+   * @return The ip value
    */
   public String getIp() {
     return ip;
@@ -154,9 +155,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the browser attribute of the AccessLog object
+   * Gets the browser attribute of the AccessLog object
    *
-   *@return    The browser value
+   * @return The browser value
    */
   public String getBrowser() {
     return browser;
@@ -164,9 +165,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the AccessLog object
+   * Gets the entered attribute of the AccessLog object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -174,9 +175,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the AccessLog object
+   * Sets the id attribute of the AccessLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -184,9 +185,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the AccessLog object
+   * Sets the id attribute of the AccessLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -194,9 +195,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the AccessLog object
+   * Sets the userId attribute of the AccessLog object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -204,9 +205,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the AccessLog object
+   * Sets the userId attribute of the AccessLog object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -214,9 +215,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the username attribute of the AccessLog object
+   * Sets the username attribute of the AccessLog object
    *
-   *@param  tmp  The new username value
+   * @param tmp The new username value
    */
   public void setUsername(String tmp) {
     this.username = tmp;
@@ -224,9 +225,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the ip attribute of the AccessLog object
+   * Sets the ip attribute of the AccessLog object
    *
-   *@param  tmp  The new ip value
+   * @param tmp The new ip value
    */
   public void setIp(String tmp) {
     this.ip = tmp;
@@ -234,9 +235,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the browser attribute of the AccessLog object
+   * Sets the browser attribute of the AccessLog object
    *
-   *@param  tmp  The new browser value
+   * @param tmp The new browser value
    */
   public void setBrowser(String tmp) {
     this.browser = tmp;
@@ -244,9 +245,9 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the AccessLog object
+   * Sets the entered attribute of the AccessLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -254,14 +255,15 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the AccessLog object
+   * Gets the enteredString attribute of the AccessLog object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -269,25 +271,32 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     if (userId == -1) {
-      throw new SQLException("Log Entry must be associated to a Centric CRM user");
+      throw new SQLException(
+          "Log Entry must be associated to a Centric CRM user");
     }
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
-      sql.append(
-          "INSERT INTO access_log (user_id, username, ip, ");
+      id = DatabaseUtils.getNextSeq(db, "access_log_id_seq");
+      sql.append("INSERT INTO access_log (user_id, username, ip, ");
+      if (id > -1) {
+        sql.append("id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
       sql.append("browser ) ");
       sql.append("VALUES (?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -298,6 +307,9 @@ public class AccessLog extends GenericBean {
       pst.setInt(++i, this.getUserId());
       pst.setString(++i, this.getUsername());
       pst.setString(++i, this.getIp());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -305,7 +317,7 @@ public class AccessLog extends GenericBean {
       pst.execute();
       pst.close();
 
-      id = DatabaseUtils.getCurrVal(db, "access_log_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "access_log_id_seq", id);
 
       db.commit();
     } catch (SQLException e) {
@@ -318,11 +330,11 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -348,10 +360,10 @@ public class AccessLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("id"));

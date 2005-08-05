@@ -14,17 +14,17 @@
 package org.jcrontab.data;
 
 /**
- *  Exception thrown when an entry in the crontab table cannot be parsed
+ * Exception thrown when an entry in the crontab table cannot be parsed
  *
- *@author     iolalla
- *@created    February 4, 2003
- *@version    $Revision$
+ * @author iolalla
+ * @version $Revision$
+ * @created February 4, 2003
  */
 
 public class CrontabEntryException extends Exception {
 
   /**
-   *  Creates a new bad contrab entry exception
+   * Creates a new bad contrab entry exception
    */
   public CrontabEntryException() {
     super();
@@ -32,9 +32,9 @@ public class CrontabEntryException extends Exception {
 
 
   /**
-   *  Creates a new bad crontab entry exception given a message string
+   * Creates a new bad crontab entry exception given a message string
    *
-   *@param  str  Message string associated to the exception
+   * @param str Message string associated to the exception
    */
   public CrontabEntryException(String str) {
     super(str);

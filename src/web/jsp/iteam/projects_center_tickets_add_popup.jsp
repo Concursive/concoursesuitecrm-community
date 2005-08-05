@@ -36,9 +36,6 @@
 <jsp:useBean id="SubList1" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
-<%--
-<jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
---%>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
@@ -80,7 +77,7 @@ function updateUserList() {
 <% if (ticket.getClosed() != null) { %>
   <input type="submit" value="<dhv:label name="button.reopen">Re-open</dhv:label>" onClick="javascript:this.form.action='ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&popup=true&return=calendar';submit();" />
 <%} else {%>
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>"  onClick="return checkForm(this.form)" />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
 <%}%>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.close()" />
 <br />
@@ -90,7 +87,7 @@ function updateUserList() {
 <% if (ticket.getClosed() != null) { %>
   <input type="submit" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&popup=true&return=calendar';submit();" />
 <%} else {%>
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>"  onClick="return checkForm(this.form)" />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
 <%}%>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.close()" />
 <input type="hidden" name="modified" value="<%= ticket.getModified() %>" />

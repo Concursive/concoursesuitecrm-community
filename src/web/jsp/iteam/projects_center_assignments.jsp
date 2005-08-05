@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Team Elements LLC (http://www.teamelements.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Team Elements LLC. Permission to use, copy, and modify
@@ -19,7 +19,8 @@
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.*,
+                 org.aspcfs.utils.web.ClientType" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="requirement" class="com.zeroio.iteam.base.Requirement" scope="request"/>
@@ -30,6 +31,11 @@
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%
+  if (clientType.getType() == -1) {
+    clientType.setParameters(request);
+  }
+%>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
 <%@ include file="projects_center_assignments_menu.jsp" %>
@@ -68,10 +74,10 @@
   </tr>
 </table>
 <table cellpadding="0" cellspacing="0" width="100%"
-  <dhv:evaluate if="<% clientType.getId() != clientType.APPLEWEBKIT %>">
+  <dhv:evaluate if="<%= clientType.getId() != ClientType.APPLEWEBKIT %>">
     border="1"
   </dhv:evaluate>
-  <dhv:evaluate if="<% clientType.getId() == clientType.APPLEWEBKIT %>">
+  <dhv:evaluate if="<%= clientType.getId() == ClientType.APPLEWEBKIT %>">
     border="0"
   </dhv:evaluate>
   rules="cols">
@@ -96,7 +102,7 @@
       --%>
       &nbsp;
       <img border="0" src="images/icons/stock_list_bullet-16.gif" align="absmiddle">
-      <a class="rollover" name="r<%= thisRequirement.getId() %>" id="r<%= thisRequirement.getId() %>" href="javascript:displayMenu('r<%= thisRequirement.getId() %>', 'menuRequirement',<%= Project.getId() %>,<%= thisRequirement.getId() %>,-1,-1,-1,-1);"
+      <a class="rollover" name="r<%= thisRequirement.getId() %>" id="r<%= thisRequirement.getId() %>" href="javascript:displayMenu('r<%= thisRequirement.getId() %>', 'menuRequirement',<%= Project.getId() %>,<%= thisRequirement.getId() %>,-1,-1,-1,-1,'<%= Project.isTrashed() %>');"
          onMouseOver="window.status='Click to show drop-down menu';return true;"
          onmouseout="window.status='';hideMenu('menuRequirement');"><%= toHtml(thisRequirement.getShortDescription()) %></a>
       (<%= mapList.size() %>
@@ -116,14 +122,14 @@
       <%= thisRequirement.getEstimatedLoeString() %>
     </td>
     <td valign="top" align="center" width="8%" nowrap>
-      <% if(!User.getTimeZone().equals(thisRequirement.getStartDateTimeZone())){%>
+      <% if(thisRequirement.getStartDateTimeZone() != null && !User.getTimeZone().equals(thisRequirement.getStartDateTimeZone())){%>
       <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="--"/>
       <% } else { %>
       <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" timeZone="<%= thisRequirement.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
     <td valign="top" align="center" width="8%" nowrap>
-      <% if(!User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
+      <% if(thisRequirement.getDeadlineTimeZone() != null && !User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
       <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="--"/>
       <% } else { %>
       <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -219,7 +225,7 @@
         <%= thisAssignment.getStatusGraphicTag() %>
       </td>
       <td>
-        <a class="rollover" name="a<%= thisAssignment.getId() %>" id="a<%= thisAssignment.getId() %>" href="javascript:displayMenu('a<%= thisAssignment.getId() %>', 'menuActivity',<%= Project.getId() %>,<%= thisRequirement.getId() %>,-1,<%= thisAssignment.getId() %>,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>);"
+        <a class="rollover" name="a<%= thisAssignment.getId() %>" id="a<%= thisAssignment.getId() %>" href="javascript:displayMenu('a<%= thisAssignment.getId() %>', 'menuActivity',<%= Project.getId() %>,<%= thisRequirement.getId() %>,-1,<%= thisAssignment.getId() %>,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>,'<%= Project.isTrashed() %>');"
            onMouseOver="window.status='Click to show drop-down menu';return true;"
            onmouseout="window.status='';hideMenu('menuActivity');"><%= toHtml(thisAssignment.getRole()) %></a>
         <dhv:evaluate if="<%= thisAssignment.hasNotes() %>">
@@ -242,8 +248,8 @@
       <zeroio:tz timestamp="<%= thisAssignment.getEstStartDate() %>" dateOnly="true"/>
     </td>
     <td valign="top" align="center" nowrap>
-      <%= thisAssignment.getRelativeDueDateString(thisAssignment.getDueDateTimeZone(), User.getLocale()) %>
-     <% if (!User.getTimeZone().equals(thisAssignment.getDueDateTimeZone())){ %>
+      <%= thisAssignment.getRelativeDueDateString((thisAssignment.getDueDateTimeZone() != null ? thisAssignment.getDueDateTimeZone():User.getTimeZone()), User.getLocale()) %>
+     <% if (thisAssignment.getDueDateTimeZone() != null && !User.getTimeZone().equals(thisAssignment.getDueDateTimeZone())) { %>
       <br />
             <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %>
       <% } %>
@@ -258,7 +264,7 @@
         <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">
       </td>
       <td>
-        <a class="rollover" name="f<%= thisFolder.getId() %>" id="f<%= thisFolder.getId() %>" href="javascript:displayMenu('f<%= thisFolder.getId() %>', 'menuFolder',<%= Project.getId() %>,<%= thisRequirement.getId() %>,<%= thisFolder.getId() %>,-1,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>);"
+        <a class="rollover" name="f<%= thisFolder.getId() %>" id="f<%= thisFolder.getId() %>" href="javascript:displayMenu('f<%= thisFolder.getId() %>', 'menuFolder',<%= Project.getId() %>,<%= thisRequirement.getId() %>,<%= thisFolder.getId() %>,-1,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>,'<%= Project.isTrashed() %>');"
            onMouseOver="window.status='Click to show drop-down menu';return true;"
            onmouseout="window.status='';hideMenu('menuFolder');"><%= toHtml(thisFolder.getName()) %></a>
         <dhv:evaluate if="<%= hasText(thisFolder.getDescription()) %>">

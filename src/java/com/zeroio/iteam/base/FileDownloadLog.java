@@ -15,18 +15,21 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id: FileDownloadLog.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: FileDownloadLog.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created January 15, 2003
  */
 public class FileDownloadLog extends GenericBean {
 
@@ -38,16 +41,17 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Constructor for the FileDownloadLog object
+   * Constructor for the FileDownloadLog object
    */
-  public FileDownloadLog() { }
+  public FileDownloadLog() {
+  }
 
 
   /**
-   *  Constructor for the FileDownloadLog object
+   * Constructor for the FileDownloadLog object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public FileDownloadLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -55,11 +59,11 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Constructor for the FileDownloadLog object
+   * Constructor for the FileDownloadLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public FileDownloadLog(Connection db, int id) throws SQLException {
     if (id < 1) {
@@ -80,9 +84,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the itemId attribute of the FileDownloadLog object
+   * Sets the itemId attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -90,9 +94,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the itemId attribute of the FileDownloadLog object
+   * Sets the itemId attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -100,9 +104,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the version attribute of the FileDownloadLog object
+   * Sets the version attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(double tmp) {
     this.version = tmp;
@@ -110,9 +114,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the version attribute of the FileDownloadLog object
+   * Sets the version attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(String tmp) {
     this.version = Double.parseDouble(tmp);
@@ -120,9 +124,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the FileDownloadLog object
+   * Sets the userId attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -130,9 +134,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the FileDownloadLog object
+   * Sets the userId attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -140,9 +144,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the downloadDate attribute of the FileDownloadLog object
+   * Sets the downloadDate attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new downloadDate value
+   * @param tmp The new downloadDate value
    */
   public void setDownloadDate(java.sql.Timestamp tmp) {
     this.downloadDate = tmp;
@@ -150,9 +154,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the downloadDate attribute of the FileDownloadLog object
+   * Sets the downloadDate attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new downloadDate value
+   * @param tmp The new downloadDate value
    */
   public void setDownloadDate(String tmp) {
     this.downloadDate = DatabaseUtils.parseTimestamp(tmp);
@@ -160,9 +164,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Sets the fileSize attribute of the FileDownloadLog object
+   * Sets the fileSize attribute of the FileDownloadLog object
    *
-   *@param  tmp  The new fileSize value
+   * @param tmp The new fileSize value
    */
   public void setFileSize(int tmp) {
     this.fileSize = tmp;
@@ -170,9 +174,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Gets the itemId attribute of the FileDownloadLog object
+   * Gets the itemId attribute of the FileDownloadLog object
    *
-   *@return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -180,9 +184,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Gets the version attribute of the FileDownloadLog object
+   * Gets the version attribute of the FileDownloadLog object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return version;
@@ -190,9 +194,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Gets the userId attribute of the FileDownloadLog object
+   * Gets the userId attribute of the FileDownloadLog object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -200,9 +204,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Gets the downloadDate attribute of the FileDownloadLog object
+   * Gets the downloadDate attribute of the FileDownloadLog object
    *
-   *@return    The downloadDate value
+   * @return The downloadDate value
    */
   public java.sql.Timestamp getDownloadDate() {
     return downloadDate;
@@ -210,9 +214,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Gets the fileSize attribute of the FileDownloadLog object
+   * Gets the fileSize attribute of the FileDownloadLog object
    *
-   *@return    The fileSize value
+   * @return The fileSize value
    */
   public int getFileSize() {
     return fileSize;
@@ -220,10 +224,10 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     itemId = rs.getInt("item_id");
@@ -234,11 +238,11 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -257,11 +261,11 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateCounter(Connection db) throws SQLException {
     if (itemId < 0 || version < 0) {
@@ -285,11 +289,16 @@ public class FileDownloadLog extends GenericBean {
     pst.executeUpdate();
     pst.close();
     //Track bandwidth used for downloads
+    int usageId = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     String sql =
         "INSERT INTO usage_log " +
-        "(enteredby, action, record_id, record_size) VALUES (?, ?, ?, ?) ";
+        "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
+        "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ";
     int i = 0;
     pst = db.prepareStatement(sql);
+    if (usageId > -1) {
+      pst.setInt(++i, usageId);
+    }
     DatabaseUtils.setInt(pst, ++i, userId);
     pst.setInt(++i, 2);
     pst.setInt(++i, itemId);

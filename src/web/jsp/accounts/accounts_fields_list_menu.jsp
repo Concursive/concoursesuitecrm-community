@@ -43,7 +43,7 @@
   }
   
   function deleteFolder() {
-    window.location.href = 'Accounts.do?command=DeleteFields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list';
+    confirmDelete('Accounts.do?command=DeleteFields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list');
   }
 </script>
 <div id="menuFoldersContainer" class="menu">

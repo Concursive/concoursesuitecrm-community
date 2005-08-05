@@ -16,50 +16,50 @@
 package org.aspcfs.utils.web;
 
 /**
- *  Description of the Interface
+ * Description of the Interface
  *
- *@author     akhi_m
- *@created    October 22, 2002
- *@version    $Id: HtmlCoreAttributes.java,v 1.3 2003/01/13 21:24:01 mrajkowski
- *      Exp $
+ * @author akhi_m
+ * @version $Id: HtmlCoreAttributes.java,v 1.3 2003/01/13 21:24:01 mrajkowski
+ *          Exp $
+ * @created October 22, 2002
  */
 public interface HtmlCoreAttributes {
   /**
-   *  Sets the id attribute of the ScheduledActions object
+   * Sets the id attribute of the ScheduledActions object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id);
 
 
   /**
-   *  Sets the class attribute of the ScheduledActions object
+   * Sets the class attribute of the ScheduledActions object
    *
-   *@param  rowClass  The new rowClass value
+   * @param rowClass The new rowClass value
    */
   public void setElementClass(String rowClass);
 
 
   /**
-   *  Sets the style attribute of the ScheduledActions object
+   * Sets the style attribute of the ScheduledActions object
    *
-   *@param  style  The new style value
+   * @param style The new style value
    */
   public void setStyle(String style);
 
 
   /**
-   *  Sets the title attribute of the ScheduledActions object
+   * Sets the title attribute of the ScheduledActions object
    *
-   *@param  title  The new title value
+   * @param title The new title value
    */
   public void setTitle(String title);
 
 
   /**
-   *  Gets the coreAttributes attribute of the ScheduledActions object
+   * Gets the coreAttributes attribute of the ScheduledActions object
    *
-   *@return    The coreAttributes value
+   * @return The coreAttributes value
    */
   public String getCoreAttributes();
 }

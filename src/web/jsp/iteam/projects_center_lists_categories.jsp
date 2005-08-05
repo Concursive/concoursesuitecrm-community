@@ -43,10 +43,12 @@
   </tr>
 </table>
 <br>
-<zeroio:permission name="project-lists-add">
-<img border="0" src="images/icons/stock_new_enum-16.gif" align="absmiddle">
-<a href="ProjectManagementListsCategory.do?command=AddCategory&pid=<%= Project.getId() %>"><dhv:label name="project.newList">New List</dhv:label></a><br>
-</zeroio:permission>
+<% if (!Project.isTrashed()){ %>
+  <zeroio:permission name="project-lists-add">
+  <img border="0" src="images/icons/stock_new_enum-16.gif" align="absmiddle">
+  <a href="ProjectManagementListsCategory.do?command=AddCategory&pid=<%= Project.getId() %>"><dhv:label name="project.newList">New List</dhv:label></a><br>
+  </zeroio:permission>
+<% } %>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="pagedListView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>">
@@ -84,7 +86,7 @@
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisCategory.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisCategory.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- THIS FORM INCORRECTLY USES BUTTONS NAMED 'action' AND SHOULD BE UPDATED --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -35,34 +35,38 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="users" selected="details" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
-  <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
-  <dhv:permission name="admin-users-edit">
-    <input type="button" name="action" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=ModifyUser&id=<%= UserRecord.getId() %>'">
-  </dhv:permission>
+  <dhv:evaluate if="<%= UserRecord.getContact().getEnabled() && !UserRecord.getContact().isTrashed() %>">
+    <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
+    <dhv:permission name="admin-users-edit">
+      <input type="button" name="action" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=ModifyUser&id=<%= UserRecord.getId() %>'">
+    </dhv:permission>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= !(UserRecord.getEnabled()) %>">
+    <dhv:permission name="admin-users-edit">
+      <input type="button" name="action" value="<dhv:label name="global.button.Enable">Enable</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=EnableUser&id=<%= UserRecord.getId() %>'">
+    </dhv:permission>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
+    <dhv:permission name="admin-users-delete">
+      <input type="button" name="action" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
+    </dhv:permission>
+    </dhv:evaluate>
+    <dhv:permission name="admin-users-edit,admin-users-delete">
+      <br>
+      &nbsp;
+    </dhv:permission>
   </dhv:evaluate>
-  <dhv:evaluate if="<%= !(UserRecord.getEnabled()) %>">
-  <dhv:permission name="admin-users-edit">
-    <input type="button" name="action" value="<dhv:label name="global.button.Enable">Enable</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=EnableUser&id=<%= UserRecord.getId() %>'">
-  </dhv:permission>
-  </dhv:evaluate>
-  <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
-  <dhv:permission name="admin-users-delete">
-    <input type="button" name="action" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
-  </dhv:permission>
-  </dhv:evaluate>
-  <dhv:permission name="admin-users-edit,admin-users-delete">
-    <br>
-    &nbsp;
-  </dhv:permission>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <td class="title" colspan="2">
         <strong><dhv:label name="accounts.accounts_details.PrimaryInformation">Primary Information</dhv:label></strong>&nbsp;
-        <% if(UserRecord.getContact().getEmployee()){ %>
-          [ <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= UserRecord.getContact().getId() %>"><dhv:label name="admin.employeeLink">Employee Link</dhv:label></a> ]
-        <% }else{ %>
-          [ <a href="Contacts.do?command=Details&id=<%= UserRecord.getContact().getId() %>"><dhv:label name="admin.accountContactLink">Account Contact Link</dhv:label></a> ]
-        <% } %>
+        <dhv:evaluate if="<%= UserRecord.getContact().getEnabled() && !UserRecord.getContact().isTrashed() %>">
+          <% if(UserRecord.getContact().getEmployee()){ %>
+            [ <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= UserRecord.getContact().getId() %>"><dhv:label name="admin.employeeLink">Employee Link</dhv:label></a> ]
+          <% }else if (UserRecord.getContact().getOrgId() != -1){ %>
+            [ <a href="Contacts.do?command=Details&id=<%= UserRecord.getContact().getId() %>"><dhv:label name="admin.accountContactLink">Account Contact Link</dhv:label></a> ]
+          <% } %>
+        </dhv:evaluate>
       </td>
     </tr>
     <tr class="containerBody">
@@ -96,19 +100,21 @@
     </tr>
   </table>
   <br>
-  <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
-  <dhv:permission name="admin-users-edit">
-    <input type="button" name="action" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=ModifyUser&id=<%= UserRecord.getId() %>'">
-  </dhv:permission>
-  </dhv:evaluate>
-  <dhv:evaluate if="<%=!(UserRecord.getEnabled())%>">
-  <dhv:permission name="admin-users-edit">
-    <input type="button" name="action" value="<dhv:label name="global.button.Enable">Enable</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=EnableUser&id=<%= UserRecord.getId() %>'">
-  </dhv:permission>
-  </dhv:evaluate>
-  <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
-  <dhv:permission name="admin-users-delete">
-    <input type="button" name="action" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
-  </dhv:permission>
+  <dhv:evaluate if="<%= UserRecord.getContact().getEnabled()  && !UserRecord.getContact().isTrashed() %>">
+    <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
+    <dhv:permission name="admin-users-edit">
+      <input type="button" name="action" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=ModifyUser&id=<%= UserRecord.getId() %>'">
+    </dhv:permission>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%=!(UserRecord.getEnabled())%>">
+    <dhv:permission name="admin-users-edit">
+      <input type="button" name="action" value="<dhv:label name="global.button.Enable">Enable</dhv:label>"	onClick="javascript:window.location.href='Users.do?command=EnableUser&id=<%= UserRecord.getId() %>'">
+    </dhv:permission>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
+    <dhv:permission name="admin-users-delete">
+      <input type="button" name="action" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
+    </dhv:permission>
+    </dhv:evaluate>
   </dhv:evaluate>
 </dhv:container>

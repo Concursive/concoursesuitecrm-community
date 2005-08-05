@@ -15,20 +15,21 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 /**
- *  Represents an issue in iTeam
+ * Represents an issue in iTeam
  *
- *@author     mrajkowski
- *@created    July 23, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 23, 2001
  */
 public class Issue extends GenericBean {
 
@@ -54,18 +55,17 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Constructor for the Issue object
-   *
-   *@since
+   * Constructor for the Issue object
    */
-  public Issue() { }
+  public Issue() {
+  }
 
 
   /**
-   *  Constructor for the Issue object
+   * Constructor for the Issue object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Issue(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -73,12 +73,12 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Constructor for the Issue object
+   * Constructor for the Issue object
    *
-   *@param  db                Description of the Parameter
-   *@param  issueId           Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param issueId   Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Issue(Connection db, int issueId, int projectId) throws SQLException {
     this.projectId = projectId;
@@ -87,11 +87,11 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Constructor for the Issue object
+   * Constructor for the Issue object
    *
-   *@param  db                Description of the Parameter
-   *@param  issueId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param issueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Issue(Connection db, int issueId) throws SQLException {
     queryRecord(db, issueId);
@@ -99,11 +99,11 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  issueId           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param issueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int issueId) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -133,10 +133,10 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //project_issues table
@@ -161,10 +161,10 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReplyList(Connection db) throws SQLException {
     //replyList = new IssueReplyList();
@@ -175,10 +175,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the RelativeIssueDateString attribute of the Issue object
+   * Gets the RelativeIssueDateString attribute of the Issue object
    *
-   *@return    The RelativeIssueDateString value
-   *@since
+   * @return The RelativeIssueDateString value
    */
   public String getRelativeEnteredString() {
     Calendar rightNow = Calendar.getInstance();
@@ -203,9 +202,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Issue object
+   * Sets the id attribute of the Issue object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -213,9 +212,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Issue object
+   * Sets the id attribute of the Issue object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -223,9 +222,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the project attribute of the Issue object
+   * Sets the project attribute of the Issue object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -233,9 +232,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Issue object
+   * Sets the projectId attribute of the Issue object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -243,9 +242,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Issue object
+   * Sets the projectId attribute of the Issue object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -253,9 +252,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Issue object
+   * Sets the categoryId attribute of the Issue object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -263,9 +262,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the Issue object
+   * Sets the categoryId attribute of the Issue object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -273,9 +272,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the subject attribute of the Issue object
+   * Sets the subject attribute of the Issue object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -283,9 +282,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the body attribute of the Issue object
+   * Sets the body attribute of the Issue object
    *
-   *@param  tmp  The new body value
+   * @param tmp The new body value
    */
   public void setBody(String tmp) {
     this.body = tmp;
@@ -293,9 +292,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the importance attribute of the Issue object
+   * Sets the importance attribute of the Issue object
    *
-   *@param  tmp  The new importance value
+   * @param tmp The new importance value
    */
   public void setImportance(int tmp) {
     this.importance = tmp;
@@ -303,9 +302,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the importance attribute of the Issue object
+   * Sets the importance attribute of the Issue object
    *
-   *@param  tmp  The new importance value
+   * @param tmp The new importance value
    */
   public void setImportance(String tmp) {
     this.importance = Integer.parseInt(tmp);
@@ -313,9 +312,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Issue object
+   * Sets the enabled attribute of the Issue object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -323,9 +322,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Issue object
+   * Sets the enabled attribute of the Issue object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -333,9 +332,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Issue object
+   * Sets the entered attribute of the Issue object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -343,9 +342,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Issue object
+   * Sets the entered attribute of the Issue object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -353,9 +352,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Issue object
+   * Sets the enteredBy attribute of the Issue object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -363,9 +362,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Issue object
+   * Sets the enteredBy attribute of the Issue object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -373,9 +372,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Issue object
+   * Sets the modified attribute of the Issue object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -383,9 +382,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Issue object
+   * Sets the modified attribute of the Issue object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -393,9 +392,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Issue object
+   * Sets the modifiedBy attribute of the Issue object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -403,9 +402,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Issue object
+   * Sets the modifiedBy attribute of the Issue object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -413,9 +412,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the replyCount attribute of the Issue object
+   * Sets the replyCount attribute of the Issue object
    *
-   *@param  tmp  The new replyCount value
+   * @param tmp The new replyCount value
    */
   public void setReplyCount(int tmp) {
     this.replyCount = tmp;
@@ -423,9 +422,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the replyDate attribute of the Issue object
+   * Sets the replyDate attribute of the Issue object
    *
-   *@param  tmp  The new replyDate value
+   * @param tmp The new replyDate value
    */
   public void setReplyDate(java.sql.Timestamp tmp) {
     this.replyDate = tmp;
@@ -433,9 +432,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the replyDate attribute of the Issue object
+   * Sets the replyDate attribute of the Issue object
    *
-   *@param  tmp  The new replyDate value
+   * @param tmp The new replyDate value
    */
   public void setReplyDate(String tmp) {
     this.replyDate = DatabaseUtils.parseTimestamp(tmp);
@@ -443,9 +442,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the replyBy attribute of the Issue object
+   * Sets the replyBy attribute of the Issue object
    *
-   *@param  tmp  The new replyBy value
+   * @param tmp The new replyBy value
    */
   public void setReplyBy(int tmp) {
     this.replyBy = tmp;
@@ -453,20 +452,19 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Sets the replyBy attribute of the Issue object
+   * Sets the replyBy attribute of the Issue object
    *
-   *@param  tmp  The new replyBy value
+   * @param tmp The new replyBy value
    */
   public void setReplyBy(String tmp) {
     this.replyBy = Integer.parseInt(tmp);
   }
 
 
-
   /**
-   *  Gets the id attribute of the Issue object
+   * Gets the id attribute of the Issue object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -474,9 +472,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the project attribute of the Issue object
+   * Gets the project attribute of the Issue object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -484,9 +482,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the Issue object
+   * Gets the projectId attribute of the Issue object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -494,9 +492,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the Issue object
+   * Gets the categoryId attribute of the Issue object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -504,9 +502,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the subject attribute of the Issue object
+   * Gets the subject attribute of the Issue object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -514,9 +512,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the body attribute of the Issue object
+   * Gets the body attribute of the Issue object
    *
-   *@return    The body value
+   * @return The body value
    */
   public String getBody() {
     return body;
@@ -524,9 +522,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the importance attribute of the Issue object
+   * Gets the importance attribute of the Issue object
    *
-   *@return    The importance value
+   * @return The importance value
    */
   public int getImportance() {
     return importance;
@@ -534,9 +532,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Issue object
+   * Gets the enabled attribute of the Issue object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -544,9 +542,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Issue object
+   * Gets the entered attribute of the Issue object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -554,9 +552,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Issue object
+   * Gets the enteredString attribute of the Issue object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -569,9 +567,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the Issue object
+   * Gets the enteredDateTimeString attribute of the Issue object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     String tmp = "";
@@ -584,9 +582,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Issue object
+   * Gets the enteredBy attribute of the Issue object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -594,9 +592,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Issue object
+   * Gets the modified attribute of the Issue object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -604,9 +602,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Issue object
+   * Gets the modifiedBy attribute of the Issue object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -614,9 +612,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyCount attribute of the Issue object
+   * Gets the replyCount attribute of the Issue object
    *
-   *@return    The replyCount value
+   * @return The replyCount value
    */
   public int getReplyCount() {
     return replyCount;
@@ -624,9 +622,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyCountString attribute of the Issue object
+   * Gets the replyCountString attribute of the Issue object
    *
-   *@return    The replyCountString value
+   * @return The replyCountString value
    */
   public String getReplyCountString() {
     if (replyCount == 0) {
@@ -640,14 +638,15 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyDateTimeString attribute of the Issue object
+   * Gets the replyDateTimeString attribute of the Issue object
    *
-   *@return    The replyDateTimeString value
+   * @return The replyDateTimeString value
    */
   public String getReplyDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(replyDate);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          replyDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -655,9 +654,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyDateString attribute of the Issue object
+   * Gets the replyDateString attribute of the Issue object
    *
-   *@return    The replyDateString value
+   * @return The replyDateString value
    */
   public String getReplyDateString() {
     String tmp = "";
@@ -670,9 +669,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyDate attribute of the Issue object
+   * Gets the replyDate attribute of the Issue object
    *
-   *@return    The replyDate value
+   * @return The replyDate value
    */
   public Timestamp getReplyDate() {
     return replyDate;
@@ -680,9 +679,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyBy attribute of the Issue object
+   * Gets the replyBy attribute of the Issue object
    *
-   *@return    The replyBy value
+   * @return The replyBy value
    */
   public int getReplyBy() {
     return replyBy;
@@ -690,9 +689,9 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Gets the replyList attribute of the Issue object
+   * Gets the replyList attribute of the Issue object
    *
-   *@return    The replyList value
+   * @return The replyList value
    */
   public IssueReplyList getReplyList() {
     return replyList;
@@ -707,17 +706,21 @@ public class Issue extends GenericBean {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_issues_issue_id_seq");
     sql.append(
         "INSERT INTO project_issues " +
         "(project_id, category_id, subject, message, importance, enabled, ");
+    if (id > -1) {
+      sql.append("issue_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -731,6 +734,9 @@ public class Issue extends GenericBean {
         "enteredBy, modifiedBy, " +
         "reply_count, last_reply_by) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -752,6 +758,9 @@ public class Issue extends GenericBean {
       pst.setString(++i, body);
       DatabaseUtils.setInt(pst, ++i, importance);
       pst.setBoolean(++i, enabled);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -767,7 +776,7 @@ public class Issue extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, replyBy);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "project_issues_issue_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "project_issues_issue_id_seq", id);
       //Update the category count
       i = 0;
       pst = db.prepareStatement(
@@ -795,11 +804,11 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public synchronized boolean delete(Connection db, String filePath) throws SQLException {
     if (id == -1 || projectId == -1 || categoryId == -1) {
@@ -827,7 +836,7 @@ public class Issue extends GenericBean {
         if (commit) {
           db.setAutoCommit(false);
         }
-        files.delete(db, filePath);
+        files.delete(db, getFileLibraryPath(filePath, "projects"));
         //Delete the replies
         IssueReplyList issueReplyList = new IssueReplyList();
         issueReplyList.setIssueId(id);
@@ -874,12 +883,12 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     return update(db);
@@ -887,11 +896,11 @@ public class Issue extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {

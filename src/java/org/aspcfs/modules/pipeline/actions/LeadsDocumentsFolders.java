@@ -15,36 +15,32 @@
  */
 package org.aspcfs.modules.pipeline.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.actions.ProjectManagementFileFolders;
+import com.zeroio.iteam.base.FileFolder;
+import com.zeroio.iteam.base.FileFolderHierarchy;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.web.*;
-import com.zeroio.iteam.actions.*;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public final class LeadsDocumentsFolders extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
@@ -73,10 +69,10 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
@@ -124,10 +120,10 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -162,10 +158,10 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -197,10 +193,10 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     //Parameters
@@ -229,14 +225,15 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     //Parameters
-    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String newFolderId = (String) context.getRequest().getParameter(
+        "folderId");
     String itemId = (String) context.getRequest().getParameter("id");
     Connection db = null;
     try {
@@ -251,7 +248,8 @@ public final class LeadsDocumentsFolders extends CFSModule {
         thisHierarchy.setLinkModuleId(Constants.DOCUMENTS_OPPORTUNITIES);
         thisHierarchy.setLinkItemId(opportunityId);
         thisHierarchy.build(db, thisFolder.getId());
-        if (thisHierarchy.getHierarchy().hasFolder(Integer.parseInt(newFolderId))) {
+        if (thisHierarchy.getHierarchy().hasFolder(
+            Integer.parseInt(newFolderId))) {
           thisFolder.buildSubFolders(db);
           Iterator iterator = (Iterator) thisFolder.getSubFolders().iterator();
           while (iterator.hasNext()) {
@@ -272,18 +270,19 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Opportunity attribute of the LeadsDocumentsFolders
-   *  object
+   * Adds a feature to the Opportunity attribute of the LeadsDocumentsFolders
+   * object
    *
-   *@param  context           The feature to be added to the Opportunity
-   *      attribute
-   *@param  db                The feature to be added to the Opportunity
-   *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context The feature to be added to the Opportunity
+   *                attribute
+   * @param db      The feature to be added to the Opportunity
+   *                attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addOpportunity(ActionContext context, Connection db) throws SQLException {
-    String opportunityId = (String) context.getRequest().getParameter("headerId");
+    String opportunityId = (String) context.getRequest().getParameter(
+        "headerId");
     if (opportunityId == null) {
       opportunityId = (String) context.getRequest().getAttribute("headerId");
     }
@@ -292,21 +291,22 @@ public final class LeadsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Opportunity attribute of the LeadsDocumentsFolders
-   *  object
+   * Adds a feature to the Opportunity attribute of the LeadsDocumentsFolders
+   * object
    *
-   *@param  context           The feature to be added to the Opportunity
-   *      attribute
-   *@param  db                The feature to be added to the Opportunity
-   *      attribute
-   *@param  opportunityId     The feature to be added to the Opportunity
-   *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context       The feature to be added to the Opportunity
+   *                      attribute
+   * @param db            The feature to be added to the Opportunity
+   *                      attribute
+   * @param opportunityId The feature to be added to the Opportunity
+   *                      attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int addOpportunity(ActionContext context, Connection db, String opportunityId) throws SQLException {
     context.getRequest().setAttribute("headerId", opportunityId);
-    OpportunityHeader thisOpportunity = new OpportunityHeader(db, opportunityId);
+    OpportunityHeader thisOpportunity = new OpportunityHeader(
+        db, opportunityId);
     context.getRequest().setAttribute("opportunityHeader", thisOpportunity);
     return thisOpportunity.getId();
   }

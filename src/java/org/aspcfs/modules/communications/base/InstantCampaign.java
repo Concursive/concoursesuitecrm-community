@@ -25,13 +25,13 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 /**
- *  This class bypasses the typical campaign process. Now a campaign can be
- *  quickly created with a message and recipients without having to build
- *  criteria.
+ * This class bypasses the typical campaign process. Now a campaign can be
+ * quickly created with a message and recipients without having to build
+ * criteria.
  *
- *@author     akhi_m
- *@created    May 13, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created May 13, 2003
  */
 public class InstantCampaign extends Campaign {
   private Message instantMessage = null;
@@ -39,9 +39,9 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Sets the instantMessage attribute of the InstantCampaign object
+   * Sets the instantMessage attribute of the InstantCampaign object
    *
-   *@param  instantMessage  The new instantMessage value
+   * @param instantMessage The new instantMessage value
    */
   public void setMessage(Message instantMessage) {
     this.instantMessage = instantMessage;
@@ -49,9 +49,9 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Sets the recipients attribute of the InstantCampaign object
+   * Sets the recipients attribute of the InstantCampaign object
    *
-   *@param  recipients  The new recipients value
+   * @param recipients The new recipients value
    */
   public void setRecipients(ContactList recipients) {
     this.recipients = recipients;
@@ -59,9 +59,9 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Gets the recipients attribute of the InstantCampaign object
+   * Gets the recipients attribute of the InstantCampaign object
    *
-   *@return    The recipients value
+   * @return The recipients value
    */
   public ContactList getRecipients() {
     return recipients;
@@ -69,9 +69,9 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Gets the instantMessage attribute of the InstantCampaign object
+   * Gets the instantMessage attribute of the InstantCampaign object
    *
-   *@return    The instantMessage value
+   * @return The instantMessage value
    */
   public Message getInstantMessage() {
     return instantMessage;
@@ -79,11 +79,11 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Adds a feature to the Recipient attribute of the InstantCampaign object
+   * Adds a feature to the Recipient attribute of the InstantCampaign object
    *
-   *@param  db                The feature to be added to the Recipient attribute
-   *@param  contactId         The feature to be added to the Recipient attribute
-   *@exception  SQLException  Description of the Exception
+   * @param db        The feature to be added to the Recipient attribute
+   * @param contactId The feature to be added to the Recipient attribute
+   * @throws SQLException Description of the Exception
    */
   public void addRecipient(Connection db, int contactId) throws SQLException {
     if (recipients == null) {
@@ -94,11 +94,11 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean activate(Connection db) throws SQLException {
     int resultCount = 0;
@@ -186,11 +186,11 @@ public class InstantCampaign extends Campaign {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateInstantCampaignMessage(Connection db, Message tmpMessage) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

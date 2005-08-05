@@ -15,26 +15,27 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.PhoneNumberList;
-import org.aspcfs.modules.base.PhoneNumber;
-import org.aspcfs.modules.base.Constants;
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.PhoneNumber;
+import org.aspcfs.modules.base.PhoneNumberList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Contains a list of phone numbers... currently used to build the list from
- *  the database with any of the parameters to limit the results.
+ * Contains a list of phone numbers... currently used to build the list from
+ * the database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
- *@created    September 4, 2001
- *@version    $Id: ContactPhoneNumberList.java,v 1.4 2003/01/15 15:51:07
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: ContactPhoneNumberList.java,v 1.4 2003/01/15 15:51:07
+ *          mrajkowski Exp $
+ * @created September 4, 2001
  */
 public class ContactPhoneNumberList extends PhoneNumberList {
 
@@ -46,23 +47,25 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Constructor for the ContactPhoneNumberList object
+   * Constructor for the ContactPhoneNumberList object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public ContactPhoneNumberList() { }
+  public ContactPhoneNumberList() {
+  }
 
 
   /**
-   *  Constructor for the ContactPhoneNumberList object
+   * Constructor for the ContactPhoneNumberList object
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public ContactPhoneNumberList(ActionContext context) {
     int i = 0;
     int primaryNumber = -1;
     if (context.getRequest().getParameter("primaryNumber") != null) {
-      primaryNumber = Integer.parseInt((String) context.getRequest().getParameter("primaryNumber"));
+      primaryNumber = Integer.parseInt(
+          (String) context.getRequest().getParameter("primaryNumber"));
     }
     while (context.getRequest().getParameter("phone" + (++i) + "type") != null) {
       ContactPhoneNumber thisPhoneNumber = new ContactPhoneNumber();
@@ -78,9 +81,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Gets the tableName attribute of the ContactPhoneNumberList object
+   * Gets the tableName attribute of the ContactPhoneNumberList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -88,9 +91,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Gets the uniqueField attribute of the ContactPhoneNumberList object
+   * Gets the uniqueField attribute of the ContactPhoneNumberList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -98,9 +101,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the ContactPhoneNumberList object
+   * Gets the lastAnchor attribute of the ContactPhoneNumberList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -108,9 +111,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the ContactPhoneNumberList object
+   * Gets the nextAnchor attribute of the ContactPhoneNumberList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -118,9 +121,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Gets the syncType attribute of the ContactPhoneNumberList object
+   * Gets the syncType attribute of the ContactPhoneNumberList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -128,9 +131,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the ContactPhoneNumberList object
+   * Sets the lastAnchor attribute of the ContactPhoneNumberList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -138,9 +141,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the ContactPhoneNumberList object
+   * Sets the nextAnchor attribute of the ContactPhoneNumberList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -148,9 +151,9 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Sets the syncType attribute of the ContactPhoneNumberList object
+   * Sets the syncType attribute of the ContactPhoneNumberList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -158,11 +161,11 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ContactPhoneNumberList object
+   * Gets the htmlSelect attribute of the ContactPhoneNumberList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect emailListSelect = new HtmlSelect();
@@ -183,13 +186,13 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Builds a list of addresses based on several parameters. The parameters are
-   *  set after this object is constructed, then the buildList method is called
-   *  to generate the list.
+   * Builds a list of addresses based on several parameters. The parameters are
+   * set after this object is constructed, then the buildList method is called
+   * to generate the list.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -203,12 +206,14 @@ public class ContactPhoneNumberList extends PhoneNumberList {
     StringBuffer sqlOrder = new StringBuffer();
 
     //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
+    sqlSelect.append(
+        "SELECT * " +
         "FROM contact_phone p, lookup_contactphone_types l " +
         "WHERE p.phone_type = l.code ");
 
     //Need to build a base SQL statement for counting records
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
         "FROM contact_phone p, lookup_contactphone_types l " +
         "WHERE p.phone_type = l.code ");
 
@@ -216,7 +221,8 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -229,9 +235,10 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(phone_type) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(phone_type) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -244,9 +251,12 @@ public class ContactPhoneNumberList extends PhoneNumberList {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", phone_type ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals(
+          "")) {
+        sqlOrder.append(
+            "ORDER BY " + pagedListInfo.getColumnToSortBy() + ", phone_type ");
+        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals(
+            "")) {
           sqlOrder.append(pagedListInfo.getSortOrder() + " ");
         }
       } else {
@@ -262,7 +272,8 @@ public class ContactPhoneNumberList extends PhoneNumberList {
       sqlOrder.append("ORDER BY phone_type ");
     }
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {

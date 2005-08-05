@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.media.autoguide.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Collection of Make objects
+ * Collection of Make objects
  *
- *@author     matt
- *@created    May 17, 2002
- *@version    $Id$
+ * @author matt
+ * @version $Id$
+ * @created May 17, 2002
  */
 public class MakeList extends ArrayList implements SyncableList {
 
@@ -41,15 +42,16 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Constructor for the MakeList object
+   * Constructor for the MakeList object
    */
-  public MakeList() { }
+  public MakeList() {
+  }
 
 
   /**
-   *  Sets the lastAnchor attribute of the MakeList object
+   * Sets the lastAnchor attribute of the MakeList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -57,9 +59,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the MakeList object
+   * Sets the lastAnchor attribute of the MakeList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -67,9 +69,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the MakeList object
+   * Sets the nextAnchor attribute of the MakeList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -77,9 +79,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the MakeList object
+   * Sets the nextAnchor attribute of the MakeList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -87,9 +89,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the MakeList object
+   * Sets the syncType attribute of the MakeList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -97,9 +99,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the MakeList object
+   * Sets the syncType attribute of the MakeList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -107,9 +109,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the year attribute of the MakeList object
+   * Sets the year attribute of the MakeList object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(int tmp) {
     this.year = tmp;
@@ -117,9 +119,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the year attribute of the MakeList object
+   * Sets the year attribute of the MakeList object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(String tmp) {
     try {
@@ -130,9 +132,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the tableName attribute of the MakeList object
+   * Gets the tableName attribute of the MakeList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -140,9 +142,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the MakeList object
+   * Gets the uniqueField attribute of the MakeList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -150,11 +152,11 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the object attribute of the MakeList object
+   * Gets the object attribute of the MakeList object
    *
-   *@param  rs                Description of Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @return The object value
+   * @throws SQLException Description of Exception
    */
   public Make getObject(ResultSet rs) throws SQLException {
     Make thisMake = new Make(rs);
@@ -163,10 +165,10 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -174,10 +176,10 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -194,13 +196,13 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  This method is required for synchronization, it allows for the resultset
-   *  to be streamed with lower overhead
+   * This method is required for synchronization, it allows for the resultset
+   * to be streamed with lower overhead
    *
-   *@param  db                Description of Parameter
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db  Description of Parameter
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -223,9 +225,9 @@ public class MakeList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -243,17 +245,18 @@ public class MakeList extends ArrayList implements SyncableList {
       sqlFilter.append("AND make.modified < ? ");
     }
     if (year > -1) {
-      sqlFilter.append("AND make.make_id IN (SELECT DISTINCT make_id FROM autoguide_vehicle WHERE year = ?) ");
+      sqlFilter.append(
+          "AND make.make_id IN (SELECT DISTINCT make_id FROM autoguide_vehicle WHERE year = ?) ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

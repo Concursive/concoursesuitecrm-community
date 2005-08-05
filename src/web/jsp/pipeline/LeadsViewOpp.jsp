@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.HtmlSelect" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.HtmlSelect, org.aspcfs.modules.base.Constants" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
@@ -108,7 +108,7 @@
 	<tr bgcolor="white">
     <td width="8" valign="top" nowrap class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('select<%= i %>','menuOpp', '<%= thisOpp.getHeader().getId() %>','<%= thisOpp.getComponent().getId() %>');"
+       <a href="javascript:displayMenu('select<%= i %>','menuOpp', '<%= thisOpp.getHeader().getId() %>','<%= thisOpp.getComponent().getId() %>', '<%= thisOpp.getComponent().isTrashed() %>');"
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="33%" valign="top" class="row<%= rowid %>">
@@ -136,7 +136,7 @@
     </td>
     <td width="33%" valign="top" class="row<%= rowid %>">
       <dhv:evaluate if="<%= thisOpp.getHeader().getAccountLink() > -1 %>">
-        <a href="Opportunities.do?command=View&orgId=<%= thisOpp.getHeader().getAccountLink() %>">
+        <a href="Accounts.do?command=Details&orgId=<%= thisOpp.getHeader().getAccountLink() %>">
           <%= toHtml(thisOpp.getHeader().getAccountName()) %>
         </a>
       </dhv:evaluate>
@@ -147,7 +147,7 @@
     </td>
     <td width="33%" valign="top" class="row<%= rowid %>">
       <dhv:evaluate if="<%= thisOpp.getHeader().getContactLink() > -1 %>">
-        <a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= thisOpp.getHeader().getContactLink() %>">
+        <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisOpp.getHeader().getContactLink() %>">
           <%= toHtml(thisOpp.getHeader().getContactName()) %>
         </a>
       </dhv:evaluate>

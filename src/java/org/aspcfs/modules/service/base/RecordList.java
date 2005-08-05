@@ -15,16 +15,18 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.util.*;
-import org.w3c.dom.*;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Maintains a list of records copied from a ResultSet. Used for the XML API.
+ * Maintains a list of records copied from a ResultSet. Used for the XML API.
  *
- *@author     matt rajkowski
- *@created    May 29, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 29, 2002
  */
 public class RecordList extends ArrayList {
 
@@ -33,9 +35,9 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Constructor for the RecordList object
+   * Constructor for the RecordList object
    *
-   *@param  tableName  Description of Parameter
+   * @param tableName Description of Parameter
    */
   public RecordList(String tableName) {
     name = tableName;
@@ -43,10 +45,10 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Constructor for the RecordList object from the specified recordList node;
-   *  typically used in constructing a TransactionStatus object
+   * Constructor for the RecordList object from the specified recordList node;
+   * typically used in constructing a TransactionStatus object
    *
-   *@param  recordListNode  Description of the Parameter
+   * @param recordListNode Description of the Parameter
    */
   public RecordList(Element recordListNode) {
     //Attributes that a recordList might have
@@ -64,9 +66,9 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Sets the name attribute of the RecordList object
+   * Sets the name attribute of the RecordList object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -74,9 +76,9 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Sets the totalRecords attribute of the RecordList object
+   * Sets the totalRecords attribute of the RecordList object
    *
-   *@param  tmp  The new totalRecords value
+   * @param tmp The new totalRecords value
    */
   public void setTotalRecords(int tmp) {
     this.totalRecords = tmp;
@@ -84,9 +86,9 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Sets the totalRecords attribute of the RecordList object
+   * Sets the totalRecords attribute of the RecordList object
    *
-   *@param  tmp  The new totalRecords value
+   * @param tmp The new totalRecords value
    */
   public void setTotalRecords(String tmp) {
     try {
@@ -100,9 +102,9 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Gets the name attribute of the RecordList object
+   * Gets the name attribute of the RecordList object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -110,9 +112,9 @@ public class RecordList extends ArrayList {
 
 
   /**
-   *  Gets the totalRecords attribute of the RecordList object
+   * Gets the totalRecords attribute of the RecordList object
    *
-   *@return    The totalRecords value
+   * @return The totalRecords value
    */
   public int getTotalRecords() {
     return totalRecords;

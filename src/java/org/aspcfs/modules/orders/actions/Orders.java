@@ -15,46 +15,39 @@
  */
 package org.aspcfs.modules.orders.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.orders.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.lang.*;
-import java.text.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.actionlist.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.orders.beans.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.orders.base.Order;
+import org.aspcfs.modules.orders.base.OrderList;
+import org.aspcfs.modules.orders.base.OrderPaymentList;
+import org.aspcfs.modules.orders.beans.StatusBean;
+import org.aspcfs.modules.products.base.ProductCategoryList;
+import org.aspcfs.modules.products.base.ProductOptionList;
+import org.aspcfs.modules.products.base.ProductOptionValuesList;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    April 20, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created April 20, 2004
  */
 public final class Orders extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandSearchForm(context);
@@ -69,10 +62,10 @@ public final class Orders extends CFSModule {
    */
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
@@ -88,17 +81,20 @@ public final class Orders extends CFSModule {
       db = getConnection(context);
       //Order type lookup
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       statusSelect.addItem(-1, "All Open Orders");
       context.getRequest().setAttribute("statusSelect", statusSelect);
       //Category lookup
       LookupList list = new LookupList(db, "lookup_product_category_type");
       ProductCategoryList categoryList = new ProductCategoryList();
       categoryList.buildList(db);
-      HtmlSelect select = categoryList.getHtmlSelect(list.getIdFromValue("Publication"));
+      HtmlSelect select = categoryList.getHtmlSelect(
+          list.getIdFromValue("Publication"));
       context.getRequest().setAttribute("categorySelect", select);
       //reset the offset and current letter of the paged list in order to make sure we search ALL orders
-      PagedListInfo orderListInfo = this.getPagedListInfo(context, "searchOrderListInfo");
+      PagedListInfo orderListInfo = this.getPagedListInfo(
+          context, "searchOrderListInfo");
       orderListInfo.setCurrentLetter("");
       orderListInfo.setCurrentOffset(0);
     } catch (Exception e) {
@@ -113,10 +109,10 @@ public final class Orders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearch(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
@@ -127,7 +123,8 @@ public final class Orders extends CFSModule {
     addModuleBean(context, "View Orders", "Search Results");
 
     //Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "searchOrderListInfo");
+    PagedListInfo searchListInfo = this.getPagedListInfo(
+        context, "searchOrderListInfo");
     searchListInfo.setLink("Orders.do?command=Search");
     Connection db = null;
     try {
@@ -145,10 +142,12 @@ public final class Orders extends CFSModule {
        */
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_order_type");
       context.getRequest().setAttribute("typeSelect", typeSelect);
 
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
       statusSelect.addItem(-1, "All Open Orders");
 
@@ -178,10 +177,10 @@ public final class Orders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
@@ -195,7 +194,8 @@ public final class Orders extends CFSModule {
     try {
       tempid = Integer.parseInt(context.getRequest().getParameter("id"));
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError",
+      context.getRequest().setAttribute(
+          "actionError",
           "Invalid criteria, please review and make necessary changes before submitting");
       return "SearchCriteriaError";
     }
@@ -211,7 +211,8 @@ public final class Orders extends CFSModule {
 
       optionValuesList = new ProductOptionValuesList();
       optionValuesList.buildList(db);
-      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
+      context.getRequest().setAttribute(
+          "productOptionValuesList", optionValuesList);
 
       OrderPaymentList paymentList = new OrderPaymentList();
       paymentList.setOrderId(newOrder.getId());
@@ -219,15 +220,19 @@ public final class Orders extends CFSModule {
       context.getRequest().setAttribute("paymentList", paymentList);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_order_type");
       context.getRequest().setAttribute("typeSelect", typeSelect);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
-      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+      LookupList paymentSelect = systemStatus.getLookupList(
+          db, "lookup_payment_status");
       context.getRequest().setAttribute("paymentSelect", paymentSelect);
 
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError",
+      context.getRequest().setAttribute(
+          "actionError",
           "The specified order could not be found");
       return "SearchCriteriaError";
     } finally {
@@ -248,10 +253,10 @@ public final class Orders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyStatus(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
@@ -277,7 +282,8 @@ public final class Orders extends CFSModule {
 
       optionValuesList = new ProductOptionValuesList();
       optionValuesList.buildList(db);
-      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
+      context.getRequest().setAttribute(
+          "productOptionValuesList", optionValuesList);
 
       OrderPaymentList paymentList = new OrderPaymentList();
       paymentList.setOrderId(newOrder.getId());
@@ -285,11 +291,13 @@ public final class Orders extends CFSModule {
       context.getRequest().setAttribute("paymentList", paymentList);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      LookupList typeSelect = systemStatus.getLookupList(
+          db, "lookup_order_type");
       context.getRequest().setAttribute("typeSelect", typeSelect);
 
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
-      statusSelect.addItem(-1, "-- None --");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
+      statusSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("statusSelect", statusSelect);
 
       StatusBean statusBean = new StatusBean();
@@ -309,10 +317,10 @@ public final class Orders extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveStatus(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {

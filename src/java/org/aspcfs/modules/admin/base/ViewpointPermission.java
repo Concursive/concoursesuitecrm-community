@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    February 24, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created February 24, 2003
  */
 public class ViewpointPermission extends GenericBean {
-
   private int id = -1;
   private int viewpointId = -1;
   private int permissionId = -1;
@@ -40,16 +41,17 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Constructor for the ViewpointPermission object
+   * Constructor for the ViewpointPermission object
    */
-  public ViewpointPermission() { }
+  public ViewpointPermission() {
+  }
 
 
   /**
-   *  Constructor for the ViewpointPermission object
+   * Constructor for the ViewpointPermission object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ViewpointPermission(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -57,11 +59,11 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Constructor for the ViewpointPermission object
+   * Constructor for the ViewpointPermission object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ViewpointPermission(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -82,9 +84,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ViewpointPermission object
+   * Sets the id attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -92,9 +94,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ViewpointPermission object
+   * Sets the id attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -102,9 +104,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the viewpointId attribute of the ViewpointPermission object
+   * Sets the viewpointId attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new viewpointId value
+   * @param tmp The new viewpointId value
    */
   public void setViewpointId(int tmp) {
     this.viewpointId = tmp;
@@ -112,9 +114,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the viewpointId attribute of the ViewpointPermission object
+   * Sets the viewpointId attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new viewpointId value
+   * @param tmp The new viewpointId value
    */
   public void setViewpointId(String tmp) {
     this.viewpointId = Integer.parseInt(tmp);
@@ -122,9 +124,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the permissionId attribute of the ViewpointPermission object
+   * Sets the permissionId attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new permissionId value
+   * @param tmp The new permissionId value
    */
   public void setPermissionId(int tmp) {
     this.permissionId = tmp;
@@ -132,9 +134,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the permissionId attribute of the ViewpointPermission object
+   * Sets the permissionId attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new permissionId value
+   * @param tmp The new permissionId value
    */
   public void setPermissionId(String tmp) {
     this.permissionId = Integer.parseInt(tmp);
@@ -142,9 +144,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the add attribute of the ViewpointPermission object
+   * Sets the add attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new add value
+   * @param tmp The new add value
    */
   public void setAdd(boolean tmp) {
     this.add = tmp;
@@ -152,9 +154,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the add attribute of the ViewpointPermission object
+   * Sets the add attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new add value
+   * @param tmp The new add value
    */
   public void setAdd(String tmp) {
     this.add = DatabaseUtils.parseBoolean(tmp);
@@ -162,9 +164,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the view attribute of the ViewpointPermission object
+   * Sets the view attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new view value
+   * @param tmp The new view value
    */
   public void setView(boolean tmp) {
     this.view = tmp;
@@ -172,9 +174,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the view attribute of the ViewpointPermission object
+   * Sets the view attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new view value
+   * @param tmp The new view value
    */
   public void setView(String tmp) {
     this.view = DatabaseUtils.parseBoolean(tmp);
@@ -182,9 +184,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the edit attribute of the ViewpointPermission object
+   * Sets the edit attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new edit value
+   * @param tmp The new edit value
    */
   public void setEdit(boolean tmp) {
     this.edit = tmp;
@@ -192,9 +194,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the edit attribute of the ViewpointPermission object
+   * Sets the edit attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new edit value
+   * @param tmp The new edit value
    */
   public void setEdit(String tmp) {
     this.edit = DatabaseUtils.parseBoolean(tmp);
@@ -202,9 +204,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the delete attribute of the ViewpointPermission object
+   * Sets the delete attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new delete value
+   * @param tmp The new delete value
    */
   public void setDelete(boolean tmp) {
     this.delete = tmp;
@@ -212,9 +214,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Sets the delete attribute of the ViewpointPermission object
+   * Sets the delete attribute of the ViewpointPermission object
    *
-   *@param  tmp  The new delete value
+   * @param tmp The new delete value
    */
   public void setDelete(String tmp) {
     this.delete = DatabaseUtils.parseBoolean(tmp);
@@ -222,9 +224,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ViewpointPermission object
+   * Gets the id attribute of the ViewpointPermission object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -232,9 +234,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the viewpointId attribute of the ViewpointPermission object
+   * Gets the viewpointId attribute of the ViewpointPermission object
    *
-   *@return    The viewpointId value
+   * @return The viewpointId value
    */
   public int getViewpointId() {
     return viewpointId;
@@ -242,9 +244,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the permissionId attribute of the ViewpointPermission object
+   * Gets the permissionId attribute of the ViewpointPermission object
    *
-   *@return    The permissionId value
+   * @return The permissionId value
    */
   public int getPermissionId() {
     return permissionId;
@@ -252,9 +254,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the add attribute of the ViewpointPermission object
+   * Gets the add attribute of the ViewpointPermission object
    *
-   *@return    The add value
+   * @return The add value
    */
   public boolean getAdd() {
     return add;
@@ -262,9 +264,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the view attribute of the ViewpointPermission object
+   * Gets the view attribute of the ViewpointPermission object
    *
-   *@return    The view value
+   * @return The view value
    */
   public boolean getView() {
     return view;
@@ -272,9 +274,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the edit attribute of the ViewpointPermission object
+   * Gets the edit attribute of the ViewpointPermission object
    *
-   *@return    The edit value
+   * @return The edit value
    */
   public boolean getEdit() {
     return edit;
@@ -282,9 +284,9 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Gets the delete attribute of the ViewpointPermission object
+   * Gets the delete attribute of the ViewpointPermission object
    *
-   *@return    The delete value
+   * @return The delete value
    */
   public boolean getDelete() {
     return delete;
@@ -292,10 +294,10 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //vp_permission table
@@ -310,18 +312,23 @@ public class ViewpointPermission extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "viewpoint_per_vp_permission_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO viewpoint_permission (viewpoint_id, permission_id, viewpoint_view, " +
+        "INSERT INTO viewpoint_permission (" +
+        (id > -1 ? "vp_permission_id, " : "") + "viewpoint_id, permission_id, viewpoint_view, " +
         "viewpoint_add, viewpoint_edit, viewpoint_delete) " +
-        "VALUES (?, ?, ?, ?, ?, ?) ");
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, viewpointId);
     pst.setInt(++i, permissionId);
     pst.setBoolean(++i, view);
@@ -329,7 +336,7 @@ public class ViewpointPermission extends GenericBean {
     pst.setBoolean(++i, edit);
     pst.setBoolean(++i, delete);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "viewpoint_per_vp_permission_seq");
+    id = DatabaseUtils.getCurrVal(db, "viewpoint_per_vp_permission_seq", id);
     return true;
   }
 }

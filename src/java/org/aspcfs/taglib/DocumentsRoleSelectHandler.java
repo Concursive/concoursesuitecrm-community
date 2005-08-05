@@ -15,20 +15,20 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.*;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.controller.SystemStatus;
 import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.web.LookupList;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public class DocumentsRoleSelectHandler extends TagSupport {
 
@@ -38,9 +38,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the name attribute of the DocumentsRoleSelectHandler object
+   * Sets the name attribute of the DocumentsRoleSelectHandler object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -48,9 +48,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the DocumentsRoleSelectHandler object
+   * Sets the value attribute of the DocumentsRoleSelectHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = Integer.parseInt(tmp);
@@ -58,9 +58,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the DocumentsRoleSelectHandler object
+   * Sets the value attribute of the DocumentsRoleSelectHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(int tmp) {
     this.value = tmp;
@@ -68,9 +68,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the onChange attribute of the DocumentsRoleSelectHandler object
+   * Sets the onChange attribute of the DocumentsRoleSelectHandler object
    *
-   *@param  tmp  The new onChange value
+   * @param tmp The new onChange value
    */
   public void setOnChange(String tmp) {
     this.onChange = tmp;
@@ -78,21 +78,24 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
       if (ce == null) {
         System.out.println("RoleHandler-> ConnectionElement is null");
       }
       boolean output = false;
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
       if (systemStatus != null) {
-        LookupList roleList = (LookupList) systemStatus.getLookupList(null, "lookup_document_store_role");
+        LookupList roleList = (LookupList) systemStatus.getLookupList(
+            null, "lookup_document_store_role");
         if (roleList != null) {
           if (onChange != null) {
             roleList.setJsEvent("onChange=\"" + onChange + "\"");
@@ -112,9 +115,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

@@ -27,11 +27,11 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    June 23, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created June 23, 2003
  */
 public class NewsArticle extends GenericBean {
   //display priorities
@@ -79,18 +79,19 @@ public class NewsArticle extends GenericBean {
   private int classificationId = ARTICLE;
   private int templateId = -1;
 
-  
+
   /**
-   *  Constructor for the NewsArticle object
+   * Constructor for the NewsArticle object
    */
-  public NewsArticle() { }
+  public NewsArticle() {
+  }
 
 
   /**
-   *  Constructor for the NewsArticle object
+   * Constructor for the NewsArticle object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public NewsArticle(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -98,12 +99,12 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Constructor for the NewsArticle object
+   * Constructor for the NewsArticle object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param id        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public NewsArticle(Connection db, int id, int projectId) throws SQLException {
     this.projectId = projectId;
@@ -112,11 +113,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newsId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param newsId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int newsId) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -147,9 +148,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the NewsArticle object
+   * Sets the id attribute of the NewsArticle object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -157,9 +158,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the NewsArticle object
+   * Sets the id attribute of the NewsArticle object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -167,9 +168,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the NewsArticle object
+   * Sets the projectId attribute of the NewsArticle object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -177,9 +178,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the NewsArticle object
+   * Sets the projectId attribute of the NewsArticle object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -187,9 +188,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the NewsArticle object
+   * Sets the categoryId attribute of the NewsArticle object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -197,9 +198,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the NewsArticle object
+   * Sets the categoryId attribute of the NewsArticle object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -207,9 +208,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the subject attribute of the NewsArticle object
+   * Sets the subject attribute of the NewsArticle object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -217,9 +218,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the intro attribute of the NewsArticle object
+   * Sets the intro attribute of the NewsArticle object
    *
-   *@param  tmp  The new intro value
+   * @param tmp The new intro value
    */
   public void setIntro(String tmp) {
     this.intro = tmp;
@@ -227,9 +228,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the message attribute of the NewsArticle object
+   * Sets the message attribute of the NewsArticle object
    *
-   *@param  tmp  The new message value
+   * @param tmp The new message value
    */
   public void setMessage(String tmp) {
     this.message = tmp;
@@ -237,9 +238,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the NewsArticle object
+   * Sets the entered attribute of the NewsArticle object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -247,9 +248,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the NewsArticle object
+   * Sets the entered attribute of the NewsArticle object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -257,9 +258,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the NewsArticle object
+   * Sets the enteredBy attribute of the NewsArticle object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -267,9 +268,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the NewsArticle object
+   * Sets the enteredBy attribute of the NewsArticle object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -277,9 +278,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the NewsArticle object
+   * Sets the modified attribute of the NewsArticle object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -287,9 +288,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the NewsArticle object
+   * Sets the modified attribute of the NewsArticle object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -297,9 +298,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the NewsArticle object
+   * Sets the modifiedBy attribute of the NewsArticle object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -307,9 +308,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the NewsArticle object
+   * Sets the modifiedBy attribute of the NewsArticle object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -317,9 +318,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the NewsArticle object
+   * Sets the startDate attribute of the NewsArticle object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
@@ -327,9 +328,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the NewsArticle object
+   * Sets the startDate attribute of the NewsArticle object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -337,9 +338,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the endDate attribute of the NewsArticle object
+   * Sets the endDate attribute of the NewsArticle object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
@@ -347,9 +348,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the endDate attribute of the NewsArticle object
+   * Sets the endDate attribute of the NewsArticle object
    *
-   *@param  tmp  The new endDate value
+   * @param tmp The new endDate value
    */
   public void setEndDate(String tmp) {
     this.endDate = DatabaseUtils.parseTimestamp(tmp);
@@ -357,9 +358,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the priorityId attribute of the NewsArticle object
+   * Sets the priorityId attribute of the NewsArticle object
    *
-   *@param  tmp  The new priorityId value
+   * @param tmp The new priorityId value
    */
   public void setPriorityId(int tmp) {
     this.priorityId = tmp;
@@ -367,9 +368,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the priorityId attribute of the NewsArticle object
+   * Sets the priorityId attribute of the NewsArticle object
    *
-   *@param  tmp  The new priorityId value
+   * @param tmp The new priorityId value
    */
   public void setPriorityId(String tmp) {
     this.priorityId = Integer.parseInt(tmp);
@@ -377,9 +378,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the NewsArticle object
+   * Sets the enabled attribute of the NewsArticle object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -387,9 +388,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the allowReplies attribute of the NewsArticle object
+   * Sets the allowReplies attribute of the NewsArticle object
    *
-   *@param  tmp  The new allowReplies value
+   * @param tmp The new allowReplies value
    */
   public void setAllowReplies(boolean tmp) {
     this.allowReplies = tmp;
@@ -397,9 +398,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the allowReplies attribute of the NewsArticle object
+   * Sets the allowReplies attribute of the NewsArticle object
    *
-   *@param  tmp  The new allowReplies value
+   * @param tmp The new allowReplies value
    */
   public void setAllowReplies(String tmp) {
     this.allowReplies = DatabaseUtils.parseBoolean(tmp);
@@ -407,9 +408,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the allowRatings attribute of the NewsArticle object
+   * Sets the allowRatings attribute of the NewsArticle object
    *
-   *@param  tmp  The new allowRatings value
+   * @param tmp The new allowRatings value
    */
   public void setAllowRatings(boolean tmp) {
     this.allowRatings = tmp;
@@ -417,9 +418,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the allowRatings attribute of the NewsArticle object
+   * Sets the allowRatings attribute of the NewsArticle object
    *
-   *@param  tmp  The new allowRatings value
+   * @param tmp The new allowRatings value
    */
   public void setAllowRatings(String tmp) {
     this.allowRatings = DatabaseUtils.parseBoolean(tmp);
@@ -427,9 +428,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the ratingCount attribute of the NewsArticle object
+   * Sets the ratingCount attribute of the NewsArticle object
    *
-   *@param  tmp  The new ratingCount value
+   * @param tmp The new ratingCount value
    */
   public void setRatingCount(int tmp) {
     this.ratingCount = tmp;
@@ -437,9 +438,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the ratingCount attribute of the NewsArticle object
+   * Sets the ratingCount attribute of the NewsArticle object
    *
-   *@param  tmp  The new ratingCount value
+   * @param tmp The new ratingCount value
    */
   public void setRatingCount(String tmp) {
     this.ratingCount = Integer.parseInt(tmp);
@@ -447,9 +448,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the avgRating attribute of the NewsArticle object
+   * Sets the avgRating attribute of the NewsArticle object
    *
-   *@param  tmp  The new avgRating value
+   * @param tmp The new avgRating value
    */
   public void setAvgRating(double tmp) {
     this.avgRating = tmp;
@@ -457,9 +458,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the readCount attribute of the NewsArticle object
+   * Sets the readCount attribute of the NewsArticle object
    *
-   *@param  tmp  The new readCount value
+   * @param tmp The new readCount value
    */
   public void setReadCount(int tmp) {
     this.readCount = tmp;
@@ -467,9 +468,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the readCount attribute of the NewsArticle object
+   * Sets the readCount attribute of the NewsArticle object
    *
-   *@param  tmp  The new readCount value
+   * @param tmp The new readCount value
    */
   public void setReadCount(String tmp) {
     this.readCount = Integer.parseInt(tmp);
@@ -477,9 +478,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the NewsArticle object
+   * Sets the enabled attribute of the NewsArticle object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -487,9 +488,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the NewsArticle object
+   * Sets the status attribute of the NewsArticle object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -497,9 +498,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the NewsArticle object
+   * Sets the status attribute of the NewsArticle object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -507,9 +508,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the taskCategoryId attribute of the NewsArticle object
+   * Gets the taskCategoryId attribute of the NewsArticle object
    *
-   *@return    The taskCategory value
+   * @return The taskCategory value
    */
   public int getTaskCategoryId() {
     return taskCategoryId;
@@ -517,9 +518,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the taskCategoryId attribute of the NewsArticle object
+   * Sets the taskCategoryId attribute of the NewsArticle object
    *
-   *@param  tmp  The new taskCategoryId value
+   * @param tmp The new taskCategoryId value
    */
   public void setTaskCategoryId(int tmp) {
     this.taskCategoryId = tmp;
@@ -527,9 +528,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the taskCategoryId attribute of the NewsArticle object
+   * Sets the taskCategoryId attribute of the NewsArticle object
    *
-   *@param  tmp  The new taskCategoryId value
+   * @param tmp The new taskCategoryId value
    */
   public void setTaskCategoryId(String tmp) {
     this.taskCategoryId = Integer.parseInt(tmp);
@@ -537,19 +538,19 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the classificationId attribute of the NewsArticle object
+   * Gets the classificationId attribute of the NewsArticle object
    *
-   *@return    The classificationId value
+   * @return The classificationId value
    */
   public int getClassificationId() {
     return classificationId;
   }
-  
-  
+
+
   /**
-   *  Sets the classificationId attribute of the NewsArticle object
+   * Sets the classificationId attribute of the NewsArticle object
    *
-   *@param  tmp  The new classificationId value
+   * @param tmp The new classificationId value
    */
   public void setClassificationId(int tmp) {
     this.classificationId = tmp;
@@ -557,9 +558,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the classificationId attribute of the NewsArticle object
+   * Sets the classificationId attribute of the NewsArticle object
    *
-   *@param  tmp  The new classificationId value
+   * @param tmp The new classificationId value
    */
   public void setClassificationId(String tmp) {
     this.classificationId = Integer.parseInt(tmp);
@@ -567,9 +568,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the templateId attribute of the NewsArticle object
+   * Gets the templateId attribute of the NewsArticle object
    *
-   *@return    The templateId value
+   * @return The templateId value
    */
   public int getTemplateId() {
     return templateId;
@@ -577,9 +578,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the NewsArticle object
+   * Sets the templateId attribute of the NewsArticle object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(int tmp) {
     this.templateId = tmp;
@@ -587,9 +588,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the templateId attribute of the NewsArticle object
+   * Sets the templateId attribute of the NewsArticle object
    *
-   *@param  tmp  The new templateId value
+   * @param tmp The new templateId value
    */
   public void setTemplateId(String tmp) {
     this.templateId = Integer.parseInt(tmp);
@@ -597,9 +598,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the startDateTimeZone attribute of the NewsArticle object
+   * Sets the startDateTimeZone attribute of the NewsArticle object
    *
-   *@param  tmp  The new startDateTimeZone value
+   * @param tmp The new startDateTimeZone value
    */
   public void setStartDateTimeZone(String tmp) {
     this.startDateTimeZone = tmp;
@@ -607,9 +608,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Sets the endDateTimeZone attribute of the NewsArticle object
+   * Sets the endDateTimeZone attribute of the NewsArticle object
    *
-   *@param  tmp  The new endDateTimeZone value
+   * @param tmp The new endDateTimeZone value
    */
   public void setEndDateTimeZone(String tmp) {
     this.endDateTimeZone = tmp;
@@ -617,9 +618,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the startDateTimeZone attribute of the NewsArticle object
+   * Gets the startDateTimeZone attribute of the NewsArticle object
    *
-   *@return    The startDateTimeZone value
+   * @return The startDateTimeZone value
    */
   public String getStartDateTimeZone() {
     return startDateTimeZone;
@@ -627,9 +628,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the endDateTimeZone attribute of the NewsArticle object
+   * Gets the endDateTimeZone attribute of the NewsArticle object
    *
-   *@return    The endDateTimeZone value
+   * @return The endDateTimeZone value
    */
   public String getEndDateTimeZone() {
     return endDateTimeZone;
@@ -637,9 +638,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the NewsArticle object
+   * Gets the id attribute of the NewsArticle object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -647,9 +648,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the NewsArticle object
+   * Gets the projectId attribute of the NewsArticle object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -657,9 +658,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the NewsArticle object
+   * Gets the categoryId attribute of the NewsArticle object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -667,9 +668,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the subject attribute of the NewsArticle object
+   * Gets the subject attribute of the NewsArticle object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -677,9 +678,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the intro attribute of the NewsArticle object
+   * Gets the intro attribute of the NewsArticle object
    *
-   *@return    The intro value
+   * @return The intro value
    */
   public String getIntro() {
     return intro;
@@ -687,9 +688,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the message attribute of the NewsArticle object
+   * Gets the message attribute of the NewsArticle object
    *
-   *@return    The message value
+   * @return The message value
    */
   public String getMessage() {
     return message;
@@ -697,9 +698,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasMessage() {
     return (message != null && !"".equals(message));
@@ -707,9 +708,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the NewsArticle object
+   * Gets the entered attribute of the NewsArticle object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -717,9 +718,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the NewsArticle object
+   * Gets the enteredBy attribute of the NewsArticle object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -727,9 +728,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the NewsArticle object
+   * Gets the modified attribute of the NewsArticle object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -737,9 +738,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the NewsArticle object
+   * Gets the modifiedBy attribute of the NewsArticle object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -747,9 +748,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the startDate attribute of the NewsArticle object
+   * Gets the startDate attribute of the NewsArticle object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public java.sql.Timestamp getStartDate() {
     return startDate;
@@ -757,9 +758,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the startDateValue attribute of the NewsArticle object
+   * Gets the startDateValue attribute of the NewsArticle object
    *
-   *@return    The startDateValue value
+   * @return The startDateValue value
    */
   public String getStartDateValue() {
     try {
@@ -771,9 +772,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the endDate attribute of the NewsArticle object
+   * Gets the endDate attribute of the NewsArticle object
    *
-   *@return    The endDate value
+   * @return The endDate value
    */
   public java.sql.Timestamp getEndDate() {
     return endDate;
@@ -781,9 +782,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the endDateValue attribute of the NewsArticle object
+   * Gets the endDateValue attribute of the NewsArticle object
    *
-   *@return    The endDateValue value
+   * @return The endDateValue value
    */
   public String getEndDateValue() {
     try {
@@ -795,9 +796,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the priorityId attribute of the NewsArticle object
+   * Gets the priorityId attribute of the NewsArticle object
    *
-   *@return    The priorityId value
+   * @return The priorityId value
    */
   public int getPriorityId() {
     return priorityId;
@@ -805,9 +806,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the NewsArticle object
+   * Gets the enabled attribute of the NewsArticle object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -815,9 +816,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the allowReplies attribute of the NewsArticle object
+   * Gets the allowReplies attribute of the NewsArticle object
    *
-   *@return    The allowReplies value
+   * @return The allowReplies value
    */
   public boolean getAllowReplies() {
     return allowReplies;
@@ -825,9 +826,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the allowRatings attribute of the NewsArticle object
+   * Gets the allowRatings attribute of the NewsArticle object
    *
-   *@return    The allowRatings value
+   * @return The allowRatings value
    */
   public boolean getAllowRatings() {
     return allowRatings;
@@ -835,9 +836,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the ratingCount attribute of the NewsArticle object
+   * Gets the ratingCount attribute of the NewsArticle object
    *
-   *@return    The ratingCount value
+   * @return The ratingCount value
    */
   public int getRatingCount() {
     return ratingCount;
@@ -845,9 +846,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the avgRating attribute of the NewsArticle object
+   * Gets the avgRating attribute of the NewsArticle object
    *
-   *@return    The avgRating value
+   * @return The avgRating value
    */
   public double getAvgRating() {
     return avgRating;
@@ -855,9 +856,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the readCount attribute of the NewsArticle object
+   * Gets the readCount attribute of the NewsArticle object
    *
-   *@return    The readCount value
+   * @return The readCount value
    */
   public int getReadCount() {
     return readCount;
@@ -865,9 +866,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the NewsArticle object
+   * Gets the status attribute of the NewsArticle object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -875,14 +876,15 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the NewsArticle object
+   * Gets the enteredDateTimeString attribute of the NewsArticle object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -890,9 +892,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateString attribute of the NewsArticle object
+   * Gets the enteredDateString attribute of the NewsArticle object
    *
-   *@return    The enteredDateString value
+   * @return The enteredDateString value
    */
   public String getEnteredDateString() {
     String tmp = "";
@@ -905,14 +907,15 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the NewsArticle object
+   * Gets the modifiedDateTimeString attribute of the NewsArticle object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -920,14 +923,15 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Gets the startDateTimeString attribute of the NewsArticle object
+   * Gets the startDateTimeString attribute of the NewsArticle object
    *
-   *@return    The startDateTimeString value
+   * @return The startDateTimeString value
    */
   public String getStartDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(startDate);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          startDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -935,9 +939,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasTaskCategoryId() {
     return taskCategoryId > -1;
@@ -945,10 +949,10 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Populates this news article from a database result set
+   * Populates this news article from a database result set
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("news_id");
@@ -979,10 +983,10 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     if (id == -1) {
@@ -1003,17 +1007,21 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Inserts a news article in the database
+   * Inserts a news article in the database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_news_news_id_seq");
     sql.append(
         "INSERT INTO project_news " +
         "(project_id, category_id, subject, intro, message, enabled, status, ");
+    if (id > -1) {
+      sql.append("news_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1025,6 +1033,9 @@ public class NewsArticle extends GenericBean {
         "start_date, start_date_timezone, end_date, end_date_timezone, allow_replies, " +
         "allow_rating, rating_count, avg_rating, priority_id, read_count, classification_id, template_id) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1042,6 +1053,9 @@ public class NewsArticle extends GenericBean {
     pst.setString(++i, message);
     pst.setBoolean(++i, enabled);
     DatabaseUtils.setInt(pst, ++i, status);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -1064,7 +1078,7 @@ public class NewsArticle extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, templateId);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_news_news_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "project_news_news_id_seq", id);
     // If there is a task category being associated, insert that too
     if (taskCategoryId > -1) {
       insertTaskCategoryLink(db);
@@ -1074,11 +1088,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Updates the specified news article in the database
+   * Updates the specified news article in the database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1156,10 +1170,10 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertTaskCategoryLink(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -1192,10 +1206,10 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void deleteTaskCategoryLink(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1208,11 +1222,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updatePage(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1235,11 +1249,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int deletePage(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1262,11 +1276,11 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  Deletes the specified news article from the database
+   * Deletes the specified news article from the database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String basePath) throws SQLException {
     if (id == -1 || projectId == -1) {
@@ -1302,9 +1316,9 @@ public class NewsArticle extends GenericBean {
 
 
   /**
-   *  The following fields depend on a timezone preference
+   * The following fields depend on a timezone preference
    *
-   *@return    The dateTimeParams value
+   * @return The dateTimeParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();

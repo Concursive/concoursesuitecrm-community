@@ -30,14 +30,14 @@ import java.util.Iterator;
 public class IteamSearchQuery {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                 Description of the Parameter
-   *@param  userId             Description of the Parameter
-   *@param  search             Description of the Parameter
-   *@param  specificProjectId  Description of the Parameter
-   *@return                    Description of the Return Value
-   *@exception  SQLException   Description of the Exception
+   * @param db                Description of the Parameter
+   * @param userId            Description of the Parameter
+   * @param search            Description of the Parameter
+   * @param specificProjectId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static String buildIteamSearchQuery(SearchBean search, Connection db, int userId, int specificProjectId) throws SQLException {
     // get the projects for the user
@@ -98,7 +98,9 @@ public class IteamSearchQuery {
           } else {
             // take into account a date range  [20030101 TO 20040101]
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            permissionBuffer.append("(type:news AND newsStatus:2 AND newsDate:[20030101 TO " + formatter.format(new java.util.Date()) + "])");
+            permissionBuffer.append(
+                "(type:news AND newsStatus:2 AND newsDate:[20030101 TO " + formatter.format(
+                    new java.util.Date()) + "])");
           }
         }
       }
@@ -168,11 +170,13 @@ public class IteamSearchQuery {
         if (projectBuffer.length() > 0) {
           projectBuffer.append(" OR ");
         }
-        projectBuffer.append("(projectId:" + projectId.intValue() + " AND (" + permissionBuffer.toString() + ")) ");
+        projectBuffer.append(
+            "(projectId:" + projectId.intValue() + " AND (" + permissionBuffer.toString() + ")) ");
       }
       // debugging
       if (permissionBuffer.length() == 0) {
-        System.out.println("NO PERMISSIONS FOR PROJECT: " + projectId.intValue());
+        System.out.println(
+            "NO PERMISSIONS FOR PROJECT: " + projectId.intValue());
       }
     }
     // user does not have any projects, so lock them into a non-existent project

@@ -15,25 +15,24 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 15, 2003
- *@version    $Id: CampaignManagerAttachment.java,v 1.2 2003/01/15 21:16:05
- *      akhi_m Exp $
+ * @author mrajkowski
+ * @version $Id: CampaignManagerAttachment.java,v 1.2 2003/01/15 21:16:05
+ *          akhi_m Exp $
+ * @created January 15, 2003
  */
 public final class CampaignManagerAttachment extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
 

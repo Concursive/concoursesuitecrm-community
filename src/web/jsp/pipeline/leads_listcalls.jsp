@@ -79,10 +79,15 @@ function reopenOpportunity(id) {
    int i = 0;
 %>            
 <dhv:container name="opportunities" selected="calls" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
-  <dhv:permission name="pipeline-opportunities-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a><br><br></dhv:permission>
+  <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>" >
+    <dhv:permission name="pipeline-opportunities-calls-add">
+      <a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a>
+      <br /><br />
+    </dhv:permission>
+  </dhv:evaluate>
   <% if ((request.getParameter("pagedListSectionId") == null && !LeadsCompletedCallsListInfo.getExpandedSelection()) || LeadsCallsListInfo.getExpandedSelection()) { %>
   <%-- Pending list --%>
-  <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="LeadsCallsListInfo"/>
+  <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" type="accounts.accounts_contacts_calls_list.PendingActivities" object="LeadsCallsListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th>
@@ -116,7 +121,7 @@ function reopenOpportunity(id) {
     <tr class="row<%= rowid %>">
       <td <%= LeadsCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= opportunityHeader.getId() %>', '<%= thisCall.getId() %>', 'pending');"
+         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= opportunityHeader.getId() %>', '<%= thisCall.getId() %>', 'pending','<%= thisCall.isTrashed() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="top" nowrap>
@@ -161,7 +166,7 @@ function reopenOpportunity(id) {
 <%}%>
 <% if ((request.getParameter("pagedListSectionId") == null && !LeadsCallsListInfo.getExpandedSelection()) || LeadsCompletedCallsListInfo.getExpandedSelection()) { %>
  <%-- Completed/Canceled list --%>
-  <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" object="LeadsCompletedCallsListInfo"/>
+  <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" type="accounts.accounts_contacts_calls_list.CompletedCanceledActivities" object="LeadsCompletedCallsListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th>
@@ -198,7 +203,7 @@ function reopenOpportunity(id) {
     <tr class="row<%= rowid %>">
       <td <%= LeadsCompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap>
          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= opportunityHeader.getId() %>', '<%= thisCall.getId() %>', '<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>');"
+         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= opportunityHeader.getId() %>', '<%= thisCall.getId() %>', '<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>','<%= thisCall.isTrashed() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="top" nowrap>

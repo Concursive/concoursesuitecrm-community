@@ -460,3 +460,5 @@ function resetAssignedDate(){
 	</table>
 &nbsp;<br>
 <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
+<input type="hidden" name="statusId" value="<%=  TicketDetails.getStatusId() %>" />
+<input type="hidden" name="trashedDate" value="<%=  TicketDetails.getTrashedDate() %>" />

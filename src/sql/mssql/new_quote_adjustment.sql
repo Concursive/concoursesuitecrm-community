@@ -43,6 +43,7 @@ ALTER TABLE quote_entry ADD closed DATETIME;
 ALTER TABLE quote_entry ADD show_total BIT DEFAULT 1;
 ALTER TABLE quote_entry ADD show_subtotal BIT DEFAULT 1;
 ALTER TABLE quote_entry ADD logo_file_id INTEGER REFERENCES project_files(item_id);
+ALTER TABLE quote_entry ADD trashed_date DATETIME;
 
 -- Create a new table to map quote conditions to a quote
 CREATE TABLE quote_condition (

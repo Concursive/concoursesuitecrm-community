@@ -1,3 +1,22 @@
+<%-- 
+  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - rights reserved. This material cannot be distributed without written
+  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - this material for internal use is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies. DARK HORSE
+  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+  - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+  - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+  - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+  - DAMAGES RELATING TO THE SOFTWARE.
+  - 
+  - Version: $Id$
+  - Description: 
+  --%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.products.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.quotes.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="quote" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
@@ -66,10 +85,14 @@ function reopenOpportunity(id) {
   <dhv:container name="opportunitiesQuotes" selected="notes" object="quote" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <% String status = quoteStatusList.getValueFromId(quote.getStatusId()); %>
-    <% if(quote.getClosed() == null){ %>
-    <dhv:permission name="pipeline-opportunities-edit"><input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/></dhv:permission>
-    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %><%= addLinkParams(request, "viewSource") %>'"/><br /><br />
-    <%}%>
+    <dhv:evaluate if="<%= !quote.isTrashed() %>" >
+      <dhv:evaluate if="<%= quote.getClosed() == null%>" >
+        <dhv:permission name="pipeline-opportunities-edit">
+          <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
+        </dhv:permission>
+        <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %><%= addLinkParams(request, "viewSource") %>'"/><br /><br />
+      </dhv:evaluate>
+    </dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr><th colspan="3"><strong><dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label></strong></th></tr>
       <tr class="containerBody">
@@ -100,29 +123,31 @@ function reopenOpportunity(id) {
     <%}%>
     </table>
     <br />
-    <% if(quote.getClosed() == null){ %>
-    <dhv:permission name="pipeline-opportunities-edit">
-    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-      <tr>
-        <th width="100%">
-          <strong><dhv:label name="quotes.notes.addNewNote">Add a new note</dhv:label></strong><br />
-        </th>
-      </tr>
-      <tr class="containerBody">
-        <td>
-          <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
-            <textarea name="notes" rows="5" cols="65"></textarea>
-          </td><td valign="top" nowrap>&nbsp;
-            <font color="red">*</font><%= showAttribute(request, "notesError") %>
-          </td></tr></table>
-        </td>
-      </tr>
-    </table>
-    </dhv:permission>
-    <br />
-    <dhv:permission name="pipeline-opportunities-edit"><input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/></dhv:permission>
-    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %><%= addLinkParams(request, "viewSource") %>'"/>
-    <% } %>
+    <dhv:evaluate if="<%= !quote.isTrashed() %>" >
+      <dhv:evaluate if="<%= quote.getClosed() == null%>" >
+        <dhv:permission name="pipeline-opportunities-edit">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th width="100%">
+              <strong><dhv:label name="quotes.notes.addNewNote">Add a new note</dhv:label></strong><br />
+            </th>
+          </tr>
+          <tr class="containerBody">
+            <td>
+              <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+                <textarea name="notes" rows="5" cols="65"></textarea>
+              </td><td valign="top" nowrap>&nbsp;
+                <font color="red">*</font><%= showAttribute(request, "notesError") %>
+              </td></tr></table>
+            </td>
+          </tr>
+        </table>
+        </dhv:permission>
+        <br />
+        <dhv:permission name="pipeline-opportunities-edit"><input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/></dhv:permission>
+        <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %><%= addLinkParams(request, "viewSource") %>'"/>
+      </dhv:evaluate>
+    </dhv:evaluate>
   </dhv:container>
 </dhv:container>
 </form>

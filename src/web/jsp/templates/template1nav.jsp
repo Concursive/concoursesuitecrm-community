@@ -16,7 +16,8 @@
   - Version: $Id$
   - Description: 
   --%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
@@ -35,7 +36,6 @@
 <head>
 <%@ include file="../initPage.jsp" %>
 <META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= getServerUrl(request) %>/MyCFS.do?command=Home">
-<META HTTP-EQUIV="Content-Type" content="text/html;charset=UTF-8">
 <title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label><%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
@@ -147,7 +147,7 @@
     </td>
     <!-- Global Items -->
     <dhv:evaluate if="<%= GlobalItems.length() > 0 %>">
-    <td width="4" class="navDiv" id="rightnavcol">
+    <td width="4" class="navDiv" id="rightnavcol" height="100%">
       <span id="globalItemsHide" name="globalItemsHide"<dhv:evaluate if="<%= globalItemsPaneHidden %>"> style="display:none"</dhv:evaluate>><a href="javascript:resizeGlobalItemsPane('hide')"><img src="images/layout/div-hide.gif" alt="Hide" width="6" border="0" /></a></span>
       <span id="globalItemsShow" name="globalItemsShow"<dhv:evaluate if="<%= !globalItemsPaneHidden %>"> style="display:none"</dhv:evaluate>><a href="javascript:resizeGlobalItemsPane('show')"><img src="images/layout/div-show.gif" alt="Show" width="6" border="0" /></a></span>
     </td>

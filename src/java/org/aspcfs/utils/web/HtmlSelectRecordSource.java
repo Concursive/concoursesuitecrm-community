@@ -15,25 +15,24 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
+
 
 /**
- *  Generates an HtmlSelect for choosing a record source
+ * Generates an HtmlSelect for choosing a record source
  *
- *@author     matt rajkowski
- *@created    October 13, 2003
- *@version    $Id: HtmlSelectRecordSource.java,v 1.1 2003/10/13 18:48:38
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: HtmlSelectRecordSource.java,v 1.1 2003/10/13 18:48:38
+ *          mrajkowski Exp $
+ * @created October 13, 2003
  */
 public class HtmlSelectRecordSource {
 
   /**
-   *  Gets the select attribute of the HtmlSelectProbabilityRange class
+   * Gets the select attribute of the HtmlSelectProbabilityRange class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, String defaultValue) {
     HtmlSelect select = new HtmlSelect();
@@ -45,10 +44,10 @@ public class HtmlSelectRecordSource {
 
 
   /**
-   *  Gets the valueFromId attribute of the HtmlSelectProbabilityRange class
+   * Gets the valueFromId attribute of the HtmlSelectProbabilityRange class
    *
-   *@param  key  Description of the Parameter
-   *@return      The valueFromId value
+   * @param key Description of the Parameter
+   * @return The valueFromId value
    */
   public static String getValueFromId(String key) {
     HtmlSelect select = new HtmlSelect();
@@ -58,9 +57,9 @@ public class HtmlSelectRecordSource {
 
 
   /**
-   *  Generates a list of choices for selecting a range of probabilities
+   * Generates a list of choices for selecting a range of probabilities
    *
-   *@param  select  Description of the Parameter
+   * @param select Description of the Parameter
    */
   public static void populateSelect(HtmlSelect select) {
     select.addItem("my", "My Records");

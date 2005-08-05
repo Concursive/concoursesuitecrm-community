@@ -32,26 +32,28 @@
     </td>
   </tr>
 </table>
-<br />
-<dhv:documentPermission name="documentcenter-team-edit">
-<a href="DocumentStoreManagementTeam.do?command=Modify&documentStoreId=<%= documentStore.getId() %>&modifyTeam=user&auto-populate=true">
-  <dhv:label name="documents.team.modifyUserMembership">Modify User Membership</dhv:label></a>
-|
-<a href="DocumentStoreManagementTeam.do?command=Modify&documentStoreId=<%= documentStore.getId() %>&modifyTeam=group&auto-populate=true">
-  <dhv:label name="documents.team.modifyGroupMembership">Modify Group Membership</dhv:label></a>
-<br />
-</dhv:documentPermission>
-<dhv:documentPermission name="documentcenter-team-edit-role">
-<script language="javascript" type="text/javascript">
-  function updateRole(documentStoreId, id, rid, memberType) {
-    window.frames['server_commands'].location.href='DocumentStoreManagementTeam.do?command=ChangeRole&documentStoreId=' + documentStoreId + '&id=' + id + '&role=' + rid + '&memberType=' + memberType;
-  }
-</script>
-<br />
-<font color="blue"><dhv:label name="documents.team.teamMessage">* Immediately change the team member's role by making changes below</dhv:label></font>
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
-</dhv:documentPermission>
-&nbsp;<br /><br />
+<dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
+  <br />
+  <dhv:documentPermission name="documentcenter-team-edit">
+    <a href="DocumentStoreManagementTeam.do?command=Modify&documentStoreId=<%= documentStore.getId() %>&modifyTeam=user&auto-populate=true">
+      <dhv:label name="documents.team.modifyUserMembership">Modify User Membership</dhv:label></a>
+    |
+    <a href="DocumentStoreManagementTeam.do?command=Modify&documentStoreId=<%= documentStore.getId() %>&modifyTeam=group&auto-populate=true">
+      <dhv:label name="documents.team.modifyGroupMembership">Modify Group Membership</dhv:label></a>
+    <br />
+    </dhv:documentPermission>
+    <dhv:documentPermission name="documentcenter-team-edit-role">
+    <script language="javascript" type="text/javascript">
+      function updateRole(documentStoreId, id, rid, memberType) {
+        window.frames['server_commands'].location.href='DocumentStoreManagementTeam.do?command=ChangeRole&documentStoreId=' + documentStoreId + '&id=' + id + '&role=' + rid + '&memberType=' + memberType;
+      }
+    </script>
+    <br />
+    <font color="blue"><dhv:label name="documents.team.teamMessage">* Immediately change the team member's role by making changes below</dhv:label></font>
+    <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
+  </dhv:documentPermission>
+  &nbsp;<br /><br />
+</dhv:evaluate>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="Employees" type="documents.team.employees" object="documentStoreEmployeeTeamInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -108,13 +110,23 @@
         <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-team-edit-role">
-        <dhv:documentRoleSelect
-          name="<%= "role" + thisMember.getItemId() %>"
-          value="<%= thisMember.getUserLevel() %>"
-          onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user');" %>"/>
+        <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
+          <dhv:documentRoleSelect
+            name="<%= "role" + thisMember.getItemId() %>"
+            value="<%= thisMember.getUserLevel() %>"
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user');" %>"/>
+         </dhv:evaluate>
+         <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
+           <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
+         </dhv:evaluate>
       </dhv:documentPermission>
     </td>
-    <td valign="top"><%= toHtml(thisContact.getContact().getNameFirstLast()) %></td>
+    <td valign="top">
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"><font color="red"></dhv:evaluate>
+      <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"> (X)</dhv:evaluate>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"></font></dhv:evaluate>
+    </td>
     <td valign="top"><%= toHtml(thisContact.getContact().getDepartmentName()) %></td>
     <dhv:documentPermission name="documentcenter-team-view-email">
        <td valign="top" nowrap>
@@ -186,13 +198,23 @@
         <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-team-edit-role">
-        <dhv:documentRoleSelect
-          name="<%= "role" + thisMember.getItemId() %>"
-          value="<%= thisMember.getUserLevel() %>"
-          onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user');" %>"/>
+        <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
+          <dhv:documentRoleSelect
+            name="<%= "role" + thisMember.getItemId() %>"
+            value="<%= thisMember.getUserLevel() %>"
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user');" %>"/>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
+          <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
+        </dhv:evaluate>
       </dhv:documentPermission>
     </td>
-    <td valign="top"><%= toHtml(thisContact.getContact().getNameFirstLast()) %></td>
+    <td valign="top">
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"><font color="red"></dhv:evaluate>
+      <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"> (X)</dhv:evaluate>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"></font></dhv:evaluate>
+    </td>
     <td valign="top"><%= toHtml(thisContact.getContact().getCompany()) %></td>
     <dhv:documentPermission name="documentcenter-team-view-email">
        <td valign="top" nowrap>
@@ -297,10 +319,15 @@
         <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-team-edit-role">
-        <dhv:documentRoleSelect
-          name="<%= "role" + thisMember.getItemId() %>"
-          value="<%= thisMember.getUserLevel() %>"
-          onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'department');" %>"/>
+        <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
+          <dhv:documentRoleSelect
+            name="<%= "role" + thisMember.getItemId() %>"
+            value="<%= thisMember.getUserLevel() %>"
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'department');" %>"/>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
+          <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
+        </dhv:evaluate>
       </dhv:documentPermission>
     </td>
     <td valign="top"><%= toHtml(departmentName) %></td>

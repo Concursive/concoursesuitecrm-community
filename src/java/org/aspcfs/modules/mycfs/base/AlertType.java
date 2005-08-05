@@ -16,11 +16,11 @@
 package org.aspcfs.modules.mycfs.base;
 
 /**
- *  Represents an Alert.
+ * Represents an Alert.
  *
- *@author     Mathur
- *@created    January 20, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 20, 2003
  */
 public class AlertType {
 
@@ -29,13 +29,12 @@ public class AlertType {
   protected String className = null;
 
 
-
   /**
-   *  Constructor for the AlertType object
+   * Constructor for the AlertType object
    *
-   *@param  name         Description of the Parameter
-   *@param  className    Description of the Parameter
-   *@param  displayName  Description of the Parameter
+   * @param name        Description of the Parameter
+   * @param className   Description of the Parameter
+   * @param displayName Description of the Parameter
    */
   public AlertType(String name, String className, String displayName) {
     this.name = name;
@@ -45,20 +44,19 @@ public class AlertType {
 
 
   /**
-   *  Sets the name attribute of the AlertType object
+   * Sets the name attribute of the AlertType object
    *
-   *@param  name  The new name value
+   * @param name The new name value
    */
   public void setName(String name) {
     this.name = name;
   }
 
 
-
   /**
-   *  Sets the className attribute of the AlertType object
+   * Sets the className attribute of the AlertType object
    *
-   *@param  className  The new className value
+   * @param className The new className value
    */
   public void setClassName(String className) {
     this.className = className;
@@ -66,9 +64,9 @@ public class AlertType {
 
 
   /**
-   *  Sets the displayName attribute of the AlertType object
+   * Sets the displayName attribute of the AlertType object
    *
-   *@param  displayName  The new displayName value
+   * @param displayName The new displayName value
    */
   public void setDisplayName(String displayName) {
     this.displayName = displayName;
@@ -76,9 +74,9 @@ public class AlertType {
 
 
   /**
-   *  Gets the displayName attribute of the AlertType object
+   * Gets the displayName attribute of the AlertType object
    *
-   *@return    The displayName value
+   * @return The displayName value
    */
   public String getDisplayName() {
     return displayName;
@@ -86,20 +84,19 @@ public class AlertType {
 
 
   /**
-   *  Gets the name attribute of the AlertType object
+   * Gets the name attribute of the AlertType object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
   }
 
 
-
   /**
-   *  Gets the className attribute of the AlertType object
+   * Gets the className attribute of the AlertType object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;

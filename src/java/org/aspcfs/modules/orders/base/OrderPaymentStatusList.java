@@ -1,30 +1,29 @@
 package org.aspcfs.modules.orders.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    May 12, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created May 12, 2004
  */
 public class OrderPaymentStatusList extends ArrayList implements SyncableList {
   //sync api
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String tableName = "order_payment_status";
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public final static String uniqueField = "payment_status_id";
   private Timestamp lastAnchor = null;
@@ -40,9 +39,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the OrderPaymentStatusList object
+   * Sets the lastAnchor attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -50,9 +49,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the OrderPaymentStatusList object
+   * Sets the lastAnchor attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -60,9 +59,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the OrderPaymentStatusList object
+   * Sets the nextAnchor attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -70,9 +69,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the OrderPaymentStatusList object
+   * Sets the nextAnchor attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -80,9 +79,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the OrderPaymentStatusList object
+   * Sets the syncType attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -90,9 +89,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the OrderPaymentStatusList object
+   * Sets the syncType attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -100,9 +99,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the OrderPaymentStatusList object
+   * Sets the pagedListInfo attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -110,9 +109,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the enteredBy attribute of the OrderPaymentStatusList object
+   * Sets the enteredBy attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -120,9 +119,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the enteredBy attribute of the OrderPaymentStatusList object
+   * Sets the enteredBy attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -130,9 +129,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the id attribute of the OrderPaymentStatusList object
+   * Sets the id attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -140,9 +139,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the id attribute of the OrderPaymentStatusList object
+   * Sets the id attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -150,9 +149,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderPaymentStatusList object
+   * Sets the statusId attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -160,9 +159,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the statusId attribute of the OrderPaymentStatusList object
+   * Sets the statusId attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -170,9 +169,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the paymentId attribute of the OrderPaymentStatusList object
+   * Sets the paymentId attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new paymentId value
+   * @param tmp The new paymentId value
    */
   public void setPaymentId(int tmp) {
     this.paymentId = tmp;
@@ -180,9 +179,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the paymentId attribute of the OrderPaymentStatusList object
+   * Sets the paymentId attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new paymentId value
+   * @param tmp The new paymentId value
    */
   public void setPaymentId(String tmp) {
     this.paymentId = Integer.parseInt(tmp);
@@ -190,9 +189,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the status attribute of the OrderPaymentStatusList object
+   * Sets the status attribute of the OrderPaymentStatusList object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -200,9 +199,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the tableName attribute of the OrderPaymentStatusList object
+   * Gets the tableName attribute of the OrderPaymentStatusList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -210,9 +209,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the uniqueField attribute of the OrderPaymentStatusList object
+   * Gets the uniqueField attribute of the OrderPaymentStatusList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -220,9 +219,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the status attribute of the OrderPaymentStatusList object
+   * Gets the status attribute of the OrderPaymentStatusList object
    *
-   *@return    The status value
+   * @return The status value
    */
   public String getStatus() {
     return status;
@@ -230,9 +229,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the OrderPaymentStatusList object
+   * Gets the lastAnchor attribute of the OrderPaymentStatusList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public Timestamp getLastAnchor() {
     return lastAnchor;
@@ -240,9 +239,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the OrderPaymentStatusList object
+   * Gets the nextAnchor attribute of the OrderPaymentStatusList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public Timestamp getNextAnchor() {
     return nextAnchor;
@@ -250,9 +249,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the syncType attribute of the OrderPaymentStatusList object
+   * Gets the syncType attribute of the OrderPaymentStatusList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -260,9 +259,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the OrderPaymentStatusList object
+   * Gets the pagedListInfo attribute of the OrderPaymentStatusList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -270,9 +269,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the enteredBy attribute of the OrderPaymentStatusList object
+   * Gets the enteredBy attribute of the OrderPaymentStatusList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -280,9 +279,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the id attribute of the OrderPaymentStatusList object
+   * Gets the id attribute of the OrderPaymentStatusList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -290,9 +289,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the statusId attribute of the OrderPaymentStatusList object
+   * Gets the statusId attribute of the OrderPaymentStatusList object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -300,9 +299,9 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the paymentId attribute of the OrderPaymentStatusList object
+   * Gets the paymentId attribute of the OrderPaymentStatusList object
    *
-   *@return    The paymentId value
+   * @return The paymentId value
    */
   public int getPaymentId() {
     return paymentId;
@@ -310,18 +309,19 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Constructor for the OrderPaymentStatusList object
+   * Constructor for the OrderPaymentStatusList object
    *
-   *@exception  SQLException  Description of the Exception
+   * @throws SQLException Description of the Exception
    */
-  public OrderPaymentStatusList() throws SQLException { }
+  public OrderPaymentStatusList() throws SQLException {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -339,8 +339,7 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
         " FROM order_payment_status ops " +
         " LEFT JOIN lookup_payment_status ps " +
         " ON ( ops.status_id = ps.code ) " +
-        " WHERE ops.payment_status_id > 0 "
-        );
+        " WHERE ops.payment_status_id > 0 ");
 
     createFilter(sqlFilter, db);
     sqlOrder.append("ORDER BY ops.entered ");
@@ -367,22 +366,15 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
         " FROM order_payment_status ops " +
         " LEFT JOIN lookup_payment_status ps " +
         " ON ( ops.status_id = ps.code ) " +
-        " WHERE ops.payment_status_id > 0 "
-        );
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+        " WHERE ops.payment_status_id > 0 ");
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       OrderPaymentStatus orderPaymentStatus = new OrderPaymentStatus(rs);
       this.add(orderPaymentStatus);
     }
@@ -392,10 +384,10 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator statusIterator = this.iterator();
@@ -407,10 +399,10 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
-   *@param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
 
@@ -454,11 +446,11 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
 

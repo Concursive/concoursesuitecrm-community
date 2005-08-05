@@ -116,12 +116,17 @@
         <table border="0" cellpadding="0" cellspacing="0" class="empty">
           <tr>
             <td valign="center">
-              <input type="checkbox" name="generatePass" value="true">
+              <input type="checkbox" name="generatePass" value="true" <%= "".equals(UserRecord.getContact().getPrimaryEmailAddress()) ? "disabled=\"true\"":"" %>>
             </td>
             <td width="8"></td>
             <td valign="center">
-              <dhv:label name="admin.newPassword.emailed">Note: New password will be emailed to the following address:</dhv:label>
-              <%= UserRecord.getContact().getPrimaryEmailAddress() %>
+              <dhv:evaluate if="<%= !"".equals(UserRecord.getContact().getPrimaryEmailAddress()) %>">
+                <dhv:label name="admin.newPassword.emailed">Note: New password will be emailed to the following address:</dhv:label>
+                <%= UserRecord.getContact().getPrimaryEmailAddress() %>
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= "".equals(UserRecord.getContact().getPrimaryEmailAddress()) %>">
+                <dhv:label name="contacts.noContactEmailAddressFound">No Contact Email Address found. Please add one.</dhv:label>
+              </dhv:evaluate>
             </td>
           </tr>
         </table>

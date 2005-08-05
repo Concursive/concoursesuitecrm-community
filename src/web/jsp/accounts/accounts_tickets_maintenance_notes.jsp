@@ -101,10 +101,12 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" >
     <tr>
       <td>
+       <dhv:evaluate if="<%= !ticketDetails.isTrashed() %>" >
         <dhv:permission name="accounts-accounts-tickets-maintenance-report-add">
             <a href="AccountTicketMaintenanceNotes.do?command=Add&id=<%=ticketDetails.getId()%>"><dhv:label name="ticket.addMaintenanceNote">Add Maintenance Note</dhv:label></a>
         </dhv:permission>
-      </td>
+       </dhv:evaluate>
+     </td>
     </tr>
   </table>
   </dhv:permission>
@@ -136,7 +138,7 @@
           <% int status = -1;%>
           <% status = thisSun.getEnabled() ? 1 : 0; %>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('select<%= i %>','menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisSun.getId() %>');"
+           <a href="javascript:displayMenu('select<%= i %>','menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisSun.getId() %>','<%= ticketDetails.isTrashed() %>');"
            onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
         </td>
       <td width="15%" nowrap>

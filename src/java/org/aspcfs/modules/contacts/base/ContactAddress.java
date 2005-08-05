@@ -15,25 +15,29 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Address;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Builds an address for a contact using a custom query that extends the fields
- *  and methods of a typical Address.
+ * Builds an address for a contact using a custom query that extends the fields
+ * and methods of a typical Address.
  *
- *@author     mrajkowski
- *@created    September 1, 2001
- *@version    $Id: ContactAddress.java,v 1.8 2003/01/13 20:48:10 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: ContactAddress.java,v 1.8 2003/01/13 20:48:10 mrajkowski Exp
+ *          $
+ * @created September 1, 2001
  */
 public class ContactAddress extends Address {
 
   /**
-   *  Constructor for the ContactAddress object
+   * Constructor for the ContactAddress object
    *
-   *@since    1.1
+   * @since 1.1
    */
   public ContactAddress() {
     isContact = true;
@@ -41,11 +45,11 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Constructor for the ContactAddress object
+   * Constructor for the ContactAddress object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public ContactAddress(ResultSet rs) throws SQLException {
     isContact = true;
@@ -54,12 +58,12 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Constructor for the ContactAddress object
+   * Constructor for the ContactAddress object
    *
-   *@param  db                Description of Parameter
-   *@param  addressId         Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param db        Description of Parameter
+   * @param addressId Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public ContactAddress(Connection db, String addressId) throws SQLException {
     queryRecord(db, Integer.parseInt(addressId));
@@ -67,11 +71,11 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Constructor for the ContactAddress object
+   * Constructor for the ContactAddress object
    *
-   *@param  db                Description of the Parameter
-   *@param  addressId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param addressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactAddress(Connection db, int addressId) throws SQLException {
     queryRecord(db, addressId);
@@ -79,15 +83,16 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  addressId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param addressId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int addressId) throws SQLException {
     isContact = true;
-    PreparedStatement pst = db.prepareStatement("SELECT c.address_id, c.contact_id, c.address_type, c.addrline1, c.addrline1,  " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT c.address_id, c.contact_id, c.address_type, c.addrline1, c.addrline1,  " +
         "c.addrline2, c.addrline3, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, " +
         "c.modified, c.modifiedby, c.primary_address, l.description " +
         "FROM contact_address c, lookup_contactaddress_types l " +
@@ -106,13 +111,13 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@param  modifiedBy        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param contactId  Description of the Parameter
+   * @param enteredBy  Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
@@ -138,10 +143,10 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     insert(db, this.getContactId(), this.getEnteredBy());
@@ -149,17 +154,22 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param enteredBy Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
-    sql.append("INSERT INTO contact_address " +
+    this.setId(DatabaseUtils.getNextSeq(db, "contact_address_address_id_seq"));
+    sql.append(
+        "INSERT INTO contact_address " +
         "(contact_id, address_type, addrline1, addrline2, addrline3, city, state, postalcode, country, primary_address, ");
+    if (getId() > -1) {
+      sql.append("address_id, ");
+    }
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -168,6 +178,9 @@ public class ContactAddress extends Address {
     }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (getId() > -1) {
+      sql.append("?, ");
+    }
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -193,7 +206,8 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(this.getCountry())) {
+    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
+        this.getCountry())) {
       pst.setString(++i, this.getState());
     } else {
       pst.setString(++i, this.getOtherState());
@@ -201,7 +215,9 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
     pst.setBoolean(++i, this.getPrimaryAddress());
-
+    if (getId() > -1) {
+      pst.setInt(++i, getId());
+    }
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -214,17 +230,18 @@ public class ContactAddress extends Address {
     pst.execute();
     pst.close();
 
-    this.setId(DatabaseUtils.getCurrVal(db, "contact_address_address_id_seq"));
+    this.setId(
+        DatabaseUtils.getCurrVal(
+            db, "contact_address_address_id_seq", getId()));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  modifiedBy        Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db         Description of Parameter
+   * @param modifiedBy Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -242,7 +259,8 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(this.getCountry())) {
+    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
+        this.getCountry())) {
       pst.setString(++i, this.getState());
     } else {
       pst.setString(++i, this.getOtherState());
@@ -258,11 +276,10 @@ public class ContactAddress extends Address {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(

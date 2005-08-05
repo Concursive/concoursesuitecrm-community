@@ -18,17 +18,17 @@ package com.zeroio.iteam.base;
 import org.aspcfs.utils.web.HtmlSelect;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 6, 2004
- *@version    $Id: HtmlPercentList.java,v 1.2 2004/07/21 19:00:43 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: HtmlPercentList.java,v 1.2 2004/07/21 19:00:43 mrajkowski Exp
+ *          $
+ * @created July 6, 2004
  */
 public class HtmlPercentList extends HtmlSelect {
 
   /**
-   *  Constructor for the HtmlPercentList object
+   * Constructor for the HtmlPercentList object
    */
   public HtmlPercentList() {
     this.addItem(-1, "0%");

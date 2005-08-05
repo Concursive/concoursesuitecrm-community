@@ -15,18 +15,18 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a piece of criteria for a report queue
+ * Represents a piece of criteria for a report queue
  *
- *@author     matt rajkowski
- *@created    October 3, 2003
- *@version    $Id: QueueCriteria.java,v 1.1.2.1 2003/10/03 20:54:54 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: QueueCriteria.java,v 1.1.2.1 2003/10/03 20:54:54 mrajkowski
+ *          Exp $
+ * @created October 3, 2003
  */
 public class QueueCriteria extends GenericBean {
 
@@ -37,16 +37,17 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Constructor for the QueueCriteria object
+   * Constructor for the QueueCriteria object
    */
-  public QueueCriteria() { }
+  public QueueCriteria() {
+  }
 
 
   /**
-   *  Constructor for the QueueCriteria object
+   * Constructor for the QueueCriteria object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public QueueCriteria(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -54,9 +55,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QueueCriteria object
+   * Sets the id attribute of the QueueCriteria object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -64,9 +65,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the QueueCriteria object
+   * Sets the id attribute of the QueueCriteria object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -74,9 +75,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Sets the queueId attribute of the QueueCriteria object
+   * Sets the queueId attribute of the QueueCriteria object
    *
-   *@param  tmp  The new queueId value
+   * @param tmp The new queueId value
    */
   public void setQueueId(int tmp) {
     this.queueId = tmp;
@@ -84,9 +85,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Sets the queueId attribute of the QueueCriteria object
+   * Sets the queueId attribute of the QueueCriteria object
    *
-   *@param  tmp  The new queueId value
+   * @param tmp The new queueId value
    */
   public void setQueueId(String tmp) {
     this.queueId = Integer.parseInt(tmp);
@@ -94,9 +95,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Sets the parameter attribute of the QueueCriteria object
+   * Sets the parameter attribute of the QueueCriteria object
    *
-   *@param  tmp  The new parameter value
+   * @param tmp The new parameter value
    */
   public void setParameter(String tmp) {
     this.parameter = tmp;
@@ -104,9 +105,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Sets the value attribute of the QueueCriteria object
+   * Sets the value attribute of the QueueCriteria object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -114,9 +115,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the QueueCriteria object
+   * Gets the id attribute of the QueueCriteria object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -124,9 +125,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Gets the queueId attribute of the QueueCriteria object
+   * Gets the queueId attribute of the QueueCriteria object
    *
-   *@return    The queueId value
+   * @return The queueId value
    */
   public int getQueueId() {
     return queueId;
@@ -134,9 +135,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Gets the parameter attribute of the QueueCriteria object
+   * Gets the parameter attribute of the QueueCriteria object
    *
-   *@return    The parameter value
+   * @return The parameter value
    */
   public String getParameter() {
     return parameter;
@@ -144,9 +145,9 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Gets the value attribute of the QueueCriteria object
+   * Gets the value attribute of the QueueCriteria object
    *
-   *@return    The value value
+   * @return The value value
    */
   public String getValue() {
     return value;
@@ -154,10 +155,10 @@ public class QueueCriteria extends GenericBean {
 
 
   /**
-   *  Populates this object from a ResetSet record
+   * Populates this object from a ResetSet record
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //report_queue_criteria table

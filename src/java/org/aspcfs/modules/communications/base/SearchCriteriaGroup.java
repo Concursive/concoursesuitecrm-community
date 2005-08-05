@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.sql.*;
 
 /**
- *  A group contains SearchCriteriaElements which specify the search criteria
- *  for a query.
+ * A group contains SearchCriteriaElements which specify the search criteria
+ * for a query.
  *
- *@author     mrajkowski
- *@created    November 13, 2001
- *@version    $Id: SearchCriteriaGroup.java,v 1.2 2002/04/24 15:39:44 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: SearchCriteriaGroup.java,v 1.2 2002/04/24 15:39:44 mrajkowski
+ *          Exp $
+ * @created November 13, 2001
  */
 public class SearchCriteriaGroup extends ArrayList {
 
@@ -33,18 +36,19 @@ public class SearchCriteriaGroup extends ArrayList {
 
 
   /**
-   *  Constructor for the SearchCriteriaGroup object
+   * Constructor for the SearchCriteriaGroup object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public SearchCriteriaGroup() { }
+  public SearchCriteriaGroup() {
+  }
 
 
   /**
-   *  Sets the GroupField attribute of the SearchCriteriaGroup object
+   * Sets the GroupField attribute of the SearchCriteriaGroup object
    *
-   *@param  tmp  The new GroupField value
-   *@since       1.1
+   * @param tmp The new GroupField value
+   * @since 1.1
    */
   public void setGroupField(SearchField tmp) {
     this.groupField = tmp;
@@ -52,10 +56,10 @@ public class SearchCriteriaGroup extends ArrayList {
 
 
   /**
-   *  Sets the Id attribute of the SearchCriteriaGroup object
+   * Sets the Id attribute of the SearchCriteriaGroup object
    *
-   *@param  tmp  The new Id value
-   *@since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     groupField.setId(tmp);
@@ -63,10 +67,10 @@ public class SearchCriteriaGroup extends ArrayList {
 
 
   /**
-   *  Gets the GroupField attribute of the SearchCriteriaGroup object
+   * Gets the GroupField attribute of the SearchCriteriaGroup object
    *
-   *@return    The GroupField value
-   *@since     1.1
+   * @return The GroupField value
+   * @since 1.1
    */
   public SearchField getGroupField() {
     return groupField;
@@ -74,12 +78,12 @@ public class SearchCriteriaGroup extends ArrayList {
 
 
   /**
-   *  Retrieves descriptor information from the field_types table that pertains
-   *  to the operator that is associated with the object's SearchField
+   * Retrieves descriptor information from the field_types table that pertains
+   * to the operator that is associated with the object's SearchField
    *
-   *@param  db                db connection
-   *@exception  SQLException  SQL Exception
-   *@since                    1.1
+   * @param db db connection
+   * @throws SQLException SQL Exception
+   * @since 1.1
    */
   public void buildFieldData(Connection db) throws SQLException {
     Statement st = db.createStatement();

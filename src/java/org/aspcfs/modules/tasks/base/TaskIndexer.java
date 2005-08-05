@@ -31,22 +31,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 27, 2004
  */
 public class TaskIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
@@ -76,28 +76,36 @@ public class TaskIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  task             Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param task     Description of the Parameter
+   * @param modified Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, Task task, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "list"));
     document.add(Field.Keyword("listId", String.valueOf(task.getId())));
-    document.add(Field.Keyword("listCategoryId", String.valueOf(task.getCategoryId())));
-    document.add(Field.Keyword("projectId", String.valueOf(task.getProjectId())));
+    document.add(
+        Field.Keyword("listCategoryId", String.valueOf(task.getCategoryId())));
+    document.add(
+        Field.Keyword("projectId", String.valueOf(task.getProjectId())));
     document.add(Field.Text("title", task.getDescription()));
-    document.add(Field.Text("contents",
-        task.getDescription() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            task.getDescription() + " " +
         ContentUtils.toText(task.getNotes())));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(task.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(task.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
@@ -107,10 +115,10 @@ public class TaskIndexer implements Indexer {
 
 
   /**
-   *  Gets the searchTerm attribute of the TaskIndexer class
+   * Gets the searchTerm attribute of the TaskIndexer class
    *
-   *@param  task  Description of the Parameter
-   *@return       The searchTerm value
+   * @param task Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(Task task) {
     Term searchTerm = new Term("listId", String.valueOf(task.getId()));
@@ -119,10 +127,10 @@ public class TaskIndexer implements Indexer {
 
 
   /**
-   *  Gets the deleteTerm attribute of the TaskIndexer class
+   * Gets the deleteTerm attribute of the TaskIndexer class
    *
-   *@param  task  Description of the Parameter
-   *@return       The deleteTerm value
+   * @param task Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(Task task) {
     Term searchTerm = new Term("listId", String.valueOf(task.getId()));

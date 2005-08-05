@@ -15,29 +15,29 @@
  */
 package org.aspcfs.controller;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.Hashtable;
-import java.sql.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.servlets.ControllerHook;
-import com.darkhorseventures.database.*;
-import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.login.beans.LoginBean;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.system.base.ApplicationVersion;
-import java.util.HashMap;
-import org.aspcfs.modules.base.Constants;
 import com.zeroio.iteam.base.ProjectList;
-import java.util.TimeZone;
-import java.text.NumberFormat;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.login.beans.LoginBean;
+import org.aspcfs.modules.login.beans.UserBean;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 /**
- *  Every request to the ServletController executes this code.
+ * Every request to the ServletController executes this code.
  *
- *@author     mrajkowski
- *@created    July 9, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 9, 2001
  */
 public class SecurityHook implements ControllerHook {
 
@@ -45,25 +45,27 @@ public class SecurityHook implements ControllerHook {
 
 
   /**
-   *  Checks to see if a User session object exists, if not then the security
-   *  check fails.<p>
+   * Checks to see if a User session object exists, if not then the security
+   * check fails.<p>
+   * <p/>
+   * The security check also compares the date/time of the user's permissions
+   * to the date/time someone changed the user's permissions in the database.
    *
-   *  The security check also compares the date/time of the user's permissions
-   *  to the date/time someone changed the user's permissions in the database.
-   *
-   *@param  request  Description of Parameter
-   *@param  servlet  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.1
+   * @param request Description of Parameter
+   * @param servlet Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String securityCheck(Servlet servlet, HttpServletRequest request) {
-    UserBean userSession = (UserBean) request.getSession().getAttribute("User");
+    UserBean userSession = (UserBean) request.getSession().getAttribute(
+        "User");
 
     // Get the intended action, if going to the login module, then let it proceed
     String action = request.getServletPath();
     int slash = action.lastIndexOf("/");
     action = action.substring(slash + 1);
-    ApplicationPrefs applicationPrefs = (ApplicationPrefs) servlet.getServletConfig().getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) servlet.getServletConfig().getServletContext().getAttribute(
+        "applicationPrefs");
 
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
@@ -88,7 +90,9 @@ public class SecurityHook implements ControllerHook {
     }
 
     //Check to see if this site requires SSL
-    if ("true".equals((String) servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
+    if ("true".equals(
+        (String) servlet.getServletConfig().getServletContext().getAttribute(
+            "ForceSSL")) &&
         "http".equals(request.getScheme())) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* A secure connection is required");
@@ -107,10 +111,12 @@ public class SecurityHook implements ControllerHook {
         return ("SystemError");
       }
 
-      Hashtable globalStatus = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus");
+      Hashtable globalStatus = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute(
+          "SystemStatus");
       if (globalStatus == null) {
         //NOTE: This shouldn't occur
-        System.out.println("SecurityHook-> Fatal: SystemStatus Hashtable is null!");
+        System.out.println(
+            "SecurityHook-> Fatal: SystemStatus Hashtable is null!");
       }
 
       SystemStatus systemStatus = (SystemStatus) globalStatus.get(ce.getUrl());
@@ -119,11 +125,14 @@ public class SecurityHook implements ControllerHook {
         //session was serialized and reloaded, but the systemStatus isn't reloaded
         Connection db = null;
         try {
-          db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
-          systemStatus = SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ce);
+          db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+              "ConnectionPool")).getConnection(ce);
+          systemStatus = SecurityHook.retrieveSystemStatus(
+              servlet.getServletConfig().getServletContext(), db, ce);
         } catch (Exception e) {
         } finally {
-          ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
+          ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+              "ConnectionPool")).free(db);
         }
       }
       //For Help and QA button, set the request with the module that was selected
@@ -135,11 +144,13 @@ public class SecurityHook implements ControllerHook {
       }
       //Check the session manager to see if this session is valid
       SessionManager thisManager = systemStatus.getSessionManager();
-      UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
+      UserSession sessionInfo = thisManager.getUserSession(
+          userSession.getActualUserId());
       //The context reloaded and didn't reload the sessionManager userSession,
       //so add the user back
       if (sessionInfo == null) {
-        request.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
+        request.getSession().setMaxInactiveInterval(
+            systemStatus.getSessionTimeout());
         thisManager.addUser(request, userSession.getActualUserId());
       }
       //If the user has a different session than what's in the manager, log the user out
@@ -149,32 +160,40 @@ public class SecurityHook implements ControllerHook {
           request.getSession(false).invalidate();
         }
         LoginBean failedSession = new LoginBean();
-        failedSession.setMessage("* Please login, your session expired because you logged in from " + sessionInfo.getIpAddress());
+        failedSession.setMessage(
+            "* Please login, your session expired because you logged in from " + sessionInfo.getIpAddress());
         request.setAttribute("LoginBean", failedSession);
         return "SecurityCheck";
       }
       //Check to see if new permissions should be loaded...
       //Calling getHierarchyCheck() and getPermissionCheck() will block the
       //user until hierarchy and permisions have been rebuilt
-      if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
-          userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
+      if (userSession.getHierarchyCheck().before(
+          systemStatus.getHierarchyCheck()) ||
+          userSession.getPermissionCheck().before(
+              systemStatus.getPermissionCheck())) {
         Connection db = null;
         try {
-          db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
-          if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
+          db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+              "ConnectionPool")).getConnection(ce);
+          if (userSession.getHierarchyCheck().before(
+              systemStatus.getHierarchyCheck())) {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("SecurityHook-> ** Getting you a new user record");
+              System.out.println(
+                  "SecurityHook-> ** Getting you a new user record");
             }
             User updatedUser = systemStatus.getUser(userSession.getUserId());
             userSession.setUserRecord(updatedUser);
             userSession.setHierarchyCheck(new java.util.Date());
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("SecurityHook-> Updating user session with new user record");
+              System.out.println(
+                  "SecurityHook-> Updating user session with new user record");
             }
           }
           //Reload contact info
           User updatedUser = userSession.getUserRecord();
-          if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
+          if (userSession.getHierarchyCheck().before(
+              systemStatus.getHierarchyCheck())) {
             updatedUser.setBuildContact(true);
           } else {
             updatedUser.setBuildContact(false);
@@ -184,27 +203,30 @@ public class SecurityHook implements ControllerHook {
           userSession.setPermissionCheck(new java.util.Date());
         } catch (SQLException e) {
         } finally {
-          ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
+          ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+              "ConnectionPool")).free(db);
         }
       }
       // NOTE: Right now ALL users have the same currency and language as the system
       // In a later version, this will be removed.
       // This happens every request, just in case the application level preference changes
-      userSession.getUserRecord().setCurrency(applicationPrefs.get("SYSTEM.CURRENCY"));
-      userSession.getUserRecord().setLanguage(applicationPrefs.get("SYSTEM.LANGUAGE"));
+      userSession.getUserRecord().setCurrency(
+          applicationPrefs.get("SYSTEM.CURRENCY"));
+      userSession.getUserRecord().setLanguage(
+          applicationPrefs.get("SYSTEM.LANGUAGE"));
     }
     return null;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  ce                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param ce      Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce) throws SQLException {
     //SystemStatusList is created in InitHook
@@ -214,18 +236,22 @@ public class SecurityHook implements ControllerHook {
       SystemStatus newSystemStatus = new SystemStatus();
       newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
       //Store the fileLibrary path for processes like Workflow
-      ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("applicationPrefs");
-      newSystemStatus.setFileLibraryPath(prefs.get("FILELIBRARY") + ce.getDbName() + fs);
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute(
+          "applicationPrefs");
+      newSystemStatus.setFileLibraryPath(
+          prefs.get("FILELIBRARY") + ce.getDbName() + fs);
       newSystemStatus.queryRecord(db);
       //Cache the role list for the RoleHandler taglib
       newSystemStatus.getLookupList(db, "lookup_project_role");
       statusList.put(ce.getUrl(), newSystemStatus);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("SecurityHook-> Added new System Status object: " + ce.getUrl());
+        System.out.println(
+            "SecurityHook-> Added new System Status object: " + ce.getUrl());
       }
       //Cache the project names, updated by hooks
       HashMap projectNameCache = ProjectList.buildNameList(db);
-      newSystemStatus.getObjects().put(Constants.SYSTEM_PROJECT_NAME_LIST, projectNameCache);
+      newSystemStatus.getObjects().put(
+          Constants.SYSTEM_PROJECT_NAME_LIST, projectNameCache);
       //Give the systemStatus a handle to applicationPrefs for language support
       newSystemStatus.setApplicationPrefs(prefs);
     }

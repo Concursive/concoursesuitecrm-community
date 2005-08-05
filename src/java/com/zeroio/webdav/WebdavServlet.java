@@ -49,6 +49,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -69,16 +70,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- *  Servlet which adds support for WebDAV level 2. All the basic HTTP requests
- *  are handled by the DefaultServlet.
+ * Servlet which adds support for WebDAV level 2. All the basic HTTP requests
+ * are handled by the DefaultServlet.
  *
- *@author     Remy Maucherat
- *@created    July 12, 2004
- *@version    $Revision$ $Date$
+ * @author Remy Maucherat
+ * @version $Revision$ $Date$
+ * @created July 12, 2004
  */
 
 public class WebdavServlet
-     extends DefaultServlet {
+    extends DefaultServlet {
 
   // -------------------------------------------------------------- Constants
 
@@ -91,67 +92,68 @@ public class WebdavServlet
   private final static String METHOD_MOVE = "MOVE";
   private final static String METHOD_LOCK = "LOCK";
   private final static String METHOD_UNLOCK = "UNLOCK";
+  private final static String METHOD_DELETE = "DELETE";
 
   /**
-   *  CFS_USER_REALM should never be changed since when a user is added to the
-   *  system this value is used in calculating the user's webdav password.
-   *  changing the realm will invalidate all the users accessing webdav
+   * CFS_USER_REALM should never be changed since when a user is added to the
+   * system this value is used in calculating the user's webdav password.
+   * changing the realm will invalidate all the users accessing webdav
    */
   public final static String CFS_USER_REALM = "Centric CRM";
 
   /**
-   *  List of systems initialized if system is in asp mode
+   * List of systems initialized if system is in asp mode
    */
   private HashMap systemsInitialized = new HashMap();
 
   /**
-   *  Default depth is infite.
+   * Default depth is infite.
    */
   private final static int INFINITY = 3;
   // To limit tree browsing a bit
 
   /**
-   *  PROPFIND - Specify a property mask.
+   * PROPFIND - Specify a property mask.
    */
   private final static int FIND_BY_PROPERTY = 0;
 
   /**
-   *  PROPFIND - Display all properties.
+   * PROPFIND - Display all properties.
    */
   private final static int FIND_ALL_PROP = 1;
 
   /**
-   *  PROPFIND - Return property names.
+   * PROPFIND - Return property names.
    */
   private final static int FIND_PROPERTY_NAMES = 2;
 
   /**
-   *  Create a new lock.
+   * Create a new lock.
    */
   private final static int LOCK_CREATION = 0;
 
   /**
-   *  Refresh lock.
+   * Refresh lock.
    */
   private final static int LOCK_REFRESH = 1;
 
   /**
-   *  Default lock timeout value.
+   * Default lock timeout value.
    */
   private final static int DEFAULT_TIMEOUT = 3600;
 
   /**
-   *  Maximum lock timeout.
+   * Maximum lock timeout.
    */
   private final static int MAX_TIMEOUT = 604800;
 
   /**
-   *  Default namespace.
+   * Default namespace.
    */
   protected final static String DEFAULT_NAMESPACE = "DAV:";
 
   /**
-   *  Simple date format for the creation date ISO representation (partial).
+   * Simple date format for the creation date ISO representation (partial).
    */
   protected final static SimpleDateFormat creationDateFormat =
       new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -163,33 +165,33 @@ public class WebdavServlet
   // ----------------------------------------------------- Instance Variables
 
   /**
-   *  Repository of the locks put on single resources. <p>
-   *
-   *  Key : path <br>
-   *  Value : LockInfo
+   * Repository of the locks put on single resources. <p>
+   * <p/>
+   * Key : path <br>
+   * Value : LockInfo
    */
   private Hashtable resourceLocks = new Hashtable();
 
   /**
-   *  Repository of the lock-null resources. <p>
-   *
-   *  Key : path of the collection containing the lock-null resource<br>
-   *  Value : Vector of lock-null resource which are members of the collection.
-   *  Each element of the Vector is the path associated with the lock-null
-   *  resource.
+   * Repository of the lock-null resources. <p>
+   * <p/>
+   * Key : path of the collection containing the lock-null resource<br>
+   * Value : Vector of lock-null resource which are members of the collection.
+   * Each element of the Vector is the path associated with the lock-null
+   * resource.
    */
   private Hashtable lockNullResources = new Hashtable();
 
   /**
-   *  Vector of the heritable locks. <p>
-   *
-   *  Key : path <br>
-   *  Value : LockInfo
+   * Vector of the heritable locks. <p>
+   * <p/>
+   * Key : path <br>
+   * Value : LockInfo
    */
   private Vector collectionLocks = new Vector();
 
   /**
-   *  Secret information used to generate reasonably secure lock ids.
+   * Secret information used to generate reasonably secure lock ids.
    */
   private String secret = "catalina";
 
@@ -198,12 +200,12 @@ public class WebdavServlet
   // --------------------------------------------------------- Public Methods
 
   /**
-   *  Initialize this servlet.
+   * Initialize this servlet.
    *
-   *@exception  ServletException  Description of the Exception
+   * @throws ServletException Description of the Exception
    */
   public void init()
-       throws ServletException {
+      throws ServletException {
 
     super.init();
     ServletConfig config = getServletConfig();
@@ -222,13 +224,13 @@ public class WebdavServlet
   // ------------------------------------------------------ Protected Methods
 
   /**
-   *  Return JAXP document builder instance.
+   * Return JAXP document builder instance.
    *
-   *@return                       The documentBuilder value
-   *@exception  ServletException  Description of the Exception
+   * @return The documentBuilder value
+   * @throws ServletException Description of the Exception
    */
   protected DocumentBuilder getDocumentBuilder()
-       throws ServletException {
+      throws ServletException {
     DocumentBuilder documentBuilder = null;
     DocumentBuilderFactory documentBuilderFactory = null;
     try {
@@ -244,10 +246,10 @@ public class WebdavServlet
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   protected synchronized boolean systemInitialized(ActionContext context) {
     String serverName = context.getRequest().getServerName();
@@ -256,10 +258,10 @@ public class WebdavServlet
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context          Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param context Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   protected synchronized void initializeSystem(ActionContext context) throws IOException {
     Connection db = null;
@@ -278,29 +280,29 @@ public class WebdavServlet
   }
 
 
-
   /**
-   *  A2 is one of the components used in re-calculating the request digest at
-   *  the server end
+   * A2 is one of the components used in re-calculating the request digest at
+   * the server end
    *
-   *@param  context  Description of the Parameter
-   *@param  params   Description of the Parameter
-   *@return          The a2 value
+   * @param context Description of the Parameter
+   * @param params  Description of the Parameter
+   * @return The a2 value
    */
   protected String getA2(ActionContext context, HashMap params) {
     String method = context.getRequest().getMethod();
     String uri = (String) params.get("uri");
-    return md5Encoder.encode(md5Helper.digest((method + ":" + uri).getBytes()));
+    return md5Encoder.encode(
+        md5Helper.digest((method + ":" + uri).getBytes()));
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  argHeader        Description of the Parameter
-   *@param  context          Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param argHeader Description of the Parameter
+   * @param context   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected boolean allowUser(ActionContext context, String argHeader) throws IOException {
 
@@ -310,7 +312,8 @@ public class WebdavServlet
       //If the Authorization header user is not the user requesting a resource the
       //force the user to authenticate again
       if (context.getRequest().getParameter("user") != null) {
-        if (!context.getRequest().getParameter("user").equals(this.getUser(context))) {
+        if (!context.getRequest().getParameter("user").equals(
+            this.getUser(context))) {
           //System.out.println("User: " + this.getUser(context));
           //System.out.println("Req User: " + context.getRequest().getParameter("user"));
           return false;
@@ -319,10 +322,12 @@ public class WebdavServlet
     }
     boolean status = false;
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("USERAGENT: " + context.getRequest().getHeader("user-agent"));
+      //System.out.println("USERAGENT: " + context.getRequest().getHeader("user-agent"));
     }
-    if (context.getRequest().getHeader("user-agent").toLowerCase().startsWith("microsoft")
-          || context.getRequest().getHeader("user-agent").toLowerCase().indexOf("windows") > -1) {
+    if (context.getRequest().getHeader("user-agent").toLowerCase().startsWith(
+        "microsoft")
+        || context.getRequest().getHeader("user-agent").toLowerCase().indexOf(
+            "windows") > -1) {
       //BASIC AUTHENTICATION
       if (!argHeader.toUpperCase().startsWith("BASIC")) {
         return false;  // we only do BASIC
@@ -334,10 +339,11 @@ public class WebdavServlet
       sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
       String userpassDecoded = new String(dec.decodeBuffer(userpassEncoded));
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("USER (BASIC): " + userpassDecoded);
+        //System.out.println("USER (BASIC): " + userpassDecoded);
       }
       // Check our user list to see if that user and password are "allowed"
-      String username = userpassDecoded.substring(0, userpassDecoded.indexOf(":"));
+      String username = userpassDecoded.substring(
+          0, userpassDecoded.indexOf(":"));
       String password = userpassDecoded.substring(username.length() + 1);
       Connection db = null;
       try {
@@ -361,20 +367,22 @@ public class WebdavServlet
       if (!argHeader.startsWith("Digest")) {
         return false;
       }
-      
+
       HashMap params = getAuthenticationParams(context, argHeader);
       //System.out.println("client digest : " + (String) params.get("response"));
       Connection db = null;
       String username = (String) params.get("username");
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("USER (DIGEST): " + username);
+        //System.out.println("USER (DIGEST): " + username);
       }
       try {
         WebdavManager manager = this.getWebdavManager(context);
         if (manager.hasUser(username)) {
           // user already logged in. calculate the digest value and validate the user
           String digest =
-              md5Encoder.encode(md5Helper.digest((manager.getUser(username).getDigest() + ":" +
+              md5Encoder.encode(
+                  md5Helper.digest(
+                      (manager.getUser(username).getDigest() + ":" +
               (String) params.get("nonce") + ":" + getA2(context, params)).getBytes()));
           if (digest.equals((String) params.get("response"))) {
             // user has been authenticated earlier and is still valid
@@ -389,7 +397,9 @@ public class WebdavServlet
           // Try to authenticate the user
           db = this.getConnection(context);
           String digest =
-              md5Encoder.encode(md5Helper.digest((manager.getWebdavPassword(db, username) + ":" +
+              md5Encoder.encode(
+                  md5Helper.digest(
+                      (manager.getWebdavPassword(db, username) + ":" +
               (String) params.get("nonce") + ":" +
               getA2(context, params)).getBytes()));
   
@@ -411,16 +421,27 @@ public class WebdavServlet
 
 
   /**
-   *  Handles the special WebDAV methods.
+   * Handles the special WebDAV methods.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
   protected void service(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
-    ActionContext context = new ActionContext(this, null, null, req, resp);
+      throws ServletException, IOException {
+
+    //showRequestInfo(req);
+    //Set the encoding scheme to be used
+    try {
+      req.setCharacterEncoding("UTF-8");
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("WebdavServlet-> Unsupported encoding");
+      }
+    }
+
+    ActionContext context = new ActionContext(this, req, resp);
     if (!systemInitialized(context)) {
       // initialize the SystemStatus, WebdavManager and ConnectionElement for this server
       initializeSystem(context);
@@ -429,12 +450,15 @@ public class WebdavServlet
     String argHeader = req.getHeader("Authorization");
     if (!allowUser(context, argHeader)) {
       System.out.println("Unauthorized access");
-      if (context.getRequest().getHeader("user-agent").toLowerCase().startsWith("microsoft")
-            || context.getRequest().getHeader("user-agent").toLowerCase().indexOf("windows") > -1) {
+      if (context.getRequest().getHeader("user-agent").toLowerCase().startsWith(
+          "microsoft")
+          || context.getRequest().getHeader("user-agent").toLowerCase().indexOf(
+              "windows") > -1) {
         //Microsoft Client. Hence use Basic Authentication
         //Basic Authentication
         //System.out.println("Authentication Scheme-> BASIC");
-        resp.setHeader("WWW-Authenticate", "BASIC realm=\"" + CFS_USER_REALM + "\"");
+        resp.setHeader(
+            "WWW-Authenticate", "BASIC realm=\"" + CFS_USER_REALM + "\"");
       } else {
         //Any othe client use Digest Authentication
         // Digest Authentication
@@ -443,7 +467,8 @@ public class WebdavServlet
         String nonce = generateNonce();
         // determine the 'opaque' value which should be returned as is by the client
         String opaque = generateOpaque();
-        resp.setHeader("WWW-Authenticate", "Digest realm=\"" + CFS_USER_REALM + "\", " +
+        resp.setHeader(
+            "WWW-Authenticate", "Digest realm=\"" + CFS_USER_REALM + "\", " +
             "nonce=\"" + nonce + "\", " +
             "opaque=\"" + opaque + "\"");
       }
@@ -451,8 +476,14 @@ public class WebdavServlet
       return;
     }
 
-    String method = req.getMethod();
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    String path = getRelativePath(context.getRequest());
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
 
+    String method = req.getMethod();
+    //System.out.println("METHOD: " + method + ", Path: " + path);
     if (method.equals(METHOD_PROPFIND)) {
       doPropfind(context);
     } else if (method.equals(METHOD_OPTIONS)) {
@@ -460,15 +491,17 @@ public class WebdavServlet
     } else if (method.equals(METHOD_PROPPATCH)) {
       doProppatch(req, resp);
     } else if (method.equals(METHOD_MKCOL)) {
-      doMkcol(req, resp);
+      doMkcol(context);
     } else if (method.equals(METHOD_COPY)) {
-      doCopy(req, resp);
+      doCopy(context);
     } else if (method.equals(METHOD_MOVE)) {
-      doMove(req, resp);
+      doMove(context);
     } else if (method.equals(METHOD_LOCK)) {
-      doLock(req, resp);
+      doLock(context);
     } else if (method.equals(METHOD_UNLOCK)) {
-      doUnlock(req, resp);
+      doUnlock(context);
+    } else if (method.equals(METHOD_DELETE)) {
+      doDelete(context);
     } else {
       // DefaultServlet processing
       super.service(req, resp);
@@ -477,32 +510,53 @@ public class WebdavServlet
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
-  protected void doOptions(ActionContext context) {
-    context.getResponse().setHeader("DAV", "1");
-    context.getResponse().setHeader("Allow", "GET, HEAD, POST, PUT, DELETE, OPTIONS, TRACE, PROPFIND");
+  protected void doOptions(ActionContext context) throws ServletException, IOException {
+    context.getResponse().addHeader("DAV", "1,2");
+    Connection db = null;
+    ModuleContext resources = null;
+    try {
+      db = this.getConnection(context);
+      resources = getCFSResources(db, context);
+
+      if (resources == null) {
+        context.getResponse().sendError(
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return;
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+
+    StringBuffer methodsAllowed = determineMethodsAllowed(
+        resources, context.getRequest());
+
+    context.getResponse().addHeader("Allow", methodsAllowed.toString());
+    context.getResponse().addHeader("MS-Author-Via", "DAV");
   }
 
 
   /**
-   *  Check if the conditions specified in the optional If headers are
-   *  satisfied.
+   * Check if the conditions specified in the optional If headers are
+   * satisfied.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     File object
-   *@return                  boolean true if the resource meets all the
-   *      specified conditions, and false if any of the conditions is not
-   *      satisfied, in which case request processing is stopped
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo File object
+   * @return boolean true if the resource meets all the
+   *         specified conditions, and false if any of the conditions is not
+   *         satisfied, in which case request processing is stopped
+   * @throws IOException Description of the Exception
    */
   protected boolean checkIfHeaders(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                                   HttpServletResponse response,
+                                   ResourceInfo resourceInfo)
+      throws IOException {
 
     if (!super.checkIfHeaders(request, response, resourceInfo)) {
       return false;
@@ -514,15 +568,15 @@ public class WebdavServlet
 
 
   /**
-   *  OPTIONS Method.
+   * OPTIONS Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
   protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+      throws ServletException, IOException {
 
     resp.addHeader("DAV", "1,2");
 
@@ -534,7 +588,8 @@ public class WebdavServlet
       return;
     }
 
-    StringBuffer methodsAllowed = determineMethodsAllowed(resources,
+    StringBuffer methodsAllowed = determineMethodsAllowed(
+        resources,
         req);
 
     resp.addHeader("Allow", methodsAllowed.toString());
@@ -544,21 +599,22 @@ public class WebdavServlet
 
 
   /**
-   *  PROPFIND Method.
+   * PROPFIND Method.
    *
-   *@param  context               Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
   protected void doPropfind(ActionContext context)
-       throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String path = getRelativePath(context.getRequest());
+
     //fix for windows clients
     if (path.equals("/files")) {
       path = "";
     }
-    
+
     if (path.endsWith("/")) {
       path = path.substring(0, path.length() - 1);
     }
@@ -569,10 +625,15 @@ public class WebdavServlet
       return;
     }
 
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      //Fix for MACOSX finder. Do not allow requests for files starting with a period
+      return;
+    }
+    //System.out.println("METHOD PROPFIND....PATH: " + path);
     // Properties which are to be displayed.
     Vector properties = null;
-    // Propfind depth
-    int depth = INFINITY;
+    // Propfind depth by default 1 for performance reasons
+    int depth = 1;
     // Propfind type
     int type = FIND_ALL_PROP;
 
@@ -592,8 +653,6 @@ public class WebdavServlet
     /*
      *  Read the request xml and determine all the properties
      */
-  
-    /*
     Node propNode = null;
     DocumentBuilder documentBuilder = getDocumentBuilder();
     try {
@@ -624,11 +683,16 @@ public class WebdavServlet
     } catch (Exception e) {
       // Most likely there was no content : we use the defaults.
       // TODO : Enhance that !
-      e.printStackTrace(System.out);
+      //e.printStackTrace(System.out);
     }
-    
+
     if (type == FIND_BY_PROPERTY) {
       properties = new Vector();
+      if (!properties.contains("creationdate")) {
+        //If the request did not contain creationdate property then add this to requested properties
+        //to make the information available for clients
+        properties.addElement("creationdate");
+      }
       NodeList childList = propNode.getChildNodes();
       for (int i = 0; i < childList.getLength(); i++) {
         Node currentNode = childList.item(i);
@@ -650,7 +714,7 @@ public class WebdavServlet
         }
       }
     }
-    */
+
     // Properties have been determined
     // Retrieve the resources
 
@@ -658,7 +722,8 @@ public class WebdavServlet
     Connection db = null;
     boolean exists = true;
     boolean status = true;
-    Object object = null;
+    Object current = null;
+    Object child = null;
     ModuleContext resources = null;
     SystemStatus thisSystem = null;
     StringBuffer xmlsb = new StringBuffer();
@@ -666,11 +731,15 @@ public class WebdavServlet
       db = this.getConnection(context);
       resources = getCFSResources(db, context);
       if (resources == null) {
-        context.getResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        context.getResponse().sendError(
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return;
       }
       thisSystem = this.getSystemStatus(context);
-      object = resources.lookup(thisSystem, db, path);
+      current = resources.lookup(thisSystem, db, path);
+      if (current instanceof ModuleContext) {
+        //System.out.println( ((ModuleContext) current).toString());
+      }
     } catch (NamingException e) {
       //e.printStackTrace(System.out);
       exists = false;
@@ -693,13 +762,16 @@ public class WebdavServlet
                   new XMLWriter(context.getResponse().getWriter());
               generatedXML.writeXMLHeader();
               generatedXML.writeElement
-                  (null, "multistatus"
-                   + generateNamespaceDeclarations(),
-                  XMLWriter.OPENING);
+                  (
+                      null, "multistatus"
+                  + generateNamespaceDeclarations(),
+                      XMLWriter.OPENING);
               parseLockNullProperties
-                  (context.getRequest(), generatedXML, lockNullPath, type,
-                  properties);
-              generatedXML.writeElement(null, "multistatus",
+                  (
+                      context.getRequest(), generatedXML, lockNullPath, type,
+                      properties);
+              generatedXML.writeElement(
+                  null, "multistatus",
                   XMLWriter.CLOSING);
               generatedXML.sendData();
               //e.printStackTrace(System.out);
@@ -732,13 +804,15 @@ public class WebdavServlet
 
     XMLWriter generatedXML = new XMLWriter(context.getResponse().getWriter());
     generatedXML.writeXMLHeader();
-    generatedXML.writeElement(null, "multistatus"
-         + generateNamespaceDeclarations(),
+    generatedXML.writeElement(
+        null, "multistatus"
+        + generateNamespaceDeclarations(),
         XMLWriter.OPENING);
 
     //System.out.println("Depth: " + depth);
     if (depth == 0) {
-      parseProperties(context, resources, generatedXML, path, type, properties);
+      parseProperties(
+          context, resources, generatedXML, path, type, properties);
     } else {
       // The stack always contains the object of the current level
       Stack stack = new Stack();
@@ -748,31 +822,27 @@ public class WebdavServlet
 
       while ((!stack.isEmpty()) && (depth >= 0)) {
         String currentPath = (String) stack.pop();
-        if (!currentPath.equals(path)) {
-          parseProperties(context, resources, generatedXML, currentPath, type, properties);
-        }
         try {
-          db = this.getConnection(context);
-          object = resources.lookup(thisSystem, db, currentPath);
+          if (!currentPath.equals(path)) {
+            //object at url currentPath not yet looked up. so perform lookup at url currentPath
+            child = resources.lookup(currentPath);
+            parseProperties(
+                context, resources, generatedXML, currentPath, type, properties);
+          }
         } catch (NamingException e) {
+          e.printStackTrace(System.out);
           continue;
-        } catch (SQLException e) {
-          //e.printStackTrace(System.out);
-          context.getResponse().sendError(CFS_SQLERROR, e.getMessage());
-          status = false;
-        } finally {
-          this.freeConnection(db, context);
         }
 
         if (!status) {
           return;
         }
 
-        if ((object instanceof ModuleContext) && depth > 0) {
+        if ((current instanceof ModuleContext) && depth > 0) {
           // Get a list of all the resources at the current path and store them
           // in the stack
           try {
-            NamingEnumeration enum1 = resources.list(currentPath);
+            NamingEnumeration enum1 = ((ModuleContext) current).list("");
             int count = 0;
             while (enum1.hasMoreElements()) {
               NameClassPair ncPair =
@@ -782,11 +852,13 @@ public class WebdavServlet
                 newPath += "/";
               }
               newPath += ncPair.getName();
+              //System.out.println("STACKING CHILD: " + newPath);
               stackBelow.push(newPath);
               count++;
             }
             if (currentPath.equals(path) && count == 0) {
               // This directory does not have any files or folders.
+              //System.out.println("DIRECTORY HAS NO FILES OR FOLDERS...");
               parseProperties(context, resources, generatedXML, properties);
             }
           } catch (NamingException e) {
@@ -812,8 +884,9 @@ public class WebdavServlet
                   lockNullResourcesList.nextElement();
               System.out.println("Lock null path: " + lockNullPath);
               parseLockNullProperties
-                  (context.getRequest(), generatedXML, lockNullPath, type,
-                  properties);
+                  (
+                      context.getRequest(), generatedXML, lockNullPath, type,
+                      properties);
             }
           }
         }
@@ -828,7 +901,14 @@ public class WebdavServlet
       }
     }
 
-    generatedXML.writeElement(null, "multistatus",
+    Iterator locks = lockNullResources.keySet().iterator();
+    while (locks.hasNext()) {
+      String lockpath = (String) locks.next();
+      //System.out.println("LOCK PATH: " + lockpath);
+    }
+
+    generatedXML.writeElement(
+        null, "multistatus",
         XMLWriter.CLOSING);
     xmlsb.append(generatedXML.toString());
     generatedXML.sendData();
@@ -837,16 +917,16 @@ public class WebdavServlet
 
 
   /**
-   *  PROPPATCH Method.
+   * PROPPATCH Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
   protected void doProppatch(HttpServletRequest req,
-      HttpServletResponse resp)
-       throws ServletException, IOException {
+                             HttpServletResponse resp)
+      throws ServletException, IOException {
 
     if (readOnly) {
       resp.sendError(WebdavStatus.SC_FORBIDDEN);
@@ -864,134 +944,158 @@ public class WebdavServlet
 
 
   /**
-   *  MKCOL Method.
+   * MKCOL Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
-  protected void doMkcol(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+  protected void doMkcol(ActionContext context)
+      throws ServletException, IOException {
 
     if (readOnly) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
     }
 
-    if (isLocked(req)) {
-      resp.sendError(WebdavStatus.SC_LOCKED);
+    if (isLocked(context.getRequest())) {
+      context.getResponse().sendError(WebdavStatus.SC_LOCKED);
       return;
     }
 
-    String path = getRelativePath(req);
+    String path = getRelativePath(context.getRequest());
+    
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
 
     if ((path.toUpperCase().startsWith("/WEB-INF")) ||
         (path.toUpperCase().startsWith("/META-INF"))) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
     }
 
-    // Retrieve the resources
-    DirContext resources = getResources();
-
-    if (resources == null) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      return;
-    }
+    Connection db = null;
+    ModuleContext resources = null;
+    SystemStatus thisSystem = null;
+    Object object = null;
 
     boolean exists = true;
-    Object object = null;
+    boolean result = true;
+    boolean created = false;
     try {
-      object = resources.lookup(path);
-    } catch (NamingException e) {
-      exists = false;
-    }
-
-    // Can't create a collection if a resource already exists at the given
-    // path
-    if (exists) {
-      // Get allowed methods
-      StringBuffer methodsAllowed = determineMethodsAllowed(resources,
-          req);
-
-      resp.addHeader("Allow", methodsAllowed.toString());
-
-      resp.sendError(WebdavStatus.SC_METHOD_NOT_ALLOWED);
-      return;
-    }
-
-    if (req.getInputStream().available() > 0) {
-      DocumentBuilder documentBuilder = getDocumentBuilder();
-      try {
-        Document document = documentBuilder.parse
-            (new InputSource(req.getInputStream()));
-        // TODO : Process this request body
-        resp.sendError(WebdavStatus.SC_NOT_IMPLEMENTED);
-        return;
-      } catch (SAXException saxe) {
-        // Parse error - assume invalid content
-        resp.sendError(WebdavStatus.SC_BAD_REQUEST);
+      db = this.getConnection(context);
+      resources = getCFSResources(db, context);
+      if (resources == null) {
+        context.getResponse().sendError(
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return;
       }
+      thisSystem = this.getSystemStatus(context);
+      try {
+        object = resources.lookup(thisSystem, db, path);
+      } catch (NameNotFoundException nnfe) {
+        exists = false;
+      }
+
+      if (context.getRequest().getInputStream().available() > 0) {
+        DocumentBuilder documentBuilder = getDocumentBuilder();
+        try {
+          Document document = documentBuilder.parse
+              (new InputSource(context.getRequest().getInputStream()));
+          // TODO : Process this request body
+          context.getResponse().sendError(WebdavStatus.SC_NOT_IMPLEMENTED);
+          return;
+        } catch (SAXException saxe) {
+          // Parse error - assume invalid content
+          context.getResponse().sendError(WebdavStatus.SC_BAD_REQUEST);
+          return;
+        }
+      }
+      //Create the collection at the specified path
+      created = resources.createSubcontext(thisSystem, db, path);
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+    } catch (NamingException ne) {
+      result = false;
+    } finally {
+      this.freeConnection(db, context);
     }
 
-    boolean result = true;
-    try {
-      resources.createSubcontext(path);
-    } catch (NamingException e) {
-      result = false;
+    if (!created) {
+      //Litmus test reports the following warning. But this warning is because of the read only property of top level folders in Centric's
+      //Webdav implementation. Hence SC_FORBIDDEN is sent!
+      
+      //mkcol_no_parent....... WARNING: MKCOL with missing intermediate gave 403, should be 409 ......... pass (with 1 warning)
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
+      return;
+    }
+    // Can't create a collection if a resource already exists at the given path
+    if (exists) {
+      // Get allowed methods
+      StringBuffer methodsAllowed = determineMethodsAllowed(
+          resources, context.getRequest());
+      context.getResponse().addHeader("Allow", methodsAllowed.toString());
+      context.getResponse().sendError(WebdavStatus.SC_METHOD_NOT_ALLOWED);
+      return;
     }
 
     if (!result) {
-      resp.sendError(WebdavStatus.SC_CONFLICT,
+      context.getResponse().sendError(
+          WebdavStatus.SC_CONFLICT,
           WebdavStatus.getStatusText
           (WebdavStatus.SC_CONFLICT));
     } else {
-      resp.setStatus(WebdavStatus.SC_CREATED);
+      context.getResponse().setStatus(WebdavStatus.SC_CREATED);
       // Removing any lock-null resource which would be present
       lockNullResources.remove(path);
     }
-
   }
 
 
   /**
-   *  DELETE Method.
+   * DELETE Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
-  protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+  protected void doDelete(ActionContext context)
+      throws ServletException, IOException {
 
     if (readOnly) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
     }
 
-    if (isLocked(req)) {
-      resp.sendError(WebdavStatus.SC_LOCKED);
+    if (isLocked(context.getRequest())) {
+      context.getResponse().sendError(WebdavStatus.SC_LOCKED);
       return;
     }
 
-    deleteResource(req, resp);
-
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      deleteResource(context, db);
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(db, context);
+    }
   }
 
 
   /**
-   *  Process a POST request for the specified resource.
+   * Process a POST request for the specified resource.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
   protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+      throws ServletException, IOException {
 
     if (isLocked(req)) {
       resp.sendError(WebdavStatus.SC_LOCKED);
@@ -1002,6 +1106,11 @@ public class WebdavServlet
 
     String path = getRelativePath(req);
 
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
+
     // Removing any lock-null resource which would be present
     lockNullResources.remove(path);
 
@@ -1009,73 +1118,106 @@ public class WebdavServlet
 
 
   /**
-   *  COPY Method.
+   * COPY Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
-  protected void doCopy(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+  protected void doCopy(ActionContext context)
+      throws ServletException, IOException {
 
     if (readOnly) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
     }
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      String method = context.getRequest().getMethod();
 
-    copyResource(req, resp);
-
-  }
-
-
-  /**
-   *  MOVE Method.
-   *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
-   */
-  protected void doMove(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
-
-    if (readOnly) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
-      return;
-    }
-
-    if (isLocked(req)) {
-      resp.sendError(WebdavStatus.SC_LOCKED);
-      return;
-    }
-
-    String path = getRelativePath(req);
-
-    if (copyResource(req, resp)) {
-      deleteResource(path, req, resp, false);
+      performAction(context, db, method);
+      //copyResource(context, db);
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(db, context);
     }
   }
 
 
   /**
-   *  LOCK Method.
+   * MOVE Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
-  protected void doLock(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+  protected void doMove(ActionContext context)
+      throws ServletException, IOException {
 
     if (readOnly) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
     }
 
-    if (isLocked(req)) {
-      resp.sendError(WebdavStatus.SC_LOCKED);
+    if (isLocked(context.getRequest())) {
+      context.getResponse().sendError(WebdavStatus.SC_LOCKED);
+      return;
+    }
+
+    String path = getRelativePath(context.getRequest());
+
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
+
+    if (path.endsWith("/")) {
+      path = path.substring(0, path.length() - 1);
+    }
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      String method = context.getRequest().getMethod();
+
+      boolean complete = performAction(context, db, method);
+      if (!complete) {
+        context.getResponse().sendError(WebdavStatus.SC_METHOD_NOT_ALLOWED);
+      }
+
+      /*
+       *  if (copyResource(context, db)) {
+       *  deleteResource(context, db, path, false);
+       *  }
+       */
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(db, context);
+    }
+  }
+
+
+  /**
+   * LOCK Method.
+   *
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
+   */
+  protected void doLock(ActionContext context)
+      throws ServletException, IOException {
+
+    if (readOnly) {
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
+      return;
+    }
+
+    if (isLocked(context.getRequest())) {
+      context.getResponse().sendError(WebdavStatus.SC_LOCKED);
       return;
     }
 
@@ -1085,7 +1227,7 @@ public class WebdavServlet
 
     // Parsing depth header
 
-    String depthStr = req.getHeader("Depth");
+    String depthStr = context.getRequest().getHeader("Depth");
 
     if (depthStr == null) {
       lock.depth = INFINITY;
@@ -1096,11 +1238,10 @@ public class WebdavServlet
         lock.depth = INFINITY;
       }
     }
-
     // Parsing timeout header
 
     int lockDuration = DEFAULT_TIMEOUT;
-    String lockDurationStr = req.getHeader("Timeout");
+    String lockDurationStr = context.getRequest().getHeader("Timeout");
     if (lockDurationStr == null) {
       lockDuration = DEFAULT_TIMEOUT;
     } else {
@@ -1140,8 +1281,9 @@ public class WebdavServlet
     DocumentBuilder documentBuilder = getDocumentBuilder();
 
     try {
-      Document document = documentBuilder.parse(new InputSource
-          (req.getInputStream()));
+      Document document = documentBuilder.parse(
+          new InputSource
+              (context.getRequest().getInputStream()));
 
       // Get the root element of the document
       Element rootElement = document.getDocumentElement();
@@ -1204,11 +1346,11 @@ public class WebdavServlet
 
         if (lock.scope == null) {
           // Bad request
-          resp.setStatus(WebdavStatus.SC_BAD_REQUEST);
+          context.getResponse().setStatus(WebdavStatus.SC_BAD_REQUEST);
         }
       } else {
         // Bad request
-        resp.setStatus(WebdavStatus.SC_BAD_REQUEST);
+        context.getResponse().setStatus(WebdavStatus.SC_BAD_REQUEST);
       }
 
       if (lockTypeNode != null) {
@@ -1233,11 +1375,11 @@ public class WebdavServlet
 
         if (lock.type == null) {
           // Bad request
-          resp.setStatus(WebdavStatus.SC_BAD_REQUEST);
+          context.getResponse().setStatus(WebdavStatus.SC_BAD_REQUEST);
         }
       } else {
         // Bad request
-        resp.setStatus(WebdavStatus.SC_BAD_REQUEST);
+        context.getResponse().setStatus(WebdavStatus.SC_BAD_REQUEST);
       }
 
       if (lockOwnerNode != null) {
@@ -1261,7 +1403,7 @@ public class WebdavServlet
 
         if (lock.owner == null) {
           // Bad request
-          resp.setStatus(WebdavStatus.SC_BAD_REQUEST);
+          context.getResponse().setStatus(WebdavStatus.SC_BAD_REQUEST);
         }
       } else {
         lock.owner = new String();
@@ -1269,7 +1411,12 @@ public class WebdavServlet
 
     }
 
-    String path = getRelativePath(req);
+    String path = getRelativePath(context.getRequest());
+
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
 
     lock.path = path;
 
@@ -1277,7 +1424,8 @@ public class WebdavServlet
     DirContext resources = getResources();
 
     if (resources == null) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      context.getResponse().sendError(
+          HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return;
     }
 
@@ -1289,16 +1437,17 @@ public class WebdavServlet
       exists = false;
     }
 
+
     Enumeration locksList = null;
 
     if (lockRequestType == LOCK_CREATION) {
 
       // Generating lock id
-      String lockTokenStr = req.getServletPath() + "-" + lock.type + "-"
-           + lock.scope + "-" + req.getUserPrincipal() + "-"
-           + lock.depth + "-" + lock.owner + "-" + lock.tokens + "-"
-           + lock.expiresAt + "-" + System.currentTimeMillis() + "-"
-           + secret;
+      String lockTokenStr = context.getRequest().getServletPath() + "-" + lock.type + "-"
+          + lock.scope + "-" + context.getRequest().getUserPrincipal() + "-"
+          + lock.depth + "-" + lock.owner + "-" + lock.tokens + "-"
+          + lock.expiresAt + "-" + System.currentTimeMillis() + "-"
+          + secret;
       String lockToken =
           md5Encoder.encode(md5Helper.digest(lockTokenStr.getBytes()));
 
@@ -1346,38 +1495,47 @@ public class WebdavServlet
 
           Enumeration lockPathsList = lockPaths.elements();
 
-          resp.setStatus(WebdavStatus.SC_CONFLICT);
+          context.getResponse().setStatus(WebdavStatus.SC_CONFLICT);
 
           XMLWriter generatedXML = new XMLWriter();
           generatedXML.writeXMLHeader();
 
           generatedXML.writeElement
-              (null, "multistatus" + generateNamespaceDeclarations(),
-              XMLWriter.OPENING);
+              (
+                  null, "multistatus" + generateNamespaceDeclarations(),
+                  XMLWriter.OPENING);
 
           while (lockPathsList.hasMoreElements()) {
-            generatedXML.writeElement(null, "response",
+            generatedXML.writeElement(
+                null, "response",
                 XMLWriter.OPENING);
-            generatedXML.writeElement(null, "href",
+            generatedXML.writeElement(
+                null, "href",
                 XMLWriter.OPENING);
             generatedXML.writeText((String) lockPathsList.nextElement());
-            generatedXML.writeElement(null, "href",
+            generatedXML.writeElement(
+                null, "href",
                 XMLWriter.CLOSING);
-            generatedXML.writeElement(null, "status",
+            generatedXML.writeElement(
+                null, "status",
                 XMLWriter.OPENING);
-            generatedXML.writeText("HTTP/1.1 " + WebdavStatus.SC_LOCKED
-                 + " " + WebdavStatus.getStatusText(WebdavStatus.SC_LOCKED));
-            generatedXML.writeElement(null, "status",
+            generatedXML.writeText(
+                "HTTP/1.1 " + WebdavStatus.SC_LOCKED
+                + " " + WebdavStatus.getStatusText(WebdavStatus.SC_LOCKED));
+            generatedXML.writeElement(
+                null, "status",
                 XMLWriter.CLOSING);
 
-            generatedXML.writeElement(null, "response",
+            generatedXML.writeElement(
+                null, "response",
                 XMLWriter.CLOSING);
           }
 
-          generatedXML.writeElement(null, "multistatus",
+          generatedXML.writeElement(
+              null, "multistatus",
               XMLWriter.CLOSING);
 
-          Writer writer = resp.getWriter();
+          Writer writer = context.getResponse().getWriter();
           writer.write(generatedXML.toString());
           writer.close();
 
@@ -1394,11 +1552,11 @@ public class WebdavServlet
           if (currentLock.path.equals(lock.path)) {
 
             if (currentLock.isExclusive()) {
-              resp.sendError(WebdavStatus.SC_LOCKED);
+              context.getResponse().sendError(WebdavStatus.SC_LOCKED);
               return;
             } else {
               if (lock.isExclusive()) {
-                resp.sendError(WebdavStatus.SC_LOCKED);
+                context.getResponse().sendError(WebdavStatus.SC_LOCKED);
                 return;
               }
             }
@@ -1425,7 +1583,8 @@ public class WebdavServlet
           if ((presentLock.isExclusive()) || (lock.isExclusive())) {
             // If either lock is exclusive, the lock can't be
             // granted
-            resp.sendError(WebdavStatus.SC_PRECONDITION_FAILED);
+            context.getResponse().sendError(
+                WebdavStatus.SC_PRECONDITION_FAILED);
             return;
           } else {
             presentLock.tokens.addElement(lockToken);
@@ -1457,13 +1616,15 @@ public class WebdavServlet
               lockNullResources.put(parentPath, lockNulls);
             }
 
+            //System.out.println("ADDED LOCK AT PATH: " + lock.path);
             lockNulls.addElement(lock.path);
 
           }
           // Add the Lock-Token header as by RFC 2518 8.10.1
           // - only do this for newly created locks
-          resp.addHeader("Lock-Token", "<opaquelocktoken:"
-               + lockToken + ">");
+          context.getResponse().addHeader(
+              "Lock-Token", "<opaquelocktoken:"
+              + lockToken + ">");
         }
 
       }
@@ -1472,7 +1633,7 @@ public class WebdavServlet
 
     if (lockRequestType == LOCK_REFRESH) {
 
-      String ifHeader = req.getHeader("If");
+      String ifHeader = context.getRequest().getHeader("If");
       if (ifHeader == null) {
         ifHeader = "";
       }
@@ -1521,23 +1682,26 @@ public class WebdavServlet
     // the lock information
     XMLWriter generatedXML = new XMLWriter();
     generatedXML.writeXMLHeader();
-    generatedXML.writeElement(null, "prop"
-         + generateNamespaceDeclarations(),
+    generatedXML.writeElement(
+        null, "prop"
+        + generateNamespaceDeclarations(),
         XMLWriter.OPENING);
 
-    generatedXML.writeElement(null, "lockdiscovery",
+    generatedXML.writeElement(
+        null, "lockdiscovery",
         XMLWriter.OPENING);
 
     lock.toXML(generatedXML);
 
-    generatedXML.writeElement(null, "lockdiscovery",
+    generatedXML.writeElement(
+        null, "lockdiscovery",
         XMLWriter.CLOSING);
 
     generatedXML.writeElement(null, "prop", XMLWriter.CLOSING);
 
-    resp.setStatus(WebdavStatus.SC_OK);
-    resp.setContentType("text/xml; charset=UTF-8");
-    Writer writer = resp.getWriter();
+    context.getResponse().setStatus(WebdavStatus.SC_OK);
+    context.getResponse().setContentType("text/xml; charset=UTF-8");
+    Writer writer = context.getResponse().getWriter();
     writer.write(generatedXML.toString());
     writer.close();
 
@@ -1545,29 +1709,34 @@ public class WebdavServlet
 
 
   /**
-   *  UNLOCK Method.
+   * UNLOCK Method.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
-  protected void doUnlock(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+  protected void doUnlock(ActionContext context)
+      throws ServletException, IOException {
 
     if (readOnly) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
     }
 
-    if (isLocked(req)) {
-      resp.sendError(WebdavStatus.SC_LOCKED);
+    if (isLocked(context.getRequest())) {
+      context.getResponse().sendError(WebdavStatus.SC_LOCKED);
       return;
     }
 
-    String path = getRelativePath(req);
+    String path = getRelativePath(context.getRequest());
 
-    String lockTokenHeader = req.getHeader("Lock-Token");
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
+
+    String lockTokenHeader = context.getRequest().getHeader("Lock-Token");
     if (lockTokenHeader == null) {
       lockTokenHeader = "";
     }
@@ -1619,7 +1788,7 @@ public class WebdavServlet
       }
     }
 
-    resp.setStatus(WebdavStatus.SC_NO_CONTENT);
+    context.getResponse().setStatus(WebdavStatus.SC_NO_CONTENT);
 
   }
 
@@ -1627,9 +1796,9 @@ public class WebdavServlet
   // -------------------------------------------------------- Private Methods
 
   /**
-   *  Generate the namespace declarations.
+   * Generate the namespace declarations.
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   private String generateNamespaceDeclarations() {
     return " xmlns=\"" + DEFAULT_NAMESPACE + "\"";
@@ -1637,18 +1806,23 @@ public class WebdavServlet
 
 
   /**
-   *  Check to see if a resource is currently write locked. The method will look
-   *  at the "If" header to make sure the client has give the appropriate lock
-   *  tokens.
+   * Check to see if a resource is currently write locked. The method will look
+   * at the "If" header to make sure the client has give the appropriate lock
+   * tokens.
    *
-   *@param  req  Servlet request
-   *@return      boolean true if the resource is locked (and no appropriate lock
-   *      token has been found for at least one of the non-shared locks which
-   *      are present on the resource).
+   * @param req Servlet request
+   * @return boolean true if the resource is locked (and no appropriate
+   *         lock token has been found for at least one of the non-shared locks
+   *         which are present on the resource).
    */
   private boolean isLocked(HttpServletRequest req) {
 
     String path = getRelativePath(req);
+
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return false;
+    }
 
     String ifHeader = req.getHeader("If");
     if (ifHeader == null) {
@@ -1665,13 +1839,13 @@ public class WebdavServlet
 
 
   /**
-   *  Check to see if a resource is currently write locked.
+   * Check to see if a resource is currently write locked.
    *
-   *@param  path      Path of the resource
-   *@param  ifHeader  "If" HTTP header which was included in the request
-   *@return           boolean true if the resource is locked (and no appropriate
-   *      lock token has been found for at least one of the non-shared locks
-   *      which are present on the resource).
+   * @param path     Path of the resource
+   * @param ifHeader "If" HTTP header which was included in the request
+   * @return boolean true if the resource is locked (and no
+   *         appropriate lock token has been found for at least one of the
+   *         non-shared locks which are present on the resource).
    */
   private boolean isLocked(String path, String ifHeader) {
 
@@ -1726,24 +1900,25 @@ public class WebdavServlet
 
 
   /**
-   *  Copy a resource.
+   * Copy a resource.
    *
-   *@param  req                   Servlet request
-   *@param  resp                  Servlet response
-   *@return                       boolean true if the copy is successful
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param method  Description of the Parameter
+   * @return boolean true if the copy is successful
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
+   * @throws SQLException     Description of the Exception
    */
-  private boolean copyResource(HttpServletRequest req,
-      HttpServletResponse resp)
-       throws ServletException, IOException {
+  //private boolean copyResource(ActionContext context, Connection db)
+  private boolean performAction(ActionContext context, Connection db, String method)
+      throws SQLException, ServletException, IOException {
 
     // Parsing destination header
-
-    String destinationPath = req.getHeader("Destination");
+    String destinationPath = context.getRequest().getHeader("Destination");
 
     if (destinationPath == null) {
-      resp.sendError(WebdavStatus.SC_BAD_REQUEST);
+      context.getResponse().sendError(WebdavStatus.SC_BAD_REQUEST);
       return false;
     }
 
@@ -1762,7 +1937,7 @@ public class WebdavServlet
         destinationPath = destinationPath.substring(firstSeparator);
       }
     } else {
-      String hostName = req.getServerName();
+      String hostName = context.getRequest().getServerName();
       if ((hostName != null) && (destinationPath.startsWith(hostName))) {
         destinationPath = destinationPath.substring(hostName.length());
       }
@@ -1786,15 +1961,15 @@ public class WebdavServlet
     // Normalise destination path (remove '.' and '..')
     destinationPath = normalize(destinationPath);
 
-    String contextPath = req.getContextPath();
+    String contextPath = context.getRequest().getContextPath();
     if ((contextPath != null) &&
         (destinationPath.startsWith(contextPath))) {
       destinationPath = destinationPath.substring(contextPath.length());
     }
 
-    String pathInfo = req.getPathInfo();
+    String pathInfo = context.getRequest().getPathInfo();
     if (pathInfo != null) {
-      String servletPath = req.getServletPath();
+      String servletPath = context.getRequest().getServletPath();
       if ((servletPath != null) &&
           (destinationPath.startsWith(servletPath))) {
         destinationPath = destinationPath.substring(servletPath.length());
@@ -1807,27 +1982,36 @@ public class WebdavServlet
 
     if ((destinationPath.toUpperCase().startsWith("/WEB-INF")) ||
         (destinationPath.toUpperCase().startsWith("/META-INF"))) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return false;
     }
 
-    String path = getRelativePath(req);
+    String path = getRelativePath(context.getRequest());
+
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return false;
+    }
+
+    if (path.endsWith("/")) {
+      path = path.substring(0, path.lastIndexOf("/"));
+    }
 
     if ((path.toUpperCase().startsWith("/WEB-INF")) ||
         (path.toUpperCase().startsWith("/META-INF"))) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return false;
     }
 
     if (destinationPath.equals(path)) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return false;
     }
 
     // Parsing overwrite header
 
     boolean overwrite = true;
-    String overwriteHeader = req.getHeader("Overwrite");
+    String overwriteHeader = context.getRequest().getHeader("Overwrite");
 
     if (overwriteHeader != null) {
       if (overwriteHeader.equalsIgnoreCase("T")) {
@@ -1838,75 +2022,94 @@ public class WebdavServlet
     }
 
     // Overwriting the destination
-
     // Retrieve the resources
-    DirContext resources = getResources();
+    ModuleContext resources = getCFSResources(db, context);
+    SystemStatus thisSystem = this.getSystemStatus(context);
 
     if (resources == null) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      context.getResponse().sendError(
+          HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return false;
     }
 
+    Object object = null;
     boolean exists = true;
+
     try {
-      resources.lookup(destinationPath);
-    } catch (NamingException e) {
+      //lookup the object at path. If it is a top level folder fail otherwise proceed
+      object = resources.lookup(thisSystem, db, path);
+
+      if (getWebdavManager(context).isTopLevelModule(object)) {
+        return false;
+      }
+
+      resources.lookup(thisSystem, db, destinationPath);
+    } catch (NamingException ne) {
       exists = false;
     }
 
     if (overwrite) {
-
       // Delete destination resource, if it exists
       if (exists) {
-        if (!deleteResource(destinationPath, req, resp, true)) {
+        if (!deleteResource(context, db, destinationPath, true)) {
+          context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
           return false;
         }
       } else {
-        resp.setStatus(WebdavStatus.SC_CREATED);
+        context.getResponse().setStatus(WebdavStatus.SC_CREATED);
       }
-
     } else {
-
       // If the destination exists, then it's a conflict
       if (exists) {
-        resp.sendError(WebdavStatus.SC_PRECONDITION_FAILED);
+        context.getResponse().sendError(WebdavStatus.SC_PRECONDITION_FAILED);
         return false;
       }
     }
 
     // Copying source to destination
-
     Hashtable errorList = new Hashtable();
-
-    boolean result = copyResource(resources, errorList,
-        path, destinationPath);
+    boolean result = false;
+    try {
+      if (method.equals(METHOD_COPY)) {
+        result = copyResource(
+            context, thisSystem, db, resources, errorList, path, destinationPath);
+      } else if (method.equals(METHOD_MOVE)) {
+        result = moveResource(
+            thisSystem, db, resources, errorList, path, destinationPath);
+      }
+    } catch (FileNotFoundException fnfe) {
+    }
 
     if ((!result) || (!errorList.isEmpty())) {
-
-      sendReport(req, resp, errorList);
+      //sendReport(context.getRequest(), context.getResponse(), errorList);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return false;
     }
 
     // Removing any lock-null resource which would be present at
     // the destination path
     lockNullResources.remove(destinationPath);
-
     return true;
   }
 
 
   /**
-   *  Copy a collection.
+   * Copy a collection.
    *
-   *@param  resources  Resources implementation to be used
-   *@param  errorList  Hashtable containing the list of errors which occurred
-   *      during the copy operation
-   *@param  source     Path of the resource to be copied
-   *@param  dest       Destination path
-   *@return            Description of the Return Value
+   * @param resources  Resources implementation to be used
+   * @param errorList  Hashtable containing the list of errors
+   *                   which occurred during the copy operation
+   * @param source     Path of the resource to be copied
+   * @param dest       Destination path
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
    */
-  private boolean copyResource(DirContext resources, Hashtable errorList,
-      String source, String dest) {
+  private boolean copyResource(ActionContext context, SystemStatus thisSystem, Connection db,
+                               ModuleContext resources, Hashtable errorList, String source, String dest)
+      throws SQLException, FileNotFoundException {
 
     if (debug > 1) {
       System.out.println("Copy: " + source + " To: " + dest);
@@ -1914,23 +2117,28 @@ public class WebdavServlet
 
     Object object = null;
     try {
-      object = resources.lookup(source);
+      object = resources.lookup(thisSystem, db, source);
     } catch (NamingException e) {
+      e.printStackTrace(System.out);
     }
 
-    if (object instanceof DirContext) {
-
+    if (object instanceof ModuleContext) {
       try {
-        resources.createSubcontext(dest);
+        resources.createSubcontext(thisSystem, db, dest);
       } catch (NamingException e) {
+        e.printStackTrace(System.out);
         errorList.put
             (dest, new Integer(WebdavStatus.SC_CONFLICT));
         return false;
       }
 
       try {
+        //System.out.println("Listing resources at path: " + source);
+        //System.out.println("OBJECT: " + object);
+        object = resources.lookup(thisSystem, db, source);
         NamingEnumeration enum1 = resources.list(source);
         while (enum1.hasMoreElements()) {
+          //System.out.println("COPYING CHILD CONTEXT.........................");
           NameClassPair ncPair = (NameClassPair) enum1.nextElement();
           String childDest = dest;
           if (!childDest.equals("/")) {
@@ -1942,9 +2150,11 @@ public class WebdavServlet
             childSrc += "/";
           }
           childSrc += ncPair.getName();
-          copyResource(resources, errorList, childSrc, childDest);
+          copyResource(
+              context, thisSystem, db, resources, errorList, childSrc, childDest);
         }
       } catch (NamingException e) {
+        e.printStackTrace(System.out);
         errorList.put
             (dest, new Integer(WebdavStatus.SC_INTERNAL_SERVER_ERROR));
         return false;
@@ -1954,20 +2164,66 @@ public class WebdavServlet
 
       if (object instanceof Resource) {
         try {
-          resources.bind(dest, object);
+          Object resource = resources.copyResource(
+              thisSystem, db, dest, object);
+          if (resource != null) {
+            processInsertHook(context, resource);
+          }
         } catch (NamingException e) {
-          errorList.put
-              (source,
-              new Integer(WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+          errorList.put(
+              source, new Integer(WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+          return false;
+        } catch (IOException io) {
+          errorList.put(
+              source, new Integer(WebdavStatus.SC_INTERNAL_SERVER_ERROR));
           return false;
         }
       } else {
         errorList.put
-            (source,
-            new Integer(WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+            (
+                source,
+                new Integer(WebdavStatus.SC_INTERNAL_SERVER_ERROR));
         return false;
       }
+    }
+    return true;
+  }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param resources  Description of the Parameter
+   * @param errorList  Description of the Parameter
+   * @param source     Description of the Parameter
+   * @param dest       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   */
+  private boolean moveResource(SystemStatus thisSystem, Connection db,
+                               ModuleContext resources, Hashtable errorList, String source, String dest)
+      throws SQLException, FileNotFoundException {
+
+    if (debug > 1) {
+      System.out.println("Move: " + source + " To: " + dest);
+    }
+
+    Object object = null;
+    try {
+      object = resources.lookup(thisSystem, db, source);
+      boolean complete = resources.move(thisSystem, db, dest, object);
+      if (!complete) {
+        errorList.put(dest, new Integer(WebdavStatus.SC_FORBIDDEN));
+        return false;
+      }
+      //resources.unbind(db, path);
+    } catch (NamingException e) {
+      e.printStackTrace(System.out);
+      errorList.put(dest, new Integer(WebdavStatus.SC_CONFLICT));
+      return false;
     }
 
     return true;
@@ -1975,127 +2231,155 @@ public class WebdavServlet
 
 
   /**
-   *  Delete a resource.
+   * Delete a resource.
    *
-   *@param  req                   Servlet request
-   *@param  resp                  Servlet response
-   *@return                       boolean true if the copy is successful
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @return boolean true if the copy is successful
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
+   * @throws SQLException     Description of the Exception
    */
-  private boolean deleteResource(HttpServletRequest req,
-      HttpServletResponse resp)
-       throws ServletException, IOException {
+  private boolean deleteResource(ActionContext context, Connection db)
+      throws SQLException, ServletException, IOException {
 
-    String path = getRelativePath(req);
+    String path = getRelativePath(context.getRequest());
+    //System.out.println("deleteResource(context, db)......path: " + path);
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return false;
+    }
 
-    return deleteResource(path, req, resp, true);
+    //System.out.println("Calling deleteResource(context, db, path, true)......");
+    return deleteResource(context, db, path, true);
   }
 
 
   /**
-   *  Delete a resource.
+   * Delete a resource.
    *
-   *@param  path                  Path of the resource which is to be deleted
-   *@param  req                   Servlet request
-   *@param  resp                  Servlet response
-   *@param  setStatus             Should the response status be set on
-   *      successful completion
-   *@return                       Description of the Return Value
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param path      Path of the resource which is to be deleted
+   * @param setStatus Should the response status be set on
+   *                  successful completion
+   * @param context   Description of the Parameter
+   * @param db        Description of the Parameter
+   * @return Description of the Return Value
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
+   * @throws SQLException     Description of the Exception
    */
-  private boolean deleteResource(String path, HttpServletRequest req,
-      HttpServletResponse resp, boolean setStatus)
-       throws ServletException, IOException {
+  private boolean deleteResource(ActionContext context, Connection db, String path, boolean setStatus)
+      throws SQLException, ServletException, IOException {
 
     if ((path.toUpperCase().startsWith("/WEB-INF")) ||
         (path.toUpperCase().startsWith("/META-INF"))) {
-      resp.sendError(WebdavStatus.SC_FORBIDDEN);
+      context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return false;
     }
 
-    String ifHeader = req.getHeader("If");
+    String ifHeader = context.getRequest().getHeader("If");
     if (ifHeader == null) {
       ifHeader = "";
     }
 
-    String lockTokenHeader = req.getHeader("Lock-Token");
+    String lockTokenHeader = context.getRequest().getHeader("Lock-Token");
     if (lockTokenHeader == null) {
       lockTokenHeader = "";
     }
 
     if (isLocked(path, ifHeader + lockTokenHeader)) {
-      resp.sendError(WebdavStatus.SC_LOCKED);
+      context.getResponse().sendError(WebdavStatus.SC_LOCKED);
       return false;
     }
 
+    //Check to see if the delete is being issued due to a copy or a move action
+    String destinationPath = context.getRequest().getHeader("Destination");
+    if (destinationPath != null) {
+      System.out.println("DELETION DUE TO COPY OR MOVE ACTION....");
+    }
+    
     // Retrieve the resources
-    DirContext resources = getResources();
+    ModuleContext resources = getCFSResources(db, context);
+    SystemStatus thisSystem = this.getSystemStatus(context);
 
     if (resources == null) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      context.getResponse().sendError(
+          HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return false;
     }
 
-    boolean exists = true;
     Object object = null;
+    boolean exists = true;
+
     try {
-      object = resources.lookup(path);
+      //lookup the object at path. If it is a top level folder fail otherwise proceed
+      object = resources.lookup(thisSystem, db, path);
+
+      if (getWebdavManager(context).isTopLevelModule(object)) {
+        //context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
+        return false;
+      }
     } catch (NamingException e) {
       exists = false;
     }
 
     if (!exists) {
-      resp.sendError(WebdavStatus.SC_NOT_FOUND);
+      context.getResponse().sendError(WebdavStatus.SC_NOT_FOUND);
       return false;
     }
 
-    boolean collection = (object instanceof DirContext);
+    boolean collection = (object instanceof ModuleContext);
 
     if (!collection) {
       try {
-        resources.unbind(path);
+        resources.unbind(thisSystem, db, path);
       } catch (NamingException e) {
-        resp.sendError(WebdavStatus.SC_INTERNAL_SERVER_ERROR);
+        //e.printStackTrace(System.out);
+        context.getResponse().sendError(WebdavStatus.SC_INTERNAL_SERVER_ERROR);
         return false;
       }
     } else {
-
       Hashtable errorList = new Hashtable();
-
-      deleteCollection(req, resources, path, errorList);
+      //System.out.println("Calling deleteCollection(.....) .......");
+      deleteCollection(
+          thisSystem, db, context.getRequest(), resources, path, errorList);
       try {
-        resources.unbind(path);
+        resources.unbind(thisSystem, db, path);
       } catch (NamingException e) {
-        errorList.put(path, new Integer
-            (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+        e.printStackTrace(System.out);
+        errorList.put(
+            path, new Integer
+                (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+      } catch (SQLException sql) {
+        sql.printStackTrace(System.out);
+        throw new SQLException(sql.getMessage());
       }
-
       if (!errorList.isEmpty()) {
-
-        sendReport(req, resp, errorList);
+        sendReport(context.getRequest(), context.getResponse(), errorList);
         return false;
       }
     }
     if (setStatus) {
-      resp.setStatus(WebdavStatus.SC_NO_CONTENT);
+      context.getResponse().setStatus(WebdavStatus.SC_NO_CONTENT);
     }
     return true;
   }
 
 
   /**
-   *  Deletes a collection.
+   * Deletes a collection.
    *
-   *@param  resources  Resources implementation associated with the context
-   *@param  path       Path to the collection to be deleted
-   *@param  errorList  Contains the list of the errors which occurred
-   *@param  req        Description of the Parameter
+   * @param resources Resources implementation associated with the
+   *                  context
+   * @param path      Path to the collection to be deleted
+   * @param errorList Contains the list of the errors which occurred
+   * @param req       Description of the Parameter
+   * @param db        Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  private void deleteCollection(HttpServletRequest req,
-      DirContext resources,
-      String path, Hashtable errorList) {
+  private void deleteCollection(SystemStatus thisSystem, Connection db, HttpServletRequest req,
+                                ModuleContext resources, String path, Hashtable errorList)
+      throws SQLException {
 
     if (debug > 1) {
       System.out.println("Delete:" + path);
@@ -2121,8 +2405,10 @@ public class WebdavServlet
     try {
       enum1 = resources.list(path);
     } catch (NamingException e) {
-      errorList.put(path, new Integer
-          (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+      e.printStackTrace(System.out);
+      errorList.put(
+          path, new Integer
+              (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
       return;
     }
 
@@ -2130,58 +2416,57 @@ public class WebdavServlet
       NameClassPair ncPair = (NameClassPair) enum1.nextElement();
       String childName = path;
       if (!childName.equals("/")) {
-        childName += "/";
+        if (!childName.endsWith("/")) {
+          childName += "/";
+        }
       }
       childName += ncPair.getName();
 
       if (isLocked(childName, ifHeader + lockTokenHeader)) {
-
         errorList.put(childName, new Integer(WebdavStatus.SC_LOCKED));
-
       } else {
-
         try {
           Object object = resources.lookup(childName);
-          if (object instanceof DirContext) {
-            deleteCollection(req, resources, childName, errorList);
+          if (object instanceof ModuleContext) {
+            deleteCollection(
+                thisSystem, db, req, resources, childName, errorList);
           }
-
           try {
-            resources.unbind(childName);
+            resources.unbind(thisSystem, db, childName);
           } catch (NamingException e) {
-            if (!(object instanceof DirContext)) {
+            if (!(object instanceof ModuleContext)) {
               // If it's not a collection, then it's an unknown
               // error
               errorList.put
-                  (childName, new Integer
-                  (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+                  (
+                      childName, new Integer
+                          (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
             }
           }
         } catch (NamingException e) {
           errorList.put
-              (childName, new Integer
-              (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
+              (
+                  childName, new Integer
+                      (WebdavStatus.SC_INTERNAL_SERVER_ERROR));
         }
       }
-
     }
-
   }
 
 
   /**
-   *  Send a multistatus element containing a complete error report to the
-   *  client.
+   * Send a multistatus element containing a complete error report to the
+   * client.
    *
-   *@param  req                   Servlet request
-   *@param  resp                  Servlet response
-   *@param  errorList             List of error to be displayed
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param req       Servlet request
+   * @param resp      Servlet response
+   * @param errorList List of error to be displayed
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
   private void sendReport(HttpServletRequest req, HttpServletResponse resp,
-      Hashtable errorList)
-       throws ServletException, IOException {
+                          Hashtable errorList)
+      throws ServletException, IOException {
 
     resp.setStatus(WebdavStatus.SC_MULTI_STATUS);
 
@@ -2191,8 +2476,9 @@ public class WebdavServlet
     XMLWriter generatedXML = new XMLWriter();
     generatedXML.writeXMLHeader();
 
-    generatedXML.writeElement(null, "multistatus"
-         + generateNamespaceDeclarations(),
+    generatedXML.writeElement(
+        null, "multistatus"
+        + generateNamespaceDeclarations(),
         XMLWriter.OPENING);
 
     Enumeration pathList = errorList.keys();
@@ -2211,8 +2497,9 @@ public class WebdavServlet
       generatedXML.writeText(absoluteUri + toAppend);
       generatedXML.writeElement(null, "href", XMLWriter.CLOSING);
       generatedXML.writeElement(null, "status", XMLWriter.OPENING);
-      generatedXML.writeText("HTTP/1.1 " + errorCode + " "
-           + WebdavStatus.getStatusText(errorCode));
+      generatedXML.writeText(
+          "HTTP/1.1 " + errorCode + " "
+          + WebdavStatus.getStatusText(errorCode));
       generatedXML.writeElement(null, "status", XMLWriter.CLOSING);
 
       generatedXML.writeElement(null, "response", XMLWriter.CLOSING);
@@ -2229,21 +2516,19 @@ public class WebdavServlet
 
 
   /**
-   *  Propfind helper method.
+   * Propfind helper method.
    *
-   *@param  resources         Resources object associated with this context
-   *@param  generatedXML      XML response to the Propfind request
-   *@param  path              Path of the current resource
-   *@param  type              Propfind type
-   *@param  propertiesVector  If the propfind type is find properties by name,
-   *      then this Vector contains those properties
-   *@param  context           Description of the Parameter
-   *@exception  IOException   Description of the Exception
+   * @param resources        Resources object associated with this context
+   * @param generatedXML     XML response to the Propfind request
+   * @param path             Path of the current resource
+   * @param type             Propfind type
+   * @param propertiesVector If the propfind type is find properties by name,
+   *                         then this Vector contains those properties
+   * @param context          Description of the Parameter
+   * @throws IOException Description of the Exception
    */
-  private void parseProperties(ActionContext context, ModuleContext resources,
-      XMLWriter generatedXML,
-      String path, int type,
-      Vector propertiesVector) throws IOException {
+  private void parseProperties(ActionContext context, ModuleContext resources, XMLWriter generatedXML,
+                               String path, int type, Vector propertiesVector) throws IOException {
 
     // Exclude any resource in the /WEB-INF and /META-INF subdirectories
     // (the "toUpperCase()" avoids problems on Windows systems)
@@ -2252,23 +2537,15 @@ public class WebdavServlet
       return;
     }
 
-    Connection db = null;
     ResourceInfo resourceInfo = null;
     SystemStatus thisSystem = null;
     boolean actionStatus = true;
     try {
-      db = this.getConnection(context);
       thisSystem = this.getSystemStatus(context);
-      resourceInfo = new ResourceInfo(thisSystem, db, path, resources);
-    } catch (SQLException e) {
-      e.printStackTrace(System.out);
-      context.getResponse().sendError(CFS_SQLERROR, e.getMessage());
-      actionStatus = false;
+      resourceInfo = new ResourceInfo(thisSystem, path, resources);
     } catch (FileNotFoundException e) {
       e.printStackTrace(System.out);
       actionStatus = false;
-    } finally {
-      this.freeConnection(db, context);
     }
 
     if (!actionStatus) {
@@ -2276,8 +2553,9 @@ public class WebdavServlet
     }
 
     generatedXML.writeElement(null, "response", XMLWriter.OPENING);
-    String status = new String("HTTP/1.1 " + WebdavStatus.SC_OK + " "
-         + WebdavStatus.getStatusText
+    String status = new String(
+        "HTTP/1.1 " + WebdavStatus.SC_OK + " "
+        + WebdavStatus.getStatusText
         (WebdavStatus.SC_OK));
 
     // Generating href element
@@ -2293,6 +2571,7 @@ public class WebdavServlet
       href += "/";
     }
 
+    //Encode the path information for this resource
     generatedXML.writeText(rewriteUrl(href));
     generatedXML.writeElement(null, "href", XMLWriter.CLOSING);
 
@@ -2302,25 +2581,33 @@ public class WebdavServlet
       resourceName = resourceName.substring(lastSlash + 1);
     }
 
+    //System.out.println("CLIENT FILENAME: " + resourceInfo.clientFilename);
+    //System.out.println("CONTENT TYPE: " + getServletContext().getMimeType(resourceInfo.clientFilename));
+
     switch (type) {
 
       case FIND_ALL_PROP:
 
         generatedXML.writeElement(null, "propstat", XMLWriter.OPENING);
         generatedXML.writeElement(null, "prop", XMLWriter.OPENING);
-        generatedXML.writeProperty(null, "creationdate", getISOCreationDate(resourceInfo.creationDate));
+        generatedXML.writeProperty(
+            null, "creationdate", resourceInfo.creationDate);
         generatedXML.writeElement(null, "displayname", XMLWriter.OPENING);
         generatedXML.writeData(resourceName);
         generatedXML.writeElement(null, "displayname", XMLWriter.CLOSING);
         if (!resourceInfo.collection) {
-          generatedXML.writeProperty(null, "getlastmodified", resourceInfo.httpDate);
-          generatedXML.writeProperty(null, "getcontentlength", String.valueOf(resourceInfo.length));
-          String contentType = getServletContext().getMimeType(resourceInfo.path);
+          generatedXML.writeProperty(
+              null, "getlastmodified", resourceInfo.httpDate);
+          generatedXML.writeProperty(
+              null, "getcontentlength", String.valueOf(resourceInfo.length));
+          String contentType = getServletContext().getMimeType(
+              resourceInfo.clientFilename);
           if (contentType != null) {
             generatedXML.writeProperty(null, "getcontenttype", contentType);
           }
           generatedXML.writeProperty(null, "getetag", getETag(resourceInfo));
-          generatedXML.writeElement(null, "resourcetype", XMLWriter.NO_CONTENT);
+          generatedXML.writeElement(
+              null, "resourcetype", XMLWriter.NO_CONTENT);
         } else {
           generatedXML.writeElement(null, "resourcetype", XMLWriter.OPENING);
           generatedXML.writeElement(null, "collection", XMLWriter.NO_CONTENT);
@@ -2330,12 +2617,12 @@ public class WebdavServlet
         generatedXML.writeProperty(null, "source", "");
 
         String supportedLocks = "<lockentry>"
-             + "<lockscope><exclusive/></lockscope>"
-             + "<locktype><write/></locktype>"
-             + "</lockentry>" + "<lockentry>"
-             + "<lockscope><shared/></lockscope>"
-             + "<locktype><write/></locktype>"
-             + "</lockentry>";
+            + "<lockscope><exclusive/></lockscope>"
+            + "<locktype><write/></locktype>"
+            + "</lockentry>" + "<lockentry>"
+            + "<lockscope><shared/></lockscope>"
+            + "<locktype><write/></locktype>"
+            + "</lockentry>";
         generatedXML.writeElement(null, "supportedlock", XMLWriter.OPENING);
         generatedXML.writeText(supportedLocks);
         generatedXML.writeElement(null, "supportedlock", XMLWriter.CLOSING);
@@ -2355,11 +2642,15 @@ public class WebdavServlet
         generatedXML.writeElement(null, "creationdate", XMLWriter.NO_CONTENT);
         generatedXML.writeElement(null, "displayname", XMLWriter.NO_CONTENT);
         if (!resourceInfo.collection) {
-          generatedXML.writeElement(null, "getcontentlanguage", XMLWriter.NO_CONTENT);
-          generatedXML.writeElement(null, "getcontentlength", XMLWriter.NO_CONTENT);
-          generatedXML.writeElement(null, "getcontenttype", XMLWriter.NO_CONTENT);
+          generatedXML.writeElement(
+              null, "getcontentlanguage", XMLWriter.NO_CONTENT);
+          generatedXML.writeElement(
+              null, "getcontentlength", XMLWriter.NO_CONTENT);
+          generatedXML.writeElement(
+              null, "getcontenttype", XMLWriter.NO_CONTENT);
           generatedXML.writeElement(null, "getetag", XMLWriter.NO_CONTENT);
-          generatedXML.writeElement(null, "getlastmodified", XMLWriter.NO_CONTENT);
+          generatedXML.writeElement(
+              null, "getlastmodified", XMLWriter.NO_CONTENT);
         }
         generatedXML.writeElement(null, "resourcetype", XMLWriter.NO_CONTENT);
         generatedXML.writeElement(null, "source", XMLWriter.NO_CONTENT);
@@ -2379,7 +2670,8 @@ public class WebdavServlet
         while (properties.hasMoreElements()) {
           String property = (String) properties.nextElement();
           if (property.equals("creationdate")) {
-            generatedXML.writeProperty(null, "creationdate", getISOCreationDate(resourceInfo.creationDate));
+            generatedXML.writeProperty(
+                null, "creationdate", resourceInfo.creationDate);
           } else if (property.equals("displayname")) {
             generatedXML.writeElement(null, "displayname", XMLWriter.OPENING);
             generatedXML.writeData(resourceName);
@@ -2388,55 +2680,69 @@ public class WebdavServlet
             if (resourceInfo.collection) {
               propertiesNotFound.addElement(property);
             } else {
-              generatedXML.writeElement(null, "getcontentlanguage", XMLWriter.NO_CONTENT);
+              generatedXML.writeElement(
+                  null, "getcontentlanguage", XMLWriter.NO_CONTENT);
             }
           } else if (property.equals("getcontentlength")) {
             if (resourceInfo.collection) {
               propertiesNotFound.addElement(property);
             } else {
-              generatedXML.writeProperty(null, "getcontentlength", (String.valueOf(resourceInfo.length)));
+              generatedXML.writeProperty(
+                  null, "getcontentlength", (String.valueOf(
+                      resourceInfo.length)));
             }
           } else if (property.equals("getcontenttype")) {
             if (resourceInfo.collection) {
               propertiesNotFound.addElement(property);
             } else {
-              generatedXML.writeProperty(null, "getcontenttype", getServletContext().getMimeType(resourceInfo.path));
+              generatedXML.writeProperty(
+                  null, "getcontenttype", getServletContext().getMimeType(
+                      resourceInfo.clientFilename));
             }
           } else if (property.equals("getetag")) {
             if (resourceInfo.collection) {
               propertiesNotFound.addElement(property);
             } else {
-              generatedXML.writeProperty(null, "getetag", getETag(resourceInfo));
+              generatedXML.writeProperty(
+                  null, "getetag", getETag(resourceInfo));
             }
           } else if (property.equals("getlastmodified")) {
             if (resourceInfo.collection) {
               //propertiesNotFound.addElement(property);
               // change
-              generatedXML.writeProperty(null, "getlastmodified", resourceInfo.httpDate);
+              generatedXML.writeProperty(
+                  null, "getlastmodified", resourceInfo.httpDate);
             } else {
-              generatedXML.writeProperty(null, "getlastmodified", resourceInfo.httpDate);
+              generatedXML.writeProperty(
+                  null, "getlastmodified", resourceInfo.httpDate);
             }
           } else if (property.equals("resourcetype")) {
             if (resourceInfo.collection) {
-              generatedXML.writeElement(null, "resourcetype", XMLWriter.OPENING);
-              generatedXML.writeElement(null, "collection", XMLWriter.NO_CONTENT);
-              generatedXML.writeElement(null, "resourcetype", XMLWriter.CLOSING);
+              generatedXML.writeElement(
+                  null, "resourcetype", XMLWriter.OPENING);
+              generatedXML.writeElement(
+                  null, "collection", XMLWriter.NO_CONTENT);
+              generatedXML.writeElement(
+                  null, "resourcetype", XMLWriter.CLOSING);
             } else {
-              generatedXML.writeElement(null, "resourcetype", XMLWriter.NO_CONTENT);
+              generatedXML.writeElement(
+                  null, "resourcetype", XMLWriter.NO_CONTENT);
             }
           } else if (property.equals("source")) {
             generatedXML.writeProperty(null, "source", "");
           } else if (property.equals("supportedlock")) {
             supportedLocks = "<lockentry>"
-                 + "<lockscope><exclusive/></lockscope>"
-                 + "<locktype><write/></locktype>"
-                 + "</lockentry>" + "<lockentry>"
-                 + "<lockscope><shared/></lockscope>"
-                 + "<locktype><write/></locktype>"
-                 + "</lockentry>";
-            generatedXML.writeElement(null, "supportedlock", XMLWriter.OPENING);
+                + "<lockscope><exclusive/></lockscope>"
+                + "<locktype><write/></locktype>"
+                + "</lockentry>" + "<lockentry>"
+                + "<lockscope><shared/></lockscope>"
+                + "<locktype><write/></locktype>"
+                + "</lockentry>";
+            generatedXML.writeElement(
+                null, "supportedlock", XMLWriter.OPENING);
             generatedXML.writeText(supportedLocks);
-            generatedXML.writeElement(null, "supportedlock", XMLWriter.CLOSING);
+            generatedXML.writeElement(
+                null, "supportedlock", XMLWriter.CLOSING);
           } else if (property.equals("lockdiscovery")) {
             if (!generateLockDiscovery(path, generatedXML)) {
               propertiesNotFound.addElement(property);
@@ -2452,13 +2758,15 @@ public class WebdavServlet
         generatedXML.writeElement(null, "propstat", XMLWriter.CLOSING);
         Enumeration propertiesNotFoundList = propertiesNotFound.elements();
         if (propertiesNotFoundList.hasMoreElements()) {
-          status = new String("HTTP/1.1 " + WebdavStatus.SC_NOT_FOUND
-               + " " + WebdavStatus.getStatusText
+          status = new String(
+              "HTTP/1.1 " + WebdavStatus.SC_NOT_FOUND
+              + " " + WebdavStatus.getStatusText
               (WebdavStatus.SC_NOT_FOUND));
           generatedXML.writeElement(null, "propstat", XMLWriter.OPENING);
           generatedXML.writeElement(null, "prop", XMLWriter.OPENING);
           while (propertiesNotFoundList.hasMoreElements()) {
-            generatedXML.writeElement(null, (String) propertiesNotFoundList.nextElement(), XMLWriter.NO_CONTENT);
+            generatedXML.writeElement(
+                null, (String) propertiesNotFoundList.nextElement(), XMLWriter.NO_CONTENT);
           }
           generatedXML.writeElement(null, "prop", XMLWriter.CLOSING);
           generatedXML.writeElement(null, "status", XMLWriter.OPENING);
@@ -2473,21 +2781,22 @@ public class WebdavServlet
 
 
   /**
-   *  If a directory does not have files or folders under it then this
-   *  method generates the necessary xml
+   * If a directory does not have files or folders under it then this method
+   * generates the necessary xml
    *
-   *@param  context           Description of the Parameter
-   *@param  resources         Description of the Parameter
-   *@param  generatedXML      Description of the Parameter
-   *@param  propertiesVector  Description of the Parameter
-   *@exception  IOException   Description of the Exception
+   * @param context          Description of the Parameter
+   * @param resources        Description of the Parameter
+   * @param generatedXML     Description of the Parameter
+   * @param propertiesVector Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   private void parseProperties(ActionContext context, ModuleContext resources,
-      XMLWriter generatedXML, Vector propertiesVector) throws IOException {
+                               XMLWriter generatedXML, Vector propertiesVector) throws IOException {
 
     generatedXML.writeElement(null, "response", XMLWriter.OPENING);
-    String status = new String("HTTP/1.1 " + WebdavStatus.SC_NOT_FOUND
-         + " " + WebdavStatus.getStatusText
+    String status = new String(
+        "HTTP/1.1 " + WebdavStatus.SC_NOT_FOUND
+        + " " + WebdavStatus.getStatusText
         (WebdavStatus.SC_NOT_FOUND));
 
     generatedXML.writeElement(null, "propstat", XMLWriter.OPENING);
@@ -2502,20 +2811,21 @@ public class WebdavServlet
 
 
   /**
-   *  Propfind helper method. Dispays the properties of a lock-null resource.
+   * Propfind helper method. Dispays the properties of a lock-null resource.
    *
-   *@param  generatedXML      XML response to the Propfind request
-   *@param  path              Path of the current resource
-   *@param  type              Propfind type
-   *@param  propertiesVector  If the propfind type is find properties by name,
-   *      then this Vector contains those properties
-   *@param  req               Description of the Parameter
+   * @param generatedXML     XML response to the Propfind request
+   * @param path             Path of the current resource
+   * @param type             Propfind type
+   * @param propertiesVector If the propfind type is find properties by name,
+   *                         then this Vector contains those properties
+   * @param req              Description of the Parameter
    */
   private void parseLockNullProperties(HttpServletRequest req,
-      XMLWriter generatedXML,
-      String path, int type,
-      Vector propertiesVector) {
+                                       XMLWriter generatedXML,
+                                       String path, int type,
+                                       Vector propertiesVector) {
 
+    //System.out.println("PARSING LOCK NULL PROPERTIES....PATH: " + path);
     // Exclude any resource in the /WEB-INF and /META-INF subdirectories
     // (the "toUpperCase()" avoids problems on Windows systems)
     if (path.toUpperCase().startsWith("/WEB-INF") ||
@@ -2531,8 +2841,9 @@ public class WebdavServlet
     }
 
     generatedXML.writeElement(null, "response", XMLWriter.OPENING);
-    String status = new String("HTTP/1.1 " + WebdavStatus.SC_OK + " "
-         + WebdavStatus.getStatusText
+    String status = new String(
+        "HTTP/1.1 " + WebdavStatus.SC_OK + " "
+        + WebdavStatus.getStatusText
         (WebdavStatus.SC_OK));
 
     // Generating href element
@@ -2564,39 +2875,45 @@ public class WebdavServlet
         generatedXML.writeElement(null, "prop", XMLWriter.OPENING);
 
         generatedXML.writeProperty
-            (null, "creationdate",
-            getISOCreationDate(lock.creationDate.getTime()));
+            (
+                null, "creationdate",
+                getISOCreationDate(lock.creationDate.getTime()));
         generatedXML.writeElement
             (null, "displayname", XMLWriter.OPENING);
         generatedXML.writeData(resourceName);
         generatedXML.writeElement
             (null, "displayname", XMLWriter.CLOSING);
-        generatedXML.writeProperty(null, "getlastmodified",
+        generatedXML.writeProperty(
+            null, "getlastmodified",
             FastHttpDateFormat.formatDate
             (lock.creationDate.getTime(), null));
         generatedXML.writeProperty
             (null, "getcontentlength", String.valueOf(0));
         generatedXML.writeProperty(null, "getcontenttype", "");
         generatedXML.writeProperty(null, "getetag", "");
-        generatedXML.writeElement(null, "resourcetype",
+        generatedXML.writeElement(
+            null, "resourcetype",
             XMLWriter.OPENING);
         generatedXML.writeElement(null, "lock-null", XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "resourcetype",
+        generatedXML.writeElement(
+            null, "resourcetype",
             XMLWriter.CLOSING);
 
         generatedXML.writeProperty(null, "source", "");
 
         String supportedLocks = "<lockentry>"
-             + "<lockscope><exclusive/></lockscope>"
-             + "<locktype><write/></locktype>"
-             + "</lockentry>" + "<lockentry>"
-             + "<lockscope><shared/></lockscope>"
-             + "<locktype><write/></locktype>"
-             + "</lockentry>";
-        generatedXML.writeElement(null, "supportedlock",
+            + "<lockscope><exclusive/></lockscope>"
+            + "<locktype><write/></locktype>"
+            + "</lockentry>" + "<lockentry>"
+            + "<lockscope><shared/></lockscope>"
+            + "<locktype><write/></locktype>"
+            + "</lockentry>";
+        generatedXML.writeElement(
+            null, "supportedlock",
             XMLWriter.OPENING);
         generatedXML.writeText(supportedLocks);
-        generatedXML.writeElement(null, "supportedlock",
+        generatedXML.writeElement(
+            null, "supportedlock",
             XMLWriter.CLOSING);
 
         generateLockDiscovery(path, generatedXML);
@@ -2613,25 +2930,35 @@ public class WebdavServlet
         generatedXML.writeElement(null, "propstat", XMLWriter.OPENING);
         generatedXML.writeElement(null, "prop", XMLWriter.OPENING);
 
-        generatedXML.writeElement(null, "creationdate",
+        generatedXML.writeElement(
+            null, "creationdate",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "displayname",
+        generatedXML.writeElement(
+            null, "displayname",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "getcontentlanguage",
+        generatedXML.writeElement(
+            null, "getcontentlanguage",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "getcontentlength",
+        generatedXML.writeElement(
+            null, "getcontentlength",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "getcontenttype",
+        generatedXML.writeElement(
+            null, "getcontenttype",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "getetag",
+        generatedXML.writeElement(
+            null, "getetag",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "getlastmodified",
+        generatedXML.writeElement(
+            null, "getlastmodified",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "resourcetype",
+        generatedXML.writeElement(
+            null, "resourcetype",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "source",
+        generatedXML.writeElement(
+            null, "source",
             XMLWriter.NO_CONTENT);
-        generatedXML.writeElement(null, "lockdiscovery",
+        generatedXML.writeElement(
+            null, "lockdiscovery",
             XMLWriter.NO_CONTENT);
 
         generatedXML.writeElement(null, "prop", XMLWriter.CLOSING);
@@ -2658,8 +2985,9 @@ public class WebdavServlet
 
           if (property.equals("creationdate")) {
             generatedXML.writeProperty
-                (null, "creationdate",
-                getISOCreationDate(lock.creationDate.getTime()));
+                (
+                    null, "creationdate",
+                    getISOCreationDate(lock.creationDate.getTime()));
           } else if (property.equals("displayname")) {
             generatedXML.writeElement
                 (null, "displayname", XMLWriter.OPENING);
@@ -2667,7 +2995,8 @@ public class WebdavServlet
             generatedXML.writeElement
                 (null, "displayname", XMLWriter.CLOSING);
           } else if (property.equals("getcontentlanguage")) {
-            generatedXML.writeElement(null, "getcontentlanguage",
+            generatedXML.writeElement(
+                null, "getcontentlanguage",
                 XMLWriter.NO_CONTENT);
           } else if (property.equals("getcontentlength")) {
             generatedXML.writeProperty
@@ -2679,30 +3008,36 @@ public class WebdavServlet
             generatedXML.writeProperty(null, "getetag", "");
           } else if (property.equals("getlastmodified")) {
             generatedXML.writeProperty
-                (null, "getlastmodified",
-                FastHttpDateFormat.formatDate
+                (
+                    null, "getlastmodified",
+                    FastHttpDateFormat.formatDate
                 (lock.creationDate.getTime(), null));
           } else if (property.equals("resourcetype")) {
-            generatedXML.writeElement(null, "resourcetype",
+            generatedXML.writeElement(
+                null, "resourcetype",
                 XMLWriter.OPENING);
-            generatedXML.writeElement(null, "lock-null",
+            generatedXML.writeElement(
+                null, "lock-null",
                 XMLWriter.NO_CONTENT);
-            generatedXML.writeElement(null, "resourcetype",
+            generatedXML.writeElement(
+                null, "resourcetype",
                 XMLWriter.CLOSING);
           } else if (property.equals("source")) {
             generatedXML.writeProperty(null, "source", "");
           } else if (property.equals("supportedlock")) {
             supportedLocks = "<lockentry>"
-                 + "<lockscope><exclusive/></lockscope>"
-                 + "<locktype><write/></locktype>"
-                 + "</lockentry>" + "<lockentry>"
-                 + "<lockscope><shared/></lockscope>"
-                 + "<locktype><write/></locktype>"
-                 + "</lockentry>";
-            generatedXML.writeElement(null, "supportedlock",
+                + "<lockscope><exclusive/></lockscope>"
+                + "<locktype><write/></locktype>"
+                + "</lockentry>" + "<lockentry>"
+                + "<lockscope><shared/></lockscope>"
+                + "<locktype><write/></locktype>"
+                + "</lockentry>";
+            generatedXML.writeElement(
+                null, "supportedlock",
                 XMLWriter.OPENING);
             generatedXML.writeText(supportedLocks);
-            generatedXML.writeElement(null, "supportedlock",
+            generatedXML.writeElement(
+                null, "supportedlock",
                 XMLWriter.CLOSING);
           } else if (property.equals("lockdiscovery")) {
             if (!generateLockDiscovery(path, generatedXML)) {
@@ -2724,8 +3059,9 @@ public class WebdavServlet
 
         if (propertiesNotFoundList.hasMoreElements()) {
 
-          status = new String("HTTP/1.1 " + WebdavStatus.SC_NOT_FOUND
-               + " " + WebdavStatus.getStatusText
+          status = new String(
+              "HTTP/1.1 " + WebdavStatus.SC_NOT_FOUND
+              + " " + WebdavStatus.getStatusText
               (WebdavStatus.SC_NOT_FOUND));
 
           generatedXML.writeElement(null, "propstat", XMLWriter.OPENING);
@@ -2733,8 +3069,9 @@ public class WebdavServlet
 
           while (propertiesNotFoundList.hasMoreElements()) {
             generatedXML.writeElement
-                (null, (String) propertiesNotFoundList.nextElement(),
-                XMLWriter.NO_CONTENT);
+                (
+                    null, (String) propertiesNotFoundList.nextElement(),
+                    XMLWriter.NO_CONTENT);
           }
 
           generatedXML.writeElement(null, "prop", XMLWriter.CLOSING);
@@ -2754,11 +3091,11 @@ public class WebdavServlet
 
 
   /**
-   *  Print the lock discovery information associated with a path.
+   * Print the lock discovery information associated with a path.
    *
-   *@param  path          Path
-   *@param  generatedXML  XML data to which the locks info will be appended
-   *@return               true if at least one lock was displayed
+   * @param path         Path
+   * @param generatedXML XML data to which the locks info will be appended
+   * @return true if at least one lock was displayed
    */
   private boolean generateLockDiscovery
       (String path, XMLWriter generatedXML) {
@@ -2770,7 +3107,8 @@ public class WebdavServlet
 
     if (resourceLock != null) {
       wroteStart = true;
-      generatedXML.writeElement(null, "lockdiscovery",
+      generatedXML.writeElement(
+          null, "lockdiscovery",
           XMLWriter.OPENING);
       resourceLock.toXML(generatedXML);
     }
@@ -2781,7 +3119,8 @@ public class WebdavServlet
       if (path.startsWith(currentLock.path)) {
         if (!wroteStart) {
           wroteStart = true;
-          generatedXML.writeElement(null, "lockdiscovery",
+          generatedXML.writeElement(
+              null, "lockdiscovery",
               XMLWriter.OPENING);
         }
         currentLock.toXML(generatedXML);
@@ -2789,7 +3128,8 @@ public class WebdavServlet
     }
 
     if (wroteStart) {
-      generatedXML.writeElement(null, "lockdiscovery",
+      generatedXML.writeElement(
+          null, "lockdiscovery",
           XMLWriter.CLOSING);
     } else {
       return false;
@@ -2800,15 +3140,14 @@ public class WebdavServlet
 
 
   /**
-   *  Get creation date in ISO format.
+   * Get creation date in ISO format.
    *
-   *@param  creationDate  Description of the Parameter
-   *@return               The iSOCreationDate value
+   * @param creationDate Description of the Parameter
+   * @return The iSOCreationDate value
    */
   private String getISOCreationDate(long creationDate) {
-    StringBuffer creationDateValue = new StringBuffer
-        (creationDateFormat.format
-        (new Date(creationDate)));
+    StringBuffer creationDateValue = new StringBuffer(
+        creationDateFormat.format(new Date(creationDate)));
     /*
      *  int offset = Calendar.getInstance().getTimeZone().getRawOffset()
      *  3600000; // FIXME ?
@@ -2831,21 +3170,20 @@ public class WebdavServlet
 
 
   /**
-   *  Determines the methods normally allowed for the resource.
+   * Determines the methods normally allowed for the resource.
    *
-   *@param  resources  Description of the Parameter
-   *@param  req        Description of the Parameter
-   *@return            Description of the Return Value
+   * @param resources Description of the Parameter
+   * @param req       Description of the Parameter
+   * @return Description of the Return Value
    */
   private StringBuffer determineMethodsAllowed(DirContext resources,
-      HttpServletRequest req) {
+                                               HttpServletRequest req) {
 
     StringBuffer methodsAllowed = new StringBuffer();
     boolean exists = true;
     Object object = null;
     try {
       String path = getRelativePath(req);
-
       object = resources.lookup(path);
     } catch (NamingException e) {
       exists = false;
@@ -2871,24 +3209,65 @@ public class WebdavServlet
   }
 
 
+  /**
+   * Description of the Method
+   *
+   * @param resources Description of the Parameter
+   * @param req       Description of the Parameter
+   * @return Description of the Return Value
+   */
+  private StringBuffer determineMethodsAllowed(ModuleContext resources,
+                                               HttpServletRequest req) {
+
+    StringBuffer methodsAllowed = new StringBuffer();
+    boolean exists = true;
+    Object object = null;
+    try {
+      String path = getRelativePath(req);
+      object = resources.lookup(path);
+    } catch (NamingException e) {
+      exists = false;
+    }
+
+    if (!exists) {
+      methodsAllowed.append("OPTIONS, MKCOL, PUT, LOCK");
+      return methodsAllowed;
+    }
+
+    methodsAllowed.append("OPTIONS, GET, HEAD, POST, DELETE, TRACE");
+    methodsAllowed.append(", PROPPATCH, COPY, MOVE, LOCK, UNLOCK");
+
+    //if (listings) {
+    methodsAllowed.append(", PROPFIND");
+    //}
+
+    if (!(object instanceof ModuleContext)) {
+      methodsAllowed.append(", PUT");
+    }
+
+    return methodsAllowed;
+  }
+
+
   // --------------------------------------------------  LockInfo Inner Class
 
   /**
-   *  Holds a lock information.
+   * Holds a lock information.
    *
-   *@author     matt rajkowski
-   *@created    July 12, 2004
-   *@version    $Id: WebdavServlet.java,v 1.1.2.2 2004/11/17 23:25:29 ananth Exp
-   *      $
+   * @author matt rajkowski
+   * @version $Id: WebdavServlet.java,v 1.1.2.2 2004/11/17 23:25:29 ananth
+   *          Exp $
+   * @created July 12, 2004
    */
   private class LockInfo {
 
     // -------------------------------------------------------- Constructor
 
     /**
-     *  Constructor.
+     * Constructor.
      */
-    public LockInfo() { }
+    public LockInfo() {
+    }
 
 
     // ------------------------------------------------- Instance Variables
@@ -2908,9 +3287,9 @@ public class WebdavServlet
 
 
     /**
-     *  Get a String representation of this lock token.
+     * Get a String representation of this lock token.
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public String toString() {
 
@@ -2919,7 +3298,7 @@ public class WebdavServlet
       result += "Depth:" + depth + "\n";
       result += "Owner:" + owner + "\n";
       result += "Expiration:"
-           + FastHttpDateFormat.formatDate(expiresAt, null) + "\n";
+          + FastHttpDateFormat.formatDate(expiresAt, null) + "\n";
       Enumeration tokensList = tokens.elements();
       while (tokensList.hasMoreElements()) {
         result += "Token:" + tokensList.nextElement() + "\n";
@@ -2929,9 +3308,9 @@ public class WebdavServlet
 
 
     /**
-     *  Return true if the lock has expired.
+     * Return true if the lock has expired.
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public boolean hasExpired() {
       return (System.currentTimeMillis() > expiresAt);
@@ -2939,9 +3318,9 @@ public class WebdavServlet
 
 
     /**
-     *  Return true if the lock is exclusive.
+     * Return true if the lock is exclusive.
      *
-     *@return    The exclusive value
+     * @return The exclusive value
      */
     public boolean isExclusive() {
 
@@ -2950,10 +3329,10 @@ public class WebdavServlet
 
 
     /**
-     *  Get an XML representation of this lock token. This method will append an
-     *  XML fragment to the given XML writer.
+     * Get an XML representation of this lock token. This method will append an
+     * XML fragment to the given XML writer.
      *
-     *@param  generatedXML  Description of the Parameter
+     * @param generatedXML Description of the Parameter
      */
     public void toXML(XMLWriter generatedXML) {
 
@@ -2988,8 +3367,9 @@ public class WebdavServlet
       Enumeration tokensList = tokens.elements();
       while (tokensList.hasMoreElements()) {
         generatedXML.writeElement(null, "href", XMLWriter.OPENING);
-        generatedXML.writeText("opaquelocktoken:"
-             + tokensList.nextElement());
+        generatedXML.writeText(
+            "opaquelocktoken:"
+            + tokensList.nextElement());
         generatedXML.writeElement(null, "href", XMLWriter.CLOSING);
       }
       generatedXML.writeElement(null, "locktoken", XMLWriter.CLOSING);
@@ -3005,12 +3385,12 @@ public class WebdavServlet
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     matt rajkowski
-   *@created    July 12, 2004
-   *@version    $Id: WebdavServlet.java,v 1.1.2.2 2004/11/17 23:25:29 ananth Exp
-   *      $
+   * @author matt rajkowski
+   * @version $Id: WebdavServlet.java,v 1.1.2.2 2004/11/17 23:25:29 ananth
+   *          Exp $
+   * @created July 12, 2004
    */
   private class Property {
 
@@ -3027,13 +3407,13 @@ public class WebdavServlet
 // --------------------------------------------------------  WebdavStatus Class
 
 /**
- *  Wraps the HttpServletResponse class to abstract the specific protocol used.
- *  To support other protocols we would only need to modify this class and the
- *  WebDavRetCode classes.
+ * Wraps the HttpServletResponse class to abstract the specific protocol used.
+ * To support other protocols we would only need to modify this class and the
+ * WebDavRetCode classes.
  *
- *@author     Marc Eaddy
- *@created    July 12, 2004
- *@version    1.0, 16 Nov 1997
+ * @author Marc Eaddy
+ * @version 1.0, 16 Nov 1997
+ * @created July 12, 2004
  */
 class WebdavStatus {
 
@@ -3042,157 +3422,157 @@ class WebdavStatus {
 
 
   /**
-   *  This Hashtable contains the mapping of HTTP and WebDAV status codes to
-   *  descriptive text. This is a static variable.
+   * This Hashtable contains the mapping of HTTP and WebDAV status codes to
+   * descriptive text. This is a static variable.
    */
   private static Hashtable mapStatusCodes = new Hashtable();
 
   // ------------------------------------------------------ HTTP Status Codes
 
   /**
-   *  Status code (200) indicating the request succeeded normally.
+   * Status code (200) indicating the request succeeded normally.
    */
   public final static int SC_OK = HttpServletResponse.SC_OK;
 
   /**
-   *  Status code (201) indicating the request succeeded and created a new
-   *  resource on the server.
+   * Status code (201) indicating the request succeeded and created a new
+   * resource on the server.
    */
   public final static int SC_CREATED = HttpServletResponse.SC_CREATED;
 
   /**
-   *  Status code (202) indicating that a request was accepted for processing,
-   *  but was not completed.
+   * Status code (202) indicating that a request was accepted for processing,
+   * but was not completed.
    */
   public final static int SC_ACCEPTED = HttpServletResponse.SC_ACCEPTED;
 
   /**
-   *  Status code (204) indicating that the request succeeded but that there was
-   *  no new information to return.
+   * Status code (204) indicating that the request succeeded but that there was
+   * no new information to return.
    */
   public final static int SC_NO_CONTENT = HttpServletResponse.SC_NO_CONTENT;
 
   /**
-   *  Status code (301) indicating that the resource has permanently moved to a
-   *  new location, and that future references should use a new URI with their
-   *  requests.
+   * Status code (301) indicating that the resource has permanently moved to a
+   * new location, and that future references should use a new URI with their
+   * requests.
    */
   public final static int SC_MOVED_PERMANENTLY =
       HttpServletResponse.SC_MOVED_PERMANENTLY;
 
   /**
-   *  Status code (302) indicating that the resource has temporarily moved to
-   *  another location, but that future references should still use the original
-   *  URI to access the resource.
+   * Status code (302) indicating that the resource has temporarily moved to
+   * another location, but that future references should still use the original
+   * URI to access the resource.
    */
   public final static int SC_MOVED_TEMPORARILY =
       HttpServletResponse.SC_MOVED_TEMPORARILY;
 
   /**
-   *  Status code (304) indicating that a conditional GET operation found that
-   *  the resource was available and not modified.
+   * Status code (304) indicating that a conditional GET operation found that
+   * the resource was available and not modified.
    */
   public final static int SC_NOT_MODIFIED =
       HttpServletResponse.SC_NOT_MODIFIED;
 
   /**
-   *  Status code (400) indicating the request sent by the client was
-   *  syntactically incorrect.
+   * Status code (400) indicating the request sent by the client was
+   * syntactically incorrect.
    */
   public final static int SC_BAD_REQUEST =
       HttpServletResponse.SC_BAD_REQUEST;
 
   /**
-   *  Status code (401) indicating that the request requires HTTP
-   *  authentication.
+   * Status code (401) indicating that the request requires HTTP
+   * authentication.
    */
   public final static int SC_UNAUTHORIZED =
       HttpServletResponse.SC_UNAUTHORIZED;
 
   /**
-   *  Status code (403) indicating the server understood the request but refused
-   *  to fulfill it.
+   * Status code (403) indicating the server understood the request but refused
+   * to fulfill it.
    */
   public final static int SC_FORBIDDEN = HttpServletResponse.SC_FORBIDDEN;
 
   /**
-   *  Status code (404) indicating that the requested resource is not available.
+   * Status code (404) indicating that the requested resource is not available.
    */
   public final static int SC_NOT_FOUND = HttpServletResponse.SC_NOT_FOUND;
 
   /**
-   *  Status code (500) indicating an error inside the HTTP service which
-   *  prevented it from fulfilling the request.
+   * Status code (500) indicating an error inside the HTTP service which
+   * prevented it from fulfilling the request.
    */
   public final static int SC_INTERNAL_SERVER_ERROR =
       HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
   /**
-   *  Status code (501) indicating the HTTP service does not support the
-   *  functionality needed to fulfill the request.
+   * Status code (501) indicating the HTTP service does not support the
+   * functionality needed to fulfill the request.
    */
   public final static int SC_NOT_IMPLEMENTED =
       HttpServletResponse.SC_NOT_IMPLEMENTED;
 
   /**
-   *  Status code (502) indicating that the HTTP server received an invalid
-   *  response from a server it consulted when acting as a proxy or gateway.
+   * Status code (502) indicating that the HTTP server received an invalid
+   * response from a server it consulted when acting as a proxy or gateway.
    */
   public final static int SC_BAD_GATEWAY =
       HttpServletResponse.SC_BAD_GATEWAY;
 
   /**
-   *  Status code (503) indicating that the HTTP service is temporarily
-   *  overloaded, and unable to handle the request.
+   * Status code (503) indicating that the HTTP service is temporarily
+   * overloaded, and unable to handle the request.
    */
   public final static int SC_SERVICE_UNAVAILABLE =
       HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 
   /**
-   *  Status code (100) indicating the client may continue with its request.
-   *  This interim response is used to inform the client that the initial part
-   *  of the request has been received and has not yet been rejected by the
-   *  server.
+   * Status code (100) indicating the client may continue with its request.
+   * This interim response is used to inform the client that the initial part
+   * of the request has been received and has not yet been rejected by the
+   * server.
    */
   public final static int SC_CONTINUE = 100;
 
   /**
-   *  Status code (405) indicating the method specified is not allowed for the
-   *  resource.
+   * Status code (405) indicating the method specified is not allowed for the
+   * resource.
    */
   public final static int SC_METHOD_NOT_ALLOWED = 405;
 
   /**
-   *  Status code (409) indicating that the request could not be completed due
-   *  to a conflict with the current state of the resource.
+   * Status code (409) indicating that the request could not be completed due
+   * to a conflict with the current state of the resource.
    */
   public final static int SC_CONFLICT = 409;
 
   /**
-   *  Status code (412) indicating the precondition given in one or more of the
-   *  request-header fields evaluated to false when it was tested on the server.
+   * Status code (412) indicating the precondition given in one or more of the
+   * request-header fields evaluated to false when it was tested on the server.
    */
   public final static int SC_PRECONDITION_FAILED = 412;
 
   /**
-   *  Status code (413) indicating the server is refusing to process a request
-   *  because the request entity is larger than the server is willing or able to
-   *  process.
+   * Status code (413) indicating the server is refusing to process a request
+   * because the request entity is larger than the server is willing or able to
+   * process.
    */
   public final static int SC_REQUEST_TOO_LONG = 413;
 
   /**
-   *  Status code (415) indicating the server is refusing to service the request
-   *  because the entity of the request is in a format not supported by the
-   *  requested resource for the requested method.
+   * Status code (415) indicating the server is refusing to service the request
+   * because the entity of the request is in a format not supported by the
+   * requested resource for the requested method.
    */
   public final static int SC_UNSUPPORTED_MEDIA_TYPE = 415;
 
   // -------------------------------------------- Extended WebDav status code
 
   /**
-   *  Status code (207) indicating that the response requires providing status
-   *  for multiple independent operations.
+   * Status code (207) indicating that the response requires providing status
+   * for multiple independent operations.
    */
   public final static int SC_MULTI_STATUS = 207;
   // This one colides with HTTP 1.1
@@ -3200,8 +3580,8 @@ class WebdavStatus {
 
 
   /**
-   *  Status code (418) indicating the entity body submitted with the PATCH
-   *  method was not understood by the resource.
+   * Status code (418) indicating the entity body submitted with the PATCH
+   * method was not understood by the resource.
    */
   public final static int SC_UNPROCESSABLE_ENTITY = 418;
   // This one colides with HTTP 1.1
@@ -3209,9 +3589,9 @@ class WebdavStatus {
 
 
   /**
-   *  Status code (419) indicating that the resource does not have sufficient
-   *  space to record the state of the resource after the execution of this
-   *  method.
+   * Status code (419) indicating that the resource does not have sufficient
+   * space to record the state of the resource after the execution of this
+   * method.
    */
   public final static int SC_INSUFFICIENT_SPACE_ON_RESOURCE = 419;
   // This one colides with HTTP 1.1
@@ -3219,16 +3599,16 @@ class WebdavStatus {
 
 
   /**
-   *  Status code (420) indicating the method was not executed on a particular
-   *  resource within its scope because some part of the method's execution
-   *  failed causing the entire method to be aborted.
+   * Status code (420) indicating the method was not executed on a particular
+   * resource within its scope because some part of the method's execution
+   * failed causing the entire method to be aborted.
    */
   public final static int SC_METHOD_FAILURE = 420;
 
   /**
-   *  Status code (423) indicating the destination resource of a method is
-   *  locked, and either the request did not contain a valid Lock-Info header,
-   *  or the Lock-Info header identifies a lock held by another principal.
+   * Status code (423) indicating the destination resource of a method is
+   * locked, and either the request did not contain a valid Lock-Info header,
+   * or the Lock-Info header identifies a lock held by another principal.
    */
   public final static int SC_LOCKED = 423;
 
@@ -3260,7 +3640,8 @@ class WebdavStatus {
     // WebDav Status Codes
     addStatusCodeMap(SC_MULTI_STATUS, "Multi-Status");
     addStatusCodeMap(SC_UNPROCESSABLE_ENTITY, "Unprocessable Entity");
-    addStatusCodeMap(SC_INSUFFICIENT_SPACE_ON_RESOURCE,
+    addStatusCodeMap(
+        SC_INSUFFICIENT_SPACE_ON_RESOURCE,
         "Insufficient Space On Resource");
     addStatusCodeMap(SC_METHOD_FAILURE, "Method Failure");
     addStatusCodeMap(SC_LOCKED, "Locked");
@@ -3271,12 +3652,12 @@ class WebdavStatus {
 
 
   /**
-   *  Returns the HTTP status text for the HTTP or WebDav status code specified
-   *  by looking it up in the static mapping. This is a static function.
+   * Returns the HTTP status text for the HTTP or WebDav status code specified
+   * by looking it up in the static mapping. This is a static function.
    *
-   *@param  nHttpStatusCode  [IN] HTTP or WebDAV status code
-   *@return                  A string with a short descriptive phrase for the
-   *      HTTP status code (e.g., "OK").
+   * @param nHttpStatusCode [IN] HTTP or WebDAV status code
+   * @return A string with a short descriptive phrase for the
+   *         HTTP status code (e.g., "OK").
    */
   public static String getStatusText(int nHttpStatusCode) {
     Integer intKey = new Integer(nHttpStatusCode);
@@ -3293,11 +3674,11 @@ class WebdavStatus {
 
 
   /**
-   *  Adds a new status code -> status text mapping. This is a static method
-   *  because the mapping is a static variable.
+   * Adds a new status code -> status text mapping. This is a static method
+   * because the mapping is a static variable.
    *
-   *@param  nKey    [IN] HTTP or WebDAV status code
-   *@param  strVal  [IN] HTTP status text
+   * @param nKey   [IN] HTTP or WebDAV status code
+   * @param strVal [IN] HTTP status text
    */
   private static void addStatusCodeMap(int nKey, String strVal) {
     mapStatusCodes.put(new Integer(nKey), strVal);

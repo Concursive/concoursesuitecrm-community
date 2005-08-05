@@ -15,16 +15,19 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.StringTokenizer;
-import java.sql.*;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    January 13, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class AccountTypeLevel {
 
@@ -36,17 +39,18 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Constructor for the AccountTypeLevel object
+   * Constructor for the AccountTypeLevel object
    */
-  public AccountTypeLevel() { }
+  public AccountTypeLevel() {
+  }
 
 
   /**
-   *  Constructor for the AccountTypeLevel object
+   * Constructor for the AccountTypeLevel object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AccountTypeLevel(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -54,11 +58,11 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Constructor for the AccountTypeLevel object
+   * Constructor for the AccountTypeLevel object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AccountTypeLevel(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -66,9 +70,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Gets the orgId attribute of the AccountTypeLevel object
+   * Gets the orgId attribute of the AccountTypeLevel object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -76,9 +80,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the orgId attribute of the AccountTypeLevel object
+   * Sets the orgId attribute of the AccountTypeLevel object
    *
-   *@param  orgId  The new orgId value
+   * @param orgId The new orgId value
    */
   public void setOrgId(int orgId) {
     this.orgId = orgId;
@@ -86,9 +90,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the orgId attribute of the AccountTypeLevel object
+   * Sets the orgId attribute of the AccountTypeLevel object
    *
-   *@param  orgId  The new orgId value
+   * @param orgId The new orgId value
    */
   public void setOrgId(String orgId) {
     this.orgId = Integer.parseInt(orgId);
@@ -96,9 +100,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the typeId attribute of the AccountTypeLevel object
+   * Sets the typeId attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -106,9 +110,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the typeId attribute of the AccountTypeLevel object
+   * Sets the typeId attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -116,9 +120,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the level attribute of the AccountTypeLevel object
+   * Sets the level attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -126,9 +130,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the level attribute of the AccountTypeLevel object
+   * Sets the level attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -136,9 +140,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the entered attribute of the AccountTypeLevel object
+   * Sets the entered attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -146,9 +150,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the modified attribute of the AccountTypeLevel object
+   * Sets the modified attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -156,9 +160,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the entered attribute of the AccountTypeLevel object
+   * Sets the entered attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -166,9 +170,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Sets the modified attribute of the AccountTypeLevel object
+   * Sets the modified attribute of the AccountTypeLevel object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -176,9 +180,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Gets the typeId attribute of the AccountTypeLevel object
+   * Gets the typeId attribute of the AccountTypeLevel object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -186,9 +190,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Gets the level attribute of the AccountTypeLevel object
+   * Gets the level attribute of the AccountTypeLevel object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -196,9 +200,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Gets the entered attribute of the AccountTypeLevel object
+   * Gets the entered attribute of the AccountTypeLevel object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -206,9 +210,9 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Gets the modified attribute of the AccountTypeLevel object
+   * Gets the modified attribute of the AccountTypeLevel object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -216,18 +220,19 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
       throw new SQLException("Account Type Level entry not found.");
     }
 
-    PreparedStatement pst = db.prepareStatement("SELECT a.* " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT a.* " +
         "FROM account_type_levels a " +
         "WHERE a.org_id = ? and a.type_id = ? ");
     pst.setInt(1, orgId);
@@ -244,25 +249,24 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
-      sql.append(
-          "INSERT INTO account_type_levels (org_id, type_id, ");
+      sql.append("INSERT INTO account_type_levels (org_id, type_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("level) ");
+      sql.append("\"level\") ");
       sql.append("VALUES (?, ?, ");
       if (entered != null) {
         sql.append("?, ");
@@ -304,10 +308,10 @@ public class AccountTypeLevel {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     orgId = rs.getInt("org_id");

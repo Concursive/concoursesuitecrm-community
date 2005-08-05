@@ -16,24 +16,24 @@
 package org.aspcfs.modules.base;
 
 /**
- *  The Constants class provides several static variables that are used
- *  throughout ASPCFS. To maintain, users cannot reuse numbers within a specific
- *  category, like Documents or Folders. A formal request should be made before
- *  adding a new constant value.<p>
+ * The Constants class provides several static variables that are used
+ * throughout ASPCFS. To maintain, users cannot reuse numbers within a specific
+ * category, like Documents or Folders. A formal request should be made before
+ * adding a new constant value.<p>
+ * <p/>
+ * Constants should be in the following form (10 digits max!):<br>
+ * two-digit month (no proceeding zero in an integer)<br>
+ * two-digit day<br>
+ * four-digit year<br>
+ * two-digit hour of day (24 hour time)
  *
- *  Constants should be in the following form (10 digits max!):<br>
- *  two-digit month (no proceeding zero in an integer)<br>
- *  two-digit day<br>
- *  four-digit year<br>
- *  two-digit hour of day (24 hour time)
- *
- *@author     matt rajkowski
- *@created    February 8, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created February 8, 2002
  */
 public final class Constants {
   public final static String fs = System.getProperty("file.separator");
-  
+
   //Using int for boolean
   public final static int UNDEFINED = -1;
   public final static int TRUE = 1;
@@ -54,8 +54,9 @@ public final class Constants {
   public final static int FOLDERS_PRODUCT_CATALOG = 200403191;
   public final static int FOLDERS_PRODUCT_CATEGORY = 200403192;
   public final static int FOLDERS_PRODUCT_OPTION = 200403193;
-  public final static int FOLDERS_EMPLOYEES = 120200513; 
-  
+  public final static int FOLDERS_EMPLOYEES = 120200513;
+  public final static int FOLDERS_PIPELINE = 120200514;
+
   //Documents (Migrate the unsorted to this format)
   public final static int DOCUMENTS_ACCOUNTS = 1;
   public final static int DOCUMENTS_CONTACTS = 2;
@@ -80,14 +81,14 @@ public final class Constants {
   public final static int DOCUMENTS_PRODUCT_OPTION = 200403196;
   public final static int DOCUMENTS_CUSTOMER_PRODUCT = 423200418;
   public final static int DOCUMENTS_DOCUMENTS = 20041083;
-	public final static int DOCUMENTS_QUOTE_LOGO = 126200511;
+  public final static int DOCUMENTS_QUOTE_LOGO = 126200511;
 
 
   //Unsorted -- used for folders, documents, and other
   //TODO: Cleanup this list once modules have been updated
   public final static int ACCOUNTS = 1;
   public final static int CONTACTS = 2;
-	public final static int QUOTES = 126200514;
+  public final static int QUOTES = 126200514;
   public final static int PIPELINE = 3;
   //public final static int PROJECTS = 4;
   public final static int COMMUNICATIONS = 5;
@@ -105,7 +106,7 @@ public final class Constants {
   public final static int COMMUNICATIONS_FILE_ATTACHMENTS = 16;
   public final static int COMMUNICATIONS_DOCUMENTS = 17;
 
-  
+
   public final static int SERVICE_CONTRACTS = 209041109;
   public final static int ASSETS = 209041110;
   //Synchronization API
@@ -131,14 +132,14 @@ public final class Constants {
   
   //Action Lists 
   public final static int ACTIONLISTS_CONTACTS = 2;
-  
+
   //User types
   //Users who use CRM with its complete license
-  public final static int ROLETYPE_REGULAR = 0; 
+  public final static int ROLETYPE_REGULAR = 0;
 
   // Restricted to access accounts of their organization
-  public final static int ROLETYPE_CUSTOMER = 1; 
-   
+  public final static int ROLETYPE_CUSTOMER = 1;
+
   // Restricted to access AdsJet products and services
   public final static int ROLETYPE_PRODUCTS = 420041011;
 
@@ -155,7 +156,9 @@ public final class Constants {
   //Survey Types
   public final static int SURVEY_REGULAR = 1;
   public final static int SURVEY_ADDRESS_REQUEST = 2;
-  
+
+  //Error messages
+  public final static String NOT_FOUND_ERROR = "NOT_FOUND_ERROR";
 
 }
 

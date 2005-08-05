@@ -15,62 +15,67 @@
  */
 package org.aspcfs.modules.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import java.sql.*;
-import java.util.ArrayList;
-import org.aspcfs.utils.web.*;
-import java.util.*;
-import com.zeroio.iteam.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
- *  Action method to construct a paged lookup list
+ * Action method to construct a paged lookup list
  *
- *@author     akhilesh mathur
- *@created    --
- *@version    $Id: LookupSelector.java,v 1.7.16.2 2004/11/12 20:37:02 partha Exp
- *      $
+ * @author akhilesh mathur
+ * @version $Id: LookupSelector.java,v 1.7.16.2 2004/11/12 20:37:02 partha Exp
+ *          $
+ * @created --
  */
 public final class LookupSelector extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPopupSelector(ActionContext context) {
     Connection db = null;
     LookupList selectList = new LookupList();
     boolean listDone = false;
     String displayFieldId = null;
-    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "LookupSelectorInfo");
+    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(
+        context, "LookupSelectorInfo");
     String tableName = context.getRequest().getParameter("table");
     HashMap selectedList = new HashMap();
-    HashMap finalElementList = (HashMap) context.getSession().getAttribute("finalElements");
+    HashMap finalElementList = (HashMap) context.getSession().getAttribute(
+        "finalElements");
     if (context.getRequest().getParameter("previousSelection") != null) {
       int j = 0;
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
-      StringTokenizer st1 = new StringTokenizer(context.getRequest().getParameter("previousSelectionDisplay"), "|");
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("previousSelection"), "|");
+      StringTokenizer st1 = new StringTokenizer(
+          context.getRequest().getParameter("previousSelectionDisplay"), "|");
       while (st.hasMoreTokens()) {
         selectedList.put(new Integer(st.nextToken()), st1.nextToken());
         j++;
       }
     } else {
       //get selected list from the session
-      selectedList = (HashMap) context.getSession().getAttribute("selectedElements");
+      selectedList = (HashMap) context.getSession().getAttribute(
+          "selectedElements");
     }
     if (context.getRequest().getParameter("displayFieldId") != null) {
       displayFieldId = context.getRequest().getParameter("displayFieldId");
     }
     //Flush the selectedList if its a new selection
     if (context.getRequest().getParameter("flushtemplist") != null) {
-      if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase("true")) {
-        if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter("previousSelection") == null) {
-          selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalElements")).clone();
+      if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase(
+          "true")) {
+        if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter(
+            "previousSelection") == null) {
+          selectedList = (HashMap) ((HashMap) context.getSession().getAttribute(
+              "finalElements")).clone();
         }
       }
     }
@@ -78,10 +83,12 @@ public final class LookupSelector extends CFSModule {
     while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
       int elementId = 0;
       String elementValue = "";
-      elementId = Integer.parseInt(context.getRequest().getParameter("hiddenelementid" + rowCount));
+      elementId = Integer.parseInt(
+          context.getRequest().getParameter("hiddenelementid" + rowCount));
       if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
         if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
-          elementValue = context.getRequest().getParameter("elementvalue" + rowCount);
+          elementValue = context.getRequest().getParameter(
+              "elementvalue" + rowCount);
         }
         if (selectedList.get(new Integer(elementId)) == null) {
           selectedList.put(new Integer(elementId), elementValue);
@@ -95,7 +102,8 @@ public final class LookupSelector extends CFSModule {
       rowCount++;
     }
     if (context.getRequest().getParameter("finalsubmit") != null) {
-      if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase("true")) {
+      if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase(
+          "true")) {
         finalElementList = (HashMap) selectedList.clone();
         context.getSession().setAttribute("finalElements", finalElementList);
       }
@@ -121,10 +129,10 @@ public final class LookupSelector extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPopupSingleSelector(ActionContext context) {
     Connection db = null;
@@ -133,14 +141,17 @@ public final class LookupSelector extends CFSModule {
     String lookupId = (String) context.getRequest().getParameter("lookupId");
     String moduleId = (String) context.getRequest().getParameter("moduleId");
     String displayFieldId = null;
-    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "LookupSingleSelectorInfo");
+    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(
+        context, "LookupSingleSelectorInfo");
     if (context.getRequest().getParameter("displayFieldId") != null) {
       displayFieldId = context.getRequest().getParameter("displayFieldId");
     }
     try {
       db = this.getConnection(context);
-      lookupSelectorInfo.setLink("LookupSelector.do?command=PopupSingleSelector&lookupId=" + lookupId + "&moduleId=" + moduleId + "&displayFieldId=" + displayFieldId);
-      selectList = new LookupList(db, Integer.parseInt(moduleId), Integer.parseInt(lookupId));
+      lookupSelectorInfo.setLink(
+          "LookupSelector.do?command=PopupSingleSelector&lookupId=" + lookupId + "&moduleId=" + moduleId + "&displayFieldId=" + displayFieldId);
+      selectList = new LookupList(
+          db, Integer.parseInt(moduleId), Integer.parseInt(lookupId));
       selectList.setPagedListInfo(lookupSelectorInfo);
       selectList.buildList(db);
     } catch (Exception e) {

@@ -15,21 +15,25 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.modules.admin.base.AccessTypeList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Contains a list of Campaign Message objects. The list can be built by
- *  setting parameters and then calling buildList.
+ * Contains a list of Campaign Message objects. The list can be built by
+ * setting parameters and then calling buildList.
  *
- *@author     Wesley_S_Gillette
- *@created    November 14, 2001
- *@version    MessageList
+ * @author Wesley_S_Gillette
+ * @version MessageList
+ * @created November 14, 2001
  */
 public class MessageList extends ArrayList {
 
@@ -51,15 +55,16 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Constructor for the MessageList object
+   * Constructor for the MessageList object
    */
-  public MessageList() { }
+  public MessageList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the MessageList object
+   * Sets the pagedListInfo attribute of the MessageList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -67,9 +72,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the name attribute of the MessageList object
+   * Sets the name attribute of the MessageList object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -77,9 +82,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the description attribute of the MessageList object
+   * Sets the description attribute of the MessageList object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -87,9 +92,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the MessageList object
+   * Sets the owner attribute of the MessageList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -97,9 +102,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the ownerIdRange attribute of the MessageList object
+   * Sets the ownerIdRange attribute of the MessageList object
    *
-   *@param  tmp  The new ownerIdRange value
+   * @param tmp The new ownerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -107,9 +112,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the jsEvent attribute of the MessageList object
+   * Sets the jsEvent attribute of the MessageList object
    *
-   *@param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -117,9 +122,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the allMessages attribute of the MessageList object
+   * Sets the allMessages attribute of the MessageList object
    *
-   *@param  allMessages  The new allMessages value
+   * @param allMessages The new allMessages value
    */
   public void setAllMessages(boolean allMessages) {
     this.allMessages = allMessages;
@@ -127,11 +132,11 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the allMessages attribute of the MessageList object
+   * Sets the allMessages attribute of the MessageList object
    *
-   *@param  allMessages   The new allMessages value
-   *@param  owner         The new allMessages value
-   *@param  ownerIdRange  The new allMessages value
+   * @param allMessages  The new allMessages value
+   * @param owner        The new allMessages value
+   * @param ownerIdRange The new allMessages value
    */
   public void setAllMessages(boolean allMessages, int owner, String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -141,9 +146,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the ruleId attribute of the MessageList object
+   * Sets the ruleId attribute of the MessageList object
    *
-   *@param  ruleId  The new ruleId value
+   * @param ruleId The new ruleId value
    */
   public void setRuleId(int ruleId) {
     this.ruleId = ruleId;
@@ -151,21 +156,20 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the controlledHierarchyOnly attribute of the MessageList object
+   * Sets the controlledHierarchyOnly attribute of the MessageList object
    *
-   *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
+   * @param controlledHierarchyOnly The new controlledHierarchyOnly value
    */
   public void setControlledHierarchyOnly(boolean controlledHierarchyOnly) {
     this.controlledHierarchyOnly = controlledHierarchyOnly;
   }
 
 
-
   /**
-   *  Sets the controlledHierarchyOnly attribute of the MessageList object
+   * Sets the controlledHierarchyOnly attribute of the MessageList object
    *
-   *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
-   *@param  ownerIdRange             The new controlledHierarchyOnly value
+   * @param controlledHierarchyOnly The new controlledHierarchyOnly value
+   * @param ownerIdRange            The new controlledHierarchyOnly value
    */
   public void setControlledHierarchyOnly(boolean controlledHierarchyOnly, String ownerIdRange) {
     this.controlledHierarchyOnly = controlledHierarchyOnly;
@@ -174,9 +178,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Sets the personalId attribute of the MessageList object
+   * Sets the personalId attribute of the MessageList object
    *
-   *@param  personalId  The new personalId value
+   * @param personalId The new personalId value
    */
   public void setPersonalId(int personalId) {
     this.personalId = personalId;
@@ -184,9 +188,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the personalId attribute of the MessageList object
+   * Gets the personalId attribute of the MessageList object
    *
-   *@return    The personalId value
+   * @return The personalId value
    */
   public int getPersonalId() {
     return personalId;
@@ -194,9 +198,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the controlledHierarchyOnly attribute of the MessageList object
+   * Gets the controlledHierarchyOnly attribute of the MessageList object
    *
-   *@return    The controlledHierarchyOnly value
+   * @return The controlledHierarchyOnly value
    */
   public boolean getControlledHierarchyOnly() {
     return controlledHierarchyOnly;
@@ -204,9 +208,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the ruleId attribute of the MessageList object
+   * Gets the ruleId attribute of the MessageList object
    *
-   *@return    The ruleId value
+   * @return The ruleId value
    */
   public int getRuleId() {
     return ruleId;
@@ -214,9 +218,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the allMessages attribute of the MessageList object
+   * Gets the allMessages attribute of the MessageList object
    *
-   *@return    The allMessages value
+   * @return The allMessages value
    */
   public boolean getAllMessages() {
     return allMessages;
@@ -224,9 +228,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the MessageList object
+   * Gets the pagedListInfo attribute of the MessageList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -234,9 +238,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the name attribute of the MessageList object
+   * Gets the name attribute of the MessageList object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -244,34 +248,32 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Gets the description attribute of the MessageList object
+   * Gets the description attribute of the MessageList object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
   }
 
 
-
   /**
-   *  Gets the htmlSelect attribute of the MessageList object
+   * Gets the htmlSelect attribute of the MessageList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
   }
 
 
-
   /**
-   *  Gets the htmlSelect attribute of the MessageList object
+   * Gets the htmlSelect attribute of the MessageList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect messageListSelect = new HtmlSelect();
@@ -288,10 +290,10 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the Item attribute of the MessageList object
+   * Adds a feature to the Item attribute of the MessageList object
    *
-   *@param  key   The feature to be added to the Item attribute
-   *@param  name  The feature to be added to the Item attribute
+   * @param key  The feature to be added to the Item attribute
+   * @param name The feature to be added to the Item attribute
    */
   public void addItem(int key, String name) {
     Message thisMessage = new Message();
@@ -306,11 +308,11 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Queries the database and adds Message objects to this collection based on
-   *  any specified parameters.
+   * Queries the database and adds Message objects to this collection based on
+   * any specified parameters.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -331,7 +333,8 @@ public class MessageList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -344,9 +347,10 @@ public class MessageList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(name) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -377,22 +381,14 @@ public class MessageList extends ArrayList {
         "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
         "WHERE m.id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       Message thisMessage = new Message(rs);
       this.add(thisMessage);
     }
@@ -402,9 +398,9 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Appends any list filters that were specified to the SQL statement
+   * Appends any list filters that were specified to the SQL statement
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -420,33 +416,37 @@ public class MessageList extends ArrayList {
     }
 
     if (ruleId != -1) {
-      sqlFilter.append("AND m.access_type IN (SELECT code from lookup_access_types where rule_id = ? AND code = m.access_type) ");
+      sqlFilter.append(
+          "AND m.access_type IN (SELECT code from lookup_access_types where rule_id = ? AND code = m.access_type) ");
     }
 
     if (allMessages) {
       //get contact in users hierarchy
-      sqlFilter.append("AND (m.enteredby IN (" + ownerIdRange + ") OR m.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type)) ");
+      sqlFilter.append(
+          "AND (m.enteredby IN (" + ownerIdRange + ") OR m.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type)) ");
     }
 
     switch (personalId) {
-        case IGNORE_PERSONAL:
-          break;
-        case EXCLUDE_PERSONAL:
-          sqlFilter.append("AND m.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type) ");
-          break;
-        default:
-          sqlFilter.append("AND (m.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type)  OR (m.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type) AND m.enteredby = ?)) ");
-          break;
+      case IGNORE_PERSONAL:
+        break;
+      case EXCLUDE_PERSONAL:
+        sqlFilter.append(
+            "AND m.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type) ");
+        break;
+      default:
+        sqlFilter.append(
+            "AND (m.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type)  OR (m.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type) AND m.enteredby = ?)) ");
+        break;
     }
   }
 
 
   /**
-   *  Sets the PreparedStatement parameters that were added in createFilter
+   * Sets the PreparedStatement parameters that were added in createFilter
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -464,27 +464,27 @@ public class MessageList extends ArrayList {
     }
 
     switch (personalId) {
-        case IGNORE_PERSONAL:
-          break;
-        case EXCLUDE_PERSONAL:
-          pst.setInt(++i, AccessType.PERSONAL);
-          break;
-        default:
-          pst.setInt(++i, AccessType.PERSONAL);
-          pst.setInt(++i, AccessType.PERSONAL);
-          pst.setInt(++i, personalId);
-          break;
+      case IGNORE_PERSONAL:
+        break;
+      case EXCLUDE_PERSONAL:
+        pst.setInt(++i, AccessType.PERSONAL);
+        break;
+      default:
+        pst.setInt(++i, AccessType.PERSONAL);
+        pst.setInt(++i, AccessType.PERSONAL);
+        pst.setInt(++i, personalId);
+        break;
     }
     return i;
   }
 
 
   /**
-   *  Checks to see if the specified messageId is in this collection of Message
-   *  objects
+   * Checks to see if the specified messageId is in this collection of Message
+   * objects
    *
-   *@param  messageId  Message ID to look for
-   *@return            Returns true if found, else false
+   * @param messageId Message ID to look for
+   * @return Returns true if found, else false
    */
   public boolean hasId(int messageId) {
     Iterator i = this.iterator();

@@ -15,17 +15,21 @@
  */
 package org.aspcfs.jcrontab.datasource;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
- *  Represents an entry for the jcron [events] table
+ * Represents an entry for the jcron [events] table
  *
- *@author     matt rajkowski
- *@created    August 27, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created August 27, 2003
  */
 public class Event {
+  private int id = -1;
   private String minute = "*";
   private String hour = "*";
   private String dayOfMonth = "*";
@@ -38,15 +42,16 @@ public class Event {
 
 
   /**
-   *  Constructor for the Event object
+   * Constructor for the Event object
    */
-  public Event() { }
+  public Event() {
+  }
 
 
   /**
-   *  Sets the minute attribute of the Event object
+   * Sets the minute attribute of the Event object
    *
-   *@param  tmp  The new minute value
+   * @param tmp The new minute value
    */
   public void setMinute(String tmp) {
     this.minute = tmp;
@@ -54,9 +59,9 @@ public class Event {
 
 
   /**
-   *  Sets the hour attribute of the Event object
+   * Sets the hour attribute of the Event object
    *
-   *@param  tmp  The new hour value
+   * @param tmp The new hour value
    */
   public void setHour(String tmp) {
     this.hour = tmp;
@@ -64,9 +69,9 @@ public class Event {
 
 
   /**
-   *  Sets the dayOfMonth attribute of the Event object
+   * Sets the dayOfMonth attribute of the Event object
    *
-   *@param  tmp  The new dayOfMonth value
+   * @param tmp The new dayOfMonth value
    */
   public void setDayOfMonth(String tmp) {
     this.dayOfMonth = tmp;
@@ -74,9 +79,9 @@ public class Event {
 
 
   /**
-   *  Sets the month attribute of the Event object
+   * Sets the month attribute of the Event object
    *
-   *@param  tmp  The new month value
+   * @param tmp The new month value
    */
   public void setMonth(String tmp) {
     this.month = tmp;
@@ -84,9 +89,9 @@ public class Event {
 
 
   /**
-   *  Sets the dayOfWeek attribute of the Event object
+   * Sets the dayOfWeek attribute of the Event object
    *
-   *@param  tmp  The new dayOfWeek value
+   * @param tmp The new dayOfWeek value
    */
   public void setDayOfWeek(String tmp) {
     this.dayOfWeek = tmp;
@@ -94,9 +99,9 @@ public class Event {
 
 
   /**
-   *  Sets the year attribute of the Event object
+   * Sets the year attribute of the Event object
    *
-   *@param  tmp  The new year value
+   * @param tmp The new year value
    */
   public void setYear(String tmp) {
     this.year = tmp;
@@ -104,9 +109,9 @@ public class Event {
 
 
   /**
-   *  Sets the task attribute of the Event object
+   * Sets the task attribute of the Event object
    *
-   *@param  tmp  The new task value
+   * @param tmp The new task value
    */
   public void setTask(String tmp) {
     this.task = tmp;
@@ -114,9 +119,9 @@ public class Event {
 
 
   /**
-   *  Sets the extraInfo attribute of the Event object
+   * Sets the extraInfo attribute of the Event object
    *
-   *@param  tmp  The new extraInfo value
+   * @param tmp The new extraInfo value
    */
   public void setExtraInfo(String tmp) {
     this.extraInfo = tmp;
@@ -124,9 +129,9 @@ public class Event {
 
 
   /**
-   *  Sets the enabled attribute of the Event object
+   * Sets the enabled attribute of the Event object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -134,9 +139,9 @@ public class Event {
 
 
   /**
-   *  Sets the enabled attribute of the Event object
+   * Sets the enabled attribute of the Event object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -144,9 +149,9 @@ public class Event {
 
 
   /**
-   *  Gets the minute attribute of the Event object
+   * Gets the minute attribute of the Event object
    *
-   *@return    The minute value
+   * @return The minute value
    */
   public String getMinute() {
     return minute;
@@ -154,9 +159,9 @@ public class Event {
 
 
   /**
-   *  Gets the hour attribute of the Event object
+   * Gets the hour attribute of the Event object
    *
-   *@return    The hour value
+   * @return The hour value
    */
   public String getHour() {
     return hour;
@@ -164,9 +169,9 @@ public class Event {
 
 
   /**
-   *  Gets the dayOfMonth attribute of the Event object
+   * Gets the dayOfMonth attribute of the Event object
    *
-   *@return    The dayOfMonth value
+   * @return The dayOfMonth value
    */
   public String getDayOfMonth() {
     return dayOfMonth;
@@ -174,9 +179,9 @@ public class Event {
 
 
   /**
-   *  Gets the month attribute of the Event object
+   * Gets the month attribute of the Event object
    *
-   *@return    The month value
+   * @return The month value
    */
   public String getMonth() {
     return month;
@@ -184,9 +189,9 @@ public class Event {
 
 
   /**
-   *  Gets the dayOfWeek attribute of the Event object
+   * Gets the dayOfWeek attribute of the Event object
    *
-   *@return    The dayOfWeek value
+   * @return The dayOfWeek value
    */
   public String getDayOfWeek() {
     return dayOfWeek;
@@ -194,9 +199,9 @@ public class Event {
 
 
   /**
-   *  Gets the year attribute of the Event object
+   * Gets the year attribute of the Event object
    *
-   *@return    The year value
+   * @return The year value
    */
   public String getYear() {
     return year;
@@ -204,9 +209,9 @@ public class Event {
 
 
   /**
-   *  Gets the task attribute of the Event object
+   * Gets the task attribute of the Event object
    *
-   *@return    The task value
+   * @return The task value
    */
   public String getTask() {
     return task;
@@ -214,9 +219,9 @@ public class Event {
 
 
   /**
-   *  Gets the extraInfo attribute of the Event object
+   * Gets the extraInfo attribute of the Event object
    *
-   *@return    The extraInfo value
+   * @return The extraInfo value
    */
   public String getExtraInfo() {
     return extraInfo;
@@ -224,9 +229,9 @@ public class Event {
 
 
   /**
-   *  Gets the enabled attribute of the Event object
+   * Gets the enabled attribute of the Event object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -234,19 +239,24 @@ public class Event {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
-    int i = 0;
+    id = DatabaseUtils.getNextSeq(db, "events_event_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO events (" +
-        "minute, hour, dayofmonth, " +
-        "month, dayofweek, year, " +
+        (id > -1 ? "event_id, " : "") +
+        "\"minute\", \"hour\", dayofmonth, " +
+        "\"month\", dayofweek, \"year\", " +
         "task, extrainfo, enabled) " +
-        "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "VALUES(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setString(++i, minute);
     pst.setString(++i, hour);
     pst.setString(++i, dayOfMonth);
@@ -258,6 +268,7 @@ public class Event {
     pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
+    id = DatabaseUtils.getCurrVal(db, "events_event_id_seq", id);
   }
 
 }

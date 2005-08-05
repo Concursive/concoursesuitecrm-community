@@ -15,6 +15,7 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
@@ -449,7 +450,7 @@ public class FileItemList extends ArrayList {
         "SELECT COUNT(*) AS recordcount " +
         "FROM project_files f " +
         "WHERE f.item_id > -1 ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -466,7 +467,7 @@ public class FileItemList extends ArrayList {
         pst = db.prepareStatement(
             sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(f.subject) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(f.subject) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -501,14 +502,7 @@ public class FileItemList extends ArrayList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       FileItem thisItem = new FileItem(rs);
       thisItem.setDirectory(fileLibraryPath);
       this.add(thisItem);
@@ -539,7 +533,7 @@ public class FileItemList extends ArrayList {
    *
    * @param sqlFilter Description of Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -563,7 +557,9 @@ public class FileItemList extends ArrayList {
     }
     if (webImageFormatOnly) {
       sqlFilter.append(
-          "AND (lower(f.client_filename) LIKE '%.gif' OR lower(f.client_filename) LIKE '%.jpg' OR lower(f.client_filename) LIKE '%.png') ");
+          "AND (" + DatabaseUtils.toLowerCase(db) + "(f.client_filename) LIKE '%.gif' OR " + DatabaseUtils.toLowerCase(
+              db) + "(f.client_filename) LIKE '%.jpg' OR " + DatabaseUtils.toLowerCase(
+                  db) + "(f.client_filename) LIKE '%.png') ");
     }
     if (alertRangeStart != null) {
       sqlFilter.append("AND f.modified >= ? ");
@@ -682,10 +678,10 @@ public class FileItemList extends ArrayList {
     long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(size) AS recordsize " +
+        "SELECT SUM(\"size\") AS recordsize " +
         "FROM project_files f " +
         "WHERE f.item_id > -1 ";
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
@@ -704,12 +700,11 @@ public class FileItemList extends ArrayList {
    *
    * @param selectName Description of the Parameter
    * @param currentKey Description of the Parameter
-   * @param useDefault Description of the Parameter
    * @return The htmlSelectDefaultNone value
    */
-  public String getHtmlSelectDefaultNone(String selectName, int currentKey, boolean useDefault) {
+  public String getHtmlSelectDefaultNone(SystemStatus thisSystem, String selectName, int currentKey, boolean useDefault) {
     HtmlSelect fileSelect = new HtmlSelect();
-    fileSelect.addItem(-1, "-- None --");
+    fileSelect.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
     Iterator i = this.iterator();
     int defaultKey = -1;
     while (i.hasNext()) {

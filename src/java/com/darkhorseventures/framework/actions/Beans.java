@@ -16,12 +16,12 @@
 package com.darkhorseventures.framework.actions;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kevin duffey
- *@author     matt rajkowski
- *@created    July 1, 2001
- *@version    $Id$
+ * @author kevin duffey
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 1, 2001
  */
 public final class Beans {
   private String beanName = "";
@@ -33,12 +33,12 @@ public final class Beans {
 
 
   /**
-   *  Constructor for the Beans object
+   * Constructor for the Beans object
    *
-   *@param  beanName     Description of the Parameter
-   *@param  beanScope    Description of the Parameter
-   *@param  className    Description of the Parameter
-   *@param  defaultBean  Description of the Parameter
+   * @param beanName    Description of the Parameter
+   * @param beanScope   Description of the Parameter
+   * @param className   Description of the Parameter
+   * @param defaultBean Description of the Parameter
    */
   public Beans(String beanName, int beanScope, String className, boolean defaultBean) {
     this.beanName = beanName;
@@ -49,9 +49,9 @@ public final class Beans {
 
 
   /**
-   *  Gets the defaultBean attribute of the Beans object
+   * Gets the defaultBean attribute of the Beans object
    *
-   *@return    The defaultBean value
+   * @return The defaultBean value
    */
   public boolean isDefaultBean() {
     return defaultBean;
@@ -59,9 +59,9 @@ public final class Beans {
 
 
   /**
-   *  Gets the className attribute of the Beans object
+   * Gets the className attribute of the Beans object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     return className;
@@ -69,9 +69,9 @@ public final class Beans {
 
 
   /**
-   *  Gets the beanName attribute of the Beans object
+   * Gets the beanName attribute of the Beans object
    *
-   *@return    The beanName value
+   * @return The beanName value
    */
   public String getBeanName() {
     return beanName;
@@ -79,9 +79,9 @@ public final class Beans {
 
 
   /**
-   *  Gets the beanScope attribute of the Beans object
+   * Gets the beanScope attribute of the Beans object
    *
-   *@return    The beanScope value
+   * @return The beanScope value
    */
   public int getBeanScope() {
     return beanScope;

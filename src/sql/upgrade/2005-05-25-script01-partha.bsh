@@ -1,0 +1,64 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+import java.util.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.calls.base.*;
+
+print("Inserting new contact history for all Activities...");
+ContactHistory history = null;
+CallList calls = null;
+
+  calls = new CallList();
+  calls.buildList(db);
+  Iterator iterator = (Iterator) calls.iterator();
+  while (iterator.hasNext()) {
+    Call call = (Call) iterator.next();
+    Contact contact = new Contact(db, call.getContactId());
+    if (contact.getEnabled()) {
+      if (call.getStatusId() == Call.COMPLETE || call.getStatusId() == Call.COMPLETE_FOLLOWUP_PENDING) {
+        history = new ContactHistory();
+        history.setContactId(call.getContactId());
+        history.setLinkObjectId(OrganizationHistory.COMPLETE_ACTIVITY);
+        history.setLinkItemId(call.getId());
+        history.queryRecord(db);
+        if (history.getId() == -1) {
+          history.setLevel(10);
+          history.setModifiedBy(call.getModifiedBy());
+          history.setEnteredBy(call.getEnteredBy());
+          history.setEntered(call.getEntered());
+          history.setModified(call.getModified());
+          history.setEnabled(true);
+          history.setStatus("INSERT");
+          history.setType("Complete: "+call.getCallType());
+          history.setDescription(call.getSubject());
+        }
+      } else {
+        history = new ContactHistory();
+        history.setContactId(call.getContactId());
+        history.setLinkObjectId(OrganizationHistory.CANCELED_ACTIVITY);
+        history.setLinkItemId(call.getId());
+        history.queryRecord(db);
+        if (history.getId() == -1) {
+          history.setLevel(10);
+          history.setModifiedBy(call.getModifiedBy());
+          history.setEnteredBy(call.getEnteredBy());
+          history.setEntered(call.getEntered());
+          history.setModified(call.getModified());
+          history.setEnabled(true);
+          history.setStatus("INSERT");
+          history.setType("Canceled: "+call.getCallType());
+          history.setDescription(call.getSubject());
+        }
+      }
+      if (history.getId() == -1) {
+        history.insert(db);
+        print("Contact History entered for Activity ID --> "+call.getId() +" with description --> "+ history.getDescription());
+      } else {
+        print("skipping Contact History for the activity ID --> "+call.getId());
+      }
+    }
+  }
+print("Adding Activities complete");

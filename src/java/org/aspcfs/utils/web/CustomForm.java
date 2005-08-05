@@ -16,20 +16,20 @@
 package org.aspcfs.utils.web;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.base.CustomFieldCategory;
 import org.aspcfs.modules.base.CustomField;
-import org.aspcfs.utils.web.CustomColumn;
-import java.util.*;
-import java.sql.*;
+import org.aspcfs.modules.base.CustomFieldCategory;
 import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.StringUtils;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
- *  Represents an HTML Form in which items are dynamically added in code
+ * Represents an HTML Form in which items are dynamically added in code
  *
- *@author     chris price
- *@created    August 8, 2002
- *@version    $Id$
+ * @author chris price
+ * @version $Id$
+ * @created August 8, 2002
  */
 public class CustomForm extends CustomFieldCategory {
 
@@ -44,17 +44,17 @@ public class CustomForm extends CustomFieldCategory {
   private ActionContext context = null;
 
 
-
   /**
-   *  Constructor for the CustomForm object
+   * Constructor for the CustomForm object
    */
-  public CustomForm() { }
+  public CustomForm() {
+  }
 
 
   /**
-   *  Sets the action attribute of the CustomForm object
+   * Sets the action attribute of the CustomForm object
    *
-   *@param  action  The new action value
+   * @param action The new action value
    */
   public void setAction(String action) {
     this.action = action;
@@ -62,9 +62,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the selectedTabId attribute of the CustomForm object
+   * Sets the selectedTabId attribute of the CustomForm object
    *
-   *@param  selectedTabId  The new selectedTabId value
+   * @param selectedTabId The new selectedTabId value
    */
   public void setSelectedTabId(int selectedTabId) {
     this.selectedTabId = selectedTabId;
@@ -72,9 +72,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the selectedTabId attribute of the CustomForm object
+   * Sets the selectedTabId attribute of the CustomForm object
    *
-   *@param  selectedTabId  The new selectedTabId value
+   * @param selectedTabId The new selectedTabId value
    */
   public void setSelectedTabId(String selectedTabId) {
     this.selectedTabId = Integer.parseInt(selectedTabId);
@@ -82,9 +82,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the cancel attribute of the CustomForm object
+   * Sets the cancel attribute of the CustomForm object
    *
-   *@param  cancel  The new cancel value
+   * @param cancel The new cancel value
    */
   public void setCancel(String cancel) {
     this.cancel = cancel;
@@ -92,9 +92,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the reset attribute of the CustomForm object
+   * Sets the reset attribute of the CustomForm object
    *
-   *@param  reset  The new reset value
+   * @param reset The new reset value
    */
   public void setReset(boolean reset) {
     this.reset = reset;
@@ -102,9 +102,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the selectedTabName attribute of the CustomForm object
+   * Sets the selectedTabName attribute of the CustomForm object
    *
-   *@param  selectedTabName  The new selectedTabName value
+   * @param selectedTabName The new selectedTabName value
    */
   public void setSelectedTabName(String selectedTabName) {
     this.selectedTabName = selectedTabName;
@@ -112,9 +112,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the buttonList attribute of the CustomForm object
+   * Sets the buttonList attribute of the CustomForm object
    *
-   *@param  tmp  The new buttonList value
+   * @param tmp The new buttonList value
    */
   public void setButtonList(LinkedHashMap tmp) {
     this.buttonList = tmp;
@@ -122,9 +122,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the jScripts attribute of the CustomForm object
+   * Sets the jScripts attribute of the CustomForm object
    *
-   *@param  jScripts  The new jScripts value
+   * @param jScripts The new jScripts value
    */
   public void setJScripts(StringBuffer jScripts) {
     this.jScripts = jScripts;
@@ -132,24 +132,25 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Constructor for the addJScripts object
+   * Constructor for the addJScripts object
    *
-   *@param  scripts  Description of the Parameter
+   * @param scripts Description of the Parameter
    */
   public void addJScripts(String scripts) {
     StringTokenizer st = new StringTokenizer(scripts, "^");
     if (st.hasMoreTokens()) {
       while (st.hasMoreTokens()) {
-        jScripts.append("<script language=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/" + st.nextToken() + "\"></script>");
+        jScripts.append(
+            "<script language=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/" + st.nextToken() + "\"></script>");
       }
     }
   }
 
 
   /**
-   *  Sets the context attribute of the CustomForm object
+   * Sets the context attribute of the CustomForm object
    *
-   *@param  context  The new context value
+   * @param context The new context value
    */
   public void setContext(ActionContext context) {
     this.context = context;
@@ -157,9 +158,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the context attribute of the CustomForm object
+   * Gets the context attribute of the CustomForm object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -167,9 +168,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the jScripts attribute of the CustomForm object
+   * Gets the jScripts attribute of the CustomForm object
    *
-   *@return    The jScripts value
+   * @return The jScripts value
    */
   public String getJScripts() {
     return jScripts.toString();
@@ -177,9 +178,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the action attribute of the CustomForm object
+   * Gets the action attribute of the CustomForm object
    *
-   *@return    The action value
+   * @return The action value
    */
   public String getAction() {
     return action;
@@ -187,9 +188,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the cancel attribute of the CustomForm object
+   * Gets the cancel attribute of the CustomForm object
    *
-   *@return    The cancel value
+   * @return The cancel value
    */
   public String getCancel() {
     return cancel;
@@ -197,9 +198,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the selectedTabId attribute of the CustomForm object
+   * Gets the selectedTabId attribute of the CustomForm object
    *
-   *@return    The selectedTabId value
+   * @return The selectedTabId value
    */
   public int getSelectedTabId() {
     return selectedTabId;
@@ -207,9 +208,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the reset attribute of the CustomForm object
+   * Gets the reset attribute of the CustomForm object
    *
-   *@return    The reset value
+   * @return The reset value
    */
   public boolean getReset() {
     return reset;
@@ -217,9 +218,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the selectedTabName attribute of the CustomForm object
+   * Gets the selectedTabName attribute of the CustomForm object
    *
-   *@return    The selectedTabName value
+   * @return The selectedTabName value
    */
   public String getSelectedTabName() {
     return selectedTabName;
@@ -227,9 +228,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the jsTabCheck attribute of the CustomForm object
+   * Gets the jsTabCheck attribute of the CustomForm object
    *
-   *@return    The jsTabCheck value
+   * @return The jsTabCheck value
    */
   public String getJsTabCheck() {
     return jsTabCheck.toString();
@@ -237,9 +238,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasJsTabCheck() {
     return (this.getJsTabCheck() != null && !"".equals(this.getJsTabCheck()));
@@ -247,9 +248,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasCancel() {
     return (this.getCancel() != null && !"".equals(this.getCancel()));
@@ -257,9 +258,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasAction() {
     return (this.getAction() != null && !"".equals(this.getAction()));
@@ -267,9 +268,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the buttonList attribute of the CustomForm object
+   * Gets the buttonList attribute of the CustomForm object
    *
-   *@return    The buttonList value
+   * @return The buttonList value
    */
   public LinkedHashMap getButtonList() {
     return buttonList;
@@ -277,9 +278,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisField  Description of the Parameter
+   * @param thisField Description of the Parameter
    */
   public void buildJsTabCheck(CustomField thisField) {
     if (thisField.getRequired() == true) {
@@ -297,26 +298,32 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisField    Description of the Parameter
-   *@param  jsCheckInfo  Description of the Parameter
+   * @param thisField   Description of the Parameter
+   * @param jsCheckInfo Description of the Parameter
    */
   public static void appendJsField(CustomField thisField, StringBuffer jsCheckInfo) {
     if (thisField.getType() == CustomField.TEXT) {
-      jsCheckInfo.append("    if (form." + thisField.getName() + ".value == \"\") {\n");
-      jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
+      jsCheckInfo.append(
+          "    if (form." + thisField.getName() + ".value == \"\") {\n");
+      jsCheckInfo.append(
+          "        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
       jsCheckInfo.append("        formTest = false;\n");
       jsCheckInfo.append("    }\n");
     } else if (thisField.getType() == CustomField.SELECT) {
-      jsCheckInfo.append("    if (form." + thisField.getName() + ".selectedIndex ==0) {\n");
-      jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
+      jsCheckInfo.append(
+          "    if (form." + thisField.getName() + ".selectedIndex ==0) {\n");
+      jsCheckInfo.append(
+          "        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
       jsCheckInfo.append("        formTest = false;\n");
       jsCheckInfo.append("    }\n");
     } else if (thisField.getType() == CustomField.ROWLIST) {
       for (int rowListCount = 1; rowListCount <= thisField.getMaxRowItems(); rowListCount++) {
-        jsCheckInfo.append("    if (form." + thisField.getName() + rowListCount + "text.value == \"\") {\n");
-        jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + rowListCount + "\\r\\n\";\n");
+        jsCheckInfo.append(
+            "    if (form." + thisField.getName() + rowListCount + "text.value == \"\") {\n");
+        jsCheckInfo.append(
+            "        message += \"- " + thisField.getDisplay() + rowListCount + "\\r\\n\";\n");
         jsCheckInfo.append("        formTest = false;\n");
         jsCheckInfo.append("    }\n");
       }
@@ -325,9 +332,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String displayButtons() {
     StringBuffer result = new StringBuffer();
@@ -339,12 +346,14 @@ public class CustomForm extends CustomFieldCategory {
       thisName = (String) buttonI.next();
       thisLink = (String) buttonList.get(thisName);
       if (thisName != null && !(thisName.equals("")) && !(thisLink.equals("")) && thisLink != null) {
-        result.append("<input type=\"submit\" value=\"" + thisName + "\" onClick=\"javascript:this.form.action='" + thisLink + "';this.form.clickFrom.value='" + thisName.toLowerCase() + "'\">\n");
+        result.append(
+            "<input type=\"submit\" value=\"" + thisName + "\" onClick=\"javascript:this.form.action='" + thisLink + "';this.form.clickFrom.value='" + thisName.toLowerCase() + "'\">\n");
       }
     }
 
     if (this.hasCancel()) {
-      result.append("<input type=\"button\" value=\"Cancel\" onClick=\"javascript:this.form.action='" + this.getCancel() + "';this.form.submit()\">");
+      result.append(
+          "<input type=\"button\" value=\"Cancel\" onClick=\"javascript:this.form.action='" + this.getCancel() + "';this.form.submit()\">");
     }
     //TODO: Maybe add a RESET button
     return result.toString();
@@ -352,15 +361,15 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Populates a CustomForm from any given object usage :
-   *  thisForm.populate(SurveyObject); -- this would populate the CustomForm<br>
-   *  from the Survey object.<br>
-   *  CustomForm heirarchy : tabs --> groups --> rows --> columns --> fields
+   * Populates a CustomForm from any given object usage :
+   * thisForm.populate(SurveyObject); -- this would populate the CustomForm<br>
+   * from the Survey object.<br>
+   * CustomForm heirarchy : tabs --> groups --> rows --> columns --> fields
    *
-   *@param  tmp               Object used for populating the form
-   *@param  db                Db connection m used for populating LookupLists
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param tmp Object used for populating the form
+   * @param db  Db connection m used for populating LookupLists
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int populate(Connection db, Object tmp) throws SQLException {
     int updatedFields = 0;
@@ -374,7 +383,8 @@ public class CustomForm extends CustomFieldCategory {
         ArrayList dynamicRows = null;
         CustomFormGroup thisGroup = (CustomFormGroup) groups.next();
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CustomForm-> Populating Group " + thisGroup.getName() + " Size:" + thisGroup.size());
+          System.out.println(
+              "CustomForm-> Populating Group " + thisGroup.getName() + " Size:" + thisGroup.size());
         }
         ListIterator rows = thisGroup.listIterator();
         while (rows.hasNext()) {
@@ -390,15 +400,22 @@ public class CustomForm extends CustomFieldCategory {
                 if (!thisField.getIsStatic()) {
                   //check for the object to be used for populating this field .. could be a listItem like SurveyQuestion
                   if (!thisField.getListName().equals("")) {
-                    Object item = ObjectUtils.getObject(ObjectUtils.getObject(tmp, thisField.getListName()), thisField.getListItemName());
-                    thisField.setEnteredValue(ObjectUtils.getParam(item, thisField.getName()));
+                    Object item = ObjectUtils.getObject(
+                        ObjectUtils.getObject(tmp, thisField.getListName()), thisField.getListItemName());
+                    thisField.setEnteredValue(
+                        ObjectUtils.getParam(item, thisField.getName()));
                     if (System.getProperty("DEBUG") != null) {
-                      System.out.println("CustomForm-> SetList field: " + thisField.getName() + " " + ObjectUtils.getParam(item, thisField.getName()) + " = " + thisField.getEnteredValue());
+                      System.out.println(
+                          "CustomForm-> SetList field: " + thisField.getName() + " " + ObjectUtils.getParam(
+                              item, thisField.getName()) + " = " + thisField.getEnteredValue());
                     }
                   } else {
-                    thisField.setEnteredValue(ObjectUtils.getParam(tmp, thisField.getName()));
+                    thisField.setEnteredValue(
+                        ObjectUtils.getParam(tmp, thisField.getName()));
                     if (System.getProperty("DEBUG") != null) {
-                      System.out.println("CustomForm-> Set field: " + thisField.getName() + " " + ObjectUtils.getParam(tmp, thisField.getName()) + " = " + thisField.getEnteredValue());
+                      System.out.println(
+                          "CustomForm-> Set field: " + thisField.getName() + " " + ObjectUtils.getParam(
+                              tmp, thisField.getName()) + " = " + thisField.getEnteredValue());
                     }
                   }
                 }
@@ -406,10 +423,13 @@ public class CustomForm extends CustomFieldCategory {
                 //Set selectedItem if field is a combo box or a checkbox
                 if (thisField.getType() == CustomField.SELECT || thisField.getType() == CustomField.CHECKBOX) {
                   if (!thisField.getListName().equals("")) {
-                    Object item = ObjectUtils.getObject(ObjectUtils.getObject(tmp, thisField.getListName()), thisField.getListItemName());
-                    thisField.setSelectedItemId(ObjectUtils.getParam(item, thisField.getName()));
+                    Object item = ObjectUtils.getObject(
+                        ObjectUtils.getObject(tmp, thisField.getListName()), thisField.getListItemName());
+                    thisField.setSelectedItemId(
+                        ObjectUtils.getParam(item, thisField.getName()));
                   } else {
-                    thisField.setSelectedItemId(ObjectUtils.getParam(tmp, thisField.getName()));
+                    thisField.setSelectedItemId(
+                        ObjectUtils.getParam(tmp, thisField.getName()));
                   }
                   thisField.buildLookupList(db, this.getContext());
                 }
@@ -422,7 +442,8 @@ public class CustomForm extends CustomFieldCategory {
               }
             }
           } else {
-            thisRow.setListObject(ObjectUtils.getObject(tmp, thisRow.getListName()));
+            thisRow.setListObject(
+                ObjectUtils.getObject(tmp, thisRow.getListName()));
           }
         }
       }
@@ -433,7 +454,8 @@ public class CustomForm extends CustomFieldCategory {
 
     if (jsTabCheck.length() != 0) {
       jsTabCheck.append("    if (formTest == false) {\n");
-      jsTabCheck.append("        alert(\"Please check the following fields:\\r\\n\\r\\n\" + message);\n");
+      jsTabCheck.append(
+          "        alert(\"Please check the following fields:\\r\\n\\r\\n\" + message);\n");
       jsTabCheck.append("        return false;\n");
       jsTabCheck.append("    } else {\n");
       jsTabCheck.append("        return true;\n");
@@ -446,9 +468,9 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the jsFormDefault attribute of the CustomForm object
+   * Gets the jsFormDefault attribute of the CustomForm object
    *
-   *@return    The jsFormDefault value
+   * @return The jsFormDefault value
    */
   public String getJsFormOnLoad() {
     Iterator tabs = this.iterator();

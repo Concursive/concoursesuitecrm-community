@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.help.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
-import java.util.*;
-import java.text.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Help Module class to allow administrators to insert biref and detailed
- *  description of application modules
+ * Help Module class to allow administrators to insert biref and detailed
+ * description of application modules
  *
- *@author     kbhoopal
- *@created    December 10, 2003
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created December 10, 2003
  */
 public class HelpModule extends GenericBean {
   //static variables
@@ -46,17 +47,18 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpModule object
+   * Constructor for the HelpModule object
    */
-  public HelpModule() { }
+  public HelpModule() {
+  }
 
 
   /**
-   *  Constructor for the HelpModule object
+   * Constructor for the HelpModule object
    *
-   *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpModule(Connection db, int thisId) throws SQLException {
     if (thisId == -1) {
@@ -82,12 +84,12 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpModule object fetches information of a module
-   *  based on the page the user is in
+   * Constructor for the HelpModule object fetches information of a module
+   * based on the page the user is in
    *
-   *@param  db                Description of the Parameter
-   *@param  action            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param action Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpModule(Connection db, String action) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -96,7 +98,7 @@ public class HelpModule extends GenericBean {
         "WHERE hm.module_id in " +
         "(SELECT link_module_id " +
         "from help_contents hc " +
-        "WHERE hc.module = ?) " +
+        "WHERE hc.\"module\" = ?) " +
         "AND hm.category_id = pc.category_id ");
     int i = 0;
     pst.setString(++i, action);
@@ -111,10 +113,10 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpModule object
+   * Constructor for the HelpModule object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpModule(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -122,9 +124,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpModule object
+   * Sets the id attribute of the HelpModule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -132,9 +134,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpModule object
+   * Sets the id attribute of the HelpModule object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -142,9 +144,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Sets the linkCategoryId attribute of the HelpModule object
+   * Sets the linkCategoryId attribute of the HelpModule object
    *
-   *@param  tmp  The new linkCategoryId value
+   * @param tmp The new linkCategoryId value
    */
   public void setLinkCategoryId(int tmp) {
     this.linkCategoryId = tmp;
@@ -152,9 +154,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Sets the linkCategoryId attribute of the HelpModule object
+   * Sets the linkCategoryId attribute of the HelpModule object
    *
-   *@param  tmp  The new linkCategoryId value
+   * @param tmp The new linkCategoryId value
    */
   public void setLinkCategoryId(String tmp) {
     this.linkCategoryId = Integer.parseInt(tmp);
@@ -162,31 +164,29 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Sets the module name attribute of the HelpModule object
+   * Sets the module name attribute of the HelpModule object
    *
-   *@param  tmp  The new section value
+   * @param tmp The new section value
    */
   public void setModuleName(String tmp) {
     this.moduleName = tmp;
   }
 
 
-
   /**
-   *  Sets the module name attribute of the HelpModule object
+   * Sets the module name attribute of the HelpModule object
    *
-   *@param  tmp  The new detail description value
+   * @param tmp The new detail description value
    */
   public void setDetailDescription(String tmp) {
     this.detailDescription = tmp;
   }
 
 
-
   /**
-   *  Sets the module name attribute of the HelpModule object
+   * Sets the module name attribute of the HelpModule object
    *
-   *@param  tmp  The new brief description value
+   * @param tmp The new brief description value
    */
   public void setBriefDescription(String tmp) {
     this.briefDescription = tmp;
@@ -194,9 +194,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Sets the relatedAction attribute of the HelpModule object
+   * Sets the relatedAction attribute of the HelpModule object
    *
-   *@param  tmp  The new relatedAction value
+   * @param tmp The new relatedAction value
    */
   public void setRelatedAction(String tmp) {
     this.relatedAction = tmp;
@@ -204,9 +204,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Gets the module Id of the HelpModule object
+   * Gets the module Id of the HelpModule object
    *
-   *@return    The module value
+   * @return The module value
    */
   public int getId() {
     return id;
@@ -214,9 +214,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Gets the module attribute of the HelpModule object
+   * Gets the module attribute of the HelpModule object
    *
-   *@return    The module name
+   * @return The module name
    */
   public String getModuleName() {
     return moduleName;
@@ -224,9 +224,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Gets the module attribute of the HelpModule object
+   * Gets the module attribute of the HelpModule object
    *
-   *@return    The Link Category Id
+   * @return The Link Category Id
    */
   public int getLinkCategoryId() {
     return linkCategoryId;
@@ -234,9 +234,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Gets the brief description of the module of the HelpModule object
+   * Gets the brief description of the module of the HelpModule object
    *
-   *@return    The brief description
+   * @return The brief description
    */
   public String getBriefDescription() {
     return briefDescription;
@@ -244,9 +244,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Gets the relatedAction attribute of the HelpModule object
+   * Gets the relatedAction attribute of the HelpModule object
    *
-   *@return    The relatedAction value
+   * @return The relatedAction value
    */
   public String getRelatedAction() {
     return relatedAction;
@@ -254,9 +254,9 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Gets the detail description of the module of the HelpModule object
+   * Gets the detail description of the module of the HelpModule object
    *
-   *@return    The detail description
+   * @return The detail description
    */
   public String getDetailDescription() {
     return detailDescription;
@@ -264,35 +264,38 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "help_module_module_id_seq");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_module " +
-        "(category_id , module_brief_description , module_detail_description) " +
-        "VALUES (?, ?, ?) "
-        );
+        "(" + (id > -1 ? "module_id, " : "") + "category_id , module_brief_description , module_detail_description) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?,?, ?) ");
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, this.getLinkCategoryId());
     pst.setString(++i, this.getBriefDescription());
     pst.setString(++i, this.getDetailDescription());
     pst.execute();
-    this.id = DatabaseUtils.getCurrVal(db, "help_module_module_id_seq");
     pst.close();
+    id = DatabaseUtils.getCurrVal(db, "help_module_module_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Updates the database with the modified brief ad detailed description
+   * Updates the database with the modified brief ad detailed description
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (id == -1) {
@@ -303,8 +306,7 @@ public class HelpModule extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE help_module " +
         "SET module_brief_description = ?, module_detail_description = ? " +
-        "WHERE module_id = ?"
-        );
+        "WHERE module_id = ?");
     pst.setString(++i, this.getBriefDescription());
     pst.setString(++i, this.getDetailDescription());
     pst.setInt(++i, this.getId());
@@ -315,11 +317,11 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Deletes a record from the database
+   * Deletes a record from the database
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -345,10 +347,10 @@ public class HelpModule extends GenericBean {
 
 
   /**
-   *  Builds the object with the information from the database
+   * Builds the object with the information from the database
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("module_id");

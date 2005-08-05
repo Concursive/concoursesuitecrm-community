@@ -29,28 +29,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Class for working with the Lucene search engine
+ * Class for working with the Lucene search engine
  *
- *@author     matt rajkowski
- *@created    May 27, 2004
- *@version    $Id: AssignmentIndexer.java,v 1.2 2004/07/21 19:00:43 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: AssignmentIndexer.java,v 1.2 2004/07/21 19:00:43 mrajkowski
+ *          Exp $
+ * @created May 27, 2004
  */
 public class AssignmentIndexer implements Indexer {
 
   /**
-   *  Given a database and a Lucene writer, this method will add content to the
-   *  searchable index
+   * Given a database and a Lucene writer, this method will add content to the
+   * searchable index
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@exception  IOException   Description of the Exception
+   * @param writer Description of the Parameter
+   * @param db     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws IOException  Description of the Exception
    */
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT assignment_id, project_id, role, technology, requirement_id, modified " +
+        "SELECT assignment_id, project_id, \"role\", technology, requirement_id, modified " +
         "FROM project_assignments " +
         "WHERE assignment_id > -1 ");
     ResultSet rs = pst.executeQuery();
@@ -75,29 +75,40 @@ public class AssignmentIndexer implements Indexer {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer           Description of the Parameter
-   *@param  assignment       Description of the Parameter
-   *@param  modified         Description of the Parameter
-   *@exception  IOException  Description of the Exception
+   * @param writer     Description of the Parameter
+   * @param assignment Description of the Parameter
+   * @param modified   Description of the Parameter
+   * @throws IOException Description of the Exception
    */
   public static void add(IndexWriter writer, Assignment assignment, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
     document.add(Field.Keyword("type", "activity"));
-    document.add(Field.Keyword("assignmentId", String.valueOf(assignment.getId())));
-    document.add(Field.Keyword("assignmentKeyId", String.valueOf(assignment.getId())));
-    document.add(Field.Keyword("requirementId", String.valueOf(assignment.getRequirementId())));
-    document.add(Field.Keyword("projectId", String.valueOf(assignment.getProjectId())));
+    document.add(
+        Field.Keyword("assignmentId", String.valueOf(assignment.getId())));
+    document.add(
+        Field.Keyword("assignmentKeyId", String.valueOf(assignment.getId())));
+    document.add(
+        Field.Keyword(
+            "requirementId", String.valueOf(assignment.getRequirementId())));
+    document.add(
+        Field.Keyword("projectId", String.valueOf(assignment.getProjectId())));
     document.add(Field.Text("title", assignment.getRole()));
-    document.add(Field.Text("contents",
-        assignment.getRole() + " " +
+    document.add(
+        Field.Text(
+            "contents",
+            assignment.getRole() + " " +
         assignment.getTechnology()));
     if (modified) {
-      document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(System.currentTimeMillis())));
     } else {
-      document.add(Field.Keyword("modified", String.valueOf(assignment.getModified().getTime())));
+      document.add(
+          Field.Keyword(
+              "modified", String.valueOf(assignment.getModified().getTime())));
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
@@ -107,25 +118,27 @@ public class AssignmentIndexer implements Indexer {
 
 
   /**
-   *  Gets the searchTerm attribute of the AssignmentIndexer class
+   * Gets the searchTerm attribute of the AssignmentIndexer class
    *
-   *@param  assignment  Description of the Parameter
-   *@return             The searchTerm value
+   * @param assignment Description of the Parameter
+   * @return The searchTerm value
    */
   public static Term getSearchTerm(Assignment assignment) {
-    Term searchTerm = new Term("assignmentKeyId", String.valueOf(assignment.getId()));
+    Term searchTerm = new Term(
+        "assignmentKeyId", String.valueOf(assignment.getId()));
     return searchTerm;
   }
 
 
   /**
-   *  Gets the deleteTerm attribute of the AssignmentIndexer class
+   * Gets the deleteTerm attribute of the AssignmentIndexer class
    *
-   *@param  assignment  Description of the Parameter
-   *@return             The deleteTerm value
+   * @param assignment Description of the Parameter
+   * @return The deleteTerm value
    */
   public static Term getDeleteTerm(Assignment assignment) {
-    Term searchTerm = new Term("assignmentId", String.valueOf(assignment.getId()));
+    Term searchTerm = new Term(
+        "assignmentId", String.valueOf(assignment.getId()));
     return searchTerm;
   }
 }

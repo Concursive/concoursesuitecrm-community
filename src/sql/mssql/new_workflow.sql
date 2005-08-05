@@ -110,5 +110,6 @@ CREATE TABLE business_process_hook (
   id INTEGER IDENTITY NOT NULL PRIMARY KEY,
   trigger_id INTEGER NOT NULL REFERENCES business_process_hook_triggers,
   process_id INTEGER NOT NULL REFERENCES business_process,
-  enabled BIT DEFAULT 0
+  enabled BIT DEFAULT 0,
+  priority INTEGER NOT NULL DEFAULT 0
 );

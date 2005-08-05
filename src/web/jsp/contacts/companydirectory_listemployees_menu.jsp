@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
@@ -29,20 +29,24 @@
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Menu link functions
   function details() {
     window.location.href = 'CompanyDirectory.do?command=EmployeeDetails&empid=' + thisEmpId;
   }
-  
+
   function modify() {
     window.location.href = 'CompanyDirectory.do?command=ModifyEmployee&empid=' + thisEmpId + '&return=list';
   }
-  
+
   function deleteEmployee() {
-  popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=' + thisEmpId + '&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');
+    popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=' + thisEmpId + '&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');
   }
-  
+
+  function exportVCard() {
+    window.location.href = 'ExternalContacts.do?command=DownloadVCard&id=' + thisEmpId;
+  }
+
 </script>
 <div id="menuEmployeeContainer" class="menu">
   <div id="menuEmployeeContent">
@@ -64,6 +68,16 @@
         </th>
         <td width="100%">
           <dhv:label name="global.button.modify">Modify</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="contacts-internal_contacts-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="exportVCard()">
+        <th>
+          <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.downloadVcard">Download VCard</dhv:label>
         </td>
       </tr>
       </dhv:permission>

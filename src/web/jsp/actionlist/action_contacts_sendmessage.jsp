@@ -18,23 +18,33 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="org.aspcfs.utils.StringUtils" %>
+<%@ page import="org.aspcfs.utils.StringUtils,
+                 org.aspcfs.utils.web.ClientType" %>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <jsp:useBean id="messageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
+<jsp:useBean id="bcc" class="java.lang.String" scope="request"/>
+<jsp:useBean id="cc" class="java.lang.String" scope="request"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<body onload="document.sendMessage.replyTo.focus();">
+<%
+  if (clientType.getType() == -1) {
+    clientType.setParameters(request);
+  }
+%>
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
-<jsp:include page="../htmlarea_include.jsp" flush="true"/>
-<body onload="initEditor('messageText');document.sendMessage.replyTo.focus();">
+  <jsp:include page="../tinymce_include.jsp" flush="true"/>
+  <script language="javascript" type="text/javascript">
+    initEditor('messageText');
+  </script>
 </dhv:evaluate>
-<%-- Use applet instead --%>
-<dhv:evaluate if="<%= clientType.showApplet() %>">
-<body onload="document.sendMessage.replyTo.focus();">
-</dhv:evaluate>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript">
   function updateMessageList() {
     document.forms['sendMessage'].elements['messageId'].selectedIndex = 0;
@@ -56,11 +66,16 @@
     document.forms['sendMessage'].submit();
   }
   function checkForm(form) {
+    try { tinyMCE.triggerSave(false); } catch(e) { }
     var formTest = true;
     var messageText = "";
 <dhv:evaluate if="<%= clientType.showApplet() %>">
     document.sendMessage.messageText.value = document.Kafenio.getDocumentBody();
 </dhv:evaluate>
+    if (formTest == false) {
+      alert(label("check.send.email", "The message could not be sent, please check the following:\r\n\r\n") + messageText);
+      return false;
+    }
     return true;
   }
 </script>
@@ -81,14 +96,17 @@
 <%if(!"new".equals(request.getParameter("listView"))){ %>
 <% 
    messageList.setJsEvent("onChange=\"javascript:updateMessage();\""); 
-   messageList.addItem(0, "--None--");
+   messageList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
 %>
 <%= messageList.getHtmlSelect("messageId", (request.getParameter("messageId") != null ? Integer.parseInt(request.getParameter("messageId")) : -1)) %>
 <% }else{ %>
   <select size="1" name="messageId">
     <option value="0"><dhv:label name="calendar.none.4dashes">--None--</dhv:label></option>
-  </select>  
-<% } %>
+  </select> 
+<% }
+boolean showBcc = true;
+boolean showCc = true;
+%>
 <%-- include the message form from create messages --%>
 <%@ include file="../communications/message_include.jsp" %>
 <br />

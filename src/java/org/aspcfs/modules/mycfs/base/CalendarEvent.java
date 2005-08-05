@@ -24,12 +24,12 @@ import java.util.Comparator;
 import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    July 27, 2001
- *@version    $Id: CalendarEvent.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: CalendarEvent.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
+ *          Exp $
+ * @created July 27, 2001
  */
 public class CalendarEvent implements Comparable {
 
@@ -95,15 +95,16 @@ public class CalendarEvent implements Comparable {
   //URL
 
   /**
-   *  Constructor for the CalendarEvent object
+   * Constructor for the CalendarEvent object
    */
-  public CalendarEvent() { }
+  public CalendarEvent() {
+  }
 
 
   /**
-   *  Sets the date attribute of the CalendarEvent object
+   * Sets the date attribute of the CalendarEvent object
    *
-   *@param  eventDate  The new date value
+   * @param eventDate The new date value
    */
   public void setDate(java.sql.Timestamp eventDate) {
     if (eventDate != null) {
@@ -120,10 +121,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Month attribute of the CalendarEvent object
+   * Sets the Month attribute of the CalendarEvent object
    *
-   *@param  tmp  The new Month value
-   *@since
+   * @param tmp The new Month value
    */
   public void setMonth(String tmp) {
     month = tmp;
@@ -131,10 +131,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Icon attribute of the CalendarEvent object
+   * Sets the Icon attribute of the CalendarEvent object
    *
-   *@param  icon  The new Icon value
-   *@since
+   * @param icon The new Icon value
    */
   public void setIcon(String icon) {
     this.icon = icon;
@@ -142,9 +141,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the idsub attribute of the CalendarEvent object
+   * Sets the idsub attribute of the CalendarEvent object
    *
-   *@param  idsub  The new idsub value
+   * @param idsub The new idsub value
    */
   public void setIdsub(int idsub) {
     this.idsub = idsub;
@@ -152,10 +151,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Day attribute of the CalendarEvent object
+   * Sets the Day attribute of the CalendarEvent object
    *
-   *@param  tmp  The new Day value
-   *@since
+   * @param tmp The new Day value
    */
   public void setDay(String tmp) {
     day = tmp;
@@ -163,10 +161,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Year attribute of the CalendarEvent object
+   * Sets the Year attribute of the CalendarEvent object
    *
-   *@param  tmp  The new Year value
-   *@since
+   * @param tmp The new Year value
    */
   public void setYear(String tmp) {
     year = tmp;
@@ -174,10 +171,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Time attribute of the CalendarEvent object
+   * Sets the Time attribute of the CalendarEvent object
    *
-   *@param  tmp  The new Time value
-   *@since
+   * @param tmp The new Time value
    */
   public void setTime(String tmp) {
     if (time != null && !time.equals("")) {
@@ -189,9 +185,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the id attribute of the CalendarEvent object
+   * Sets the id attribute of the CalendarEvent object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -199,9 +195,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the link attribute of the CalendarEvent object
+   * Sets the link attribute of the CalendarEvent object
    *
-   *@param  tmp  The new link value
+   * @param tmp The new link value
    */
   public void setLink(String tmp) {
     this.link = tmp;
@@ -209,10 +205,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Subject attribute of the CalendarEvent object
+   * Sets the Subject attribute of the CalendarEvent object
    *
-   *@param  tmp  The new Subject value
-   *@since
+   * @param tmp The new Subject value
    */
   public void setSubject(String tmp) {
     subject = tmp;
@@ -220,10 +215,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the Category attribute of the CalendarEvent object
+   * Sets the Category attribute of the CalendarEvent object
    *
-   *@param  tmp  The new Category value
-   *@since
+   * @param tmp The new Category value
    */
   public void setCategory(String tmp) {
     category = tmp;
@@ -231,10 +225,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the HTMLClass attribute of the CalendarEvent object
+   * Sets the HTMLClass attribute of the CalendarEvent object
    *
-   *@param  tmp  The new HTMLClass value
-   *@since
+   * @param tmp The new HTMLClass value
    */
   public void setHTMLClass(String tmp) {
     HTMLClass = tmp;
@@ -242,9 +235,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the status attribute of the CalendarEvent object
+   * Sets the status attribute of the CalendarEvent object
    *
-   *@param  status  The new status value
+   * @param status The new status value
    */
   public void setStatus(int status) {
     this.status = status;
@@ -252,9 +245,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Sets the relatedLinks attribute of the CalendarEvent object
+   * Sets the relatedLinks attribute of the CalendarEvent object
    *
-   *@param  relatedLinks  The new relatedLinks value
+   * @param relatedLinks The new relatedLinks value
    */
   public void setRelatedLinks(ArrayList relatedLinks) {
     this.relatedLinks = relatedLinks;
@@ -262,9 +255,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Adds a feature to the RelatedLink attribute of the CalendarEvent object
+   * Adds a feature to the RelatedLink attribute of the CalendarEvent object
    *
-   *@param  link  The feature to be added to the RelatedLink attribute
+   * @param link The feature to be added to the RelatedLink attribute
    */
   public void addRelatedLink(String link) {
     if (relatedLinks == null) {
@@ -275,9 +268,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the relatedLinks attribute of the CalendarEvent object
+   * Gets the relatedLinks attribute of the CalendarEvent object
    *
-   *@return    The relatedLinks value
+   * @return The relatedLinks value
    */
   public ArrayList getRelatedLinks() {
     return relatedLinks;
@@ -285,9 +278,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the status attribute of the CalendarEvent object
+   * Gets the status attribute of the CalendarEvent object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -295,9 +288,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the idsub attribute of the CalendarEvent object
+   * Gets the idsub attribute of the CalendarEvent object
    *
-   *@return    The idsub value
+   * @return The idsub value
    */
   public int getIdsub() {
     return idsub;
@@ -305,9 +298,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the id attribute of the CalendarEvent object
+   * Gets the id attribute of the CalendarEvent object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -315,10 +308,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the Subject attribute of the CalendarEvent object
+   * Gets the Subject attribute of the CalendarEvent object
    *
-   *@return    The Subject value
-   *@since
+   * @return The Subject value
    */
   public String getSubject() {
     return subject;
@@ -326,10 +318,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the Category attribute of the CalendarEvent object
+   * Gets the Category attribute of the CalendarEvent object
    *
-   *@return    The Category value
-   *@since
+   * @return The Category value
    */
   public String getCategory() {
     return category;
@@ -337,45 +328,59 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the icon attribute of the CalendarEvent class
+   * Gets the icon attribute of the CalendarEvent class
    *
-   *@param  thisCategory  Description of the Parameter
-   *@param  systemStatus  Description of the Parameter
-   *@return               The icon value
+   * @param thisCategory Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @return The icon value
    */
   public static String getIcon(String thisCategory, SystemStatus systemStatus) {
     if (thisCategory.equals("event")) {
-      return "<img border=\"0\" src=\"images/event-timed.gif\" align=\"texttop\" width=\"12\" height=\"12\" title=\"" + getLabel("calendar.Event", systemStatus, "Event") + "\" />";
+      return "<img border=\"0\" src=\"images/event-timed.gif\" align=\"texttop\" width=\"12\" height=\"12\" title=\"" + getLabel(
+          "calendar.Event", systemStatus, "Event") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
-      return "<img border=\"0\" src=\"images/event-star12.gif\" align=\"texttop\" width=\"12\" height=\"12\" title=\"" + getLabel("calendar.Holiday", systemStatus, "Holiday") + "\" />";
+      return "<img border=\"0\" src=\"images/event-star12.gif\" align=\"texttop\" width=\"12\" height=\"12\" title=\"" + getLabel(
+          "calendar.Holiday", systemStatus, "Holiday") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
-      return "<img border=\"0\" src=\"images/box-hold.gif\" align=\"texttop\" width=\"16\" height=\"15\" title=\"" + getLabel("calendar.UserAccountExpires", systemStatus, "User Account Expires") + "\" />";
-    } else if (thisCategory.equalsIgnoreCase("Opportunity") || thisCategory.equalsIgnoreCase("Opportunities")) {
-      return "<img border=\"0\" src=\"images/alertopp.gif\" align=\"texttop\" title=\"" + getLabel("calendar.Opportunities", systemStatus, "Opportunities") + "\" />";
-    } else if (thisCategory.equalsIgnoreCase("Activities") || thisCategory.equalsIgnoreCase("Contact Activities") || thisCategory.equalsIgnoreCase("Opportunity Activities")) {
-      return "<img border=\"0\" src=\"images/alertcall.gif\" align=\"texttop\" title=\"" + getLabel("calendar.Activities", systemStatus, "Activities") + "\" />";
+      return "<img border=\"0\" src=\"images/box-hold.gif\" align=\"texttop\" width=\"16\" height=\"15\" title=\"" + getLabel(
+          "calendar.UserAccountExpires", systemStatus, "User Account Expires") + "\" />";
+    } else if (thisCategory.equalsIgnoreCase("Opportunity") || thisCategory.equalsIgnoreCase(
+        "Opportunities")) {
+      return "<img border=\"0\" src=\"images/alertopp.gif\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.Opportunities", systemStatus, "Opportunities") + "\" />";
+    } else if (thisCategory.equalsIgnoreCase("Activities") || thisCategory.equalsIgnoreCase(
+        "Contact Activities") || thisCategory.equalsIgnoreCase(
+            "Opportunity Activities")) {
+      return "<img border=\"0\" src=\"images/alertcall.gif\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.Activities", systemStatus, "Activities") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Pending Activities")) {
-      return "<img border=\"0\" src=\"images/box-hold.gif\" align=\"texttop\" title=\"" + getLabel("calendar.PendingActivities", systemStatus, "Pending Activities") + "\" />";
+      return "<img border=\"0\" src=\"images/box-hold.gif\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.PendingActivities", systemStatus, "Pending Activities") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
-      return "<img border=\"0\" src=\"images/alertassignment.gif\" align=\"texttop\" title=\"" + getLabel("calendar.Assignments", systemStatus, "Assignments") + "\" />";
-    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")) {
-      return "<img border=\"0\" src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=\"texttop\" title=\"" + getLabel("calendar.Accounts", systemStatus, "Accounts") + "\" />";
+      return "<img border=\"0\" src=\"images/alertassignment.gif\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.Assignments", systemStatus, "Assignments") + "\" />";
+    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase(
+        "Account Contract Alerts")) {
+      return "<img border=\"0\" src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.Accounts", systemStatus, "Accounts") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
-      return "<img src=\"images/box.gif\" border=\"0\" align=\"texttop\" width=\"14\" height=\"14\" title=\"" + getLabel("calendar.Tasks", systemStatus, "Tasks") + "\" />";
+      return "<img src=\"images/box.gif\" border=\"0\" align=\"texttop\" width=\"14\" height=\"14\" title=\"" + getLabel(
+          "calendar.Tasks", systemStatus, "Tasks") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Ticket Requests")) {
-      return "<img src=\"images/tree0.gif\" border=\"0\" align=\"texttop\" title=\"" + getLabel("calendar.Tickets", systemStatus, "Tickets") + "\" />";
+      return "<img src=\"images/tree0.gif\" border=\"0\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.Tickets", systemStatus, "Tickets") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Project Tickets")) {
-      return "<img src=\"images/tree1.gif\" border=\"0\" align=\"texttop\" title=\"" + getLabel("calendar.projectTickets", systemStatus, "Project Tickets") + "\" />";
+      return "<img src=\"images/tree1.gif\" border=\"0\" align=\"texttop\" title=\"" + getLabel(
+          "calendar.projectTickets", systemStatus, "Project Tickets") + "\" />";
     }
     return "";
   }
 
 
   /**
-   *  Gets the DateTimeString attribute of the CalendarEvent object
+   * Gets the DateTimeString attribute of the CalendarEvent object
    *
-   *@return    The DateTimeString value
-   *@since
+   * @return The DateTimeString value
    */
   public String getDateTimeString() {
     return (year + "-" + month + "-" + day + " " + time);
@@ -383,9 +388,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the dateString attribute of the CalendarEvent object
+   * Gets the dateString attribute of the CalendarEvent object
    *
-   *@return    The dateString value
+   * @return The dateString value
    */
   public String getDateString() {
     return (month + "/" + day + "/" + year);
@@ -393,9 +398,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the holiday attribute of the CalendarEvent object
+   * Gets the holiday attribute of the CalendarEvent object
    *
-   *@return    The holiday value
+   * @return The holiday value
    */
   public boolean isHoliday() {
     return ("holiday").equalsIgnoreCase(this.category);
@@ -403,12 +408,12 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the label attribute of the CalendarEvent object
+   * Gets the label attribute of the CalendarEvent object
    *
-   *@param  label         Description of the Parameter
-   *@param  systemStatus  Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The label value
+   * @param label        Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The label value
    */
   public static String getLabel(String label, SystemStatus systemStatus, String defaultValue) {
     if (systemStatus != null) {
@@ -422,10 +427,9 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Returned Value
-   *@since
+   * @return Description of the Returned Value
    */
   public String toString() {
     return month + "/" + day + "/" + year + ": " + category;
@@ -433,11 +437,10 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  object  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since
+   * @param object Description of Parameter
+   * @return Description of the Returned Value
    */
   public int compareTo(Object object) {
     return (eventComparator.compare(this, object));
@@ -445,11 +448,10 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  object  Description of Parameter
-   *@return         Description of the Returned Value
-   *@since
+   * @param object Description of Parameter
+   * @return Description of the Returned Value
    */
   public int compareDateTo(Object object) {
     return (eventComparator.compare(this, object));
@@ -457,24 +459,24 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     mrajkowski
-   *@created    July 27, 2001
-   *@version    $Id: CalendarEvent.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
-   *      Exp $
+   * @author mrajkowski
+   * @version $Id: CalendarEvent.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
+   *          Exp $
+   * @created July 27, 2001
    */
   class comparatorEvent implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of Parameter
-     *@param  right  Description of Parameter
-     *@return        Description of the Returned Value
-     *@since
+     * @param left  Description of Parameter
+     * @param right Description of Parameter
+     * @return Description of the Returned Value
      */
     public int compare(Object left, Object right) {
-      return (((CalendarEvent) left).getDateTimeString().compareTo(((CalendarEvent) right).getDateTimeString()));
+      return (((CalendarEvent) left).getDateTimeString().compareTo(
+          ((CalendarEvent) right).getDateTimeString()));
     }
 
   }

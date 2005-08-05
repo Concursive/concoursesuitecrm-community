@@ -15,21 +15,23 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.w3c.dom.Element;
-import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
-import java.io.*;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Contains a list of BusinessProcessComponent objects and can be used for
- *  initially building the list.
+ * Contains a list of BusinessProcessComponent objects and can be used for
+ * initially building the list.
  *
- *@author     matt rajkowski
- *@created    June 6, 2003
- *@version    $Id: BusinessProcessComponentList.java,v 1.2 2003/06/19 20:50:05
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: BusinessProcessComponentList.java,v 1.2 2003/06/19 20:50:05
+ *          mrajkowski Exp $
+ * @created June 6, 2003
  */
 public class BusinessProcessComponentList extends HashMap {
   private int enabled = Constants.UNDEFINED;
@@ -38,15 +40,16 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Constructor for the BusinessProcessComponentList object
+   * Constructor for the BusinessProcessComponentList object
    */
-  public BusinessProcessComponentList() { }
+  public BusinessProcessComponentList() {
+  }
 
 
   /**
-   *  Sets the enabled attribute of the BusinessProcessComponentList object
+   * Sets the enabled attribute of the BusinessProcessComponentList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -54,9 +57,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Sets the enabled attribute of the BusinessProcessComponentList object
+   * Sets the enabled attribute of the BusinessProcessComponentList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -64,9 +67,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Sets the processId attribute of the BusinessProcessComponentList object
+   * Sets the processId attribute of the BusinessProcessComponentList object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(int tmp) {
     this.processId = tmp;
@@ -74,9 +77,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Sets the processId attribute of the BusinessProcessComponentList object
+   * Sets the processId attribute of the BusinessProcessComponentList object
    *
-   *@param  tmp  The new processId value
+   * @param tmp The new processId value
    */
   public void setProcessId(String tmp) {
     this.processId = Integer.parseInt(tmp);
@@ -84,9 +87,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Sets the componentId attribute of the BusinessProcessComponentList object
+   * Sets the componentId attribute of the BusinessProcessComponentList object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(int tmp) {
     this.componentId = tmp;
@@ -94,9 +97,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Sets the componentId attribute of the BusinessProcessComponentList object
+   * Sets the componentId attribute of the BusinessProcessComponentList object
    *
-   *@param  tmp  The new componentId value
+   * @param tmp The new componentId value
    */
   public void setComponentId(String tmp) {
     this.componentId = Integer.parseInt(tmp);
@@ -104,9 +107,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Gets the enabled attribute of the BusinessProcessComponentList object
+   * Gets the enabled attribute of the BusinessProcessComponentList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -114,9 +117,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Gets the processId attribute of the BusinessProcessComponentList object
+   * Gets the processId attribute of the BusinessProcessComponentList object
    *
-   *@return    The processId value
+   * @return The processId value
    */
   public int getProcessId() {
     return processId;
@@ -124,9 +127,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Gets the componentId attribute of the BusinessProcessComponentList object
+   * Gets the componentId attribute of the BusinessProcessComponentList object
    *
-   *@return    The componentId value
+   * @return The componentId value
    */
   public int getComponentId() {
     return componentId;
@@ -134,10 +137,10 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Builds a list of components based on selected filters
+   * Builds a list of components based on selected filters
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     //Get a list of business processes and store the name and the object
@@ -153,11 +156,13 @@ public class BusinessProcessComponentList extends HashMap {
         "AND c.component_id = cl.component_id ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY id ");
-    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      BusinessProcessComponent thisComponent = new BusinessProcessComponent(rs);
+      BusinessProcessComponent thisComponent = new BusinessProcessComponent(
+          rs);
       this.put(new Integer(thisComponent.getId()), thisComponent);
     }
     rs.close();
@@ -172,9 +177,9 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Adds filters to the WHERE clause of the database query
+   * Adds filters to the WHERE clause of the database query
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -193,11 +198,11 @@ public class BusinessProcessComponentList extends HashMap {
 
 
   /**
-   *  Adds parameters to the query based on the selected filters
+   * Adds parameters to the query based on the selected filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

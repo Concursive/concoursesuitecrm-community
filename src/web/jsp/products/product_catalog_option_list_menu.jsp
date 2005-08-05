@@ -22,14 +22,25 @@
   var thisConfigId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, optionId, configId, status) {
+  function displayMenu(loc, id, optionId, configId, status, trashed) {
     thisOptionId = optionId;
     thisConfigId = configId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOption", "down", 0, 0, 170, getHeight("menuOptionTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan("menuModify");
+      hideSpan("menuDelete");
+    } else {
+      showSpan("menuModify");
+      showSpan("menuDelete");
+    }
   }
   //Menu link functions
   function details() {
@@ -72,7 +83,7 @@
       </tr>
       --%>
       <dhv:permission name="admin-sysconfig-products-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -82,7 +93,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="admin-sysconfig-products-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOption()">
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOption()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

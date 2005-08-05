@@ -19,10 +19,7 @@ import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Import;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.RequestUtils;
 
 import java.io.File;
@@ -38,26 +35,27 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
- *  Perform system level maintenance, typically setup on a cron
+ * Perform system level maintenance, typically setup on a cron
  *
- *@author     matt rajkowski
- *@created    9/24/2002
- *@version    $Id: ProcessSystem.java,v 1.14 2003/12/10 21:32:17 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ProcessSystem.java,v 1.14 2003/12/10 21:32:17 mrajkowski Exp
+ *          $
+ * @created 9/24/2002
  */
 public final class ProcessSystem extends CFSModule {
 
   /**
-   *  For every cached system, the preferences are reloaded
+   * For every cached system, the preferences are reloaded
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReloadSystemPrefs(ActionContext context) {
     if (!allow(context)) {
       return ("PermissionError");
     }
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+        "ConnectionPool");
     Connection db = null;
     Iterator i = this.getSystemIterator(context);
     while (i.hasNext()) {
@@ -75,10 +73,10 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Removes all systems from the cache
+   * Removes all systems from the cache
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandClearSystems(ActionContext context) {
     if (!allow(context)) {
@@ -94,116 +92,24 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  For every system, invalidates and deletes the day's graphing data since
-   *  the graphs need to be rebuilt daily
+   * Gets an Iterator of all SystemStatus objects that are cached
    *
-   *@param  context                    Description of the Parameter
-   *@return                            Description of the Return Value
-   *@exception  java.sql.SQLException  Description of the Exception
-   */
-  public String executeCommandClearGraphData(ActionContext context) throws java.sql.SQLException {
-    clearGraphData(context);
-    deleteGraphFiles(context);
-    // Also clear any deleted (trashed) import files
-    deleteImportedRecords(context);
-    return "ProcessOK";
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandUpdateUserCache(ActionContext context) {
-    if (!allow(context)) {
-      return ("PermissionError");
-    }
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
-    Connection db = null;
-    Iterator i = this.getSystemIterator(context);
-    while (i.hasNext()) {
-      SystemStatus systemStatus = (SystemStatus) i.next();
-      try {
-        db = sqlDriver.getConnection(systemStatus.getConnectionElement());
-        systemStatus.updateHierarchy(db);
-      } catch (Exception e) {
-        e.printStackTrace();
-      } finally {
-        sqlDriver.free(db);
-      }
-    }
-    return "ProcessOK";
-  }
-
-
-  /**
-   *  Deletes all of the files in graphs
-   *
-   *@param  context  Description of the Parameter
-   */
-  private void deleteGraphFiles(ActionContext context) {
-    File graphFolder = new File(context.getServletContext().getRealPath("/") + "graphs" + fs);
-    if (graphFolder.isDirectory()) {
-      File[] files = graphFolder.listFiles();
-      if (files != null) {
-        for (int i = 0; i < files.length; i++) {
-          File thisFile = files[i];
-          thisFile.delete();
-        }
-      }
-    }
-  }
-
-
-  /**
-   *  Goes through each user and flags the graph data as invalid
-   *
-   *@param  context  Description of the Parameter
-   */
-  private void clearGraphData(ActionContext context) {
-    UserList shortChildList = null;
-    UserList fullChildList = null;
-    Iterator i = this.getSystemIterator(context);
-    while (i.hasNext()) {
-      SystemStatus thisStatus = (SystemStatus) i.next();
-      UserList thisList = thisStatus.getHierarchyList();
-      Iterator j = thisList.iterator();
-      while (j.hasNext()) {
-        User thisUser = (User) j.next();
-        shortChildList = thisUser.getShortChildList();
-        fullChildList = thisUser.getFullChildList(shortChildList, new UserList());
-        Iterator k = fullChildList.iterator();
-        while (k.hasNext()) {
-          User indUser = (User) k.next();
-          indUser.setIsValid(false, true);
-          indUser.setIsValidLead(false,true);
-          indUser.setRevenueIsValid(false, true);
-        }
-      }
-    }
-  }
-
-
-  /**
-   *  Gets an Iterator of all SystemStatus objects that are cached
-   *
-   *@param  context  Description of the Parameter
-   *@return          The systemIterator value
+   * @param context Description of the Parameter
+   * @return The systemIterator value
    */
   private Iterator getSystemIterator(ActionContext context) {
-    Hashtable globalStatus = (Hashtable) context.getServletContext().getAttribute("SystemStatus");
+    Hashtable globalStatus = (Hashtable) context.getServletContext().getAttribute(
+        "SystemStatus");
     return globalStatus.values().iterator();
   }
 
 
   /**
-   *  For each JSP found in the context path, a URL is constructed and requested
-   *  so that the server compiles the JSP
+   * For each JSP found in the context path, a URL is constructed and requested
+   * so that the server compiles the JSP
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrecompileJSPs(ActionContext context) {
     File baseDir = new File(context.getServletContext().getRealPath("/"));
@@ -213,11 +119,11 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Action to begin precompiling JSPs by specifying the directory to compile
+   * Action to begin precompiling JSPs by specifying the directory to compile
    *
-   *@param  context        Description of the Parameter
-   *@param  thisDirectory  Description of the Parameter
-   *@param  dir            Description of the Parameter
+   * @param context       Description of the Parameter
+   * @param thisDirectory Description of the Parameter
+   * @param dir           Description of the Parameter
    */
   private void precompileDirectory(ActionContext context, File thisDirectory, String dir) {
     File[] listing = thisDirectory.listFiles();
@@ -233,17 +139,18 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Method to compile a JSP by making an http request of the JSP
+   * Method to compile a JSP by making an http request of the JSP
    *
-   *@param  context   Description of the Parameter
-   *@param  thisFile  Description of the Parameter
-   *@param  dir       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param thisFile Description of the Parameter
+   * @param dir      Description of the Parameter
    */
   private void precompileJSP(ActionContext context, File thisFile, String dir) {
     if (thisFile.getName().endsWith(".jsp") &&
         !thisFile.getName().endsWith("_include.jsp") &&
         !thisFile.getName().endsWith("_menu.jsp")) {
-      String serverName = "http://" + RequestUtils.getServerUrl(context.getRequest());
+      String serverName = "http://" + RequestUtils.getServerUrl(
+          context.getRequest());
       String jsp = serverName + dir + thisFile.getName();
       try {
         URL url = new URL(jsp);
@@ -257,10 +164,10 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Currently only the localhost is allowed
+   * Currently only the localhost is allowed
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean allow(ActionContext context) {
     if (System.getProperty("DEBUG") != null) {
@@ -268,10 +175,12 @@ public final class ProcessSystem extends CFSModule {
     }
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Compare to: " + InetAddress.getLocalHost().getHostAddress());
+        System.out.println(
+            "Compare to: " + InetAddress.getLocalHost().getHostAddress());
       }
       return ("127.0.0.1".equals(context.getIpAddress()) ||
-          InetAddress.getLocalHost().getHostAddress().equals(context.getIpAddress()));
+          InetAddress.getLocalHost().getHostAddress().equals(
+              context.getIpAddress()));
     } catch (Exception e) {
       return false;
     }
@@ -279,17 +188,18 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public synchronized boolean deleteImportedRecords(ActionContext context) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ProcessSystem-> Checking imports for deletion");
     }
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+        "ConnectionPool");
     Connection db = null;
     PreparedStatement pst = null;
     Iterator i = this.getSystemIterator(context);
@@ -316,7 +226,8 @@ public final class ProcessSystem extends CFSModule {
           while (j.hasNext()) {
             int thisImportId = Integer.parseInt((String) j.next());
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("ProcessSystem-> Deleting import " + thisImportId);
+              System.out.println(
+                  "ProcessSystem-> Deleting import " + thisImportId);
             }
             pst = db.prepareStatement(
                 "DELETE FROM contact_emailaddress " +

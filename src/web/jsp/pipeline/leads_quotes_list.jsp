@@ -72,7 +72,11 @@ function reopenOpportunity(id) {
   &nbsp;<br>
 </dhv:evaluate>
 <dhv:container name="opportunities" selected="quotes" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
-  <dhv:permission name="pipeline-opportunities-add"><a href="LeadsQuotes.do?command=AddQuoteForm&headerId=<%= opportunityHeader.getId()%><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
+  <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>" >
+    <dhv:permission name="pipeline-opportunities-add">
+      <a href="LeadsQuotes.do?command=AddQuoteForm&headerId=<%= opportunityHeader.getId()%><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a>
+    </dhv:permission>
+  </dhv:evaluate>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsQuoteListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
@@ -121,7 +125,7 @@ function reopenOpportunity(id) {
     <tr class="row<%= rowid %>">
       <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuQuote', '<%= thisQuote.getId() %>', '&headerId=<%= thisQuote.getHeaderId() %><%= addLinkParams(request, "viewSource") %>' , '<%= (thisQuote.getClosed() == null) ? "true" : "false" %>');"
+         <a href="javascript:displayMenu('select<%= i %>','menuQuote', '<%= thisQuote.getId() %>', '&headerId=<%= thisQuote.getHeaderId() %><%= addLinkParams(request, "viewSource") %>' , '<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= thisQuote.isTrashed() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
          <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>

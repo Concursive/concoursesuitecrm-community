@@ -1,16 +1,17 @@
 package org.aspcfs.utils;
 
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.web.HtmlSelect;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
+import java.util.HashMap;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    May 6, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created May 6, 2004
  */
 public class CreditCardUtils {
 
@@ -27,11 +28,10 @@ public class CreditCardUtils {
   private HashMap errors = new HashMap();
 
 
-
   /**
-   *  Sets the nameOnCard attribute of the CreditCardUtils object
+   * Sets the nameOnCard attribute of the CreditCardUtils object
    *
-   * @param  tmp  The new nameOnCard value
+   * @param tmp The new nameOnCard value
    */
   public void setNameOnCard(String tmp) {
     this.nameOnCard = tmp;
@@ -39,9 +39,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Sets the paymentType attribute of the CreditCardUtils object
+   * Sets the paymentType attribute of the CreditCardUtils object
    *
-   * @param  tmp  The new paymentType value
+   * @param tmp The new paymentType value
    */
   public void setType(String tmp) {
     this.type = tmp;
@@ -49,9 +49,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Sets the number attribute of the CreditCardUtils object
+   * Sets the number attribute of the CreditCardUtils object
    *
-   * @param  tmp  The new number value
+   * @param tmp The new number value
    */
   public void setNumber(String tmp) {
     this.number = tmp;
@@ -59,9 +59,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Sets the expirationMonth attribute of the CreditCardUtils object
+   * Sets the expirationMonth attribute of the CreditCardUtils object
    *
-   * @param  tmp  The new expirationMonth value
+   * @param tmp The new expirationMonth value
    */
   public void setExpirationMonth(String tmp) {
     this.expirationMonth = tmp;
@@ -69,9 +69,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Sets the expirationYear attribute of the CreditCardUtils object
+   * Sets the expirationYear attribute of the CreditCardUtils object
    *
-   * @param  tmp  The new expirationYear value
+   * @param tmp The new expirationYear value
    */
   public void setExpirationYear(String tmp) {
     this.expirationYear = tmp;
@@ -79,9 +79,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the nameOnCard attribute of the CreditCardUtils object
+   * Gets the nameOnCard attribute of the CreditCardUtils object
    *
-   * @return    The nameOnCard value
+   * @return The nameOnCard value
    */
   public String getNameOnCard() {
     return nameOnCard;
@@ -89,9 +89,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the paymentType attribute of the CreditCardUtils object
+   * Gets the paymentType attribute of the CreditCardUtils object
    *
-   * @return    The paymentType value
+   * @return The paymentType value
    */
   public String getType() {
     return type;
@@ -99,9 +99,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the number attribute of the CreditCardUtils object
+   * Gets the number attribute of the CreditCardUtils object
    *
-   * @return    The number value
+   * @return The number value
    */
   public String getNumber() {
     return number;
@@ -109,9 +109,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the expirationMonth attribute of the CreditCardUtils object
+   * Gets the expirationMonth attribute of the CreditCardUtils object
    *
-   * @return    The expirationMonth value
+   * @return The expirationMonth value
    */
   public String getExpirationMonth() {
     return expirationMonth;
@@ -119,9 +119,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the expirationYear attribute of the CreditCardUtils object
+   * Gets the expirationYear attribute of the CreditCardUtils object
    *
-   * @return    The expirationYear value
+   * @return The expirationYear value
    */
   public String getExpirationYear() {
     return expirationYear;
@@ -129,9 +129,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the errors attribute of the CreditCardUtils object
+   * Gets the errors attribute of the CreditCardUtils object
    *
-   * @return    The errors value
+   * @return The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -139,9 +139,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the valid attribute of the CreditCardUtils object
+   * Gets the valid attribute of the CreditCardUtils object
    *
-   * @return    The valid value
+   * @return The valid value
    */
   public boolean isValid() {
     errors.clear();
@@ -154,8 +154,10 @@ public class CreditCardUtils {
     if (number == null || "".equals(number.trim())) {
       errors.put("numberError", "Credit Card number is required");
     }
-    System.out.println("CreditCardUtils -> expirationYear : " + expirationYear);
-    System.out.println("CreditCardUtils -> expirationMonth : " + expirationMonth);
+    System.out.println(
+        "CreditCardUtils -> expirationYear : " + expirationYear);
+    System.out.println(
+        "CreditCardUtils -> expirationMonth : " + expirationMonth);
     if (expirationMonth != null && !"".equals(expirationMonth.trim())) {
       if (expirationYear != null && !"".equals(expirationYear.trim())) {
         Calendar today = Calendar.getInstance();
@@ -163,7 +165,8 @@ public class CreditCardUtils {
         int month = today.get(Calendar.MONTH) + 1;
         if (year == Integer.parseInt(expirationYear)) {
           if (month + 1 > Integer.parseInt(expirationMonth)) {
-            errors.put("expirationMonthError", "The card seems to have expired");
+            errors.put(
+                "expirationMonthError", "The card seems to have expired");
           }
         }
       }
@@ -176,10 +179,10 @@ public class CreditCardUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  cardNum  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param cardNum Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean checkCardNumWithMod10(String cardNum) {
     int i = 0;
@@ -202,7 +205,8 @@ public class CreditCardUtils {
         String aStr = String.valueOf(a);
         String b = aStr.substring(0, 1);
         String c = aStr.substring(1, 2);
-        cc[i] = Math.floor(Double.parseDouble(b)) + Math.floor(Double.parseDouble(c));
+        cc[i] = Math.floor(Double.parseDouble(b)) + Math.floor(
+            Double.parseDouble(c));
       } else {
         cc[i] = a;
       }
@@ -221,10 +225,10 @@ public class CreditCardUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  cardNum  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param cardNum Description of the Parameter
+   * @return Description of the Return Value
    */
   private String cleanCardNum(String cardNum) {
     int i = 0;
@@ -249,11 +253,11 @@ public class CreditCardUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  cardType  Description of the Parameter
-   * @param  cardNum   Description of the Parameter
-   * @return           Description of the Return Value
+   * @param cardType Description of the Parameter
+   * @param cardNum  Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean checkCardValidity(String cardType, String cardNum) {
     String validCard = "";
@@ -264,7 +268,8 @@ public class CreditCardUtils {
 
     // check if the card type is valid
     if ((!cardType.equals(this.VISA)) && (!cardType.equals(this.MASTER_CARD)) &&
-        (!cardType.equals(this.AMERICAN_EXPRESS)) && (!cardType.equals(this.DISCOVER))) {
+        (!cardType.equals(this.AMERICAN_EXPRESS)) && (!cardType.equals(
+            this.DISCOVER))) {
       errors.put("typeError", "credit card type is invalid");
       return false;
     } else {
@@ -282,7 +287,8 @@ public class CreditCardUtils {
           ((cardType.equals("D")) && (cardStart == 6)));
       if (!(cardStartOK)) {
         // card number's first digit doesn't match card type
-        errors.put("numberError", "card number does not match the card type selected.");
+        errors.put(
+            "numberError", "card number does not match the card type selected.");
         return false;
       }
       // the card number is good now, so check to make sure
@@ -294,7 +300,8 @@ public class CreditCardUtils {
           ((cardType.equals("D")) && (cardLength == 16)));
       if (!(cardLengthOK)) {
         // not the right length
-        errors.put("numberError", "make sure you've entered all of the digits on your card.");
+        errors.put(
+            "numberError", "make sure you've entered all of the digits on your card.");
         return false;
       }
 
@@ -302,7 +309,8 @@ public class CreditCardUtils {
       if (checkCardNumWithMod10(validCard)) {
         return true;
       } else {
-        errors.put("numberError", "Please make sure you've entered your card number correctly.");
+        errors.put(
+            "numberError", "Please make sure you've entered your card number correctly.");
         return false;
       }
     } else {
@@ -312,9 +320,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Sets the requestItems attribute of the CreditCardUtils object
+   * Sets the requestItems attribute of the CreditCardUtils object
    *
-   * @param  request  The new requestItems value
+   * @param request The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
     if (request.getParameter("nameOnCard") != null) {
@@ -336,9 +344,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
@@ -346,9 +354,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the selectExpirationMonth attribute of the CreditCardUtils object
+   * Gets the selectExpirationMonth attribute of the CreditCardUtils object
    *
-   * @return    The selectExpirationMonth value
+   * @return The selectExpirationMonth value
    */
   public HtmlSelect getSelectExpirationMonth() {
     HtmlSelect select = new HtmlSelect();
@@ -361,9 +369,9 @@ public class CreditCardUtils {
 
 
   /**
-   *  Gets the selectExpirationYear attribute of the CreditCardUtils object
+   * Gets the selectExpirationYear attribute of the CreditCardUtils object
    *
-   * @return    The selectExpirationYear value
+   * @return The selectExpirationYear value
    */
   public HtmlSelect getSelectExpirationYear() {
     HtmlSelect select = new HtmlSelect();
@@ -378,20 +386,26 @@ public class CreditCardUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String displayOnlyLastFour() {
     String display = "";
     if (number != null) {
       int length = number.length();
-      for (int i = 0; i < length ; ++i) {
+      for (int i = 0; i < length; ++i) {
         char c = number.charAt(i);
         if (c != ' ' && c != '-') {
-          if (i < length - 4) { display += "x"; }
-          if (i == length - 4) { display += "-" + c; }
-          if (i > length - 4) { display += c; }
+          if (i < length - 4) {
+            display += "x";
+          }
+          if (i == length - 4) {
+            display += "-" + c;
+          }
+          if (i > length - 4) {
+            display += c;
+          }
         }
       }
     }

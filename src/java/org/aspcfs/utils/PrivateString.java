@@ -15,18 +15,22 @@
  */
 package org.aspcfs.utils;
 
-import java.security.*;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import java.io.*;
-import sun.misc.*;
-import javax.crypto.*;
-import com.sun.crypto.provider.*;
+import java.security.Key;
+import java.security.SecureRandom;
+import java.security.Security;
 
 /**
- *  Encrypts and decrypts data using a key
+ * Encrypts and decrypts data using a key
  *
- *@author     matt rajkowski
- *@created    August 22, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created August 22, 2002
  */
 public class PrivateString {
 
@@ -34,15 +38,16 @@ public class PrivateString {
 
 
   /**
-   *  Constructor for the PrivateString object
+   * Constructor for the PrivateString object
    */
-  public PrivateString() { }
+  public PrivateString() {
+  }
 
 
   /**
-   *  Constructor for the PrivateString object
+   * Constructor for the PrivateString object
    *
-   *@param  file  Description of the Parameter
+   * @param file Description of the Parameter
    */
   public PrivateString(String file) {
     key = PrivateString.generateKeyFile(file);
@@ -50,9 +55,9 @@ public class PrivateString {
 
 
   /**
-   *  Sets the key attribute of the PrivateString object
+   * Sets the key attribute of the PrivateString object
    *
-   *@param  tmp  The new key value
+   * @param tmp The new key value
    */
   public void setKey(Key tmp) {
     this.key = tmp;
@@ -60,9 +65,9 @@ public class PrivateString {
 
 
   /**
-   *  Gets the key attribute of the PrivateString object
+   * Gets the key attribute of the PrivateString object
    *
-   *@return    The key value
+   * @return The key value
    */
   public Key getKey() {
     return key;
@@ -70,10 +75,10 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  filename  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param filename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static synchronized Key generateKeyFile(String filename) {
     try {
@@ -100,10 +105,10 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  keyFilename  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param keyFilename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Key loadKey(String keyFilename) {
     try {
@@ -113,17 +118,18 @@ public class PrivateString {
       in.close();
       return key;
     } catch (Exception e) {
-      System.out.println("PrivateString-> Error loading key at: " + keyFilename);
+      System.out.println(
+          "PrivateString-> Error loading key at: " + keyFilename);
       return null;
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  keyFile  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param keyFile Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Key loadKey(File keyFile) {
     try {
@@ -139,11 +145,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inString     Description of the Parameter
-   *@param  keyFilename  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param inString    Description of the Parameter
+   * @param keyFilename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String encrypt(String keyFilename, String inString) {
     Key key = PrivateString.loadKey(keyFilename);
@@ -152,11 +158,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  key       Description of the Parameter
-   *@param  inString  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param key      Description of the Parameter
+   * @param inString Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String encrypt(Key key, String inString) {
     try {
@@ -175,11 +181,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  inString     Description of the Parameter
-   *@param  keyFilename  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param inString    Description of the Parameter
+   * @param keyFilename Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String decrypt(String keyFilename, String inString) {
     Key key = PrivateString.loadKey(keyFilename);
@@ -188,11 +194,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  key       Description of the Parameter
-   *@param  inString  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param key      Description of the Parameter
+   * @param inString Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String decrypt(Key key, String inString) {
     try {
@@ -216,11 +222,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  keyFilename  Description of the Parameter
-   *@param  inString     Description of the Parameter
-   *@return              Description of the Return Value
+   * @param keyFilename Description of the Parameter
+   * @param inString    Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String encryptAsymmetric(String keyFilename, String inString) {
     Key key = PrivateString.loadKey(keyFilename);
@@ -229,11 +235,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  keyFile   Description of the Parameter
-   *@param  inString  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param keyFile  Description of the Parameter
+   * @param inString Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String encryptAsymmetric(File keyFile, String inString) {
     Key key = PrivateString.loadKey(keyFile);
@@ -242,16 +248,17 @@ public class PrivateString {
 
 
   /**
-   *  Encrypts a string using a public key, can only be decrypted using the
-   *  private key
+   * Encrypts a string using a public key, can only be decrypted using the
+   * private key
    *
-   *@param  inString   Description of the Parameter
-   *@param  publicKey  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param inString  Description of the Parameter
+   * @param publicKey Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String encryptAsymmetric(Key publicKey, String inString) {
     try {
-      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+      Security.addProvider(
+          new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
       Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
       cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -268,11 +275,11 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  keyFilename  Description of the Parameter
-   *@param  inString     Description of the Parameter
-   *@return              Description of the Return Value
+   * @param keyFilename Description of the Parameter
+   * @param inString    Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String decryptAsymmetric(String keyFilename, String inString) {
     Key key = PrivateString.loadKey(keyFilename);
@@ -281,16 +288,17 @@ public class PrivateString {
 
 
   /**
-   *  Decrypts a base64 encoded string, with a private key, that was encoded
-   *  using a public key
+   * Decrypts a base64 encoded string, with a private key, that was encoded
+   * using a public key
    *
-   *@param  inString    Description of the Parameter
-   *@param  privateKey  Description of the Parameter
-   *@return             Description of the Return Value
+   * @param inString   Description of the Parameter
+   * @param privateKey Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String decryptAsymmetric(Key privateKey, String inString) {
     try {
-      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+      Security.addProvider(
+          new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
       Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
       cipher.init(Cipher.DECRYPT_MODE, privateKey);
@@ -310,9 +318,9 @@ public class PrivateString {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public static void main(String args[]) {
 

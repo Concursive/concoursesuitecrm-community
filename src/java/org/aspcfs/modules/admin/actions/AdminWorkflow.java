@@ -16,28 +16,32 @@
 package org.aspcfs.modules.admin.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.apps.workFlowManager.BusinessProcess;
+import org.aspcfs.apps.workFlowManager.BusinessProcessComponent;
+import org.aspcfs.apps.workFlowManager.BusinessProcessList;
+import org.aspcfs.controller.objectHookManager.ObjectHookList;
 import org.aspcfs.modules.actions.CFSModule;
-import java.sql.Connection;
 import org.aspcfs.modules.admin.base.PermissionCategory;
-import java.util.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.controller.objectHookManager.*;
+
 import java.io.File;
+import java.sql.Connection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
- *  Submodule that generates workflow steps
+ * Submodule that generates workflow steps
  *
- *@author     matt rajkowski
- *@created    May 30, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created May 30, 2003
  */
 public final class AdminWorkflow extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     Connection db = null;
@@ -50,16 +54,19 @@ public final class AdminWorkflow extends CFSModule {
     try {
       db = this.getConnection(context);
       //Load the category for the web trails
-      PermissionCategory category = new PermissionCategory(db, Integer.parseInt(moduleId));
+      PermissionCategory category = new PermissionCategory(
+          db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", category);
       //Load the process from the params
-      BusinessProcess process = new BusinessProcess(db, Integer.parseInt(param));
+      BusinessProcess process = new BusinessProcess(
+          db, Integer.parseInt(param));
       process.buildResources(db);
       //Take all of the components for the selected process and assign
       //a step id so that the workflow can be conveyed visually
       LinkedHashMap steps = new LinkedHashMap();
       //Put the starting component in place
-      BusinessProcessComponent component = process.getComponent(process.getStartId());
+      BusinessProcessComponent component = process.getComponent(
+          process.getStartId());
       steps.put(new Integer(component.getId()), component);
       //Now put each child result in the list
       addChildren(steps, component);
@@ -76,11 +83,11 @@ public final class AdminWorkflow extends CFSModule {
 
 
   /**
-   *  Adds children to the step/component list... children are either a result
-   *  of the parent component being true or false after execution.
+   * Adds children to the step/component list... children are either a result
+   * of the parent component being true or false after execution.
    *
-   *@param  map        The feature to be added to the Children attribute
-   *@param  component  The feature to be added to the Children attribute
+   * @param map       The feature to be added to the Children attribute
+   * @param component The feature to be added to the Children attribute
    */
   private void addChildren(LinkedHashMap map, BusinessProcessComponent component) {
     Iterator children = component.getAllChildren().iterator();
@@ -92,11 +99,12 @@ public final class AdminWorkflow extends CFSModule {
       addChildren(map, thisComponent);
     }
   }
-  
+
   public String executeCommandSave(ActionContext context) {
     Connection db = null;
     //Save the processList for the current system
-    File xmlFile = new File(this.getPath(context) + this.getDbName(context) + fs + "workflow.xml");
+    File xmlFile = new File(
+        this.getPath(context) + this.getDbName(context) + fs + "workflow.xml");
     //Read in any processes
     BusinessProcessList processList = new BusinessProcessList();
     processList.buildList(xmlFile);

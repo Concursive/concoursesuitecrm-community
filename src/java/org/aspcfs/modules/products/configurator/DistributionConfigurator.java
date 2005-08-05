@@ -15,21 +15,19 @@
  */
 package org.aspcfs.modules.products.configurator;
 
-import org.aspcfs.utils.DatabaseUtils;
 
-import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     ananth
- * @created    September 15, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created September 15, 2004
  */
 public class DistributionConfigurator extends LookupListConfigurator {
 
   /**
-   *  Constructor for the DistributionConfigurator object
+   * Constructor for the DistributionConfigurator object
    */
   public DistributionConfigurator() {
     // set the name

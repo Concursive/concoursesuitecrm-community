@@ -15,22 +15,23 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    July 23, 2001
- *@version    $Id: Requirement.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: Requirement.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
+ *          $
+ * @created July 23, 2001
  */
 public class Requirement extends GenericBean {
 
@@ -75,18 +76,17 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Constructor for the Assignment object
-   *
-   *@since
+   * Constructor for the Assignment object
    */
-  public Requirement() { }
+  public Requirement() {
+  }
 
 
   /**
-   *  Constructor for the Requirement object
+   * Constructor for the Requirement object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Requirement(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -94,12 +94,12 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Constructor for the Requirement object
+   * Constructor for the Requirement object
    *
-   *@param  db                Description of the Parameter
-   *@param  requirementId     Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param requirementId Description of the Parameter
+   * @param projectId     Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Requirement(Connection db, int requirementId, int projectId) throws SQLException {
     this.projectId = projectId;
@@ -108,11 +108,11 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Constructor for the Requirement object
+   * Constructor for the Requirement object
    *
-   *@param  db                Description of the Parameter
-   *@param  requirementId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param requirementId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Requirement(Connection db, int requirementId) throws SQLException {
     queryRecord(db, requirementId);
@@ -120,11 +120,11 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  requirementId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param requirementId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void queryRecord(Connection db, int requirementId) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -159,10 +159,10 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //project_requirements table
@@ -199,9 +199,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the project attribute of the Requirement object
+   * Sets the project attribute of the Requirement object
    *
-   *@param  tmp  The new project value
+   * @param tmp The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -209,9 +209,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Requirement object
+   * Sets the projectId attribute of the Requirement object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -219,9 +219,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Requirement object
+   * Sets the projectId attribute of the Requirement object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -229,9 +229,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Requirement object
+   * Sets the id attribute of the Requirement object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -239,9 +239,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Requirement object
+   * Sets the id attribute of the Requirement object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -249,9 +249,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the submittedBy attribute of the Requirement object
+   * Sets the submittedBy attribute of the Requirement object
    *
-   *@param  tmp  The new submittedBy value
+   * @param tmp The new submittedBy value
    */
   public void setSubmittedBy(String tmp) {
     this.submittedBy = tmp;
@@ -259,9 +259,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the departmentBy attribute of the Requirement object
+   * Sets the departmentBy attribute of the Requirement object
    *
-   *@param  tmp  The new departmentBy value
+   * @param tmp The new departmentBy value
    */
   public void setDepartmentBy(String tmp) {
     this.departmentBy = tmp;
@@ -269,9 +269,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the shortDescription attribute of the Requirement object
+   * Sets the shortDescription attribute of the Requirement object
    *
-   *@param  tmp  The new shortDescription value
+   * @param tmp The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -279,9 +279,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Requirement object
+   * Sets the description attribute of the Requirement object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -289,9 +289,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the dateReceived attribute of the Requirement object
+   * Sets the dateReceived attribute of the Requirement object
    *
-   *@param  tmp  The new dateReceived value
+   * @param tmp The new dateReceived value
    */
   public void setDateReceived(java.sql.Timestamp tmp) {
     this.dateReceived = tmp;
@@ -299,9 +299,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the dateReceived attribute of the Requirement object
+   * Sets the dateReceived attribute of the Requirement object
    *
-   *@param  tmp  The new dateReceived value
+   * @param tmp The new dateReceived value
    */
   public void setDateReceived(String tmp) {
     try {
@@ -315,9 +315,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoe attribute of the Requirement object
+   * Sets the estimatedLoe attribute of the Requirement object
    *
-   *@param  tmp  The new estimatedLoe value
+   * @param tmp The new estimatedLoe value
    */
   public void setEstimatedLoe(int tmp) {
     this.estimatedLoe = tmp;
@@ -325,9 +325,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoe attribute of the Requirement object
+   * Sets the estimatedLoe attribute of the Requirement object
    *
-   *@param  tmp  The new estimatedLoe value
+   * @param tmp The new estimatedLoe value
    */
   public void setEstimatedLoe(String tmp) {
     this.estimatedLoe = Integer.parseInt(tmp);
@@ -335,9 +335,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoeTypeId attribute of the Requirement object
+   * Sets the estimatedLoeTypeId attribute of the Requirement object
    *
-   *@param  tmp  The new estimatedLoeTypeId value
+   * @param tmp The new estimatedLoeTypeId value
    */
   public void setEstimatedLoeTypeId(int tmp) {
     this.estimatedLoeTypeId = tmp;
@@ -345,9 +345,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoeTypeId attribute of the Requirement object
+   * Sets the estimatedLoeTypeId attribute of the Requirement object
    *
-   *@param  tmp  The new estimatedLoeTypeId value
+   * @param tmp The new estimatedLoeTypeId value
    */
   public void setEstimatedLoeTypeId(String tmp) {
     this.estimatedLoeTypeId = Integer.parseInt(tmp);
@@ -355,9 +355,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the estimatedLoeType attribute of the Requirement object
+   * Sets the estimatedLoeType attribute of the Requirement object
    *
-   *@param  tmp  The new estimatedLoeType value
+   * @param tmp The new estimatedLoeType value
    */
   public void setEstimatedLoeType(String tmp) {
     this.estimatedLoeType = tmp;
@@ -365,9 +365,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the actualLoe attribute of the Requirement object
+   * Sets the actualLoe attribute of the Requirement object
    *
-   *@param  tmp  The new actualLoe value
+   * @param tmp The new actualLoe value
    */
   public void setActualLoe(int tmp) {
     this.actualLoe = tmp;
@@ -375,9 +375,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the actualLoe attribute of the Requirement object
+   * Sets the actualLoe attribute of the Requirement object
    *
-   *@param  tmp  The new actualLoe value
+   * @param tmp The new actualLoe value
    */
   public void setActualLoe(String tmp) {
     this.actualLoe = Integer.parseInt(tmp);
@@ -385,9 +385,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the actualLoeTypeId attribute of the Requirement object
+   * Sets the actualLoeTypeId attribute of the Requirement object
    *
-   *@param  tmp  The new actualLoeTypeId value
+   * @param tmp The new actualLoeTypeId value
    */
   public void setActualLoeTypeId(int tmp) {
     this.actualLoeTypeId = tmp;
@@ -395,9 +395,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the actualLoeTypeId attribute of the Requirement object
+   * Sets the actualLoeTypeId attribute of the Requirement object
    *
-   *@param  tmp  The new actualLoeTypeId value
+   * @param tmp The new actualLoeTypeId value
    */
   public void setActualLoeTypeId(String tmp) {
     this.actualLoeTypeId = Integer.parseInt(tmp);
@@ -405,9 +405,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the actualLoeType attribute of the Requirement object
+   * Sets the actualLoeType attribute of the Requirement object
    *
-   *@param  tmp  The new actualLoeType value
+   * @param tmp The new actualLoeType value
    */
   public void setActualLoeType(String tmp) {
     this.actualLoeType = tmp;
@@ -415,9 +415,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the Requirement object
+   * Sets the startDate attribute of the Requirement object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
@@ -425,9 +425,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the startDate attribute of the Requirement object
+   * Sets the startDate attribute of the Requirement object
    *
-   *@param  tmp  The new startDate value
+   * @param tmp The new startDate value
    */
   public void setStartDate(String tmp) {
     startDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -435,9 +435,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the deadline attribute of the Requirement object
+   * Sets the deadline attribute of the Requirement object
    *
-   *@param  tmp  The new deadline value
+   * @param tmp The new deadline value
    */
   public void setDeadline(java.sql.Timestamp tmp) {
     this.deadline = tmp;
@@ -445,9 +445,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the deadline attribute of the Requirement object
+   * Sets the deadline attribute of the Requirement object
    *
-   *@param  tmp  The new deadline value
+   * @param tmp The new deadline value
    */
   public void setDeadline(String tmp) {
     deadline = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -455,9 +455,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approved attribute of the Requirement object
+   * Sets the approved attribute of the Requirement object
    *
-   *@param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(boolean tmp) {
     this.approved = tmp;
@@ -465,9 +465,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approved attribute of the Requirement object
+   * Sets the approved attribute of the Requirement object
    *
-   *@param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(String tmp) {
     approved = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -475,9 +475,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approvedBy attribute of the Requirement object
+   * Sets the approvedBy attribute of the Requirement object
    *
-   *@param  tmp  The new approvedBy value
+   * @param tmp The new approvedBy value
    */
   public void setApprovedBy(int tmp) {
     this.approvedBy = tmp;
@@ -485,9 +485,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approvedBy attribute of the Requirement object
+   * Sets the approvedBy attribute of the Requirement object
    *
-   *@param  tmp  The new approvedBy value
+   * @param tmp The new approvedBy value
    */
   public void setApprovedBy(String tmp) {
     this.approvedBy = Integer.parseInt(tmp);
@@ -495,9 +495,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approvedByString attribute of the Requirement object
+   * Sets the approvedByString attribute of the Requirement object
    *
-   *@param  tmp  The new approvedByString value
+   * @param tmp The new approvedByString value
    */
   public void setApprovedByString(String tmp) {
     this.approvedByString = tmp;
@@ -505,9 +505,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approvalDate attribute of the Requirement object
+   * Sets the approvalDate attribute of the Requirement object
    *
-   *@param  tmp  The new approvalDate value
+   * @param tmp The new approvalDate value
    */
   public void setApprovalDate(java.sql.Timestamp tmp) {
     approvalDate = tmp;
@@ -515,9 +515,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the approvalDate attribute of the Requirement object
+   * Sets the approvalDate attribute of the Requirement object
    *
-   *@param  tmp  The new approvalDate value
+   * @param tmp The new approvalDate value
    */
   public void setApprovalDate(String tmp) {
     this.approvalDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -525,9 +525,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the closedBy attribute of the Requirement object
+   * Sets the closedBy attribute of the Requirement object
    *
-   *@param  tmp  The new closedBy value
+   * @param tmp The new closedBy value
    */
   public void setClosedBy(int tmp) {
     closedBy = tmp;
@@ -535,9 +535,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the closedBy attribute of the Requirement object
+   * Sets the closedBy attribute of the Requirement object
    *
-   *@param  tmp  The new closedBy value
+   * @param tmp The new closedBy value
    */
   public void setClosedBy(String tmp) {
     closedBy = Integer.parseInt(tmp);
@@ -545,9 +545,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Requirement object
+   * Sets the closed attribute of the Requirement object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(boolean tmp) {
     this.closed = tmp;
@@ -555,9 +555,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Requirement object
+   * Sets the closed attribute of the Requirement object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     closed = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -565,9 +565,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the Requirement object
+   * Sets the closeDate attribute of the Requirement object
    *
-   *@param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(java.sql.Timestamp tmp) {
     this.closeDate = tmp;
@@ -575,9 +575,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the Requirement object
+   * Sets the closeDate attribute of the Requirement object
    *
-   *@param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(String tmp) {
     this.closeDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -585,9 +585,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Requirement object
+   * Sets the enteredBy attribute of the Requirement object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -595,9 +595,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Requirement object
+   * Sets the enteredBy attribute of the Requirement object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -605,9 +605,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Requirement object
+   * Sets the entered attribute of the Requirement object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -615,9 +615,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Requirement object
+   * Sets the entered attribute of the Requirement object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -625,9 +625,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Requirement object
+   * Sets the modified attribute of the Requirement object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -635,9 +635,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Requirement object
+   * Sets the modified attribute of the Requirement object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -645,9 +645,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Requirement object
+   * Sets the modifiedBy attribute of the Requirement object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -662,9 +662,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Requirement object
+   * Sets the modifiedBy attribute of the Requirement object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.setModifiedBy(Integer.parseInt(tmp));
@@ -672,9 +672,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the treeOpen attribute of the Requirement object
+   * Sets the treeOpen attribute of the Requirement object
    *
-   *@param  tmp  The new treeOpen value
+   * @param tmp The new treeOpen value
    */
   public void setTreeOpen(boolean tmp) {
     this.treeOpen = tmp;
@@ -682,9 +682,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the planActivityCount attribute of the Requirement object
+   * Sets the planActivityCount attribute of the Requirement object
    *
-   *@param  tmp  The new planActivityCount value
+   * @param tmp The new planActivityCount value
    */
   public void setPlanActivityCount(int tmp) {
     this.planActivityCount = tmp;
@@ -692,9 +692,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the planClosedCount attribute of the Requirement object
+   * Sets the planClosedCount attribute of the Requirement object
    *
-   *@param  tmp  The new planClosedCount value
+   * @param tmp The new planClosedCount value
    */
   public void setPlanClosedCount(int tmp) {
     this.planClosedCount = tmp;
@@ -702,9 +702,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the startDateTimeZone attribute of the Requirement object
+   * Sets the startDateTimeZone attribute of the Requirement object
    *
-   *@param  tmp  The new startDateTimeZone value
+   * @param tmp The new startDateTimeZone value
    */
   public void setStartDateTimeZone(String tmp) {
     this.startDateTimeZone = tmp;
@@ -712,9 +712,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the deadlineTimeZone attribute of the Requirement object
+   * Sets the deadlineTimeZone attribute of the Requirement object
    *
-   *@param  tmp  The new deadlineTimeZone value
+   * @param tmp The new deadlineTimeZone value
    */
   public void setDeadlineTimeZone(String tmp) {
     this.deadlineTimeZone = tmp;
@@ -722,9 +722,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the startDateTimeZone attribute of the Requirement object
+   * Gets the startDateTimeZone attribute of the Requirement object
    *
-   *@return    The startDateTimeZone value
+   * @return The startDateTimeZone value
    */
   public String getStartDateTimeZone() {
     return startDateTimeZone;
@@ -732,9 +732,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the deadlineTimeZone attribute of the Requirement object
+   * Gets the deadlineTimeZone attribute of the Requirement object
    *
-   *@return    The deadlineTimeZone value
+   * @return The deadlineTimeZone value
    */
   public String getDeadlineTimeZone() {
     return deadlineTimeZone;
@@ -742,9 +742,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the project attribute of the Requirement object
+   * Gets the project attribute of the Requirement object
    *
-   *@return    The project value
+   * @return The project value
    */
   public Project getProject() {
     return project;
@@ -752,9 +752,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the Requirement object
+   * Gets the projectId attribute of the Requirement object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -762,9 +762,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Requirement object
+   * Gets the id attribute of the Requirement object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -772,9 +772,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the submittedBy attribute of the Requirement object
+   * Gets the submittedBy attribute of the Requirement object
    *
-   *@return    The submittedBy value
+   * @return The submittedBy value
    */
   public String getSubmittedBy() {
     return submittedBy;
@@ -782,9 +782,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the departmentBy attribute of the Requirement object
+   * Gets the departmentBy attribute of the Requirement object
    *
-   *@return    The departmentBy value
+   * @return The departmentBy value
    */
   public String getDepartmentBy() {
     return departmentBy;
@@ -792,9 +792,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the shortDescription attribute of the Requirement object
+   * Gets the shortDescription attribute of the Requirement object
    *
-   *@return    The shortDescription value
+   * @return The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -802,9 +802,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Requirement object
+   * Gets the description attribute of the Requirement object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -812,9 +812,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the dateReceived attribute of the Requirement object
+   * Gets the dateReceived attribute of the Requirement object
    *
-   *@return    The dateReceived value
+   * @return The dateReceived value
    */
   public Timestamp getDateReceived() {
     return dateReceived;
@@ -822,9 +822,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoe attribute of the Requirement object
+   * Gets the estimatedLoe attribute of the Requirement object
    *
-   *@return    The estimatedLoe value
+   * @return The estimatedLoe value
    */
   public int getEstimatedLoe() {
     return estimatedLoe;
@@ -832,9 +832,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeValue attribute of the Requirement object
+   * Gets the estimatedLoeValue attribute of the Requirement object
    *
-   *@return    The estimatedLoeValue value
+   * @return The estimatedLoeValue value
    */
   public String getEstimatedLoeValue() {
     return (estimatedLoe == -1 ? "" : "" + estimatedLoe);
@@ -842,9 +842,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeTypeId attribute of the Requirement object
+   * Gets the estimatedLoeTypeId attribute of the Requirement object
    *
-   *@return    The estimatedLoeTypeId value
+   * @return The estimatedLoeTypeId value
    */
   public int getEstimatedLoeTypeId() {
     return estimatedLoeTypeId;
@@ -852,9 +852,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeType attribute of the Requirement object
+   * Gets the estimatedLoeType attribute of the Requirement object
    *
-   *@return    The estimatedLoeType value
+   * @return The estimatedLoeType value
    */
   public String getEstimatedLoeType() {
     return estimatedLoeType;
@@ -862,9 +862,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the actualLoe attribute of the Requirement object
+   * Gets the actualLoe attribute of the Requirement object
    *
-   *@return    The actualLoe value
+   * @return The actualLoe value
    */
   public int getActualLoe() {
     return actualLoe;
@@ -872,9 +872,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeValue attribute of the Requirement object
+   * Gets the actualLoeValue attribute of the Requirement object
    *
-   *@return    The actualLoeValue value
+   * @return The actualLoeValue value
    */
   public String getActualLoeValue() {
     return (actualLoe == -1 ? "" : "" + actualLoe);
@@ -882,9 +882,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeTypeId attribute of the Requirement object
+   * Gets the actualLoeTypeId attribute of the Requirement object
    *
-   *@return    The actualLoeTypeId value
+   * @return The actualLoeTypeId value
    */
   public int getActualLoeTypeId() {
     return actualLoeTypeId;
@@ -892,9 +892,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeType attribute of the Requirement object
+   * Gets the actualLoeType attribute of the Requirement object
    *
-   *@return    The actualLoeType value
+   * @return The actualLoeType value
    */
   public String getActualLoeType() {
     return actualLoeType;
@@ -902,9 +902,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the estimatedLoeString attribute of the Requirement object
+   * Gets the estimatedLoeString attribute of the Requirement object
    *
-   *@return    The estimatedLoeString value
+   * @return The estimatedLoeString value
    */
   public String getEstimatedLoeString() {
     if (estimatedLoe == -1) {
@@ -912,7 +912,8 @@ public class Requirement extends GenericBean {
     } else {
       String loeTmp = estimatedLoeType;
       if (loeTmp.endsWith("(s)")) {
-        return estimatedLoe + " " + estimatedLoeType.substring(0, estimatedLoeType.indexOf("(s)")) + (estimatedLoe == 1 ? "" : "s");
+        return estimatedLoe + " " + estimatedLoeType.substring(
+            0, estimatedLoeType.indexOf("(s)")) + (estimatedLoe == 1 ? "" : "s");
       } else {
         return loeTmp;
       }
@@ -921,9 +922,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the actualLoeString attribute of the Requirement object
+   * Gets the actualLoeString attribute of the Requirement object
    *
-   *@return    The actualLoeString value
+   * @return The actualLoeString value
    */
   public String getActualLoeString() {
     if (actualLoe == -1) {
@@ -931,7 +932,8 @@ public class Requirement extends GenericBean {
     } else {
       String loeTmp = actualLoeType;
       if (loeTmp.endsWith("(s)")) {
-        return actualLoe + " " + actualLoeType.substring(0, actualLoeType.indexOf("(s)")) + (actualLoe == 1 ? "" : "s");
+        return actualLoe + " " + actualLoeType.substring(
+            0, actualLoeType.indexOf("(s)")) + (actualLoe == 1 ? "" : "s");
       } else {
         return loeTmp;
       }
@@ -940,9 +942,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the startDate attribute of the Requirement object
+   * Gets the startDate attribute of the Requirement object
    *
-   *@return    The startDate value
+   * @return The startDate value
    */
   public java.sql.Timestamp getStartDate() {
     return startDate;
@@ -950,9 +952,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the startDateString attribute of the Requirement object
+   * Gets the startDateString attribute of the Requirement object
    *
-   *@return    The startDateString value
+   * @return The startDateString value
    */
   public String getStartDateString() {
     try {
@@ -964,9 +966,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the startDateValue attribute of the Requirement object
+   * Gets the startDateValue attribute of the Requirement object
    *
-   *@return    The startDateValue value
+   * @return The startDateValue value
    */
   public String getStartDateValue() {
     try {
@@ -978,13 +980,14 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the startDateDateTimeString attribute of the Requirement object
+   * Gets the startDateDateTimeString attribute of the Requirement object
    *
-   *@return    The startDateDateTimeString value
+   * @return The startDateDateTimeString value
    */
   public String getStartDateDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startDate);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(startDate);
     } catch (NullPointerException e) {
     }
     return "--";
@@ -992,13 +995,14 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the startDateDateTimeValue attribute of the Requirement object
+   * Gets the startDateDateTimeValue attribute of the Requirement object
    *
-   *@return    The startDateDateTimeValue value
+   * @return The startDateDateTimeValue value
    */
   public String getStartDateDateTimeValue() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startDate);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(startDate);
     } catch (NullPointerException e) {
     }
     return "";
@@ -1006,9 +1010,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the deadline attribute of the Requirement object
+   * Gets the deadline attribute of the Requirement object
    *
-   *@return    The deadline value
+   * @return The deadline value
    */
   public java.sql.Timestamp getDeadline() {
     return deadline;
@@ -1016,9 +1020,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the deadlineString attribute of the Requirement object
+   * Gets the deadlineString attribute of the Requirement object
    *
-   *@return    The deadlineString value
+   * @return The deadlineString value
    */
   public String getDeadlineString() {
     try {
@@ -1030,9 +1034,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the deadlineValue attribute of the Requirement object
+   * Gets the deadlineValue attribute of the Requirement object
    *
-   *@return    The deadlineValue value
+   * @return The deadlineValue value
    */
   public String getDeadlineValue() {
     try {
@@ -1044,13 +1048,14 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the deadlineDateTimeString attribute of the Requirement object
+   * Gets the deadlineDateTimeString attribute of the Requirement object
    *
-   *@return    The deadlineDateTimeString value
+   * @return The deadlineDateTimeString value
    */
   public String getDeadlineDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(deadline);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(deadline);
     } catch (NullPointerException e) {
     }
     return "--";
@@ -1058,13 +1063,14 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the deadlineDateTimeValue attribute of the Requirement object
+   * Gets the deadlineDateTimeValue attribute of the Requirement object
    *
-   *@return    The deadlineDateTimeValue value
+   * @return The deadlineDateTimeValue value
    */
   public String getDeadlineDateTimeValue() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(deadline);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(deadline);
     } catch (NullPointerException e) {
     }
     return "";
@@ -1072,9 +1078,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the approved attribute of the Requirement object
+   * Gets the approved attribute of the Requirement object
    *
-   *@return    The approved value
+   * @return The approved value
    */
   public boolean getApproved() {
     return approved;
@@ -1082,9 +1088,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the approvedBy attribute of the Requirement object
+   * Gets the approvedBy attribute of the Requirement object
    *
-   *@return    The approvedBy value
+   * @return The approvedBy value
    */
   public int getApprovedBy() {
     return approvedBy;
@@ -1092,9 +1098,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the approvedByString attribute of the Requirement object
+   * Gets the approvedByString attribute of the Requirement object
    *
-   *@return    The approvedByString value
+   * @return The approvedByString value
    */
   public String getApprovedByString() {
     return approvedByString;
@@ -1102,9 +1108,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the approvalDate attribute of the Requirement object
+   * Gets the approvalDate attribute of the Requirement object
    *
-   *@return    The approvalDate value
+   * @return The approvalDate value
    */
   public java.sql.Timestamp getApprovalDate() {
     return approvalDate;
@@ -1112,9 +1118,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the closedBy attribute of the Requirement object
+   * Gets the closedBy attribute of the Requirement object
    *
-   *@return    The closedBy value
+   * @return The closedBy value
    */
   public int getClosedBy() {
     return closedBy;
@@ -1122,9 +1128,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the closeDate attribute of the Requirement object
+   * Gets the closeDate attribute of the Requirement object
    *
-   *@return    The closeDate value
+   * @return The closeDate value
    */
   public java.sql.Timestamp getCloseDate() {
     return closeDate;
@@ -1132,9 +1138,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the Requirement object
+   * Gets the closed attribute of the Requirement object
    *
-   *@return    The closed value
+   * @return The closed value
    */
   public boolean getClosed() {
     return (closeDate != null);
@@ -1142,9 +1148,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Requirement object
+   * Gets the enteredBy attribute of the Requirement object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1152,9 +1158,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Requirement object
+   * Gets the entered attribute of the Requirement object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1162,9 +1168,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Requirement object
+   * Gets the enteredString attribute of the Requirement object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -1176,13 +1182,14 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the Requirement object
+   * Gets the enteredDateTimeString attribute of the Requirement object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -1190,9 +1197,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Requirement object
+   * Gets the modified attribute of the Requirement object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -1200,9 +1207,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Requirement object
+   * Gets the modifiedString attribute of the Requirement object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     if (modified != null) {
@@ -1214,13 +1221,14 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the Requirement object
+   * Gets the modifiedDateTimeString attribute of the Requirement object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -1228,9 +1236,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Requirement object
+   * Gets the modifiedBy attribute of the Requirement object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1238,9 +1246,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the assignments attribute of the Requirement object
+   * Gets the assignments attribute of the Requirement object
    *
-   *@return    The assignments value
+   * @return The assignments value
    */
   public AssignmentList getAssignments() {
     return assignments;
@@ -1248,9 +1256,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the statusGraphicTag attribute of the Requirement object
+   * Gets the statusGraphicTag attribute of the Requirement object
    *
-   *@return    The statusGraphicTag value
+   * @return The statusGraphicTag value
    */
   public String getStatusGraphicTag() {
     String statusGraphic = "";
@@ -1268,9 +1276,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the plan attribute of the Requirement object
+   * Gets the plan attribute of the Requirement object
    *
-   *@return    The plan value
+   * @return The plan value
    */
   public AssignmentFolder getPlan() {
     return plan;
@@ -1278,10 +1286,10 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the assignmentTag attribute of the Requirement object
+   * Gets the assignmentTag attribute of the Requirement object
    *
-   *@param  link  Description of the Parameter
-   *@return       The assignmentTag value
+   * @param link Description of the Parameter
+   * @return The assignmentTag value
    */
   public String getAssignmentTag(String link) {
     String treeGraphic = null;
@@ -1295,9 +1303,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the treeOpen attribute of the Requirement object
+   * Gets the treeOpen attribute of the Requirement object
    *
-   *@return    The treeOpen value
+   * @return The treeOpen value
    */
   public boolean isTreeOpen() {
     return treeOpen;
@@ -1305,9 +1313,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the planActivityCount attribute of the Requirement object
+   * Gets the planActivityCount attribute of the Requirement object
    *
-   *@return    The planActivityCount value
+   * @return The planActivityCount value
    */
   public int getPlanActivityCount() {
     return planActivityCount;
@@ -1315,9 +1323,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the planClosedCount attribute of the Requirement object
+   * Gets the planClosedCount attribute of the Requirement object
    *
-   *@return    The planClosedCount value
+   * @return The planClosedCount value
    */
   public int getPlanClosedCount() {
     return planClosedCount;
@@ -1340,11 +1348,10 @@ public class Requirement extends GenericBean {
   }
 
   /**
-   *  Gets the RelativeDueDateString attribute of the Assignment object
+   * Gets the RelativeDueDateString attribute of the Assignment object
    *
-   *@param  checkDate  Description of the Parameter
-   *@return            The RelativeDueDateString value
-   *@since
+   * @param checkDate Description of the Parameter
+   * @return The RelativeDueDateString value
    */
   public String getRelativeDateString(java.sql.Timestamp checkDate) {
     if (checkDate != null) {
@@ -1373,20 +1380,23 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-
+    id = DatabaseUtils.getNextSeq(db, "project_requi_requirement_i_seq");
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_requirements " +
         "(project_id, submittedBy, departmentBy, shortDescription, description, " +
         "dateReceived, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
         "startdate, startdate_timezone, deadline, deadline_timezone, approvedBy, approvalDate, closedBy, closeDate, ");
+    if (id > -1) {
+      sql.append("requirement_id, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1394,7 +1404,11 @@ public class Requirement extends GenericBean {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
+    sql.append(
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1465,6 +1479,9 @@ public class Requirement extends GenericBean {
       closeDate.setNanos(0);
       pst.setTimestamp(++i, closeDate);
     }
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -1475,17 +1492,17 @@ public class Requirement extends GenericBean {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_requi_requirement_i_seq");
+    id = DatabaseUtils.getCurrVal(db, "project_requi_requirement_i_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
@@ -1530,12 +1547,12 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     return update(db);
@@ -1543,11 +1560,11 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
@@ -1623,11 +1640,11 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int buildAssignmentList(Connection db) throws SQLException {
     assignments.setProject(this.getProject());
@@ -1639,11 +1656,11 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  folderState       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param folderState Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPlan(Connection db, ArrayList folderState) throws SQLException {
     plan.getFolders().setRequirementId(this.getId());
@@ -1652,17 +1669,18 @@ public class Requirement extends GenericBean {
     plan.getAssignments().setRequirementId(this.getId());
     plan.getAssignments().setFolderId(0);
     plan.getAssignments().setClosedOnly(this.getAssignments().getClosedOnly());
-    plan.getAssignments().setIncompleteOnly(this.getAssignments().getIncompleteOnly());
+    plan.getAssignments().setIncompleteOnly(
+        this.getAssignments().getIncompleteOnly());
     plan.getAssignments().buildList(db);
     buildItems(db, plan.getFolders(), true, folderState);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildFolderHierarchy(Connection db) throws SQLException {
     plan.getFolders().setRequirementId(this.getId());
@@ -1673,13 +1691,13 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  folderList        Description of the Parameter
-   *@param  buildAssignments  Description of the Parameter
-   *@param  folderState       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db               Description of the Parameter
+   * @param folderList       Description of the Parameter
+   * @param buildAssignments Description of the Parameter
+   * @param folderState      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildItems(Connection db, AssignmentFolderList folderList, boolean buildAssignments, ArrayList folderState) throws SQLException {
     Iterator i = folderList.iterator();
@@ -1693,8 +1711,10 @@ public class Requirement extends GenericBean {
         if (buildAssignments) {
           folder.getAssignments().setRequirementId(folder.getRequirementId());
           folder.getAssignments().setFolderId(folder.getId());
-          folder.getAssignments().setClosedOnly(this.getAssignments().getClosedOnly());
-          folder.getAssignments().setIncompleteOnly(this.getAssignments().getIncompleteOnly());
+          folder.getAssignments().setClosedOnly(
+              this.getAssignments().getClosedOnly());
+          folder.getAssignments().setIncompleteOnly(
+              this.getAssignments().getIncompleteOnly());
           folder.getAssignments().buildList(db);
         }
         buildItems(db, folder.getFolders(), buildAssignments, folderState);
@@ -1706,11 +1726,11 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the folderTreeOpen attribute of the Requirement object
+   * Gets the folderTreeOpen attribute of the Requirement object
    *
-   *@param  folderIds  Description of the Parameter
-   *@param  folderId   Description of the Parameter
-   *@return            The folderTreeOpen value
+   * @param folderIds Description of the Parameter
+   * @param folderId  Description of the Parameter
+   * @return The folderTreeOpen value
    */
   private boolean isFolderTreeOpen(ArrayList folderIds, int folderId) {
     if (folderIds == null) {
@@ -1724,9 +1744,9 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  The following fields depend on a timezone preference
+   * The following fields depend on a timezone preference
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -1734,33 +1754,36 @@ public class Requirement extends GenericBean {
     thisList.add("deadline");
     return thisList;
   }
-  
+
   public int getPercentClosed() {
     if (planActivityCount == 0 || planClosedCount == planActivityCount) {
       return 100;
     }
-    return (int) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0);
+    return (int) Math.round(
+        ((double) planClosedCount / (double) planActivityCount) * 100.0);
   }
 
   public int getPercentUpcoming() {
     if (planActivityCount == 0 || planUpcomingCount == 0) {
       return 0;
     }
-    return (int) Math.round(((double) planUpcomingCount / (double) planActivityCount) * 100.0);
+    return (int) Math.round(
+        ((double) planUpcomingCount / (double) planActivityCount) * 100.0);
   }
 
   public int getPercentOverdue() {
     if (planActivityCount == 0 || planOverdueCount == 0) {
       return 0;
     }
-    return (int) Math.round(((double) planOverdueCount / (double) planActivityCount) * 100.0);
+    return (int) Math.round(
+        ((double) planOverdueCount / (double) planActivityCount) * 100.0);
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPlanActivityCounts(Connection db) throws SQLException {
     planActivityCount = 0;
@@ -1798,8 +1821,7 @@ public class Requirement extends GenericBean {
         "FROM project_assignments " +
         "WHERE requirement_id = ? " +
         "AND complete_date IS NULL " +
-        "AND due_date IS NOT NULL AND due_date < CURRENT_TIMESTAMP "
-    );
+        "AND due_date IS NOT NULL AND due_date < CURRENT_TIMESTAMP ");
     pst.setInt(1, id);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -1814,8 +1836,7 @@ public class Requirement extends GenericBean {
         "WHERE requirement_id = ? " +
         "AND complete_date IS NULL " +
         "AND ((due_date IS NOT NULL AND due_date >= CURRENT_TIMESTAMP) " +
-        "     OR (due_date IS NULL)) "
-    );
+        "     OR (due_date IS NULL)) ");
     pst.setInt(1, id);
     rs = pst.executeQuery();
     if (rs.next()) {

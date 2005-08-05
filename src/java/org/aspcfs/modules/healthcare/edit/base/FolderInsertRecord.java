@@ -15,28 +15,19 @@
  */
 package org.aspcfs.modules.healthcare.edit.base;
 
-import java.sql.*;
-import java.util.*;
-import java.text.DateFormat;
-import java.text.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.servlets.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.utils.StringUtils;
+
+import java.util.ArrayList;
 
 /**
- *  An object to help with the management of EDIT records when transferring from
- *  the staging server to CFS
+ * An object to help with the management of EDIT records when transferring from
+ * the staging server to CFS
  *
- *@author     chris
- *@created    February 6, 2003
- *@version    $Id: FolderInsertRecord.java,v 1.4 2004/01/15 15:24:57 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: FolderInsertRecord.java,v 1.4 2004/01/15 15:24:57 mrajkowski
+ *          Exp $
+ * @created February 6, 2003
  */
 public class FolderInsertRecord extends GenericBean {
   private String id = null;
@@ -55,17 +46,18 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Constructor for the FolderInsertRecord object
+   * Constructor for the FolderInsertRecord object
    */
 
-  public FolderInsertRecord() { }
+  public FolderInsertRecord() {
+  }
 
 
   /**
-   *  Constructor for the FolderInsertRecord object
+   * Constructor for the FolderInsertRecord object
    *
-   *@param  transId  Description of the Parameter
-   *@param  payor    Description of the Parameter
+   * @param transId Description of the Parameter
+   * @param payor   Description of the Parameter
    */
   public FolderInsertRecord(String transId, String payor) {
     id = transId;
@@ -74,11 +66,11 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Constructor for the FolderInsertRecord object
+   * Constructor for the FolderInsertRecord object
    *
-   *@param  transId   Description of the Parameter
-   *@param  payor     Description of the Parameter
-   *@param  provider  Description of the Parameter
+   * @param transId  Description of the Parameter
+   * @param payor    Description of the Parameter
+   * @param provider Description of the Parameter
    */
   public FolderInsertRecord(String transId, String payor, String provider) {
     id = transId;
@@ -88,9 +80,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the FolderInsertRecord object
+   * Gets the id attribute of the FolderInsertRecord object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -98,9 +90,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the FolderInsertRecord object
+   * Sets the id attribute of the FolderInsertRecord object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = id;
@@ -108,9 +100,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the payorId attribute of the FolderInsertRecord object
+   * Gets the payorId attribute of the FolderInsertRecord object
    *
-   *@return    The payorId value
+   * @return The payorId value
    */
   public String getPayorId() {
     return payorId;
@@ -118,9 +110,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the payorId attribute of the FolderInsertRecord object
+   * Sets the payorId attribute of the FolderInsertRecord object
    *
-   *@param  payorId  The new payorId value
+   * @param payorId The new payorId value
    */
   public void setPayorId(String payorId) {
     this.payorId = payorId;
@@ -128,10 +120,10 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Increment the counts based on what transactions this TransactionRecord has
+   * Increment the counts based on what transactions this TransactionRecord has
    *
-   *@param  tr  Description of the Parameter
-   *@return     Description of the Return Value
+   * @param tr Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean process(TransactionRecord tr) {
     if (tr.getType().equals("270")) {
@@ -159,9 +151,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the eligibility attribute of the FolderInsertRecord object
+   * Gets the eligibility attribute of the FolderInsertRecord object
    *
-   *@return    The eligibility value
+   * @return The eligibility value
    */
   public int getEligibility() {
     return eligibility;
@@ -169,9 +161,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the eligibility attribute of the FolderInsertRecord object
+   * Sets the eligibility attribute of the FolderInsertRecord object
    *
-   *@param  eligibility  The new eligibility value
+   * @param eligibility The new eligibility value
    */
   public void setEligibility(int eligibility) {
     this.eligibility = eligibility;
@@ -179,9 +171,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the eligibility attribute of the FolderInsertRecord object
+   * Sets the eligibility attribute of the FolderInsertRecord object
    *
-   *@param  eligibility  The new eligibility value
+   * @param eligibility The new eligibility value
    */
   public void setEligibility(String eligibility) {
     this.eligibility = Integer.parseInt(eligibility);
@@ -189,9 +181,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the claimStatus attribute of the FolderInsertRecord object
+   * Gets the claimStatus attribute of the FolderInsertRecord object
    *
-   *@return    The claimStatus value
+   * @return The claimStatus value
    */
   public int getClaimStatus() {
     return claimStatus;
@@ -199,9 +191,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the claimStatus attribute of the FolderInsertRecord object
+   * Sets the claimStatus attribute of the FolderInsertRecord object
    *
-   *@param  claimStatus  The new claimStatus value
+   * @param claimStatus The new claimStatus value
    */
   public void setClaimStatus(int claimStatus) {
     this.claimStatus = claimStatus;
@@ -209,9 +201,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the claimStatus attribute of the FolderInsertRecord object
+   * Sets the claimStatus attribute of the FolderInsertRecord object
    *
-   *@param  claimStatus  The new claimStatus value
+   * @param claimStatus The new claimStatus value
    */
   public void setClaimStatus(String claimStatus) {
     this.claimStatus = Integer.parseInt(claimStatus);
@@ -219,9 +211,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the referral attribute of the FolderInsertRecord object
+   * Gets the referral attribute of the FolderInsertRecord object
    *
-   *@return    The referral value
+   * @return The referral value
    */
   public int getReferral() {
     return referral;
@@ -229,9 +221,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the referral attribute of the FolderInsertRecord object
+   * Sets the referral attribute of the FolderInsertRecord object
    *
-   *@param  referral  The new referral value
+   * @param referral The new referral value
    */
   public void setReferral(int referral) {
     this.referral = referral;
@@ -239,9 +231,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the referral attribute of the FolderInsertRecord object
+   * Sets the referral attribute of the FolderInsertRecord object
    *
-   *@param  referral  The new referral value
+   * @param referral The new referral value
    */
   public void setReferral(String referral) {
     this.referral = Integer.parseInt(referral);
@@ -249,9 +241,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the providerId attribute of the FolderInsertRecord object
+   * Gets the providerId attribute of the FolderInsertRecord object
    *
-   *@return    The providerId value
+   * @return The providerId value
    */
   public String getProviderId() {
     return providerId;
@@ -259,9 +251,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the providerId attribute of the FolderInsertRecord object
+   * Sets the providerId attribute of the FolderInsertRecord object
    *
-   *@param  providerId  The new providerId value
+   * @param providerId The new providerId value
    */
   public void setProviderId(String providerId) {
     this.providerId = providerId;
@@ -269,9 +261,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the dental attribute of the FolderInsertRecord object
+   * Gets the dental attribute of the FolderInsertRecord object
    *
-   *@return    The dental value
+   * @return The dental value
    */
   public int getDental() {
     return dental;
@@ -279,9 +271,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the dental attribute of the FolderInsertRecord object
+   * Sets the dental attribute of the FolderInsertRecord object
    *
-   *@param  dental  The new dental value
+   * @param dental The new dental value
    */
   public void setDental(int dental) {
     this.dental = dental;
@@ -289,9 +281,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the dental attribute of the FolderInsertRecord object
+   * Sets the dental attribute of the FolderInsertRecord object
    *
-   *@param  dental  The new dental value
+   * @param dental The new dental value
    */
   public void setDental(String dental) {
     this.dental = Integer.parseInt(dental);
@@ -299,9 +291,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the professional attribute of the FolderInsertRecord object
+   * Gets the professional attribute of the FolderInsertRecord object
    *
-   *@return    The professional value
+   * @return The professional value
    */
   public int getProfessional() {
     return professional;
@@ -309,9 +301,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the professional attribute of the FolderInsertRecord object
+   * Sets the professional attribute of the FolderInsertRecord object
    *
-   *@param  professional  The new professional value
+   * @param professional The new professional value
    */
   public void setProfessional(int professional) {
     this.professional = professional;
@@ -319,9 +311,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the professional attribute of the FolderInsertRecord object
+   * Sets the professional attribute of the FolderInsertRecord object
    *
-   *@param  professional  The new professional value
+   * @param professional The new professional value
    */
   public void setProfessional(String professional) {
     this.professional = Integer.parseInt(professional);
@@ -329,9 +321,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the institutional attribute of the FolderInsertRecord object
+   * Gets the institutional attribute of the FolderInsertRecord object
    *
-   *@return    The institutional value
+   * @return The institutional value
    */
   public int getInstitutional() {
     return institutional;
@@ -339,9 +331,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the institutional attribute of the FolderInsertRecord object
+   * Sets the institutional attribute of the FolderInsertRecord object
    *
-   *@param  institutional  The new institutional value
+   * @param institutional The new institutional value
    */
   public void setInstitutional(int institutional) {
     this.institutional = institutional;
@@ -349,9 +341,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the institutional attribute of the FolderInsertRecord object
+   * Sets the institutional attribute of the FolderInsertRecord object
    *
-   *@param  institutional  The new institutional value
+   * @param institutional The new institutional value
    */
   public void setInstitutional(String institutional) {
     this.institutional = Integer.parseInt(institutional);
@@ -359,9 +351,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the claimRemittance attribute of the FolderInsertRecord object
+   * Gets the claimRemittance attribute of the FolderInsertRecord object
    *
-   *@return    The claimRemittance value
+   * @return The claimRemittance value
    */
   public int getClaimRemittance() {
     return claimRemittance;
@@ -369,9 +361,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the claimRemittance attribute of the FolderInsertRecord object
+   * Sets the claimRemittance attribute of the FolderInsertRecord object
    *
-   *@param  claimRemittance  The new claimRemittance value
+   * @param claimRemittance The new claimRemittance value
    */
   public void setClaimRemittance(int claimRemittance) {
     this.claimRemittance = claimRemittance;
@@ -379,9 +371,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the claimRemittance attribute of the FolderInsertRecord object
+   * Sets the claimRemittance attribute of the FolderInsertRecord object
    *
-   *@param  claimRemittance  The new claimRemittance value
+   * @param claimRemittance The new claimRemittance value
    */
   public void setClaimRemittance(String claimRemittance) {
     this.claimRemittance = Integer.parseInt(claimRemittance);
@@ -389,9 +381,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Gets the advice attribute of the FolderInsertRecord object
+   * Gets the advice attribute of the FolderInsertRecord object
    *
-   *@return    The advice value
+   * @return The advice value
    */
   public int getAdvice() {
     return advice;
@@ -399,9 +391,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the advice attribute of the FolderInsertRecord object
+   * Sets the advice attribute of the FolderInsertRecord object
    *
-   *@param  advice  The new advice value
+   * @param advice The new advice value
    */
   public void setAdvice(int advice) {
     this.advice = advice;
@@ -409,9 +401,9 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Sets the advice attribute of the FolderInsertRecord object
+   * Sets the advice attribute of the FolderInsertRecord object
    *
-   *@param  advice  The new advice value
+   * @param advice The new advice value
    */
   public void setAdvice(String advice) {
     this.advice = Integer.parseInt(advice);
@@ -419,19 +411,27 @@ public class FolderInsertRecord extends GenericBean {
 
 
   /**
-   *  Update the totals when an ArrayList of previous MTD values are passed in
+   * Update the totals when an ArrayList of previous MTD values are passed in
    *
-   *@param  oldVals  Description of the Parameter
+   * @param oldVals Description of the Parameter
    */
   public void updateTotals(ArrayList oldVals) {
-    eligibility = this.getEligibility() + StringUtils.parseInt((String) oldVals.get(0), 0);
-    claimStatus = this.getClaimStatus() + StringUtils.parseInt((String) oldVals.get(1), 0);
-    referral = this.getReferral() + StringUtils.parseInt((String) oldVals.get(2), 0);
-    advice = this.getAdvice() + StringUtils.parseInt((String) oldVals.get(3), 0);
-    dental = this.getDental() + StringUtils.parseInt((String) oldVals.get(4), 0);
-    professional = this.getProfessional() + StringUtils.parseInt((String) oldVals.get(5), 0);
-    institutional = this.getInstitutional() + StringUtils.parseInt((String) oldVals.get(6), 0);
-    claimRemittance = this.getClaimRemittance() + StringUtils.parseInt((String) oldVals.get(7), 0);
+    eligibility = this.getEligibility() + StringUtils.parseInt(
+        (String) oldVals.get(0), 0);
+    claimStatus = this.getClaimStatus() + StringUtils.parseInt(
+        (String) oldVals.get(1), 0);
+    referral = this.getReferral() + StringUtils.parseInt(
+        (String) oldVals.get(2), 0);
+    advice = this.getAdvice() + StringUtils.parseInt(
+        (String) oldVals.get(3), 0);
+    dental = this.getDental() + StringUtils.parseInt(
+        (String) oldVals.get(4), 0);
+    professional = this.getProfessional() + StringUtils.parseInt(
+        (String) oldVals.get(5), 0);
+    institutional = this.getInstitutional() + StringUtils.parseInt(
+        (String) oldVals.get(6), 0);
+    claimRemittance = this.getClaimRemittance() + StringUtils.parseInt(
+        (String) oldVals.get(7), 0);
   }
 }
 

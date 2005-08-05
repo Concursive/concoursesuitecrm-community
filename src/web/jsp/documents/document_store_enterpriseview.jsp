@@ -30,7 +30,7 @@
 <tr>
 <td>
 <a href="DocumentManagement.do"><dhv:label name="Documents" mainMenuItem="true">Documents</dhv:label></a> >
-<dhv:label name="projects.list">List</dhv:label>
+<dhv:label name="project.list">List</dhv:label>
 </td>
 </tr>
 </table>
@@ -50,6 +50,7 @@
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
         <option <%= documentStoreListInfo.getOptionValue("Open") %>><dhv:label name="documents.openDocumentStores">Open Document Stores</dhv:label></option>
         <option <%= documentStoreListInfo.getOptionValue("Archived") %>><dhv:label name="documents.archivedDocumentStores">Archived Document Stores</dhv:label></option>
+        <%--<option <%= documentStoreListInfo.getOptionValue("Trashed") %>><dhv:label name="global.trashed">Trashed</dhv:label></option>--%>
       </select>
     </td>
     <td>

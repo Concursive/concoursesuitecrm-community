@@ -1,0 +1,121 @@
+# These scripts upgrade the 2.9 production databases to 3.0
+
+# Permission Category Constants
+2005-03-09-script01.sql
+2005-03-10-script01.sql
+
+# Product Catalog Editor
+2004-09-21-script01.sql
+2004-09-21-script02.sql
+#2004-09-24-script01.bsh
+2004-09-24-script02.sql
+2004-10-15-script01.bsh
+2004-10-15.sql
+
+# WebDAV feature / Permission Category changes
+2004-11-17-script01.sql
+2005-01-26-script01.sql
+2004-11-17-script02.bsh
+2004-11-17-script03.bsh
+
+# Add Permission Category (Some already have this, so a check is made)
+2004-10-00-script01.bsh
+2004-10-00-script02.bsh
+2004-10-00-script03.bsh
+
+# Quote Management
+2004-11-29-script01.sql
+2004-11-29-script02.sql
+2004-11-29-script03.sql
+2004-11-29-script04.sql
+2004-11-29-script05.sql
+2004-11-29-script06.bsh
+2004-11-29-script07.sql
+2004-11-29-script08.bsh
+
+# Additional Adjustments
+2004-11-29-script09.sql
+2004-11-29-script10.sql
+2004-11-29-script11.sql
+2004-11-29-script12.sql
+2004-11-29-script13.bsh
+
+# Document Management
+2004-12-02-script1.sql
+2004-12-02-script2.bsh
+2004-12-02-script3.bsh
+2004-12-02-script4.bsh
+2004-12-09.bsh
+
+# Merge f-improvements-20041201
+2004-12-07-script01.sql
+2004-12-08gk.sql
+2004-12-20-script01.bsh
+
+# Merge f-contact_request-20041216
+2004-12-16-script1.bsh
+2004-12-17-script1.sql
+
+# Merge bug-version29_20050114
+2005-01-14.sql
+
+# Merge f-contact_request-20050103
+2005-01-18-script01.sql
+2005-01-18-script02.bsh
+
+# Merge f-folders-20050120
+2005-01-20-script01.sql
+2005-01-20-script02.bsh
+2005-01-20-script03.bsh
+2005-01-26-script02.bsh
+2005-01-26-script02.sql
+2005-01-27-script01.sql
+2005-01-27-script02.bsh
+
+# Merge f-contact_request-20050119
+2005-01-20-script01.bsh
+2005-01-24-script01.sql
+2005-02-07-script01.bsh
+
+# Merge Project Management
+2005-03-28-script01.sql
+2005-02-15-script01.sql
+
+# Merge bug-version3-20050210
+2005-02-17-script01.sql
+
+# Industry list
+2005-03-02-script01.bsh
+
+# Account Project permissions and Project permissions
+2005-03-02-script02.bsh
+2005-03-02-script03.bsh
+2005-03-02-script04.sql
+
+# Employee projects
+2005-03-02-script05.bsh
+
+# Lookup list changes
+2005-03-03-script01.sql
+
+# Product Catalog Editor v2
+2005-03-01-script01.bsh
+2005-03-01-script02.sql
+
+# Leads Module
+2005-02-28-script01.bsh
+2005-02-28-script02.bsh
+2005-02-28-script03.sql
+
+# Leads Module (merge4)
+2005-03-16-script01.bsh
+2005-03-17-script01.bsh
+
+# Product
+2005-03-11-script01.sql
+
+# Product catalog permissions
+2005-03-28-script01.bsh
+
+# Missing leads lookup editors
+2005-04-09-script01.bsh

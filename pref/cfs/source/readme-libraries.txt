@@ -42,11 +42,13 @@ This distribution includes the required Centric CRM 3rd party libraries:
   commons-digester.jar
   commons-logging-api.jar
   commons-logging.jar
+  DaffodilDB_402_Common.jar
+  DaffodilDB_402_Embedded.jar
   iText.jar
   jasperreports-0.6.4.jar
   jcommon-0.9.6.jar
   jfreechart-0.9.21.jar
-  jtds-1.0.1.jar
+  jtds-1.1.jar
   log4j-1.2.9.jar
   lucene-1.4.2.jar
   mail.jar
@@ -54,6 +56,7 @@ This distribution includes the required Centric CRM 3rd party libraries:
   poi-2.5-final-20040302.jar
   poi-scratchpad-2.5-final-20040302.jar
   postgresql-8.0-310.jdbc3.jar
+  quartz-1.4.5.jar
   tm-extractors-0.4.jar
   xercesMinimal.jar
   
@@ -74,6 +77,7 @@ Project Name                      License
 Batik                             Apache Software License
 Bean Shell                        LGPL
 Bouncy Castle Crypto API          Bouncy Castle Open Source License
+DaffodilDB (One$DB Embedded)      LGPL
 gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
@@ -91,7 +95,10 @@ Lucene                            Apache Software License
 NekoHTML                          Apache style
 PDFBox                            BSD
 POI                               Apache Software License
+PostgreSQL JDBC Driver            BSD
+Quartz                            OpenSymphony Software License
 Team Elements Project Management  Team Elements, LLC Commercial License
+TinyMCE                           LGPL
 TMExtractors                      Apache style
 Xerces                            Apache Software License
 Ximian Icons                      LGPL

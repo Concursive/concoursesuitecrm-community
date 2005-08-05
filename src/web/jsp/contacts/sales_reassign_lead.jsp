@@ -23,6 +23,7 @@
 <jsp:useBean id="contactId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="next" class="java.lang.String" scope="request" />
 <jsp:useBean id="from" class="java.lang.String" scope="request" />
+<jsp:useBean id="nextValue" class="java.lang.String" scope="request" />
 <jsp:useBean id="listForm" class="java.lang.String" scope="request" />
 <jsp:useBean id="assignStatus" class="java.lang.String" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
@@ -60,7 +61,7 @@
         var test = parent.continueTrashLead();
       } else if (next == "delete") {
         //Just perform the deletion and skip right here
-        window.location.href= 'Sales.do?command=ConfirmDelete&contactId=<%= contactId %>&popup=true&from=<%= from %>&listForm=<%= (listForm != null ? listForm : "") %>';
+        window.location.href= 'Sales.do?command=ConfirmDelete&contactId=<%= contactId %>&popup=true&from=<%= from %>&nextValue=<%= nextValue %>&listForm=<%= (listForm != null ? listForm : "") %>';
       } else {
         alert('programming error');
       }

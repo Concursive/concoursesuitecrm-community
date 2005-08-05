@@ -15,35 +15,38 @@
  */
 package org.aspcfs.modules.login.beans;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.webdav.WebdavServlet;
 import org.aspcfs.utils.PasswordHash;
 
 /**
- *  Used by the Login module for passing formatted data to the Login JSP
+ * Used by the Login module for passing formatted data to the Login JSP
  *
- *@author     chris
- *@created    July 2, 2001
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created July 2, 2001
  */
 public class LoginBean extends GenericBean {
   private String message = "";
   private String username = "";
   private String password = "";
+  private String webdavPassword = "";
 
 
   /**
-   *  Default constructor.
+   * Default constructor.
    *
-   *@since    1.0
+   * @since 1.0
    */
-  public LoginBean() { }
+  public LoginBean() {
+  }
 
 
   /**
-   *  Sets the Username attribute of the object.
+   * Sets the Username attribute of the object.
    *
-   *@param  tmp  The new Username value
-   *@since       1.0
+   * @param tmp The new Username value
+   * @since 1.0
    */
   public void setUsername(String tmp) {
     this.username = tmp;
@@ -51,35 +54,38 @@ public class LoginBean extends GenericBean {
 
 
   /**
-   *  Sets the Password attribute of the object to the encrypted value of the
-   *  given value.
+   * Sets the Password attribute of the object to the encrypted value of the
+   * given value.
    *
-   *@param  tmp  The new Password value
-   *@since       1.0
+   * @param tmp The new Password value
+   * @since 1.0
    */
   public void setPassword(String tmp) {
     PasswordHash pwh = new PasswordHash();
-    this.password = pwh.encrypt(tmp);
+    this.password = PasswordHash.encrypt(tmp);
+    //Enrypt the webdav password. 'username' should be already set for a valid webdav password
+    this.webdavPassword = PasswordHash.encrypt(
+        username + ":" +
+        WebdavServlet.CFS_USER_REALM + ":" + tmp);
   }
 
 
   /**
-   *  Sets the Message attribute of the LoginBean object
+   * Sets the Message attribute of the LoginBean object
    *
-   *@param  tmp  The new Message value
-   *@since       1.1
+   * @param tmp The new Message value
+   * @since 1.1
    */
   public void setMessage(String tmp) {
     this.message = tmp;
   }
 
 
-
   /**
-   *  Gets the Username attribute of the object.
+   * Gets the Username attribute of the object.
    *
-   *@return    The Username value
-   *@since     1.0
+   * @return The Username value
+   * @since 1.0
    */
   public String getUsername() {
     return username;
@@ -87,12 +93,12 @@ public class LoginBean extends GenericBean {
 
 
   /**
-   *  Gets the password attribute of the object. The value stored in this object
-   *  is encrypted -- this method returns the encrypted value. The original
-   *  value is not stored.
+   * Gets the password attribute of the object. The value stored in this object
+   * is encrypted -- this method returns the encrypted value. The original
+   * value is not stored.
    *
-   *@return    The Password value
-   *@since     1.0
+   * @return The Password value
+   * @since 1.0
    */
   public String getPassword() {
     return password;
@@ -100,14 +106,23 @@ public class LoginBean extends GenericBean {
 
 
   /**
-   *  Gets the Message attribute of the LoginBean object
+   * Gets the Message attribute of the LoginBean object
    *
-   *@return    The Message value
-   *@since     1.1
+   * @return The Message value
+   * @since 1.1
    */
   public String getMessage() {
     return message;
   }
 
+
+  /**
+   * Gets the webdavPassword attribute of the LoginBean object
+   *
+   * @return The webdavPassword value
+   */
+  public String getWebdavPassword() {
+    return webdavPassword;
+  }
 }
 

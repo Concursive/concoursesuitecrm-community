@@ -15,19 +15,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    April 10, 2003
- *@version    $Id: FileFolderList.java,v 1.1.2.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: FileFolderList.java,v 1.1.2.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created April 10, 2003
  */
 public class FileFolderList extends ArrayList {
 
@@ -40,15 +43,16 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Constructor for the FileFolderList object
+   * Constructor for the FileFolderList object
    */
-  public FileFolderList() { }
+  public FileFolderList() {
+  }
 
 
   /**
-   *  Sets the parentId attribute of the FileFolderList object
+   * Sets the parentId attribute of the FileFolderList object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -56,9 +60,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the FileFolderList object
+   * Sets the linkModuleId attribute of the FileFolderList object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -66,9 +70,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Sets the linkItemId attribute of the FileFolderList object
+   * Sets the linkItemId attribute of the FileFolderList object
    *
-   *@param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -76,9 +80,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the FileFolderList object
+   * Sets the pagedListInfo attribute of the FileFolderList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -86,9 +90,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Sets the topLevelOnly attribute of the FileFolderList object
+   * Sets the topLevelOnly attribute of the FileFolderList object
    *
-   *@param  tmp  The new topLevelOnly value
+   * @param tmp The new topLevelOnly value
    */
   public void setTopLevelOnly(boolean tmp) {
     this.topLevelOnly = tmp;
@@ -96,9 +100,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Sets the buildItemCount attribute of the FileFolderList object
+   * Sets the buildItemCount attribute of the FileFolderList object
    *
-   *@param  tmp  The new buildItemCount value
+   * @param tmp The new buildItemCount value
    */
   public void setBuildItemCount(boolean tmp) {
     this.buildItemCount = tmp;
@@ -106,9 +110,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Gets the parentId attribute of the FileFolderList object
+   * Gets the parentId attribute of the FileFolderList object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -116,9 +120,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the FileFolderList object
+   * Gets the pagedListInfo attribute of the FileFolderList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -126,10 +130,10 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -172,20 +176,14 @@ public class FileFolderList extends ArrayList {
         "* " +
         "FROM project_folders f " +
         "WHERE f.link_module_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       FileFolder thisFolder = new FileFolder(rs);
       this.add(thisFolder);
     }
@@ -203,9 +201,9 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -227,11 +225,11 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -249,13 +247,13 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  linkModuleId      Description of the Parameter
-   *@param  linkItemId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkModuleId Description of the Parameter
+   * @param linkItemId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int linkModuleId, int linkItemId) throws SQLException {
     int count = 0;
@@ -276,10 +274,10 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator folders = this.iterator();
@@ -291,10 +289,10 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public FileFolderList buildCompleteHierarchy() throws SQLException {
     for (int i = 0; i < this.size(); i++) {
@@ -308,11 +306,11 @@ public class FileFolderList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  folderId          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param folderId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean hasFolder(int folderId) throws SQLException {
     for (int i = 0; i < this.size(); i++) {

@@ -21,28 +21,26 @@ import org.aspcfs.modules.help.base.HelpContents;
 import org.aspcfs.modules.help.base.HelpItem;
 import org.aspcfs.modules.help.base.HelpModule;
 import org.aspcfs.modules.help.base.HelpTOC;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 
 /**
- *  Help Module
+ * Help Module
  *
- *@author     mrajkowski
- *@created    January 21, 2002
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created January 21, 2002
  */
 
 public final class Help extends CFSModule {
 
   /**
-   *  Fetches the help_id and module_id based on the action, section and
-   *  sebsection
+   * Fetches the help_id and module_id based on the action, section and
+   * sebsection
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     Connection db = null;
@@ -72,10 +70,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandProcess(ActionContext context) {
     if (this.hasPermission(context, "help-edit")) {
@@ -100,10 +98,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewAll(ActionContext context) {
     Connection db = null;
@@ -123,10 +121,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Fetches context sensitive (page related) help information
+   * Fetches context sensitive (page related) help information
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewContext(ActionContext context) {
     Connection db = null;
@@ -150,10 +148,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Fetches module description of the module that the page belongs to
+   * Fetches module description of the module that the page belongs to
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
 
   public String executeCommandViewModule(ActionContext context) {
@@ -180,10 +178,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Fetches the table of contents
+   * Fetches the table of contents
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewTableOfContents(ActionContext context) {
     Connection db = null;
@@ -202,10 +200,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Provides an editable view of the module description
+   * Provides an editable view of the module description
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewModuleDescription(ActionContext context) {
     Connection db = null;
@@ -225,10 +223,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Fetches the existing module descirption so that they can be modified
+   * Fetches the existing module descirption so that they can be modified
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyDescription(ActionContext context) {
     Connection db = null;
@@ -250,10 +248,10 @@ public final class Help extends CFSModule {
 
 
   /**
-   *  Saves the updated module description
+   * Saves the updated module description
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveDescription(ActionContext context) {
     Connection db = null;
@@ -274,7 +272,9 @@ public final class Help extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "Help.do?command=ViewModuleDescription&module=" + thisModule.getRelatedAction() + RequestUtils.addLinkParams(context.getRequest(), "popup"));
+    context.getRequest().setAttribute(
+        "refreshUrl", "Help.do?command=ViewModuleDescription&module=" + thisModule.getRelatedAction() + RequestUtils.addLinkParams(
+            context.getRequest(), "popup"));
     return getReturn(context, "SaveDescription");
   }
 }

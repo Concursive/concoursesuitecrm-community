@@ -15,21 +15,26 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import java.util.*;
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
 /**
- *  Represents a list of members of a document store
+ * Represents a list of members of a document store
  *
  * @author
+ * @version $Id: DocumentStoreTeamMemberList.java,v 1.1.2.2 2004/11/10
+ *          23:13:18 kbhoopal Exp $
  * @created
- * @version    $Id: DocumentStoreTeamMemberList.java,v 1.1.2.2 2004/11/10
- *      23:13:18 kbhoopal Exp $
  */
 public class DocumentStoreTeamMemberList extends ArrayList {
-
   public final static String USER = "user";
   public final static String GROUP = "group";
   public final static String ROLE = "role";
@@ -54,15 +59,16 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Constructor for the DocumentStoreTeamMemberList object
+   * Constructor for the DocumentStoreTeamMemberList object
    */
-  public DocumentStoreTeamMemberList() { }
+  public DocumentStoreTeamMemberList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the DocumentStoreTeamMemberList object
+   * Sets the pagedListInfo attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -70,10 +76,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the
-   *  DocumentStoreTeamMemberList object
+   * Sets the emptyHtmlSelectRecord attribute of the
+   * DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -81,9 +87,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the documentStore attribute of the DocumentStoreTeamMemberList object
+   * Sets the documentStore attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new documentStore value
+   * @param tmp The new documentStore value
    */
   public void setDocumentStore(DocumentStore tmp) {
     this.documentStore = tmp;
@@ -91,9 +97,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the memberType attribute of the DocumentStoreTeamMemberList object
+   * Sets the memberType attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new memberType value
+   * @param tmp The new memberType value
    */
   public void setMemberType(String tmp) {
     this.memberType = tmp;
@@ -101,9 +107,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the groupType attribute of the DocumentStoreTeamMemberList object
+   * Sets the groupType attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new groupType value
+   * @param tmp The new groupType value
    */
   public void setGroupType(String tmp) {
     this.groupType = tmp;
@@ -111,10 +117,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the documentStoreId attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Sets the documentStoreId attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @param  tmp  The new documentStoreId value
+   * @param tmp The new documentStoreId value
    */
   public void setDocumentStoreId(int tmp) {
     this.documentStoreId = tmp;
@@ -122,10 +128,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the documentStoreId attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Sets the documentStoreId attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @param  tmp  The new documentStoreId value
+   * @param tmp The new documentStoreId value
    */
   public void setDocumentStoreId(String tmp) {
     this.documentStoreId = Integer.parseInt(tmp);
@@ -133,9 +139,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the userLevel attribute of the DocumentStoreTeamMemberList object
+   * Sets the userLevel attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(int tmp) {
     this.userLevel = tmp;
@@ -143,9 +149,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the userLevel attribute of the DocumentStoreTeamMemberList object
+   * Sets the userLevel attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new userLevel value
+   * @param tmp The new userLevel value
    */
   public void setUserLevel(String tmp) {
     this.userLevel = Integer.parseInt(tmp);
@@ -153,9 +159,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the insertMembers attribute of the DocumentStoreTeamMemberList object
+   * Sets the insertMembers attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new insertMembers value
+   * @param tmp The new insertMembers value
    */
   public void setInsertMembers(String tmp) {
     this.insertMembers = tmp;
@@ -163,9 +169,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the deleteMembers attribute of the DocumentStoreTeamMemberList object
+   * Sets the deleteMembers attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new deleteMembers value
+   * @param tmp The new deleteMembers value
    */
   public void setDeleteMembers(String tmp) {
     this.deleteMembers = tmp;
@@ -173,9 +179,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the DocumentStoreTeamMemberList object
+   * Sets the enteredBy attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -183,9 +189,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the DocumentStoreTeamMemberList object
+   * Sets the enteredBy attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -193,9 +199,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the DocumentStoreTeamMemberList object
+   * Sets the modifiedBy attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -203,9 +209,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the DocumentStoreTeamMemberList object
+   * Sets the modifiedBy attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -213,10 +219,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the forDocumentStoreUser attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Sets the forDocumentStoreUser attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @param  tmp  The new forDocumentStoreUser value
+   * @param tmp The new forDocumentStoreUser value
    */
   public void setForDocumentStoreUser(int tmp) {
     this.forDocumentStoreUser = tmp;
@@ -224,10 +230,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the forDocumentStoreUser attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Sets the forDocumentStoreUser attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @param  tmp  The new forDocumentStoreUser value
+   * @param tmp The new forDocumentStoreUser value
    */
   public void setForDocumentStoreUser(String tmp) {
     this.forDocumentStoreUser = Integer.parseInt(tmp);
@@ -235,9 +241,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the employeesOnly attribute of the DocumentStoreTeamMemberList object
+   * Sets the employeesOnly attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new employeesOnly value
+   * @param tmp The new employeesOnly value
    */
   public void setEmployeesOnly(boolean tmp) {
     this.employeesOnly = tmp;
@@ -245,9 +251,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the employeesOnly attribute of the DocumentStoreTeamMemberList object
+   * Sets the employeesOnly attribute of the DocumentStoreTeamMemberList object
    *
-   * @param  tmp  The new employeesOnly value
+   * @param tmp The new employeesOnly value
    */
   public void setEmployeesOnly(String tmp) {
     this.employeesOnly = DatabaseUtils.parseBoolean(tmp);
@@ -255,10 +261,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the accountContactsOnly attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Sets the accountContactsOnly attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @param  tmp  The new accountContactsOnly value
+   * @param tmp The new accountContactsOnly value
    */
   public void setAccountContactsOnly(boolean tmp) {
     this.accountContactsOnly = tmp;
@@ -266,10 +272,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Sets the accountContactsOnly attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Sets the accountContactsOnly attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @param  tmp  The new accountContactsOnly value
+   * @param tmp The new accountContactsOnly value
    */
   public void setAccountContactsOnly(String tmp) {
     this.accountContactsOnly = DatabaseUtils.parseBoolean(tmp);
@@ -277,9 +283,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the DocumentStoreTeamMemberList object
+   * Gets the pagedListInfo attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -287,10 +293,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the
-   *  DocumentStoreTeamMemberList object
+   * Gets the emptyHtmlSelectRecord attribute of the
+   * DocumentStoreTeamMemberList object
    *
-   * @return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -298,9 +304,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the documentStore attribute of the DocumentStoreTeamMemberList object
+   * Gets the documentStore attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The documentStore value
+   * @return The documentStore value
    */
   public DocumentStore getDocumentStore() {
     return documentStore;
@@ -308,9 +314,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the memberType attribute of the DocumentStoreTeamMemberList object
+   * Gets the memberType attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The memberType value
+   * @return The memberType value
    */
   public String getMemberType() {
     return memberType;
@@ -318,9 +324,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the groupType attribute of the DocumentStoreTeamMemberList object
+   * Gets the groupType attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The groupType value
+   * @return The groupType value
    */
   public String getGroupType() {
     return groupType;
@@ -328,10 +334,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the documentStoreId attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Gets the documentStoreId attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @return    The documentStoreId value
+   * @return The documentStoreId value
    */
   public int getDocumentStoreId() {
     return documentStoreId;
@@ -339,9 +345,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the userLevel attribute of the DocumentStoreTeamMemberList object
+   * Gets the userLevel attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The userLevel value
+   * @return The userLevel value
    */
   public int getUserLevel() {
     return userLevel;
@@ -349,9 +355,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the insertMembers attribute of the DocumentStoreTeamMemberList object
+   * Gets the insertMembers attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The insertMembers value
+   * @return The insertMembers value
    */
   public String getInsertMembers() {
     return insertMembers;
@@ -359,9 +365,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the deleteMembers attribute of the DocumentStoreTeamMemberList object
+   * Gets the deleteMembers attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The deleteMembers value
+   * @return The deleteMembers value
    */
   public String getDeleteMembers() {
     return deleteMembers;
@@ -369,9 +375,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the DocumentStoreTeamMemberList object
+   * Gets the enteredBy attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -379,9 +385,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the DocumentStoreTeamMemberList object
+   * Gets the modifiedBy attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -389,10 +395,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the forDocumentUser attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Gets the forDocumentUser attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @return    The forDocumentUser value
+   * @return The forDocumentUser value
    */
   public int getForDocumentStoreUser() {
     return forDocumentStoreUser;
@@ -400,9 +406,9 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the employeesOnly attribute of the DocumentStoreTeamMemberList object
+   * Gets the employeesOnly attribute of the DocumentStoreTeamMemberList object
    *
-   * @return    The employeesOnly value
+   * @return The employeesOnly value
    */
   public boolean getEmployeesOnly() {
     return employeesOnly;
@@ -410,10 +416,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the accountContactsOnly attribute of the DocumentStoreTeamMemberList
-   *  object
+   * Gets the accountContactsOnly attribute of the DocumentStoreTeamMemberList
+   * object
    *
-   * @return    The accountContactsOnly value
+   * @return The accountContactsOnly value
    */
   public boolean getAccountContactsOnly() {
     return accountContactsOnly;
@@ -421,10 +427,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  thisId  Description of the Parameter
-   * @return         Description of the Return Value
+   * @param thisId Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasUserId(int thisId) {
     Iterator i = this.iterator();
@@ -439,10 +445,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     String tableName = "";
@@ -463,11 +469,11 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Constructor for the buildUserMemberList object
+   * Constructor for the buildUserMemberList object
    *
-   * @param  db                Description of the Parameter
-   * @param  tableName         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildMemberList(Connection db, String tableName) throws SQLException {
     PreparedStatement pst = null;
@@ -489,7 +495,7 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     if (memberType.equals(DocumentStoreTeamMemberList.ROLE)) {
       sqlCount.append(
           "SELECT COUNT(*) AS recordcount " +
-          "FROM " + tableName + " um, role rl, lookup_document_store_role r " +
+          "FROM " + tableName + " um, \"role\" rl, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = rl.role_id " +
           "AND um.userlevel = r.code ");
@@ -519,14 +525,14 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     pst.close();
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("r.level", null);
+    pagedListInfo.setDefaultSort("r.\"level\"", null);
     pagedListInfo.appendSqlTail(db, sqlOrder);
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
 
     if (memberType.equals(DocumentStoreTeamMemberList.USER)) {
       sqlSelect.append(
-          "um.*, r.level " +
+          "um.*, r.\"level\" " +
           "FROM " + tableName + " um, contact u, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = u.user_id " +
@@ -534,34 +540,28 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     }
     if (memberType.equals(DocumentStoreTeamMemberList.ROLE)) {
       sqlSelect.append(
-          "um.*, r.level " +
-          "FROM " + tableName + " um, role rl, lookup_document_store_role r " +
+          "um.*, r.\"level\" " +
+          "FROM " + tableName + " um, \"role\" rl, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = rl.role_id " +
           "AND um.userlevel = r.code ");
     }
     if (memberType.equals(DocumentStoreTeamMemberList.DEPARTMENT)) {
       sqlSelect.append(
-          "um.*, r.level " +
+          "um.*, r.\"level\" " +
           "FROM " + tableName + " um, lookup_department d, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = d.code " +
           "AND um.userlevel = r.code ");
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       DocumentStoreTeamMember thisTeamMember = new DocumentStoreTeamMember(rs);
       thisTeamMember.setDocumentStore(documentStore);
       this.add(thisTeamMember);
@@ -572,10 +572,10 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  tableName  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param tableName Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, String tableName) {
     if (sqlFilter == null) {
@@ -602,11 +602,11 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -624,11 +624,11 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateUserMembership(Connection db) throws SQLException {
     try {
@@ -643,7 +643,8 @@ public class DocumentStoreTeamMemberList extends ArrayList {
           int itemId = -1;
           String itemIdValue = items.nextToken();
           if (itemIdValue.indexOf("@") > 0) {
-            itemId = org.aspcfs.modules.admin.base.User.getIdByEmailAddress(db, itemIdValue);
+            itemId = org.aspcfs.modules.admin.base.User.getIdByEmailAddress(
+                db, itemIdValue);
           } else {
             itemId = Integer.parseInt(itemIdValue);
           }
@@ -711,11 +712,11 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  tmpMemberType     Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param tmpMemberType Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db, String tmpMemberType) throws SQLException {
     Iterator team = this.iterator();
@@ -727,13 +728,13 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the onTeam attribute of the TeamMemberList object
+   * Gets the onTeam attribute of the TeamMemberList object
    *
-   * @param  db                Description of the Parameter
-   * @param  documentStoreId   Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   The onTeam value
-   * @exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param documentStoreId Description of the Parameter
+   * @param userId          Description of the Parameter
+   * @return The onTeam value
+   * @throws SQLException Description of the Exception
    */
   public static boolean isUserOnTeam(Connection db, int documentStoreId, int userId) throws SQLException {
     boolean exists = false;
@@ -755,11 +756,11 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateGroupMembership(Connection db) throws SQLException {
     try {
@@ -847,14 +848,14 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Gets the groupOnTeam attribute of the DocumentStoreTeamMemberList class
+   * Gets the groupOnTeam attribute of the DocumentStoreTeamMemberList class
    *
-   * @param  db                Description of the Parameter
-   * @param  documentStoreId   Description of the Parameter
-   * @param  roleId            Description of the Parameter
-   * @param  tableName         Description of the Parameter
-   * @return                   The groupOnTeam value
-   * @exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param documentStoreId Description of the Parameter
+   * @param roleId          Description of the Parameter
+   * @param tableName       Description of the Parameter
+   * @return The groupOnTeam value
+   * @throws SQLException Description of the Exception
    */
   public static boolean isGroupOnTeam(Connection db, int documentStoreId, int roleId, String tableName) throws SQLException {
     boolean exists = false;
@@ -876,12 +877,12 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Re-Assigns the management of document stores from one user to an another
+   * Re-Assigns the management of document stores from one user to an another
    *
-   * @param  db                Description of the Parameter
-   * @param  fromUserId        Description of the Parameter
-   * @param  toUserItemId      Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param fromUserId   Description of the Parameter
+   * @param toUserItemId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void reassignElements(Connection db, int fromUserId, int toUserItemId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -901,13 +902,13 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  fromUserId        Description of the Parameter
-   * @param  toUserItemId      Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param fromUserId   Description of the Parameter
+   * @param toUserItemId Description of the Parameter
+   * @param userId       Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void reassignElements(Connection db, int fromUserId, int toUserItemId, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -915,14 +916,12 @@ public class DocumentStoreTeamMemberList extends ArrayList {
         " SET item_id = ?, modifiedby = ? " +
         " WHERE item_id = ? " +
         " AND userlevel = ? ");
-
     int i = 0;
     pst.setInt(++i, toUserItemId);
     pst.setInt(++i, userId);
     pst.setInt(++i, fromUserId);
     pst.setInt(++i, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
     pst.execute();
-
     pst.close();
   }
 

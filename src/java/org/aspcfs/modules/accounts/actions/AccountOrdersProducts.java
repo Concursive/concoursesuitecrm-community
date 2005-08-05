@@ -1,44 +1,38 @@
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.orders.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.lang.*;
-import java.text.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.actionlist.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.orders.beans.*;
+import org.aspcfs.modules.orders.base.Order;
+import org.aspcfs.modules.orders.base.OrderPaymentList;
+import org.aspcfs.modules.orders.base.OrderProduct;
+import org.aspcfs.modules.orders.base.OrderProductStatusList;
+import org.aspcfs.modules.orders.beans.StatusBean;
+import org.aspcfs.modules.products.base.CustomerProduct;
+import org.aspcfs.modules.products.base.CustomerProductHistoryList;
+import org.aspcfs.modules.products.base.ProductOptionList;
+import org.aspcfs.modules.products.base.ProductOptionValuesList;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 public final class AccountOrdersProducts extends CFSModule {
-  public String executeCommandDefault(ActionContext context){
+  public String executeCommandDefault(ActionContext context) {
     return "OK";
   }
-  
-  public String executeCommandDetails(ActionContext context){
-    int productId = Integer.parseInt( (String) context.getRequest().getParameter("productId"));
+
+  public String executeCommandDetails(ActionContext context) {
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     OrderProduct orderProduct = null;
     OrderProductStatusList productStatusList = null;
     OrderPaymentList paymentList = null;
     Order order = null;
-    Connection db=null;
-    try{
+    Connection db = null;
+    try {
       db = getConnection(context);
       orderProduct = new OrderProduct();
       orderProduct.setBuildProduct(true);
@@ -51,27 +45,30 @@ public final class AccountOrdersProducts extends CFSModule {
       order.setBuildProducts(true);
       order.queryRecord(db, orderProduct.getOrderId());
       context.getRequest().setAttribute("order", order);
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
-      
-      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+
+      LookupList paymentSelect = systemStatus.getLookupList(
+          db, "lookup_payment_status");
       context.getRequest().setAttribute("paymentSelect", paymentSelect);
 
       productStatusList = orderProduct.getProductStatusList();
-      context.getRequest().setAttribute("productStatusList", productStatusList);
-      
+      context.getRequest().setAttribute(
+          "productStatusList", productStatusList);
+
       paymentList = new OrderPaymentList();
       paymentList.setOrderId(orderProduct.getOrderId());
       paymentList.setOrderItemId(orderProduct.getId());
       paymentList.buildList(db);
       context.getRequest().setAttribute("paymentList", paymentList);
-      
+
       ProductOptionList optionList = new ProductOptionList();
       optionList.buildList(db);
       context.getRequest().setAttribute("productOptionList", optionList);
-      
+
       ProductOptionValuesList valuesList = new ProductOptionValuesList();
       valuesList.buildList(db);
       context.getRequest().setAttribute("productOptionValuesList", valuesList);
@@ -98,16 +95,17 @@ public final class AccountOrdersProducts extends CFSModule {
 
   }
 
-  public String executeCommandModify(ActionContext context){
-    int productId = Integer.parseInt( (String) context.getRequest().getParameter("productId"));
+  public String executeCommandModify(ActionContext context) {
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     OrderProduct orderProduct = null;
     OrderProductStatusList productStatusList = null;
     OrderPaymentList paymentList = null;
     Order order = null;
-    Connection db=null;
-    try{
+    Connection db = null;
+    try {
       db = getConnection(context);
-      
+
       orderProduct = new OrderProduct();
       orderProduct.setBuildProduct(true);
       orderProduct.setBuildProductOptions(true);
@@ -118,29 +116,31 @@ public final class AccountOrdersProducts extends CFSModule {
       StatusBean productBean = new StatusBean();
       productBean.setStatusId(orderProduct.getStatusId());
       context.getRequest().setAttribute("statusBean", productBean);
-      
+
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      LookupList statusSelect = systemStatus.getLookupList(
+          db, "lookup_order_status");
       context.getRequest().setAttribute("statusSelect", statusSelect);
-      
+
       order = new Order();
       order.setBuildProducts(true);
       order.queryRecord(db, orderProduct.getOrderId());
       context.getRequest().setAttribute("order", order);
-      
+
       productStatusList = orderProduct.getProductStatusList();
-      context.getRequest().setAttribute("productStatusList", productStatusList);
-      
+      context.getRequest().setAttribute(
+          "productStatusList", productStatusList);
+
       paymentList = new OrderPaymentList();
       paymentList.setOrderId(orderProduct.getOrderId());
       paymentList.setOrderItemId(orderProduct.getId());
       paymentList.buildList(db);
       context.getRequest().setAttribute("paymentList", paymentList);
-      
+
       ProductOptionList optionList = new ProductOptionList();
       optionList.buildList(db);
       context.getRequest().setAttribute("productOptionList", optionList);
-      
+
       ProductOptionValuesList valuesList = new ProductOptionValuesList();
       valuesList.buildList(db);
       context.getRequest().setAttribute("productOptionValuesList", valuesList);
@@ -148,7 +148,7 @@ public final class AccountOrdersProducts extends CFSModule {
       Organization thisOrganization = null;
       thisOrganization = new Organization(db, order.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -159,17 +159,18 @@ public final class AccountOrdersProducts extends CFSModule {
     addModuleBean(context, "OrdersProducts", "OrdersProducts Details");
     return ("ModifyOK");
   }
-  
-  public String executeCommandSave(ActionContext context){
-    int productId = Integer.parseInt( (String) context.getRequest().getParameter("productId"));
+
+  public String executeCommandSave(ActionContext context) {
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     OrderProduct orderProduct = null;
     OrderProductStatusList productStatusList = null;
     OrderPaymentList paymentList = null;
     Order order = null;
-    Connection db=null;
-    try{
+    Connection db = null;
+    try {
       db = getConnection(context);
-      
+
       orderProduct = new OrderProduct();
       orderProduct.setBuildProduct(true);
       orderProduct.setBuildProductOptions(true);
@@ -200,7 +201,8 @@ public final class AccountOrdersProducts extends CFSModule {
 
   public String executeCommandDisplayCustomerProduct(ActionContext context) {
     Connection db = null;
-    int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+    int productId = Integer.parseInt(
+        (String) context.getRequest().getParameter("productId"));
     CustomerProduct customerProduct = null;
     try {
       db = getConnection(context);

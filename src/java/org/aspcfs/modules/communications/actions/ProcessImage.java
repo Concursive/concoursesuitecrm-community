@@ -16,39 +16,38 @@
 package org.aspcfs.modules.communications.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import com.zeroio.iteam.base.FileItem;
 import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.actions.CFSModule;
 
 import java.util.StringTokenizer;
 
 /**
- *  A stand alone servlet that sends files. Currently it will stream an image
- *  file from a customer's protected image library
+ * A stand alone servlet that sends files. Currently it will stream an image
+ * file from a customer's protected image library
  *
- *@author     mrajkowski
- *@created    January 23, 2002
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created January 23, 2002
  */
 public final class ProcessImage extends CFSModule {
 
   /**
-   *  Receives a request for a customer's image and processes it.<br>
-   *  Images are stored in the fileLibrary using the cryptic datetime filename
-   *  without an extension<p>
+   * Receives a request for a customer's image and processes it.<br>
+   * Images are stored in the fileLibrary using the cryptic datetime filename
+   * without an extension<p>
+   * <p/>
+   * The url format should be any of the following 3:<br>
+   * <img src="http://ds21.darkhorseventures.com/ProcessImage.do?id=sitecode|filename|imagetype">
+   * <img src="http://sitecode.darkhorseventures.com/ProcessImage.do?id=filename|imagetype">
+   * <img src="http://sitecode.darkhorseventures.com/ProcessImage.do?id=filename.imagetype">
+   * <p/>
+   * <p/>
+   * Where sitecode = ds21 or similar (leave out the cdb_)<br>
+   * filename is the date generated filename<br>
+   * imagetype should be gif or jpeg
    *
-   *  The url format should be any of the following 3:<br>
-   *  <img src="http://ds21.darkhorseventures.com/ProcessImage.do?id=sitecode|filename|imagetype">
-   *  <img src="http://sitecode.darkhorseventures.com/ProcessImage.do?id=filename|imagetype">
-   *  <img src="http://sitecode.darkhorseventures.com/ProcessImage.do?id=filename.imagetype">
-   *  <p>
-   *
-   *  Where sitecode = ds21 or similar (leave out the cdb_)<br>
-   *  filename is the date generated filename<br>
-   *  imagetype should be gif or jpeg
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     String id = (String) context.getRequest().getParameter("id");
@@ -98,7 +97,8 @@ public final class ProcessImage extends CFSModule {
       if (fileDownload.fileExists()) {
         fileDownload.sendFile(context, "image/" + imageType);
       } else {
-        System.err.println("Image-> Trying to send a file that does not exist");
+        System.err.println(
+            "Image-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection

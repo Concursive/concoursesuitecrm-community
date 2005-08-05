@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -53,7 +53,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
 <dhv:label name="myitems.tasks">Tasks</dhv:label>
 </td>
 </tr>
@@ -211,13 +211,13 @@
         </td>
         <td valign="top">
           <a href="MyTasks.do?command=Details&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; 
-          <dhv:evaluate if="<%= thisTask.getContact() != null%>">
-          <% if(!thisTask.getContact().getEmployee()){ %>
-            [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green"><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></font></a>]
-          <% }else{ %>
-            [<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green"><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></font></a>]
-          <% } %>
-          </dhv:evaluate>
+          <% if(thisTask.getContactId()!=-1) {%>
+            <% if(!thisTask.getContact().getEmployee()){ %>
+              [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green"><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></font></a>]
+            <% }else{ %>
+              [<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green"><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></font></a>]
+            <% } %>
+          <%}%>
           <dhv:evaluate if="<%= ((thisTask.getType() != Task.GENERAL) && (thisTask.getLinkDetails().getLinkItemId() != -1)) %>">
             [<a href="<%= thisTask.getLinkDetails().getLink() %>"><font color="orange"><%= thisTask.getLinkDetails().getDisplayNameFull() %></font></a>]
           </dhv:evaluate>
@@ -300,7 +300,7 @@
       }
     } else {%>
       <tr>
-        <td class="containerBody" colspan="6" valign="center">
+        <td class="containerBody" colspan="7" valign="center">
           <dhv:label name="tasks.noTasksFoundInView">No tasks found in this view.</dhv:label>
         </td>
       </tr>

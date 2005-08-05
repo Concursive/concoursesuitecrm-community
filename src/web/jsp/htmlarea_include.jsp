@@ -5,13 +5,16 @@
   -          place.
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="initPage.jsp" %>
 <%
+  if (clientType.getType() == -1) {
+    clientType.setParameters(request);
+  }
   boolean sslEnabled = "https".equals(request.getScheme());
   if (clientType.getType() == -1) {
     clientType.setParameters(request);

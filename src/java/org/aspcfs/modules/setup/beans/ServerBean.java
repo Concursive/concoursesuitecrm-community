@@ -15,18 +15,19 @@
  */
 package org.aspcfs.modules.setup.beans;
 
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.text.NumberFormat;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
-import java.text.NumberFormat;
 
 /**
- *  Bean to encapsulate the Configure Server HTML form
+ * Bean to encapsulate the Configure Server HTML form
  *
- *@author     mrajkowski
- *@created    August 26, 2003
- *@version    $Id: ServerBean.java,v 1.1.2.1 2003/08/26 21:16:19 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: ServerBean.java,v 1.1.2.1 2003/08/26 21:16:19 mrajkowski Exp
+ *          $
+ * @created August 26, 2003
  */
 public class ServerBean extends GenericBean {
 
@@ -42,9 +43,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the ServerBean object
+   * Sets the configured attribute of the ServerBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(int tmp) {
     this.configured = tmp;
@@ -52,9 +53,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the ServerBean object
+   * Sets the configured attribute of the ServerBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(String tmp) {
     this.configured = Integer.parseInt(tmp);
@@ -62,9 +63,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the url attribute of the ServerBean object
+   * Sets the url attribute of the ServerBean object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -72,9 +73,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the email attribute of the ServerBean object
+   * Sets the email attribute of the ServerBean object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -82,9 +83,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the emailAddress attribute of the ServerBean object
+   * Sets the emailAddress attribute of the ServerBean object
    *
-   *@param  tmp  The new emailAddress value
+   * @param tmp The new emailAddress value
    */
   public void setEmailAddress(String tmp) {
     this.emailAddress = tmp;
@@ -92,9 +93,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the fax attribute of the ServerBean object
+   * Sets the fax attribute of the ServerBean object
    *
-   *@param  tmp  The new fax value
+   * @param tmp The new fax value
    */
   public void setFax(String tmp) {
     this.fax = tmp;
@@ -102,9 +103,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the timeZone attribute of the ServerBean object
+   * Sets the timeZone attribute of the ServerBean object
    *
-   *@param  tmp  The new timeZone value
+   * @param tmp The new timeZone value
    */
   public void setTimeZone(String tmp) {
     this.timeZone = tmp;
@@ -112,9 +113,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the currency attribute of the ServerBean object
+   * Gets the currency attribute of the ServerBean object
    *
-   *@return    The currency value
+   * @return The currency value
    */
   public String getCurrency() {
     return currency;
@@ -122,9 +123,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the currency attribute of the ServerBean object
+   * Sets the currency attribute of the ServerBean object
    *
-   *@param  tmp  The new currency value
+   * @param tmp The new currency value
    */
   public void setCurrency(String tmp) {
     this.currency = tmp;
@@ -132,9 +133,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the language attribute of the ServerBean object
+   * Gets the language attribute of the ServerBean object
    *
-   *@return    The language value
+   * @return The language value
    */
   public String getLanguage() {
     return language;
@@ -142,9 +143,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the language attribute of the ServerBean object
+   * Sets the language attribute of the ServerBean object
    *
-   *@param  tmp  The new language value
+   * @param tmp The new language value
    */
   public void setLanguage(String tmp) {
     this.language = tmp;
@@ -152,9 +153,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the country attribute of the ServerBean object
+   * Gets the country attribute of the ServerBean object
    *
-   *@return    The country value
+   * @return The country value
    */
   public String getCountry() {
     return country;
@@ -162,9 +163,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the country attribute of the ServerBean object
+   * Sets the country attribute of the ServerBean object
    *
-   *@param  tmp  The new country value
+   * @param tmp The new country value
    */
   public void setCountry(String tmp) {
     this.country = tmp;
@@ -172,9 +173,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the configured attribute of the ServerBean object
+   * Gets the configured attribute of the ServerBean object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public int getConfigured() {
     return configured;
@@ -182,9 +183,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the url attribute of the ServerBean object
+   * Gets the url attribute of the ServerBean object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -192,9 +193,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the email attribute of the ServerBean object
+   * Gets the email attribute of the ServerBean object
    *
-   *@return    The email value
+   * @return The email value
    */
   public String getEmail() {
     return email;
@@ -202,9 +203,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the emailAddress attribute of the ServerBean object
+   * Gets the emailAddress attribute of the ServerBean object
    *
-   *@return    The emailAddress value
+   * @return The emailAddress value
    */
   public String getEmailAddress() {
     return emailAddress;
@@ -212,9 +213,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the fax attribute of the ServerBean object
+   * Gets the fax attribute of the ServerBean object
    *
-   *@return    The fax value
+   * @return The fax value
    */
   public String getFax() {
     return fax;
@@ -222,9 +223,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the timeZone attribute of the ServerBean object
+   * Gets the timeZone attribute of the ServerBean object
    *
-   *@return    The timeZone value
+   * @return The timeZone value
    */
   public String getTimeZone() {
     return timeZone;
@@ -232,9 +233,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneDefault attribute of the ServerBean object
+   * Gets the timeZoneDefault attribute of the ServerBean object
    *
-   *@return    The timeZoneDefault value
+   * @return The timeZoneDefault value
    */
   public String getTimeZoneDefault() {
     if (timeZone != null) {
@@ -246,9 +247,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the currencyDefault attribute of the ServerBean object
+   * Gets the currencyDefault attribute of the ServerBean object
    *
-   *@return    The currencyDefault value
+   * @return The currencyDefault value
    */
   public String getCurrencyDefault() {
     if (currency != null) {
@@ -260,9 +261,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the languageDefault attribute of the ServerBean object
+   * Gets the languageDefault attribute of the ServerBean object
    *
-   *@return    The languageDefault value
+   * @return The languageDefault value
    */
   public String getLanguageDefault() {
     if (language != null) {
@@ -274,9 +275,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the countryDefault attribute of the ServerBean object
+   * Gets the countryDefault attribute of the ServerBean object
    *
-   *@return    The countryDefault value
+   * @return The countryDefault value
    */
   public String getCountryDefault() {
     if (country != null) {
@@ -288,9 +289,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Sets the serverInfo attribute of the ServerBean object
+   * Sets the serverInfo attribute of the ServerBean object
    *
-   *@param  tmp  The new serverInfo value
+   * @param tmp The new serverInfo value
    */
   public void setServerInfo(String tmp) {
     StringTokenizer st = new StringTokenizer(tmp, "|");
@@ -314,9 +315,9 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the serverInfo attribute of the ServerBean object
+   * Gets the serverInfo attribute of the ServerBean object
    *
-   *@return    The serverInfo value
+   * @return The serverInfo value
    */
   public String getServerInfo() {
     return "email=" + email + "|" +

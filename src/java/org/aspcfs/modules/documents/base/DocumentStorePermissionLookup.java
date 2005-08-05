@@ -15,20 +15,17 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.utils.DatabaseUtils;
-import java.sql.*;
-import java.text.*;
-import java.util.Calendar;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public class DocumentStorePermissionLookup extends GenericBean {
 
@@ -40,16 +37,17 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Constructor for the DocumentStorePermissionLookup object
+   * Constructor for the DocumentStorePermissionLookup object
    */
-  public DocumentStorePermissionLookup() { }
+  public DocumentStorePermissionLookup() {
+  }
 
 
   /**
-   *  Constructor for the DocumentStorePermissionLookup object
+   * Constructor for the DocumentStorePermissionLookup object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStorePermissionLookup(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -57,9 +55,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the DocumentStorePermissionLookup object
+   * Sets the id attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -67,9 +65,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the DocumentStorePermissionLookup object
+   * Sets the id attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -77,9 +75,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the DocumentStorePermissionLookup object
+   * Sets the categoryId attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -87,9 +85,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the DocumentStorePermissionLookup object
+   * Sets the categoryId attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -97,9 +95,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the permission attribute of the DocumentStorePermissionLookup object
+   * Sets the permission attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -107,9 +105,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the DocumentStorePermissionLookup object
+   * Sets the description attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -117,9 +115,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the defaultRole attribute of the DocumentStorePermissionLookup object
+   * Sets the defaultRole attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new defaultRole value
+   * @param tmp The new defaultRole value
    */
   public void setDefaultRole(int tmp) {
     this.defaultRole = tmp;
@@ -127,9 +125,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Sets the defaultRole attribute of the DocumentStorePermissionLookup object
+   * Sets the defaultRole attribute of the DocumentStorePermissionLookup object
    *
-   *@param  tmp  The new defaultRole value
+   * @param tmp The new defaultRole value
    */
   public void setDefaultRole(String tmp) {
     this.defaultRole = Integer.parseInt(tmp);
@@ -137,9 +135,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the DocumentStorePermissionLookup object
+   * Gets the id attribute of the DocumentStorePermissionLookup object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -147,9 +145,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the DocumentStorePermissionLookup object
+   * Gets the categoryId attribute of the DocumentStorePermissionLookup object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -157,9 +155,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Gets the permission attribute of the DocumentStorePermissionLookup object
+   * Gets the permission attribute of the DocumentStorePermissionLookup object
    *
-   *@return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -167,9 +165,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the DocumentStorePermissionLookup object
+   * Gets the description attribute of the DocumentStorePermissionLookup object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -177,9 +175,9 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Gets the defaultRole attribute of the DocumentStorePermissionLookup object
+   * Gets the defaultRole attribute of the DocumentStorePermissionLookup object
    *
-   *@return    The defaultRole value
+   * @return The defaultRole value
    */
   public int getDefaultRole() {
     return defaultRole;
@@ -187,10 +185,10 @@ public class DocumentStorePermissionLookup extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("code");

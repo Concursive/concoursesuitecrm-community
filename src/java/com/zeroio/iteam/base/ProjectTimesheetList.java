@@ -15,11 +15,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    December 3, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created December 3, 2004
  */
 public class ProjectTimesheetList extends LinkedHashMap {
 
@@ -27,15 +27,16 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the ProjectTimesheetList object
+   * Constructor for the ProjectTimesheetList object
    */
-  public ProjectTimesheetList() { }
+  public ProjectTimesheetList() {
+  }
 
 
   /**
-   *  Gets the timesheetId attribute of the ProjectTimesheetList object
+   * Gets the timesheetId attribute of the ProjectTimesheetList object
    *
-   *@return    The timesheetId value
+   * @return The timesheetId value
    */
   public int getTimesheetId() {
     return timesheetId;
@@ -43,9 +44,9 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Sets the timesheetId attribute of the ProjectTimesheetList object
+   * Sets the timesheetId attribute of the ProjectTimesheetList object
    *
-   *@param  tmp  The new timesheetId value
+   * @param tmp The new timesheetId value
    */
   public void setTimesheetId(int tmp) {
     this.timesheetId = tmp;
@@ -53,9 +54,9 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Sets the timesheetId attribute of the ProjectTimesheetList object
+   * Sets the timesheetId attribute of the ProjectTimesheetList object
    *
-   *@param  tmp  The new timesheetId value
+   * @param tmp The new timesheetId value
    */
   public void setTimesheetId(String tmp) {
     this.timesheetId = Integer.parseInt(tmp);
@@ -63,11 +64,11 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  timesheet         Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param timesheet Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db, DailyTimesheetList timesheet) throws SQLException {
     // Prepare the query
@@ -99,10 +100,10 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  projectTimesheet  Description of the Parameter
-   *@param  dailyTimesheet    Description of the Parameter
+   * @param projectTimesheet Description of the Parameter
+   * @param dailyTimesheet   Description of the Parameter
    */
   private void add(ProjectTimesheet projectTimesheet, DailyTimesheet dailyTimesheet) {
     Integer projectId = new Integer(projectTimesheet.getProjectId());
@@ -118,10 +119,10 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisProjectId    Description of the Parameter
-   *@param  hoursAdjustment  Description of the Parameter
+   * @param thisProjectId   Description of the Parameter
+   * @param hoursAdjustment Description of the Parameter
    */
   public void add(int thisProjectId, double hoursAdjustment) {
     Integer projectId = new Integer(thisProjectId);
@@ -136,10 +137,10 @@ public class ProjectTimesheetList extends LinkedHashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     // TODO: Check if in auto-commit mode

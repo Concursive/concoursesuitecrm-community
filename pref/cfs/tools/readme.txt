@@ -1,7 +1,7 @@
 Centric CRM Tools; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM Tools
+Centric CRM Tools 0.2
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
@@ -32,21 +32,54 @@ DAMAGES RELATING TO THE SOFTWARE.
 | INTRODUCTION                                                             |
 ----------------------------------------------------------------------------
 
-Centric CRM Tools allow you to communicate with the Centric CRM application
-using HTTP.  These tools are meant to be easy to maintain.
+Centric CRM Tools includes multi-platform code to communicate with the
+Centric CRM application using HTTP.
 
-If you are going to be developing Centric CRM, please make sure to read the
-developer information at http://www.centriccrm.com/Portal.do?key=community,
-you can also find information about installing, configuring, and using
-Centric CRM there.
+For example, you can capture leads or tickets from your existing web site
+and send them straight into Centric CRM by using the "save" method.
+
+You can also read data from Centric CRM by using the "load" method.
+
+  Methods supported:
+  
+    DataRecord.INSERT
+    DataRecord.SELECT
+    DataRecord.UPDATE
+    DataRecord.DELETE
+    DataRecord.GET_DATETIME
+
+More information can be found in the Centric CRM Community...
+http://www.centriccrm.com/Portal.do?key=community
+
+
+----------------------------------------------------------------------------
+| CHANGELOG                                                                |
+----------------------------------------------------------------------------
+
+v0.2
+  June 17, 2005
+  Fix for sending data as UNICODE
+  Includes import-mappings.xml which describes Class -> DataRecord mapping
+
+v0.1
+  April 26, 2005
+  Initial version
+
 
 ----------------------------------------------------------------------------
 | REQUIREMENTS                                                             |
 ----------------------------------------------------------------------------
 
-The centric_crm-tools.jar can be used with any Java 1.4 or 1.5 application.
-
+The centric_crm_tools.jar can be used with any Java 1.4 or 1.5 application.
 You will need to have the Java Servlet-API in your classpath.
+
+
+In the Centric CRM database, a couple of manual operations currently need
+to be performed (these will have Admin web config in a later version)
+
+*  In the [sync_client] table, an arbitrary client should be inserted
+   with a plain-text password in the [code] field.  This will be used in
+   the client authentication code.
 
 
 ----------------------------------------------------------------------------
@@ -56,43 +89,90 @@ You will need to have the Java Servlet-API in your classpath.
 import org.aspcfs.utils.CRMConnection;
 import org.aspcfs.apps.transfer.DataRecord;
 
-int clientId = 5;
+// Client ID must already exist in target CRM system
+int clientId = 1;
 
 // Establish connectivity information
 CRMConnection crm = new CRMConnection();
-crm.setUrl("http://dhv.dhcrm.com");
-crm.setId("dhv.dhcrm.com");
+crm.setUrl("http://www.yourorg.com/centric");
+crm.setId("www.yourorg.com");
 crm.setCode("password");
-if (clientId == -1) {
-  clientId = crm.retrieveNewClientId();
-}
 crm.setClientId(clientId);
+
+// Start a new transaction
 crm.setAutoCommit(false);
 
-// Write some data to the connection
 DataRecord contact = new DataRecord();
 contact.setName("contact");
 contact.setAction(DataRecord.INSERT);
+contact.setShareKey(true);
 contact.addField("nameFirst", bean.getNameFirst());
 contact.addField("nameLast", bean.getNameLast());
 contact.addField("company", bean.getCompanyName());
 contact.addField("title", bean.getTitle());
+contact.addField("source", bean.getSourceId());
+contact.addField("isLead", "true");
+contact.addField("accessType", 2);
+contact.addField("leadStatus", 1);
+contact.addField("enteredBy", 0);
+contact.addField("modifiedBy", 0);
 crm.save(contact);
+
 // Transform the email
 DataRecord email = new DataRecord();
 email.setName("contactEmailAddress");
 email.setAction(DataRecord.INSERT);
 email.addField("email", bean.getEmail());
+email.addField("contactId", "$C{contact.id}");
+email.addField("type", 1);
+email.addField("enteredBy", 0);
+email.addField("modifiedBy", 0);
 crm.save(email);
+
 // Transform the phone
 DataRecord phone = new DataRecord();
 phone.setName("contactPhoneNumber");
 phone.setAction(DataRecord.INSERT);
-phone.addField("number", bean.getPhone() + (" " + StringUtils.toString(bean.getPhoneExt())).trim());
+phone.addField("number", bean.getPhone());
+phone.addField("contactId", "$C{contact.id}");
+phone.addField("type", 1);
+phone.addField("enteredBy", 0);
+phone.addField("modifiedBy", 0);
 crm.save(phone);
 
 boolean result = crm.commit();
 
-System.out.println(crm.getLastResponse);
+System.out.println(crm.getLastResponse());
 
 
+----------------------------------------------------------------------------
+| ADDITIONAL EXAMPLES                                                      |
+----------------------------------------------------------------------------
+
+1. Consider the following transaction that saves an Account, a Contact under
+   that Account, the Contacts address information, a Ticket under the
+   Account, and a Custom Record that inserts Custom Field Data into that
+   Custom Record.
+
+   account
+     organizationPhoneNumber
+     organizationEmailAddress
+     organizationAddress
+     contact
+       contactPhoneNumber
+       contactEmailAddress
+       contactAddress
+     ticket
+       customFieldRecord
+         customFieldData
+         customFieldData
+         customFieldData
+
+
+2. Another example might be to retrieve information from Centric CRM first,
+   if a record exists, then decide to create a new record or append to it.
+   Consider the following:
+
+   - Ask Centric CRM for a contact list in which the contact's email address
+     is a match.
+   - If a match is returned, then submit a ticket related to that contact

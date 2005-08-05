@@ -48,6 +48,7 @@ ALTER TABLE quote_entry ALTER COLUMN show_total SET DEFAULT true;
 ALTER TABLE quote_entry ADD COLUMN show_subtotal BOOLEAN;
 ALTER TABLE quote_entry ALTER COLUMN show_subtotal SET DEFAULT true;
 ALTER TABLE quote_entry ADD COLUMN logo_file_id INTEGER REFERENCES project_files(item_id);
+ALTER TABLE quote_entry ADD COLUMN trashed_date TIMESTAMP(3);
 
 -- Create a new table to map quote conditions to a quote
 CREATE TABLE quote_condition (

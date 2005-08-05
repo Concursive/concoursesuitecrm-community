@@ -25,14 +25,14 @@ import java.io.File;
 import java.util.*;
 
 /**
- *  Processes the permissions.xml file, turns the data into objects and can be
- *  used by a writer. Specifically, this file is used during the installation of
- *  a new database.
+ * Processes the permissions.xml file, turns the data into objects and can be
+ * used by a writer. Specifically, this file is used during the installation of
+ * a new database.
  *
- *@author     matt rajkowski
- *@created    January 23, 2003
- *@version    $Id: InitPermissionsAndRoles.java,v 1.19 2004/06/15 14:27:26
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: InitPermissionsAndRoles.java,v 1.19 2004/06/15 14:27:26
+ *          mrajkowski Exp $
+ * @created January 23, 2003
  */
 public class InitPermissionsAndRoles implements DataReader {
   public final static String fs = System.getProperty("file.separator");
@@ -40,9 +40,9 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Sets the processConfigFile attribute of the InitPermissionsAndRoles object
+   * Sets the processConfigFile attribute of the InitPermissionsAndRoles object
    *
-   *@param  tmp  The new processConfigFile value
+   * @param tmp The new processConfigFile value
    */
   public void setProcessConfigFile(String tmp) {
     this.processConfigFile = tmp;
@@ -50,9 +50,9 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Gets the processConfigFile attribute of the InitPermissionsAndRoles object
+   * Gets the processConfigFile attribute of the InitPermissionsAndRoles object
    *
-   *@return    The processConfigFile value
+   * @return The processConfigFile value
    */
   public String getProcessConfigFile() {
     return processConfigFile;
@@ -60,9 +60,9 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Gets the version attribute of the InitPermissionsAndRoles object
+   * Gets the version attribute of the InitPermissionsAndRoles object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -70,9 +70,9 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Gets the name attribute of the InitPermissionsAndRoles object
+   * Gets the name attribute of the InitPermissionsAndRoles object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Centric CRM Permissions and Roles XML Reader";
@@ -80,9 +80,9 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Gets the description attribute of the InitPermissionsAndRoles object
+   * Gets the description attribute of the InitPermissionsAndRoles object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Reads permissions and categories; reads in associated roles";
@@ -90,9 +90,9 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Gets the configured attribute of the InitPermissionsAndRoles object
+   * Gets the configured attribute of the InitPermissionsAndRoles object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     boolean configOK = true;
@@ -104,7 +104,8 @@ public class InitPermissionsAndRoles implements DataReader {
 
     File configFile = new File(processConfigFile);
     if (!configFile.exists()) {
-      logger.info("InitPermissionsAndRoles-> Config: process config file not found: " + processConfigFile);
+      logger.info(
+          "InitPermissionsAndRoles-> Config: process config file not found: " + processConfigFile);
       configOK = false;
     }
 
@@ -113,10 +114,10 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
@@ -127,7 +128,8 @@ public class InitPermissionsAndRoles implements DataReader {
 
       //Read in all of the permission categories (categories and permissions)
       ArrayList categoryList = new ArrayList();
-      XMLUtils.getAllChildren(xml.getFirstChild("permissions"), "category", categoryList);
+      XMLUtils.getAllChildren(
+          xml.getFirstChild("permissions"), "category", categoryList);
       logger.info("Categories: " + categoryList.size());
       Comparator comparator = new CategoryElementComparator();
       Object sortArray[] = categoryList.toArray();
@@ -150,7 +152,8 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.setName("permissionCategory");
         thisRecord.setAction("insert");
         thisRecord.addField("constant", (String) category.getAttribute("id"));
-        thisRecord.addField("category", (String) category.getAttribute("name"));
+        thisRecord.addField(
+            "category", (String) category.getAttribute("name"));
         thisRecord.addField("level", String.valueOf(categoryLevel));
         //The default is true, if not set in the XML
         if ("false".equals((String) category.getAttribute("enabled"))) {
@@ -160,15 +163,25 @@ public class InitPermissionsAndRoles implements DataReader {
           thisRecord.addField("enabled", "true");
           thisRecord.addField("active", "true");
         }
-        thisRecord.addField("folders", (String) category.getAttribute("folders"));
-        thisRecord.addField("lookups", (String) category.getAttribute("lookups"));
-        thisRecord.addField("viewpoints", (String) category.getAttribute("viewpoints"));
-        thisRecord.addField("reports", (String) category.getAttribute("reports"));
-        thisRecord.addField("scheduledEvents", (String) category.getAttribute("scheduledEvents"));
-        thisRecord.addField("objectEvents", (String) category.getAttribute("objectEvents"));
-        thisRecord.addField("categories", (String) category.getAttribute("categories"));
-        thisRecord.addField("products", (String) category.getAttribute("products"));
-        thisRecord.addField("webdav", (String) category.getAttribute("webdav"));
+        thisRecord.addField(
+            "folders", (String) category.getAttribute("folders"));
+        thisRecord.addField(
+            "lookups", (String) category.getAttribute("lookups"));
+        thisRecord.addField(
+            "viewpoints", (String) category.getAttribute("viewpoints"));
+        thisRecord.addField(
+            "reports", (String) category.getAttribute("reports"));
+        thisRecord.addField(
+            "scheduledEvents", (String) category.getAttribute(
+                "scheduledEvents"));
+        thisRecord.addField(
+            "objectEvents", (String) category.getAttribute("objectEvents"));
+        thisRecord.addField(
+            "categories", (String) category.getAttribute("categories"));
+        thisRecord.addField(
+            "products", (String) category.getAttribute("products"));
+        thisRecord.addField(
+            "webdav", (String) category.getAttribute("webdav"));
         thisRecord.addField("logos", (String) category.getAttribute("logos"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
@@ -185,14 +198,21 @@ public class InitPermissionsAndRoles implements DataReader {
           permissionRecord.setName("permission");
           permissionRecord.setAction("insert");
           permissionRecord.addField("categoryId", String.valueOf(categoryId));
-          permissionRecord.addField("permissionLevel", String.valueOf(permissionLevel));
-          permissionRecord.addField("name", (String) permission.getAttribute("name"));
-          permissionRecord.addField("description", (String) permission.getAttribute("description"));
+          permissionRecord.addField(
+              "permissionLevel", String.valueOf(permissionLevel));
+          permissionRecord.addField(
+              "name", (String) permission.getAttribute("name"));
+          permissionRecord.addField(
+              "description", (String) permission.getAttribute("description"));
           String attributes = (String) permission.getAttribute("attributes");
-          permissionRecord.addField("view", String.valueOf(attributes.indexOf("v") > -1));
-          permissionRecord.addField("add", String.valueOf(attributes.indexOf("a") > -1));
-          permissionRecord.addField("edit", String.valueOf(attributes.indexOf("e") > -1));
-          permissionRecord.addField("delete", String.valueOf(attributes.indexOf("d") > -1));
+          permissionRecord.addField(
+              "view", String.valueOf(attributes.indexOf("v") > -1));
+          permissionRecord.addField(
+              "add", String.valueOf(attributes.indexOf("a") > -1));
+          permissionRecord.addField(
+              "edit", String.valueOf(attributes.indexOf("e") > -1));
+          permissionRecord.addField(
+              "delete", String.valueOf(attributes.indexOf("d") > -1));
           //The default is true, if not set in the XML
           if ("false".equals((String) permission.getAttribute("enabled"))) {
             permissionRecord.addField("enabled", "false");
@@ -208,7 +228,9 @@ public class InitPermissionsAndRoles implements DataReader {
           }
           writer.save(permissionRecord);
           int permissionId = Integer.parseInt(writer.getLastResponse());
-          permissionIds.put((String) permission.getAttribute("name"), new Integer(permissionId));
+          permissionIds.put(
+              (String) permission.getAttribute("name"), new Integer(
+                  permissionId));
         }
 
         //Insert any folders under this category
@@ -223,9 +245,11 @@ public class InitPermissionsAndRoles implements DataReader {
           folderRecord.setName("folder");
           folderRecord.setAction("insert");
           folderRecord.addField("moduleId", String.valueOf(categoryId));
-          folderRecord.addField("categoryId", (String) folder.getAttribute("constantId"));
+          folderRecord.addField(
+              "categoryId", (String) folder.getAttribute("constantId"));
           folderRecord.addField("level", String.valueOf(folderLevel));
-          folderRecord.addField("description", (String) folder.getAttribute("description"));
+          folderRecord.addField(
+              "description", (String) folder.getAttribute("description"));
           writer.save(folderRecord);
         }
 
@@ -241,11 +265,15 @@ public class InitPermissionsAndRoles implements DataReader {
           lookupRecord.setName("lookup");
           lookupRecord.setAction("insert");
           lookupRecord.addField("moduleId", String.valueOf(categoryId));
-          lookupRecord.addField("lookupId", (String) lookup.getAttribute("constantId"));
-          lookupRecord.addField("class", (String) lookup.getAttribute("class"));
-          lookupRecord.addField("table", (String) lookup.getAttribute("table"));
+          lookupRecord.addField(
+              "lookupId", (String) lookup.getAttribute("constantId"));
+          lookupRecord.addField(
+              "class", (String) lookup.getAttribute("class"));
+          lookupRecord.addField(
+              "table", (String) lookup.getAttribute("table"));
           lookupRecord.addField("level", String.valueOf(lookupLevel));
-          lookupRecord.addField("description", (String) lookup.getAttribute("description"));
+          lookupRecord.addField(
+              "description", (String) lookup.getAttribute("description"));
           lookupRecord.addField("categoryId", uniqueCategoryId);
           writer.save(lookupRecord);
         }
@@ -260,9 +288,9 @@ public class InitPermissionsAndRoles implements DataReader {
           reportRecord.setName("report");
           reportRecord.setAction("insert");
           reportRecord.addField("categoryId", String.valueOf(categoryId));
-          //TODO: Lookup the id if there is one
-          //reportRecord.addField("permissionId", String.valueOf(permissionId));
-          reportRecord.addField("permissionId", -1);
+          reportRecord.addField(
+              "permissionId", ((Integer) permissionIds.get(
+                  report.getAttribute("permission"))).intValue());
           reportRecord.addField("file", (String) report.getAttribute("file"));
           String type = report.getAttribute("type");
           if ("admin".equals(type)) {
@@ -270,8 +298,10 @@ public class InitPermissionsAndRoles implements DataReader {
           } else {
             reportRecord.addField("type", "1");
           }
-          reportRecord.addField("title", (String) report.getAttribute("title"));
-          reportRecord.addField("description", (String) report.getAttribute("description"));
+          reportRecord.addField(
+              "title", (String) report.getAttribute("title"));
+          reportRecord.addField(
+              "description", (String) report.getAttribute("description"));
           reportRecord.addField("enteredBy", "0");
           reportRecord.addField("modifiedBy", "0");
           writer.save(reportRecord);
@@ -279,7 +309,8 @@ public class InitPermissionsAndRoles implements DataReader {
 
         //Insert any multiple categories under this category
         ArrayList multipleCategory = new ArrayList();
-        XMLUtils.getAllChildren(category, "multipleCategory", multipleCategory);
+        XMLUtils.getAllChildren(
+            category, "multipleCategory", multipleCategory);
         Iterator multipleItems = multipleCategory.iterator();
         int multipleLevel = 0;
         while (multipleItems.hasNext()) {
@@ -290,14 +321,18 @@ public class InitPermissionsAndRoles implements DataReader {
           multipleRecord.setAction("insert");
           multipleRecord.addField("moduleId", String.valueOf(categoryId));
           multipleRecord.addField("categoryId", uniqueCategoryId);
-          multipleRecord.addField("constantId", (String) multiple.getAttribute("constantId"));
-          multipleRecord.addField("table", (String) multiple.getAttribute("table"));
+          multipleRecord.addField(
+              "constantId", (String) multiple.getAttribute("constantId"));
+          multipleRecord.addField(
+              "table", (String) multiple.getAttribute("table"));
           multipleRecord.addField("level", String.valueOf(multipleLevel));
-          multipleRecord.addField("description", (String) multiple.getAttribute("description"));
-          multipleRecord.addField("maxLevels", (String) multiple.getAttribute("maxLevels"));
+          multipleRecord.addField(
+              "description", (String) multiple.getAttribute("description"));
+          multipleRecord.addField(
+              "maxLevels", (String) multiple.getAttribute("maxLevels"));
           writer.save(multipleRecord);
         }
-        
+
         //Insert any webdav modules under this category
         ArrayList webdavList = new ArrayList();
         XMLUtils.getAllChildren(category, "webdav", webdavList);
@@ -308,7 +343,8 @@ public class InitPermissionsAndRoles implements DataReader {
           webdavRecord.setName("webdav");
           webdavRecord.setAction("insert");
           webdavRecord.addField("categoryId", String.valueOf(categoryId));
-          webdavRecord.addField("class", (String) webdav.getAttribute("class"));
+          webdavRecord.addField(
+              "class", (String) webdav.getAttribute("class"));
           writer.save(webdavRecord);
         }
       }
@@ -324,8 +360,12 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.setName("role");
         thisRecord.setAction("insert");
         thisRecord.addField("role", (String) role.getAttribute("name"));
-        thisRecord.addField("description", (String) role.getAttribute("description"));
-        thisRecord.addField("type", (((role.getAttribute("type") == null) || ("".equals(role.getAttribute("type")))) ? "0" : (String) role.getAttribute("type")));
+        thisRecord.addField(
+            "description", (String) role.getAttribute("description"));
+        thisRecord.addField(
+            "type", (((role.getAttribute("type") == null) || ("".equals(
+                role.getAttribute("type")))) ? "0" : (String) role.getAttribute(
+                    "type")));
         if ("false".equals((String) role.getAttribute("enabled"))) {
           thisRecord.addField("enabled", "false");
         } else {
@@ -344,12 +384,19 @@ public class InitPermissionsAndRoles implements DataReader {
           rolePermissionRecord.setName("rolePermission");
           rolePermissionRecord.setAction("insert");
           rolePermissionRecord.addField("roleId", String.valueOf(roleId));
-          rolePermissionRecord.addField("permissionId", ((Integer) permissionIds.get((String) rolePermission.getAttribute("name"))).intValue());
-          String attributes = (String) rolePermission.getAttribute("attributes");
-          rolePermissionRecord.addField("view", String.valueOf(attributes.indexOf("v") > -1));
-          rolePermissionRecord.addField("add", String.valueOf(attributes.indexOf("a") > -1));
-          rolePermissionRecord.addField("edit", String.valueOf(attributes.indexOf("e") > -1));
-          rolePermissionRecord.addField("delete", String.valueOf(attributes.indexOf("d") > -1));
+          rolePermissionRecord.addField(
+              "permissionId", ((Integer) permissionIds.get(
+                  (String) rolePermission.getAttribute("name"))).intValue());
+          String attributes = (String) rolePermission.getAttribute(
+              "attributes");
+          rolePermissionRecord.addField(
+              "view", String.valueOf(attributes.indexOf("v") > -1));
+          rolePermissionRecord.addField(
+              "add", String.valueOf(attributes.indexOf("a") > -1));
+          rolePermissionRecord.addField(
+              "edit", String.valueOf(attributes.indexOf("e") > -1));
+          rolePermissionRecord.addField(
+              "delete", String.valueOf(attributes.indexOf("d") > -1));
           writer.save(rolePermissionRecord);
         }
       }
@@ -362,20 +409,20 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   /**
-   *  Used for comparing this object by id
+   * Used for comparing this object by id
    *
-   *@author     matt rajkowski
-   *@created    January 23, 2003
-   *@version    $Id: InitPermissionsAndRoles.java,v 1.19 2004/06/15 14:27:26
-   *      mrajkowski Exp $
+   * @author matt rajkowski
+   * @version $Id: InitPermissionsAndRoles.java,v 1.19 2004/06/15 14:27:26
+   *          mrajkowski Exp $
+   * @created January 23, 2003
    */
   class CategoryElementComparator implements Comparator {
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  left   Description of the Parameter
-     *@param  right  Description of the Parameter
-     *@return        Description of the Return Value
+     * @param left  Description of the Parameter
+     * @param right Description of the Parameter
+     * @return Description of the Return Value
      */
     public int compare(Object left, Object right) {
       int a = Integer.parseInt((String) ((Element) left).getAttribute("id"));

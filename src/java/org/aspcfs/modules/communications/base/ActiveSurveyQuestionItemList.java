@@ -15,18 +15,20 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import javax.servlet.http.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Maintains an Array of Items for a Active Survey Question.
+ * Maintains an Array of Items for a Active Survey Question.
  *
- *@author     akhi_m
- *@created    November 1, 2002
- *@version    $Id: ActiveSurveyQuestionItemList.java,v 1.4 2003/01/14 16:11:33
- *      akhi_m Exp $
+ * @author akhi_m
+ * @version $Id: ActiveSurveyQuestionItemList.java,v 1.4 2003/01/14 16:11:33
+ *          akhi_m Exp $
+ * @created November 1, 2002
  */
 public class ActiveSurveyQuestionItemList extends ArrayList {
 
@@ -34,22 +36,24 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Constructor for the ItemList object
+   * Constructor for the ItemList object
    */
-  public ActiveSurveyQuestionItemList() { }
+  public ActiveSurveyQuestionItemList() {
+  }
 
 
   /**
-   *  Builds ActiveSurveyItemList from a ItemList object (copy)
+   * Builds ActiveSurveyItemList from a ItemList object (copy)
    *
-   *@param  items  Description of the Parameter
+   * @param items Description of the Parameter
    */
   public ActiveSurveyQuestionItemList(ItemList items) {
     if (items != null) {
       Iterator thisList = items.iterator();
       while (thisList.hasNext()) {
         Item inactiveItem = (Item) thisList.next();
-        ActiveSurveyQuestionItem thisItem = new ActiveSurveyQuestionItem(inactiveItem);
+        ActiveSurveyQuestionItem thisItem = new ActiveSurveyQuestionItem(
+            inactiveItem);
         this.add(thisItem);
       }
     }
@@ -57,9 +61,9 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Gets the questionId attribute of the ActiveSurveyQuestionItemList object
+   * Gets the questionId attribute of the ActiveSurveyQuestionItemList object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return questionId;
@@ -67,11 +71,11 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the ActiveSurveyQuestionItemList object
+   * Gets the object attribute of the ActiveSurveyQuestionItemList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestionItem getObject(ResultSet rs) throws SQLException {
     ActiveSurveyQuestionItem thisItem = new ActiveSurveyQuestionItem(rs);
@@ -80,9 +84,9 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Sets the questionId attribute of the ActiveSurveyQuestionItemList object
+   * Sets the questionId attribute of the ActiveSurveyQuestionItemList object
    *
-   *@param  questionId  The new questionId value
+   * @param questionId The new questionId value
    */
   public void setQuestionId(int questionId) {
     this.questionId = questionId;
@@ -90,21 +94,20 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Sets the questionId attribute of the ActiveSurveyQuestionItemList object
+   * Sets the questionId attribute of the ActiveSurveyQuestionItemList object
    *
-   *@param  questionId  The new questionId value
+   * @param questionId The new questionId value
    */
   public void setQuestionId(String questionId) {
     this.questionId = Integer.parseInt(questionId);
   }
 
 
-
   /**
-   *  Gets the question attribute of the ActiveSurveyQuestionItemList object
+   * Gets the question attribute of the ActiveSurveyQuestionItemList object
    *
-   *@param  itemId  Description of the Parameter
-   *@return         The question value
+   * @param itemId Description of the Parameter
+   * @return The question value
    */
   public ActiveSurveyQuestionItem getItem(int itemId) {
     Iterator thisList = this.iterator();
@@ -120,12 +123,12 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  questionId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param questionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateResponse(Connection db, int questionId) throws SQLException {
     PreparedStatement pst = null;
@@ -154,12 +157,12 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Delete all Items for a Active Survey Question
+   * Delete all Items for a Active Survey Question
    *
-   *@param  db                Description of the Parameter
-   *@param  questionId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param questionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean delete(Connection db, int questionId) throws SQLException {
     boolean commit = true;
@@ -191,10 +194,10 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -211,12 +214,12 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     String sql =

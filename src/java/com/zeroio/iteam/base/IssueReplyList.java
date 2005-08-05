@@ -26,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id: IssueReplyList.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: IssueReplyList.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *          Exp $
+ * @created January 15, 2003
  */
 public class IssueReplyList extends ArrayList {
 
@@ -45,15 +45,16 @@ public class IssueReplyList extends ArrayList {
   private int projectId = -1;
 
   /**
-   *  Constructor for the IssueReplyList object
+   * Constructor for the IssueReplyList object
    */
-  public IssueReplyList() { }
+  public IssueReplyList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the IssueReplyList object
+   * Sets the pagedListInfo attribute of the IssueReplyList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -61,9 +62,9 @@ public class IssueReplyList extends ArrayList {
 
 
   /**
-   *  Sets the lastReplies attribute of the IssueReplyList object
+   * Sets the lastReplies attribute of the IssueReplyList object
    *
-   *@param  tmp  The new lastReplies value
+   * @param tmp The new lastReplies value
    */
   public void setLastReplies(int tmp) {
     this.lastReplies = tmp;
@@ -71,9 +72,9 @@ public class IssueReplyList extends ArrayList {
 
 
   /**
-   *  Sets the issue attribute of the IssueReplyList object
+   * Sets the issue attribute of the IssueReplyList object
    *
-   *@param  tmp  The new issue value
+   * @param tmp The new issue value
    */
   public void setIssue(Issue tmp) {
     this.issue = tmp;
@@ -81,9 +82,9 @@ public class IssueReplyList extends ArrayList {
 
 
   /**
-   *  Sets the issueId attribute of the IssueReplyList object
+   * Sets the issueId attribute of the IssueReplyList object
    *
-   *@param  tmp  The new issueId value
+   * @param tmp The new issueId value
    */
   public void setIssueId(int tmp) {
     this.issueId = tmp;
@@ -91,9 +92,9 @@ public class IssueReplyList extends ArrayList {
 
 
   /**
-   *  Gets the issue attribute of the IssueReplyList object
+   * Gets the issue attribute of the IssueReplyList object
    *
-   *@return    The issue value
+   * @return The issue value
    */
   public Issue getIssue() {
     return issue;
@@ -113,10 +114,10 @@ public class IssueReplyList extends ArrayList {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -155,9 +156,10 @@ public class IssueReplyList extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
-          "AND lower(subject) < ? ");
+          "AND " + DatabaseUtils.toLowerCase(db) + "(subject) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -180,22 +182,15 @@ public class IssueReplyList extends ArrayList {
         "FROM project_issue_replies r " +
         "WHERE r.reply_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       IssueReply thisReply = new IssueReply(rs);
       thisReply.setIssue(issue);
       this.add(thisReply);
@@ -214,9 +209,9 @@ public class IssueReplyList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -229,11 +224,11 @@ public class IssueReplyList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -244,7 +239,7 @@ public class IssueReplyList extends ArrayList {
 
     return i;
   }
-  
+
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator i = this.iterator();
     while (i.hasNext()) {

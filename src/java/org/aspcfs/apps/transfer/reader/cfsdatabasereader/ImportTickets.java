@@ -15,25 +15,23 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.apps.transfer.*;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 import org.aspcfs.modules.troubletickets.base.TicketCategoryList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.troubletickets.base.TicketLogList;
-import com.zeroio.iteam.base.*;
-import java.util.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Processes Tickets
+ * Processes Tickets
  *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id: ImportTickets.java,v 1.18 2003/06/30 17:48:12 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: ImportTickets.java,v 1.18 2003/06/30 17:48:12 mrajkowski Exp
+ *          $
+ * @created January 14, 2003
  */
 public class ImportTickets implements CFSDatabaseReaderImportModule {
 
@@ -42,13 +40,13 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -60,7 +58,8 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     categoryList.buildList(db);
     Iterator categories = categoryList.iterator();
     while (categories.hasNext()) {
-      DataRecord thisRecord = mappings.createDataRecord(categories.next(), "insert");
+      DataRecord thisRecord = mappings.createDataRecord(
+          categories.next(), "insert");
       if ("0".equals(thisRecord.getValue("parentCode"))) {
         //Remove the lookup attribute by overwriting the previous field
         thisRecord.removeField("parentCode");

@@ -30,6 +30,7 @@ import org.apache.naming.resources.ResourceAttributes;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.controller.objectHookManager.ObjectHookAction;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 
 import javax.naming.InitialContext;
@@ -39,6 +40,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -60,14 +62,14 @@ import java.util.*;
  * The default resource-serving servlet for most web applications,
  * used to serve static resources such as HTML pages and images.
  *
- *@author     Craig R. McClanahan
- *@author     Remy Maucherat
- *@created    October 26, 2004
- *@version    $Revision$ $Date$
+ * @author Craig R. McClanahan
+ * @author Remy Maucherat
+ * @version $Revision$ $Date$
+ * @created October 26, 2004
  */
 
 public class DefaultServlet
-     extends HttpServlet {
+    extends HttpServlet {
 
   // ----------------------------------------------------- Instance Variables
 
@@ -130,6 +132,7 @@ public class DefaultServlet
 
   protected final static String METHOD_GET = "GET";
   protected final static String METHOD_PUT = "PUT";
+  protected final static String METHOD_HEAD = "HEAD";
 
   protected final static int CFS_SQLERROR = 425;
 
@@ -180,7 +183,7 @@ public class DefaultServlet
   /**
    * Initialize this servlet.
    *
-   *@exception  ServletException  Description of the Exception
+   * @throws ServletException Description of the Exception
    */
   public void init() throws ServletException {
 
@@ -232,7 +235,8 @@ public class DefaultServlet
     }
 
     if (debug > 0) {
-      log("DefaultServlet.init:  input buffer size=" + input +
+      log(
+          "DefaultServlet.init:  input buffer size=" + input +
           ", output buffer size=" + output);
     }
 
@@ -250,10 +254,10 @@ public class DefaultServlet
    *  Utility Methods
    */
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean managerReady(ActionContext context) {
     if (context.getServletContext().getAttribute("WebdavManager") != null) {
@@ -263,12 +267,19 @@ public class DefaultServlet
     }
   }
 
+  protected String decodePath(String path) {
+    try {
+      return java.net.URLDecoder.decode(path, "UTF-8");
+    } catch (java.io.UnsupportedEncodingException e) {
+      return path;
+    }
+  }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   protected synchronized ConnectionElement retrieveConnectionElement(ActionContext context) {
     String serverName = context.getRequest().getServerName();
@@ -287,34 +298,51 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the path attribute of the DefaultServlet object
+   * Gets the path attribute of the DefaultServlet object
    *
-   *@param  context  Description of the Parameter
-   *@return          The path value
+   * @param context Description of the Parameter
+   * @return The path value
    */
   protected String getPath(ActionContext context) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     return prefs.get("FILELIBRARY");
   }
 
 
   /**
-   *  Gets the systemStatus attribute of the DefaultServlet object
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@param  ce       Description of the Parameter
-   *@return          The systemStatus value
+   * @param context Description of the Parameter
+   * @param object  Description of the Parameter
+   */
+  protected void processInsertHook(ActionContext context, Object object) {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+        "ConnectionPool");
+    ConnectionElement ce = this.getConnectionElement(context);
+    this.getSystemStatus(context).processHook(
+        context,
+        ObjectHookAction.INSERT, null, object, sqlDriver, ce);
+  }
+
+  /**
+   * Gets the systemStatus attribute of the DefaultServlet object
+   *
+   * @param context Description of the Parameter
+   * @param ce      Description of the Parameter
+   * @return The systemStatus value
    */
   protected SystemStatus getSystemStatus(ActionContext context, ConnectionElement ce) {
-    return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl());
   }
 
 
   /**
-   *  Gets the systemStatus attribute of the DefaultServlet object
+   * Gets the systemStatus attribute of the DefaultServlet object
    *
-   *@param  context  Description of the Parameter
-   *@return          The systemStatus value
+   * @param context Description of the Parameter
+   * @return The systemStatus value
    */
   protected SystemStatus getSystemStatus(ActionContext context) {
     return getSystemStatus(context, this.getConnectionElement(context));
@@ -322,10 +350,10 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the connectionElement attribute of the DefaultServlet object
+   * Gets the connectionElement attribute of the DefaultServlet object
    *
-   *@param  context  Description of the Parameter
-   *@return          The connectionElement value
+   * @param context Description of the Parameter
+   * @return The connectionElement value
    */
   protected ConnectionElement getConnectionElement(ActionContext context) {
     String serverName = context.getRequest().getServerName();
@@ -334,10 +362,10 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the webdavManager attribute of the DefaultServlet object
+   * Gets the webdavManager attribute of the DefaultServlet object
    *
-   *@param  context  Description of the Parameter
-   *@return          The webdavManager value
+   * @param context Description of the Parameter
+   * @return The webdavManager value
    */
   protected WebdavManager getWebdavManager(ActionContext context) {
     ConnectionElement ce = this.getConnectionElement(context);
@@ -347,10 +375,10 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the userId attribute of the DefaultServlet object
+   * Gets the userId attribute of the DefaultServlet object
    *
-   *@param  context  Description of the Parameter
-   *@return          The userId value
+   * @param context Description of the Parameter
+   * @return The userId value
    */
   protected int getUserId(ActionContext context) {
     String username = this.getUser(context);
@@ -359,28 +387,30 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the connection attribute of the DefaultServlet object
+   * Gets the connection attribute of the DefaultServlet object
    *
-   *@param  context           Description of the Parameter
-   *@return                   The connection value
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @return The connection value
+   * @throws SQLException Description of the Exception
    */
   protected Connection getConnection(ActionContext context) throws SQLException {
     ConnectionElement ce = this.getConnectionElement(context);
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+        "ConnectionPool");
     return sqlDriver.getConnection(ce);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db       Description of the Parameter
-   *@param  context  Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
    */
   protected void freeConnection(Connection db, ActionContext context) {
     if (db != null) {
-      ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+      ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
+          "ConnectionPool");
       sqlDriver.free(db);
     }
     db = null;
@@ -388,11 +418,11 @@ public class DefaultServlet
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context    Description of the Parameter
-   *@param  argHeader  Description of the Parameter
-   *@return            The authenticationParams value
+   * @param context   Description of the Parameter
+   * @param argHeader Description of the Parameter
+   * @return The authenticationParams value
    */
   protected HashMap getAuthenticationParams(ActionContext context, String argHeader) {
     HashMap params = new HashMap();
@@ -403,7 +433,8 @@ public class DefaultServlet
         token = token.substring("Digest".length());
       }
       String param = token.substring(0, token.indexOf("=")).trim();
-      String value = token.substring(token.indexOf("\"") + 1, token.lastIndexOf("\""));
+      String value = token.substring(
+          token.indexOf("\"") + 1, token.lastIndexOf("\""));
       params.put(param, value);
     }
     return params;
@@ -411,10 +442,10 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the user attribute of the DefaultServlet object
+   * Gets the user attribute of the DefaultServlet object
    *
-   *@param  context  Description of the Parameter
-   *@return          The user value
+   * @param context Description of the Parameter
+   * @return The user value
    */
   protected String getUser(ActionContext context) {
     String argHeader = context.getRequest().getHeader("Authorization");
@@ -432,15 +463,16 @@ public class DefaultServlet
       return username;
     } else {
       //DIGEST AUTHENTICATION
-      return (String) getAuthenticationParams(context, argHeader).get("username");
+      return (String) getAuthenticationParams(context, argHeader).get(
+          "username");
     }
   }
 
 
   /**
-   *  Gets the nonce attribute of the DefaultServlet object
+   * Gets the nonce attribute of the DefaultServlet object
    *
-   *@return    The nonce value
+   * @return The nonce value
    */
   protected String generateNonce() {
     sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
@@ -451,9 +483,9 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the opaque attribute of the DefaultServlet object
+   * Gets the opaque attribute of the DefaultServlet object
    *
-   *@return    The opaque value
+   * @return The opaque value
    */
   protected String generateOpaque() {
     sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
@@ -463,23 +495,25 @@ public class DefaultServlet
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  ServletException  Description of the Exception
-   *@exception  IOException       Description of the Exception
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws ServletException Description of the Exception
+   * @throws IOException      Description of the Exception
    */
   protected void service(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+      throws ServletException, IOException {
 
-    ActionContext context = new ActionContext(this, null, null, req, resp);
+    ActionContext context = new ActionContext(this, req, resp);
     String method = req.getMethod();
 
     if (method.equals(METHOD_GET)) {
-      doGet(context, req, resp);
+      doGet(context);
     } else if (method.equals(METHOD_PUT)) {
-      doPut(req, resp);
+      doPut(context);
+    } else if (method.equals(METHOD_HEAD)) {
+      doHead(context);
     }
   }
 
@@ -491,7 +525,7 @@ public class DefaultServlet
    * JNDI first, then in the servlet context if JNDI has failed (it could be
    * disabled). It will return null.
    *
-   *@return    A JNDI DirContext, or null.
+   * @return A JNDI DirContext, or null.
    */
   protected DirContext getResources() {
 
@@ -523,37 +557,33 @@ public class DefaultServlet
 
 
   /**
-   *  Gets the cFSResources attribute of the DefaultServlet object
+   * Gets the cFSResources attribute of the DefaultServlet object
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@return                   The cFSResources value
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @return The cFSResources value
+   * @throws SQLException Description of the Exception
    */
-  protected ModuleContext getCFSResources(Connection db, ActionContext context) throws SQLException {
-    ModuleContext result = null;
-    /*
-     *  /TODO: cache the context tree so that it is not built from scratch ie root
-     *  / everytime. But caching would make the tree go out of sync with the
-     *  / database
-     */
+  protected synchronized ModuleContext getCFSResources(Connection db, ActionContext context) throws SQLException {
+    ModuleContext rootContext = null;
     try {
       String username = this.getUser(context);
       ConnectionElement ce = this.getConnectionElement(context);
       SystemStatus thisSystem = this.getSystemStatus(context, ce);
       WebdavManager thisManager = this.getWebdavManager(context);
-      result = (ModuleContext) thisManager.getResources(db, thisSystem, username);
+      rootContext = (ModuleContext) thisManager.getResources(
+          db, thisSystem, username);
     } catch (ClassCastException e) {
       // Failed : Not the right type
     }
-    return result;
+    return rootContext;
   }
 
 
   /**
    * Show HTTP header information.
    *
-   *@param  req  Description of the Parameter
+   * @param req Description of the Parameter
    */
   protected void showRequestInfo(HttpServletRequest req) {
 
@@ -614,8 +644,9 @@ public class DefaultServlet
     System.out.println("Path translated : " + req.getPathTranslated());
     System.out.println("Query string : " + req.getQueryString());
     System.out.println("Remote user : " + req.getRemoteUser());
-    System.out.println("Requested session id : "
-         + req.getRequestedSessionId());
+    System.out.println(
+        "Requested session id : "
+        + req.getRequestedSessionId());
     System.out.println("Request URI : " + req.getRequestURI());
     System.out.println("Context path : " + req.getContextPath());
     System.out.println("Servlet path : " + req.getServletPath());
@@ -641,8 +672,8 @@ public class DefaultServlet
   /**
    * Return the relative path associated with this servlet.
    *
-   *@param  request  The servlet request we are processing
-   *@return          The relativePath value
+   * @param request The servlet request we are processing
+   * @return The relativePath value
    */
   protected String getRelativePath(HttpServletRequest request) {
 
@@ -675,26 +706,24 @@ public class DefaultServlet
   /**
    * Process a GET request for the specified resource.
    *
-   *@param  request               The servlet request we are processing
-   *@param  response              The servlet response we are creating
-   *@param  context               Description of the Parameter
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @param context Description of the Parameter
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
-  protected void doGet(ActionContext context, HttpServletRequest request, HttpServletResponse response)
-       throws IOException, ServletException {
+  protected void doGet(ActionContext context)
+      throws IOException, ServletException {
 
     if (debug > 999) {
-      showRequestInfo(request);
+      showRequestInfo(context.getRequest());
     }
 
     // Serve the requested resource, including the data content
     try {
-      serveResource(context, request, response, true);
+      serveResource(context, true, METHOD_GET);
     } catch (IOException ex) {
       // we probably have this check somewhere else too.
       if (ex.getMessage() != null
-           && ex.getMessage().indexOf("Broken pipe") >= 0) {
+          && ex.getMessage().indexOf("Broken pipe") >= 0) {
         // ignore it.
       }
       throw ex;
@@ -706,18 +735,16 @@ public class DefaultServlet
   /**
    * Process a HEAD request for the specified resource.
    *
-   *@param  request               The servlet request we are processing
-   *@param  response              The servlet response we are creating
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @param request  The servlet request we are processing
+   * @param response The servlet response we are creating
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
-  protected void doHead(HttpServletRequest request,
-      HttpServletResponse response)
-       throws IOException, ServletException {
+  protected void doHead(ActionContext context)
+      throws IOException, ServletException {
 
     // Serve the requested resource, without the data content
-    //TODO: fix this call and uncomment
-    //serveResource(request, response, false);
+    serveResource(context, false, METHOD_HEAD);
 
   }
 
@@ -725,14 +752,14 @@ public class DefaultServlet
   /**
    * Process a POST request for the specified resource.
    *
-   *@param  request               The servlet request we are processing
-   *@param  response              The servlet response we are creating
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @param request  The servlet request we are processing
+   * @param response The servlet response we are creating
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
   protected void doPost(HttpServletRequest request,
-      HttpServletResponse response)
-       throws IOException, ServletException {
+                        HttpServletResponse response)
+      throws IOException, ServletException {
     doGet(request, response);
   }
 
@@ -740,82 +767,115 @@ public class DefaultServlet
   /**
    * Process a POST request for the specified resource.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
-  protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+  protected void doPut(ActionContext context)
+      throws ServletException, IOException {
 
+    //showRequestInfo(context.getRequest());
+    
     if (readOnly) {
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      context.getResponse().sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
 
-    String path = getRelativePath(req);
+    String path = getRelativePath(context.getRequest());
 
+    //Fix for MACOSX finder. Do not allow requests for files starting with a period
+    if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
+      return;
+    }
+    
     // Retrieve the resources
-    DirContext resources = getResources();
-
-    if (resources == null) {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      return;
-    }
+    Connection db = null;
+    ModuleContext resources = null;
+    SystemStatus thisSystem = null;
+    Object object = null;
 
     boolean exists = true;
-    try {
-      resources.lookup(path);
-    } catch (NamingException e) {
-      exists = false;
-    }
-
     boolean result = true;
 
-    // Temp. content file used to support partial PUT
-    File contentFile = null;
-
-    // Input stream for temp. content file used to support partial PUT
-    FileInputStream contentFileInStream = null;
-
-    ResourceInfo resourceInfo = new ResourceInfo(path, resources);
-    Range range = parseContentRange(req, resp);
-
-    InputStream resourceInputStream = null;
-
-    // Append data specified in ranges to existing content for this
-    // resource - create a temp. file on the local filesystem to
-    // perform this operation
-    // Assume just one range is specified for now
-    if (range != null) {
-      contentFile = executePartialPut(req, range, path);
-      resourceInputStream = new FileInputStream(contentFile);
-    } else {
-      resourceInputStream = req.getInputStream();
-    }
-
     try {
-      Resource newResource = new Resource(resourceInputStream);
-      // FIXME: Add attributes
-      if (exists) {
-        resources.rebind(path, newResource);
-      } else {
-        resources.bind(path, newResource);
+      db = this.getConnection(context);
+      resources = getCFSResources(db, context);
+
+      if (resources == null) {
+        context.getResponse().sendError(
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return;
       }
-    } catch (NamingException e) {
-      result = false;
+
+      thisSystem = this.getSystemStatus(context);
+
+      try {
+        object = resources.lookup(thisSystem, db, path);
+      } catch (NamingException e) {
+        exists = false;
+      }
+
+      // Temp. content file used to support partial PUT
+      File contentFile = null;
+  
+      // Input stream for temp. content file used to support partial PUT
+      FileInputStream contentFileInStream = null;
+  
+      //ResourceInfo resourceInfo = new ResourceInfo(thisSystem, path, resources);
+      Range range = parseContentRange(
+          context.getRequest(), context.getResponse());
+  
+      //InputStream resourceInputStream = null;
+      ServletInputStream resourceInputStream = null;
+      // Append data specified in ranges to existing content for this
+      // resource - create a temp. file on the local filesystem to
+      // perform this operation
+      // Assume just one range is specified for now
+      if (range != null) {
+        contentFile = executePartialPut(context.getRequest(), range, path);
+        //resourceInputStream = new FileInputStream(contentFile);
+      } else {
+        resourceInputStream = context.getRequest().getInputStream();
+        //System.out.println("RESOURCE INPUT STREAM: " + resourceInputStream);
+        System.out.println(
+            "CONTENT LENGTH: " + context.getRequest().getContentLength());
+        //System.out.println("DATA: " + resourceInputStream.available());
+      }
+
+      try {
+        Object thisObject = null;
+        if (exists) {
+          //resources.rebind(path, newResource);
+          Resource oldResource = (Resource) object;
+          oldResource.setContent(resourceInputStream);
+          thisObject = resources.copyResource(
+              thisSystem, db, path, oldResource);
+        } else {
+          Resource newResource = new Resource(resourceInputStream);
+          thisObject = resources.copyResource(
+              thisSystem, db, path, newResource);
+        }
+        if (thisObject != null) {
+          processInsertHook(context, thisObject);
+        }
+      } catch (NamingException e) {
+        //e.printStackTrace(System.out);
+        result = false;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(db, context);
     }
 
     if (result) {
       if (exists) {
-        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        context.getResponse().setStatus(HttpServletResponse.SC_NO_CONTENT);
       } else {
-        resp.setStatus(HttpServletResponse.SC_CREATED);
+        context.getResponse().setStatus(HttpServletResponse.SC_CREATED);
       }
     } else {
-      resp.sendError(HttpServletResponse.SC_CONFLICT);
+      context.getResponse().sendError(HttpServletResponse.SC_CONFLICT);
     }
-
   }
 
 
@@ -824,15 +884,15 @@ public class DefaultServlet
    * existing content in oldRevisionContent (if present). This code does
    * not support simultaneous partial updates to the same resource.
    *
-   *@param  req              Description of the Parameter
-   *@param  range            Description of the Parameter
-   *@param  path             Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param req   Description of the Parameter
+   * @param range Description of the Parameter
+   * @param path  Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected File executePartialPut(HttpServletRequest req, Range range,
-      String path)
-       throws IOException {
+                                   String path)
+      throws IOException {
 
     // Append data specified in ranges to existing content for this
     // resource - create a temp. file on the local filesystem to
@@ -862,8 +922,9 @@ public class DefaultServlet
     // Copy data in oldRevisionContent to contentFile
     if (oldResource != null) {
       BufferedInputStream bufOldRevStream =
-          new BufferedInputStream(oldResource.streamContent(),
-          BUFFER_SIZE);
+          new BufferedInputStream(
+              oldResource.streamContent(),
+              BUFFER_SIZE);
 
       int numBytesRead;
       byte[] copyBuffer = new byte[BUFFER_SIZE];
@@ -895,13 +956,13 @@ public class DefaultServlet
   /**
    * Process a POST request for the specified resource.
    *
-   *@param  req                   Description of the Parameter
-   *@param  resp                  Description of the Parameter
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @param req  Description of the Parameter
+   * @param resp Description of the Parameter
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-       throws ServletException, IOException {
+      throws ServletException, IOException {
 
     if (readOnly) {
       resp.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -949,31 +1010,31 @@ public class DefaultServlet
    * Check if the conditions specified in the optional If headers are
    * satisfied.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     File object
-   *@return                  boolean true if the resource meets all the specified conditions,
-   * and false if any of the conditions is not satisfied, in which case
-   * request processing is stopped
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo File object
+   * @return boolean true if the resource meets all the specified conditions,
+   *         and false if any of the conditions is not satisfied, in which case
+   *         request processing is stopped
+   * @throws IOException Description of the Exception
    */
   protected boolean checkIfHeaders(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                                   HttpServletResponse response,
+                                   ResourceInfo resourceInfo)
+      throws IOException {
 
     return checkIfMatch(request, response, resourceInfo)
-         && checkIfModifiedSince(request, response, resourceInfo)
-         && checkIfNoneMatch(request, response, resourceInfo)
-         && checkIfUnmodifiedSince(request, response, resourceInfo);
+        && checkIfModifiedSince(request, response, resourceInfo)
+        && checkIfNoneMatch(request, response, resourceInfo)
+        && checkIfUnmodifiedSince(request, response, resourceInfo);
   }
 
 
   /**
    * Get the ETag associated with a file.
    *
-   *@param  resourceInfo  File object
-   *@return               The eTag value
+   * @param resourceInfo File object
+   * @return The eTag value
    */
   protected String getETag(ResourceInfo resourceInfo) {
     if (resourceInfo.strongETag != null) {
@@ -982,7 +1043,7 @@ public class DefaultServlet
       return resourceInfo.weakETag;
     } else {
       return "W/\"" + resourceInfo.length + "-"
-           + resourceInfo.date + "\"";
+          + resourceInfo.date + "\"";
     }
   }
 
@@ -994,8 +1055,8 @@ public class DefaultServlet
    * boundaries of the current context (i.e. too many ".." path elements
    * are present), return <code>null</code> instead.
    *
-   *@param  path  Path to be normalized
-   *@return       Description of the Return Value
+   * @param path Path to be normalized
+   * @return Description of the Return Value
    */
   protected String normalize(String path) {
 
@@ -1065,8 +1126,8 @@ public class DefaultServlet
   /**
    * URL rewriter.
    *
-   *@param  path  Path which has to be rewiten
-   *@return       Description of the Return Value
+   * @param path Path which has to be rewiten
+   * @return Description of the Return Value
    */
   protected String rewriteUrl(String path) {
     return urlEncoder.encode(path);
@@ -1076,8 +1137,8 @@ public class DefaultServlet
   /**
    * Display the size of a file.
    *
-   *@param  buf       Description of the Parameter
-   *@param  filesize  Description of the Parameter
+   * @param buf      Description of the Parameter
+   * @param filesize Description of the Parameter
    */
   protected void displaySize(StringBuffer buf, int filesize) {
 
@@ -1097,28 +1158,34 @@ public class DefaultServlet
   /**
    * Serve the specified resource, optionally including the data content.
    *
-   *@param  request               The servlet request we are processing
-   *@param  response              The servlet response we are creating
-   *@param  content               Should the content be included?
-   *@param  context               Description of the Parameter
-   *@exception  IOException       if an input/output error occurs
-   *@exception  ServletException  if a servlet-specified error occurs
+   * @param request  The servlet request we are processing
+   * @param response The servlet response we are creating
+   * @param content  Should the content be included?
+   * @param context  Description of the Parameter
+   * @throws IOException      if an input/output error occurs
+   * @throws ServletException if a servlet-specified error occurs
    */
-  protected void serveResource(ActionContext context, HttpServletRequest request,
-      HttpServletResponse response,
-      boolean content)
-       throws IOException, ServletException {
+  protected void serveResource(ActionContext context, boolean content, String method)
+      throws IOException, ServletException {
 
     //TODO: remove this hardcoding
     debug = 2;
     // Identify the requested resource path
-    String path = getRelativePath(request);
+    String path = getRelativePath(context.getRequest());
+
+    if (path.indexOf("/.") > -1) {
+      //MAC OSX Fix
+      return;
+    }
+
     if (debug > 0) {
       if (content) {
-        log("DefaultServlet.serveResource:  Serving resource '" +
+        log(
+            "DefaultServlet.serveResource:  Serving resource '" +
             path + "' headers and data");
       } else {
-        log("DefaultServlet.serveResource:  Serving resource '" +
+        log(
+            "DefaultServlet.serveResource:  Serving resource '" +
             path + "' headers only");
       }
     }
@@ -1131,18 +1198,24 @@ public class DefaultServlet
     SystemStatus thisSystem = null;
     boolean status = true;
     try {
-      System.out.println("DefaultServlet-> Serving Resource");
+      //System.out.println("DefaultServlet-> Serving Resource " + (content ? "WITH CONTENT" : "WITHOUT CONTENT"));
       db = this.getConnection(context);
       resources = getCFSResources(db, context);
+      if (resources == null) {
+        context.getResponse().sendError(
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return;
+      }
       thisSystem = this.getSystemStatus(context);
-      resourceInfo = new ResourceInfo(thisSystem, db, path, resources);
+      if (method.equals(METHOD_GET)) {
+        Object current = resources.lookup(thisSystem, db, path);
+      }
+      resourceInfo = new ResourceInfo(thisSystem, path, resources);
     } catch (SQLException e) {
       e.printStackTrace(System.out);
       context.getResponse().sendError(CFS_SQLERROR, e.getMessage());
       status = false;
     } catch (Exception e) {
-      //TODO: remove silent catch
-      e.printStackTrace(System.out);
     } finally {
       this.freeConnection(db, context);
     }
@@ -1151,8 +1224,9 @@ public class DefaultServlet
     }
 
     if (!resourceInfo.exists) {
-      response.sendError(HttpServletResponse.SC_NOT_FOUND,
-          request.getRequestURI());
+      context.getResponse().sendError(
+          HttpServletResponse.SC_NOT_FOUND,
+          context.getRequest().getRequestURI());
       return;
     }
 
@@ -1160,8 +1234,9 @@ public class DefaultServlet
     // ends with "/" or "\", return NOT FOUND
     if (!resourceInfo.collection) {
       if (path.endsWith("/") || (path.endsWith("\\"))) {
-        response.sendError(HttpServletResponse.SC_NOT_FOUND,
-            request.getRequestURI());
+        context.getResponse().sendError(
+            HttpServletResponse.SC_NOT_FOUND,
+            context.getRequest().getRequestURI());
         return;
       }
     }
@@ -1172,16 +1247,18 @@ public class DefaultServlet
 
       // Checking If headers
       boolean included =
-          (request.getAttribute(Globals.INCLUDE_CONTEXT_PATH_ATTR) != null);
+          (context.getRequest().getAttribute(
+              Globals.INCLUDE_CONTEXT_PATH_ATTR) != null);
       if (!included
-           && !checkIfHeaders(request, response, resourceInfo)) {
+          && !checkIfHeaders(
+              context.getRequest(), context.getResponse(), resourceInfo)) {
         return;
       }
     }
 
     // Find content type
     String contentType =
-        getServletContext().getMimeType(resourceInfo.path);
+        getServletContext().getMimeType(resourceInfo.clientFilename);
 
     Vector ranges = null;
 
@@ -1190,38 +1267,41 @@ public class DefaultServlet
       // Skip directory listings if we have been configured to
       // suppress them
       if (!listings) {
-        response.sendError(HttpServletResponse.SC_NOT_FOUND,
-            request.getRequestURI());
+        context.getResponse().sendError(
+            HttpServletResponse.SC_NOT_FOUND,
+            context.getRequest().getRequestURI());
         return;
       }
       contentType = "text/html;charset=UTF-8";
 
     } else {
       // Parse range specifier
-      ranges = parseRange(request, response, resourceInfo);
+      ranges = parseRange(
+          context.getRequest(), context.getResponse(), resourceInfo);
       // ETag header
-      response.setHeader("ETag", getETag(resourceInfo));
+      context.getResponse().setHeader("ETag", getETag(resourceInfo));
       // Last-Modified header
       if (debug > 0) {
-        log("DefaultServlet.serveFile:  lastModified='" +
+        log(
+            "DefaultServlet.serveFile:  lastModified='" +
             (new Timestamp(resourceInfo.date)).toString() + "'");
       }
-      response.setHeader("Last-Modified", resourceInfo.httpDate);
+      context.getResponse().setHeader("Last-Modified", resourceInfo.httpDate);
     }
-    
+
     ServletOutputStream ostream = null;
     PrintWriter writer = null;
 
     if (content) {
       // Trying to retrieve the servlet output stream
       try {
-        ostream = response.getOutputStream();
+        ostream = context.getResponse().getOutputStream();
       } catch (IllegalStateException e) {
         // If it fails, we try to get a Writer instead if we're
         // trying to serve a text file
         if ((contentType == null)
-             || (contentType.startsWith("text"))) {
-          writer = response.getWriter();
+            || (contentType.startsWith("text"))) {
+          writer = context.getResponse().getWriter();
         } else {
           throw e;
         }
@@ -1230,38 +1310,39 @@ public class DefaultServlet
 
     if ((resourceInfo.collection) ||
         (((ranges == null) || (ranges.isEmpty()))
-         && (request.getHeader("Range") == null))) {
+        && (context.getRequest().getHeader("Range") == null))) {
 
       // Set the appropriate output headers
       if (contentType != null) {
         if (debug > 0) {
-          log("DefaultServlet.serveFile:  contentType='" +
+          log(
+              "DefaultServlet.serveFile:  contentType='" +
               contentType + "'");
         }
-        response.setContentType(contentType);
+        context.getResponse().setContentType(contentType);
       }
       long contentLength = resourceInfo.length;
       if ((!resourceInfo.collection) && (contentLength >= 0)) {
         if (debug > 0) {
-          log("DefaultServlet.serveFile:  contentLength=" +
+          log(
+              "DefaultServlet.serveFile:  contentLength=" +
               contentLength);
         }
-        response.setContentLength((int) contentLength);
+        context.getResponse().setContentLength((int) contentLength);
       }
       if (resourceInfo.collection) {
         if (content) {
           // Serve the directory browser
           resourceInfo.setStream
-              (render(request.getContextPath(), resourceInfo));
+              (render(context.getRequest().getContextPath(), resourceInfo));
         }
       }
       // Copy the input stream to our output stream (if requested)
       if (content) {
         try {
-          response.setBufferSize(output);
+          context.getResponse().setBufferSize(output);
         } catch (IllegalStateException e) {
           // Silent catch
-          e.printStackTrace(System.out);
         }
         if (ostream != null) {
           copy(resourceInfo, ostream);
@@ -1274,26 +1355,29 @@ public class DefaultServlet
         return;
       }
       // Partial content response.
-      response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+      context.getResponse().setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
       if (ranges.size() == 1) {
         Range range = (Range) ranges.elementAt(0);
-        response.addHeader("Content-Range", "bytes "
-             + range.start
-             + "-" + range.end + "/"
-             + range.length);
-        response.setContentLength((int) (range.end - range.start + 1));
+        context.getResponse().addHeader(
+            "Content-Range", "bytes "
+            + range.start
+            + "-" + range.end + "/"
+            + range.length);
+        context.getResponse().setContentLength(
+            (int) (range.end - range.start + 1));
 
         if (contentType != null) {
           if (debug > 0) {
-            log("DefaultServlet.serveFile:  contentType='" +
+            log(
+                "DefaultServlet.serveFile:  contentType='" +
                 contentType + "'");
           }
-          response.setContentType(contentType);
+          context.getResponse().setContentType(contentType);
         }
 
         if (content) {
           try {
-            response.setBufferSize(output);
+            context.getResponse().setBufferSize(output);
           } catch (IllegalStateException e) {
             // Silent catch
           }
@@ -1305,20 +1389,23 @@ public class DefaultServlet
         }
       } else {
 
-        response.setContentType("multipart/byteranges; boundary="
-             + mimeSeparation);
+        context.getResponse().setContentType(
+            "multipart/byteranges; boundary="
+            + mimeSeparation);
 
         if (content) {
           try {
-            response.setBufferSize(output);
+            context.getResponse().setBufferSize(output);
           } catch (IllegalStateException e) {
             // Silent catch
           }
           if (ostream != null) {
-            copy(resourceInfo, ostream, ranges.elements(),
+            copy(
+                resourceInfo, ostream, ranges.elements(),
                 contentType);
           } else {
-            copy(resourceInfo, writer, ranges.elements(),
+            copy(
+                resourceInfo, writer, ranges.elements(),
                 contentType);
           }
         }
@@ -1330,14 +1417,14 @@ public class DefaultServlet
   /**
    * Parse the content-range header.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@return                  Range
-   *@exception  IOException  Description of the Exception
+   * @param request  The servlet request we are processing
+   * @param response The servlet response we are creating
+   * @return Range
+   * @throws IOException Description of the Exception
    */
   protected Range parseContentRange(HttpServletRequest request,
-      HttpServletResponse response)
-       throws IOException {
+                                    HttpServletResponse response)
+      throws IOException {
 
     // Retrieving the content-range header (if any is specified
     String rangeHeader = request.getHeader("Content-Range");
@@ -1392,16 +1479,16 @@ public class DefaultServlet
   /**
    * Parse the range header.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     Description of the Parameter
-   *@return                  Vector of ranges
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo Description of the Parameter
+   * @return Vector of ranges
+   * @throws IOException Description of the Exception
    */
   protected Vector parseRange(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                              HttpServletResponse response,
+                              ResourceInfo resourceInfo)
+      throws IOException {
 
     // Checking If-Range
     String headerValue = request.getHeader("If-Range");
@@ -1488,7 +1575,8 @@ public class DefaultServlet
           currentRange.start = fileLength + offset;
           currentRange.end = fileLength - 1;
         } catch (NumberFormatException e) {
-          response.addHeader("Content-Range",
+          response.addHeader(
+              "Content-Range",
               "bytes */" + fileLength);
           response.sendError
               (HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
@@ -1502,13 +1590,15 @@ public class DefaultServlet
               (rangeDefinition.substring(0, dashPos));
           if (dashPos < rangeDefinition.length() - 1) {
             currentRange.end = Long.parseLong
-                (rangeDefinition.substring
+                (
+                    rangeDefinition.substring
                 (dashPos + 1, rangeDefinition.length()));
           } else {
             currentRange.end = fileLength - 1;
           }
         } catch (NumberFormatException e) {
-          response.addHeader("Content-Range",
+          response.addHeader(
+              "Content-Range",
               "bytes */" + fileLength);
           response.sendError
               (HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
@@ -1535,12 +1625,12 @@ public class DefaultServlet
    * Append the request parameters to the redirection string before calling
    * sendRedirect.
    *
-   *@param  request       Description of the Parameter
-   *@param  redirectPath  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param request      Description of the Parameter
+   * @param redirectPath Description of the Parameter
+   * @return Description of the Return Value
    */
   protected String appendParameters(HttpServletRequest request,
-      String redirectPath) {
+                                    String redirectPath) {
 
     StringBuffer result = new StringBuffer(rewriteUrl(redirectPath));
 
@@ -1554,11 +1644,11 @@ public class DefaultServlet
 
 
   /**
-   *  Decide which way to render. HTML or XML.
+   * Decide which way to render. HTML or XML.
    *
-   *@param  contextPath   Description of the Parameter
-   *@param  resourceInfo  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param contextPath  Description of the Parameter
+   * @param resourceInfo Description of the Parameter
+   * @return Description of the Return Value
    */
   protected InputStream render
       (String contextPath, ResourceInfo resourceInfo) {
@@ -1578,15 +1668,15 @@ public class DefaultServlet
    * Return an InputStream to an HTML representation of the contents
    * of this directory.
    *
-   *@param  contextPath      Context path to which our internal paths are
-   *  relative
-   *@param  resourceInfo     Description of the Parameter
-   *@param  xsltInputStream  Description of the Parameter
-   *@return                  Description of the Return Value
+   * @param contextPath     Context path to which our internal paths are
+   *                        relative
+   * @param resourceInfo    Description of the Parameter
+   * @param xsltInputStream Description of the Parameter
+   * @return Description of the Return Value
    */
   protected InputStream renderXml(String contextPath,
-      ResourceInfo resourceInfo,
-      InputStream xsltInputStream) {
+                                  ResourceInfo resourceInfo,
+                                  InputStream xsltInputStream) {
 
     StringBuffer sb = new StringBuffer();
 
@@ -1690,10 +1780,10 @@ public class DefaultServlet
    * Return an InputStream to an HTML representation of the contents
    * of this directory.
    *
-   *@param  contextPath   Context path to which our internal paths are
-   *  relative
-   *@param  resourceInfo  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param contextPath  Context path to which our internal paths are
+   *                     relative
+   * @param resourceInfo Description of the Parameter
+   * @return Description of the Return Value
    */
   protected InputStream renderHtml
       (String contextPath, ResourceInfo resourceInfo) {
@@ -1764,7 +1854,8 @@ public class DefaultServlet
     sb.append("</h1>");
     sb.append("<HR size=\"1\" noshade=\"noshade\">");
 
-    sb.append("<table width=\"100%\" cellspacing=\"0\"" +
+    sb.append(
+        "<table width=\"100%\" cellspacing=\"0\"" +
         " cellpadding=\"5\" align=\"center\">\r\n");
 
     // Render the column headings
@@ -1867,8 +1958,8 @@ public class DefaultServlet
   /**
    * Render the specified file size (in bytes).
    *
-   *@param  size  File size (in bytes)
-   *@return       Description of the Return Value
+   * @param size File size (in bytes)
+   * @return Description of the Return Value
    */
   protected String renderSize(long size) {
 
@@ -1886,8 +1977,8 @@ public class DefaultServlet
   /**
    * Get the readme file as a string.
    *
-   *@param  directory  Description of the Parameter
-   *@return            The readme value
+   * @param directory Description of the Parameter
+   * @return The readme value
    */
   protected String getReadme(DirContext directory) {
     if (readmeFile != null) {
@@ -1897,7 +1988,8 @@ public class DefaultServlet
         if (obj != null && obj instanceof Resource) {
           StringWriter buffer = new StringWriter();
           InputStream is = ((Resource) obj).streamContent();
-          copyRange(new InputStreamReader(is),
+          copyRange(
+              new InputStreamReader(is),
               new PrintWriter(buffer));
 
           return buffer.toString();
@@ -1918,8 +2010,8 @@ public class DefaultServlet
   /**
    * Return the xsl template inputstream (if possible)
    *
-   *@param  directory  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param directory Description of the Parameter
+   * @return Description of the Return Value
    */
   protected InputStream findXsltInputStream(DirContext directory) {
     if (localXsltFile != null) {
@@ -1981,18 +2073,18 @@ public class DefaultServlet
   /**
    * Check if the if-match condition is satisfied.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     File object
-   *@return                  boolean true if the resource meets the specified condition,
-   * and false if the condition is not satisfied, in which case request
-   * processing is stopped
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo File object
+   * @return boolean true if the resource meets the specified condition,
+   *         and false if the condition is not satisfied, in which case request
+   *         processing is stopped
+   * @throws IOException Description of the Exception
    */
   private boolean checkIfMatch(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                               HttpServletResponse response,
+                               ResourceInfo resourceInfo)
+      throws IOException {
 
     String eTag = getETag(resourceInfo);
     String headerValue = request.getHeader("If-Match");
@@ -2026,18 +2118,18 @@ public class DefaultServlet
   /**
    * Check if the if-modified-since condition is satisfied.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     File object
-   *@return                  boolean true if the resource meets the specified condition,
-   * and false if the condition is not satisfied, in which case request
-   * processing is stopped
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo File object
+   * @return boolean true if the resource meets the specified condition,
+   *         and false if the condition is not satisfied, in which case request
+   *         processing is stopped
+   * @throws IOException Description of the Exception
    */
   private boolean checkIfModifiedSince(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                                       HttpServletResponse response,
+                                       ResourceInfo resourceInfo)
+      throws IOException {
     try {
       long headerValue = request.getDateHeader("If-Modified-Since");
       long lastModified = resourceInfo.date;
@@ -2046,7 +2138,7 @@ public class DefaultServlet
         // If an If-None-Match header has been specified, if modified since
         // is ignored.
         if ((request.getHeader("If-None-Match") == null)
-             && (lastModified <= headerValue + 1000)) {
+            && (lastModified <= headerValue + 1000)) {
           // The entity has not been modified since the date
           // specified by the client. This is not an error case.
           response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -2063,18 +2155,18 @@ public class DefaultServlet
   /**
    * Check if the if-none-match condition is satisfied.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     File object
-   *@return                  boolean true if the resource meets the specified condition,
-   * and false if the condition is not satisfied, in which case request
-   * processing is stopped
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo File object
+   * @return boolean true if the resource meets the specified condition,
+   *         and false if the condition is not satisfied, in which case request
+   *         processing is stopped
+   * @throws IOException Description of the Exception
    */
   private boolean checkIfNoneMatch(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                                   HttpServletResponse response,
+                                   ResourceInfo resourceInfo)
+      throws IOException {
 
     String eTag = getETag(resourceInfo);
     String headerValue = request.getHeader("If-None-Match");
@@ -2105,7 +2197,7 @@ public class DefaultServlet
         // For every other method, 412 Precondition Failed is sent
         // back.
         if (("GET".equals(request.getMethod()))
-             || ("HEAD".equals(request.getMethod()))) {
+            || ("HEAD".equals(request.getMethod()))) {
           response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
           return false;
         } else {
@@ -2122,18 +2214,18 @@ public class DefaultServlet
   /**
    * Check if the if-unmodified-since condition is satisfied.
    *
-   *@param  request          The servlet request we are processing
-   *@param  response         The servlet response we are creating
-   *@param  resourceInfo     File object
-   *@return                  boolean true if the resource meets the specified condition,
-   * and false if the condition is not satisfied, in which case request
-   * processing is stopped
-   *@exception  IOException  Description of the Exception
+   * @param request      The servlet request we are processing
+   * @param response     The servlet response we are creating
+   * @param resourceInfo File object
+   * @return boolean true if the resource meets the specified condition,
+   *         and false if the condition is not satisfied, in which case request
+   *         processing is stopped
+   * @throws IOException Description of the Exception
    */
   private boolean checkIfUnmodifiedSince(HttpServletRequest request,
-      HttpServletResponse response,
-      ResourceInfo resourceInfo)
-       throws IOException {
+                                         HttpServletResponse response,
+                                         ResourceInfo resourceInfo)
+      throws IOException {
     try {
       long lastModified = resourceInfo.date;
       long headerValue = request.getDateHeader("If-Unmodified-Since");
@@ -2157,12 +2249,12 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  ostream          The output stream to write to
-   *@param  resourceInfo     Description of the Parameter
-   *@exception  IOException  if an input/output error occurs
+   * @param ostream      The output stream to write to
+   * @param resourceInfo Description of the Parameter
+   * @throws IOException if an input/output error occurs
    */
   private void copy(ResourceInfo resourceInfo, ServletOutputStream ostream)
-       throws IOException {
+      throws IOException {
 
     IOException exception = null;
 
@@ -2202,12 +2294,12 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  writer           The writer to write to
-   *@param  resourceInfo     Description of the Parameter
-   *@exception  IOException  if an input/output error occurs
+   * @param writer       The writer to write to
+   * @param resourceInfo Description of the Parameter
+   * @throws IOException if an input/output error occurs
    */
   private void copy(ResourceInfo resourceInfo, PrintWriter writer)
-       throws IOException {
+      throws IOException {
 
     IOException exception = null;
 
@@ -2237,14 +2329,14 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  resourceInfo     The ResourceInfo object
-   *@param  ostream          The output stream to write to
-   *@param  range            Range the client wanted to retrieve
-   *@exception  IOException  if an input/output error occurs
+   * @param resourceInfo The ResourceInfo object
+   * @param ostream      The output stream to write to
+   * @param range        Range the client wanted to retrieve
+   * @throws IOException if an input/output error occurs
    */
   private void copy(ResourceInfo resourceInfo, ServletOutputStream ostream,
-      Range range)
-       throws IOException {
+                    Range range)
+      throws IOException {
 
     IOException exception = null;
 
@@ -2272,14 +2364,14 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  resourceInfo     The ResourceInfo object
-   *@param  writer           The writer to write to
-   *@param  range            Range the client wanted to retrieve
-   *@exception  IOException  if an input/output error occurs
+   * @param resourceInfo The ResourceInfo object
+   * @param writer       The writer to write to
+   * @param range        Range the client wanted to retrieve
+   * @throws IOException if an input/output error occurs
    */
   private void copy(ResourceInfo resourceInfo, PrintWriter writer,
-      Range range)
-       throws IOException {
+                    Range range)
+      throws IOException {
 
     IOException exception = null;
 
@@ -2306,15 +2398,15 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  resourceInfo     The ResourceInfo object
-   *@param  ostream          The output stream to write to
-   *@param  ranges           Enumeration of the ranges the client wanted to retrieve
-   *@param  contentType      Content type of the resource
-   *@exception  IOException  if an input/output error occurs
+   * @param resourceInfo The ResourceInfo object
+   * @param ostream      The output stream to write to
+   * @param ranges       Enumeration of the ranges the client wanted to retrieve
+   * @param contentType  Content type of the resource
+   * @throws IOException if an input/output error occurs
    */
   private void copy(ResourceInfo resourceInfo, ServletOutputStream ostream,
-      Enumeration ranges, String contentType)
-       throws IOException {
+                    Enumeration ranges, String contentType)
+      throws IOException {
 
     IOException exception = null;
 
@@ -2322,7 +2414,7 @@ public class DefaultServlet
 
       InputStream resourceInputStream = resourceInfo.getStream();
       InputStream istream =
-      // FIXME: internationalization???????
+          // FIXME: internationalization???????
           new BufferedInputStream(resourceInputStream, input);
 
       Range currentRange = (Range) ranges.nextElement();
@@ -2333,13 +2425,15 @@ public class DefaultServlet
       if (contentType != null) {
         ostream.println("Content-Type: " + contentType);
       }
-      ostream.println("Content-Range: bytes " + currentRange.start
-           + "-" + currentRange.end + "/"
-           + currentRange.length);
+      ostream.println(
+          "Content-Range: bytes " + currentRange.start
+          + "-" + currentRange.end + "/"
+          + currentRange.length);
       ostream.println();
 
       // Printing content
-      exception = copyRange(istream, ostream, currentRange.start,
+      exception = copyRange(
+          istream, ostream, currentRange.start,
           currentRange.end);
 
       try {
@@ -2365,15 +2459,15 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  resourceInfo     The ResourceInfo object
-   *@param  writer           The writer to write to
-   *@param  ranges           Enumeration of the ranges the client wanted to retrieve
-   *@param  contentType      Content type of the resource
-   *@exception  IOException  if an input/output error occurs
+   * @param resourceInfo The ResourceInfo object
+   * @param writer       The writer to write to
+   * @param ranges       Enumeration of the ranges the client wanted to retrieve
+   * @param contentType  Content type of the resource
+   * @throws IOException if an input/output error occurs
    */
   private void copy(ResourceInfo resourceInfo, PrintWriter writer,
-      Enumeration ranges, String contentType)
-       throws IOException {
+                    Enumeration ranges, String contentType)
+      throws IOException {
 
     IOException exception = null;
 
@@ -2390,13 +2484,15 @@ public class DefaultServlet
       if (contentType != null) {
         writer.println("Content-Type: " + contentType);
       }
-      writer.println("Content-Range: bytes " + currentRange.start
-           + "-" + currentRange.end + "/"
-           + currentRange.length);
+      writer.println(
+          "Content-Range: bytes " + currentRange.start
+          + "-" + currentRange.end + "/"
+          + currentRange.length);
       writer.println();
 
       // Printing content
-      exception = copyRange(reader, writer, currentRange.start,
+      exception = copyRange(
+          reader, writer, currentRange.start,
           currentRange.end);
 
       try {
@@ -2422,12 +2518,12 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  istream  The input stream to read from
-   *@param  ostream  The output stream to write to
-   *@return          Exception which occurred during processing
+   * @param istream The input stream to read from
+   * @param ostream The output stream to write to
+   * @return Exception which occurred during processing
    */
   private IOException copyRange(InputStream istream,
-      ServletOutputStream ostream) {
+                                ServletOutputStream ostream) {
 
     // Copy the input stream to the output stream
     IOException exception = null;
@@ -2455,9 +2551,9 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  reader  The reader to read from
-   *@param  writer  The writer to write to
-   *@return         Exception which occurred during processing
+   * @param reader The reader to read from
+   * @param writer The writer to write to
+   * @return Exception which occurred during processing
    */
   private IOException copyRange(Reader reader, PrintWriter writer) {
 
@@ -2487,15 +2583,15 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  istream  The input stream to read from
-   *@param  ostream  The output stream to write to
-   *@param  start    Start of the range which will be copied
-   *@param  end      End of the range which will be copied
-   *@return          Exception which occurred during processing
+   * @param istream The input stream to read from
+   * @param ostream The output stream to write to
+   * @param start   Start of the range which will be copied
+   * @param end     End of the range which will be copied
+   * @return Exception which occurred during processing
    */
   private IOException copyRange(InputStream istream,
-      ServletOutputStream ostream,
-      long start, long end) {
+                                ServletOutputStream ostream,
+                                long start, long end) {
 
     if (debug > 10) {
       log("Serving bytes:" + start + "-" + end);
@@ -2540,14 +2636,14 @@ public class DefaultServlet
    * output stream, and ensure that both streams are closed before returning
    * (even in the face of an exception).
    *
-   *@param  reader  The reader to read from
-   *@param  writer  The writer to write to
-   *@param  start   Start of the range which will be copied
-   *@param  end     End of the range which will be copied
-   *@return         Exception which occurred during processing
+   * @param reader The reader to read from
+   * @param writer The writer to write to
+   * @param start  Start of the range which will be copied
+   * @param end    End of the range which will be copied
+   * @return Exception which occurred during processing
    */
   private IOException copyRange(Reader reader, PrintWriter writer,
-      long start, long end) {
+                                long start, long end) {
 
     try {
       reader.skip(start);
@@ -2587,10 +2683,10 @@ public class DefaultServlet
   // ------------------------------------------------------ Range Inner Class
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     ananth
-   *@created    October 26, 2004
+   * @author ananth
+   * @created October 26, 2004
    */
   private class Range {
 
@@ -2602,19 +2698,19 @@ public class DefaultServlet
     /**
      * Validate range.
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public boolean validate() {
       if (end >= length) {
         end = length - 1;
       }
       return ((start >= 0) && (end >= 0) && (start <= end)
-           && (length > 0));
+          && (length > 0));
     }
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      */
     public void recycle() {
       start = 0;
@@ -2629,18 +2725,18 @@ public class DefaultServlet
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   *@author     ananth
-   *@created    October 26, 2004
+   * @author ananth
+   * @created October 26, 2004
    */
   protected class ResourceInfo {
 
     /**
      * Constructor.
      *
-     *@param  path       Description of the Parameter
-     *@param  resources  Description of the Parameter
+     * @param path      Description of the Parameter
+     * @param resources Description of the Parameter
      */
     public ResourceInfo(String path, DirContext resources) {
       set(path, resources);
@@ -2648,18 +2744,16 @@ public class DefaultServlet
 
 
     /**
-     *Constructor for the ResourceInfo object
+     * Constructor for the ResourceInfo object
      *
-     *@param  path                       Description of the Parameter
-     *@param  resources                  Description of the Parameter
-     *@param  db                         Description of the Parameter
-     *@param  thisSystem                 Description of the Parameter
-     *@exception  SQLException           Description of the Exception
-     *@exception  FileNotFoundException  Description of the Exception
+     * @param path       Description of the Parameter
+     * @param resources  Description of the Parameter
+     * @param thisSystem Description of the Parameter
+     * @throws FileNotFoundException Description of the Exception
      */
-    public ResourceInfo(SystemStatus thisSystem, Connection db, String path, ModuleContext resources)
-         throws SQLException, FileNotFoundException {
-      set(thisSystem, db, path, resources);
+    public ResourceInfo(SystemStatus thisSystem, String path, ModuleContext resources)
+        throws FileNotFoundException {
+      set(thisSystem, path, resources);
     }
 
 
@@ -2669,7 +2763,8 @@ public class DefaultServlet
     public Resource file;
     public Attributes attributes;
     public String path;
-    public long creationDate;
+    public String clientFilename;
+    public String creationDate;
     public String httpDate;
     public long date;
     public long length;
@@ -2682,7 +2777,7 @@ public class DefaultServlet
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      */
     public void recycle() {
       object = null;
@@ -2690,7 +2785,8 @@ public class DefaultServlet
       file = null;
       attributes = null;
       path = null;
-      creationDate = 0;
+      clientFilename = null;
+      creationDate = null;
       httpDate = null;
       date = 0;
       length = -1;
@@ -2704,34 +2800,34 @@ public class DefaultServlet
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  path       Description of the Parameter
-     *@param  resources  Description of the Parameter
+     * @param path      Description of the Parameter
+     * @param resources Description of the Parameter
      */
-    public void set(String path, DirContext resources) { }
+    public void set(String path, DirContext resources) {
+    }
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  path                       Description of the Parameter
-     *@param  resources                  Description of the Parameter
-     *@param  db                         Description of the Parameter
-     *@param  thisSystem                 Description of the Parameter
-     *@exception  SQLException           Description of the Exception
-     *@exception  FileNotFoundException  Description of the Exception
+     * @param thisSystem Description of the Parameter
+     * @param path       Description of the Parameter
+     * @param resources  Description of the Parameter
+     * @throws FileNotFoundException Description of the Exception
      */
-    public void set(SystemStatus thisSystem, Connection db, String path, ModuleContext resources) throws SQLException, FileNotFoundException {
+    public void set(SystemStatus thisSystem, String path, ModuleContext resources) throws FileNotFoundException {
       recycle();
 
       this.path = path;
       this.resources = resources;
       exists = true;
       try {
-        object = resources.lookup(thisSystem, db, path);
+        object = resources.lookup(path);
         if (object instanceof Resource) {
           file = (Resource) object;
+          clientFilename = file.getName();
           collection = false;
         } else if (object instanceof ModuleContext) {
           dir = (ModuleContext) object;
@@ -2746,19 +2842,21 @@ public class DefaultServlet
       }
       if (exists) {
         try {
-          attributes = resources.getAttributes(thisSystem, db, path);
+          attributes = resources.getAttributes(path);
           if (attributes instanceof ResourceAttributes) {
             ResourceAttributes tempAttrs =
                 (ResourceAttributes) attributes;
             Date tempDate = tempAttrs.getCreationDate();
             if (tempDate != null) {
-              creationDate = tempDate.getTime();
+              date = tempDate.getTime();
+              creationDate = FastHttpDateFormat.formatDate(date, null);
+            } else {
+              creationDate = FastHttpDateFormat.getCurrentDate();
             }
             tempDate = tempAttrs.getLastModifiedDate();
             if (tempDate != null) {
               date = tempDate.getTime();
-              httpDate =
-                  FastHttpDateFormat.formatDate(date, null);
+              httpDate = FastHttpDateFormat.formatDate(date, null);
             } else {
               httpDate = FastHttpDateFormat.getCurrentDate();
             }
@@ -2769,7 +2867,6 @@ public class DefaultServlet
         } catch (NamingException e) {
           // Shouldn't happen, the implementation of the DirContext
           // is probably broken
-          //e.printStackTrace(System.out);
           exists = false;
         }
       }
@@ -2779,7 +2876,7 @@ public class DefaultServlet
     /**
      * Test if the associated resource exists.
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public boolean exists() {
       return exists;
@@ -2789,7 +2886,7 @@ public class DefaultServlet
     /**
      * String representation.
      *
-     *@return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public String toString() {
       return path;
@@ -2799,7 +2896,7 @@ public class DefaultServlet
     /**
      * Set IS.
      *
-     *@param  is  The new stream value
+     * @param is The new stream value
      */
     public void setStream(InputStream is) {
       this.is = is;
@@ -2809,11 +2906,11 @@ public class DefaultServlet
     /**
      * Get IS from resource.
      *
-     *@return                  The stream value
-     *@exception  IOException  Description of the Exception
+     * @return The stream value
+     * @throws IOException Description of the Exception
      */
     public InputStream getStream()
-         throws IOException {
+        throws IOException {
       if (is != null) {
         return is;
       }

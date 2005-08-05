@@ -43,8 +43,8 @@
     <tr class="containerBody">
       <td>
         <ul>
-          <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers">Manage Users</a></li></dhv:permission>
-          <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles">Manage Roles</a></li></dhv:permission>
+          <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers"><dhv:label name="admin.manageUsers">Manage Users</dhv:label></a></li></dhv:permission>
+          <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles"><dhv:label name="admin.manageRoles">Manage Roles</dhv:label></a></li></dhv:permission>
         </ul>
       </td>
     </tr>
@@ -92,7 +92,7 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong><dhv:label name="Usage">Usage</dhv:label></strong>
+        <strong><dhv:label name="admin.Usage">Usage</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">

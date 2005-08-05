@@ -15,20 +15,18 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
-import java.sql.*;
-import java.text.*;
-import java.util.Calendar;
-import org.aspcfs.modules.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
@@ -38,16 +36,17 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Constructor for the DocumentStorePermissionCategoryLookup object
+   * Constructor for the DocumentStorePermissionCategoryLookup object
    */
-  public DocumentStorePermissionCategoryLookup() { }
+  public DocumentStorePermissionCategoryLookup() {
+  }
 
 
   /**
-   *  Constructor for the DocumentStorePermissionCategoryLookup object
+   * Constructor for the DocumentStorePermissionCategoryLookup object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public DocumentStorePermissionCategoryLookup(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -55,9 +54,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the DocumentStorePermissionCategoryLookup object
+   * Sets the id attribute of the DocumentStorePermissionCategoryLookup object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -65,9 +64,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the DocumentStorePermissionCategoryLookup object
+   * Sets the id attribute of the DocumentStorePermissionCategoryLookup object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -75,9 +74,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the DocumentStorePermissionCategoryLookup object
+   * Sets the description attribute of the DocumentStorePermissionCategoryLookup object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -85,9 +84,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the DocumentStorePermissionCategoryLookup object
+   * Gets the id attribute of the DocumentStorePermissionCategoryLookup object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -95,9 +94,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the DocumentStorePermissionCategoryLookup object
+   * Gets the description attribute of the DocumentStorePermissionCategoryLookup object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -105,9 +104,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Gets the permissions attribute of the DocumentStorePermissionCategoryLookup object
+   * Gets the permissions attribute of the DocumentStorePermissionCategoryLookup object
    *
-   *@return    The permissions value
+   * @return The permissions value
    */
   public DocumentStorePermissionLookupList getPermissions() {
     return permissions;
@@ -115,10 +114,10 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("code");
@@ -127,14 +126,15 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  includeEnabled    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param includeEnabled Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db, int includeEnabled) throws SQLException {
-    permissions = new DocumentStorePermissionLookupList(db, id, includeEnabled);
+    permissions = new DocumentStorePermissionLookupList(
+        db, id, includeEnabled);
   }
 }
 

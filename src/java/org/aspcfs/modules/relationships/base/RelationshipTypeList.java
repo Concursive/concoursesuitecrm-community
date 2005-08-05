@@ -15,19 +15,23 @@
  */
 package org.aspcfs.modules.relationships.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 
 /**
- *  Contains a list of relationship types built from the database
+ * Contains a list of relationship types built from the database
  *
- *@author     Mathur
- *@created    August 11, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created August 11, 2004
  */
 public class RelationshipTypeList extends ArrayList {
   private int categoryIdMapsFrom = -1;
@@ -36,19 +40,22 @@ public class RelationshipTypeList extends ArrayList {
   private int size = 1;
   private boolean showDisabled = true;
   protected PagedListInfo pagedListInfo = null;
+  // other filters
+  private int typeId = -1;
 
 
   /**
-   *  Constructor for the RelationshipTypeList object
+   * Constructor for the RelationshipTypeList object
    */
-  public RelationshipTypeList() { }
+  public RelationshipTypeList() {
+  }
 
 
   /**
-   *  Constructor for the RelationshipTypeList object
+   * Constructor for the RelationshipTypeList object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public RelationshipTypeList(Connection db) throws SQLException {
     buildList(db);
@@ -56,9 +63,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the RelationshipTypeList object
+   * Sets the categoryIdMapsFrom attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(int tmp) {
     this.categoryIdMapsFrom = tmp;
@@ -66,9 +73,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the RelationshipTypeList object
+   * Sets the categoryIdMapsFrom attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(String tmp) {
     this.categoryIdMapsFrom = Integer.parseInt(tmp);
@@ -76,9 +83,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the jsEvent attribute of the RelationshipTypeList object
+   * Sets the jsEvent attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -86,9 +93,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the defaultKey attribute of the RelationshipTypeList object
+   * Sets the defaultKey attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new defaultKey value
+   * @param tmp The new defaultKey value
    */
   public void setDefaultKey(int tmp) {
     this.defaultKey = tmp;
@@ -96,9 +103,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the defaultKey attribute of the RelationshipTypeList object
+   * Sets the defaultKey attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new defaultKey value
+   * @param tmp The new defaultKey value
    */
   public void setDefaultKey(String tmp) {
     this.defaultKey = Integer.parseInt(tmp);
@@ -106,9 +113,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the size attribute of the RelationshipTypeList object
+   * Sets the size attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(int tmp) {
     this.size = tmp;
@@ -116,9 +123,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the size attribute of the RelationshipTypeList object
+   * Sets the size attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(String tmp) {
     this.size = Integer.parseInt(tmp);
@@ -126,9 +133,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the showDisabled attribute of the RelationshipTypeList object
+   * Sets the showDisabled attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new showDisabled value
+   * @param tmp The new showDisabled value
    */
   public void setShowDisabled(boolean tmp) {
     this.showDisabled = tmp;
@@ -136,9 +143,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the showDisabled attribute of the RelationshipTypeList object
+   * Sets the showDisabled attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new showDisabled value
+   * @param tmp The new showDisabled value
    */
   public void setShowDisabled(String tmp) {
     this.showDisabled = DatabaseUtils.parseBoolean(tmp);
@@ -146,9 +153,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the RelationshipTypeList object
+   * Sets the pagedListInfo attribute of the RelationshipTypeList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -156,9 +163,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the RelationshipTypeList object
+   * Gets the pagedListInfo attribute of the RelationshipTypeList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -166,9 +173,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Gets the categoryIdMapsFrom attribute of the RelationshipTypeList object
+   * Gets the categoryIdMapsFrom attribute of the RelationshipTypeList object
    *
-   *@return    The categoryIdMapsFrom value
+   * @return The categoryIdMapsFrom value
    */
   public int getCategoryIdMapsFrom() {
     return categoryIdMapsFrom;
@@ -176,9 +183,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Gets the jsEvent attribute of the RelationshipTypeList object
+   * Gets the jsEvent attribute of the RelationshipTypeList object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -186,9 +193,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Gets the defaultKey attribute of the RelationshipTypeList object
+   * Gets the defaultKey attribute of the RelationshipTypeList object
    *
-   *@return    The defaultKey value
+   * @return The defaultKey value
    */
   public int getDefaultKey() {
     return defaultKey;
@@ -196,9 +203,9 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Gets the size attribute of the RelationshipTypeList object
+   * Gets the size attribute of the RelationshipTypeList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -206,19 +213,30 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Gets the showDisabled attribute of the RelationshipTypeList object
+   * Gets the showDisabled attribute of the RelationshipTypeList object
    *
-   *@return    The showDisabled value
+   * @return The showDisabled value
    */
   public boolean getShowDisabled() {
     return showDisabled;
   }
 
+  public int getTypeId() {
+    return typeId;
+  }
+
+  public void setTypeId(int tmp) {
+    this.typeId = tmp;
+  }
+
+  public void setTypeId(String tmp) {
+    this.typeId = Integer.parseInt(tmp);
+  }
 
   /**
-   *  Gets the htmlSelect attribute of the RelationshipTypeList object
+   * Gets the htmlSelect attribute of the RelationshipTypeList object
    *
-   *@return    The htmlSelect value
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect() {
     HtmlSelect relationshipTypeSelect = new HtmlSelect();
@@ -227,9 +245,12 @@ public class RelationshipTypeList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       RelationshipType thisRelationshipType = (RelationshipType) i.next();
-      relationshipTypeSelect.addItem(thisRelationshipType.getTypeId(), thisRelationshipType.getReciprocalName1());
-      if (!thisRelationshipType.getReciprocalName1().equals(thisRelationshipType.getReciprocalName2())) {
-        relationshipTypeSelect.addItem(thisRelationshipType.getTypeId() + "_reciprocal", thisRelationshipType.getReciprocalName2());
+      relationshipTypeSelect.addItem(
+          thisRelationshipType.getTypeId(), thisRelationshipType.getReciprocalName1());
+      if (!thisRelationshipType.getReciprocalName1().equals(
+          thisRelationshipType.getReciprocalName2())) {
+        relationshipTypeSelect.addItem(
+            thisRelationshipType.getTypeId() + "_reciprocal", thisRelationshipType.getReciprocalName2());
       }
     }
     return relationshipTypeSelect;
@@ -237,10 +258,10 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -276,7 +297,8 @@ public class RelationshipTypeList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND lrt.reciprocal_name_1 < ? ");
         items = prepareFilter(pst);
@@ -306,21 +328,14 @@ public class RelationshipTypeList extends ArrayList {
         "lrt.* " +
         "FROM lookup_relationship_types lrt " +
         "WHERE lrt.type_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       RelationshipType thisRelationshipType = new RelationshipType(rs);
       this.add(thisRelationshipType);
     }
@@ -330,10 +345,10 @@ public class RelationshipTypeList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db         Description of the Parameter
-   *@param  sqlFilter  Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -343,21 +358,28 @@ public class RelationshipTypeList extends ArrayList {
     if (categoryIdMapsFrom != -1) {
       sqlFilter.append("AND lrt.category_id_maps_from = ? ");
     }
+
+    if (typeId != -1) {
+      sqlFilter.append("AND lrt.type_id = ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
     if (categoryIdMapsFrom != -1) {
       pst.setInt(++i, categoryIdMapsFrom);
+    }
+    if (typeId != -1) {
+      pst.setInt(++i, typeId);
     }
     return i;
   }

@@ -51,6 +51,7 @@
         <option <%= CampaignDashboardListInfo.getOptionValue("my") %>><dhv:label name="campaign.myRunningCampaigns">My Running Campaigns</dhv:label></option>
         <option <%= CampaignDashboardListInfo.getOptionValue("all") %>><dhv:label name="campaign.allRunningCampaigns">All Running Campaigns</dhv:label></option>
         <option <%= CampaignDashboardListInfo.getOptionValue("instant") %>><dhv:label name="campaign.allInstantCampaigns">All Instant Campaigns</dhv:label></option>
+        <%--<option <%= CampaignDashboardListInfo.getOptionValue("trashed") %>><dhv:label name="campaign.allTrashedCampaigns">All Trashed Campaigns</dhv:label></option>--%>
       </select>
     </td>
     <td>

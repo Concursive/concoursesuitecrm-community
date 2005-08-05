@@ -15,22 +15,23 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.AccessLog;
-import org.aspcfs.modules.base.Constants;
-
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    November, 2002
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created November, 2002
  */
 public class AccessLogList extends ArrayList {
 
@@ -38,11 +39,11 @@ public class AccessLogList extends ArrayList {
   private int userId = -1;
 
   /**
-   *  Used by XML API
+   * Used by XML API
    */
   public final static String tableName = "access_log";
   /**
-   *  Used by XML API
+   * Used by XML API
    */
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
@@ -54,15 +55,16 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Constructor for the AccessLogList object
+   * Constructor for the AccessLogList object
    */
-  public AccessLogList() { }
+  public AccessLogList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the AccessLogList object
+   * Sets the pagedListInfo attribute of the AccessLogList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -70,9 +72,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the AccessLogList object
+   * Gets the pagedListInfo attribute of the AccessLogList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -80,9 +82,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the userId attribute of the AccessLogList object
+   * Gets the userId attribute of the AccessLogList object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -90,9 +92,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the userId attribute of the AccessLogList object
+   * Sets the userId attribute of the AccessLogList object
    *
-   *@param  userId  The new userId value
+   * @param userId The new userId value
    */
   public void setUserId(int userId) {
     this.userId = userId;
@@ -100,9 +102,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the userId attribute of the AccessLogList object
+   * Sets the userId attribute of the AccessLogList object
    *
-   *@param  userId  The new userId value
+   * @param userId The new userId value
    */
   public void setUserId(String userId) {
     this.userId = Integer.parseInt(userId);
@@ -110,9 +112,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the enteredRangeStart attribute of the AccessLogList object
+   * Sets the enteredRangeStart attribute of the AccessLogList object
    *
-   *@param  tmp  The new enteredRangeStart value
+   * @param tmp The new enteredRangeStart value
    */
   public void setEnteredRangeStart(java.sql.Timestamp tmp) {
     this.enteredRangeStart = tmp;
@@ -120,9 +122,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the enteredRangeEnd attribute of the AccessLogList object
+   * Sets the enteredRangeEnd attribute of the AccessLogList object
    *
-   *@param  tmp  The new enteredRangeEnd value
+   * @param tmp The new enteredRangeEnd value
    */
   public void setEnteredRangeEnd(java.sql.Timestamp tmp) {
     this.enteredRangeEnd = tmp;
@@ -130,9 +132,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the tableName attribute of the AccessLogList object
+   * Gets the tableName attribute of the AccessLogList object
    *
-   *@return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -140,9 +142,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the uniqueField attribute of the AccessLogList object
+   * Gets the uniqueField attribute of the AccessLogList object
    *
-   *@return    The uniqueField value
+   * @return The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -150,9 +152,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the lastAnchor attribute of the AccessLogList object
+   * Gets the lastAnchor attribute of the AccessLogList object
    *
-   *@return    The lastAnchor value
+   * @return The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -160,9 +162,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the nextAnchor attribute of the AccessLogList object
+   * Gets the nextAnchor attribute of the AccessLogList object
    *
-   *@return    The nextAnchor value
+   * @return The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -170,9 +172,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Gets the syncType attribute of the AccessLogList object
+   * Gets the syncType attribute of the AccessLogList object
    *
-   *@return    The syncType value
+   * @return The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -180,9 +182,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the lastAnchor attribute of the AccessLogList object
+   * Sets the lastAnchor attribute of the AccessLogList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param tmp The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -190,9 +192,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the nextAnchor attribute of the AccessLogList object
+   * Sets the nextAnchor attribute of the AccessLogList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param tmp The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -200,9 +202,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Sets the syncType attribute of the AccessLogList object
+   * Sets the syncType attribute of the AccessLogList object
    *
-   *@param  tmp  The new syncType value
+   * @param tmp The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -210,10 +212,10 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -236,7 +238,8 @@ public class AccessLogList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -249,9 +252,10 @@ public class AccessLogList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(a.username) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -280,7 +284,8 @@ public class AccessLogList extends ArrayList {
         "a.* " +
         "FROM access_log a " +
         "WHERE a.id > 0 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
@@ -300,9 +305,9 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (userId > -1) {
@@ -318,11 +323,11 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -340,11 +345,11 @@ public class AccessLogList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
@@ -354,7 +359,8 @@ public class AccessLogList extends ArrayList {
         "FROM access_log a " +
         "WHERE a.id > 0 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -363,6 +369,24 @@ public class AccessLogList extends ArrayList {
     pst.close();
     rs.close();
     return recordCount;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      AccessLog tmpAccessLog = (AccessLog) itr.next();
+      tmpAccessLog.delete(db);
+    }
+
+    return true;
   }
 }
 

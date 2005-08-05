@@ -15,22 +15,21 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
 import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.web.HtmlCoreAttributes;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+
+import java.util.ArrayList;
 
 /**
- *  Builds a Html Column element ... opeionally builds html from XML input.
- *  usage : <column valign="top" class="formLabel" width="80" nowrap="true">
+ * Builds a Html Column element ... opeionally builds html from XML input.
+ * usage : <column valign="top" class="formLabel" width="80" nowrap="true">
  *
- *@author     Akhilesh Mathur
- *@created    October 22, 2002
- *@version    $Id$
- *      Note : Class attribute in the xml has to be defined as elementClass as
- *      class is a reserved word
+ * @author Akhilesh Mathur
+ * @version $Id$
+ *          Note : Class attribute in the xml has to be defined as elementClass as
+ *          class is a reserved word
+ * @created October 22, 2002
  */
 public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
@@ -57,15 +56,16 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Constructor for the CustomColumn object
+   * Constructor for the CustomColumn object
    */
-  public CustomColumn() { }
+  public CustomColumn() {
+  }
 
 
   /**
-   *  Constructor for the CustomColumn object
+   * Constructor for the CustomColumn object
    *
-   *@param  column  Description of the Parameter
+   * @param column Description of the Parameter
    */
   public CustomColumn(Element column) {
     processXMLColumn(column);
@@ -73,9 +73,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the multiple attribute of the CustomColumn object
+   * Sets the multiple attribute of the CustomColumn object
    *
-   *@param  multiple  The new multiple value
+   * @param multiple The new multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
@@ -83,9 +83,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the multiple attribute of the CustomColumn object
+   * Sets the multiple attribute of the CustomColumn object
    *
-   *@param  multiple  The new multiple value
+   * @param multiple The new multiple value
    */
   public void setMultiple(String multiple) {
     this.multiple = "true".equalsIgnoreCase(multiple);
@@ -93,9 +93,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the startTag attribute of the CustomColumn object
+   * Sets the startTag attribute of the CustomColumn object
    *
-   *@param  startTag  The new startTag value
+   * @param startTag The new startTag value
    */
   public void setStartTag(String startTag) {
     this.startTag = startTag;
@@ -103,9 +103,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the id attribute of the CustomColumn object
+   * Sets the id attribute of the CustomColumn object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = tmp;
@@ -113,9 +113,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the style attribute of the CustomColumn object
+   * Sets the style attribute of the CustomColumn object
    *
-   *@param  tmp  The new style value
+   * @param tmp The new style value
    */
   public void setStyle(String tmp) {
     this.style = tmp;
@@ -123,9 +123,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the title attribute of the CustomColumn object
+   * Sets the title attribute of the CustomColumn object
    *
-   *@param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -133,9 +133,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the elementClass attribute of the CustomColumn object
+   * Sets the elementClass attribute of the CustomColumn object
    *
-   *@param  tmp  The new elementClass value
+   * @param tmp The new elementClass value
    */
   public void setElementClass(String tmp) {
     this.elementClass = tmp;
@@ -143,9 +143,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the align attribute of the CustomColumn object
+   * Sets the align attribute of the CustomColumn object
    *
-   *@param  tmp  The new align value
+   * @param tmp The new align value
    */
   public void setAlign(String tmp) {
     this.align = tmp;
@@ -153,9 +153,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the valign attribute of the CustomColumn object
+   * Sets the valign attribute of the CustomColumn object
    *
-   *@param  tmp  The new valign value
+   * @param tmp The new valign value
    */
   public void setValign(String tmp) {
     this.valign = tmp;
@@ -163,9 +163,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the bgColor attribute of the CustomColumn object
+   * Sets the bgColor attribute of the CustomColumn object
    *
-   *@param  tmp  The new bgColor value
+   * @param tmp The new bgColor value
    */
   public void setBgColor(String tmp) {
     this.bgColor = tmp;
@@ -173,9 +173,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the colspan attribute of the CustomColumn object
+   * Sets the colspan attribute of the CustomColumn object
    *
-   *@param  tmp  The new colSpan value
+   * @param tmp The new colSpan value
    */
   public void setColspan(String tmp) {
     this.colspan = tmp;
@@ -183,9 +183,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the rowspan attribute of the CustomColumn object
+   * Sets the rowspan attribute of the CustomColumn object
    *
-   *@param  tmp  The new rowSpan value
+   * @param tmp The new rowSpan value
    */
   public void setRowspan(String tmp) {
     this.rowspan = tmp;
@@ -193,9 +193,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the height attribute of the CustomColumn object
+   * Sets the height attribute of the CustomColumn object
    *
-   *@param  tmp  The new height value
+   * @param tmp The new height value
    */
   public void setHeight(String tmp) {
     this.height = tmp;
@@ -203,9 +203,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the width attribute of the CustomColumn object
+   * Sets the width attribute of the CustomColumn object
    *
-   *@param  tmp  The new width value
+   * @param tmp The new width value
    */
   public void setWidth(String tmp) {
     this.width = tmp;
@@ -213,9 +213,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the type attribute of the CustomColumn object
+   * Sets the type attribute of the CustomColumn object
    *
-   *@param  type  The new type value
+   * @param type The new type value
    */
   public void setType(String type) {
     this.type = type;
@@ -223,9 +223,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the nowrap attribute of the CustomColumn object
+   * Sets the nowrap attribute of the CustomColumn object
    *
-   *@param  nowrap  The new nowrap value
+   * @param nowrap The new nowrap value
    */
   public void setNowrap(boolean nowrap) {
     this.nowrap = nowrap;
@@ -233,9 +233,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Sets the nowrap attribute of the CustomColumn object
+   * Sets the nowrap attribute of the CustomColumn object
    *
-   *@param  nowrap  The new nowrap value
+   * @param nowrap The new nowrap value
    */
   public void setNowrap(String nowrap) {
     this.nowrap = "true".equalsIgnoreCase(nowrap);
@@ -243,9 +243,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the nowrap attribute of the CustomColumn object
+   * Gets the nowrap attribute of the CustomColumn object
    *
-   *@return    The nowrap value
+   * @return The nowrap value
    */
   public boolean getNowrap() {
     return nowrap;
@@ -253,9 +253,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the type attribute of the CustomColumn object
+   * Gets the type attribute of the CustomColumn object
    *
-   *@return    The type value
+   * @return The type value
    */
   public String getType() {
     return type;
@@ -263,9 +263,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the colspan attribute of the CustomColumn object
+   * Gets the colspan attribute of the CustomColumn object
    *
-   *@return    The colSpan value
+   * @return The colSpan value
    */
   public String getColspan() {
     return colspan;
@@ -273,9 +273,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the rowSpan attribute of the CustomColumn object
+   * Gets the rowSpan attribute of the CustomColumn object
    *
-   *@return    The rowSpan value
+   * @return The rowSpan value
    */
   public String getRowspan() {
     return rowspan;
@@ -283,9 +283,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the height attribute of the CustomColumn object
+   * Gets the height attribute of the CustomColumn object
    *
-   *@return    The height value
+   * @return The height value
    */
   public String getHeight() {
     return height;
@@ -293,9 +293,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the width attribute of the CustomColumn object
+   * Gets the width attribute of the CustomColumn object
    *
-   *@return    The width value
+   * @return The width value
    */
   public String getWidth() {
     return width;
@@ -303,9 +303,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the align attribute of the CustomColumn object
+   * Gets the align attribute of the CustomColumn object
    *
-   *@return    The align value
+   * @return The align value
    */
   public String getAlign() {
     return align;
@@ -313,9 +313,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the valign attribute of the CustomColumn object
+   * Gets the valign attribute of the CustomColumn object
    *
-   *@return    The valign value
+   * @return The valign value
    */
   public String getValign() {
     return valign;
@@ -323,9 +323,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the bgColor attribute of the CustomColumn object
+   * Gets the bgColor attribute of the CustomColumn object
    *
-   *@return    The bgColor value
+   * @return The bgColor value
    */
   public String getBgColor() {
     return bgColor;
@@ -333,9 +333,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the id attribute of the CustomColumn object
+   * Gets the id attribute of the CustomColumn object
    *
-   *@return    The id value
+   * @return The id value
    */
   public String getId() {
     return id;
@@ -343,9 +343,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the style attribute of the CustomColumn object
+   * Gets the style attribute of the CustomColumn object
    *
-   *@return    The style value
+   * @return The style value
    */
   public String getStyle() {
     return style;
@@ -353,9 +353,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the title attribute of the CustomColumn object
+   * Gets the title attribute of the CustomColumn object
    *
-   *@return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -363,9 +363,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the elementClass attribute of the CustomColumn object
+   * Gets the elementClass attribute of the CustomColumn object
    *
-   *@return    The elementClass value
+   * @return The elementClass value
    */
   public String getElementClass() {
     return elementClass;
@@ -373,9 +373,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the startTag attribute of the CustomColumn object
+   * Gets the startTag attribute of the CustomColumn object
    *
-   *@return    The startTag value
+   * @return The startTag value
    */
   public String getStartTag() {
     return startTag;
@@ -383,9 +383,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the endTag attribute of the CustomColumn object
+   * Gets the endTag attribute of the CustomColumn object
    *
-   *@return    The endTag value
+   * @return The endTag value
    */
   public String getEndTag() {
     return endTag;
@@ -393,9 +393,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the multiple attribute of the CustomColumn object
+   * Gets the multiple attribute of the CustomColumn object
    *
-   *@return    The multiple value
+   * @return The multiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -403,24 +403,25 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Gets the coreAttributes attribute of the CustomColumn object
+   * Gets the coreAttributes attribute of the CustomColumn object
    *
-   *@return    The coreAttributes value
+   * @return The coreAttributes value
    */
   public String getCoreAttributes() {
     StringBuffer tmpString = new StringBuffer();
     tmpString.append(id != null ? " id=\"" + id + "\" " : "");
     tmpString.append(title != null ? " title=\"" + title + "\" " : "");
     tmpString.append(style != null ? " style=\"" + style + "\" " : "");
-    tmpString.append(elementClass != null ? " class=\"" + elementClass + "\" " : "");
+    tmpString.append(
+        elementClass != null ? " class=\"" + elementClass + "\" " : "");
     return tmpString.toString();
   }
 
 
   /**
-   *  Gets the customAttributes attribute of the CustomColumn object
+   * Gets the customAttributes attribute of the CustomColumn object
    *
-   *@return    The customAttributes value
+   * @return The customAttributes value
    */
   public String getCustomAttributes() {
     StringBuffer tmpString = new StringBuffer();
@@ -436,9 +437,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  column  Description of the Parameter
+   * @param column Description of the Parameter
    */
   public void processXMLColumn(Element column) {
     //process XML to fill object and call  buildColumn
@@ -446,9 +447,11 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
     NamedNodeMap nnm = column.getAttributes();
     if (nnm != null) {
       for (int i = 0; i < nnm.getLength(); i++) {
-        ObjectUtils.setParam(this, nnm.item(i).getNodeName().trim(), nnm.item(i).getNodeValue().trim());
+        ObjectUtils.setParam(
+            this, nnm.item(i).getNodeName().trim(), nnm.item(i).getNodeValue().trim());
       }
-      if (column.getAttribute("class") != null && !"".equals(column.getAttribute("class"))) {
+      if (column.getAttribute("class") != null && !"".equals(
+          column.getAttribute("class"))) {
         this.elementClass = column.getAttribute("class");
       }
     }
@@ -456,7 +459,7 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void build() {
     startTag = "<TD" + this.getCoreAttributes() + this.getCustomAttributes() + (nowrap ? " nowrap " : "") + ">";

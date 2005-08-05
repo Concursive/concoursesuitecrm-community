@@ -15,29 +15,32 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Hashtable;
 
 /**
- *  A cache for keeping track of SyncClient data. This collection contains
- *  client tables and the related client-server mappings. Currently all of the
- *  records are cached for the given client, so all must be added or removed at
- *  the same time.
+ * A cache for keeping track of SyncClient data. This collection contains
+ * client tables and the related client-server mappings. Currently all of the
+ * records are cached for the given client, so all must be added or removed at
+ * the same time.
  *
- *@author     matt rajkowski
- *@created    June 10, 2002
- *@version    $Id: SyncClientManager.java,v 1.3 2003/01/13 21:54:40 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: SyncClientManager.java,v 1.3 2003/01/13 21:54:40 mrajkowski
+ *          Exp $
+ * @created June 10, 2002
  */
 public class SyncClientManager extends Hashtable {
 
   /**
-   *  Adds a feature to the Client attribute of the SyncClientManager object
+   * Adds a feature to the Client attribute of the SyncClientManager object
    *
-   *@param  db                The feature to be added to the Client attribute
-   *@param  clientId          The feature to be added to the Client attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the Client attribute
+   * @param clientId The feature to be added to the Client attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public Hashtable addClient(Connection db, int clientId) throws SQLException {
     if (this.containsKey(new Integer(clientId))) {
@@ -74,9 +77,9 @@ public class SyncClientManager extends Hashtable {
 
 
   /**
-   *  Removes a client from the in-memory cache
+   * Removes a client from the in-memory cache
    *
-   *@param  clientId  Description of the Parameter
+   * @param clientId Description of the Parameter
    */
   public void removeClient(int clientId) {
     if (this.containsKey(new Integer(clientId))) {
@@ -86,12 +89,12 @@ public class SyncClientManager extends Hashtable {
 
 
   /**
-   *  Inserts a client-server record mapping into the cache
+   * Inserts a client-server record mapping into the cache
    *
-   *@param  clientId  Description of the Parameter
-   *@param  tableId   Description of the Parameter
-   *@param  recordId  Description of the Parameter
-   *@param  cuid      Description of the Parameter
+   * @param clientId Description of the Parameter
+   * @param tableId  Description of the Parameter
+   * @param recordId Description of the Parameter
+   * @param cuid     Description of the Parameter
    */
   public void insert(int clientId, int tableId, Integer recordId, Integer cuid) {
     Hashtable clientLookup = (Hashtable) this.get(new Integer(clientId));
@@ -105,11 +108,11 @@ public class SyncClientManager extends Hashtable {
 
 
   /**
-   *  Removes a client-server record mapping from the cache
+   * Removes a client-server record mapping from the cache
    *
-   *@param  clientId  Description of the Parameter
-   *@param  tableId   Description of the Parameter
-   *@param  recordId  Description of the Parameter
+   * @param clientId Description of the Parameter
+   * @param tableId  Description of the Parameter
+   * @param recordId Description of the Parameter
    */
   public void remove(int clientId, int tableId, Integer recordId) {
     Hashtable clientLookup = (Hashtable) this.get(new Integer(clientId));

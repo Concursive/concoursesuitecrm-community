@@ -16,11 +16,11 @@ import java.util.StringTokenizer;
 
 public class RequestUtils {
   /**
-   *  Adds a feature to the LinkParams attribute of the HTTPUtils class
+   * Adds a feature to the LinkParams attribute of the HTTPUtils class
    *
-   *@param  request  The feature to be added to the LinkParams attribute
-   *@param  tmp      The feature to be added to the LinkParams attribute
-   *@return          Description of the Return Value
+   * @param request The feature to be added to the LinkParams attribute
+   * @param tmp     The feature to be added to the LinkParams attribute
+   * @return Description of the Return Value
    */
   public static String addLinkParams(HttpServletRequest request, String tmp) {
     String params = "";
@@ -35,7 +35,8 @@ public class RequestUtils {
   }
 
   public static String getLink(ActionContext context, String url) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     boolean sslEnabled = "true".equals(prefs.get("ForceSSL"));
     if (sslEnabled) {
       return ("https://" + RequestUtils.getServerUrl(context.getRequest()) + "/" + url);
@@ -45,14 +46,15 @@ public class RequestUtils {
   }
 
   /**
-   *  Returns the server's url that was specified in the request, excluding the
-   *  scheme
+   * Returns the server's url that was specified in the request, excluding the
+   * scheme
    *
-   *@param  request  Description of the Parameter
-   *@return          The serverURL value
+   * @param request Description of the Parameter
+   * @return The serverURL value
    */
   public static String getServerUrl(HttpServletRequest request) {
     int port = request.getServerPort();
-    return (request.getServerName() + (port != 80 && port != 443 ? ":" + String.valueOf(port) : "") + request.getContextPath());
+    return (request.getServerName() + (port != 80 && port != 443 ? ":" + String.valueOf(
+        port) : "") + request.getContextPath());
   }
 }

@@ -15,16 +15,16 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- *  This tag returns an HTML checkbox string based on the given parameters.
+ * This tag returns an HTML checkbox string based on the given parameters.
  *
- *@author     matt rajkowski
- *@created    August 13, 2003
- *@version    $Id: CheckboxHtmlHandler.java,v 1.3 2004/06/30 15:24:37 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: CheckboxHtmlHandler.java,v 1.3 2004/06/30 15:24:37 mrajkowski
+ *          Exp $
+ * @created August 13, 2003
  */
 public class CheckboxHtmlHandler extends TagSupport {
 
@@ -34,9 +34,9 @@ public class CheckboxHtmlHandler extends TagSupport {
 
 
   /**
-   *  Sets the name attribute of the CheckboxHtmlHandler object
+   * Sets the name attribute of the CheckboxHtmlHandler object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -44,9 +44,9 @@ public class CheckboxHtmlHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the CheckboxHtmlHandler object
+   * Sets the value attribute of the CheckboxHtmlHandler object
    *
-   *@param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
@@ -54,9 +54,9 @@ public class CheckboxHtmlHandler extends TagSupport {
 
 
   /**
-   *  Sets the checked attribute of the CheckboxHtmlHandler object
+   * Sets the checked attribute of the CheckboxHtmlHandler object
    *
-   *@param  tmp  The new checked value
+   * @param tmp The new checked value
    */
   public final void setChecked(boolean tmp) {
     checked = tmp;
@@ -64,9 +64,9 @@ public class CheckboxHtmlHandler extends TagSupport {
 
 
   /**
-   *  Sets the checked attribute of the CheckboxHtmlHandler object
+   * Sets the checked attribute of the CheckboxHtmlHandler object
    *
-   *@param  tmp  The new checked value
+   * @param tmp The new checked value
    */
   public final void setChecked(String tmp) {
     checked = "true".equalsIgnoreCase(tmp);
@@ -74,10 +74,10 @@ public class CheckboxHtmlHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -92,9 +92,9 @@ public class CheckboxHtmlHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

@@ -1,0 +1,1588 @@
+<workflow>
+  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  that executes the WorkflowManager when a ticket is updated or inserted,
+  the corresponding process is activated -->
+  <hooks>
+    <hook class="org.aspcfs.modules.troubletickets.base.Ticket" module="8">
+      <actions>
+        <action type="update" process="dhv.application.ticket.update" enabled="true"/>
+        <action type="insert" process="dhv.application.ticket.insert" enabled="true"/>
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.accounts.base.Organization" module="1">
+      <actions>
+        <action type="update" process="dhv.application.account.update" enabled="false"/>
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.contacts.base.Contact" module="1">
+      <actions>
+        <action type="insert" process="dhv.application.account.contact.insert" enabled="false"/>
+        <action type="update" process="dhv.application.account.contact.update" enabled="false"/>
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.contacts.base.Call" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.call.insert" enabled="true" />
+        <action type="update" process="dhv.application.contact.call.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.mycfs.base.CFSNote" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.note.insert" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.communications.base.Campaign" module="2">
+      <actions>
+        <action type="update" process="dhv.application.contact.campaign.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.communications.base.InstantCampaign" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.instantcampaign.insert" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.tasks.base.Task" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.task.insert" enabled="true" />
+        <action type="update" process="dhv.application.contact.task.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.troubletickets.base.TicketTask" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.task.insert" enabled="true" />
+        <action type="update" process="dhv.application.contact.task.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.quotes.base.Quote" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.quote.insert" enabled="true" />
+        <action type="update" process="dhv.application.contact.quote.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.pipeline.base.OpportunityHeader" module="2">
+      <actions>
+        <action type="update" process="dhv.application.contact.oppHeader.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.pipeline.base.OpportunityComponent" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.opportunity.insert" enabled="true" />
+        <action type="update" process="dhv.application.contact.opportunity.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.servicecontracts.base.ServiceContract" module="2">
+      <actions>
+        <action type="insert" process="dhv.application.contact.servicecontract.insert" enabled="true" />
+        <action type="update" process="dhv.application.contact.servicecontract.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="com.zeroio.iteam.base.FileItem" module="1">
+      <actions>
+        <action type="insert" process="dhv.application.account.document.insert" enabled="true" />
+        <action type="update" process="dhv.application.account.document.update" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.relationships.base.Relationship" module="1">
+      <actions>
+        <action type="insert" process="dhv.application.account.relationship.insert" enabled="true" />
+      </actions>
+    </hook>
+    <hook class="org.aspcfs.modules.assets.base.Asset" module="1">
+      <actions>
+        <action type="insert" process="dhv.application.account.asset.insert" enabled="true" />
+        <action type="update" process="dhv.application.account.asset.update" enabled="true" />
+      </actions>
+    </hook>
+  </hooks>
+
+  <!-- Each process describes the workflow for the various object and action
+    that is being hooked-->
+  <processes>
+    <process name="dhv.application.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="8">
+      <parameters>
+        <!-- Global parameters for the process override the defaults from Centric CRM -->
+        <!--
+        <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
+        <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+        -->
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.LoadTicketDetails" enabled="true"/>
+        <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed"/>
+        <component id="3" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
+        <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Closed"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="true" class="org.aspcfs.modules.components.SetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="3" if="false" class="org.aspcfs.modules.components.SetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket not Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+    
+    <process name="dhv.application.ticket.update" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="8">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.LoadTicketDetails" enabled="true"/>
+        <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed"/>
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.ResetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Closed"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.ResetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="4" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketClosed"/>
+        <component id="7" parent="6" if="true" class="org.aspcfs.modules.components.ResetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Closed"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="6" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketAssigned"/>
+        <component id="9" parent="8" if="true" class="org.aspcfs.modules.components.ResetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="10" parent="8" if="false" class="org.aspcfs.modules.components.ResetContactHistory" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="9"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Ticket Unassigned"/>
+            <parameter name="history.description"><![CDATA[${this.problemHeader}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+    
+    <!-- Capture Account History -->
+    <!-- Account Update -->
+    <process name="dhv.application.account.update" description="Capture Account History" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.accounts.components.LoadAccountDetails" enabled="false" />
+        <component id="2" parent="1" class="org.aspcfs.modules.accounts.components.QueryAccountModified" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="1"/>
+            <parameter name="history.linkItemId" value="${this.orgId}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Modified"/>
+            <parameter name="history.description"><![CDATA[
+              Name changed from "${previous.name}" to "${this.name}"
+              Contract End Date changed from ${previous.contractEndDateBufferedString} to  ${this.contractEndDateBufferedString}
+              Revenue changed from ${previous.revenue} to ${this.revenue}
+            ]]>
+          </parameter>
+        </parameters>
+        </component>
+      </components>
+    </process>
+    
+    <!-- Capture Account History for Contact Insert -->
+    <process name="dhv.application.account.contact.insert" description="History of Creation of the Account Contact" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.contacts.components.LoadContactDetails" enabled="false" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.components.DummyComponent">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="2"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Inserted"/>
+            <parameter name="history.description"><![CDATA[
+              ${this.nameLastFirst} was added as a Contact.
+            ]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+    
+    <!-- Capture Account History for Contact Update -->
+    <process name="dhv.application.account.contact.update" description="Capture Account Contact History" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.contacts.components.LoadContactDetails" enabled="false" />
+        <component id="2" parent="1" class="org.aspcfs.modules.contacts.components.QueryContactNameModified" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SetAccountHistory">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="2"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Modified"/>
+            <parameter name="history.description"><![CDATA[Contact Name changed from ${previous.nameLastFirst} to ${this.nameLastFirst}]]>
+          </parameter>
+        </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.contacts.components.QueryContactMoved" />
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.contacts.components.QueryContactWasAccountContact" />
+        <component id="6" parent="5" if="true" class="org.aspcfs.modules.components.SetAccountHistory">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="2"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Modified"/>
+            <parameter name="history.description"><![CDATA[
+            The contact "${this.nameLastFirst} has been moved from ${previous.orgName} to the current account.
+            ]]>
+          </parameter>
+        </parameters>
+        </component>
+        <component id="7" parent="5" if="false" class="org.aspcfs.modules.components.SetAccountHistory">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="2"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Modified"/>
+            <parameter name="history.description"><![CDATA[
+              A General Contact "${this.nameLastFirst} has been moved to the account
+            ]]>
+          </parameter>
+        </parameters>
+        </component>
+        <component id="8" parent="3" if="true" class="org.aspcfs.modules.contacts.components.QueryContactMoved"/>
+        <component id="9" parent="8" if="true" class="org.aspcfs.modules.contacts.components.QueryContactWasAccountContact"/>
+        <component id="10" parent="9" if="true" class="org.aspcfs.modules.components.SetAccountHistory">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="2"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Modified"/>
+            <parameter name="history.description"><![CDATA[
+              The contact "${this.nameLastFirst} has been moved from ${previous.orgName} to the current account.
+            ]]>
+          </parameter>
+        </parameters>
+        </component>
+        <component id="11" parent="10" if="false" class="org.aspcfs.modules.components.SetAccountHistory">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="2"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Modified"/>
+            <parameter name="history.description"><![CDATA[
+              A General Contact "${this.nameLastFirst} has been moved to the account
+            ]]>
+          </parameter>
+        </parameters>
+        </component>
+      </components>
+    </process>
+    
+    <!-- Capture Completed or Cancelled Activities into the Contact History -->
+    <process name="dhv.application.contact.call.insert" description="Capture Call into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.contacts.components.LoadCallDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.contacts.components.QueryCompleteActivity" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Complete: ${this.callType}"/>
+            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="13"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Canceled: ${this.callType}"/>
+            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture modified Activities (Complete or Canceled) into the Contact History -->
+    <process name="dhv.application.contact.call.update" description="Capture the modified Activities into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.contacts.components.LoadCallDetails" enabled="true" />
+        <component id="2" parent="1" class="org.aspcfs.modules.contacts.components.QueryActivityModified" />
+        <component id="3" parent="2" class="org.aspcfs.modules.contacts.components.QueryCompleteActivity" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Complete: ${this.callType}"/>
+            <parameter name="history.description"><![CDATA[${this.subject}]]>
+          </parameter>
+        </parameters>
+        </component>
+        <component id="5" parent="3" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Canceled: ${this.callType}"/>
+            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+
+    <!-- Delete the history element related to the deleted activity -->
+    <process name="dhv.application.contact.call.delete" description="Remove the deleted Activity from Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.contacts.components.QueryCompleteActivity" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.components.DeleteContactHistory" enabled="false">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+          </parameters>
+        </component>
+        <component id="3" parent="1" if="false" class="org.aspcfs.modules.components.DeleteContactHistory" enabled="false">
+           <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="13"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+
+    <!-- Capture Email Messages into the Contact History -->
+    <process name="dhv.application.contact.note.insert" description="Capture CFSNote into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.contacts.components.LoadNoteDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="14"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.sentTo}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Email Message"/>
+            <parameter name="history.description"><![CDATA[Subject: ${this.subject}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Activated Campaign Messages into the Contact History -->
+    <process name="dhv.application.contact.campaign.update" description="Capture Campaign Messages into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.communications.components.LoadCampaignDetails" enabled="true" />
+        <component id="2" parent="1" class="org.aspcfs.modules.communications.components.QueryCampaignJustActivated" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.communications.components.SetMultipleContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="15"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Message"/>
+            <parameter name="history.description"><![CDATA[Subject: ${this.subject}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.communications.components.QueryCampaignJustCanceled"/>
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.communications.components.DeleteMultipleContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="15"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Instant Campaign Messages into the Contact History -->
+    <process name="dhv.application.contact.instantcampaign.insert" description="Capture Instant Campaign Messages into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.communications.components.LoadCampaignDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.communications.components.SetMultipleContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="15"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Email Message"/>
+            <parameter name="history.description"><![CDATA[Subject: ${this.subject}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Tasks into the Contact History -->
+    <process name="dhv.application.contact.task.insert" description="Capture Task into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.tasks.components.LoadTaskDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskHasLinkedContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskIsNotPersonal" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskAssigned" />
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskComplete" />
+        <component id="6" parent="5" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Task Assigned and Complete"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="5" if="false" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Task Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="4" if="false" class="org.aspcfs.modules.tasks.components.QueryTaskComplete" />
+        <component id="9" parent="8" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Task Unassigned but Complete"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="10" parent="8" if="false" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Task not Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Task Updates into the Contact History -->
+    <process name="dhv.application.contact.task.update" description="Capture Task Updates into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.tasks.components.LoadTaskDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskHasLinkedContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskIsNotPersonal" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskAssigned" />
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.tasks.components.QueryTaskComplete" />
+        <component id="6" parent="5" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Task Complete"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="5" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Task Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="4" if="false" class="org.aspcfs.modules.tasks.components.QueryTaskComplete" />
+        <component id="9" parent="8" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Task Unassigned but Complete"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="10" parent="8" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Task not Assigned"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="11" parent="3" if="false" class="org.aspcfs.modules.tasks.components.QueryPreviousTaskNotPersonal" />
+        <component id="12" parent="11" if="true" class="org.aspcfs.modules.components.DeleteContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+          </parameters>
+        </component>
+        <component id="13" parent="2" if="false" class="org.aspcfs.modules.tasks.components.QueryPreviousTaskHadLinkContact" />
+        <component id="14" parent="13" if="true" class="org.aspcfs.modules.components.DeleteContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.linkObjectId" value="16"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Quotes into the Contact History -->
+    <process name="dhv.application.contact.quote.insert" description="Capture Quote into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.quotes.components.LoadQuoteDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.quotes.components.QueryQuoteClosed" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="5"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Quote Closed"/>
+            <parameter name="history.description"><![CDATA[${this.shortDescription}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.quotes.components.QueryQuoteIssued" />
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="5"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Quote Issued"/>
+            <parameter name="history.description"><![CDATA[${this.shortDescription}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="4" if="false" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="5"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Quote"/>
+            <parameter name="history.description"><![CDATA[${this.shortDescription}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Quotes into the Contact History -->
+    <process name="dhv.application.contact.quote.update" description="Capture Quote Updates into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.quotes.components.LoadQuoteDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.quotes.components.QueryQuoteClosed" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="5"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Quote Closed"/>
+            <parameter name="history.description"><![CDATA[${this.shortDescription}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.quotes.components.QueryQuoteIssued" />
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="5"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Quote Issued"/>
+            <parameter name="history.description"><![CDATA[${this.shortDescription}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="4" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="5"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Quote"/>
+            <parameter name="history.description"><![CDATA[${this.shortDescription}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Opportunity Component into the Contact History -->
+    <process name="dhv.application.contact.opportunity.insert" description="Capture Opportunity into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.pipeline.components.LoadOpportunityDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.pipeline.components.QueryOppLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.pipeline.components.QueryOppClosed" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Opportunity Component Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="false" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="2" if="false" class="org.aspcfs.modules.pipeline.components.QueryOppClosed" />
+        <component id="7" parent="6" if="true" class="org.aspcfs.modules.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Opportunity Component Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="6" if="false" class="org.aspcfs.modules.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Opportunity Component Updates into the Contact History -->
+    <process name="dhv.application.contact.opportunity.update" description="Capture Opportunity Updates into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.pipeline.components.LoadOpportunityDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.pipeline.components.QueryOppLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.pipeline.components.QueryOppJustClosed" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component Just Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="false" class="org.aspcfs.modules.pipeline.components.QueryOppClosed" />
+        <component id="6" parent="5" if="true" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="5" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="2" if="false" class="org.aspcfs.modules.pipeline.components.QueryOppJustClosed" />
+        <component id="9" parent="8" if="true" class="org.aspcfs.modules.components.ResetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component Just Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="10" parent="8" if="false" class="org.aspcfs.modules.pipeline.components.QueryOppClosed" />
+        <component id="11" parent="10" if="true" class="org.aspcfs.modules.components.ResetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="12" parent="10" if="false" class="org.aspcfs.modules.components.ResetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Opportunity Header Updates into the Contact History -->
+    <process name="dhv.application.contact.oppHeader.update" description="Capture Opportunity Header Updates into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.pipeline.components.LoadOpportunityHeaderDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.pipeline.components.QueryOppHeaderLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.pipeline.components.QueryOppHeaderWasLinkedToAccount" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.pipeline.components.ResetOpportunityContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="account"/>
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${previous.accountLink}"/>
+            <parameter name="history.contactId" value="${this.contactLink}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Opportunity Component Closed"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="2" if="false" class="org.aspcfs.modules.pipeline.components.QueryOppHeaderWasLinkedToContact" />
+        <component id="6" parent="5" if="true" class="org.aspcfs.modules.pipeline.components.ResetOpportunityContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="contact"/>
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${previous.contactLink}"/>
+            <parameter name="history.orgId" value="${this.accountLink}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="3" if="false" class="org.aspcfs.modules.pipeline.components.UpdateOpportunityContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="contact"/>
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactLink}"/>
+            <parameter name="history.previousContactId" value="${previous.contactLink}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="5" if="false" class="org.aspcfs.modules.pipeline.components.UpdateOpportunityContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="account"/>
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="4"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.accountLink}"/>
+            <parameter name="history.previousOrgId" value="${previous.accountLink}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Opportunity Component"/>
+            <parameter name="history.description"><![CDATA[${this.description}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Service Contract into the Contact History -->
+    <process name="dhv.application.contact.servicecontract.insert" description="Capture Service Contract into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.servicecontracts.components.LoadServiceContractDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.servicecontracts.components.QuerySCLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="7"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Service Contract"/>
+            <parameter name="history.description"><![CDATA[Service Contract Number: ${this.serviceContractNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="7"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Service Contract"/>
+            <parameter name="history.description"><![CDATA[Service Contract Number: ${this.serviceContractNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Service Contract Update into the Contact History -->
+    <process name="dhv.application.contact.servicecontract.update" description="Capture Service Contract Update into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.servicecontracts.components.LoadServiceContractDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.servicecontracts.components.QuerySCLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.servicecontracts.components.QuerySCWasLinkedToAccount" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.components.ResetToContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="account"/>
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="7"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.orgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Service Contract"/>
+            <parameter name="history.description"><![CDATA[Service Contract Number: ${this.serviceContractNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="7"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Service Contract"/>
+            <parameter name="history.description"><![CDATA[Service Contract Number: ${this.serviceContractNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="2" if="false" class="org.aspcfs.modules.servicecontracts.components.QuerySCWasLinkedToContact" />
+        <component id="7" parent="6" if="true" class="org.aspcfs.modules.components.ResetToContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="contact"/>
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="7"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${previous.contactId}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Service Contract"/>
+            <parameter name="history.description"><![CDATA[Service Contract Number: ${this.serviceContractNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="6" if="false" class="org.aspcfs.modules.components.ResetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="7"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Service Contract"/>
+            <parameter name="history.description"><![CDATA[Service Contract Number: ${this.serviceContractNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Account Document into the Account History -->
+    <process name="dhv.application.account.document.insert" description="Capture Account Documents into Account History" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="com.zeroio.iteam.components.LoadDocumentDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="10"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.linkItemId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Document"/>
+            <parameter name="history.description"><![CDATA[${this.clientFilename}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Account Document Update into the Account History -->
+    <process name="dhv.application.account.document.update" description="Capture Document into Account History" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="com.zeroio.iteam.components.LoadDocumentDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.components.ResetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="10"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.linkItemId}"/>
+            <parameter name="history.previousOrgId" value="${previous.linkItemId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Document"/>
+            <parameter name="history.description"><![CDATA[${this.clientFilename}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Relationships into the Account History -->
+    <process name="dhv.application.account.relationship.insert" description="Capture Relationships into Account History" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.relationships.components.LoadRelationshipDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.relationships.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="11"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.objectIdMapsFrom}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Relationship"/>
+            <parameter name="history.description"><![CDATA[none]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+
+    <!-- Capture Asset into the Account History -->
+    <process name="dhv.application.account.asset.insert" description="Capture Asset into Account History" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.assets.components.LoadAssetDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.assets.components.QueryAssetLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="8"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Asset: ${this.statusName}"/>
+            <parameter name="history.description"><![CDATA[Serial Number: ${this.serialNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.components.SetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="8"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Insert"/>
+            <parameter name="history.type" value="Asset: ${this.statusName}"/>
+            <parameter name="history.description"><![CDATA[Serial Number: ${this.serialNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+    <!-- Capture Asset Update into the Contact History -->
+    <process name="dhv.application.account.asset.update" description="Capture Asset Update into Contact History" startId="1" type="OBJECT_EVENT" module="2">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.assets.components.LoadAssetDetails" enabled="true" />
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.assets.components.QueryAssetLinkedToContact" />
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.assets.components.QueryAssetWasLinkedToAccount" />
+        <component id="4" parent="3" if="true" class="org.aspcfs.modules.components.ResetToContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="account"/>
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="8"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.orgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Asset: ${this.statusName}"/>
+            <parameter name="history.description"><![CDATA[Serial Number: ${this.serialNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="false" class="org.aspcfs.modules.components.ResetContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="8"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Asset: ${this.statusName}"/>
+            <parameter name="history.description"><![CDATA[Serial Number: ${this.serialNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="2" if="false" class="org.aspcfs.modules.assets.components.QueryAssetWasLinkedToContact" />
+        <component id="7" parent="6" if="true" class="org.aspcfs.modules.components.ResetToContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.reset" value="contact"/>
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="8"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${previous.contactId}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Asset: ${this.statusName}"/>
+            <parameter name="history.description"><![CDATA[Serial Number: ${this.serialNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+        <component id="8" parent="6" if="false" class="org.aspcfs.modules.components.ResetAccountHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.level" value="10"/>
+            <parameter name="history.enteredby" value="${this.enteredBy}"/>
+            <parameter name="history.modifiedby" value="${this.modifiedBy}"/>
+            <parameter name="history.linkObjectId" value="8"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+            <parameter name="history.enabled" value="true"/>
+            <parameter name="history.status" value="Update"/>
+            <parameter name="history.type" value="Asset: ${this.statusName}"/>
+            <parameter name="history.description"><![CDATA[Serial Number: ${this.serialNumber}]]>
+            </parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+  </processes>
+</workflow>
+

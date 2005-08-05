@@ -15,28 +15,29 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import org.aspcfs.modules.actions.CFSModule;
 import com.darkhorseventures.framework.actions.ActionContext;
-import com.darkhorseventures.database.*;
-import java.sql.*;
-import org.aspcfs.modules.help.base.*;
-import java.util.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.help.base.HelpItem;
+import org.aspcfs.modules.help.base.HelpItemList;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.util.Iterator;
+
 /**
- *  Various QA tools for Admin
+ * Various QA tools for Admin
  *
- *@author     matt rajkowski
- *@created    July 25, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created July 25, 2003
  */
 public class AdminQA extends CFSModule {
 
   /**
-   *  Shows a report of the QA system
+   * Shows a report of the QA system
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReport(ActionContext context) {
     Connection db = null;

@@ -31,19 +31,19 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    April 18, 2003
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created April 18, 2003
  */
 public final class MyActionLists extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
@@ -54,10 +54,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
@@ -67,23 +67,26 @@ public final class MyActionLists extends CFSModule {
     addModuleBean(context, "My Action Lists", "Action Lists");
     String linkModuleId = context.getRequest().getParameter("linkModuleId");
     String userId = (String) context.getRequest().getParameter("viewUserId");
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (userId != null && !"".equals(userId)) {
       if (!this.hasAuthority(context, Integer.parseInt(userId))) {
         return ("PermissionError");
       }
-      if (!userId.equals(""+this.getUserId(context))) {
+      if (!userId.equals("" + this.getUserId(context))) {
         context.getSession().setAttribute("viewUserId", userId);
         viewUserId = userId;
       } else {
         context.getSession().removeAttribute("viewUserId");
-        viewUserId = ""+ this.getUserId(context);
+        viewUserId = "" + this.getUserId(context);
       }
     } else if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
-    PagedListInfo actionListInfo = this.getPagedListInfo(context, "ActionListInfo");
-    actionListInfo.setLink("MyActionLists.do?command=List&linkModuleId=" + linkModuleId+"&viewUserId="+viewUserId);
+    PagedListInfo actionListInfo = this.getPagedListInfo(
+        context, "ActionListInfo");
+    actionListInfo.setLink(
+        "MyActionLists.do?command=List&linkModuleId=" + linkModuleId + "&viewUserId=" + viewUserId);
     Connection db = null;
     try {
       db = getConnection(context);
@@ -116,10 +119,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
@@ -129,9 +132,10 @@ public final class MyActionLists extends CFSModule {
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("id");
     Connection db = null;
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
 
     ActionList thisList = (ActionList) context.getFormBean();
@@ -153,18 +157,19 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
       return ("PermissionError");
     }
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
     addModuleBean(context, "My Action Lists", "Add an Action List");
     return "PrepareAddOK";
@@ -172,10 +177,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
@@ -185,9 +190,10 @@ public final class MyActionLists extends CFSModule {
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("id");
     Connection db = null;
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
 
     ActionList thisList = (ActionList) context.getFormBean();
@@ -209,18 +215,19 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
       return ("PermissionError");
     }
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
     boolean recordInserted = false;
     int resultCount = 0;
@@ -256,7 +263,8 @@ public final class MyActionLists extends CFSModule {
 
             //Build the contactList
             ContactList contacts = new ContactList();
-            contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
+            contacts.setScl(
+                thisSCL, this.getUserId(context), this.getUserRange(context));
             contacts.setBuildDetails(true);
             contacts.setBuildTypes(false);
             contacts.buildList(db);
@@ -269,7 +277,9 @@ public final class MyActionLists extends CFSModule {
           }
         } else {
           SystemStatus systemStatus = this.getSystemStatus(context);
-          errors.put("criteriaError", systemStatus.getLabel("object.validation.criteriaNotDefined"));
+          errors.put(
+              "criteriaError", systemStatus.getLabel(
+                  "object.validation.criteriaNotDefined"));
           processErrors(context, errors);
         }
       } else {
@@ -294,18 +304,19 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-delete"))) {
       return ("PermissionError");
     }
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
     Connection db = null;
     addModuleBean(context, "My Action Lists", "");
@@ -321,16 +332,20 @@ public final class MyActionLists extends CFSModule {
       thisList.queryRecord(db, Integer.parseInt(actionId));
       DependencyList dependencies = thisList.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
-      
+
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='MyActionLists.do?command=Delete&id=" + actionId + "&linkModuleId=" + linkModuleId + "'");
+        htmlDialog.setDeleteUrl(
+            "javascript:window.location.href='MyActionLists.do?command=Delete&id=" + actionId + "&linkModuleId=" + linkModuleId + "'");
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='MyActionLists.do?command=Delete&id=" + actionId + "&linkModuleId=" + linkModuleId + "'");
-        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='MyActionLists.do?command=Delete&id=" + actionId + "&linkModuleId=" + linkModuleId + "'");
+        htmlDialog.addButton(
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -344,18 +359,19 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-delete"))) {
       return ("PermissionError");
     }
-    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    String viewUserId = (String) context.getSession().getAttribute(
+        "viewUserId");
     if (viewUserId == null || "".equals(viewUserId)) {
-      viewUserId = ""+this.getUserId(context);
+      viewUserId = "" + this.getUserId(context);
     }
     Exception errorMessage = null;
     addModuleBean(context, "My Action Lists", "");
@@ -374,7 +390,8 @@ public final class MyActionLists extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      context.getRequest().setAttribute("refreshUrl", "MyActionLists.do?command=List&linkModuleId=" + linkModuleId);
+      context.getRequest().setAttribute(
+          "refreshUrl", "MyActionLists.do?command=List&linkModuleId=" + linkModuleId);
       return "DeleteOK";
     } else {
       context.getRequest().setAttribute("Error", errorMessage);

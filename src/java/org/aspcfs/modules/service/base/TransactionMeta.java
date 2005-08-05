@@ -15,18 +15,16 @@
  */
 package org.aspcfs.modules.service.base;
 
-import java.util.*;
-import org.w3c.dom.*;
-import java.sql.*;
+import java.util.LinkedList;
 
 /**
- *  TransactionMeta stores data for Transaction Items. The meta data can then be
- *  used for identifying object properties, for example.
+ * TransactionMeta stores data for Transaction Items. The meta data can then be
+ * used for identifying object properties, for example.
  *
- *@author     matt
- *@created    April 10, 2002
- *@version    $Id: TransactionMeta.java,v 1.2 2002/04/22 15:32:59 mrajkowski Exp
- *      $
+ * @author matt
+ * @version $Id: TransactionMeta.java,v 1.2 2002/04/22 15:32:59 mrajkowski Exp
+ *          $
+ * @created April 10, 2002
  */
 public class TransactionMeta {
 
@@ -34,15 +32,16 @@ public class TransactionMeta {
 
 
   /**
-   *  Constructor for the TransactionMeta object
+   * Constructor for the TransactionMeta object
    */
-  public TransactionMeta() { }
+  public TransactionMeta() {
+  }
 
 
   /**
-   *  Sets the field attribute of the TransactionMeta object
+   * Sets the field attribute of the TransactionMeta object
    *
-   *@param  tmp  The new field value
+   * @param tmp The new field value
    */
   public void setProperty(String tmp) {
     if (fields == null) {
@@ -53,9 +52,9 @@ public class TransactionMeta {
 
 
   /**
-   *  Gets the fields attribute of the TransactionMeta object
+   * Gets the fields attribute of the TransactionMeta object
    *
-   *@return    The fields value
+   * @return The fields value
    */
   public LinkedList getFields() {
     return fields;

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -23,20 +23,27 @@
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="bcc" class="java.lang.String" scope="request"/>
+<jsp:useBean id="cc" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%
+  if (clientType.getType() == -1) {
+    clientType.setParameters(request);
+  }
+%>
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
-<jsp:include page="../htmlarea_include.jsp" flush="true"/>
-<body onload="initEditor('messageText');document.addMessage.name.focus();">
+  <jsp:include page="../tinymce_include.jsp" flush="true"/>
+  <script language="javascript" type="text/javascript">
+    initEditor('messageText');
+  </script>
 </dhv:evaluate>
-<%-- Use applet instead --%>
-<dhv:evaluate if="<%= clientType.showApplet() %>">
 <body onload="document.addMessage.name.focus();">
-</dhv:evaluate>
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
+    try { tinyMCE.triggerSave(false); } catch(e) { }
     var formTest = true;
     var messageText = "";
 <dhv:evaluate if="<%= clientType.showApplet() %>">
@@ -47,6 +54,10 @@
 </script>
 <form name="addMessage" method="post" action="CampaignManagerMessage.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
+<%
+boolean showBcc = false;
+boolean showCc = false;
+%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>

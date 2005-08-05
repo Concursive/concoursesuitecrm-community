@@ -27,7 +27,7 @@
       "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, 1);
     pst.setInt(2, 1);
-    pst.setInt(3, 819041648);
+    pst.setInt(3, 819041649);
     pst.setInt(4, 50);
     pst.setString(5, "lookup_orgaddress_types");
     pst.setString(6, "lookupList");
@@ -42,7 +42,7 @@
       "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, 1);
     pst.setInt(2, 1);
-    pst.setInt(3, 819041648);
+    pst.setInt(3, 819041650);
     pst.setInt(4, 60);
     pst.setString(5, "lookup_orgphone_types");
     pst.setString(6, "lookupList");

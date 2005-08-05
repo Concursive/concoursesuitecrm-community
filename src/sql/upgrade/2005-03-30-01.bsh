@@ -1,0 +1,52 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+// Database upgrade v3.0 (2005-03-30)
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+void insertPermission(Connection db, int constantId, String permissionName, String description, boolean view, boolean add, boolean edit, boolean delete, int level, boolean enabled, boolean active, boolean viewpoints) {
+  int count = Permission.lookupId(db, permissionName);
+  if (count == -1) {
+    // Get the category
+    int categoryId = PermissionCategory.lookupId(db, constantId);
+    // Insert the permission
+    Permission permission = new Permission();
+    permission.setCategoryId(categoryId);
+    permission.setName(permissionName);
+    permission.setDescription(description);
+    permission.setView(view);
+    permission.setAdd(add);
+    permission.setEdit(edit);
+    permission.setDelete(delete);
+    permission.setPermissionLevel(level);
+    permission.setEnabled(enabled);
+    permission.setActive(active);
+    permission.setViewpoints(viewpoints);
+    permission.insert(db);
+  }
+}
+
+insertPermission(db, 1, "accounts-accounts-contacts-move", "Move contacts to other accounts", true, false, false, false, 90, true, true, false);
+insertPermission(db, 1, "accounts-accounts-relationships", "Relationships", true, true, true, true, 290, true, true, false);
+insertPermission(db, 1, "accounts-accounts-contact-updater", "Request contact information update", true, false, false, false, 300, true, true, false);
+insertPermission(db, 1, "accounts-projects", "Projects", true, false, false, false, 310, true, true, false);
+
+insertPermission(db, 2, "contacts-external-contact-updater", "Request contact information update", true, false, false, false, 90, true, true, false);
+
+insertPermission(db, 9, "admin-sysconfig-logos", "Configure Module Logos", true, true, true, true, 110, true, true, false);
+
+insertPermission(db, 228051100, "sales", "Access to Leads Module", true, false, false, false, 10, true, true, false);
+insertPermission(db, 228051100, "sales-leads", "Lead Records", true, true, true, true, 20, true, true, false);
+insertPermission(db, 228051100, "sales-import", "Access to Import Leads", true, false, false, false, 30, true, true, false);
+
+insertPermission(db, 420041017, "quotes-quotes", "Quote Records", true, true, true, true, 20, true, true, false);
+
+insertPermission(db, 420041018, "orders", "Access to Orders module", true, false, false, false, 10, true, true, false);
+insertPermission(db, 420041018, "orders-orders", "Order Records", true, true, true, true, 20, true, true, false);
+
+insertPermission(db, 1111031131, "contacts-internal_contacts-folders", "Folders", true, true, true, true, 30, true, true, false);
+insertPermission(db, 1111031131, "contacts-internal_contacts-projects", "Projects", true, false, false, false, 40, true, true, false);
+
+insertPermission(db, 1202041528, "documents", "Access to Documents module", true, false, false, false, 10, true, true, false);
+insertPermission(db, 1202041528, "documents_documentstore", "Manage Document Stores", true, true, true, true, 20, true, true, false);

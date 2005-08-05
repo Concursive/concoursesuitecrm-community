@@ -15,36 +15,38 @@
  */
 package org.aspcfs.modules.healthcare.edit.actions;
 
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SecurityHook;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.service.base.*;
-import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.healthcare.edit.base.TransactionRecord;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
+import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.service.base.TransactionStatus;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.sql.Connection;
 
 /**
- *  Processes records that are posted from clients, using XML
+ * Processes records that are posted from clients, using XML
  *
- *@author     chris
- *@created    February 11, 2003
- *@version    $Id: ProcessTransaction.java,v 1.13 2004/03/29 21:30:08 mrajkowski
- *      Exp $
+ * @author chris
+ * @version $Id: ProcessTransaction.java,v 1.13 2004/03/29 21:30:08 mrajkowski
+ *          Exp $
+ * @created February 11, 2003
  */
 public final class ProcessTransaction extends CFSModule {
 
   /**
-   *  A single XML transaction is processed
+   * A single XML transaction is processed
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
@@ -69,7 +71,8 @@ public final class ProcessTransaction extends CFSModule {
       thisSystem = this.getSystemStatus(context, ce);
       if (thisSystem == null) {
         //Since typical login was bypassed, make sure the system status is in memory
-        thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+        thisSystem = SecurityHook.retrieveSystemStatus(
+            context.getServletContext(), db, ce);
       }
 
       //Insert the record
@@ -105,15 +108,18 @@ public final class ProcessTransaction extends CFSModule {
       app.appendChild(response);
       //Append the status code (0=OK, 1=Error)
       Element status = document.createElement("status");
-      status.appendChild(document.createTextNode(String.valueOf(thisMessage.getStatusCode())));
+      status.appendChild(
+          document.createTextNode(String.valueOf(thisMessage.getStatusCode())));
       response.appendChild(status);
       //Append the errorText
       Element errorText = document.createElement("errorText");
       if (thisMessage.getStatusCode() > 0) {
-        errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
+        errorText.appendChild(
+            document.createTextNode(thisMessage.getMessage()));
       }
       response.appendChild(errorText);
-      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));
+      context.getRequest().setAttribute(
+          "statusXML", XMLUtils.toString(document));
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
     }
@@ -121,10 +127,16 @@ public final class ProcessTransaction extends CFSModule {
     try {
       if (xml != null && ce != null && thisSystem != null) {
         System.out.println("ProcessTransaction-> CE: " + ce.getUrl());
-        System.out.println("ProcessTransaction-> Trying to forward to: " + getValue(thisSystem, "FORWARD.URL"));
-        System.out.println("ProcessTransaction-> The message: " + xml.toString());
-        HTTPUtils.sendPacket(getValue(thisSystem, "FORWARD.URL"), xml.toString());
-        System.out.println("ProcessTransaction-> Forwarded to: " + getValue(thisSystem, "FORWARD.URL"));
+        System.out.println(
+            "ProcessTransaction-> Trying to forward to: " + getValue(
+                thisSystem, "FORWARD.URL"));
+        System.out.println(
+            "ProcessTransaction-> The message: " + xml.toString());
+        HTTPUtils.sendPacket(
+            getValue(thisSystem, "FORWARD.URL"), xml.toString());
+        System.out.println(
+            "ProcessTransaction-> Forwarded to: " + getValue(
+                thisSystem, "FORWARD.URL"));
       } else {
         System.out.println("ProcessTransaction-> DID NOT FORWARD");
       }
@@ -136,14 +148,15 @@ public final class ProcessTransaction extends CFSModule {
 
 
   /**
-   *  Gets the value attribute of the ProcessTransaction object
+   * Gets the value attribute of the ProcessTransaction object
    *
-   *@param  thisSystem  Description of the Parameter
-   *@param  param       Description of the Parameter
-   *@return             The value value
+   * @param thisSystem Description of the Parameter
+   * @param param      Description of the Parameter
+   * @return The value value
    */
   private String getValue(SystemStatus thisSystem, String param) {
-    return thisSystem.getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction", param);
+    return thisSystem.getValue(
+        "org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction", param);
   }
 }
 

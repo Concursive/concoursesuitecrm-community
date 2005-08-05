@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Represents a survey that can have introductory text and questions.
+ * Represents a survey that can have introductory text and questions.
  *
- *@author     chris price
- *@created    August 7, 2002
- *@version    $Id$
+ * @author chris price
+ * @version $Id$
+ * @created August 7, 2002
  */
 public class Survey extends SurveyBase {
 
@@ -51,16 +51,17 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Constructor for the Survey object
+   * Constructor for the Survey object
    */
-  public Survey() { }
+  public Survey() {
+  }
 
 
   /**
-   *  Constructor for the Survey object
+   * Constructor for the Survey object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Survey(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -68,11 +69,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Constructor for the Survey object
+   * Constructor for the Survey object
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
 
   public Survey(Connection db, String surveyId) throws SQLException {
@@ -81,11 +82,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Constructor for the Survey object
+   * Constructor for the Survey object
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Survey(Connection db, int surveyId) throws SQLException {
     queryRecord(db, surveyId);
@@ -93,11 +94,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param surveyId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int surveyId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -120,14 +121,15 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the enteredString attribute of the Survey object
+   * Gets the enteredString attribute of the Survey object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -135,9 +137,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the requestItems attribute of the Survey object
+   * Sets the requestItems attribute of the Survey object
    *
-   *@param  request  The new requestItems value
+   * @param request The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
     questions = new SurveyQuestionList(request);
@@ -145,9 +147,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the status attribute of the Survey object
+   * Sets the status attribute of the Survey object
    *
-   *@param  status  The new status value
+   * @param status The new status value
    */
   public void setStatus(int status) {
     this.status = status;
@@ -155,9 +157,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the inactiveCount attribute of the Survey object
+   * Sets the inactiveCount attribute of the Survey object
    *
-   *@param  tmp  The new inactiveCount value
+   * @param tmp The new inactiveCount value
    */
   public void setInactiveCount(int tmp) {
     this.inactiveCount = tmp;
@@ -165,9 +167,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the inactiveCount attribute of the Survey object
+   * Sets the inactiveCount attribute of the Survey object
    *
-   *@param  tmp  The new inactiveCount value
+   * @param tmp The new inactiveCount value
    */
   public void setInactiveCount(String tmp) {
     this.inactiveCount = Integer.parseInt(tmp);
@@ -175,9 +177,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the inactiveCount attribute of the Survey object
+   * Gets the inactiveCount attribute of the Survey object
    *
-   *@return    The inactiveCount value
+   * @return The inactiveCount value
    */
   public int getInactiveCount() {
     return inactiveCount;
@@ -185,9 +187,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the status attribute of the Survey object
+   * Gets the status attribute of the Survey object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -195,9 +197,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the questions attribute of the Survey object
+   * Gets the questions attribute of the Survey object
    *
-   *@return    The questions value
+   * @return The questions value
    */
   public SurveyQuestionList getQuestions() {
     return questions;
@@ -205,9 +207,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the questions attribute of the Survey object
+   * Sets the questions attribute of the Survey object
    *
-   *@param  items  The new questions value
+   * @param items The new questions value
    */
   public void setQuestions(SurveyQuestionList items) {
     this.questions = questions;
@@ -215,9 +217,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the id attribute of the Survey object
+   * Gets the id attribute of the Survey object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -225,12 +227,12 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the id attribute of the Survey class
+   * Gets the id attribute of the Survey class
    *
-   *@param  db                Description of the Parameter
-   *@param  campaignId        Description of the Parameter
-   *@return                   The id value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param campaignId Description of the Parameter
+   * @return The id value
+   * @throws SQLException Description of the Exception
    */
   public static int getId(Connection db, int campaignId, int surveyType) throws SQLException {
     int surveyId = -1;
@@ -254,11 +256,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  campaignId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param campaignId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void removeLink(Connection db, int campaignId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -271,9 +273,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the enteredBy attribute of the Survey object
+   * Gets the enteredBy attribute of the Survey object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -281,9 +283,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Survey object
+   * Gets the modifiedBy attribute of the Survey object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -291,9 +293,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the modified attribute of the Survey object
+   * Gets the modified attribute of the Survey object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -301,9 +303,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the entered attribute of the Survey object
+   * Gets the entered attribute of the Survey object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -311,9 +313,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the enabled attribute of the Survey object
+   * Gets the enabled attribute of the Survey object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -321,9 +323,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the id attribute of the Survey object
+   * Sets the id attribute of the Survey object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -331,9 +333,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the id attribute of the Survey object
+   * Sets the id attribute of the Survey object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -341,9 +343,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the enteredBy attribute of the Survey object
+   * Sets the enteredBy attribute of the Survey object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -351,9 +353,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Survey object
+   * Sets the modifiedBy attribute of the Survey object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -361,9 +363,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the modified attribute of the Survey object
+   * Sets the modified attribute of the Survey object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -371,9 +373,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the modified attribute of the Survey object
+   * Sets the modified attribute of the Survey object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     if (tmp != null) {
@@ -383,9 +385,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the entered attribute of the Survey object
+   * Sets the entered attribute of the Survey object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -393,9 +395,9 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Sets the enabled attribute of the Survey object
+   * Sets the enabled attribute of the Survey object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -403,13 +405,14 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the enteredDateTimeString attribute of the Survey object
+   * Gets the enteredDateTimeString attribute of the Survey object
    *
-   *@return    The enteredDateTimeString value
+   * @return The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(entered);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -417,10 +420,10 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public String printHidden(HttpServletRequest request) {
     StringBuffer result = new StringBuffer();
@@ -436,7 +439,8 @@ public class Survey extends SurveyBase {
         String tempString = e.nextElement().toString();
         String[] parameterValues = request.getParameterValues(tempString);
         if (params.contains(tempString)) {
-          result.append("<input type=\"hidden\" name=\"" + tempString + "\" value=\"" + parameterValues[0] + "\">\n");
+          result.append(
+              "<input type=\"hidden\" name=\"" + tempString + "\" value=\"" + parameterValues[0] + "\">\n");
         }
       }
     }
@@ -445,14 +449,15 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the modifiedString attribute of the Survey object
+   * Gets the modifiedString attribute of the Survey object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -460,13 +465,14 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the Survey object
+   * Gets the modifiedDateTimeString attribute of the Survey object
    *
-   *@return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
@@ -474,25 +480,28 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql =
-        "INSERT INTO survey " +
-        "(name, description, intro, outro, itemLength, type, status, enteredBy, modifiedBy) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
     boolean doCommit = false;
     try {
       doCommit = db.getAutoCommit();
       if (doCommit == true) {
         db.setAutoCommit(false);
       }
+      id = DatabaseUtils.getNextSeq(db, "survey_survey_id_seq");
+      String sql = "INSERT INTO survey " +
+          "(" + (id > -1 ? "survey_id, " : "") + "name, description, intro, outro, itemLength, type, status, enteredBy, modifiedBy) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setString(++i, name);
       pst.setString(++i, description);
       pst.setString(++i, intro);
@@ -504,9 +513,7 @@ public class Survey extends SurveyBase {
       pst.setInt(++i, enteredBy);
       pst.execute();
       pst.close();
-
-      id = DatabaseUtils.getCurrVal(db, "survey_survey_id_seq");
-
+      id = DatabaseUtils.getCurrVal(db, "survey_survey_id_seq", id);
       //Insert the questions
       Iterator x = questions.iterator();
       while (x.hasNext()) {
@@ -532,11 +539,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean commit = true;
@@ -570,7 +577,8 @@ public class Survey extends SurveyBase {
         SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
         thisQuestion.delete(db, this.getId());
       }
-      st.executeUpdate("DELETE FROM survey_questions WHERE survey_id = " + this.getId());
+      st.executeUpdate(
+          "DELETE FROM survey_questions WHERE survey_id = " + this.getId());
       st.executeUpdate("DELETE FROM survey WHERE survey_id = " + this.getId());
       st.close();
       if (commit) {
@@ -591,11 +599,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -654,11 +662,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
@@ -696,10 +704,10 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //survey table
@@ -719,11 +727,11 @@ public class Survey extends SurveyBase {
 
 
   /**
-   *  Gets the addressSurveyId attribute of the Survey class
+   * Gets the addressSurveyId attribute of the Survey class
    *
-   *@return    The addressSurveyId value
+   * @return The addressSurveyId value
    */
-  public static int getAddressSurveyId(Connection db) throws SQLException{
+  public static int getAddressSurveyId(Connection db) throws SQLException {
     int addressSurveyId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT survey_id " +

@@ -24,7 +24,6 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
-<form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getId() %>" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -78,4 +77,3 @@
   </table>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
 </dhv:container>
-</form>

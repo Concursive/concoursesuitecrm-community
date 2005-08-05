@@ -76,6 +76,26 @@
           <%= toHtml(Campaign.getMessageName()) %>
         </td>
       </tr>
+    <dhv:evaluate if="<%= Campaign.getBcc() != null && !"".equals(Campaign.getCc()) %>">
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="quotes.cc">CC</dhv:label>
+        </td>
+        <td>
+          <%=toHtml(Campaign.getCc())%>
+        </td>
+      </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= Campaign.getBcc() != null && !"".equals(Campaign.getBcc()) %>">
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="quotes.bcc">BCC</dhv:label>
+        </td>
+        <td>
+          <%=toHtml(Campaign.getBcc())%>
+        </td>
+      </tr>
+    </dhv:evaluate>
       <tr class="containerBody">
         <td class="formLabel">
           <dhv:label name="accounts.accounts_contacts_messages_details.MessageSubject">Message Subject</dhv:label>

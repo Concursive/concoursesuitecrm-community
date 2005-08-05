@@ -32,30 +32,65 @@ import java.util.Set;
 import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 2, 2002
- *@version    $Id: TaskListScheduledActions.java,v 1.4 2002/12/04 13:11:34
- *      mrajkowski Exp $
+ * @author akhi_m
+ * @version $Id: TaskListScheduledActions.java,v 1.4 2002/12/04 13:11:34
+ *          mrajkowski Exp $
+ * @created October 2, 2002
  */
 public class TaskListScheduledActions extends TaskList implements ScheduledActions {
 
   private ActionContext context = null;
   private CFSModule module = null;
   private int userId = -1;
+  //user for whom tasks need to be retrieved
+  private int loginId = -1;
+
+  //user that has logged in
 
 
   /**
-   *  Constructor for the TaskListScheduledActions object
-   */
-  public TaskListScheduledActions() { }
-
-
-  /**
-   *  Sets the module attribute of the QuoteListScheduledActions object
+   * Gets the loginId attribute of the TaskListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @return The loginId value
+   */
+  public int getLoginId() {
+    return loginId;
+  }
+
+
+  /**
+   * Sets the loginId attribute of the TaskListScheduledActions object
+   *
+   * @param tmp The new loginId value
+   */
+  public void setLoginId(int tmp) {
+    this.loginId = tmp;
+  }
+
+
+  /**
+   * Sets the loginId attribute of the TaskListScheduledActions object
+   *
+   * @param tmp The new loginId value
+   */
+  public void setLoginId(String tmp) {
+    this.loginId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Constructor for the TaskListScheduledActions object
+   */
+  public TaskListScheduledActions() {
+  }
+
+
+  /**
+   * Sets the module attribute of the QuoteListScheduledActions object
+   *
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -63,9 +98,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Sets the context attribute of the QuoteListScheduledActions object
+   * Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -73,9 +108,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Sets the userId attribute of the TaskListScheduledActions object
+   * Sets the userId attribute of the TaskListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -83,9 +118,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Sets the userId attribute of the TaskListScheduledActions object
+   * Sets the userId attribute of the TaskListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -93,9 +128,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Gets the context attribute of the QuoteListScheduledActions object
+   * Gets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -103,9 +138,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Gets the module attribute of the QuoteListScheduledActions object
+   * Gets the module attribute of the QuoteListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -113,34 +148,33 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Gets the userId attribute of the TaskListScheduledActions object
+   * Gets the userId attribute of the TaskListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
 
     try {
       //get the id of the user that has logged in
-      int loginId = -1;
       if (module != null && context != null) {
         loginId = module.getUserId(context);
       }
-	    
+
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + userId);
+        System.out.println(
+            "TaskListScheduledActions-> Building Task Alerts for user " + userId);
       }
 
       //get TimeZone
@@ -157,8 +191,10 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       while (taskList.hasNext()) {
         Task thisTask = (Task) taskList.next();
         thisTask.buildResources(db);
-        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTask.getDueDate());
-        companyCalendar.addEvent(alertDate, CalendarEventList.EVENT_TYPES[0], thisTask);
+        String alertDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, thisTask.getDueDate());
+        companyCalendar.addEvent(
+            alertDate, CalendarEventList.EVENT_TYPES[0], thisTask);
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Task Calendar Alerts");
@@ -167,11 +203,11 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
 
@@ -179,7 +215,6 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Alert Count ");
       }
-      int loginId = -1;
       if (module != null && context != null) {
         loginId = module.getUserId(context);
       }
@@ -197,13 +232,17 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       Iterator i = s.iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[0], dayEvents.get(thisDay));
+        companyCalendar.addEventCount(
+            thisDay, CalendarEventList.EVENT_TYPES[0], dayEvents.get(thisDay));
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("TaskListScheduledActions-> Added Tasks for " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
+          System.out.println(
+              "TaskListScheduledActions-> Added Tasks for " + thisDay + "- " + String.valueOf(
+                  dayEvents.get(thisDay)));
         }
       }
     } catch (SQLException e) {
-      throw new SQLException("Error Building Task Calendar Alerts: " + e.getMessage());
+      throw new SQLException(
+          "Error Building Task Calendar Alerts: " + e.getMessage());
     }
   }
 }

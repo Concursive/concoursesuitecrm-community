@@ -15,34 +15,35 @@
  */
 package org.aspcfs.utils;
 
-import java.security.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.security.MessageDigest;
 import java.util.Random;
 
 /**
- *  Utility to hash a String. Code from news group.
+ * Utility to hash a String. Code from news group.
  *
- *@author     matt rajkowski
- *@created    August 16, 2001
- *@version    $Id: PasswordHash.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: PasswordHash.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
+ *          Exp $
+ * @created August 16, 2001
  */
 public class PasswordHash {
   private static Random random = new Random();
 
 
   /**
-   *  Default constructor.
+   * Default constructor.
    */
-  public PasswordHash() { }
+  public PasswordHash() {
+  }
 
 
   /**
-   *  Takes a string and turns it into a one-way string hash
+   * Takes a string and turns it into a one-way string hash
    *
-   *@param  inString  Description of Parameter
-   *@return           Description of the Returned Value
-   *@since
+   * @param inString Description of Parameter
+   * @return Description of the Returned Value
    */
   public static String encrypt(String inString) {
     try {
@@ -66,10 +67,10 @@ public class PasswordHash {
 
 
   /**
-   *  Command line utility. When run as an application, this member uses the
-   *  encrypt method to display the encrypted version of a line of input.
+   * Command line utility. When run as an application, this member uses the
+   * encrypt method to display the encrypted version of a line of input.
    *
-   *@param  args  Not used.
+   * @param args Not used.
    */
   public static void main(String args[]) {
     PasswordHash hasher = new PasswordHash();
@@ -92,11 +93,11 @@ public class PasswordHash {
 
 
   /**
-   *  Gets the randomString attribute of the PasswordHash class
+   * Gets the randomString attribute of the PasswordHash class
    *
-   *@param  lo  Description of the Parameter
-   *@param  hi  Description of the Parameter
-   *@return     The randomString value
+   * @param lo Description of the Parameter
+   * @param hi Description of the Parameter
+   * @return The randomString value
    */
   public static String getRandomString(int lo, int hi) {
     int n = rand(lo, hi);
@@ -109,11 +110,11 @@ public class PasswordHash {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  lo  Description of the Parameter
-   *@param  hi  Description of the Parameter
-   *@return     Description of the Return Value
+   * @param lo Description of the Parameter
+   * @param hi Description of the Parameter
+   * @return Description of the Return Value
    */
   public static int rand(int lo, int hi) {
     int n = hi - lo + 1;

@@ -15,55 +15,56 @@
  */
 package org.aspcfs.utils;
 
-import java.security.cert.X509Certificate;
-import java.security.cert.CertificateException;
 import javax.net.ssl.X509TrustManager;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 /**
- *  This is a replacement trust manager that accepts ANYTHING. This was created
- *  to allow self-signed X509 certificates to work.<p>
+ * This is a replacement trust manager that accepts ANYTHING. This was created
+ * to allow self-signed X509 certificates to work.<p>
+ * <p/>
+ * This class is a work in progress, which later on should at least detect some
+ * credentials.
  *
- *  This class is a work in progress, which later on should at least detect some
- *  credentials.
- *
- *@author     matt rajkowski
- *@created    March 25, 2003
- *@version    $Id: HttpsTrustManager.java,v 1.1 2003/03/26 21:12:56 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HttpsTrustManager.java,v 1.1 2003/03/26 21:12:56 mrajkowski
+ *          Exp $
+ * @created March 25, 2003
  */
 public class HttpsTrustManager implements X509TrustManager {
   /**
-   *  Constructor for the HttpsTrustManager object
+   * Constructor for the HttpsTrustManager object
    */
-  HttpsTrustManager() { }
+  HttpsTrustManager() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  chain                     Description of the Parameter
-   *@param  authType                  Description of the Parameter
-   *@exception  CertificateException  Description of the Exception
+   * @param chain    Description of the Parameter
+   * @param authType Description of the Parameter
+   * @throws CertificateException Description of the Exception
    */
   public void checkClientTrusted(X509Certificate chain[], String authType) throws CertificateException {
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  chain                     Description of the Parameter
-   *@param  authType                  Description of the Parameter
-   *@exception  CertificateException  Description of the Exception
+   * @param chain    Description of the Parameter
+   * @param authType Description of the Parameter
+   * @throws CertificateException Description of the Exception
    */
   public void checkServerTrusted(X509Certificate chain[], String authType) throws CertificateException {
   }
 
 
   /**
-   *  Gets the acceptedIssuers attribute of the HttpsTrustManager object
+   * Gets the acceptedIssuers attribute of the HttpsTrustManager object
    *
-   *@return    The acceptedIssuers value
+   * @return The acceptedIssuers value
    */
   public X509Certificate[] getAcceptedIssuers() {
     return null;

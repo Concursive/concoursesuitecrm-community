@@ -135,6 +135,8 @@
     <action name="ExternalContactsCallsForward"/>
     <action name="ExternalContactsPrototype"/>
     <action name="ExternalContactsImports"/>
+    <action name="ExternalContactsHistory"/>
+    <action name="ExternalContactsMessages"/>
     <page title="Contacts"/>
     <permission value="contacts-view"/>
     <long_html value="Contacts"/>
@@ -181,6 +183,7 @@
     <action name="LeadsDocumentsFolders"/>
     <action name="LeadsPrototype"/>
     <action name="LeadsQuotes"/>
+    <action name="LeadsFolders"/>
     <page title="Pipeline"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>
@@ -250,6 +253,9 @@
     <action name="AccountContactsCalls"/>
     <action name="AccountRelationships"/>
     <action name="AccountsProjects"/>
+    <action name="AccountsHistory"/>
+    <action name="AccountContactsHistory"/>
+    <action name="AccountContactsMessages"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>

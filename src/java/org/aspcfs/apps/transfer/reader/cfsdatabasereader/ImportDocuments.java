@@ -15,21 +15,23 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
-import com.zeroio.iteam.base.*;
+import com.zeroio.iteam.base.FileDownloadLogList;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItemVersionList;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
-import org.aspcfs.utils.web.*;
-import com.zeroio.iteam.base.*;
-import java.util.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Reads all Documents
+ * Reads all Documents
  *
- *@author     matt rajkowski
- *@created    September 18, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 18, 2002
  */
 public class ImportDocuments implements CFSDatabaseReaderImportModule {
 
@@ -38,13 +40,13 @@ public class ImportDocuments implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -62,18 +64,22 @@ public class ImportDocuments implements CFSDatabaseReaderImportModule {
       DataRecord thisRecord = mappings.createDataRecord(thisItem, "insert");
       thisRecord.addField("doVersionInsert", "false");
       switch (thisItem.getLinkModuleId()) {
-          case 1:
-            thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), "account", null);
-            break;
-          case 3:
-            thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), "opportunity", null);
-            break;
-          case 5:
-            thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), "campaign", null);
-            break;
-          default:
-            thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), null, null);
-            break;
+        case 1:
+          thisRecord.addField(
+              "linkItemId", String.valueOf(thisItem.getLinkItemId()), "account", null);
+          break;
+        case 3:
+          thisRecord.addField(
+              "linkItemId", String.valueOf(thisItem.getLinkItemId()), "opportunity", null);
+          break;
+        case 5:
+          thisRecord.addField(
+              "linkItemId", String.valueOf(thisItem.getLinkItemId()), "campaign", null);
+          break;
+        default:
+          thisRecord.addField(
+              "linkItemId", String.valueOf(thisItem.getLinkItemId()), null, null);
+          break;
       }
       processOK = writer.save(thisRecord);
     }

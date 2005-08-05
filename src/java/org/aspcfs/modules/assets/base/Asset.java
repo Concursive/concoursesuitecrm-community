@@ -15,24 +15,24 @@
  */
 package org.aspcfs.modules.assets.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
- *  Assets are h/w, s/w or systems that are serviced under the service contract.
+ * Assets are h/w, s/w or systems that are serviced under the service contract.
  *
- *@author     kbhoopal
- *@created    March 16, 2004
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created March 16, 2004
  */
 public class Asset extends GenericBean {
 
@@ -74,10 +74,12 @@ public class Asset extends GenericBean {
   private String dateListedTimeZone = null;
   private String expirationDateTimeZone = null;
   private String purchaseDateTimeZone = null;
+  private String statusName = null;
+  private java.sql.Timestamp trashedDate = null;
 
 
   /**
-   *  Constructor for the Asset object
+   * Constructor for the Asset object
    */
   public Asset() {
     errors.clear();
@@ -85,11 +87,11 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Constructor for the Asset object
+   * Constructor for the Asset object
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpId             Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param tmpId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Asset(Connection db, String tmpId) throws SQLException {
     errors.clear();
@@ -98,10 +100,10 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Constructor for the Asset object
+   * Constructor for the Asset object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Asset(ResultSet rs) throws SQLException {
     errors.clear();
@@ -110,9 +112,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Asset object
+   * Sets the id attribute of the Asset object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -120,9 +122,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Asset object
+   * Sets the id attribute of the Asset object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -130,9 +132,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the contractId attribute of the Asset object
+   * Sets the contractId attribute of the Asset object
    *
-   *@param  tmp  The new contractId value
+   * @param tmp The new contractId value
    */
   public void setContractId(int tmp) {
     this.contractId = tmp;
@@ -140,9 +142,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the contractId attribute of the Asset object
+   * Sets the contractId attribute of the Asset object
    *
-   *@param  tmp  The new contractId value
+   * @param tmp The new contractId value
    */
   public void setContractId(String tmp) {
     this.contractId = Integer.parseInt(tmp);
@@ -150,9 +152,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the serviceContractNumber attribute of the Asset object
+   * Sets the serviceContractNumber attribute of the Asset object
    *
-   *@param  tmp  The new serviceContractNumber value
+   * @param tmp The new serviceContractNumber value
    */
   public void setServiceContractNumber(String tmp) {
     this.serviceContractNumber = tmp;
@@ -160,9 +162,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Asset object
+   * Sets the orgId attribute of the Asset object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -170,9 +172,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Asset object
+   * Sets the orgId attribute of the Asset object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -180,9 +182,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the dateListed attribute of the Asset object
+   * Sets the dateListed attribute of the Asset object
    *
-   *@param  tmp  The new dateListed value
+   * @param tmp The new dateListed value
    */
   public void setDateListed(java.sql.Timestamp tmp) {
     this.dateListed = tmp;
@@ -190,9 +192,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the dateListed attribute of the Asset object
+   * Sets the dateListed attribute of the Asset object
    *
-   *@param  tmp  The new dateListed value
+   * @param tmp The new dateListed value
    */
   public void setDateListed(String tmp) {
     this.dateListed = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -200,9 +202,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the assetTag attribute of the Asset object
+   * Sets the assetTag attribute of the Asset object
    *
-   *@param  tmp  The new assetTag value
+   * @param tmp The new assetTag value
    */
   public void setAssetTag(String tmp) {
     this.assetTag = tmp;
@@ -210,9 +212,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the Asset object
+   * Sets the status attribute of the Asset object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(int tmp) {
     this.status = tmp;
@@ -220,9 +222,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the Asset object
+   * Sets the status attribute of the Asset object
    *
-   *@param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = Integer.parseInt(tmp);
@@ -230,9 +232,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the location attribute of the Asset object
+   * Sets the location attribute of the Asset object
    *
-   *@param  tmp  The new location value
+   * @param tmp The new location value
    */
   public void setLocation(String tmp) {
     this.location = tmp;
@@ -240,9 +242,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the level1 attribute of the Asset object
+   * Sets the level1 attribute of the Asset object
    *
-   *@param  tmp  The new level1 value
+   * @param tmp The new level1 value
    */
   public void setLevel1(int tmp) {
     this.level1 = tmp;
@@ -250,9 +252,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the level1 attribute of the Asset object
+   * Sets the level1 attribute of the Asset object
    *
-   *@param  tmp  The new level1 value
+   * @param tmp The new level1 value
    */
   public void setLevel1(String tmp) {
     this.level1 = Integer.parseInt(tmp);
@@ -260,9 +262,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the level2 attribute of the Asset object
+   * Sets the level2 attribute of the Asset object
    *
-   *@param  tmp  The new level2 value
+   * @param tmp The new level2 value
    */
   public void setLevel2(int tmp) {
     this.level2 = tmp;
@@ -270,9 +272,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the level2 attribute of the Asset object
+   * Sets the level2 attribute of the Asset object
    *
-   *@param  tmp  The new level2 value
+   * @param tmp The new level2 value
    */
   public void setLevel2(String tmp) {
     this.level2 = Integer.parseInt(tmp);
@@ -280,9 +282,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the level3 attribute of the Asset object
+   * Sets the level3 attribute of the Asset object
    *
-   *@param  tmp  The new level3 value
+   * @param tmp The new level3 value
    */
   public void setLevel3(int tmp) {
     this.level3 = tmp;
@@ -290,9 +292,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the level3 attribute of the Asset object
+   * Sets the level3 attribute of the Asset object
    *
-   *@param  tmp  The new level3 value
+   * @param tmp The new level3 value
    */
   public void setLevel3(String tmp) {
     this.level3 = Integer.parseInt(tmp);
@@ -300,9 +302,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the vendor attribute of the Asset object
+   * Sets the vendor attribute of the Asset object
    *
-   *@param  tmp  The new vendor value
+   * @param tmp The new vendor value
    */
   public void setVendor(String tmp) {
     this.vendor = tmp;
@@ -310,9 +312,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the manufacturer attribute of the Asset object
+   * Sets the manufacturer attribute of the Asset object
    *
-   *@param  tmp  The new manufacturer value
+   * @param tmp The new manufacturer value
    */
   public void setManufacturer(String tmp) {
     this.manufacturer = tmp;
@@ -320,9 +322,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the serialNumber attribute of the Asset object
+   * Sets the serialNumber attribute of the Asset object
    *
-   *@param  tmp  The new serialNumber value
+   * @param tmp The new serialNumber value
    */
   public void setSerialNumber(String tmp) {
     this.serialNumber = tmp;
@@ -330,9 +332,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the modelVersion attribute of the Asset object
+   * Sets the modelVersion attribute of the Asset object
    *
-   *@param  tmp  The new modelVersion value
+   * @param tmp The new modelVersion value
    */
   public void setModelVersion(String tmp) {
     this.modelVersion = tmp;
@@ -340,9 +342,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Asset object
+   * Sets the description attribute of the Asset object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -350,9 +352,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Asset object
+   * Sets the expirationDate attribute of the Asset object
    *
-   *@param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(java.sql.Timestamp tmp) {
     this.expirationDate = tmp;
@@ -360,9 +362,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Asset object
+   * Sets the expirationDate attribute of the Asset object
    *
-   *@param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(String tmp) {
     this.expirationDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -370,9 +372,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the inclusions attribute of the Asset object
+   * Sets the inclusions attribute of the Asset object
    *
-   *@param  tmp  The new inclusions value
+   * @param tmp The new inclusions value
    */
   public void setInclusions(String tmp) {
     this.inclusions = tmp;
@@ -380,9 +382,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the exclusions attribute of the Asset object
+   * Sets the exclusions attribute of the Asset object
    *
-   *@param  tmp  The new exclusions value
+   * @param tmp The new exclusions value
    */
   public void setExclusions(String tmp) {
     this.exclusions = tmp;
@@ -390,9 +392,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the purchaseDate attribute of the Asset object
+   * Sets the purchaseDate attribute of the Asset object
    *
-   *@param  tmp  The new purchaseDate value
+   * @param tmp The new purchaseDate value
    */
   public void setPurchaseDate(java.sql.Timestamp tmp) {
     this.purchaseDate = tmp;
@@ -400,9 +402,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the purchaseDate attribute of the Asset object
+   * Sets the purchaseDate attribute of the Asset object
    *
-   *@param  tmp  The new purchaseDate value
+   * @param tmp The new purchaseDate value
    */
   public void setPurchaseDate(String tmp) {
     this.purchaseDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -410,9 +412,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the purchaseCost attribute of the Asset object
+   * Sets the purchaseCost attribute of the Asset object
    *
-   *@param  tmp  The new purchaseCost value
+   * @param tmp The new purchaseCost value
    */
   public void setPurchaseCost(String tmp) {
     this.purchaseCost = Double.parseDouble(tmp);
@@ -420,9 +422,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the purchaseCost attribute of the Asset object
+   * Sets the purchaseCost attribute of the Asset object
    *
-   *@param  tmp  The new purchaseCost value
+   * @param tmp The new purchaseCost value
    */
   public void setPurchaseCost(double tmp) {
     this.purchaseCost = tmp;
@@ -430,9 +432,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the poNumber attribute of the Asset object
+   * Sets the poNumber attribute of the Asset object
    *
-   *@param  tmp  The new poNumber value
+   * @param tmp The new poNumber value
    */
   public void setPoNumber(String tmp) {
     this.poNumber = tmp;
@@ -440,9 +442,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the purchasedFrom attribute of the Asset object
+   * Sets the purchasedFrom attribute of the Asset object
    *
-   *@param  tmp  The new purchasedFrom value
+   * @param tmp The new purchasedFrom value
    */
   public void setPurchasedFrom(String tmp) {
     this.purchasedFrom = tmp;
@@ -450,9 +452,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the Asset object
+   * Sets the contactId attribute of the Asset object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -460,9 +462,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the Asset object
+   * Sets the contactId attribute of the Asset object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -470,9 +472,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the Asset object
+   * Sets the notes attribute of the Asset object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -480,9 +482,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the responseTime attribute of the Asset object
+   * Sets the responseTime attribute of the Asset object
    *
-   *@param  tmp  The new responseTime value
+   * @param tmp The new responseTime value
    */
   public void setResponseTime(int tmp) {
     this.responseTime = tmp;
@@ -490,9 +492,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the responseTime attribute of the Asset object
+   * Sets the responseTime attribute of the Asset object
    *
-   *@param  tmp  The new responseTime value
+   * @param tmp The new responseTime value
    */
   public void setResponseTime(String tmp) {
     this.responseTime = Integer.parseInt(tmp);
@@ -500,9 +502,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the telephoneResponseModel attribute of the Asset object
+   * Sets the telephoneResponseModel attribute of the Asset object
    *
-   *@param  tmp  The new telephoneResponseModel value
+   * @param tmp The new telephoneResponseModel value
    */
   public void setTelephoneResponseModel(int tmp) {
     this.telephoneResponseModel = tmp;
@@ -510,9 +512,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the telephoneResponseModel attribute of the Asset object
+   * Sets the telephoneResponseModel attribute of the Asset object
    *
-   *@param  tmp  The new telephoneResponseModel value
+   * @param tmp The new telephoneResponseModel value
    */
   public void setTelephoneResponseModel(String tmp) {
     this.telephoneResponseModel = Integer.parseInt(tmp);
@@ -520,9 +522,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the onsiteResponseModel attribute of the Asset object
+   * Sets the onsiteResponseModel attribute of the Asset object
    *
-   *@param  tmp  The new onsiteResponseModel value
+   * @param tmp The new onsiteResponseModel value
    */
   public void setOnsiteResponseModel(int tmp) {
     this.onsiteResponseModel = tmp;
@@ -530,9 +532,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the onsiteResponseModel attribute of the Asset object
+   * Sets the onsiteResponseModel attribute of the Asset object
    *
-   *@param  tmp  The new onsiteResponseModel value
+   * @param tmp The new onsiteResponseModel value
    */
   public void setOnsiteResponseModel(String tmp) {
     this.onsiteResponseModel = Integer.parseInt(tmp);
@@ -540,9 +542,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the emailResponseModel attribute of the Asset object
+   * Sets the emailResponseModel attribute of the Asset object
    *
-   *@param  tmp  The new emailResponseModel value
+   * @param tmp The new emailResponseModel value
    */
   public void setEmailResponseModel(int tmp) {
     this.emailResponseModel = tmp;
@@ -550,9 +552,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the emailResponseModel attribute of the Asset object
+   * Sets the emailResponseModel attribute of the Asset object
    *
-   *@param  tmp  The new emailResponseModel value
+   * @param tmp The new emailResponseModel value
    */
   public void setEmailResponseModel(String tmp) {
     this.emailResponseModel = Integer.parseInt(tmp);
@@ -560,9 +562,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Asset object
+   * Sets the entered attribute of the Asset object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -570,9 +572,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Asset object
+   * Sets the entered attribute of the Asset object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -580,9 +582,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Asset object
+   * Sets the enteredBy attribute of the Asset object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -590,9 +592,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Asset object
+   * Sets the enteredBy attribute of the Asset object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -600,9 +602,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Asset object
+   * Sets the modified attribute of the Asset object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -610,9 +612,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Asset object
+   * Sets the modified attribute of the Asset object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -620,9 +622,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Asset object
+   * Sets the modifiedBy attribute of the Asset object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -630,9 +632,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Asset object
+   * Sets the modifiedBy attribute of the Asset object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -640,9 +642,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Asset object
+   * Sets the enabled attribute of the Asset object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -650,9 +652,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Asset object
+   * Sets the enabled attribute of the Asset object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -660,9 +662,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the Asset object
+   * Sets the override attribute of the Asset object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(boolean tmp) {
     this.override = tmp;
@@ -670,9 +672,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the Asset object
+   * Sets the override attribute of the Asset object
    *
-   *@param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(String tmp) {
     this.override = DatabaseUtils.parseBoolean(tmp);
@@ -680,9 +682,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the dateListedTimeZone attribute of the Asset object
+   * Sets the dateListedTimeZone attribute of the Asset object
    *
-   *@param  tmp  The new dateListedTimeZone value
+   * @param tmp The new dateListedTimeZone value
    */
   public void setDateListedTimeZone(String tmp) {
     this.dateListedTimeZone = tmp;
@@ -690,9 +692,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the expirationDateTimeZone attribute of the Asset object
+   * Sets the expirationDateTimeZone attribute of the Asset object
    *
-   *@param  tmp  The new expirationDateTimeZone value
+   * @param tmp The new expirationDateTimeZone value
    */
   public void setExpirationDateTimeZone(String tmp) {
     this.expirationDateTimeZone = tmp;
@@ -700,9 +702,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Sets the purchaseDateTimeZone attribute of the Asset object
+   * Sets the purchaseDateTimeZone attribute of the Asset object
    *
-   *@param  tmp  The new purchaseDateTimeZone value
+   * @param tmp The new purchaseDateTimeZone value
    */
   public void setPurchaseDateTimeZone(String tmp) {
     this.purchaseDateTimeZone = tmp;
@@ -710,9 +712,43 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the dateListedTimeZone attribute of the Asset object
+   * Sets the trashedDate attribute of the Asset object
    *
-   *@return    The dateListedTimeZone value
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(java.sql.Timestamp tmp) {
+    this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Sets the trashedDate attribute of the Asset object
+   *
+   * @param tmp The new trashedDate value
+   */
+  public void setTrashedDate(String tmp) {
+    this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the trashedDate attribute of the Asset object
+   *
+   * @return The trashedDate value
+   */
+  public java.sql.Timestamp getTrashedDate() {
+    return trashedDate;
+  }
+
+  public boolean isTrashed() {
+    return (trashedDate != null);
+  }
+
+
+  /**
+   * Gets the dateListedTimeZone attribute of the Asset object
+   *
+   * @return The dateListedTimeZone value
    */
   public String getDateListedTimeZone() {
     return dateListedTimeZone;
@@ -720,9 +756,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the expirationDateTimeZone attribute of the Asset object
+   * Gets the expirationDateTimeZone attribute of the Asset object
    *
-   *@return    The expirationDateTimeZone value
+   * @return The expirationDateTimeZone value
    */
   public String getExpirationDateTimeZone() {
     return expirationDateTimeZone;
@@ -730,9 +766,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the purchaseDateTimeZone attribute of the Asset object
+   * Gets the purchaseDateTimeZone attribute of the Asset object
    *
-   *@return    The purchaseDateTimeZone value
+   * @return The purchaseDateTimeZone value
    */
   public String getPurchaseDateTimeZone() {
     return purchaseDateTimeZone;
@@ -740,9 +776,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Asset object
+   * Gets the id attribute of the Asset object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -750,9 +786,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the contractId attribute of the Asset object
+   * Gets the contractId attribute of the Asset object
    *
-   *@return    The contractId value
+   * @return The contractId value
    */
   public int getContractId() {
     return contractId;
@@ -760,9 +796,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the serviceContractNumber attribute of the Asset object
+   * Gets the serviceContractNumber attribute of the Asset object
    *
-   *@return    The serviceContractNumber value
+   * @return The serviceContractNumber value
    */
   public String getServiceContractNumber() {
     return serviceContractNumber;
@@ -770,9 +806,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the Asset object
+   * Gets the orgId attribute of the Asset object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -780,9 +816,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the dateListed attribute of the Asset object
+   * Gets the dateListed attribute of the Asset object
    *
-   *@return    The dateListed value
+   * @return The dateListed value
    */
   public java.sql.Timestamp getDateListed() {
     return dateListed;
@@ -790,9 +826,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the assetTag attribute of the Asset object
+   * Gets the assetTag attribute of the Asset object
    *
-   *@return    The assetTag value
+   * @return The assetTag value
    */
   public String getAssetTag() {
     return assetTag;
@@ -800,9 +836,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the Asset object
+   * Gets the status attribute of the Asset object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -810,9 +846,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the location attribute of the Asset object
+   * Gets the location attribute of the Asset object
    *
-   *@return    The location value
+   * @return The location value
    */
   public String getLocation() {
     return location;
@@ -820,9 +856,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the level1 attribute of the Asset object
+   * Gets the level1 attribute of the Asset object
    *
-   *@return    The level1 value
+   * @return The level1 value
    */
   public int getLevel1() {
     return level1;
@@ -830,9 +866,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the level2 attribute of the Asset object
+   * Gets the level2 attribute of the Asset object
    *
-   *@return    The level2 value
+   * @return The level2 value
    */
   public int getLevel2() {
     return level2;
@@ -840,9 +876,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the level3 attribute of the Asset object
+   * Gets the level3 attribute of the Asset object
    *
-   *@return    The level3 value
+   * @return The level3 value
    */
   public int getLevel3() {
     return level3;
@@ -850,9 +886,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the vendor attribute of the Asset object
+   * Gets the vendor attribute of the Asset object
    *
-   *@return    The vendor value
+   * @return The vendor value
    */
   public String getVendor() {
     return vendor;
@@ -860,9 +896,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the manufacturer attribute of the Asset object
+   * Gets the manufacturer attribute of the Asset object
    *
-   *@return    The manufacturer value
+   * @return The manufacturer value
    */
   public String getManufacturer() {
     return manufacturer;
@@ -870,9 +906,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the serialNumber attribute of the Asset object
+   * Gets the serialNumber attribute of the Asset object
    *
-   *@return    The serialNumber value
+   * @return The serialNumber value
    */
   public String getSerialNumber() {
     return serialNumber;
@@ -880,9 +916,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the modelVersion attribute of the Asset object
+   * Gets the modelVersion attribute of the Asset object
    *
-   *@return    The modelVersion value
+   * @return The modelVersion value
    */
   public String getModelVersion() {
     return modelVersion;
@@ -890,9 +926,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Asset object
+   * Gets the description attribute of the Asset object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -900,9 +936,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the expirationDate attribute of the Asset object
+   * Gets the expirationDate attribute of the Asset object
    *
-   *@return    The expirationDate value
+   * @return The expirationDate value
    */
   public java.sql.Timestamp getExpirationDate() {
     return expirationDate;
@@ -910,9 +946,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the inclusions attribute of the Asset object
+   * Gets the inclusions attribute of the Asset object
    *
-   *@return    The inclusions value
+   * @return The inclusions value
    */
   public String getInclusions() {
     return inclusions;
@@ -920,9 +956,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the exclusions attribute of the Asset object
+   * Gets the exclusions attribute of the Asset object
    *
-   *@return    The exclusions value
+   * @return The exclusions value
    */
   public String getExclusions() {
     return exclusions;
@@ -930,9 +966,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the purchaseDate attribute of the Asset object
+   * Gets the purchaseDate attribute of the Asset object
    *
-   *@return    The purchaseDate value
+   * @return The purchaseDate value
    */
   public java.sql.Timestamp getPurchaseDate() {
     return purchaseDate;
@@ -940,9 +976,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the purchaseCost attribute of the Asset object
+   * Gets the purchaseCost attribute of the Asset object
    *
-   *@return    The purchaseCost value
+   * @return The purchaseCost value
    */
   public double getPurchaseCost() {
     return purchaseCost;
@@ -950,9 +986,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the poNumber attribute of the Asset object
+   * Gets the poNumber attribute of the Asset object
    *
-   *@return    The poNumber value
+   * @return The poNumber value
    */
   public String getPoNumber() {
     return poNumber;
@@ -960,9 +996,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the purchasedFrom attribute of the Asset object
+   * Gets the purchasedFrom attribute of the Asset object
    *
-   *@return    The purchasedFrom value
+   * @return The purchasedFrom value
    */
   public String getPurchasedFrom() {
     return purchasedFrom;
@@ -970,9 +1006,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the contactId attribute of the Asset object
+   * Gets the contactId attribute of the Asset object
    *
-   *@return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -980,9 +1016,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the Asset object
+   * Gets the notes attribute of the Asset object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -990,9 +1026,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the responseTime attribute of the Asset object
+   * Gets the responseTime attribute of the Asset object
    *
-   *@return    The responseTime value
+   * @return The responseTime value
    */
   public int getResponseTime() {
     return responseTime;
@@ -1000,9 +1036,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the telephoneResponseModel attribute of the Asset object
+   * Gets the telephoneResponseModel attribute of the Asset object
    *
-   *@return    The telephoneResponseModel value
+   * @return The telephoneResponseModel value
    */
   public int getTelephoneResponseModel() {
     return telephoneResponseModel;
@@ -1010,9 +1046,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the onsiteResponseModel attribute of the Asset object
+   * Gets the onsiteResponseModel attribute of the Asset object
    *
-   *@return    The onsiteResponseModel value
+   * @return The onsiteResponseModel value
    */
   public int getOnsiteResponseModel() {
     return onsiteResponseModel;
@@ -1020,9 +1056,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the emailResponseModel attribute of the Asset object
+   * Gets the emailResponseModel attribute of the Asset object
    *
-   *@return    The emailResponseModel value
+   * @return The emailResponseModel value
    */
   public int getEmailResponseModel() {
     return emailResponseModel;
@@ -1030,9 +1066,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Asset object
+   * Gets the entered attribute of the Asset object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1040,9 +1076,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Asset object
+   * Gets the enteredBy attribute of the Asset object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1050,9 +1086,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Asset object
+   * Gets the modified attribute of the Asset object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1060,9 +1096,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Asset object
+   * Gets the modifiedBy attribute of the Asset object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1070,9 +1106,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Asset object
+   * Gets the enabled attribute of the Asset object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -1080,9 +1116,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the override attribute of the Asset object
+   * Gets the override attribute of the Asset object
    *
-   *@return    The override value
+   * @return The override value
    */
   public boolean getOverride() {
     return override;
@@ -1090,9 +1126,29 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive
+   * Gets the statusName attribute of the Asset object
    *
-   *@return    The timeZoneParams value
+   * @return The statusName value
+   */
+  public String getStatusName() {
+    return statusName;
+  }
+
+
+  /**
+   * Sets the statusName attribute of the Asset object
+   *
+   * @param tmp The new statusName value
+   */
+  public void setStatusName(String tmp) {
+    this.statusName = tmp;
+  }
+
+
+  /**
+   * Gets the properties that are TimeZone sensitive
+   *
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -1104,9 +1160,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the Asset class
+   * Gets the numberParams attribute of the Asset class
    *
-   *@return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -1116,18 +1172,19 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpAssetId        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param tmpAssetId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int tmpAssetId) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     pst = db.prepareStatement(
-        "SELECT a.*, sc.contract_number AS service_contract_number " +
+        "SELECT a.*, sc.contract_number AS service_contract_number, las.description as status_name " +
         "FROM asset a LEFT JOIN service_contract sc ON (a.contract_id = sc.contract_id) " +
+        "LEFT JOIN lookup_asset_status las ON (a.status = las.code) " +
         "WHERE a.asset_id = ? ");
     pst.setInt(1, tmpAssetId);
     rs = pst.executeQuery();
@@ -1140,17 +1197,18 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = null;
+    id = DatabaseUtils.getNextSeq(db, "asset_asset_id_seq");
     pst = db.prepareStatement(
         "INSERT INTO asset " +
-        "(account_id," +
+        "(" + (id > -1 ? "asset_id, " : "") + "account_id," +
         "contract_id," +
         "date_listed," +
         "date_listed_timezone," +
@@ -1181,10 +1239,13 @@ public class Asset extends GenericBean {
         "onsite_service_model," +
         "email_service_model," +
         "enteredby," +
-        "modifiedby)" +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
+        "modifiedby, " +
+        "trashed_date )" +
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, orgId);
     DatabaseUtils.setInt(pst, ++i, contractId);
     DatabaseUtils.setTimestamp(pst, ++i, dateListed);
@@ -1217,20 +1278,20 @@ public class Asset extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, emailResponseModel);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
+    DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "asset_asset_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "asset_asset_id_seq", id);
     pst.close();
-
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -1266,9 +1327,11 @@ public class Asset extends GenericBean {
         "response_time = ? , " +
         "telephone_service_model = ? , " +
         "onsite_service_model = ? , " +
-        "email_service_model = ? ");
+        "email_service_model = ?, " +
+        "trashed_date = ? ");
     if (!override) {
-      sql.append(" , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
+      sql.append(
+          " , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
     }
     sql.append("WHERE asset_id = ? ");
     if (!override) {
@@ -1306,6 +1369,7 @@ public class Asset extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, telephoneResponseModel);
     DatabaseUtils.setInt(pst, ++i, onsiteResponseModel);
     DatabaseUtils.setInt(pst, ++i, emailResponseModel);
+    DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     if (!override) {
       pst.setInt(++i, modifiedBy);
     }
@@ -1320,18 +1384,86 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param toTrash Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+    int resultCount = 0;
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      sql.append(
+          "UPDATE asset " +
+          "SET trashed_date = ? , " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+          "modifiedby = ? " +
+          "WHERE asset_id = ? ");
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      if (toTrash) {
+        DatabaseUtils.setTimestamp(
+            pst, ++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
+      }
+      pst.setInt(++i, tmpUserId);
+      pst.setInt(++i, this.id);
+      resultCount = pst.executeUpdate();
+      pst.close();
+      // Disable the account or the contact history for asset
+      ContactHistory.trash(
+          db, OrganizationHistory.ASSET, this.getId(), !toTrash);
+
+      //Assets have tickets related, so delete them first
+      TicketList ticketList = new TicketList();
+      ticketList.setAssetId(this.getId());
+      if (!toTrash) {
+        ticketList.setIncludeOnlyTrashed(true);
+      }
+      ticketList.buildList(db);
+      ticketList.updateStatus(db, toTrash, tmpUserId);
+
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
     try {
       Dependency ticDependency = new Dependency();
       ticDependency.setName("tickets");
-      ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ASSETS, this.getId()));
+      ticDependency.setCount(
+          TicketList.retrieveRecordCount(db, Constants.ASSETS, this.getId()));
       ticDependency.setCanDelete(false);
       dependencyList.add(ticDependency);
 
@@ -1343,16 +1475,16 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Seperate method to delete the dependencies and then the object. This
-   *  seperation allows asset alone to be deleted when other objects are deleted
-   *  (for e.g., tickets)
+   * Seperate method to delete the dependencies and then the object. This
+   * seperation allows asset alone to be deleted when other objects are deleted
+   * (for e.g., tickets)
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      File path of documents related to a ticket
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath File path of documents related to a ticket
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
-  public boolean deleteAll(Connection db, String baseFilePath) throws SQLException {
+  public boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Asset Id not specified.");
     }
@@ -1364,11 +1496,27 @@ public class Asset extends GenericBean {
       //Assets have tickets related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setAssetId(this.getId());
+      ticketList.setIncludeOnlyTrashed(true);
       ticketList.buildList(db);
       ticketList.delete(db, baseFilePath);
       ticketList = null;
 
-      delete(db);
+      ticketList = new TicketList();
+      ticketList.setAssetId(this.getId());
+      ticketList.setIncludeOnlyTrashed(false);
+      ticketList.buildList(db);
+      ticketList.delete(db, baseFilePath);
+      ticketList = null;
+
+      ContactHistory.deleteObject(db, OrganizationHistory.ASSET, this.getId());
+
+      PreparedStatement pst = null;
+      pst = db.prepareStatement(
+          "DELETE FROM asset " +
+          "WHERE asset_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      pst.close();
       if (commit) {
         db.commit();
       }
@@ -1388,27 +1536,10 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Deletes this object from the database
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void delete(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    pst = db.prepareStatement(
-        "DELETE FROM asset " +
-        "WHERE asset_id = ? ");
-    pst.setInt(1, id);
-    pst.execute();
-    pst.close();
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void buildRecord(ResultSet rs) throws SQLException {
     //asset table
@@ -1436,7 +1567,8 @@ public class Asset extends GenericBean {
     contactId = DatabaseUtils.getInt(rs, "contact_id");
     notes = rs.getString("notes");
     responseTime = DatabaseUtils.getInt(rs, "response_time");
-    telephoneResponseModel = DatabaseUtils.getInt(rs, "telephone_service_model");
+    telephoneResponseModel = DatabaseUtils.getInt(
+        rs, "telephone_service_model");
     onsiteResponseModel = DatabaseUtils.getInt(rs, "onsite_service_model");
     emailResponseModel = DatabaseUtils.getInt(rs, "email_service_model");
     entered = rs.getTimestamp("entered");
@@ -1448,8 +1580,11 @@ public class Asset extends GenericBean {
     this.dateListedTimeZone = rs.getString("date_listed_timezone");
     this.expirationDateTimeZone = rs.getString("expiration_date_timezone");
     this.purchaseDateTimeZone = rs.getString("purchase_date_timezone");
+    this.trashedDate = rs.getTimestamp("trashed_date");
     // service contract table
     serviceContractNumber = rs.getString("service_contract_number");
+    // lookup asset status table
+    statusName = rs.getString("status_name");
   }
 }
 

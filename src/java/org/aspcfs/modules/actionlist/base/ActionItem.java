@@ -15,25 +15,21 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
-import java.util.*;
-import java.text.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.contacts.base.Contact;
+
+import java.sql.*;
+import java.text.DateFormat;
 
 /**
- *  Item on a action list
+ * Item on a action list
  *
- * @author     akhi_m
- * @created    April 24, 2003
+ * @author akhi_m
+ * @created April 24, 2003
  */
 public class ActionItem extends GenericBean {
   /**
-   *  Description of the Field
+   * Description of the Field
    */
   public static int DONE = 1;
   private int id = -1;
@@ -49,17 +45,18 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *Constructor for the ActionItem object
+   * Constructor for the ActionItem object
    */
-  public ActionItem() { }
+  public ActionItem() {
+  }
 
 
   /**
-   *Constructor for the ActionItem object
+   * Constructor for the ActionItem object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActionItem(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -67,10 +64,10 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *Constructor for the ActionItem object
+   * Constructor for the ActionItem object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ActionItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -78,9 +75,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the ActionItem object
+   * Sets the id attribute of the ActionItem object
    *
-   * @param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -88,9 +85,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the ActionItem object
+   * Sets the actionId attribute of the ActionItem object
    *
-   * @param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
@@ -98,9 +95,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the linkItemId attribute of the ActionItem object
+   * Sets the linkItemId attribute of the ActionItem object
    *
-   * @param  linkItemId  The new linkItemId value
+   * @param linkItemId The new linkItemId value
    */
   public void setLinkItemId(int linkItemId) {
     this.linkItemId = linkItemId;
@@ -108,9 +105,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionItem object
+   * Sets the enteredBy attribute of the ActionItem object
    *
-   * @param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -118,9 +115,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionItem object
+   * Sets the modifiedBy attribute of the ActionItem object
    *
-   * @param  modifiedBy  The new modifiedBy value
+   * @param modifiedBy The new modifiedBy value
    */
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
@@ -128,9 +125,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the ActionItem object
+   * Sets the modified attribute of the ActionItem object
    *
-   * @param  modified  The new modified value
+   * @param modified The new modified value
    */
   public void setModified(java.sql.Timestamp modified) {
     this.modified = modified;
@@ -138,9 +135,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the ActionItem object
+   * Sets the entered attribute of the ActionItem object
    *
-   * @param  entered  The new entered value
+   * @param entered The new entered value
    */
   public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
@@ -148,9 +145,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the ActionItem object
+   * Sets the enabled attribute of the ActionItem object
    *
-   * @param  enabled  The new enabled value
+   * @param enabled The new enabled value
    */
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
@@ -158,9 +155,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the ActionItem object
+   * Sets the complete attribute of the ActionItem object
    *
-   * @param  complete  The new complete value
+   * @param complete The new complete value
    */
   public void setComplete(boolean complete) {
     this.complete = complete;
@@ -168,9 +165,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the complete attribute of the ActionItem object
+   * Sets the complete attribute of the ActionItem object
    *
-   * @param  complete  The new complete value
+   * @param complete The new complete value
    */
   public void setComplete(String complete) {
     this.complete = DatabaseUtils.parseBoolean(complete);
@@ -178,9 +175,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the ActionItem object
+   * Sets the completeDate attribute of the ActionItem object
    *
-   * @param  completeDate  The new completeDate value
+   * @param completeDate The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp completeDate) {
     this.completeDate = completeDate;
@@ -188,9 +185,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the completeDateString attribute of the ActionItem object
+   * Gets the completeDateString attribute of the ActionItem object
    *
-   * @return    The completeDateString value
+   * @return The completeDateString value
    */
   public String getCompleteDateString() {
     String tmp = "";
@@ -203,9 +200,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the ActionItem object
+   * Gets the completeDate attribute of the ActionItem object
    *
-   * @return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -213,9 +210,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the complete attribute of the ActionItem object
+   * Gets the complete attribute of the ActionItem object
    *
-   * @return    The complete value
+   * @return The complete value
    */
   public boolean getComplete() {
     return complete;
@@ -223,9 +220,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the ActionItem object
+   * Gets the id attribute of the ActionItem object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -233,9 +230,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the actionId attribute of the ActionItem object
+   * Gets the actionId attribute of the ActionItem object
    *
-   * @return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -243,9 +240,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the linkItemId attribute of the ActionItem object
+   * Gets the linkItemId attribute of the ActionItem object
    *
-   * @return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -253,9 +250,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionItem object
+   * Gets the enteredBy attribute of the ActionItem object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -263,9 +260,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActionItem object
+   * Gets the modifiedBy attribute of the ActionItem object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -273,9 +270,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the ActionItem object
+   * Gets the modified attribute of the ActionItem object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -283,9 +280,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the ActionItem object
+   * Gets the modifiedString attribute of the ActionItem object
    *
-   * @return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -298,9 +295,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the ActionItem object
+   * Gets the entered attribute of the ActionItem object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -308,9 +305,9 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the ActionItem object
+   * Gets the enabled attribute of the ActionItem object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -318,11 +315,11 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -348,28 +345,32 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(
+      id = DatabaseUtils.getNextSeq(db, "action_item_code_seq");
+      PreparedStatement pst = null;
+      pst = db.prepareStatement(
           "INSERT INTO action_item " +
-          "(action_id, link_item_id, enteredby, modifiedby, enabled) " +
-          "VALUES (?, ?, ?, ?, ? ) "
-          );
+          "(" + (id > -1 ? "item_id," : "") + "action_id, link_item_id, enteredby, modifiedby, enabled) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getActionId());
       pst.setInt(++i, this.getLinkItemId());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setBoolean(++i, this.getEnabled());
       pst.execute();
-      this.id = DatabaseUtils.getCurrVal(db, "action_item_code_seq");
+      this.id = DatabaseUtils.getCurrVal(db, "action_item_code_seq", id);
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -383,12 +384,12 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Mark the item complete
+   * Mark the item complete
    *
-   * @param  db                Description of the Parameter
-   * @param  complete          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param complete Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int updateStatus(Connection db, boolean complete) throws SQLException {
     if (id == -1) {
@@ -424,10 +425,10 @@ public class ActionItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("item_id");

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -116,7 +116,8 @@
     }
   }
   
-  <% if(!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null){ %>
+  <% if((!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null) ||
+  !((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null)){ %>
   function toggleSpan(cb, tag) {
     var form = document.addCall;
     if (cb.checked) {
@@ -222,9 +223,17 @@
         <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
       <% }else{ %>
         <span name="nextActionSpan" id="nextActionSpan" <%= (CallDetails.getHasFollowup() || (request.getAttribute("alertDateWarning") != null))  ? "" : "style=\"display:none\"" %>>
-        <br>
-        <%-- include pending activity form --%>
-        <%@ include file="../contacts/call_followup_include.jsp" %>
+          <br />
+          <%-- include pending activity form --%>
+          <%@ include file="../contacts/call_followup_include.jsp" %>
+          <%--Add the javascript to toggle the followupInclude. --%>
+          <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+            <script type="text/javascript">
+              var form1 = document.addCall;
+              form1.hasFollowup.checked = true;
+              form1.hasFollowup.disabled = true;
+            </script>
+          </dhv:evaluate>
         </span>
     <%
         }
@@ -243,6 +252,7 @@
     <input type="hidden" name="dosubmit" value="true" />
     <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>" />
     <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>" />
+    <input type="hidden" name="oppHeaderId" value="<%= CallDetails.getOppHeaderId() != -1? CallDetails.getOppHeaderId():PreviousCallDetails.getOppHeaderId() %>">
     <input type="hidden" name="id" value="<%= CallDetails.getId() %>" />
     <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>" />
     <input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>" />
@@ -254,7 +264,7 @@
     <input type="hidden" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>" />
     <input type="hidden" name="notes" value="<%= toString(CallDetails.getNotes()) %>" />
     <input type="hidden" name="resultId" value="<%= CallDetails.getResultId() %>" />
-<% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)&& (request.getAttribute("alertDateWarning") == null)){ %>
+<% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null) && (request.getAttribute("alertDateWarning") == null)){ %>
     <%-- include pending activity values --%>
     <input type="hidden" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>" />
     <input type="hidden" name="alertCallTypeId" value="<%= CallDetails.getAlertCallTypeId() %>" />

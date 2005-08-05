@@ -55,8 +55,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
-<dhv:label name="Re-assignments">Re-assignments</dhv:label>
+<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
+<dhv:label name="myitems.Re-assignments">Re-assignments</dhv:label>
 </td>
 </tr>
 </table>
@@ -240,7 +240,10 @@
     <%}%>
     </td>
 		<td valign="top" nowrap>
-      <%= UserList.getHtmlSelect("ownerToUsers") %>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="empty">
+        <tr><td align="left"><%= UserList.getHtmlSelect("ownerToUsers") %></td>
+        <td><%= showAttribute(request, "managerIdError") %></td></tr>
+      </table>
     </td>
   </tr>  
 <%-- Activities (Pending) --%>

@@ -15,21 +15,21 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import org.aspcfs.utils.*;
+
 
 /**
- *  Components should extend this class for basic component functionality
+ * Components should extend this class for basic component functionality
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created November 11, 2002
  */
 public class Component {
   /**
-   *  Gets the fileLibraryPath attribute of the Component class
+   * Gets the fileLibraryPath attribute of the Component class
    *
-   *@param  context  Description of the Parameter
-   *@return          The fileLibraryPath value
+   * @param context Description of the Parameter
+   * @return The fileLibraryPath value
    */
   protected static String getFileLibraryPath(ComponentContext context) {
     return context.getParameter("FileLibraryPath");

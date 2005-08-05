@@ -15,20 +15,20 @@
  */
 package org.aspcfs.modules.help.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Represents a list of tips for a page
+ * Represents a list of tips for a page
  *
- *@author     akhi_m
- *@created    July 9, 2003
- *@version    $id:exp$
+ * @author akhi_m
+ * @version $id:exp$
+ * @created July 9, 2003
  */
 public class HelpTipList extends ArrayList {
 
@@ -39,9 +39,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the HelpTipList object
+   * Sets the pagedListInfo attribute of the HelpTipList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -49,9 +49,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Sets the linkHelpId attribute of the HelpTipList object
+   * Sets the linkHelpId attribute of the HelpTipList object
    *
-   *@param  linkHelpId  The new linkHelpId value
+   * @param linkHelpId The new linkHelpId value
    */
   public void setLinkHelpId(int linkHelpId) {
     this.linkHelpId = linkHelpId;
@@ -59,9 +59,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Sets the completeOnly attribute of the HelpTipList object
+   * Sets the completeOnly attribute of the HelpTipList object
    *
-   *@param  completeOnly  The new completeOnly value
+   * @param completeOnly The new completeOnly value
    */
   public void setCompleteOnly(boolean completeOnly) {
     this.completeOnly = completeOnly;
@@ -69,9 +69,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpTipList object
+   * Sets the enteredBy attribute of the HelpTipList object
    *
-   *@param  enteredBy  The new enteredBy value
+   * @param enteredBy The new enteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -79,9 +79,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the HelpTipList object
+   * Gets the enteredBy attribute of the HelpTipList object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -89,9 +89,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the HelpTipList object
+   * Gets the pagedListInfo attribute of the HelpTipList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -99,9 +99,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Gets the linkHelpId attribute of the HelpTipList object
+   * Gets the linkHelpId attribute of the HelpTipList object
    *
-   *@return    The linkHelpId value
+   * @return The linkHelpId value
    */
   public int getLinkHelpId() {
     return linkHelpId;
@@ -109,9 +109,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Gets the completeOnly attribute of the HelpTipList object
+   * Gets the completeOnly attribute of the HelpTipList object
    *
-   *@return    The completeOnly value
+   * @return The completeOnly value
    */
   public boolean getCompleteOnly() {
     return completeOnly;
@@ -119,10 +119,10 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Builds a list of tips
+   * Builds a list of tips
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -158,7 +158,8 @@ public class HelpTipList extends ArrayList {
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString() +
           "AND hf.description < ? ");
       items = prepareFilter(pst);
@@ -183,22 +184,15 @@ public class HelpTipList extends ArrayList {
         "FROM help_tips hf " +
         "WHERE hf.tip_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       HelpTip thisTip = new HelpTip(rs);
       this.add(thisTip);
     }
@@ -208,9 +202,9 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Creates the filters
+   * Creates the filters
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -232,11 +226,11 @@ public class HelpTipList extends ArrayList {
 
 
   /**
-   *  Sets the filters
+   * Sets the filters
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

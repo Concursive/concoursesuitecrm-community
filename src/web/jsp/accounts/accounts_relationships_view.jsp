@@ -45,7 +45,9 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:permission name="accounts-accounts-relationships-add"><a href="AccountRelationships.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_relationships_view.AddARelationship">Add a  Relationship</dhv:label></a><br><br></dhv:permission>
+  <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
+    <dhv:permission name="accounts-accounts-relationships-add"><a href="AccountRelationships.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_relationships_view.AddARelationship">Add a  Relationship</dhv:label></a><br><br></dhv:permission>
+  </dhv:evaluate>
   <%-- list --%>
   <%
     int count = 0;
@@ -79,7 +81,7 @@
       <tr class="containerBody">
         <td width="8" valign="top" nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('select<%= count %>','menuRelation','<%= OrgDetails.getOrgId() %>', '<%= thisRelationship.getId() %>');"
+           <a href="javascript:displayMenu('select<%= count %>','menuRelation','<%= OrgDetails.getOrgId() %>', '<%= thisRelationship.getId() %>', '<%= OrgDetails.isTrashed() %>');"
               onMouseOver="over(0, <%= count %>)"
               onmouseout="out(0, <%= count %>); hideMenu('menuRelation');"><img
               src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>

@@ -29,18 +29,18 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *  Actions for Account Relationships
+ * Actions for Account Relationships
  *
- *@author     Mathur
- *@created    August 11, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created August 11, 2004
  */
 public final class AccountRelationships extends CFSModule {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-relationships-view")) {
@@ -72,10 +72,10 @@ public final class AccountRelationships extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-relationships-add")) {
@@ -88,7 +88,7 @@ public final class AccountRelationships extends CFSModule {
       
       //add account to the request
       addFormElements(context, db);
-      
+
       RelationshipTypeList typeList = new RelationshipTypeList();
       typeList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
       typeList.buildList(db);
@@ -104,10 +104,10 @@ public final class AccountRelationships extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-relationships-edit")) {
@@ -131,10 +131,10 @@ public final class AccountRelationships extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     String permission = "accounts-accounts-relationships-add";
@@ -144,6 +144,7 @@ public final class AccountRelationships extends CFSModule {
     String relTypeId = context.getRequest().getParameter("relTypeId");
     int typeId = -1;
     boolean isValid = false;
+    Relationship oldRelationship = null;
     Relationship thisRelationship = (Relationship) context.getFormBean();
     thisRelationship.setModifiedBy(getUserId(context));
     if (thisRelationship.getId() > 0) {
@@ -155,20 +156,24 @@ public final class AccountRelationships extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
+      if (thisRelationship.getId() > 0) {
+        oldRelationship = new Relationship(db, thisRelationship.getId());
+      }
       //add account to the request
       Organization thisOrg = addFormElements(context, db);
-      
+
       thisRelationship.setModifiedBy(getUserId(context));
-      if(relTypeId.endsWith("_reciprocal")){
+      if (relTypeId.endsWith("_reciprocal")) {
         //user chose reciprocal relation, so switch the direction to maintain order
-        thisRelationship.setObjectIdMapsFrom(thisRelationship.getObjectIdMapsTo());
+        thisRelationship.setObjectIdMapsFrom(
+            thisRelationship.getObjectIdMapsTo());
         thisRelationship.setObjectIdMapsTo(thisOrg.getOrgId());
-        typeId = Integer.parseInt(relTypeId.substring(0, relTypeId.indexOf("_")));
-      }else{
+        typeId = Integer.parseInt(
+            relTypeId.substring(0, relTypeId.indexOf("_")));
+      } else {
         typeId = Integer.parseInt(relTypeId);
       }
-       
+
       thisRelationship.setTypeId(typeId);
       thisRelationship.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
       thisRelationship.setCategoryIdMapsTo(Constants.ACCOUNT_OBJECT);
@@ -182,33 +187,52 @@ public final class AccountRelationships extends CFSModule {
       isValid = this.validateObject(context, db, thisRelationship);
       if (isValid) {
         if (thisRelationship.getId() > 0) {
-        //TODO:implement modify
-          if (thisList.checkDuplicateRelationship(db, thisRelationship.getObjectIdMapsTo(), typeId, Constants.ACCOUNT_OBJECT) == 1) {
+          //TODO:implement modify
+          if (thisList.checkDuplicateRelationship(
+              db, thisRelationship.getObjectIdMapsTo(), typeId, Constants.ACCOUNT_OBJECT) == 1) {
             resultCount = thisRelationship.update(db);
+            if (resultCount > 0) {
+              this.processUpdateHook(
+                  context, oldRelationship, thisRelationship);
+            }
           } else {
             SystemStatus systemStatus = this.getSystemStatus(context);
-            errors.put("actionError", systemStatus.getLabel("object.validation.actionError.relationshipDuplicate"));
+            errors.put(
+                "actionError", systemStatus.getLabel(
+                    "object.validation.actionError.relationshipDuplicate"));
           }
         } else {
           thisRelationship.setEnteredBy(this.getUserId(context));
-          if (thisList.checkDuplicateRelationship(db, thisRelationship.getObjectIdMapsTo(), typeId, Constants.ACCOUNT_OBJECT) == 0) {
+          if (thisList.checkDuplicateRelationship(
+              db, thisRelationship.getObjectIdMapsTo(), typeId, Constants.ACCOUNT_OBJECT) == 0) {
             recordInserted = thisRelationship.insert(db);
+            if (recordInserted) {
+              thisRelationship = new Relationship(
+                  db, thisRelationship.getId());
+              this.processInsertHook(context, thisRelationship);
+            }
           } else {
             SystemStatus systemStatus = this.getSystemStatus(context);
-            errors.put("actionError", systemStatus.getLabel("object.validation.actionError.relationshipDuplicate"));
+            errors.put(
+                "actionError", systemStatus.getLabel(
+                    "object.validation.actionError.relationshipDuplicate"));
           }
         }
       }
       if (!(recordInserted || resultCount == 1)) {
-        if(relTypeId.endsWith("_reciprocal")){
+        if (relTypeId.endsWith("_reciprocal")) {
           if (thisRelationship.getObjectIdMapsFrom() != -1) {
-            Organization secondOrganization = new Organization(db, thisRelationship.getObjectIdMapsFrom());
-            context.getRequest().setAttribute("secondOrganization", secondOrganization);
+            Organization secondOrganization = new Organization(
+                db, thisRelationship.getObjectIdMapsFrom());
+            context.getRequest().setAttribute(
+                "secondOrganization", secondOrganization);
           }
         } else {
           if (thisRelationship.getObjectIdMapsTo() != -1) {
-            Organization secondOrganization = new Organization(db, thisRelationship.getObjectIdMapsTo());
-            context.getRequest().setAttribute("secondOrganization", secondOrganization);
+            Organization secondOrganization = new Organization(
+                db, thisRelationship.getObjectIdMapsTo());
+            context.getRequest().setAttribute(
+                "secondOrganization", secondOrganization);
           }
         }
         RelationshipTypeList typeList = new RelationshipTypeList();
@@ -237,10 +261,10 @@ public final class AccountRelationships extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-relationships-delete")) {
@@ -255,11 +279,14 @@ public final class AccountRelationships extends CFSModule {
       
       //add account to the request
       addFormElements(context, db);
-      
-      Relationship thisRelation = new Relationship(db, Integer.parseInt(relId));
+
+      Relationship thisRelation = new Relationship(
+          db, Integer.parseInt(relId));
       recordDeleted = thisRelation.delete(db);
       if (!recordDeleted) {
-        thisRelation.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.relationshipDeletion"));
+        thisRelation.getErrors().put(
+            "actionError", systemStatus.getLabel(
+                "object.validation.actionError.relationshipDeletion"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -269,8 +296,8 @@ public final class AccountRelationships extends CFSModule {
     }
     return getReturn(context, "Delete");
   }
-  
-  
+
+
   public Organization addFormElements(ActionContext context, Connection db) throws SQLException {
     String orgId = context.getRequest().getParameter("orgId");
     Organization thisOrg = new Organization(db, Integer.parseInt(orgId));

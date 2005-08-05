@@ -15,37 +15,43 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.sql.*;
 import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
- *  The WorkflowManager is responsible for executing Business Processes. During
- *  execution, individual components are executed and evaluated, which in turn
- *  can further execute children components.
+ * The WorkflowManager is responsible for executing Business Processes. During
+ * execution, individual components are executed and evaluated, which in turn
+ * can further execute children components.
  *
- *@author     matt rajkowski
- *@created    January 13, 2003
- *@version    $Id: WorkflowManager.java,v 1.4 2003/01/13 21:41:16 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: WorkflowManager.java,v 1.4 2003/01/13 21:41:16 mrajkowski Exp
+ *          $
+ * @created January 13, 2003
  */
 public class WorkflowManager {
   Map classes = new HashMap();
 
 
   /**
-   *  Constructor for the WorkflowManager object
+   * Constructor for the WorkflowManager object
    */
-  public WorkflowManager() { }
+  public WorkflowManager() {
+  }
 
 
   /**
-   *  Execution of a business process begins by executing this method with a
-   *  valid ComponentContext.
+   * Execution of a business process begins by executing this method with a
+   * valid ComponentContext.
    *
-   *@param  context        Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public void execute(ComponentContext context) throws Exception {
     if (System.getProperty("DEBUG") != null) {
@@ -55,19 +61,25 @@ public class WorkflowManager {
     this.populateProcessParameters(context);
     int startId = context.getProcess().getStartId();
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("WorkflowManager-> Business Process Start: " + startId);
+      System.out.println(
+          "WorkflowManager-> Business Process Start: " + startId);
     }
-    //Retrieve the lastAnchor, and set nextAnchor to current timestamp
-    //based on process name
-    //store in componentContext as process.lastAnchor, process.nextAnchor
-    loadAnchors(context);
     //Execute the process, starting with 1st component
-    BusinessProcessComponent startComponent = context.getProcess().getComponent(startId);
+    BusinessProcessComponent startComponent = context.getProcess().getComponent(
+        startId);
     if (startComponent.getEnabled()) {
+      if (context.getProcess().getType() == BusinessProcess.SCHEDULED_EVENT) {
+        //Retrieve the lastAnchor, and set nextAnchor to current timestamp
+        //based on process name
+        //store in componentContext as process.lastAnchor, process.nextAnchor
+        loadAnchors(context);
+      }
       boolean startResult = this.executeComponent(context, startComponent);
       processChildren(context, startComponent, startResult);
-      //Store the nextAnchor as the lastAnchor
-      saveAnchors(context);
+      if (context.getProcess().getType() == BusinessProcess.SCHEDULED_EVENT) {
+        //Store the nextAnchor as the lastAnchor
+        saveAnchors(context);
+      }
     }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("WorkflowManager-> Business Process End");
@@ -76,13 +88,13 @@ public class WorkflowManager {
 
 
   /**
-   *  After a component is executed, the qualifying children are executed based
-   *  on the parent's result.
+   * After a component is executed, the qualifying children are executed based
+   * on the parent's result.
    *
-   *@param  context         Description of the Parameter
-   *@param  bpc             Description of the Parameter
-   *@param  previousResult  Description of the Parameter
-   *@exception  Exception   Description of the Exception
+   * @param context        Description of the Parameter
+   * @param bpc            Description of the Parameter
+   * @param previousResult Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   private void processChildren(ComponentContext context, BusinessProcessComponent bpc, boolean previousResult) throws Exception {
     Iterator i = bpc.getChildren(previousResult).iterator();
@@ -97,16 +109,17 @@ public class WorkflowManager {
 
 
   /**
-   *  Executes a specific component and returns the component's return value.
+   * Executes a specific component and returns the component's return value.
    *
-   *@param  context        Description of the Parameter
-   *@param  component      Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param context   Description of the Parameter
+   * @param component Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   private boolean executeComponent(ComponentContext context, BusinessProcessComponent component) throws Exception {
     if (System.getProperty("DEBUG") != null) {
-      System.out.print("WorkflowManager-> Executing: " + component.getClassName() + component.getDescription() + "? ");
+      System.out.print(
+          "WorkflowManager-> Executing: " + component.getClassName() + component.getDescription() + "? ");
     }
     //Retrieve the class from the cache, or instantiate a new one
     Object classRef = null;
@@ -117,11 +130,14 @@ public class WorkflowManager {
         classRef = Class.forName(component.getClassName()).newInstance();
         classes.put(component.getClassName(), classRef);
       } catch (ClassNotFoundException cnfe) {
-        System.out.println("WorkflowManager-> Class Not Found Exception. MESSAGE = " + cnfe.getMessage());
+        System.out.println(
+            "WorkflowManager-> Class Not Found Exception. MESSAGE = " + cnfe.getMessage());
       } catch (InstantiationException ie) {
-        System.out.println("WorkflowManager-> Instantiation Exception. MESSAGE = " + ie.getMessage());
+        System.out.println(
+            "WorkflowManager-> Instantiation Exception. MESSAGE = " + ie.getMessage());
       } catch (IllegalAccessException iae) {
-        System.out.println("WorkflowManager-> Illegal Argument Exception. MESSAGE = " + iae.getMessage());
+        System.out.println(
+            "WorkflowManager-> Illegal Argument Exception. MESSAGE = " + iae.getMessage());
       }
     }
 
@@ -138,11 +154,13 @@ public class WorkflowManager {
       //Add configuration data from component definitions into the context,
       //overriding any global parameters
       this.populateComponentParameters(context, component);
-      Method method = classRef.getClass().getMethod("execute", new Class[]{context.getClass()});
+      Method method = classRef.getClass().getMethod(
+          "execute", new Class[]{context.getClass()});
       result = method.invoke(classRef, new Object[]{context});
     } catch (Exception e) {
       e.printStackTrace(System.out);
-      System.out.println("WorkflowManager-> Exception while trying to execute component " + component.getClassName() + " error: " + e.getMessage());
+      System.out.println(
+          "WorkflowManager-> Exception while trying to execute component " + component.getClassName() + " error: " + e.getMessage());
     }
     if (result instanceof Boolean) {
       if (System.getProperty("DEBUG") != null) {
@@ -156,17 +174,18 @@ public class WorkflowManager {
       }
       return (((Integer) result).intValue() == 1);
     } else {
-      System.out.println("WorkflowManager-> Component did not return an acceptable result");
+      System.out.println(
+          "WorkflowManager-> Component did not return an acceptable result");
       return false;
     }
   }
 
 
   /**
-   *  Before a component is executed, global parameters are applied to the
-   *  component, however, local parameters for a component will override these.
+   * Before a component is executed, global parameters are applied to the
+   * component, however, local parameters for a component will override these.
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void populateProcessParameters(ComponentContext context) {
     BusinessProcess thisProcess = context.getProcess();
@@ -175,7 +194,8 @@ public class WorkflowManager {
       while (i.hasNext()) {
         ProcessParameter thisParameter = (ProcessParameter) i.next();
         if (thisParameter.getEnabled()) {
-          context.setParameter(thisParameter.getName(), thisParameter.getValue());
+          context.setParameter(
+              thisParameter.getName(), thisParameter.getValue());
         }
       }
     }
@@ -183,11 +203,11 @@ public class WorkflowManager {
 
 
   /**
-   *  Before a component is executed, local parameters for a component are
-   *  applied, overwriting any global parameters that may have been set.
+   * Before a component is executed, local parameters for a component are
+   * applied, overwriting any global parameters that may have been set.
    *
-   *@param  context    Description of the Parameter
-   *@param  component  Description of the Parameter
+   * @param context   Description of the Parameter
+   * @param component Description of the Parameter
    */
   private void populateComponentParameters(ComponentContext context, BusinessProcessComponent component) {
     if (component.hasParameters()) {
@@ -195,7 +215,8 @@ public class WorkflowManager {
       while (i.hasNext()) {
         ComponentParameter thisParameter = (ComponentParameter) i.next();
         if (thisParameter.getEnabled()) {
-          context.setParameter(thisParameter.getName(), thisParameter.getValue());
+          context.setParameter(
+              thisParameter.getName(), thisParameter.getValue());
         }
       }
     }
@@ -203,15 +224,17 @@ public class WorkflowManager {
 
 
   /**
-   *  Loads the last time the process executed successfully from the database,
+   * Loads the last time the process executed successfully from the database,
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void loadAnchors(ComponentContext context) {
     System.out.println("WorkflowManager-> loadAnchors");
     Connection db = null;
     try {
-      context.setParameter("process.nextAnchor", (new java.sql.Timestamp(new java.util.Date().getTime())).toString());
+      context.setParameter(
+          "process.nextAnchor", (new java.sql.Timestamp(
+              new java.util.Date().getTime())).toString());
       db = ObjectHookComponent.getConnection(context);
       PreparedStatement pst = db.prepareStatement(
           "SELECT anchor " +
@@ -220,7 +243,8 @@ public class WorkflowManager {
       pst.setString(1, context.getProcess().getName());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
-        context.setParameter("process.lastAnchor", rs.getTimestamp("anchor").toString());
+        context.setParameter(
+            "process.lastAnchor", rs.getTimestamp("anchor").toString());
       }
       rs.close();
       pst.close();
@@ -232,10 +256,10 @@ public class WorkflowManager {
 
 
   /**
-   *  Saves the start time when the last process executed successfully, to the
-   *  database
+   * Saves the start time when the last process executed successfully, to the
+   * database
    *
-   *@param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   private void saveAnchors(ComponentContext context) {
     System.out.println("WorkflowManager-> saveAnchors");
@@ -248,13 +272,17 @@ public class WorkflowManager {
           "WHERE process_name = ? " +
           "AND anchor = ? ");
       if (context.hasParameter("process.nextAnchor")) {
-        pst.setTimestamp(1, java.sql.Timestamp.valueOf(context.getParameter("process.nextAnchor")));
+        pst.setTimestamp(
+            1, java.sql.Timestamp.valueOf(
+                context.getParameter("process.nextAnchor")));
       } else {
         pst.setNull(1, java.sql.Types.DATE);
       }
       pst.setString(2, context.getProcess().getName());
       if (context.hasParameter("process.lastAnchor")) {
-        pst.setTimestamp(3, java.sql.Timestamp.valueOf(context.getParameter("process.lastAnchor")));
+        pst.setTimestamp(
+            3, java.sql.Timestamp.valueOf(
+                context.getParameter("process.lastAnchor")));
       } else {
         pst.setNull(3, java.sql.Types.DATE);
       }
@@ -266,7 +294,9 @@ public class WorkflowManager {
             "(process_name, anchor) VALUES (?, ?) ");
         pst.setString(1, context.getProcess().getName());
         if (context.hasParameter("process.nextAnchor")) {
-          pst.setTimestamp(2, java.sql.Timestamp.valueOf(context.getParameter("process.nextAnchor")));
+          pst.setTimestamp(
+              2, java.sql.Timestamp.valueOf(
+                  context.getParameter("process.nextAnchor")));
         } else {
           pst.setNull(2, java.sql.Types.DATE);
         }

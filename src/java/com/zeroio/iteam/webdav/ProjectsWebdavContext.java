@@ -21,31 +21,32 @@ import com.zeroio.webdav.context.ModuleContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 
+import javax.naming.NamingException;
+import java.io.FileNotFoundException;
 import java.sql.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    November 11, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id: ProjectsWebdavContext.java,v 1.2.6.1 2005/05/10 18:01:53
+ *          ananth Exp $
+ * @created November 11, 2004
  */
 public class ProjectsWebdavContext
-     extends BaseWebdavContext implements ModuleContext {
+    extends BaseWebdavContext implements ModuleContext {
 
   private final static String PROJECTS = "projects";
   private int linkModuleId = Constants.DOCUMENTS_PROJECTS;
   private int userId = -1;
-  private String contextName = null;
   private String fileLibraryPath = null;
   private String permission = "projects-view";
 
 
-
   /**
-   *  Sets the userId attribute of the ProjectsWebdavContext object
+   * Sets the userId attribute of the ProjectsWebdavContext object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -53,9 +54,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Sets the userId attribute of the ProjectsWebdavContext object
+   * Sets the userId attribute of the ProjectsWebdavContext object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -63,9 +64,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Gets the userId attribute of the ProjectsWebdavContext object
+   * Gets the userId attribute of the ProjectsWebdavContext object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -73,9 +74,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Sets the linkModuleId attribute of the ProjectsWebdavContext object
+   * Sets the linkModuleId attribute of the ProjectsWebdavContext object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -83,9 +84,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Sets the linkModuleId attribute of the ProjectsWebdavContext object
+   * Sets the linkModuleId attribute of the ProjectsWebdavContext object
    *
-   *@param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -93,19 +94,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Sets the contextName attribute of the ProjectsWebdavContext object
+   * Sets the fileLibraryPath attribute of the ProjectsWebdavContext object
    *
-   *@param  tmp  The new contextName value
-   */
-  public void setContextName(String tmp) {
-    this.contextName = tmp;
-  }
-
-
-  /**
-   *  Sets the fileLibraryPath attribute of the ProjectsWebdavContext object
-   *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -113,9 +104,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Sets the permission attribute of the ProjectsWebdavContext object
+   * Sets the permission attribute of the ProjectsWebdavContext object
    *
-   *@param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -123,9 +114,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Gets the linkModuleId attribute of the ProjectsWebdavContext object
+   * Gets the linkModuleId attribute of the ProjectsWebdavContext object
    *
-   *@return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -133,19 +124,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Gets the contextName attribute of the ProjectsWebdavContext object
+   * Gets the fileLibraryPath attribute of the ProjectsWebdavContext object
    *
-   *@return    The contextName value
-   */
-  public String getContextName() {
-    return contextName;
-  }
-
-
-  /**
-   *  Gets the fileLibraryPath attribute of the ProjectsWebdavContext object
-   *
-   *@return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -153,9 +134,9 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Gets the permission attribute of the ProjectsWebdavContext object
+   * Gets the permission attribute of the ProjectsWebdavContext object
    *
-   *@return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -163,16 +144,17 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Constructor for the ProjectsWebdavContext object
+   * Constructor for the ProjectsWebdavContext object
    */
-  public ProjectsWebdavContext() { }
+  public ProjectsWebdavContext() {
+  }
 
 
   /**
-   *  Constructor for the ProjectsWebdavContext object
+   * Constructor for the ProjectsWebdavContext object
    *
-   *@param  name          Description of the Parameter
-   *@param  linkModuleId  Description of the Parameter
+   * @param name         Description of the Parameter
+   * @param linkModuleId Description of the Parameter
    */
   public ProjectsWebdavContext(String name, int linkModuleId) {
     this.contextName = name;
@@ -181,29 +163,29 @@ public class ProjectsWebdavContext
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  fileLibraryPath   Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  thisSystem        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param fileLibraryPath Description of the Parameter
+   * @param userId          Description of the Parameter
+   * @param thisSystem      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(SystemStatus thisSystem, Connection db, int userId, String fileLibraryPath) throws SQLException {
     this.fileLibraryPath = fileLibraryPath;
     this.userId = userId;
     bindings.clear();
-    if (hasPermission(thisSystem, userId, "projects-view")) {
+    if (hasPermission(thisSystem, userId, "projects-projects-view")) {
       populateBindings(db);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void populateBindings(Connection db) throws SQLException {
     if (linkModuleId == -1) {
@@ -213,10 +195,10 @@ public class ProjectsWebdavContext
         "SELECT project_id, title, entered, modified " +
         "FROM projects " +
         "WHERE project_id > -1 " +
+        "AND trashed_date IS NULL " +
         "AND project_id IN (SELECT project_id FROM project_team WHERE user_id = ? " +
         "AND status IS NULL " +
-        "AND portal = ?) "
-    );
+        "AND portal = ?) ");
     pst.setInt(1, userId);
     pst.setBoolean(2, false);
     ResultSet rs = pst.executeQuery();
@@ -227,15 +209,33 @@ public class ProjectsWebdavContext
       item.setContextName(rs.getString("title"));
       item.setPath(fileLibraryPath + PROJECTS + fs);
       item.setUserId(userId);
-      //TODO: is this correct?? or is it projects-
-      item.setPermission("project-documents-view");
+      item.setPermission("project-documents");
       bindings.put(item.getContextName(), item);
       Timestamp entered = rs.getTimestamp("entered");
       Timestamp modified = rs.getTimestamp("modified");
-      buildProperties(item.getContextName(), entered, modified, new Integer(0));
+      buildProperties(
+          item.getContextName(), entered, modified, new Integer(0));
     }
     rs.close();
     pst.close();
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param folderName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   * @throws NamingException       Description of the Exception
+   */
+  public boolean createSubcontext(SystemStatus thisSystem, Connection db, String folderName) throws SQLException,
+      FileNotFoundException, NamingException {
+    //Not allowed
+    return false;
   }
 }
 

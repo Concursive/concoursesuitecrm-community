@@ -15,22 +15,41 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
+import org.aspcfs.controller.SystemStatus;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 15, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 15, 2003
  */
 public class StateSelect extends HtmlSelect {
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    */
   public StateSelect() {
     this.addItem(-1, "--None--");
+    addStates();
+  }
+
+
+  /**
+   * Constructor for the StateSelect object
+   *
+   * @param thisSystem Description of the Parameter
+   */
+  public StateSelect(SystemStatus thisSystem) {
+    this.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+    addStates();
+  }
+
+
+  /**
+   * Adds a feature to the States attribute of the StateSelect object
+   */
+  private void addStates() {
     this.addItem("AL", "Alabama");
     this.addItem("AK", "Alaska");
     this.addItem("AB", "Alberta");
@@ -102,6 +121,5 @@ public class StateSelect extends HtmlSelect {
     this.addItem("WI", "Wisconsin");
     this.addItem("WY", "Wyoming");
   }
-
 }
 

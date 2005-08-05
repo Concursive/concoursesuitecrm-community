@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.Usage;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a list of Usage objects. Can be used for generating the list by
- *  specifying parameters and then initiating buildList to query the database.
- *  Can also be used for just querying the count of objects and the sum of
- *  record objects.
+ * Represents a list of Usage objects. Can be used for generating the list by
+ * specifying parameters and then initiating buildList to query the database.
+ * Can also be used for just querying the count of objects and the sum of
+ * record objects.
  *
- *@author     matt rajkowski
- *@created    December 6, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created December 6, 2002
  */
 public class UsageList {
   private int action = -1;
@@ -40,15 +42,16 @@ public class UsageList {
 
 
   /**
-   *  Constructor for the UsageList object
+   * Constructor for the UsageList object
    */
-  public UsageList() { }
+  public UsageList() {
+  }
 
 
   /**
-   *  Sets the action attribute of the UsageList object
+   * Sets the action attribute of the UsageList object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(int tmp) {
     this.action = tmp;
@@ -56,9 +59,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the action attribute of the UsageList object
+   * Sets the action attribute of the UsageList object
    *
-   *@param  tmp  The new action value
+   * @param tmp The new action value
    */
   public void setAction(String tmp) {
     this.action = Integer.parseInt(tmp);
@@ -66,9 +69,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the enteredRangeStart attribute of the UsageList object
+   * Sets the enteredRangeStart attribute of the UsageList object
    *
-   *@param  tmp  The new enteredRangeStart value
+   * @param tmp The new enteredRangeStart value
    */
   public void setEnteredRangeStart(java.sql.Timestamp tmp) {
     this.enteredRangeStart = tmp;
@@ -76,9 +79,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the enteredRangeStart attribute of the UsageList object
+   * Sets the enteredRangeStart attribute of the UsageList object
    *
-   *@param  tmp  The new enteredRangeStart value
+   * @param tmp The new enteredRangeStart value
    */
   public void setEnteredRangeStart(String tmp) {
     this.enteredRangeStart = DatabaseUtils.parseTimestamp(tmp);
@@ -86,9 +89,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the enteredRangeEnd attribute of the UsageList object
+   * Sets the enteredRangeEnd attribute of the UsageList object
    *
-   *@param  tmp  The new enteredRangeEnd value
+   * @param tmp The new enteredRangeEnd value
    */
   public void setEnteredRangeEnd(java.sql.Timestamp tmp) {
     this.enteredRangeEnd = tmp;
@@ -96,9 +99,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the enteredRangeEnd attribute of the UsageList object
+   * Sets the enteredRangeEnd attribute of the UsageList object
    *
-   *@param  tmp  The new enteredRangeEnd value
+   * @param tmp The new enteredRangeEnd value
    */
   public void setEnteredRangeEnd(String tmp) {
     this.enteredRangeEnd = DatabaseUtils.parseTimestamp(tmp);
@@ -106,9 +109,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the count attribute of the UsageList object
+   * Sets the count attribute of the UsageList object
    *
-   *@param  tmp  The new count value
+   * @param tmp The new count value
    */
   public void setCount(long tmp) {
     this.count = tmp;
@@ -116,9 +119,9 @@ public class UsageList {
 
 
   /**
-   *  Sets the size attribute of the UsageList object
+   * Sets the size attribute of the UsageList object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(long tmp) {
     this.size = tmp;
@@ -126,9 +129,9 @@ public class UsageList {
 
 
   /**
-   *  Gets the action attribute of the UsageList object
+   * Gets the action attribute of the UsageList object
    *
-   *@return    The action value
+   * @return The action value
    */
   public int getAction() {
     return action;
@@ -136,9 +139,9 @@ public class UsageList {
 
 
   /**
-   *  Gets the enteredRangeStart attribute of the UsageList object
+   * Gets the enteredRangeStart attribute of the UsageList object
    *
-   *@return    The enteredRangeStart value
+   * @return The enteredRangeStart value
    */
   public java.sql.Timestamp getEnteredRangeStart() {
     return enteredRangeStart;
@@ -146,9 +149,9 @@ public class UsageList {
 
 
   /**
-   *  Gets the enteredRangeEnd attribute of the UsageList object
+   * Gets the enteredRangeEnd attribute of the UsageList object
    *
-   *@return    The enteredRangeEnd value
+   * @return The enteredRangeEnd value
    */
   public java.sql.Timestamp getEnteredRangeEnd() {
     return enteredRangeEnd;
@@ -156,9 +159,9 @@ public class UsageList {
 
 
   /**
-   *  Gets the count attribute of the UsageList object
+   * Gets the count attribute of the UsageList object
    *
-   *@return    The count value
+   * @return The count value
    */
   public long getCount() {
     return count;
@@ -166,9 +169,9 @@ public class UsageList {
 
 
   /**
-   *  Gets the size attribute of the UsageList object
+   * Gets the size attribute of the UsageList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public long getSize() {
     return size;
@@ -176,10 +179,10 @@ public class UsageList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     throw new SQLException("Not implemented");
@@ -187,11 +190,11 @@ public class UsageList {
 
 
   /**
-   *  Queries the count of records and the sum of recordSizes based on the
-   *  specified parameters.
+   * Queries the count of records and the sum of recordSizes based on the
+   * specified parameters.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildUsage(Connection db) throws SQLException {
     StringBuffer sqlFilter = new StringBuffer();
@@ -200,7 +203,8 @@ public class UsageList {
         "FROM usage_log u " +
         "WHERE u.usage_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -213,9 +217,9 @@ public class UsageList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -234,11 +238,11 @@ public class UsageList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

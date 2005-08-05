@@ -15,20 +15,18 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import java.util.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.HashMap;
 
 /**
- *  This Class evaluates a Contact ID and returns a Contact Name from request
- *  scope.
+ * This Class evaluates a Contact ID and returns a Contact Name from request
+ * scope.
  *
- *@author     matt rajkowski
- *@created    November 22, 2002
- *@version    $Id: ContactNameHandler.java,v 1.1 2002/11/25 16:07:13 akhi_m Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ContactNameHandler.java,v 1.1 2002/11/25 16:07:13 akhi_m Exp
+ *          $
+ * @created November 22, 2002
  */
 public class ContactNameHandler extends TagSupport {
 
@@ -37,10 +35,9 @@ public class ContactNameHandler extends TagSupport {
 
 
   /**
-   *  Sets the Id attribute of the ContactNameHandler object
+   * Sets the Id attribute of the ContactNameHandler object
    *
-   *@param  tmp  The new Id value
-   *@since
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -48,9 +45,9 @@ public class ContactNameHandler extends TagSupport {
 
 
   /**
-   *  Sets the id attribute of the ContactNameHandler object
+   * Sets the id attribute of the ContactNameHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.contactId = tmp;
@@ -58,9 +55,9 @@ public class ContactNameHandler extends TagSupport {
 
 
   /**
-   *  Name of the request attribute which stores the HashMap
+   * Name of the request attribute which stores the HashMap
    *
-   *@param  listName  The new listName value
+   * @param listName The new listName value
    */
   public void setListName(String listName) {
     this.listName = listName;
@@ -68,18 +65,18 @@ public class ContactNameHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Returned Value
-   *@exception  JspException  Description of Exception
-   *@since
+   * @return Description of the Returned Value
+   * @throws JspException Description of Exception
    */
   public int doStartTag() throws JspException {
     try {
-
-      HashMap contacts = (HashMap) pageContext.getRequest().getAttribute(listName);
+      HashMap contacts = (HashMap) pageContext.getRequest().getAttribute(
+          listName);
       if (contacts.get(new Integer(contactId)) != null) {
-        this.pageContext.getOut().write((String) contacts.get(new Integer(contactId)));
+        this.pageContext.getOut().write(
+            (String) contacts.get(new Integer(contactId)));
       } else {
         System.out.println("ContactnameHandler-> Contact Record not found");
       }
@@ -91,9 +88,9 @@ public class ContactNameHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

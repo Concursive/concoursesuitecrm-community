@@ -15,22 +15,22 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.Permission;
-import org.aspcfs.modules.base.Constants;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    February 24, 2003
- *@version    $Id$
+ * @author Mathur
+ * @version $Id$
+ * @created February 24, 2003
  */
 public class ViewpointPermissionList extends HashMap {
 
@@ -39,17 +39,18 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Constructor for the ViewpointPermissionList object
+   * Constructor for the ViewpointPermissionList object
    */
-  public ViewpointPermissionList() { }
+  public ViewpointPermissionList() {
+  }
 
 
   /**
-   *  Constructor for the ViewpointPermissionList object
+   * Constructor for the ViewpointPermissionList object
    *
-   *@param  db                Description of the Parameter
-   *@param  viewpointId       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param viewpointId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ViewpointPermissionList(Connection db, int viewpointId) throws SQLException {
     this.viewpointId = viewpointId;
@@ -58,9 +59,9 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Constructor for the ViewpointPermissionList object
+   * Constructor for the ViewpointPermissionList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public ViewpointPermissionList(HttpServletRequest request) {
     int i = 0;
@@ -73,9 +74,9 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Sets the enabledState attribute of the ViewpointPermissionList object
+   * Sets the enabledState attribute of the ViewpointPermissionList object
    *
-   *@param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -83,9 +84,9 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Gets the enabledState attribute of the ViewpointPermissionList object
+   * Gets the enabledState attribute of the ViewpointPermissionList object
    *
-   *@return    The enabledState value
+   * @return The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -93,10 +94,10 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildCombinedList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -113,9 +114,10 @@ public class ViewpointPermissionList extends HashMap {
         "FROM permission p, permission_category c, viewpoint_permission v " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = v.permission_id ");
-    sqlOrder.append("ORDER BY v.viewpoint_id, c.level, p.level ");
+    sqlOrder.append("ORDER BY v.viewpoint_id, c.\"level\", p.\"level\" ");
     createFilter(sqlFilter);
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -132,9 +134,9 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -153,11 +155,11 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -175,11 +177,11 @@ public class ViewpointPermissionList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisName  Description of the Parameter
-   *@param  thisType  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param thisName Description of the Parameter
+   * @param thisType Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasPermission(String thisName, String thisType) {
     Iterator i = this.keySet().iterator();
@@ -194,7 +196,8 @@ public class ViewpointPermissionList extends HashMap {
       if ("edit".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getEdit()) {
         return true;
       }
-      if ("delete".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getDelete()) {
+      if ("delete".equals(thisType) && thisName.equals(
+          thisPermission.getName()) && thisPermission.getDelete()) {
         return true;
       }
     }

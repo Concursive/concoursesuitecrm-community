@@ -288,7 +288,7 @@ if (i.hasNext()) {
 	<tr class="row<%= rowid %>">
       <td valign="center">
         <%if(thisOpp.getHeader().getContactLink() > 0){ %>
-        <a href="AccountContactsOppComponents.do?command=DetailsComponent&id=<%= thisOpp.getHeader().getId() %>&contactId=<%= thisOpp.getHeader().getContactLink() %>">
+        <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&contactId=<%= thisOpp.getHeader().getContactLink() %>">
         <%= toHtml(thisOpp.getHeader().getDescription()) %>: <%= toHtml(thisOpp.getComponent().getDescription()) %></a>
         <%
         } else { %>

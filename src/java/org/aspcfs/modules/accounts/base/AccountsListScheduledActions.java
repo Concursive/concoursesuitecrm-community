@@ -18,23 +18,25 @@ package org.aspcfs.modules.accounts.base;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.CalendarView;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.*;
-import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 2, 2002
- *@version    $Id: AccountsListScheduledActions.java,v 1.4 2002/10/16 15:15:55
- *      mrajkowski Exp $
+ * @author akhi_m
+ * @version $Id: AccountsListScheduledActions.java,v 1.4 2002/10/16 15:15:55
+ *          mrajkowski Exp $
+ * @created October 2, 2002
  */
 public class AccountsListScheduledActions extends OrganizationList implements ScheduledActions {
 
@@ -44,15 +46,16 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Constructor for the AccountsListScheduledActions object
+   * Constructor for the AccountsListScheduledActions object
    */
-  public AccountsListScheduledActions() { }
+  public AccountsListScheduledActions() {
+  }
 
 
   /**
-   *  Sets the module attribute of the QuoteListScheduledActions object
+   * Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -60,9 +63,9 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Sets the context attribute of the QuoteListScheduledActions object
+   * Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -70,9 +73,9 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Sets the userId attribute of the AccountsListScheduledActions object
+   * Sets the userId attribute of the AccountsListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -80,9 +83,9 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Sets the userId attribute of the AccountsListScheduledActions object
+   * Sets the userId attribute of the AccountsListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -90,9 +93,9 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Gets the context attribute of the QuoteListScheduledActions object
+   * Gets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -100,9 +103,9 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Gets the module attribute of the QuoteListScheduledActions object
+   * Gets the module attribute of the QuoteListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -110,9 +113,9 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Gets the userId attribute of the AccountsListScheduledActions object
+   * Gets the userId attribute of the AccountsListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -120,15 +123,16 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccountsListScheduledActions --> Building Account Alerts ");
+      System.out.println(
+          "AccountsListScheduledActions --> Building Account Alerts ");
     }
     try {
       //get the userId
@@ -152,14 +156,14 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
-   *  Adds a feature to the AlertDates attribute of the
-   *  AccountsListScheduledActions object
+   * Adds a feature to the AlertDates attribute of the
+   * AccountsListScheduledActions object
    *
-   *@param  companyCalendar   The feature to be added to the AlertDates
-   *      attribute
-   *@param  db                The feature to be added to the AlertDates
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar The feature to be added to the AlertDates
+   *                        attribute
+   * @param db              The feature to be added to the AlertDates
+   *                        attribute
+   * @throws SQLException Description of the Exception
    */
   public void addAlertDates(CalendarView companyCalendar, Connection db) throws SQLException {
 
@@ -172,25 +176,28 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator n = this.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOrg.getAlertDate());
-      companyCalendar.addEvent(alertDate, CalendarEventList.EVENT_TYPES[3], thisOrg);
+      String alertDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, thisOrg.getAlertDate());
+      companyCalendar.addEvent(
+          alertDate, CalendarEventList.EVENT_TYPES[3], thisOrg);
     }
   }
 
 
   /**
-   *  Adds a feature to the ContractEndDates attribute of the
-   *  AccountsListScheduledActions object
+   * Adds a feature to the ContractEndDates attribute of the
+   * AccountsListScheduledActions object
    *
-   *@param  companyCalendar   The feature to be added to the ContractEndDates
-   *      attribute
-   *@param  db                The feature to be added to the ContractEndDates
-   *      attribute
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar The feature to be added to the ContractEndDates
+   *                        attribute
+   * @param db              The feature to be added to the ContractEndDates
+   *                        attribute
+   * @throws SQLException Description of the Exception
    */
   public void addContractEndDates(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
+      System.out.println(
+          "AccountsListScheduledActions --> Building Account Contract End Dates ");
     }
 
     //get TimeZone
@@ -203,22 +210,25 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator n = this.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-      String endDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOrg.getContractEndDate());
-      companyCalendar.addEvent(endDate, CalendarEventList.EVENT_TYPES[3], thisOrg);
+      String endDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, thisOrg.getContractEndDate());
+      companyCalendar.addEvent(
+          endDate, CalendarEventList.EVENT_TYPES[3], thisOrg);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccountsListScheduledActions --> Building Alert Date Count ");
+      System.out.println(
+          "AccountsListScheduledActions --> Building Alert Date Count ");
     }
 
     //get the userId
@@ -255,7 +265,8 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator i = s.iterator();
     while (i.hasNext()) {
       String thisDay = (String) i.next();
-      companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[3], dayEvents.get(thisDay));
+      companyCalendar.addEventCount(
+          thisDay, CalendarEventList.EVENT_TYPES[3], dayEvents.get(thisDay));
     }
   }
 }

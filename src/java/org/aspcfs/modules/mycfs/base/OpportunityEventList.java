@@ -15,17 +15,16 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
 import org.aspcfs.modules.pipeline.base.OpportunityComponent;
 import org.aspcfs.modules.pipeline.base.OpportunityComponentList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Mathur
- *@created    October 23, 2003
- *@version    $Id: OpportunityEventList.java,v 1.2 2004/08/04 20:01:56
- *      mrajkowski Exp $
+ * @author Mathur
+ * @version $Id: OpportunityEventList.java,v 1.2 2004/08/04 20:01:56
+ *          mrajkowski Exp $
+ * @created October 23, 2003
  */
 public class OpportunityEventList {
   OpportunityComponentList alertOpps = new OpportunityComponentList();
@@ -33,9 +32,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Sets the size attribute of the TaskEventList object
+   * Sets the size attribute of the TaskEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(int size) {
     this.size = size;
@@ -43,9 +42,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Sets the size attribute of the TaskEventList object
+   * Sets the size attribute of the TaskEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
@@ -53,9 +52,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Sets the alertOpps attribute of the OpportunityEventList object
+   * Sets the alertOpps attribute of the OpportunityEventList object
    *
-   *@param  alertOpps  The new alertOpps value
+   * @param alertOpps The new alertOpps value
    */
   public void setAlertOpps(OpportunityComponentList alertOpps) {
     this.alertOpps = alertOpps;
@@ -63,9 +62,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Gets the alertOpps attribute of the OpportunityEventList object
+   * Gets the alertOpps attribute of the OpportunityEventList object
    *
-   *@return    The alertOpps value
+   * @return The alertOpps value
    */
   public OpportunityComponentList getAlertOpps() {
     return alertOpps;
@@ -73,9 +72,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Gets the size attribute of the TaskEventList object
+   * Gets the size attribute of the TaskEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -83,9 +82,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the TaskEventList object
+   * Gets the sizeString attribute of the TaskEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);
@@ -93,9 +92,9 @@ public class OpportunityEventList {
 
 
   /**
-   *  Adds a call to the list dealert on the status of the Task
+   * Adds a call to the list dealert on the status of the Task
    *
-   *@param  thisOpp  The feature to be added to the Event attribute
+   * @param thisOpp The feature to be added to the Event attribute
    */
   public void addEvent(OpportunityComponent thisOpp) {
     if (thisOpp != null) {

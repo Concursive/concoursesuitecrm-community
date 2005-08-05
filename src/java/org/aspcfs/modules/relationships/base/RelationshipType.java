@@ -15,15 +15,16 @@
  */
 package org.aspcfs.modules.relationships.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.ResultSet;
+
 /**
- *  Represents a relationship type
+ * Represents a relationship type
  *
- *@author     Mathur
- *@created    August 11, 2004
- *@version    $id:exp$
+ * @author Mathur
+ * @version $id:exp$
+ * @created August 11, 2004
  */
 public class RelationshipType {
 
@@ -38,9 +39,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the typeId attribute of the RelationshipType object
+   * Sets the typeId attribute of the RelationshipType object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -48,9 +49,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the typeId attribute of the RelationshipType object
+   * Sets the typeId attribute of the RelationshipType object
    *
-   *@param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -58,9 +59,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the RelationshipType object
+   * Sets the categoryIdMapsFrom attribute of the RelationshipType object
    *
-   *@param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(int tmp) {
     this.categoryIdMapsFrom = tmp;
@@ -68,9 +69,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the RelationshipType object
+   * Sets the categoryIdMapsFrom attribute of the RelationshipType object
    *
-   *@param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(String tmp) {
     this.categoryIdMapsFrom = Integer.parseInt(tmp);
@@ -78,9 +79,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the categoryIdMapsTo attribute of the RelationshipType object
+   * Sets the categoryIdMapsTo attribute of the RelationshipType object
    *
-   *@param  tmp  The new categoryIdMapsTo value
+   * @param tmp The new categoryIdMapsTo value
    */
   public void setCategoryIdMapsTo(int tmp) {
     this.categoryIdMapsTo = tmp;
@@ -88,9 +89,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the categoryIdMapsTo attribute of the RelationshipType object
+   * Sets the categoryIdMapsTo attribute of the RelationshipType object
    *
-   *@param  tmp  The new categoryIdMapsTo value
+   * @param tmp The new categoryIdMapsTo value
    */
   public void setCategoryIdMapsTo(String tmp) {
     this.categoryIdMapsTo = Integer.parseInt(tmp);
@@ -98,9 +99,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the reciprocalName1 attribute of the RelationshipType object
+   * Sets the reciprocalName1 attribute of the RelationshipType object
    *
-   *@param  tmp  The new reciprocalName1 value
+   * @param tmp The new reciprocalName1 value
    */
   public void setReciprocalName1(String tmp) {
     this.reciprocalName1 = tmp;
@@ -108,9 +109,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the reciprocalName2 attribute of the RelationshipType object
+   * Sets the reciprocalName2 attribute of the RelationshipType object
    *
-   *@param  tmp  The new reciprocalName2 value
+   * @param tmp The new reciprocalName2 value
    */
   public void setReciprocalName2(String tmp) {
     this.reciprocalName2 = tmp;
@@ -118,9 +119,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the level attribute of the RelationshipType object
+   * Sets the level attribute of the RelationshipType object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -128,9 +129,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the level attribute of the RelationshipType object
+   * Sets the level attribute of the RelationshipType object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -138,9 +139,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the defaultItem attribute of the RelationshipType object
+   * Sets the defaultItem attribute of the RelationshipType object
    *
-   *@param  tmp  The new defaultItem value
+   * @param tmp The new defaultItem value
    */
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
@@ -148,9 +149,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the defaultItem attribute of the RelationshipType object
+   * Sets the defaultItem attribute of the RelationshipType object
    *
-   *@param  tmp  The new defaultItem value
+   * @param tmp The new defaultItem value
    */
   public void setDefaultItem(String tmp) {
     this.defaultItem = DatabaseUtils.parseBoolean(tmp);
@@ -158,9 +159,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the enabled attribute of the RelationshipType object
+   * Sets the enabled attribute of the RelationshipType object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -168,9 +169,9 @@ public class RelationshipType {
 
 
   /**
-   *  Sets the enabled attribute of the RelationshipType object
+   * Sets the enabled attribute of the RelationshipType object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -178,9 +179,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the enabled attribute of the RelationshipType object
+   * Gets the enabled attribute of the RelationshipType object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -188,9 +189,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the typeId attribute of the RelationshipType object
+   * Gets the typeId attribute of the RelationshipType object
    *
-   *@return    The typeId value
+   * @return The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -198,9 +199,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the categoryIdMapsFrom attribute of the RelationshipType object
+   * Gets the categoryIdMapsFrom attribute of the RelationshipType object
    *
-   *@return    The categoryIdMapsFrom value
+   * @return The categoryIdMapsFrom value
    */
   public int getCategoryIdMapsFrom() {
     return categoryIdMapsFrom;
@@ -208,9 +209,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the categoryIdMapsTo attribute of the RelationshipType object
+   * Gets the categoryIdMapsTo attribute of the RelationshipType object
    *
-   *@return    The categoryIdMapsTo value
+   * @return The categoryIdMapsTo value
    */
   public int getCategoryIdMapsTo() {
     return categoryIdMapsTo;
@@ -218,9 +219,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the reciprocalName1 attribute of the RelationshipType object
+   * Gets the reciprocalName1 attribute of the RelationshipType object
    *
-   *@return    The reciprocalName1 value
+   * @return The reciprocalName1 value
    */
   public String getReciprocalName1() {
     return reciprocalName1;
@@ -228,9 +229,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the reciprocalName2 attribute of the RelationshipType object
+   * Gets the reciprocalName2 attribute of the RelationshipType object
    *
-   *@return    The reciprocalName2 value
+   * @return The reciprocalName2 value
    */
   public String getReciprocalName2() {
     return reciprocalName2;
@@ -238,9 +239,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the level attribute of the RelationshipType object
+   * Gets the level attribute of the RelationshipType object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -248,9 +249,9 @@ public class RelationshipType {
 
 
   /**
-   *  Gets the defaultItem attribute of the RelationshipType object
+   * Gets the defaultItem attribute of the RelationshipType object
    *
-   *@return    The defaultItem value
+   * @return The defaultItem value
    */
   public boolean getDefaultItem() {
     return defaultItem;
@@ -258,10 +259,10 @@ public class RelationshipType {
 
 
   /**
-   *  Constructor for the RelationshipType object
+   * Constructor for the RelationshipType object
    *
-   *@param  rs                         Description of the Parameter
-   *@exception  java.sql.SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
    */
   public RelationshipType(ResultSet rs) throws java.sql.SQLException {
     typeId = rs.getInt("type_id");

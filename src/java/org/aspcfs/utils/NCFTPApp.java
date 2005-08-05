@@ -15,17 +15,18 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Class to execute ftp commands using the NCFTP application -> www.ncftp.com.
- *  The "ncftp" files need to be in the system path.
+ * Class to execute ftp commands using the NCFTP application -> www.ncftp.com.
+ * The "ncftp" files need to be in the system path.
  *
- *@author     matt rajkowski
- *@created    October 23, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created October 23, 2002
  */
 public class NCFTPApp {
 
@@ -39,16 +40,17 @@ public class NCFTPApp {
 
 
   /**
-   *  Constructor for the NCFTPApp object
+   * Constructor for the NCFTPApp object
    */
-  public NCFTPApp() { }
+  public NCFTPApp() {
+  }
 
 
   /**
-   *  Sets the appExecutable attribute of the NCFTPApp object, this is the base
-   *  name for all ncftp commands that will be appended, ncftpput, etc.
+   * Sets the appExecutable attribute of the NCFTPApp object, this is the base
+   * name for all ncftp commands that will be appended, ncftpput, etc.
    *
-   *@param  tmp  The new appExecutable value
+   * @param tmp The new appExecutable value
    */
   public void setAppExecutable(String tmp) {
     this.appExecutable = tmp;
@@ -56,9 +58,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the result attribute of the NCFTPApp object after executing a method
+   * Sets the result attribute of the NCFTPApp object after executing a method
    *
-   *@param  tmp  The new result value
+   * @param tmp The new result value
    */
   public void setResult(int tmp) {
     this.result = tmp;
@@ -66,9 +68,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the files attribute of the NCFTPApp object
+   * Sets the files attribute of the NCFTPApp object
    *
-   *@param  tmp  The new files value
+   * @param tmp The new files value
    */
   public void setFiles(ArrayList tmp) {
     this.files = tmp;
@@ -76,9 +78,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the stdOut attribute of the NCFTPApp object
+   * Sets the stdOut attribute of the NCFTPApp object
    *
-   *@param  tmp  The new stdOut value
+   * @param tmp The new stdOut value
    */
   public void setStdOut(String tmp) {
     this.stdOut = tmp;
@@ -86,9 +88,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the stdErr attribute of the NCFTPApp object
+   * Sets the stdErr attribute of the NCFTPApp object
    *
-   *@param  tmp  The new stdErr value
+   * @param tmp The new stdErr value
    */
   public void setStdErr(String tmp) {
     this.stdErr = tmp;
@@ -96,9 +98,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the deleteSourceFilesAfterSend attribute of the NCFTPApp object
+   * Sets the deleteSourceFilesAfterSend attribute of the NCFTPApp object
    *
-   *@param  tmp  The new deleteSourceFilesAfterSend value
+   * @param tmp The new deleteSourceFilesAfterSend value
    */
   public void setDeleteSourceFilesAfterSend(boolean tmp) {
     this.deleteSourceFilesAfterSend = tmp;
@@ -106,9 +108,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the makeRemoteDir attribute of the NCFTPApp object
+   * Sets the makeRemoteDir attribute of the NCFTPApp object
    *
-   *@param  tmp  The new makeRemoteDir value
+   * @param tmp The new makeRemoteDir value
    */
   public void setMakeRemoteDir(boolean tmp) {
     this.makeRemoteDir = tmp;
@@ -116,9 +118,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Gets the appExecutable attribute of the NCFTPApp object
+   * Gets the appExecutable attribute of the NCFTPApp object
    *
-   *@return    The appExecutable value
+   * @return The appExecutable value
    */
   public String getAppExecutable() {
     return appExecutable;
@@ -126,9 +128,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Gets the result attribute of the NCFTPApp object
+   * Gets the result attribute of the NCFTPApp object
    *
-   *@return    The result value
+   * @return The result value
    */
   public int getResult() {
     return result;
@@ -136,9 +138,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Gets the files attribute of the NCFTPApp object
+   * Gets the files attribute of the NCFTPApp object
    *
-   *@return    The files value
+   * @return The files value
    */
   public ArrayList getFiles() {
     return files;
@@ -146,9 +148,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Gets the stdOut attribute of the NCFTPApp object
+   * Gets the stdOut attribute of the NCFTPApp object
    *
-   *@return    The stdOut value
+   * @return The stdOut value
    */
   public String getStdOut() {
     return stdOut;
@@ -156,9 +158,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Gets the stdErr attribute of the NCFTPApp object
+   * Gets the stdErr attribute of the NCFTPApp object
    *
-   *@return    The stdErr value
+   * @return The stdErr value
    */
   public String getStdErr() {
     return stdErr;
@@ -166,9 +168,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Gets the deleteSourceFilesAfterSend attribute of the NCFTPApp object
+   * Gets the deleteSourceFilesAfterSend attribute of the NCFTPApp object
    *
-   *@return    The deleteSourceFilesAfterSend value
+   * @return The deleteSourceFilesAfterSend value
    */
   public boolean getDeleteSourceFilesAfterSend() {
     return deleteSourceFilesAfterSend;
@@ -176,9 +178,9 @@ public class NCFTPApp {
 
 
   /**
-   *  Adds a filename to the File attribute of the NCFTPApp object
+   * Adds a filename to the File attribute of the NCFTPApp object
    *
-   *@param  tmp  The feature to be added to the File attribute
+   * @param tmp The feature to be added to the File attribute
    */
   public void addFile(String tmp) {
     files.add(tmp);
@@ -186,11 +188,11 @@ public class NCFTPApp {
 
 
   /**
-   *  Uses the supplied ftp url and uploads files to the host using any
-   *  parameters that have been set
+   * Uses the supplied ftp url and uploads files to the host using any
+   * parameters that have been set
    *
-   *@param  ftpUrl  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param ftpUrl Description of the Parameter
+   * @return Description of the Return Value
    */
   public int put(String ftpUrl) {
     stdOut = null;
@@ -236,8 +238,8 @@ public class NCFTPApp {
       String[] commands = (String[]) command.toArray(new String[0]);
       Process process = Runtime.getRuntime().exec(commands);
       BufferedReader brErr
-           = new BufferedReader(
-          new InputStreamReader(process.getErrorStream()));
+          = new BufferedReader(
+              new InputStreamReader(process.getErrorStream()));
       /*
        *  BufferedReader brOut
        *  = new BufferedReader(
@@ -265,10 +267,10 @@ public class NCFTPApp {
 
 
   /**
-   *  Decodes an ftp url to get the username
+   * Decodes an ftp url to get the username
    *
-   *@param  ftpUrl  Description of the Parameter
-   *@return         The ftpUser value
+   * @param ftpUrl Description of the Parameter
+   * @return The ftpUser value
    */
   private static String getFtpUser(String ftpUrl) {
     String tmp = ftpUrl.substring(
@@ -282,13 +284,14 @@ public class NCFTPApp {
 
 
   /**
-   *  Decodes an ftp url to get the password
+   * Decodes an ftp url to get the password
    *
-   *@param  ftpUrl  Description of the Parameter
-   *@return         The ftpPassword value
+   * @param ftpUrl Description of the Parameter
+   * @return The ftpPassword value
    */
   private static String getFtpPassword(String ftpUrl) {
-    String tmp = ftpUrl.substring(ftpUrl.indexOf("ftp://") + 6, ftpUrl.indexOf("@"));
+    String tmp = ftpUrl.substring(
+        ftpUrl.indexOf("ftp://") + 6, ftpUrl.indexOf("@"));
     if (tmp.indexOf(":") > -1) {
       return tmp.substring(tmp.indexOf(":") + 1);
     } else {
@@ -298,10 +301,10 @@ public class NCFTPApp {
 
 
   /**
-   *  Decodes an ftp url to get the host
+   * Decodes an ftp url to get the host
    *
-   *@param  ftpUrl  Description of the Parameter
-   *@return         The ftpHost value
+   * @param ftpUrl Description of the Parameter
+   * @return The ftpHost value
    */
   private static String getFtpHost(String ftpUrl) {
     String tmp = ftpUrl.substring(ftpUrl.indexOf("@") + 1);
@@ -314,10 +317,10 @@ public class NCFTPApp {
 
 
   /**
-   *  Decodes an ftp url to get the remote dir to begin with
+   * Decodes an ftp url to get the remote dir to begin with
    *
-   *@param  ftpUrl  Description of the Parameter
-   *@return         The ftpRemoteDir value
+   * @param ftpUrl Description of the Parameter
+   * @return The ftpRemoteDir value
    */
   private static String getFtpRemoteDir(String ftpUrl) {
     String tmp = ftpUrl.substring(ftpUrl.lastIndexOf(":") + 1);

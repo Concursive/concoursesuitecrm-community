@@ -48,7 +48,7 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>">
+  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <dhv:permission name="accounts-accounts-tickets-activity-log-edit">
       <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />

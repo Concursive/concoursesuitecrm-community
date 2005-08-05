@@ -15,17 +15,24 @@
  */
 package org.aspcfs.apps.workFlowManager;
 
-import java.util.*;
-import org.aspcfs.utils.*;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.XMLUtils;
+
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  When a BusinessProcess is executed, a ComponentContext is created for that
- *  process only to hold data that can be used between components.
+ * When a BusinessProcess is executed, a ComponentContext is created for that
+ * process only to hold data that can be used between components.
  *
- *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: ComponentContext.java,v 1.5 2003/01/13 21:41:16 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ComponentContext.java,v 1.5 2003/01/13 21:41:16 mrajkowski
+ *          Exp $
+ * @created November 11, 2002
  */
 public class ComponentContext extends HashMap {
   public final static int TEXT_ENCODING = 0;
@@ -41,15 +48,16 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Constructor for the ComponentContext object
+   * Constructor for the ComponentContext object
    */
-  public ComponentContext() { }
+  public ComponentContext() {
+  }
 
 
   /**
-   *  Set the name of the Process that should be executed
+   * Set the name of the Process that should be executed
    *
-   *@param  tmp  The new processName value
+   * @param tmp The new processName value
    */
   public void setProcessName(String tmp) {
     this.processName = tmp;
@@ -57,9 +65,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the process attribute of the ComponentContext object
+   * Sets the process attribute of the ComponentContext object
    *
-   *@param  tmp  The new process value
+   * @param tmp The new process value
    */
   public void setProcess(BusinessProcess tmp) {
     this.process = tmp;
@@ -67,9 +75,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the previousObject attribute of the ComponentContext object
+   * Sets the previousObject attribute of the ComponentContext object
    *
-   *@param  tmp  The new previousObject value
+   * @param tmp The new previousObject value
    */
   public void setPreviousObject(Object tmp) {
     this.previousObject = tmp;
@@ -77,9 +85,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the thisObject attribute of the ComponentContext object
+   * Sets the thisObject attribute of the ComponentContext object
    *
-   *@param  tmp  The new thisObject value
+   * @param tmp The new thisObject value
    */
   public void setThisObject(Object tmp) {
     this.thisObject = tmp;
@@ -87,9 +95,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the objects attribute of the ComponentContext object
+   * Sets the objects attribute of the ComponentContext object
    *
-   *@param  tmp  The new objects value
+   * @param tmp The new objects value
    */
   public void setObjects(AbstractList tmp) {
     this.objects = tmp;
@@ -97,9 +105,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the manager attribute of the ComponentContext object
+   * Sets the manager attribute of the ComponentContext object
    *
-   *@param  tmp  The new manager value
+   * @param tmp The new manager value
    */
   public void setManager(WorkflowManager tmp) {
     this.manager = tmp;
@@ -107,9 +115,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the processName attribute of the ComponentContext object
+   * Gets the processName attribute of the ComponentContext object
    *
-   *@return    The processName value
+   * @return The processName value
    */
   public String getProcessName() {
     return processName;
@@ -117,9 +125,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the process attribute of the ComponentContext object
+   * Gets the process attribute of the ComponentContext object
    *
-   *@return    The process value
+   * @return The process value
    */
   public BusinessProcess getProcess() {
     return process;
@@ -127,9 +135,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the previousObject attribute of the ComponentContext object
+   * Gets the previousObject attribute of the ComponentContext object
    *
-   *@return    The previousObject value
+   * @return The previousObject value
    */
   public Object getPreviousObject() {
     return previousObject;
@@ -137,9 +145,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the thisObject attribute of the ComponentContext object
+   * Gets the thisObject attribute of the ComponentContext object
    *
-   *@return    The thisObject value
+   * @return The thisObject value
    */
   public Object getThisObject() {
     return thisObject;
@@ -147,9 +155,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the objects attribute of the ComponentContext object
+   * Gets the objects attribute of the ComponentContext object
    *
-   *@return    The objects value
+   * @return The objects value
    */
   public AbstractList getObjects() {
     return objects;
@@ -157,10 +165,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the parameter attribute of the ComponentContext object
+   * Sets the parameter attribute of the ComponentContext object
    *
-   *@param  parameterName  The new parameter value
-   *@param  value          The new parameter value
+   * @param parameterName The new parameter value
+   * @param value         The new parameter value
    */
   public void setParameter(String parameterName, String value) {
     if (value != null) {
@@ -170,9 +178,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Returns whether the process was triggered by updating an object
+   * Returns whether the process was triggered by updating an object
    *
-   *@return    The update value
+   * @return The update value
    */
   public boolean isUpdate() {
     return (thisObject != null && previousObject != null);
@@ -180,9 +188,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Returns whether the process was triggered by inserting an object
+   * Returns whether the process was triggered by inserting an object
    *
-   *@return    The insert value
+   * @return The insert value
    */
   public boolean isInsert() {
     return (thisObject != null && previousObject == null);
@@ -190,9 +198,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Returns whether the process was triggered by deleting an object
+   * Returns whether the process was triggered by deleting an object
    *
-   *@return    The delete value
+   * @return The delete value
    */
   public boolean isDelete() {
     return (thisObject == null && previousObject != null);
@@ -200,9 +208,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the className attribute of the ComponentContext object
+   * Gets the className attribute of the ComponentContext object
    *
-   *@return    The className value
+   * @return The className value
    */
   public String getClassName() {
     if (thisObject != null) {
@@ -216,10 +224,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the parameterAsInt attribute of the ComponentContext object
+   * Gets the parameterAsInt attribute of the ComponentContext object
    *
-   *@param  parameterName  Description of the Parameter
-   *@return                The parameterAsInt value
+   * @param parameterName Description of the Parameter
+   * @return The parameterAsInt value
    */
   public int getParameterAsInt(String parameterName) {
     try {
@@ -231,10 +239,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the parameterAsBoolean attribute of the ComponentContext object
+   * Gets the parameterAsBoolean attribute of the ComponentContext object
    *
-   *@param  parameterName  Description of the Parameter
-   *@return                The parameterAsBoolean value
+   * @param parameterName Description of the Parameter
+   * @return The parameterAsBoolean value
    */
   public boolean getParameterAsBoolean(String parameterName) {
     try {
@@ -246,10 +254,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the parameter attribute of the ComponentContext object
+   * Gets the parameter attribute of the ComponentContext object
    *
-   *@param  parameterName  Description of the Parameter
-   *@return                The parameter value
+   * @param parameterName Description of the Parameter
+   * @return The parameter value
    */
   public String getParameter(String parameterName) {
     return getParameter(parameterName, thisObject, previousObject);
@@ -257,12 +265,12 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the parameter attribute of the ComponentContext object
+   * Gets the parameter attribute of the ComponentContext object
    *
-   *@param  parameterName   Description of the Parameter
-   *@param  thisObject      Description of the Parameter
-   *@param  previousObject  Description of the Parameter
-   *@return                 The parameter value
+   * @param parameterName  Description of the Parameter
+   * @param thisObject     Description of the Parameter
+   * @param previousObject Description of the Parameter
+   * @return The parameter value
    */
   public String getParameter(String parameterName, Object thisObject, Object previousObject) {
     String param = (String) this.get(parameterName);
@@ -274,22 +282,26 @@ public class ComponentContext extends HashMap {
         Iterator i = templateVariables.iterator();
         while (i.hasNext()) {
           String variable = (String) i.next();
-          String value = retrieveContextValue(variable, thisObject, previousObject);
+          String value = retrieveContextValue(
+              variable, thisObject, previousObject);
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("ComponentContext-> " + parameterName + ": ${" + variable + "} = " + value);
+            System.out.println(
+                "ComponentContext-> " + parameterName + ": ${" + variable + "} = " + value);
           }
           template.addParseElement("${" + variable + "}", value);
         }
         return template.getParsedText();
       } else {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("ComponentContext-> " + parameterName + ": " + param);
+          System.out.println(
+              "ComponentContext-> " + parameterName + ": " + param);
         }
         return param;
       }
     } else {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ComponentContext-> " + parameterName + ": not found");
+        System.out.println(
+            "ComponentContext-> " + parameterName + ": not found");
       }
       return null;
     }
@@ -297,10 +309,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Sets the attribute attribute of the ComponentContext object
+   * Sets the attribute attribute of the ComponentContext object
    *
-   *@param  parameterName  The new attribute value
-   *@param  value          The new attribute value
+   * @param parameterName The new attribute value
+   * @param value         The new attribute value
    */
   public void setAttribute(String parameterName, Object value) {
     this.put(parameterName, value);
@@ -308,10 +320,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Gets the attribute attribute of the ComponentContext object
+   * Gets the attribute attribute of the ComponentContext object
    *
-   *@param  parameterName  Description of the Parameter
-   *@return                The attribute value
+   * @param parameterName Description of the Parameter
+   * @return The attribute value
    */
   public Object getAttribute(String parameterName) {
     if (this.containsKey(parameterName)) {
@@ -323,10 +335,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  param  Description of the Parameter
-   *@return        Description of the Return Value
+   * @param param Description of the Parameter
+   * @return Description of the Return Value
    */
   public String retrieveContextValue(String param) {
     return retrieveContextValue(param, thisObject, previousObject);
@@ -334,12 +346,12 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  param           Description of the Parameter
-   *@param  thisObject      Description of the Parameter
-   *@param  previousObject  Description of the Parameter
-   *@return                 Description of the Return Value
+   * @param param          Description of the Parameter
+   * @param thisObject     Description of the Parameter
+   * @param previousObject Description of the Parameter
+   * @return Description of the Return Value
    */
   public String retrieveContextValue(String param, Object thisObject, Object previousObject) {
     //Get the parameter
@@ -372,22 +384,24 @@ public class ComponentContext extends HashMap {
         value = ObjectUtils.getParam(previousObject, param.substring(9));
       } else {
         //otherwise, try to return the property of the specified object
-        Object paramObject = this.getAttribute(param.substring(0, param.indexOf(".")));
-        value = ObjectUtils.getParam(paramObject, param.substring(param.indexOf(".") + 1));
+        Object paramObject = this.getAttribute(
+            param.substring(0, param.indexOf(".")));
+        value = ObjectUtils.getParam(
+            paramObject, param.substring(param.indexOf(".") + 1));
       }
     } else {
       value = ObjectUtils.getParam(thisObject, param);
     }
     if (value != null) {
       switch (encoding) {
-          case XML_ENCODING:
-            value = XMLUtils.toXMLValue(value);
-            break;
-          case HTML_ENCODING:
-            value = HTTPUtils.toHtmlValue(value);
-            break;
-          default:
-            break;
+        case XML_ENCODING:
+          value = XMLUtils.toXMLValue(value);
+          break;
+        case HTML_ENCODING:
+          value = HTTPUtils.toHtmlValue(value);
+          break;
+        default:
+          break;
       }
     }
     return value;
@@ -395,10 +409,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  parameterName  Description of the Parameter
-   *@return                Description of the Return Value
+   * @param parameterName Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasParameter(String parameterName) {
     return this.containsKey(parameterName);
@@ -406,9 +420,9 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasObjects() {
     return (objects != null);
@@ -416,10 +430,10 @@ public class ComponentContext extends HashMap {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  component  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param component Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean execute(String component) {
     try {

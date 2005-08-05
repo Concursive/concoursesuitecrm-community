@@ -22,11 +22,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Represents an email address.
+ * Represents an email address.
  *
- *@author     mrajkowski
- *@created    September 6, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created September 6, 2001
  */
 public class EmailAddress {
 
@@ -47,10 +47,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the Id attribute of the EmailAddress object
+   * Sets the Id attribute of the EmailAddress object
    *
-   *@param  tmp  The new Id value
-   *@since       1.4
+   * @param tmp The new Id value
+   * @since 1.4
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -58,10 +58,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the Id attribute of the EmailAddress object
+   * Sets the Id attribute of the EmailAddress object
    *
-   *@param  tmp  The new Id value
-   *@since       1.4
+   * @param tmp The new Id value
+   * @since 1.4
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -69,10 +69,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the OrgId attribute of the EmailAddress object
+   * Sets the OrgId attribute of the EmailAddress object
    *
-   *@param  tmp  The new OrgId value
-   *@since       1.4
+   * @param tmp The new OrgId value
+   * @since 1.4
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -80,9 +80,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the orgId attribute of the EmailAddress object
+   * Sets the orgId attribute of the EmailAddress object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -90,10 +90,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the ContactId attribute of the EmailAddress object
+   * Sets the ContactId attribute of the EmailAddress object
    *
-   *@param  tmp  The new ContactId value
-   *@since       1.4
+   * @param tmp The new ContactId value
+   * @since 1.4
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -101,9 +101,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the contactId attribute of the EmailAddress object
+   * Sets the contactId attribute of the EmailAddress object
    *
-   *@param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -111,10 +111,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the Type attribute of the EmailAddress object
+   * Sets the Type attribute of the EmailAddress object
    *
-   *@param  tmp  The new Type value
-   *@since       1.4
+   * @param tmp The new Type value
+   * @since 1.4
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -122,10 +122,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the Type attribute of the EmailAddress object
+   * Sets the Type attribute of the EmailAddress object
    *
-   *@param  tmp  The new Type value
-   *@since       1.4
+   * @param tmp The new Type value
+   * @since 1.4
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
@@ -133,10 +133,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the TypeName attribute of the EmailAddress object
+   * Sets the TypeName attribute of the EmailAddress object
    *
-   *@param  tmp  The new TypeName value
-   *@since       1.4
+   * @param tmp The new TypeName value
+   * @since 1.4
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -144,10 +144,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the Email attribute of the EmailAddress object
+   * Sets the Email attribute of the EmailAddress object
    *
-   *@param  tmp  The new Email value
-   *@since       1.4
+   * @param tmp The new Email value
+   * @since 1.4
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -155,10 +155,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the EnteredBy attribute of the EmailAddress object
+   * Sets the EnteredBy attribute of the EmailAddress object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.4
+   * @param tmp The new EnteredBy value
+   * @since 1.4
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -166,9 +166,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the enteredBy attribute of the EmailAddress object
+   * Sets the enteredBy attribute of the EmailAddress object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -176,9 +176,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the enabled attribute of the EmailAddress object
+   * Sets the enabled attribute of the EmailAddress object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -186,10 +186,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the EmailAddress object
+   * Sets the ModifiedBy attribute of the EmailAddress object
    *
-   *@param  tmp  The new ModifiedBy value
-   *@since       1.4
+   * @param tmp The new ModifiedBy value
+   * @since 1.4
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -197,9 +197,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the modifiedBy attribute of the EmailAddress object
+   * Sets the modifiedBy attribute of the EmailAddress object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -207,10 +207,10 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the Enabled attribute of the EmailAddress object
+   * Sets the Enabled attribute of the EmailAddress object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.4
+   * @param tmp The new Enabled value
+   * @since 1.4
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -218,9 +218,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the primaryEmail attribute of the EmailAddress object
+   * Sets the primaryEmail attribute of the EmailAddress object
    *
-   *@param  tmp  The new primaryEmail value
+   * @param tmp The new primaryEmail value
    */
   public void setPrimaryEmail(boolean tmp) {
     this.primaryEmail = tmp;
@@ -228,9 +228,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the primaryEmail attribute of the EmailAddress object
+   * Sets the primaryEmail attribute of the EmailAddress object
    *
-   *@param  tmp  The new primaryEmail value
+   * @param tmp The new primaryEmail value
    */
   public void setPrimaryEmail(String tmp) {
     this.primaryEmail = ("primaryEmail".equals(tmp));
@@ -238,10 +238,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the Id attribute of the EmailAddress object
+   * Gets the Id attribute of the EmailAddress object
    *
-   *@return    The Id value
-   *@since     1.4
+   * @return The Id value
+   * @since 1.4
    */
   public int getId() {
     return id;
@@ -249,10 +249,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the OrgId attribute of the EmailAddress object
+   * Gets the OrgId attribute of the EmailAddress object
    *
-   *@return    The OrgId value
-   *@since     1.4
+   * @return The OrgId value
+   * @since 1.4
    */
   public int getOrgId() {
     return orgId;
@@ -260,10 +260,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the ContactId attribute of the EmailAddress object
+   * Gets the ContactId attribute of the EmailAddress object
    *
-   *@return    The ContactId value
-   *@since     1.4
+   * @return The ContactId value
+   * @since 1.4
    */
   public int getContactId() {
     return contactId;
@@ -271,10 +271,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the Type attribute of the EmailAddress object
+   * Gets the Type attribute of the EmailAddress object
    *
-   *@return    The Type value
-   *@since     1.4
+   * @return The Type value
+   * @since 1.4
    */
   public int getType() {
     return type;
@@ -282,10 +282,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the TypeName attribute of the EmailAddress object
+   * Gets the TypeName attribute of the EmailAddress object
    *
-   *@return    The TypeName value
-   *@since     1.4
+   * @return The TypeName value
+   * @since 1.4
    */
   public String getTypeName() {
     return typeName;
@@ -293,9 +293,9 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the entered attribute of the EmailAddress object
+   * Gets the entered attribute of the EmailAddress object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -303,9 +303,9 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the modified attribute of the EmailAddress object
+   * Gets the modified attribute of the EmailAddress object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -313,9 +313,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the entered attribute of the EmailAddress object
+   * Sets the entered attribute of the EmailAddress object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -323,9 +323,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the modified attribute of the EmailAddress object
+   * Sets the modified attribute of the EmailAddress object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -333,9 +333,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the entered attribute of the EmailAddress object
+   * Sets the entered attribute of the EmailAddress object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -343,9 +343,9 @@ public class EmailAddress {
 
 
   /**
-   *  Sets the modified attribute of the EmailAddress object
+   * Sets the modified attribute of the EmailAddress object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -353,10 +353,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the Email attribute of the EmailAddress object
+   * Gets the Email attribute of the EmailAddress object
    *
-   *@return    The Email value
-   *@since     1.4
+   * @return The Email value
+   * @since 1.4
    */
   public String getEmail() {
     return email;
@@ -364,10 +364,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the EnteredBy attribute of the EmailAddress object
+   * Gets the EnteredBy attribute of the EmailAddress object
    *
-   *@return    The EnteredBy value
-   *@since     1.4
+   * @return The EnteredBy value
+   * @since 1.4
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -375,10 +375,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the EmailAddress object
+   * Gets the ModifiedBy attribute of the EmailAddress object
    *
-   *@return    The ModifiedBy value
-   *@since     1.4
+   * @return The ModifiedBy value
+   * @since 1.4
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -386,10 +386,10 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the Enabled attribute of the EmailAddress object
+   * Gets the Enabled attribute of the EmailAddress object
    *
-   *@return    The Enabled value
-   *@since     1.4
+   * @return The Enabled value
+   * @since 1.4
    */
   public boolean getEnabled() {
     return enabled;
@@ -397,9 +397,9 @@ public class EmailAddress {
 
 
   /**
-   *  Gets the primaryEmail attribute of the EmailAddress object
+   * Gets the primaryEmail attribute of the EmailAddress object
    *
-   *@return    The primaryEmail value
+   * @return The primaryEmail value
    */
   public boolean getPrimaryEmail() {
     return primaryEmail;
@@ -407,11 +407,11 @@ public class EmailAddress {
 
 
   /**
-   *  If an email address is filled in, and a type is selected, then the email
-   *  address is valid.
+   * If an email address is filled in, and a type is selected, then the email
+   * address is valid.
    *
-   *@return    The Valid value
-   *@since     1.5
+   * @return The Valid value
+   * @since 1.5
    */
   public boolean isValid() {
     return (type > -1 && email != null && !email.trim().equals(""));
@@ -419,11 +419,11 @@ public class EmailAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.4
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.4
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("emailaddress_id"));
@@ -462,11 +462,11 @@ public class EmailAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request    Description of Parameter
-   *@param  parseItem  Description of Parameter
-   *@since             1.4
+   * @param request   Description of Parameter
+   * @param parseItem Description of Parameter
+   * @since 1.4
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setType(request.getParameter("email" + parseItem + "type"));
@@ -484,9 +484,9 @@ public class EmailAddress {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     return (

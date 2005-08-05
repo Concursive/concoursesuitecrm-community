@@ -15,20 +15,25 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  NOTE: This class is not dependent on tickets anymore and is used for working
- *  on drafts for Category objects.
+ * NOTE: This class is not dependent on tickets anymore and is used for working
+ * on drafts for Category objects.
  *
- *@author     akhi_m
- *@created    May 23, 2003
- *@version    $id: exp$
+ * @author akhi_m
+ * @version $id: exp$
+ * @created May 23, 2003
  */
 public class TicketCategoryDraftList extends ArrayList {
   HtmlSelect catListSelect = new HtmlSelect();
@@ -42,15 +47,16 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Constructor for the TicketCategoryDraftList object
+   * Constructor for the TicketCategoryDraftList object
    */
-  public TicketCategoryDraftList() { }
+  public TicketCategoryDraftList() {
+  }
 
 
   /**
-   *  Sets the PagedListInfo attribute of the TicketCategoryDraftList object
+   * Sets the PagedListInfo attribute of the TicketCategoryDraftList object
    *
-   *@param  tmp  The new PagedListInfo value
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -58,9 +64,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the HtmlJsEvent attribute of the TicketCategoryDraftList object
+   * Sets the HtmlJsEvent attribute of the TicketCategoryDraftList object
    *
-   *@param  htmlJsEvent  The new htmlJsEvent value
+   * @param htmlJsEvent The new htmlJsEvent value
    */
   public void setHtmlJsEvent(String htmlJsEvent) {
     this.htmlJsEvent = htmlJsEvent;
@@ -68,9 +74,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the CatListSelect attribute of the TicketCategoryDraftList object
+   * Sets the CatListSelect attribute of the TicketCategoryDraftList object
    *
-   *@param  catListSelect  The new CatListSelect value
+   * @param catListSelect The new CatListSelect value
    */
   public void setCatListSelect(HtmlSelect catListSelect) {
     this.catListSelect = catListSelect;
@@ -78,9 +84,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategoryDraftList object
+   * Sets the ParentCode attribute of the TicketCategoryDraftList object
    *
-   *@param  tmp  The new ParentCode value
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -88,9 +94,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the ParentCode attribute of the TicketCategoryDraftList object
+   * Sets the ParentCode attribute of the TicketCategoryDraftList object
    *
-   *@param  tmp  The new ParentCode value
+   * @param tmp The new ParentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -98,9 +104,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the CatLevel attribute of the TicketCategoryDraftList object
+   * Sets the CatLevel attribute of the TicketCategoryDraftList object
    *
-   *@param  catLevel  The new CatLevel value
+   * @param catLevel The new CatLevel value
    */
   public void setCatLevel(int catLevel) {
     this.catLevel = catLevel;
@@ -108,9 +114,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the CatLevel attribute of the TicketCategoryDraftList object
+   * Sets the CatLevel attribute of the TicketCategoryDraftList object
    *
-   *@param  catLevel  The new CatLevel value
+   * @param catLevel The new CatLevel value
    */
   public void setCatLevel(String catLevel) {
     this.catLevel = Integer.parseInt(catLevel);
@@ -118,9 +124,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the enabledState attribute of the TicketCategoryDraftList object
+   * Sets the enabledState attribute of the TicketCategoryDraftList object
    *
-   *@param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -128,9 +134,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the buildHierarchy attribute of the TicketCategoryDraftList object
+   * Sets the buildHierarchy attribute of the TicketCategoryDraftList object
    *
-   *@param  buildHierarchy  The new buildHierarchy value
+   * @param buildHierarchy The new buildHierarchy value
    */
   public void setBuildHierarchy(boolean buildHierarchy) {
     this.buildHierarchy = buildHierarchy;
@@ -138,9 +144,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Sets the topLevelOnly attribute of the TicketCategoryDraftList object
+   * Sets the topLevelOnly attribute of the TicketCategoryDraftList object
    *
-   *@param  topLevelOnly  The new topLevelOnly value
+   * @param topLevelOnly The new topLevelOnly value
    */
   public void setTopLevelOnly(boolean topLevelOnly) {
     this.topLevelOnly = topLevelOnly;
@@ -148,9 +154,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the topLevelOnly attribute of the TicketCategoryDraftList object
+   * Gets the topLevelOnly attribute of the TicketCategoryDraftList object
    *
-   *@return    The topLevelOnly value
+   * @return The topLevelOnly value
    */
   public boolean getTopLevelOnly() {
     return topLevelOnly;
@@ -158,9 +164,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the buildHierarchy attribute of the TicketCategoryDraftList object
+   * Gets the buildHierarchy attribute of the TicketCategoryDraftList object
    *
-   *@return    The buildHierarchy value
+   * @return The buildHierarchy value
    */
   public boolean getBuildHierarchy() {
     return buildHierarchy;
@@ -168,9 +174,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the CatListSelect attribute of the TicketCategoryDraftList object
+   * Gets the CatListSelect attribute of the TicketCategoryDraftList object
    *
-   *@return    The CatListSelect value
+   * @return The CatListSelect value
    */
   public HtmlSelect getCatListSelect() {
     return catListSelect;
@@ -178,9 +184,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the HtmlJsEvent attribute of the TicketCategoryDraftList object
+   * Gets the HtmlJsEvent attribute of the TicketCategoryDraftList object
    *
-   *@return    The HtmlJsEvent value
+   * @return The HtmlJsEvent value
    */
   public String getHtmlJsEvent() {
     return htmlJsEvent;
@@ -188,10 +194,10 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the TicketCategoryDraftList object
+   * Gets the HtmlSelect attribute of the TicketCategoryDraftList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelect value
+   * @param selectName Description of Parameter
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -199,9 +205,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the CatLevel attribute of the TicketCategoryDraftList object
+   * Gets the CatLevel attribute of the TicketCategoryDraftList object
    *
-   *@return    The CatLevel value
+   * @return The CatLevel value
    */
   public int getCatLevel() {
     return catLevel;
@@ -209,9 +215,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the PagedListInfo attribute of the TicketCategoryDraftList object
+   * Gets the PagedListInfo attribute of the TicketCategoryDraftList object
    *
-   *@return    The PagedListInfo value
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -219,9 +225,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the ParentCode attribute of the TicketCategoryDraftList object
+   * Gets the ParentCode attribute of the TicketCategoryDraftList object
    *
-   *@return    The ParentCode value
+   * @return The ParentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -229,9 +235,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the enabledState attribute of the TicketCategoryDraftList object
+   * Gets the enabledState attribute of the TicketCategoryDraftList object
    *
-   *@return    The enabledState value
+   * @return The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -239,11 +245,11 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the TicketCategoryDraftList object
+   * Gets the HtmlSelect attribute of the TicketCategoryDraftList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The HtmlSelect value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The HtmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     Iterator i = this.iterator();
@@ -275,11 +281,11 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  tableName         Description of the Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db        Description of Parameter
+   * @param tableName Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db, String tableName) throws SQLException {
     PreparedStatement pst = null;
@@ -299,7 +305,8 @@ public class TicketCategoryDraftList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
+      pst = db.prepareStatement(
+          sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -312,7 +319,8 @@ public class TicketCategoryDraftList extends ArrayList {
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
             "AND tc.id < ? ");
         items = prepareFilter(pst);
@@ -343,20 +351,14 @@ public class TicketCategoryDraftList extends ArrayList {
         "tc.* " +
         "FROM " + tableName + "_draft tc " +
         "WHERE tc.id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
       TicketCategoryDraft thisCat = new TicketCategoryDraft(rs);
       this.add(thisCat);
     }
@@ -366,9 +368,9 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -391,11 +393,11 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -413,12 +415,12 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
-   *  Delete the draft entries.
+   * Delete the draft entries.
    *
-   *@param  db                Description of the Parameter
-   *@param  baseTableName     Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param baseTableName Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean deleteDraft(Connection db, String baseTableName) throws SQLException {
     try {

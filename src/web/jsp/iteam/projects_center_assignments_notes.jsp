@@ -27,7 +27,12 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
   <tr>
     <td>
-      The following notes have been entered for this activity:
+      <dhv:evaluate if="<%= isPopup(request) %>">
+        <dhv:label name="project.notesForThisActivity">The following notes have been entered for this activity:</dhv:label>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= !isPopup(request) %>">
+        <dhv:label name="project.notesForActivity" param="<%="assignmentRole=" + toHtmlValue(assignment.getRole())%>">The following notes have been entered for the assignment "<%=toHtmlValue(assignment.getRole())%>"</dhv:label>
+      </dhv:evaluate>
     </td>
   </tr>
 </table>

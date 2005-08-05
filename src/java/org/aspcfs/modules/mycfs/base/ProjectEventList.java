@@ -15,15 +15,14 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
 import com.zeroio.iteam.base.Assignment;
 import com.zeroio.iteam.base.AssignmentList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Ananth
- *@created    February 16, 2005
+ * @author Ananth
+ * @created February 16, 2005
  */
 public class ProjectEventList {
   AssignmentList pendingAssignments = new AssignmentList();
@@ -31,9 +30,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Gets the pendingAssignments attribute of the ProjectEventList object
+   * Gets the pendingAssignments attribute of the ProjectEventList object
    *
-   *@return    The pendingAssignments value
+   * @return The pendingAssignments value
    */
   public AssignmentList getPendingAssignments() {
     return pendingAssignments;
@@ -41,9 +40,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Sets the pendingAssignments attribute of the ProjectEventList object
+   * Sets the pendingAssignments attribute of the ProjectEventList object
    *
-   *@param  tmp  The new pendingAssignments value
+   * @param tmp The new pendingAssignments value
    */
   public void setPendingAssignments(AssignmentList tmp) {
     this.pendingAssignments = tmp;
@@ -51,9 +50,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Gets the size attribute of the ProjectEventList object
+   * Gets the size attribute of the ProjectEventList object
    *
-   *@return    The size value
+   * @return The size value
    */
   public int getSize() {
     return size;
@@ -61,9 +60,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Sets the size attribute of the ProjectEventList object
+   * Sets the size attribute of the ProjectEventList object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(int tmp) {
     this.size = tmp;
@@ -71,9 +70,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Sets the size attribute of the ProjectEventList object
+   * Sets the size attribute of the ProjectEventList object
    *
-   *@param  tmp  The new size value
+   * @param tmp The new size value
    */
   public void setSize(String tmp) {
     this.size = Integer.parseInt(tmp);
@@ -81,9 +80,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Sets the size attribute of the ProjectEventList object
+   * Sets the size attribute of the ProjectEventList object
    *
-   *@param  size  The new size value
+   * @param size The new size value
    */
   public void setSize(Integer size) {
     this.size = size.intValue();
@@ -91,9 +90,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Gets the sizeString attribute of the ProjectEventList object
+   * Gets the sizeString attribute of the ProjectEventList object
    *
-   *@return    The sizeString value
+   * @return The sizeString value
    */
   public String getSizeString() {
     return String.valueOf(size);
@@ -101,9 +100,9 @@ public class ProjectEventList {
 
 
   /**
-   *  Adds a feature to the Event attribute of the ProjectEventList object
+   * Adds a feature to the Event attribute of the ProjectEventList object
    *
-   *@param  thisAssignment  The feature to be added to the Event attribute
+   * @param thisAssignment The feature to be added to the Event attribute
    */
   public void addEvent(Assignment thisAssignment) {
     if (thisAssignment != null) {

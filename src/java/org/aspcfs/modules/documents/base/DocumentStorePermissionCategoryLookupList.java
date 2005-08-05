@@ -15,20 +15,21 @@
  */
 package org.aspcfs.modules.documents.base;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- *  Represents a list of possible permission categories of a project
+ * Represents a list of possible permission categories of a project
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author Kailash
+ * @version $Id$
+ * @created 2004-12-02
  */
 public class DocumentStorePermissionCategoryLookupList extends ArrayList {
 
@@ -36,16 +37,17 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Constructor for the DocumentStorePermissionCategoryLookupList object
+   * Constructor for the DocumentStorePermissionCategoryLookupList object
    */
-  public DocumentStorePermissionCategoryLookupList() { }
+  public DocumentStorePermissionCategoryLookupList() {
+  }
 
 
   /**
-   *  Sets the includeEnabled attribute of the DocumentStorePermissionCategoryLookupList
-   *  object
+   * Sets the includeEnabled attribute of the DocumentStorePermissionCategoryLookupList
+   * object
    *
-   *@param  tmp  The new includeEnabled value
+   * @param tmp The new includeEnabled value
    */
   public void setIncludeEnabled(int tmp) {
     this.includeEnabled = tmp;
@@ -53,10 +55,10 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -65,12 +67,13 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
         "FROM lookup_document_store_permission_category " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY level, description ");
+    sql.append("ORDER BY \"level\", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      DocumentStorePermissionCategoryLookup thisCategory = new DocumentStorePermissionCategoryLookup(rs);
+      DocumentStorePermissionCategoryLookup thisCategory = new DocumentStorePermissionCategoryLookup(
+          rs);
       this.add(thisCategory);
     }
     rs.close();
@@ -79,9 +82,9 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -94,11 +97,11 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -110,10 +113,10 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();

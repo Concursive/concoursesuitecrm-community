@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <mappings>
+    <map id="contactInformation.details" displayName="Contact Information"><![CDATA[
+Nós temos a seguinte informação de contato em arquivo para você...
+<br />
+<b>Nome:</b> ${name}<br />
+<br />
+<b>Endereço de Email:</b><br />
+${emailAddresses}
+${noEmailAddresses=Nenhum endereço de email no registro.<br />}
+<br />
+<br />
+<b>Endereços de Mensagem de Texto:</b><br />
+${textMessageAddresses}
+${noTextMessageAddresses=Nenhum endereço de mensagem de texto no registro.<br />}
+<br />
+<br />
+<b>Telefones:</b><br />
+${phoneNumbers}
+${noPhoneNumbers=Nenhum número de telefone no registro.<br />}
+<br />
+<br />
+<b>Endereço Postal:</b><br />
+${postalAddresses}
+${noPostalAddresses=Nenhum endereço postal no registro.<br />}
+]]></map>
+    <!-- Project Management User Added -->
+    <map id="projects.userAdded.subject" displayName="Project Management User Added"><![CDATA[Convite de Projeto]]></map>
+    <map id="projects.userAdded.body" displayName="Project Management User Added"><![CDATA[
+<body>
+Olá ${invite.name},<br />
+<br />
+${user.name} configurou o seguinte projeto no Centric CRM e está solicitando que
+você se junte a ele:<br />
+<br />
+Nome do Projeto: ${project.name}<br />
+Descrição do Projeto: ${project.description}<br />
+<br />
+Para aceitar ou recusar o convite, conecte-se e revise seus projetos clicando
+no seguinte link:<br />
+<a href="${link}" target="_blank">${link}</a><br />
+<br />
+Uma vez conectado, acesse o módulo Projetos e veja seus convites.<br />
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+    <!-- Project Management News Email -->
+    <map id="projects.news.email.subject" displayName="Project Management News Email"><![CDATA[${news.subject}]]></map>
+    <map id="projects.news.email.body" displayName="Project Management News Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td>
+      ${news.intro}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ${news.continued=[a mensagem continua...]}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">Veja esta mensagem online</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+  </mappings>
+</templates>

@@ -15,23 +15,23 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.modules.troubletickets.base.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    February 2, 2004
- *@version    $Id: TicketPerDayDescription.java,v 1.1.2.5 2004/02/26 18:54:42
- *      kbhoopal Exp $
+ * @author kbhoopal
+ * @version $Id: TicketPerDayDescription.java,v 1.1.2.5 2004/02/26 18:54:42
+ *          kbhoopal Exp $
+ * @created February 2, 2004
  */
 public class TicketPerDayDescription extends GenericBean {
 
@@ -47,16 +47,17 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Constructor for the TicketPerDayDescription object
+   * Constructor for the TicketPerDayDescription object
    */
-  public TicketPerDayDescription() { }
+  public TicketPerDayDescription() {
+  }
 
 
   /**
-   *  Constructor for the TicketReplacementPart object
+   * Constructor for the TicketReplacementPart object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public TicketPerDayDescription(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -64,9 +65,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketPerDayDescription object
+   * Sets the id attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -74,9 +75,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the TicketPerDayDescription object
+   * Sets the id attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -84,9 +85,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the linkFormId attribute of the TicketPerDayDescription object
+   * Sets the linkFormId attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new linkFormId value
+   * @param tmp The new linkFormId value
    */
   public void setLinkFormId(int tmp) {
     this.linkFormId = tmp;
@@ -94,9 +95,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the linkFormId attribute of the TicketPerDayDescription object
+   * Sets the linkFormId attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new linkFormId value
+   * @param tmp The new linkFormId value
    */
   public void setLinkFormId(String tmp) {
     this.linkFormId = Integer.parseInt(tmp);
@@ -104,9 +105,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the activityDate attribute of the TicketPerDayDescription object
+   * Sets the activityDate attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new activityDate value
+   * @param tmp The new activityDate value
    */
   public void setActivityDate(java.sql.Timestamp tmp) {
     this.activityDate = tmp;
@@ -114,9 +115,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the activityDate attribute of the TicketPerDayDescription object
+   * Sets the activityDate attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new activityDate value
+   * @param tmp The new activityDate value
    */
   public void setActivityDate(String tmp) {
     activityDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -124,10 +125,10 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the descriptionOfService attribute of the TicketPerDayDescription
-   *  object
+   * Sets the descriptionOfService attribute of the TicketPerDayDescription
+   * object
    *
-   *@param  tmp  The new descriptionOfService value
+   * @param tmp The new descriptionOfService value
    */
   public void setDescriptionOfService(String tmp) {
     this.descriptionOfService = tmp;
@@ -135,9 +136,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the travelHours attribute of the TicketPerDayDescription object
+   * Sets the travelHours attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new travelHours value
+   * @param tmp The new travelHours value
    */
   public void setTravelHours(int tmp) {
     this.travelHours = tmp;
@@ -145,9 +146,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the travelHours attribute of the TicketPerDayDescription object
+   * Sets the travelHours attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new travelHours value
+   * @param tmp The new travelHours value
    */
   public void setTravelHours(String tmp) {
     this.travelHours = Integer.parseInt(tmp);
@@ -155,9 +156,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the travelMinutes attribute of the TicketPerDayDescription object
+   * Sets the travelMinutes attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new travelMinutes value
+   * @param tmp The new travelMinutes value
    */
   public void setTravelMinutes(int tmp) {
     this.travelMinutes = tmp;
@@ -165,9 +166,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the travelMinutes attribute of the TicketPerDayDescription object
+   * Sets the travelMinutes attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new travelMinutes value
+   * @param tmp The new travelMinutes value
    */
   public void setTravelMinutes(String tmp) {
     this.travelMinutes = Integer.parseInt(tmp);
@@ -175,9 +176,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the laborHours attribute of the TicketPerDayDescription object
+   * Sets the laborHours attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new laborHours value
+   * @param tmp The new laborHours value
    */
   public void setLaborHours(int tmp) {
     this.laborHours = tmp;
@@ -185,9 +186,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the laborHours attribute of the TicketPerDayDescription object
+   * Sets the laborHours attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new laborHours value
+   * @param tmp The new laborHours value
    */
   public void setLaborHours(String tmp) {
     this.laborHours = Integer.parseInt(tmp);
@@ -195,9 +196,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the laborMinutes attribute of the TicketPerDayDescription object
+   * Sets the laborMinutes attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new laborMinutes value
+   * @param tmp The new laborMinutes value
    */
   public void setLaborMinutes(int tmp) {
     this.laborMinutes = tmp;
@@ -205,9 +206,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the laborMinutes attribute of the TicketPerDayDescription object
+   * Sets the laborMinutes attribute of the TicketPerDayDescription object
    *
-   *@param  tmp  The new laborMinutes value
+   * @param tmp The new laborMinutes value
    */
   public void setLaborMinutes(String tmp) {
     this.laborMinutes = Integer.parseInt(tmp);
@@ -215,10 +216,10 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Sets the activityDateTimeZone attribute of the TicketPerDayDescription
-   *  object
+   * Sets the activityDateTimeZone attribute of the TicketPerDayDescription
+   * object
    *
-   *@param  tmp  The new activityDateTimeZone value
+   * @param tmp The new activityDateTimeZone value
    */
   public void setActivityDateTimeZone(String tmp) {
     this.activityDateTimeZone = tmp;
@@ -226,10 +227,10 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the activityDateTimeZone attribute of the TicketPerDayDescription
-   *  object
+   * Gets the activityDateTimeZone attribute of the TicketPerDayDescription
+   * object
    *
-   *@return    The activityDateTimeZone value
+   * @return The activityDateTimeZone value
    */
   public String getActivityDateTimeZone() {
     return activityDateTimeZone;
@@ -237,9 +238,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the TicketPerDayDescription object
+   * Gets the id attribute of the TicketPerDayDescription object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -247,9 +248,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the activityDate attribute of the TicketPerDayDescription object
+   * Gets the activityDate attribute of the TicketPerDayDescription object
    *
-   *@return    The activityDate value
+   * @return The activityDate value
    */
   public java.sql.Timestamp getActivityDate() {
     return activityDate;
@@ -257,10 +258,10 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the descriptionOfService attribute of the TicketPerDayDescription
-   *  object
+   * Gets the descriptionOfService attribute of the TicketPerDayDescription
+   * object
    *
-   *@return    The descriptionOfService value
+   * @return The descriptionOfService value
    */
   public String getDescriptionOfService() {
     return descriptionOfService;
@@ -268,9 +269,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the linkFormId attribute of the TicketPerDayDescription object
+   * Gets the linkFormId attribute of the TicketPerDayDescription object
    *
-   *@return    The linkFormId value
+   * @return The linkFormId value
    */
   public int getLinkFormId() {
     return linkFormId;
@@ -278,9 +279,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the travelHours attribute of the TicketPerDayDescription object
+   * Gets the travelHours attribute of the TicketPerDayDescription object
    *
-   *@return    The travelHours value
+   * @return The travelHours value
    */
   public int getTravelHours() {
     return travelHours;
@@ -288,9 +289,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the travelMinutes attribute of the TicketPerDayDescription object
+   * Gets the travelMinutes attribute of the TicketPerDayDescription object
    *
-   *@return    The travelMinutes value
+   * @return The travelMinutes value
    */
   public int getTravelMinutes() {
     return travelMinutes;
@@ -298,9 +299,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the laborHours attribute of the TicketPerDayDescription object
+   * Gets the laborHours attribute of the TicketPerDayDescription object
    *
-   *@return    The laborHours value
+   * @return The laborHours value
    */
   public int getLaborHours() {
     return laborHours;
@@ -308,9 +309,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the laborMinutes attribute of the TicketPerDayDescription object
+   * Gets the laborMinutes attribute of the TicketPerDayDescription object
    *
-   *@return    The laborMinutes value
+   * @return The laborMinutes value
    */
   public int getLaborMinutes() {
     return laborMinutes;
@@ -318,9 +319,9 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive
+   * Gets the properties that are TimeZone sensitive
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -330,17 +331,16 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  inserts the work item for the data into the database
+   * inserts the work item for the data into the database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-
-    pst = db.prepareStatement(
+    id = DatabaseUtils.getNextSeq(db, "ticket_activity_item_item_id_seq");
+    PreparedStatement pst = db.prepareStatement(
         "INSERT INTO  ticket_activity_item " +
-        "(link_form_id, " +
+        "(" + (id > -1 ? "item_id, " : "") + "link_form_id, " +
         "activity_date, " +
         "activity_date_timezone, " +
         "description, " +
@@ -348,9 +348,11 @@ public class TicketPerDayDescription extends GenericBean {
         "travel_minutes, " +
         "labor_hours, " +
         "labor_minutes) " +
-        "VALUES (?,?,?,?,?,?,?,?)");
-
+        "VALUES (" + (id > -1 ? "?, " : "") + "?,?,?,?,?,?,?,?)");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, linkFormId);
     pst.setTimestamp(++i, activityDate);
     pst.setString(++i, this.activityDateTimeZone);
@@ -359,18 +361,17 @@ public class TicketPerDayDescription extends GenericBean {
     pst.setInt(++i, travelMinutes);
     pst.setInt(++i, laborHours);
     pst.setInt(++i, laborMinutes);
-
     pst.execute();
     pst.close();
-
+    id = DatabaseUtils.getCurrVal(db, "ticket_activity_item_item_id_seq", id);
   }
 
 
   /**
-   *  Deletes the work item for the day from the database
+   * Deletes the work item for the day from the database
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -385,29 +386,32 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request                       Description of the Parameter
-   *@param  parseItem                     Description of the Parameter
-   *@exception  java.text.ParseException  Description of the Exception
+   * @param request   Description of the Parameter
+   * @param parseItem Description of the Parameter
+   * @throws java.text.ParseException Description of the Exception
    */
   public void buildRecord(HttpServletRequest request, int parseItem) throws java.text.ParseException {
     //this.setActivityDate(request.getParameter("activityDate" + parseItem));
-    this.setDescriptionOfService(request.getParameter("descriptionOfService" + parseItem));
+    this.setDescriptionOfService(
+        request.getParameter("descriptionOfService" + parseItem));
     this.setTravelHours(request.getParameter("travelHours" + parseItem));
     this.setTravelMinutes(request.getParameter("travelMinutes" + parseItem));
     this.setLaborHours(request.getParameter("laborHours" + parseItem));
     this.setLaborMinutes(request.getParameter("laborMinutes" + parseItem));
-    this.setActivityDateTimeZone(request.getParameter("activityDate" + parseItem + "TimeZone"));
-    sanitizeDate(request, request.getParameter("activityDate" + parseItem), "ActivityDate");
+    this.setActivityDateTimeZone(
+        request.getParameter("activityDate" + parseItem + "TimeZone"));
+    sanitizeDate(
+        request, request.getParameter("activityDate" + parseItem), "ActivityDate");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("item_id");

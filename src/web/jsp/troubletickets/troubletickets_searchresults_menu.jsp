@@ -21,23 +21,34 @@
   var thisTicketId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, ticId) {
+  function displayMenu(loc, id, ticId, trashed) {
     thisTicketId = ticId;
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTicket", "down", 0, 0, 170, getHeight("menuTicketTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
+  function updateMenu(trashed){
+    if (trashed == 'true'){
+      hideSpan('menuModify');
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuModify');
+      showSpan('menuDelete');
+    }
+  }
+
   //Menu link functions
   function details() {
       window.location.href = 'TroubleTickets.do?command=Details&id=' + thisTicketId + '&return=searchResults';
   }
-  
+
   function modify() {
       window.location.href = 'TroubleTickets.do?command=Modify&id=' + thisTicketId + '&return=searchResults';
   }
-  
+
   function deleteTicket() {
       popURL('TroubleTickets.do?command=ConfirmDelete&id=' + thisTicketId + '&popup=true&return=searchResults','Delete_ticket','320','200','yes','no');
   }
@@ -56,7 +67,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="tickets-tickets-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -66,7 +77,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="tickets-tickets-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTicket()">
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTicket()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

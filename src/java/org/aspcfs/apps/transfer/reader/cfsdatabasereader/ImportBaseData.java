@@ -15,28 +15,26 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import java.sql.*;
-import org.aspcfs.apps.transfer.*;
-import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.admin.base.AccessLogList;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.accounts.base.OrganizationList;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportLookupTables;
-import com.zeroio.iteam.base.*;
-import java.util.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
- *  Processes Users, Accounts, and Contacts based on the user hierarchy that
- *  created each item.
+ * Processes Users, Accounts, and Contacts based on the user hierarchy that
+ * created each item.
  *
- *@author     matt rajkowski
- *@created    September 4, 2002
- *@version    $Id: ImportBaseData.java,v 1.33 2002/10/24 16:44:46 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: ImportBaseData.java,v 1.33 2002/10/24 16:44:46 mrajkowski Exp
+ *          $
+ * @created September 4, 2002
  */
 public class ImportBaseData implements CFSDatabaseReaderImportModule {
 
@@ -45,13 +43,13 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  writer            Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  mappings          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer;
@@ -101,7 +99,8 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
 
     writer.setAutoCommit(true);
     logger.info("ImportBaseData-> Inserting Account Type Levels");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "accountTypeLevels");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "accountTypeLevels");
     if (!processOK) {
       return false;
     }
@@ -191,11 +190,11 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userList          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param userList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void saveUserList(Connection db, UserList userList) throws SQLException {
     Iterator users = userList.iterator();
@@ -219,11 +218,11 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  contactList       Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db          Description of the Parameter
+   * @param contactList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void saveContactList(Connection db, ContactList contactList) throws SQLException {
     Iterator contacts = contactList.iterator();
@@ -239,12 +238,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       emailList.setContactId(thisContact.getId());
       emailList.buildList(db);
 
-      logger.info("ImportBaseData-> Inserting " + emailList.size() + " Contact emails");
+      logger.info(
+          "ImportBaseData-> Inserting " + emailList.size() + " Contact emails");
 
       Iterator emails = emailList.iterator();
       while (emails.hasNext()) {
         ContactEmailAddress thisAddress = (ContactEmailAddress) emails.next();
-        DataRecord anotherRecord = mappings.createDataRecord(thisAddress, "insert");
+        DataRecord anotherRecord = mappings.createDataRecord(
+            thisAddress, "insert");
         writer.save(anotherRecord);
         writer.commit();
       }
@@ -253,12 +254,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       addressList.setContactId(thisContact.getId());
       addressList.buildList(db);
 
-      logger.info("ImportBaseData-> Inserting " + addressList.size() + " Contact addresses");
+      logger.info(
+          "ImportBaseData-> Inserting " + addressList.size() + " Contact addresses");
 
       Iterator addresses = addressList.iterator();
       while (addresses.hasNext()) {
         ContactAddress streetAddress = (ContactAddress) addresses.next();
-        DataRecord addressRecord = mappings.createDataRecord(streetAddress, "insert");
+        DataRecord addressRecord = mappings.createDataRecord(
+            streetAddress, "insert");
         writer.save(addressRecord);
         writer.commit();
       }
@@ -267,7 +270,8 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       phoneList.setContactId(thisContact.getId());
       phoneList.buildList(db);
 
-      logger.info("ImportBaseData-> Inserting " + phoneList.size() + " Contact phone numbers");
+      logger.info(
+          "ImportBaseData-> Inserting " + phoneList.size() + " Contact phone numbers");
 
       Iterator phones = phoneList.iterator();
       while (phones.hasNext()) {
@@ -282,11 +286,11 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  orgList           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param orgList Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void saveOrgList(Connection db, OrganizationList orgList) throws SQLException {
     Iterator orgs = orgList.iterator();
@@ -301,12 +305,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       emailList.setOrgId(thisOrg.getId());
       emailList.buildList(db);
 
-      logger.info("ImportBaseData-> Inserting " + emailList.size() + " Organization emails");
+      logger.info(
+          "ImportBaseData-> Inserting " + emailList.size() + " Organization emails");
 
       Iterator emails = emailList.iterator();
       while (emails.hasNext()) {
         OrganizationEmailAddress thisAddress = (OrganizationEmailAddress) emails.next();
-        DataRecord anotherRecord = mappings.createDataRecord(thisAddress, "insert");
+        DataRecord anotherRecord = mappings.createDataRecord(
+            thisAddress, "insert");
         writer.save(anotherRecord);
         writer.commit();
       }
@@ -315,12 +321,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       addressList.setOrgId(thisOrg.getId());
       addressList.buildList(db);
 
-      logger.info("ImportBaseData-> Inserting " + addressList.size() + " Organization addresses");
+      logger.info(
+          "ImportBaseData-> Inserting " + addressList.size() + " Organization addresses");
 
       Iterator addresses = addressList.iterator();
       while (addresses.hasNext()) {
         OrganizationAddress streetAddress = (OrganizationAddress) addresses.next();
-        DataRecord addressRecord = mappings.createDataRecord(streetAddress, "insert");
+        DataRecord addressRecord = mappings.createDataRecord(
+            streetAddress, "insert");
         writer.save(addressRecord);
         writer.commit();
       }
@@ -329,12 +337,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       phoneList.setOrgId(thisOrg.getId());
       phoneList.buildList(db);
 
-      logger.info("ImportBaseData-> Inserting " + phoneList.size() + " Organization phone numbers");
+      logger.info(
+          "ImportBaseData-> Inserting " + phoneList.size() + " Organization phone numbers");
 
       Iterator phones = phoneList.iterator();
       while (phones.hasNext()) {
         OrganizationPhoneNumber thisPhone = (OrganizationPhoneNumber) phones.next();
-        DataRecord anotherRecord = mappings.createDataRecord(thisPhone, "insert");
+        DataRecord anotherRecord = mappings.createDataRecord(
+            thisPhone, "insert");
         writer.save(anotherRecord);
         writer.commit();
       }

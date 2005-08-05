@@ -29,11 +29,11 @@ import java.text.DateFormat;
 import java.util.Iterator;
 
 /**
- *  Represents a Role (User Group)
+ * Represents a Role (User Group)
  *
- *@author     matt rajkowski
- *@created    September 19, 2001
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 19, 2001
  */
 public class Role extends GenericBean {
   //Role Properties
@@ -56,16 +56,17 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Constructor for the Role object
+   * Constructor for the Role object
    */
-  public Role() { }
+  public Role() {
+  }
 
 
   /**
-   *  Constructor for the Role object
+   * Constructor for the Role object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Role(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -73,16 +74,16 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Constructor for the Role object
+   * Constructor for the Role object
    *
-   *@param  db                Description of Parameter
-   *@param  roleId            Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db     Description of Parameter
+   * @param roleId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public Role(Connection db, int roleId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM role " +
+        "FROM \"role\" " +
         "WHERE role_id = ? ");
     pst.setInt(1, roleId);
     ResultSet rs = pst.executeQuery();
@@ -99,9 +100,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Entered attribute of the Role object
+   * Sets the Entered attribute of the Role object
    *
-   *@param  tmp  The new Entered value
+   * @param tmp The new Entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -109,9 +110,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Entered attribute of the Role object
+   * Sets the Entered attribute of the Role object
    *
-   *@param  tmp  The new Entered value
+   * @param tmp The new Entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -119,9 +120,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Modified attribute of the Role object
+   * Sets the Modified attribute of the Role object
    *
-   *@param  tmp  The new Modified value
+   * @param tmp The new Modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -129,9 +130,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Modified attribute of the Role object
+   * Sets the Modified attribute of the Role object
    *
-   *@param  tmp  The new Modified value
+   * @param tmp The new Modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -139,9 +140,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Role object
+   * Sets the Id attribute of the Role object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -149,9 +150,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Role object
+   * Sets the Id attribute of the Role object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -159,9 +160,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Role attribute of the Role object
+   * Sets the Role attribute of the Role object
    *
-   *@param  tmp  The new Role value
+   * @param tmp The new Role value
    */
   public void setRole(String tmp) {
     this.role = tmp;
@@ -169,9 +170,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Description attribute of the Role object
+   * Sets the Description attribute of the Role object
    *
-   *@param  tmp  The new Description value
+   * @param tmp The new Description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -179,9 +180,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the roleType attribute of the Role object
+   * Sets the roleType attribute of the Role object
    *
-   *@param  tmp  The new roleType value
+   * @param tmp The new roleType value
    */
   public void setRoleType(int tmp) {
     this.roleType = tmp;
@@ -189,9 +190,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the roleType attribute of the Role object
+   * Sets the roleType attribute of the Role object
    *
-   *@param  tmp  The new roleType value
+   * @param tmp The new roleType value
    */
   public void setRoleType(String tmp) {
     this.roleType = Integer.parseInt(tmp);
@@ -199,9 +200,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Role object
+   * Sets the EnteredBy attribute of the Role object
    *
-   *@param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -209,10 +210,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Role object
+   * Sets the EnteredBy attribute of the Role object
    *
-   *@param  tmp  The new EnteredBy value
-   *@since
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -220,9 +220,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Role object
+   * Sets the ModifiedBy attribute of the Role object
    *
-   *@param  tmp  The new ModifiedBy value
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -230,9 +230,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Role object
+   * Sets the ModifiedBy attribute of the Role object
    *
-   *@param  tmp  The new ModifiedBy value
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -240,9 +240,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Role object
+   * Sets the Enabled attribute of the Role object
    *
-   *@param  tmp  The new Enabled value
+   * @param tmp The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -250,9 +250,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Role object
+   * Sets the Enabled attribute of the Role object
    *
-   *@param  tmp  The new Enabled value
+   * @param tmp The new Enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -260,9 +260,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the RequestItems attribute of the Role object
+   * Sets the RequestItems attribute of the Role object
    *
-   *@param  request  The new RequestItems value
+   * @param request The new RequestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
     permissionList = new RolePermissionList(request);
@@ -270,9 +270,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the userCount attribute of the Role object
+   * Sets the userCount attribute of the Role object
    *
-   *@param  tmp  The new userCount value
+   * @param tmp The new userCount value
    */
   public void setUserCount(int tmp) {
     this.userCount = tmp;
@@ -280,9 +280,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Sets the userCount attribute of the Role object
+   * Sets the userCount attribute of the Role object
    *
-   *@param  tmp  The new userCount value
+   * @param tmp The new userCount value
    */
   public void setUserCount(String tmp) {
     this.userCount = Integer.parseInt(tmp);
@@ -290,9 +290,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Entered attribute of the Role object
+   * Gets the Entered attribute of the Role object
    *
-   *@return    The Entered value
+   * @return The Entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -300,9 +300,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Modified attribute of the Role object
+   * Gets the Modified attribute of the Role object
    *
-   *@return    The Modified value
+   * @return The Modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -310,14 +310,15 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedString attribute of the Role object
+   * Gets the ModifiedString attribute of the Role object
    *
-   *@return    The ModifiedString value
+   * @return The ModifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          modified);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -325,14 +326,15 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the EnteredString attribute of the Role object
+   * Gets the EnteredString attribute of the Role object
    *
-   *@return    The EnteredString value
+   * @return The EnteredString value
    */
   public String getEnteredString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(
+          entered);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -340,9 +342,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Role object
+   * Gets the Id attribute of the Role object
    *
-   *@return    The Id value
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -350,9 +352,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Role attribute of the Role object
+   * Gets the Role attribute of the Role object
    *
-   *@return    The Role value
+   * @return The Role value
    */
   public String getRole() {
     return role;
@@ -360,9 +362,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Description attribute of the Role object
+   * Gets the Description attribute of the Role object
    *
-   *@return    The Description value
+   * @return The Description value
    */
   public String getDescription() {
     return description;
@@ -370,9 +372,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the roleType attribute of the Role object
+   * Gets the roleType attribute of the Role object
    *
-   *@return    The roleType value
+   * @return The roleType value
    */
   public int getRoleType() {
     return roleType;
@@ -380,9 +382,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Role object
+   * Gets the EnteredBy attribute of the Role object
    *
-   *@return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -390,9 +392,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Role object
+   * Gets the ModifiedBy attribute of the Role object
    *
-   *@return    The ModifiedBy value
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -400,9 +402,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the Role object
+   * Gets the Enabled attribute of the Role object
    *
-   *@return    The Enabled value
+   * @return The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -410,9 +412,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the PermissionList attribute of the Role object
+   * Gets the PermissionList attribute of the Role object
    *
-   *@return    The PermissionList value
+   * @return The PermissionList value
    */
   public RolePermissionList getPermissionList() {
     return permissionList;
@@ -420,9 +422,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the UserList attribute of the Role object
+   * Gets the UserList attribute of the Role object
    *
-   *@return    The UserList value
+   * @return The UserList value
    */
   public UserList getUserList() {
     return userList;
@@ -430,9 +432,9 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the userCount attribute of the Role object
+   * Gets the userCount attribute of the Role object
    *
-   *@return    The userCount value
+   * @return The userCount value
    */
   public int getUserCount() {
     return userCount;
@@ -440,11 +442,11 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -456,15 +458,15 @@ public class Role extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "UPDATE role " +
-          "SET role = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
+          "UPDATE \"role\" " +
+          "SET \"role\" = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
           "modifiedby = ? " +
           "WHERE modified = ? AND role_id = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setString(++i, this.getRole());
       pst.setString(++i, this.getDescription());
-      DatabaseUtils.setInt(pst,++i, getRoleType());
+      DatabaseUtils.setInt(pst, ++i, getRoleType());
       pst.setInt(++i, this.getModifiedBy());
       pst.setTimestamp(++i, this.getModified());
       pst.setInt(++i, id);
@@ -485,11 +487,11 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -520,25 +522,33 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     try {
+      id = DatabaseUtils.getNextSeq(db, "role_role_id_seq");
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO role (role, description, role_type, ");
+      sql.append("INSERT INTO \"role\" (\"role\", description, role_type, ");
       if (entered != null) {
         sql.append("entered, ");
+      }
+      if (id > -1) {
+        sql.append("role_id, ");
       }
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("enteredby, modifiedby, enabled ) " +
+      sql.append(
+          "enteredby, modifiedby, enabled ) " +
           "VALUES (?, ?, ?, ");
+      if (id > -1) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -550,9 +560,12 @@ public class Role extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getRole());
       pst.setString(++i, getDescription());
-      DatabaseUtils.setInt(pst,++i, getRoleType());
+      DatabaseUtils.setInt(pst, ++i, getRoleType());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
+      }
+      if (id > -1) {
+        pst.setInt(++i, id);
       }
       if (modified != null) {
         pst.setTimestamp(++i, modified);
@@ -562,7 +575,7 @@ public class Role extends GenericBean {
       pst.setBoolean(++i, enabled);
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "role_role_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "role_role_id_seq", id);
       insertPermissions(db);
       db.commit();
     } catch (SQLException e) {
@@ -576,12 +589,11 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -596,14 +608,14 @@ public class Role extends GenericBean {
       db.setAutoCommit(false);
       if (buildUserCount(db, false)) {
         pst = db.prepareStatement(
-            "UPDATE role " +
+            "UPDATE \"role\" " +
             "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
             "WHERE role_id = " + id + " ");
         recordCount = pst.executeUpdate();
       } else {
         deletePermissions(db);
         pst = db.prepareStatement(
-            "DELETE FROM role " +
+            "DELETE FROM \"role\" " +
             "WHERE role_id = " + id + " ");
         recordCount = pst.executeUpdate();
       }
@@ -624,29 +636,33 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Permission attribute of the Role object
+   * Adds a feature to the Permission attribute of the Role object
    *
-   *@param  db                The feature to be added to the Permission
-   *      attribute
-   *@param  permissionId      The feature to be added to the Permission
-   *      attribute
-   *@param  add               The feature to be added to the Permission
-   *      attribute
-   *@param  view              The feature to be added to the Permission
-   *      attribute
-   *@param  edit              The feature to be added to the Permission
-   *      attribute
-   *@param  delete            The feature to be added to the Permission
-   *      attribute
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db           The feature to be added to the Permission
+   *                     attribute
+   * @param permissionId The feature to be added to the Permission
+   *                     attribute
+   * @param add          The feature to be added to the Permission
+   *                     attribute
+   * @param view         The feature to be added to the Permission
+   *                     attribute
+   * @param edit         The feature to be added to the Permission
+   *                     attribute
+   * @param delete       The feature to be added to the Permission
+   *                     attribute
+   * @throws SQLException Description of Exception
    */
   public void addPermission(Connection db, int permissionId, boolean add, boolean view, boolean edit, boolean delete) throws SQLException {
     int i = 0;
+    int rolePermissionId = DatabaseUtils.getNextSeq(
+        db, "role_permission_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO role_permission " +
-        "(role_id, permission_id, role_add, role_view, role_edit, role_delete) " +
-        "VALUES (?, ?, ?, ?, ?, ? ) ");
+        "(" + (rolePermissionId > -1 ? "id, " : "") + "role_id, permission_id, role_add, role_view, role_edit, role_delete) " +
+        "VALUES (" + (rolePermissionId > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
+    if (rolePermissionId > -1) {
+      pst.setInt(++i, rolePermissionId);
+    }
     pst.setInt(++i, getId());
     pst.setInt(++i, permissionId);
     pst.setBoolean(++i, add);
@@ -659,11 +675,10 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //role table
@@ -680,11 +695,10 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildResources(Connection db) throws SQLException {
     permissionList = new RolePermissionList(db, id);
@@ -693,11 +707,10 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildUserList(Connection db) throws SQLException {
     userList.setRoleId(id);
@@ -707,12 +720,11 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Gets the Duplicate attribute of the Role object
+   * Gets the Duplicate attribute of the Role object
    *
-   *@param  db                Description of Parameter
-   *@return                   The Duplicate value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @return The Duplicate value
+   * @throws SQLException Description of Exception
    */
   public boolean isDuplicate(Connection db) throws SQLException {
     boolean duplicate = false;
@@ -720,8 +732,9 @@ public class Role extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM role " +
-        "WHERE lower(role) = lower(?)  " +
+        "FROM \"role\" " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(\"role\") = " + DatabaseUtils.toLowerCase(
+            db) + "(?)  " +
         "AND enabled = ? ");
     if (id > -1) {
       sql.append("AND role_id <> ? ");
@@ -749,13 +762,12 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  activeUsersOnly   Description of the Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db              Description of Parameter
+   * @param activeUsersOnly Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean buildUserCount(Connection db, boolean activeUsersOnly) throws SQLException {
     int resultCount = -1;
@@ -786,11 +798,10 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   private void deletePermissions(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -803,18 +814,19 @@ public class Role extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   private void insertPermissions(Connection db) throws SQLException {
     Iterator ipermission = permissionList.keySet().iterator();
     while (ipermission.hasNext()) {
-      Permission thisPermission = (Permission) permissionList.get((String) ipermission.next());
+      Permission thisPermission = (Permission) permissionList.get(
+          (String) ipermission.next());
       if (thisPermission.getEnabled()) {
-        addPermission(db,
+        addPermission(
+            db,
             thisPermission.getId(),
             thisPermission.getAdd(),
             thisPermission.getView(),

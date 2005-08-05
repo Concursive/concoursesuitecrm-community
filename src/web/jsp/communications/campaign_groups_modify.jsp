@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.LookupElement" %>
@@ -32,7 +32,51 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
+function checkValue() {
+  if (document.getElementById("searchValue").value.indexOf("[") != -1 ||
+      document.getElementById("searchValue").value.indexOf("]") != -1 ||
+      document.getElementById("searchValue").value.indexOf("^") != -1 ||
+      document.getElementById("searchValue").value.indexOf("|") != -1 ||
+      document.getElementById("searchValue").value.indexOf("*") != -1) {
+    alert(label("check.avoided.text","Please enter a valid input. Avoid the characters *[^|]"));
+    return false;
+  }
+  if (document.searchForm.fieldSelect.selectedIndex == 4) {
+    if (checkNullString(document.getElementById("searchValue").value)) {
+      alert(label("check.valid.input","Please enter a valid input"));
+      return false;
+    }
+  } else if (document.searchForm.fieldSelect.selectedIndex == 5) {
+    if (checkNullString(document.getElementById("searchValue").value)) {
+      alert(label("check.number.invalid","- Please enter a valid Number\r\n"));
+      return false;
+    } else {
+      if (!checkNaturalNumber(document.getElementById("searchValue").value)) {
+        alert(label("check.number.invalid","- Please enter a valid Number\r\n"));
+        return false;
+      }
+    }
+  } else if (document.searchForm.fieldSelect.selectedIndex == 3) {
+    if (checkNullString(document.getElementById("searchValue").value)) {
+        alert(label("check.valid.date","Please enter a valid date"));
+      return false;
+    } else {
+      if (!checkDate(document.getElementById("searchValue").value)) {
+        alert(label("check.valid.date","Please enter a valid date"));
+        return false;
+      }
+    }
+  } else if (!(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 8) && 
+      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11))  {
+    if (checkNullString(document.getElementById("searchValue").value)) {
+      alert(label("check.valid.input","Please enter a valid input"));
+      return false;
+    }
+  }
+  return true;
+}
 <!-- 
 //updateOperators has to be defined in each file because it uses bean
 //information to populate selects
@@ -305,7 +349,7 @@ listOfOperators[2] = numberOperators
             <span name="searchText1" ID="searchText1"><dhv:label name="contact.searchText">Search Text</dhv:label></span>
           </td>
           <td width="100%" valign="center">
-            <span name="searchText2" ID="searchText2"><input type="text" name="searchValue" value="" size="25"  maxlength="125"></span> 
+            <span name="searchText2" ID="searchText2"><input type="text" name="searchValue" id="searchValue" value="" size="25"  maxlength="125"></span> 
           </td>
         </tr>
         <tr>
@@ -337,7 +381,7 @@ listOfOperators[2] = numberOperators
         <tr>
           <td style="text-align: center;" colspan="2" nowrap>
             <br>
-            <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:addValues()">
+            <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:if (checkValue()) {addValues();}">
           </td>
         </tr>
       </table>

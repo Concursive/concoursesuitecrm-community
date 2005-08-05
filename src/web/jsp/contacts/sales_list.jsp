@@ -24,7 +24,6 @@
 <%@ page import="org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="SalesListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session" />
 <jsp:useBean id="contacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request" />
-<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request" />
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request" />
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />

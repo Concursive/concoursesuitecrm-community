@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents a ContactType -- every contact has a type. <br>
- *  0 is an Employee <br>
- *  1 is Not Specified
+ * Represents a ContactType -- every contact has a type. <br>
+ * 0 is an Employee <br>
+ * 1 is Not Specified
  *
- *@author     mrajkowski
- *@created    August 29, 2001
- *@version    $Id: ContactType.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: ContactType.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski Exp
+ *          $
+ * @created August 29, 2001
  */
 public class ContactType {
 
@@ -41,19 +44,20 @@ public class ContactType {
 
 
   /**
-   *  Constructor for the ContactType object
+   * Constructor for the ContactType object
    *
-   *@since    1.1
+   * @since 1.1
    */
-  public ContactType() { }
+  public ContactType() {
+  }
 
 
   /**
-   *  Constructor for the ContactType object
+   * Constructor for the ContactType object
    *
-   *@param  rs                         Description of Parameter
-   *@exception  java.sql.SQLException  Description of Exception
-   *@since                             1.1
+   * @param rs Description of Parameter
+   * @throws java.sql.SQLException Description of Exception
+   * @since 1.1
    */
   public ContactType(ResultSet rs) throws java.sql.SQLException {
     id = rs.getInt("code");
@@ -68,10 +72,10 @@ public class ContactType {
 
 
   /**
-   *  Sets the Id attribute of the ContactType object
+   * Sets the Id attribute of the ContactType object
    *
-   *@param  tmp  The new Id value
-   *@since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -79,10 +83,10 @@ public class ContactType {
 
 
   /**
-   *  Sets the Description attribute of the ContactType object
+   * Sets the Description attribute of the ContactType object
    *
-   *@param  tmp  The new Description value
-   *@since       1.1
+   * @param tmp The new Description value
+   * @since 1.1
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -90,10 +94,10 @@ public class ContactType {
 
 
   /**
-   *  Sets the Enabled attribute of the ContactType object
+   * Sets the Enabled attribute of the ContactType object
    *
-   *@param  tmp  The new Enabled value
-   *@since       1.1
+   * @param tmp The new Enabled value
+   * @since 1.1
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -101,9 +105,9 @@ public class ContactType {
 
 
   /**
-   *  Sets the userId attribute of the ContactType object
+   * Sets the userId attribute of the ContactType object
    *
-   *@param  userId  The new user_id value
+   * @param userId The new user_id value
    */
   public void setUserId(int userId) {
     this.userId = userId;
@@ -111,9 +115,9 @@ public class ContactType {
 
 
   /**
-   *  Sets the category attribute of the ContactType object
+   * Sets the category attribute of the ContactType object
    *
-   *@param  category  The new category value
+   * @param category The new category value
    */
   public void setCategory(int category) {
     this.category = category;
@@ -121,9 +125,9 @@ public class ContactType {
 
 
   /**
-   *  Sets the category attribute of the ContactType object
+   * Sets the category attribute of the ContactType object
    *
-   *@param  category  The new category value
+   * @param category The new category value
    */
   public void setCategory(String category) {
     this.category = Integer.parseInt(category);
@@ -131,9 +135,9 @@ public class ContactType {
 
 
   /**
-   *  Sets the level attribute of the ContactType object
+   * Sets the level attribute of the ContactType object
    *
-   *@param  level  The new level value
+   * @param level The new level value
    */
   public void setLevel(int level) {
     this.level = level;
@@ -141,9 +145,9 @@ public class ContactType {
 
 
   /**
-   *  Gets the level attribute of the ContactType object
+   * Gets the level attribute of the ContactType object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -151,9 +155,9 @@ public class ContactType {
 
 
   /**
-   *  Gets the userId attribute of the ContactType object
+   * Gets the userId attribute of the ContactType object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -161,9 +165,9 @@ public class ContactType {
 
 
   /**
-   *  Gets the category attribute of the ContactType object
+   * Gets the category attribute of the ContactType object
    *
-   *@return    The category value
+   * @return The category value
    */
   public int getCategory() {
     return category;
@@ -171,10 +175,10 @@ public class ContactType {
 
 
   /**
-   *  Gets the Id attribute of the ContactType object
+   * Gets the Id attribute of the ContactType object
    *
-   *@return    The Id value
-   *@since     1.1
+   * @return The Id value
+   * @since 1.1
    */
   public int getId() {
     return id;
@@ -182,10 +186,10 @@ public class ContactType {
 
 
   /**
-   *  Returns the id of the Contact Type object<br>
-   *  Required for LookupHtmlHandler when a validation fails
+   * Returns the id of the Contact Type object<br>
+   * Required for LookupHtmlHandler when a validation fails
    *
-   *@return    The code value
+   * @return The code value
    */
   public int getCode() {
     return id;
@@ -193,9 +197,9 @@ public class ContactType {
 
 
   /**
-   *  Gets the codeString attribute of the ContactType object
+   * Gets the codeString attribute of the ContactType object
    *
-   *@return    The codeString value
+   * @return The codeString value
    */
   public String getCodeString() {
     return String.valueOf(id);
@@ -203,10 +207,10 @@ public class ContactType {
 
 
   /**
-   *  Gets the Description attribute of the ContactType object
+   * Gets the Description attribute of the ContactType object
    *
-   *@return    The Description value
-   *@since     1.1
+   * @return The Description value
+   * @since 1.1
    */
   public String getDescription() {
     return description;
@@ -214,10 +218,10 @@ public class ContactType {
 
 
   /**
-   *  Gets the Enabled attribute of the ContactType object
+   * Gets the Enabled attribute of the ContactType object
    *
-   *@return    The Enabled value
-   *@since     1.1
+   * @return The Enabled value
+   * @since 1.1
    */
   public boolean getEnabled() {
     return enabled;
@@ -225,11 +229,11 @@ public class ContactType {
 
 
   /**
-   *  Sets the enabled attribute of the ContactType object
+   * Sets the enabled attribute of the ContactType object
    *
-   *@param  db                The new enabled value
-   *@param  tmp               The new enabled value
-   *@exception  SQLException  Description of the Exception
+   * @param db  The new enabled value
+   * @param tmp The new enabled value
+   * @throws SQLException Description of the Exception
    */
   public void setEnabled(Connection db, boolean tmp) throws SQLException {
     if (this.getId() == -1) {
@@ -257,11 +261,11 @@ public class ContactType {
 
 
   /**
-   *  Inserts a Contact Type in the DB.
+   * Inserts a Contact Type in the DB.
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
@@ -271,7 +275,7 @@ public class ContactType {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO lookup_contact_types " +
-          "(description, level, enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
+          "(description, \"level\", enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
           "VALUES (?, ?, ?, ?" + (userId > -1 ? ", ?" : "") + ") ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getLevel());
@@ -294,11 +298,11 @@ public class ContactType {
 
 
   /**
-   *  Sets the newOrder attribute of the ContactType object
+   * Sets the newOrder attribute of the ContactType object
    *
-   *@param  db                The new newOrder value
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db The new newOrder value
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int setNewOrder(Connection db) throws SQLException {
     int resultCount = 0;
@@ -310,8 +314,9 @@ public class ContactType {
     PreparedStatement pst = null;
     int i = 0;
 
-    pst = db.prepareStatement("UPDATE lookup_contact_types " +
-        "SET level = ? " +
+    pst = db.prepareStatement(
+        "UPDATE lookup_contact_types " +
+        "SET \"level\" = ? " +
         "WHERE code = ? ");
     pst.setInt(++i, this.getLevel());
     pst.setInt(++i, this.getId());

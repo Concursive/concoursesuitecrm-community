@@ -42,16 +42,17 @@
     </td>
   </tr>
 </table>
+<dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
 <br>
 <dhv:documentPermission name="documentcenter-documents-folders-add">
-<img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle">
+<img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" />
 <a href="DocumentStoreManagementFileFolders.do?command=Add&documentStoreId=<%= documentStore.getId() %>&parentId=<%= documentStore.getFiles().getFolderId() %>&folderId=<%= documentStore.getFiles().getFolderId() %>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
 </dhv:documentPermission>
 <dhv:documentPermission name="documentcenter-documents-folders-add,documentcenter-documents-files-upload" if="all">
 |
 </dhv:documentPermission>
 <dhv:documentPermission name="documentcenter-documents-files-upload">
-<img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle">
+<img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle" />
 <a href="DocumentStoreManagementFiles.do?command=Add&documentStoreId=<%= documentStore.getId() %>&folderId=<%= documentStore.getFiles().getFolderId() %>"><dhv:label name="documents.documents.submitFile">Submit File</dhv:label></a>
 </dhv:documentPermission>
 <dhv:evaluate if="<%= documentStore.getFiles().getFolderId() != -1 %>">
@@ -59,14 +60,14 @@
   <dhv:documentPermission name="documentcenter-documents-folders-add,documentcenter-documents-files-upload" if="any">
 |
   </dhv:documentPermission>
-<img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle">
+<img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" />
 <a href="DocumentStoreManagementFileFolders.do?command=Modify&documentStoreId=<%= documentStore.getId() %>&folderId=<%= documentStore.getFiles().getFolderId() %>&id=<%= documentStore.getFiles().getFolderId() %>&parentId=<%= documentStore.getFiles().getFolderId() %>"><dhv:label name="documents.documents.renameFolder">Rename Folder</dhv:label></a>
 </dhv:documentPermission>
 </dhv:evaluate>
 <dhv:documentPermission name="documentcenter-documents-folders-add,documentcenter-documents-files-upload,documentcenter-documents-folders-edit" if="any">
-<br>
-<br>
+  <br /><br />
 </dhv:documentPermission>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="8">&nbsp;</th>
@@ -88,21 +89,21 @@
     FileFolder thisFolder = (FileFolder) folders.next();
     rowid = (rowid != 1?1:2);
 %>
-  <tr>
-    <td class="row<%= rowid %>" align="center" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %>fo<%= thisFolder.getId() %>', 'menuFolder', <%= thisFolder.getId() %>, -1, <%= thisFolder.getDisplay() %>)"
+  <tr class="row<%= rowid %>">
+    <td align="center" nowrap>
+      <a href="javascript:displayMenu('select_<%= SKIN %>fo<%= thisFolder.getId() %>', 'menuFolder', <%= thisFolder.getId() %>, -1, <%= thisFolder.getDisplay() %>,'<%= documentStore.isTrashed() %>')"
          onMouseOver="over(0, 'fo<%= thisFolder.getId() %>')"
          onmouseout="out(0, 'fo<%= thisFolder.getId() %>'); hideMenu('menuFolder');"><img 
         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %>fo<%= thisFolder.getId() %>" id="select_<%= SKIN %>fo<%= thisFolder.getId() %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" width="100%">
+    <td width="100%">
       <img src="images/stock_folder-23.gif" border="0" align="absmiddle">
       <a href="DocumentManagement.do?command=DocumentStoreCenter&section=File_<%= thisFolder.getDisplay() == -1?"Library":"Gallery" %>&documentStoreId=<%= documentStore.getId() %>&folderId=<%= thisFolder.getId() %><%= thisFolder.getDisplay() == 2?"&details=true":"" %>"><%= toHtml(thisFolder.getSubject()) %></a>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <dhv:label name="project.folder.lowercase">folder</dhv:label>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <%= thisFolder.getItemCount() %> 
       <% if(thisFolder.getItemCount() != 1) {%>
         <dhv:label name="project.items.lowercase">items</dhv:label>
@@ -110,10 +111,10 @@
         <dhv:label name="project.item.lowercase">item</dhv:label>
       <%}%>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       --
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <zeroio:tz timestamp="<%= thisFolder.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       <dhv:username id="<%= thisFolder.getModifiedBy() %>"/>
     </td>
@@ -126,25 +127,25 @@
     rowid = (rowid != 1?1:2);
     FileItem thisFile = (FileItem)i.next();
 %>    
-  <tr>
-    <td class="row<%= rowid %>" align="center" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %>fi<%= thisFile.getId() %>', 'menuFile', -1, <%= thisFile.getId() %>, -1)"
+  <tr class="row<%= rowid %>">
+    <td align="center" nowrap>
+      <a href="javascript:displayMenu('select_<%= SKIN %>fi<%= thisFile.getId() %>', 'menuFile', -1, <%= thisFile.getId() %>, -1, '<%= documentStore.isTrashed() %>')"
          onMouseOver="over(0, 'fi<%= thisFile.getId() %>')"
          onmouseout="out(0, 'fi<%= thisFile.getId() %>'); hideMenu('menuFile');"><img 
         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %>fi<%= thisFile.getId() %>" id="select_<%= SKIN %>fi<%= thisFile.getId() %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" width="100%">
+    <td width="100%">
       <%= thisFile.getImageTag("-23") %>
-      <a href="DocumentStoreManagementFiles.do?command=Details&documentStoreId=<%= documentStore.getId() %>&fid=<%= thisFile.getId() %>&folderId=<%= request.getParameter("folderId") %>"><%= toHtml(thisFile.getSubject()) %></a>
+      <a href="DocumentStoreManagementFiles.do?command=Details&documentStoreId=<%= documentStore.getId() %>&fid=<%= thisFile.getId() %>&folderId=<%= documentStore.getFiles().getFolderId() %>"><%= toHtml(thisFile.getSubject()) %></a>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap><%= toHtml(thisFile.getExtension()) %></td>
-    <td class="row<%= rowid %>" align="right" nowrap>
+    <td align="center" nowrap><%= toHtml(thisFile.getExtension()) %></td>
+    <td align="right" nowrap>
       <%= thisFile.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <%= thisFile.getVersion() %>&nbsp;
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       <dhv:username id="<%= thisFile.getModifiedBy() %>"/>
     </td>

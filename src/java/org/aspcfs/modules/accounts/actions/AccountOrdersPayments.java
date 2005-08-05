@@ -1,44 +1,33 @@
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.orders.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.lang.*;
-import java.text.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.actionlist.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.orders.beans.*;
+import org.aspcfs.modules.orders.base.*;
+import org.aspcfs.modules.orders.beans.StatusBean;
+import org.aspcfs.modules.products.base.ProductOptionList;
+import org.aspcfs.modules.products.base.ProductOptionValuesList;
+import org.aspcfs.utils.SecurityKey;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     partha
- *@created    June 30, 2004
- *@version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created June 30, 2004
  */
 public final class AccountOrdersPayments extends CFSModule {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return "OK";
@@ -46,10 +35,10 @@ public final class AccountOrdersPayments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "orders-view"))) {
@@ -57,9 +46,11 @@ public final class AccountOrdersPayments extends CFSModule {
     }
     int paymentId = -1;
     try {
-      paymentId = Integer.parseInt(context.getRequest().getParameter("paymentId"));
+      paymentId = Integer.parseInt(
+          context.getRequest().getParameter("paymentId"));
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError",
+      context.getRequest().setAttribute(
+          "actionError",
           "Invalid criteria, please review and make necessary changes before submitting");
       return "SearchCriteriaError";
     }
@@ -99,13 +90,16 @@ public final class AccountOrdersPayments extends CFSModule {
       context.getRequest().setAttribute("productOptionValuesList", valuesList);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList paymentMethod = systemStatus.getLookupList(db, "lookup_payment_methods");
+      LookupList paymentMethod = systemStatus.getLookupList(
+          db, "lookup_payment_methods");
       context.getRequest().setAttribute("paymentMethod", paymentMethod);
 
-      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+      LookupList paymentSelect = systemStatus.getLookupList(
+          db, "lookup_payment_status");
       context.getRequest().setAttribute("paymentSelect", paymentSelect);
 
-      LookupList creditCardType = systemStatus.getLookupList(db, "lookup_creditcard_types");
+      LookupList creditCardType = systemStatus.getLookupList(
+          db, "lookup_creditcard_types");
       context.getRequest().setAttribute("creditCardType", creditCardType);
 
       creditCard.queryRecord(db, orderPayment.getCreditCardId());
@@ -116,7 +110,8 @@ public final class AccountOrdersPayments extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError",
+      context.getRequest().setAttribute(
+          "actionError",
           "The specified payment could not be found");
       return "SearchCriteriaError";
     } finally {
@@ -128,18 +123,24 @@ public final class AccountOrdersPayments extends CFSModule {
       context.getSession().removeAttribute("creditCardPassword");
     }
     // Check the credit card password last so that the decoded number can be added
-    String creditCardPassword = context.getRequest().getParameter("creditCardPassword");
+    String creditCardPassword = context.getRequest().getParameter(
+        "creditCardPassword");
     if (creditCardPassword == null) {
-      creditCardPassword = (String) context.getSession().getAttribute("creditCardPassword");
+      creditCardPassword = (String) context.getSession().getAttribute(
+          "creditCardPassword");
     }
     if (creditCardPassword != null && !"".equals(creditCardPassword)) {
       try {
-        creditCard.setCardNumber(SecurityKey.useEncodedKey(getPath(context, "keys") + "order_private.enc",
-            creditCardPassword, creditCard.getCardNumber()));
-        context.getSession().setAttribute("creditCardPassword", creditCardPassword);
+        creditCard.setCardNumber(
+            SecurityKey.useEncodedKey(
+                getPath(context, "keys") + "order_private.enc",
+                creditCardPassword, creditCard.getCardNumber()));
+        context.getSession().setAttribute(
+            "creditCardPassword", creditCardPassword);
       } catch (Exception e) {
         e.printStackTrace(System.out);
-        context.getRequest().setAttribute("actionError", "Invalid Password, try again");
+        context.getRequest().setAttribute(
+            "actionError", "Invalid Password, try again");
       }
     }
     addModuleBean(context, "OrdersProducts", "OrdersProducts Details");
@@ -148,13 +149,14 @@ public final class AccountOrdersPayments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-    int paymentId = Integer.parseInt((String) context.getRequest().getParameter("paymentId"));
+    int paymentId = Integer.parseInt(
+        (String) context.getRequest().getParameter("paymentId"));
     OrderProduct orderProduct = null;
     OrderPaymentStatusList paymentStatusList = null;
     OrderPayment orderPayment = null;
@@ -184,7 +186,7 @@ public final class AccountOrdersPayments extends CFSModule {
       order.setBuildAddressList(true);
       order.queryRecord(db, orderProduct.getOrderId());
       context.getRequest().setAttribute("order", order);
-      
+
       ProductOptionList optionList = new ProductOptionList();
       optionList.buildList(db);
       context.getRequest().setAttribute("productOptionList", optionList);
@@ -194,13 +196,16 @@ public final class AccountOrdersPayments extends CFSModule {
       context.getRequest().setAttribute("productOptionValuesList", valuesList);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList paymentMethod = systemStatus.getLookupList(db, "lookup_payment_methods");
+      LookupList paymentMethod = systemStatus.getLookupList(
+          db, "lookup_payment_methods");
       context.getRequest().setAttribute("paymentMethod", paymentMethod);
 
-      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+      LookupList paymentSelect = systemStatus.getLookupList(
+          db, "lookup_payment_status");
       context.getRequest().setAttribute("paymentSelect", paymentSelect);
 
-      LookupList creditCardType = systemStatus.getLookupList(db, "lookup_creditcard_types");
+      LookupList creditCardType = systemStatus.getLookupList(
+          db, "lookup_creditcard_types");
       context.getRequest().setAttribute("creditCardType", creditCardType);
 
       PaymentCreditCard creditCard = new PaymentCreditCard();
@@ -224,13 +229,14 @@ public final class AccountOrdersPayments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    int paymentId = Integer.parseInt((String) context.getRequest().getParameter("paymentId"));
+    int paymentId = Integer.parseInt(
+        (String) context.getRequest().getParameter("paymentId"));
     OrderProduct orderProduct = null;
     OrderPaymentStatusList paymentStatusList = null;
     OrderPayment orderPayment = null;
@@ -251,7 +257,8 @@ public final class AccountOrdersPayments extends CFSModule {
         orderPayment.setStatusId(statusBean.getStatusId());
       }
       if (statusBean.getAuthorizationRefNumber() != null) {
-        orderPayment.setAuthorizationRefNumber(statusBean.getAuthorizationRefNumber());
+        orderPayment.setAuthorizationRefNumber(
+            statusBean.getAuthorizationRefNumber());
       }
       if (statusBean.getAuthorizationCode() != null) {
         orderPayment.setAuthorizationCode(statusBean.getAuthorizationCode());

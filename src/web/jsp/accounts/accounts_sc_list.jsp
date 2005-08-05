@@ -48,9 +48,11 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:permission name="accounts-service-contracts-add">
-    <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="account.sc.addServiceContract">Add Service Contract</dhv:label></a>
-  </dhv:permission>
+  <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
+    <dhv:permission name="accounts-service-contracts-add">
+      <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="account.sc.addServiceContract">Add Service Contract</dhv:label></a>
+    </dhv:permission>
+  </dhv:evaluate>
   <dhv:permission name="accounts-service-contracts-add" none="true"></dhv:permission>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -89,7 +91,7 @@
           <% int status = -1;%>
           <% status = OrgDetails.getEnabled() ? 1 : 0; %>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('select<%= i %>','menuServiceContract', '<%=request.getParameter("orgId") %>', '<%= thisContract.getId() %>');"
+           <a href="javascript:displayMenu('select<%= i %>','menuServiceContract', '<%=request.getParameter("orgId") %>', '<%= thisContract.getId() %>', '<%= thisContract.isTrashed() || OrgDetails.isTrashed() %>');"
            onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuServiceContract');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
       </td>
       <td width="20%">

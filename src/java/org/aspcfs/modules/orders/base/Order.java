@@ -15,23 +15,23 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.quotes.base.Quote;
+import org.aspcfs.modules.quotes.base.QuoteProduct;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.quotes.base.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.util.Iterator;
 
 /**
- *  An Order comprises of products and product options.
+ * An Order comprises of products and product options.
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created March 18, 2004
  */
 public class Order extends GenericBean {
   private int id = -1;
@@ -72,9 +72,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the submitted attribute of the Order object
+   * Sets the submitted attribute of the Order object
    *
-   *@param  tmp  The new submitted value
+   * @param tmp The new submitted value
    */
   public void setSubmitted(Timestamp tmp) {
     this.submitted = tmp;
@@ -82,9 +82,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the submitted attribute of the Order object
+   * Sets the submitted attribute of the Order object
    *
-   *@param  tmp  The new submitted value
+   * @param tmp The new submitted value
    */
   public void setSubmitted(String tmp) {
     this.submitted = DatabaseUtils.parseTimestamp(tmp);
@@ -92,9 +92,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the addressList attribute of the Order object
+   * Sets the addressList attribute of the Order object
    *
-   *@param  tmp  The new addressList value
+   * @param tmp The new addressList value
    */
   public void setAddressList(OrderAddressList tmp) {
     this.addressList = tmp;
@@ -102,9 +102,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the buildAddressList attribute of the Order object
+   * Sets the buildAddressList attribute of the Order object
    *
-   *@param  tmp  The new buildAddressList value
+   * @param tmp The new buildAddressList value
    */
   public void setBuildAddressList(boolean tmp) {
     this.buildAddressList = tmp;
@@ -112,9 +112,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the buildAddressList attribute of the Order object
+   * Sets the buildAddressList attribute of the Order object
    *
-   *@param  tmp  The new buildAddressList value
+   * @param tmp The new buildAddressList value
    */
   public void setBuildAddressList(String tmp) {
     this.buildAddressList = DatabaseUtils.parseBoolean(tmp);
@@ -122,9 +122,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the buildAddressList attribute of the Order object
+   * Gets the buildAddressList attribute of the Order object
    *
-   *@return    The buildAddressList value
+   * @return The buildAddressList value
    */
   public boolean getBuildAddressList() {
     return buildAddressList;
@@ -132,9 +132,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the addressList attribute of the Order object
+   * Gets the addressList attribute of the Order object
    *
-   *@return    The addressList value
+   * @return The addressList value
    */
   public OrderAddressList getAddressList() {
     return addressList;
@@ -142,9 +142,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the submitted attribute of the Order object
+   * Gets the submitted attribute of the Order object
    *
-   *@return    The submitted value
+   * @return The submitted value
    */
   public Timestamp getSubmitted() {
     return submitted;
@@ -152,9 +152,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Order object
+   * Sets the id attribute of the Order object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -162,9 +162,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Order object
+   * Sets the id attribute of the Order object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -172,9 +172,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the Order object
+   * Sets the parentId attribute of the Order object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -182,9 +182,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the Order object
+   * Sets the parentId attribute of the Order object
    *
-   *@param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -192,9 +192,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Order object
+   * Sets the orgId attribute of the Order object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -202,9 +202,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the Order object
+   * Sets the orgId attribute of the Order object
    *
-   *@param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -212,9 +212,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the billingContactId attribute of the Order object
+   * Sets the billingContactId attribute of the Order object
    *
-   *@param  tmp  The new billingContactId value
+   * @param tmp The new billingContactId value
    */
   public void setBillingContactId(int tmp) {
     this.billingContactId = tmp;
@@ -222,9 +222,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the billingContactId attribute of the Order object
+   * Sets the billingContactId attribute of the Order object
    *
-   *@param  tmp  The new billingContactId value
+   * @param tmp The new billingContactId value
    */
   public void setBillingContactId(String tmp) {
     this.billingContactId = Integer.parseInt(tmp);
@@ -232,9 +232,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the sourceId attribute of the Order object
+   * Sets the sourceId attribute of the Order object
    *
-   *@param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(int tmp) {
     this.sourceId = tmp;
@@ -242,9 +242,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the sourceId attribute of the Order object
+   * Sets the sourceId attribute of the Order object
    *
-   *@param  tmp  The new sourceId value
+   * @param tmp The new sourceId value
    */
   public void setSourceId(String tmp) {
     this.sourceId = Integer.parseInt(tmp);
@@ -252,9 +252,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the Order object
+   * Sets the quoteId attribute of the Order object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -262,9 +262,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the quoteId attribute of the Order object
+   * Sets the quoteId attribute of the Order object
    *
-   *@param  tmp  The new quoteId value
+   * @param tmp The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -272,9 +272,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the grandTotal attribute of the Order object
+   * Sets the grandTotal attribute of the Order object
    *
-   *@param  tmp  The new grandTotal value
+   * @param tmp The new grandTotal value
    */
   public void setGrandTotal(double tmp) {
     this.grandTotal = tmp;
@@ -282,9 +282,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Order object
+   * Sets the statusId attribute of the Order object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -292,9 +292,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Order object
+   * Sets the statusId attribute of the Order object
    *
-   *@param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -302,9 +302,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the statusDate attribute of the Order object
+   * Sets the statusDate attribute of the Order object
    *
-   *@param  tmp  The new statusDate value
+   * @param tmp The new statusDate value
    */
   public void setStatusDate(Timestamp tmp) {
     this.statusDate = tmp;
@@ -312,9 +312,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orderTermsId attribute of the Order object
+   * Sets the orderTermsId attribute of the Order object
    *
-   *@param  tmp  The new orderTermsId value
+   * @param tmp The new orderTermsId value
    */
   public void setOrderTermsId(int tmp) {
     this.orderTermsId = tmp;
@@ -322,9 +322,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orderTermsId attribute of the Order object
+   * Sets the orderTermsId attribute of the Order object
    *
-   *@param  tmp  The new orderTermsId value
+   * @param tmp The new orderTermsId value
    */
   public void setOrderTermsId(String tmp) {
     this.orderTermsId = Integer.parseInt(tmp);
@@ -332,9 +332,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orderTypeId attribute of the Order object
+   * Sets the orderTypeId attribute of the Order object
    *
-   *@param  tmp  The new orderTypeId value
+   * @param tmp The new orderTypeId value
    */
   public void setOrderTypeId(int tmp) {
     this.orderTypeId = tmp;
@@ -342,9 +342,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orderTypeId attribute of the Order object
+   * Sets the orderTypeId attribute of the Order object
    *
-   *@param  tmp  The new orderTypeId value
+   * @param tmp The new orderTypeId value
    */
   public void setOrderTypeId(String tmp) {
     this.orderTypeId = Integer.parseInt(tmp);
@@ -352,9 +352,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the expirationDate attribute of the Order object
+   * Sets the expirationDate attribute of the Order object
    *
-   *@param  tmp  The new expirationDate value
+   * @param tmp The new expirationDate value
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
@@ -362,9 +362,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the Order object
+   * Sets the description attribute of the Order object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -372,9 +372,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the Order object
+   * Sets the notes attribute of the Order object
    *
-   *@param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -382,9 +382,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Order object
+   * Sets the enteredBy attribute of the Order object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -392,9 +392,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Order object
+   * Sets the enteredBy attribute of the Order object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -402,9 +402,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Order object
+   * Sets the modifiedBy attribute of the Order object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -412,9 +412,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Order object
+   * Sets the modifiedBy attribute of the Order object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -422,9 +422,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Order object
+   * Sets the entered attribute of the Order object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -432,9 +432,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Order object
+   * Sets the modified attribute of the Order object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -442,9 +442,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Order object
+   * Sets the name attribute of the Order object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -452,9 +452,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the Order object
+   * Sets the nameLast attribute of the Order object
    *
-   *@param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -462,9 +462,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the Order object
+   * Sets the nameFirst attribute of the Order object
    *
-   *@param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -472,9 +472,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the nameMiddle attribute of the Order object
+   * Sets the nameMiddle attribute of the Order object
    *
-   *@param  tmp  The new nameMiddle value
+   * @param tmp The new nameMiddle value
    */
   public void setNameMiddle(String tmp) {
     this.nameMiddle = tmp;
@@ -482,9 +482,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the buildProducts attribute of the Order object
+   * Sets the buildProducts attribute of the Order object
    *
-   *@param  tmp  The new buildProducts value
+   * @param tmp The new buildProducts value
    */
   public void setBuildProducts(boolean tmp) {
     this.buildProducts = tmp;
@@ -492,9 +492,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the productList attribute of the Order object
+   * Sets the productList attribute of the Order object
    *
-   *@param  tmp  The new productList value
+   * @param tmp The new productList value
    */
   public void setProductList(OrderProductList tmp) {
     this.productList = tmp;
@@ -502,9 +502,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the salesId attribute of the Order object
+   * Sets the salesId attribute of the Order object
    *
-   *@param  tmp  The new salesId value
+   * @param tmp The new salesId value
    */
   public void setSalesId(int tmp) {
     this.salesId = tmp;
@@ -512,9 +512,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the salesId attribute of the Order object
+   * Sets the salesId attribute of the Order object
    *
-   *@param  tmp  The new salesId value
+   * @param tmp The new salesId value
    */
   public void setSalesId(String tmp) {
     this.salesId = Integer.parseInt(tmp);
@@ -522,9 +522,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orderedBy attribute of the Order object
+   * Sets the orderedBy attribute of the Order object
    *
-   *@param  tmp  The new orderedBy value
+   * @param tmp The new orderedBy value
    */
   public void setOrderedBy(int tmp) {
     this.orderedBy = tmp;
@@ -532,9 +532,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the orderedBy attribute of the Order object
+   * Sets the orderedBy attribute of the Order object
    *
-   *@param  tmp  The new orderedBy value
+   * @param tmp The new orderedBy value
    */
   public void setOrderedBy(String tmp) {
     this.orderedBy = Integer.parseInt(tmp);
@@ -542,9 +542,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the contractDate attribute of the Order object
+   * Sets the contractDate attribute of the Order object
    *
-   *@param  tmp  The new contractDate value
+   * @param tmp The new contractDate value
    */
   public void setContractDate(Timestamp tmp) {
     this.contractDate = tmp;
@@ -552,9 +552,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the contractDate attribute of the Order object
+   * Sets the contractDate attribute of the Order object
    *
-   *@param  tmp  The new contractDate value
+   * @param tmp The new contractDate value
    */
   public void setContractDate(String tmp) {
     this.contractDate = DatabaseUtils.parseTimestamp(tmp);
@@ -562,9 +562,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Sets the requestItems attribute of the Order object
+   * Sets the requestItems attribute of the Order object
    *
-   *@param  request  The new requestItems value
+   * @param request The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
     addressList = new OrderAddressList(request);
@@ -572,9 +572,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the contractDate attribute of the Order object
+   * Gets the contractDate attribute of the Order object
    *
-   *@return    The contractDate value
+   * @return The contractDate value
    */
   public Timestamp getContractDate() {
     return contractDate;
@@ -582,9 +582,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the salesId attribute of the Order object
+   * Gets the salesId attribute of the Order object
    *
-   *@return    The salesId value
+   * @return The salesId value
    */
   public int getSalesId() {
     return salesId;
@@ -592,9 +592,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the orderedBy attribute of the Order object
+   * Gets the orderedBy attribute of the Order object
    *
-   *@return    The orderedBy value
+   * @return The orderedBy value
    */
   public int getOrderedBy() {
     return orderedBy;
@@ -602,9 +602,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Order object
+   * Gets the id attribute of the Order object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -612,9 +612,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the parentId attribute of the Order object
+   * Gets the parentId attribute of the Order object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -622,9 +622,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the Order object
+   * Gets the orgId attribute of the Order object
    *
-   *@return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -632,9 +632,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the billingContactId attribute of the Order object
+   * Gets the billingContactId attribute of the Order object
    *
-   *@return    The billingContactId value
+   * @return The billingContactId value
    */
   public int getBillingContactId() {
     return billingContactId;
@@ -642,9 +642,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the sourceId attribute of the Order object
+   * Gets the sourceId attribute of the Order object
    *
-   *@return    The sourceId value
+   * @return The sourceId value
    */
   public int getSourceId() {
     return sourceId;
@@ -652,9 +652,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the quoteId attribute of the Order object
+   * Gets the quoteId attribute of the Order object
    *
-   *@return    The quoteId value
+   * @return The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -662,9 +662,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Order object
+   * Gets the statusId attribute of the Order object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -672,9 +672,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the statusDate attribute of the Order object
+   * Gets the statusDate attribute of the Order object
    *
-   *@return    The statusDate value
+   * @return The statusDate value
    */
   public Timestamp getStatusDate() {
     return statusDate;
@@ -682,9 +682,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the orderTermsId attribute of the Order object
+   * Gets the orderTermsId attribute of the Order object
    *
-   *@return    The orderTermsId value
+   * @return The orderTermsId value
    */
   public int getOrderTermsId() {
     return orderTermsId;
@@ -692,9 +692,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the orderTypeId attribute of the Order object
+   * Gets the orderTypeId attribute of the Order object
    *
-   *@return    The orderTypeId value
+   * @return The orderTypeId value
    */
   public int getOrderTypeId() {
     return orderTypeId;
@@ -702,9 +702,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the expirationDate attribute of the Order object
+   * Gets the expirationDate attribute of the Order object
    *
-   *@return    The expirationDate value
+   * @return The expirationDate value
    */
   public Timestamp getExpirationDate() {
     return expirationDate;
@@ -712,9 +712,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the Order object
+   * Gets the description attribute of the Order object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -722,9 +722,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the Order object
+   * Gets the notes attribute of the Order object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -732,9 +732,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Order object
+   * Gets the enteredBy attribute of the Order object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -742,9 +742,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Order object
+   * Gets the modifiedBy attribute of the Order object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -752,9 +752,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Order object
+   * Gets the entered attribute of the Order object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -762,9 +762,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Order object
+   * Gets the modified attribute of the Order object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -772,9 +772,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the grandTotal attribute of the Order object
+   * Gets the grandTotal attribute of the Order object
    *
-   *@return    The grandTotal value
+   * @return The grandTotal value
    */
   public double getGrandTotal() {
     return grandTotal;
@@ -782,9 +782,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the Order object
+   * Gets the name attribute of the Order object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -792,9 +792,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the Order object
+   * Gets the nameLast attribute of the Order object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -802,9 +802,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the Order object
+   * Gets the nameFirst attribute of the Order object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -812,9 +812,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the nameMiddle attribute of the Order object
+   * Gets the nameMiddle attribute of the Order object
    *
-   *@return    The nameMiddle value
+   * @return The nameMiddle value
    */
   public String getNameMiddle() {
     return nameMiddle;
@@ -822,9 +822,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the buildProducts attribute of the Order object
+   * Gets the buildProducts attribute of the Order object
    *
-   *@return    The buildProducts value
+   * @return The buildProducts value
    */
   public boolean getBuildProducts() {
     return buildProducts;
@@ -832,9 +832,9 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the productList attribute of the Order object
+   * Gets the productList attribute of the Order object
    *
-   *@return    The productList value
+   * @return The productList value
    */
   public OrderProductList getProductList() {
     return productList;
@@ -842,17 +842,18 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Constructor for the Order object
+   * Constructor for the Order object
    */
-  public Order() { }
+  public Order() {
+  }
 
 
   /**
-   *  Constructor for the Order object
+   * Constructor for the Order object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Order(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -860,10 +861,10 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Constructor for the Order object
+   * Constructor for the Order object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Order(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -871,11 +872,11 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -889,8 +890,7 @@ public class Order extends GenericBean {
         " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
         " LEFT JOIN lookup_order_status los ON ( oe.status_id = los.code ) " +
         " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
-        " WHERE oe.order_id = ? "
-        );
+        " WHERE oe.order_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -911,10 +911,10 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // order_entry table
@@ -951,10 +951,10 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildProducts(Connection db) throws SQLException {
     productList.setOrderId(this.getId());
@@ -965,10 +965,10 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAddressList(Connection db) throws SQLException {
     addressList.setOrderId(this.getId());
@@ -977,10 +977,10 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the address attribute of the Order object
+   * Gets the address attribute of the Order object
    *
-   *@param  thisType  Description of the Parameter
-   *@return           The address value
+   * @param thisType Description of the Parameter
+   * @return The address value
    */
   public OrderAddress getAddress(String thisType) {
     return (OrderAddress) addressList.getAddress(thisType);
@@ -988,7 +988,7 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void determineTotal() {
     // determine the total
@@ -1002,19 +1002,24 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "order_entry_order_id_seq");
     sql.append(
         "INSERT INTO order_entry(parent_id, org_id, quote_id, sales_id, orderedby, billing_contact_id, source_id, " +
         "grand_total, status_id, status_date, contract_date, expiration_date, order_terms_id, order_type_id, " +
         "description, notes, ");
+    if (id > -1) {
+      sql.append("order_id, ");
+    }
+
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1024,6 +1029,9 @@ public class Order extends GenericBean {
     }
     sql.append("modifiedby, submitted ) ");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1050,6 +1058,9 @@ public class Order extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getOrderTypeId());
     pst.setString(++i, this.getDescription());
     pst.setString(++i, this.getNotes());
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -1061,13 +1072,14 @@ public class Order extends GenericBean {
     pst.setTimestamp(++i, this.getSubmitted());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "order_entry_order_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "order_entry_order_id_seq", id);
 
     //Insert the addresses if there are any
     Iterator iaddress = this.getAddressList().iterator();
     while (iaddress.hasNext()) {
       OrderAddress thisAddress = (OrderAddress) iaddress.next();
-      thisAddress.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
+      thisAddress.process(
+          db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     }
 
     result = true;
@@ -1076,11 +1088,11 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1111,7 +1123,8 @@ public class Order extends GenericBean {
 
       // delete the credit card record associated with this order
       PreparedStatement pst = null;
-      pst = db.prepareStatement("DELETE FROM payment_creditcard WHERE order_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM payment_creditcard WHERE order_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -1123,7 +1136,8 @@ public class Order extends GenericBean {
       pst.close();
 
       // delete the order address record
-      pst = db.prepareStatement("DELETE FROM order_address WHERE order_id = ? ");
+      pst = db.prepareStatement(
+          "DELETE FROM order_address WHERE order_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -1151,11 +1165,11 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1165,7 +1179,8 @@ public class Order extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
 
-    sql.append("UPDATE order_entry " +
+    sql.append(
+        "UPDATE order_entry " +
         " SET sales_id = ?, " +
         "     orderedby = ?, " +
         "     billing_contact_id = ?, " +
@@ -1180,8 +1195,7 @@ public class Order extends GenericBean {
         "     description = ?, " +
         "     notes = ?, " +
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-        "     modifiedby = ? "
-        );
+        "     modifiedby = ? ");
     sql.append(" WHERE order_id = ? ");
 
     int i = 0;
@@ -1209,11 +1223,11 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1231,8 +1245,7 @@ public class Order extends GenericBean {
       pst = db.prepareStatement(
           " SELECT count(*) as parentcount " +
           " FROM order_entry " +
-          " WHERE parent_id = ?"
-          );
+          " WHERE parent_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -1280,12 +1293,12 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  quoteId           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param quoteId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean createOrderFromQuote(Connection db, int quoteId) throws SQLException {
     PreparedStatement pst = null;
@@ -1299,8 +1312,7 @@ public class Order extends GenericBean {
 
     pst = db.prepareStatement(
         " SELECT code from lookup_order_status " +
-        " WHERE description = ? "
-        );
+        " WHERE description = ? ");
     pst.setString(1, "Pending");
     rs = pst.executeQuery();
     if (rs.next()) {

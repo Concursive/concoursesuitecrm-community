@@ -15,18 +15,18 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.StringTokenizer;
-import java.sql.*;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.DatabaseUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     -
- *@created    January 15, 2003
- *@version    $Id: CampaignListGroup.java,v 1.4 2003/03/07 14:13:39 mrajkowski
- *      Exp $
+ * @author -
+ * @version $Id: CampaignListGroup.java,v 1.4 2003/03/07 14:13:39 mrajkowski
+ *          Exp $
+ * @created January 15, 2003
  */
 public class CampaignListGroup {
 
@@ -35,17 +35,18 @@ public class CampaignListGroup {
 
 
   /**
-   *  Constructor for the CampaignListGroup object
+   * Constructor for the CampaignListGroup object
    */
-  public CampaignListGroup() { }
+  public CampaignListGroup() {
+  }
 
 
   /**
-   *  Constructor for the CampaignListGroup object
+   * Constructor for the CampaignListGroup object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CampaignListGroup(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -53,11 +54,11 @@ public class CampaignListGroup {
 
 
   /**
-   *  Constructor for the CampaignListGroup object
+   * Constructor for the CampaignListGroup object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CampaignListGroup(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -65,9 +66,9 @@ public class CampaignListGroup {
 
 
   /**
-   *  Gets the campaignId attribute of the CampaignListGroup object
+   * Gets the campaignId attribute of the CampaignListGroup object
    *
-   *@return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -75,9 +76,9 @@ public class CampaignListGroup {
 
 
   /**
-   *  Gets the groupId attribute of the CampaignListGroup object
+   * Gets the groupId attribute of the CampaignListGroup object
    *
-   *@return    The groupId value
+   * @return The groupId value
    */
   public int getGroupId() {
     return groupId;
@@ -85,9 +86,9 @@ public class CampaignListGroup {
 
 
   /**
-   *  Sets the campaignId attribute of the CampaignListGroup object
+   * Sets the campaignId attribute of the CampaignListGroup object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -95,9 +96,9 @@ public class CampaignListGroup {
 
 
   /**
-   *  Sets the groupId attribute of the CampaignListGroup object
+   * Sets the groupId attribute of the CampaignListGroup object
    *
-   *@param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -105,9 +106,9 @@ public class CampaignListGroup {
 
 
   /**
-   *  Sets the campaignId attribute of the CampaignListGroup object
+   * Sets the campaignId attribute of the CampaignListGroup object
    *
-   *@param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
@@ -115,9 +116,9 @@ public class CampaignListGroup {
 
 
   /**
-   *  Sets the groupId attribute of the CampaignListGroup object
+   * Sets the groupId attribute of the CampaignListGroup object
    *
-   *@param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -125,17 +126,18 @@ public class CampaignListGroup {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
       throw new SQLException("Campaign List Group not found.");
     }
-    PreparedStatement pst = db.prepareStatement("SELECT c.* " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT c.* " +
         "FROM campaign_list_groups c " +
         "WHERE c.campaign_id = ? and c.group_id = ? ");
     pst.setInt(1, campaignId);
@@ -153,11 +155,11 @@ public class CampaignListGroup {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
 
@@ -165,8 +167,7 @@ public class CampaignListGroup {
 
     try {
       db.setAutoCommit(false);
-      sql.append(
-          "INSERT INTO campaign_list_groups (campaign_id, group_id) ");
+      sql.append("INSERT INTO campaign_list_groups (campaign_id, group_id) ");
       sql.append("VALUES (?, ?) ");
 
       int i = 0;
@@ -198,10 +199,10 @@ public class CampaignListGroup {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     campaignId = rs.getInt("campaign_id");

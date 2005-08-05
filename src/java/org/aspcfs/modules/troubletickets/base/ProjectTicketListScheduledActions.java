@@ -33,11 +33,11 @@ import java.util.Iterator;
 import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    March 30, 2005
- *@version    $Id$
+ * @author kbhoopal
+ * @version $Id$
+ * @created March 30, 2005
  */
 public class ProjectTicketListScheduledActions extends TicketList implements ScheduledActions {
 
@@ -46,17 +46,17 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
   private CFSModule module = null;
 
 
-
   /**
-   *  Constructor for the ProjectTicketListScheduledActions object
+   * Constructor for the ProjectTicketListScheduledActions object
    */
-  public ProjectTicketListScheduledActions() { }
+  public ProjectTicketListScheduledActions() {
+  }
 
 
   /**
-   *  Sets the module attribute of the ProjectTicketListScheduledActions object
+   * Sets the module attribute of the ProjectTicketListScheduledActions object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
@@ -64,9 +64,9 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Sets the context attribute of the ProjectTicketListScheduledActions object
+   * Sets the context attribute of the ProjectTicketListScheduledActions object
    *
-   *@param  tmp  The new context value
+   * @param tmp The new context value
    */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
@@ -74,9 +74,9 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Gets the context attribute of the ProjectTicketListScheduledActions object
+   * Gets the context attribute of the ProjectTicketListScheduledActions object
    *
-   *@return    The context value
+   * @return The context value
    */
   public ActionContext getContext() {
     return context;
@@ -84,9 +84,9 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Gets the module attribute of the ProjectTicketListScheduledActions object
+   * Gets the module attribute of the ProjectTicketListScheduledActions object
    *
-   *@return    The module value
+   * @return The module value
    */
   public CFSModule getModule() {
     return module;
@@ -94,9 +94,9 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Sets the userId attribute of the ProjectTicketListScheduledActions object
+   * Sets the userId attribute of the ProjectTicketListScheduledActions object
    *
-   *@param  userId  The new userId value
+   * @param userId The new userId value
    */
   public void setUserId(int userId) {
     this.userId = userId;
@@ -104,9 +104,9 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Sets the userId attribute of the ProjectTicketListScheduledActions object
+   * Sets the userId attribute of the ProjectTicketListScheduledActions object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -114,9 +114,9 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Gets the userId attribute of the ProjectTicketListScheduledActions object
+   * Gets the userId attribute of the ProjectTicketListScheduledActions object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -124,16 +124,17 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProjectTicketListScheduledActions-> Building Ticket alerts for user " + userId);
+        System.out.println(
+            "ProjectTicketListScheduledActions-> Building Ticket alerts for user " + userId);
       }
       //get User
       User thisUser = null;
@@ -148,7 +149,8 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
       Timestamp todayTimestamp = new Timestamp(System.currentTimeMillis());
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, todayTimestamp);
+      String alertDate = DateUtils.getServerToUserDateString(
+          timeZone, DateFormat.SHORT, todayTimestamp);
 
       this.setOrgId(-1);
       this.setForProjectUser(this.getUserId());
@@ -163,8 +165,10 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
       while (m.hasNext()) {
         Ticket thisTicket = (Ticket) m.next();
         thisTicket.buildContactInformation(db);
-        alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTicket.getEstimatedResolutionDate());
-        TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[14]);
+        alertDate = DateUtils.getServerToUserDateString(
+            timeZone, DateFormat.SHORT, thisTicket.getEstimatedResolutionDate());
+        TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(
+            alertDate, CalendarEventList.EVENT_TYPES[14]);
         thisList.getOpenProjectTickets().add(thisTicket);
       }
     } catch (Exception e) {
@@ -175,15 +179,16 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
 
   /**
-   *  Build event categories and count of occurance of each category.
+   * Build event categories and count of occurance of each category.
    *
-   *@param  companyCalendar   Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param companyCalendar Description of the Parameter
+   * @param db              Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("ProjectTicketListScheduledActions --> Building Alert Counts ");
+      System.out.println(
+          "ProjectTicketListScheduledActions --> Building Alert Counts ");
     }
     //get User
     User thisUser = null;
@@ -214,7 +219,8 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
       Iterator i = dayEvents.keySet().iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[14], dayEvents.get(thisDay));
+        companyCalendar.addEventCount(
+            thisDay, CalendarEventList.EVENT_TYPES[14], dayEvents.get(thisDay));
       }
     } catch (SQLException e) {
       e.printStackTrace();

@@ -15,16 +15,22 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /**
- *  A tree of items for displaying
+ * A tree of items for displaying
  *
- *@author     matt rajkowski
- *@created    March 2003
- *@version    $Id: RequirementMapList.java,v 1.2 2004/07/21 19:00:43 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: RequirementMapList.java,v 1.2 2004/07/21 19:00:43 mrajkowski
+ *          Exp $
+ * @created March 2003
  */
 public class RequirementMapList extends ArrayList {
   public final static int FILTER_PRIORITY = 1;
@@ -34,15 +40,16 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Constructor for the RequirementMapList object
+   * Constructor for the RequirementMapList object
    */
-  public RequirementMapList() { }
+  public RequirementMapList() {
+  }
 
 
   /**
-   *  Sets the projectId attribute of the RequirementMapList object
+   * Sets the projectId attribute of the RequirementMapList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -50,9 +57,9 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Sets the projectId attribute of the RequirementMapList object
+   * Sets the projectId attribute of the RequirementMapList object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -60,9 +67,9 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Sets the requirementId attribute of the RequirementMapList object
+   * Sets the requirementId attribute of the RequirementMapList object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(int tmp) {
     this.requirementId = tmp;
@@ -70,9 +77,9 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Sets the requirementId attribute of the RequirementMapList object
+   * Sets the requirementId attribute of the RequirementMapList object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(String tmp) {
     this.requirementId = Integer.parseInt(tmp);
@@ -80,9 +87,9 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Gets the projectId attribute of the RequirementMapList object
+   * Gets the projectId attribute of the RequirementMapList object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -90,9 +97,9 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Gets the requirementId attribute of the RequirementMapList object
+   * Gets the requirementId attribute of the RequirementMapList object
    *
-   *@return    The requirementId value
+   * @return The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
@@ -100,10 +107,10 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     //All the items are in order by position
@@ -125,7 +132,8 @@ public class RequirementMapList extends ArrayList {
       if (previousItem != null) {
         if (thisItem.getIndent() == 0) {
           //Top level
-          ((RequirementMapItem) indents.get(new Integer(thisItem.getIndent()))).setFinalNode(false);
+          ((RequirementMapItem) indents.get(new Integer(thisItem.getIndent()))).setFinalNode(
+              false);
         } else {
           if (previousItem.getIndent() < thisItem.getIndent()) {
             //The parent was the previous item
@@ -133,13 +141,19 @@ public class RequirementMapList extends ArrayList {
             previousItem.getChildren().add(thisItem);
           } else if (previousItem.getIndent() >= thisItem.getIndent()) {
             //The parent is somewhere back...
-            thisItem.setParent((RequirementMapItem) indents.get(new Integer(thisItem.getIndent() - 1)));
-            ((RequirementMapItem) indents.get(new Integer(thisItem.getIndent() - 1))).getChildren().add(thisItem);
-            ((RequirementMapItem) indents.get(new Integer(thisItem.getIndent()))).setFinalNode(false);
+            thisItem.setParent(
+                (RequirementMapItem) indents.get(
+                    new Integer(thisItem.getIndent() - 1)));
+            ((RequirementMapItem) indents.get(
+                new Integer(thisItem.getIndent() - 1))).getChildren().add(
+                    thisItem);
+            ((RequirementMapItem) indents.get(
+                new Integer(thisItem.getIndent()))).setFinalNode(false);
           }
         }
       }
-      RequirementMapItem previousIndent = (RequirementMapItem) indents.get(new Integer(thisItem.getIndent()));
+      RequirementMapItem previousIndent = (RequirementMapItem) indents.get(
+          new Integer(thisItem.getIndent()));
       if (previousIndent != null) {
         thisItem.setPreviousSameIndent(previousIndent);
         previousIndent.setNextSameIndent(thisItem);
@@ -153,10 +167,10 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Gets the item attribute of the RequirementMapList object
+   * Gets the item attribute of the RequirementMapList object
    *
-   *@param  position  Description of the Parameter
-   *@return           The item value
+   * @param position Description of the Parameter
+   * @return The item value
    */
   public RequirementMapItem getItem(int position) {
     return (RequirementMapItem) this.get(position - 1);
@@ -174,11 +188,11 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  requirementId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param requirementId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void delete(Connection db, int requirementId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -191,12 +205,12 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  assignments  Description of the Parameter
-   *@param  filterType   Description of the Parameter
-   *@param  value        Description of the Parameter
-   *@return              Description of the Return Value
+   * @param assignments Description of the Parameter
+   * @param filterType  Description of the Parameter
+   * @param value       Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean filter(AssignmentList assignments, int filterType, String value) {
     if (value != null) {
@@ -210,7 +224,8 @@ public class RequirementMapList extends ArrayList {
       while (list.hasPrevious()) {
         RequirementMapItem thisItem = (RequirementMapItem) list.previous();
         RequirementMapItem thisParent = thisItem.getParent();
-        if (thisItem.getChildren().isEmpty() && check(thisItem, assignments, filterType, id)) {
+        if (thisItem.getChildren().isEmpty() && check(
+            thisItem, assignments, filterType, id)) {
           //Remove this item because it's not valid
           if (thisParent != null) {
             thisParent.getChildren().remove(thisItem);
@@ -222,7 +237,8 @@ public class RequirementMapList extends ArrayList {
         } else {
           //Check to see if this item has visually changed because of other items
           if (thisParent != null) {
-            if (!thisItem.getFinalNode() && thisParent.getChildren().indexOf(thisItem) == thisParent.getChildren().size() - 1) {
+            if (!thisItem.getFinalNode() && thisParent.getChildren().indexOf(
+                thisItem) == thisParent.getChildren().size() - 1) {
               thisItem.setFinalNode(true);
             }
           }
@@ -234,13 +250,13 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisItem     Description of the Parameter
-   *@param  assignments  Description of the Parameter
-   *@param  filterType   Description of the Parameter
-   *@param  value        Description of the Parameter
-   *@return              Description of the Return Value
+   * @param thisItem    Description of the Parameter
+   * @param assignments Description of the Parameter
+   * @param filterType  Description of the Parameter
+   * @param value       Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean check(RequirementMapItem thisItem, AssignmentList assignments, int filterType, int value) {
     if (thisItem.getFolderId() != -1) {
@@ -255,11 +271,11 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  assignments  Description of the Parameter
-   *@param  value        Description of the Parameter
-   *@return              Description of the Return Value
+   * @param assignments Description of the Parameter
+   * @param value       Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean filterAssignments(AssignmentList assignments, String value) {
     if (value != null) {
@@ -269,7 +285,8 @@ public class RequirementMapList extends ArrayList {
       while (list.hasPrevious()) {
         RequirementMapItem thisItem = (RequirementMapItem) list.previous();
         RequirementMapItem thisParent = thisItem.getParent();
-        if (checkAssignment(thisItem, thisItem.getChildren(), assignments, value)) {
+        if (checkAssignment(
+            thisItem, thisItem.getChildren(), assignments, value)) {
           //Remove this item because it's not valid
           if (thisParent != null) {
             thisParent.getChildren().remove(thisItem);
@@ -281,7 +298,8 @@ public class RequirementMapList extends ArrayList {
         } else {
           //Check to see if this item has visually changed because of other items
           if (thisParent != null) {
-            if (!thisItem.getFinalNode() && thisParent.getChildren().indexOf(thisItem) == thisParent.getChildren().size() - 1) {
+            if (!thisItem.getFinalNode() && thisParent.getChildren().indexOf(
+                thisItem) == thisParent.getChildren().size() - 1) {
               thisItem.setFinalNode(true);
             }
           }
@@ -293,18 +311,18 @@ public class RequirementMapList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisItem     Description of the Parameter
-   *@param  assignments  Description of the Parameter
-   *@param  value        Description of the Parameter
-   *@return              Description of the Return Value
+   * @param thisItem    Description of the Parameter
+   * @param assignments Description of the Parameter
+   * @param value       Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean checkAssignment(RequirementMapItem thisItem, ArrayList children, AssignmentList assignments, String value) {
     boolean childrenResult = true;
     if (children.size() > 0) {
       Iterator childrenIterator = children.iterator();
-      while( childrenIterator.hasNext()) {
+      while (childrenIterator.hasNext()) {
         RequirementMapItem child = (RequirementMapItem) childrenIterator.next();
         if (!checkAssignment(child, child.getChildren(), assignments, value)) {
           childrenResult = false;
@@ -313,12 +331,14 @@ public class RequirementMapList extends ArrayList {
       }
     }
     if (value.equals("incompleteOnly")) {
-      Assignment assign = assignments.getAssignment(thisItem.getAssignmentId());
+      Assignment assign = assignments.getAssignment(
+          thisItem.getAssignmentId());
       if (assign != null && assign.getCompleteDate() != null) {
         return (true && childrenResult);
       }
     } else if (value.equals("closedOnly")) {
-      Assignment assign = assignments.getAssignment(thisItem.getAssignmentId());
+      Assignment assign = assignments.getAssignment(
+          thisItem.getAssignmentId());
       if (assign != null && assign.getCompleteDate() == null) {
         return (true && childrenResult);
       }

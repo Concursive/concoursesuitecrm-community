@@ -22,20 +22,20 @@ import org.aspcfs.utils.web.LookupList;
 import java.sql.Connection;
 
 /**
- *  Basic Task object.<br>
- *  Processes and Builds necessary data for any Task object.
+ * Basic Task object.<br>
+ * Processes and Builds necessary data for any Task object.
  *
- *@author     akhi_m
- *@created    May 23, 2003
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created May 23, 2003
  */
 public final class TaskForm extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Connection db = null;
@@ -43,7 +43,8 @@ public final class TaskForm extends CFSModule {
       db = this.getConnection(context);
       //build loe types
       LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
-      context.getRequest().setAttribute("EstimatedLOETypeList", estimatedLOETypeList);
+      context.getRequest().setAttribute(
+          "EstimatedLOETypeList", estimatedLOETypeList);
       //build task priority levels (descritions)
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
@@ -56,7 +57,8 @@ public final class TaskForm extends CFSModule {
 
     String returnAction = "PrepareTask";
     if (context.getRequest().getParameter("returnAction") != null) {
-      returnAction = (String) context.getRequest().getParameter("returnAction");
+      returnAction = (String) context.getRequest().getParameter(
+          "returnAction");
     }
     return getReturn(context, returnAction);
   }

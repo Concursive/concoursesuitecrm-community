@@ -18,6 +18,7 @@
   --%>
 <%-- draws the ticket events for a specific day --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.troubletickets.base.Ticket,org.aspcfs.modules.base.Constants" %>
 <%
   TicketEventList ticketEventList = (TicketEventList) thisDay.get(category);
@@ -45,7 +46,7 @@
         &nbsp;
       </th>
       <th class="weekSelector" nowrap>
-        <strong><dhv:label name="tickets.symbol.number" param="number=">Ticket #</dhv:label></strong>
+        <strong><dhv:label name="projecttickets.symbol.number" param="number=">Project Ticket #</dhv:label></strong>
       </th>
       <th class="weekSelector" width="100%">
         <strong><dhv:label name="accounts.accounts_asset_history.Issue">Issue</dhv:label></strong>
@@ -64,7 +65,7 @@
        src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
      </td>
      <td nowrap valign="top">
-       <%= thisTicket.getPaddedId() %>
+       <zeroio:project id="<%= thisTicket.getProjectId() %>"/> (#<%= thisTicket.getProjectTicketCount() %>) 
      </td>
      <td valign="top">
        <%= StringUtils.trimToSizeNoDots(toString(thisTicket.getProblem()), 30) %>

@@ -36,21 +36,20 @@ import org.aspcfs.utils.web.RequestUtils;
 import java.sql.Connection;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    October 15, 2001
- *@version    $Id: ExternalContactsOpps.java,v 1.3 2002/02/05 19:44:43 chris Exp
- *      $
+ * @author chris
+ * @version $Id: ExternalContactsOpps.java,v 1.3 2002/02/05 19:44:43 chris Exp
+ *          $
+ * @created October 15, 2001
  */
 public final class ExternalContactsOpps extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandViewOpps(ActionContext context) {
 
@@ -59,8 +58,11 @@ public final class ExternalContactsOpps extends CFSModule {
 
     addModuleBean(context, "External Contacts", "Opportunities");
 
-    PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "ExternalOppsPagedListInfo");
-    oppPagedListInfo.setLink("ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+    PagedListInfo oppPagedListInfo = this.getPagedListInfo(
+        context, "ExternalOppsPagedListInfo");
+    oppPagedListInfo.setLink(
+        "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + RequestUtils.addLinkParams(
+            context.getRequest(), "popup|popupType|actionId"));
 
     Connection db = null;
     OpportunityHeaderList oppList = new OpportunityHeaderList();
@@ -69,7 +71,9 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-view") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-view")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-view") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-view")))) {
         return ("PermissionError");
       }
 
@@ -89,6 +93,9 @@ public final class ExternalContactsOpps extends CFSModule {
         oppList.setOwner(this.getUserId(context));
         oppList.setQueryOpenOnly(true);
       }
+      if (thisContact.isTrashed()) {
+        oppList.setIncludeOnlyTrashed(true);
+      }
       oppList.buildList(db);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -99,7 +106,8 @@ public final class ExternalContactsOpps extends CFSModule {
 
     if (errorMessage == null) {
       context.getRequest().setAttribute("opportunityHeaderList", oppList);
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+      boolean popup = "true".equals(
+          context.getRequest().getParameter("popup"));
       if (popup) {
         return "ListOppsPopupOK";
       }
@@ -112,10 +120,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Exception errorMessage = null;
@@ -123,18 +131,38 @@ public final class ExternalContactsOpps extends CFSModule {
     Contact thisContact = null;
     Connection db = null;
     String id = context.getRequest().getParameter("headerId");
+    if (id == null || "".equals(id)) {
+      id = (String) context.getRequest().getAttribute("headerId");
+    }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
     UserList shortChildList = thisRec.getShortChildList();
-    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    UserList userList = thisRec.getFullChildList(
+        shortChildList, new UserList());
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     userList.setExcludeExpiredIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
       if (context.getRequest().getAttribute("ContactDetails") == null) {
         thisContact = new Contact(db, contactId);
         if (!hasAuthority(db, context, thisContact)) {
@@ -142,11 +170,14 @@ public final class ExternalContactsOpps extends CFSModule {
         }
         context.getRequest().setAttribute("ContactDetails", thisContact);
       } else {
-        thisContact = (Contact) context.getRequest().getAttribute("ContactDetails");
+        thisContact = (Contact) context.getRequest().getAttribute(
+            "ContactDetails");
       }
 
       if (id != null && !"-1".equals(id)) {
-        if (!hasPermission(context, "contacts-external_contacts-opportunities-add") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-add")))) {
+        if (!hasPermission(
+            context, "contacts-external_contacts-opportunities-add") || (thisContact.getOrgId() > 0 && !(hasPermission(
+                context, "accounts-accounts-contacts-opportunities-add")))) {
           return ("PermissionError");
         }
       }
@@ -154,7 +185,8 @@ public final class ExternalContactsOpps extends CFSModule {
       //check if a header needs to be built.
       if (id != null && !"-1".equals(id)) {
         //Build the container item
-        OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(id));
+        OpportunityHeader oppHeader = new OpportunityHeader(
+            db, Integer.parseInt(id));
         context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
     } catch (Exception e) {
@@ -173,31 +205,51 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandSave(ActionContext context) {
     boolean recordInserted = false;
     boolean isValid = false;
-    OpportunityBean newOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
+    OpportunityBean newOpp = (OpportunityBean) context.getRequest().getAttribute(
+        "OppDetails");
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
     //set types
-    newOpp.getComponent().setTypeList(context.getRequest().getParameterValues("selectedList"));
+    newOpp.getComponent().setTypeList(
+        context.getRequest().getParameterValues("selectedList"));
     newOpp.getComponent().setEnteredBy(getUserId(context));
     newOpp.getComponent().setModifiedBy(getUserId(context));
     newOpp.getHeader().setEnteredBy(getUserId(context));
     newOpp.getHeader().setModifiedBy(getUserId(context));
+    SystemStatus systemStatus = this.getSystemStatus(context);
 
     Connection db = null;
     try {
       db = this.getConnection(context);
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
       thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-add") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-add")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-add") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-add")))) {
         return ("PermissionError");
       }
 
@@ -209,10 +261,17 @@ public final class ExternalContactsOpps extends CFSModule {
       if (isValid) {
         recordInserted = newOpp.insert(db, context);
       }
-      if (!recordInserted) {
+      if (recordInserted) {
+        OpportunityHeader header = newOpp.getHeader();
+        OpportunityComponent component = newOpp.getComponent();
+        component.setContactId(header.getContactLink());
+        component.setOrgId(header.getAccountLink());
+        this.processInsertHook(context, component);
+      } else {
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
-        context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
+        context.getRequest().setAttribute(
+            "TypeList", newOpp.getComponent().getTypeList());
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -223,7 +282,8 @@ public final class ExternalContactsOpps extends CFSModule {
     }
     if (recordInserted) {
       addRecentItem(context, newOpp.getHeader());
-      context.getRequest().setAttribute("headerId", String.valueOf(newOpp.getHeader().getId()));
+      context.getRequest().setAttribute(
+          "headerId", String.valueOf(newOpp.getHeader().getId()));
       return (executeCommandDetailsOpp(context));
     }
     return (executeCommandPrepare(context));
@@ -231,10 +291,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateOpp(ActionContext context) {
     Connection db = null;
@@ -246,19 +306,28 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-edit")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-edit")))) {
         return ("PermissionError");
       }
 
-      OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(headerId));
+      OpportunityHeader oldHeader = new OpportunityHeader(
+          db, Integer.parseInt(headerId));
+      OpportunityHeader oppHeader = new OpportunityHeader(
+          db, Integer.parseInt(headerId));
       if (!hasAuthority(context, oppHeader.getEnteredBy())) {
         return "PermissionError";
       }
       oppHeader.setModifiedBy(getUserId(context));
-      oppHeader.setDescription(context.getRequest().getParameter("description"));
+      oppHeader.setDescription(
+          context.getRequest().getParameter("description"));
       isValid = this.validateObject(context, db, oppHeader);
       if (isValid) {
         resultCount = oppHeader.update(db);
+      }
+      if (resultCount == 1) {
+        this.processUpdateHook(context, oldHeader, oppHeader);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -268,7 +337,8 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (resultCount == 1) {
-      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
+          "return").equals("list")) {
         return (executeCommandViewOpps(context));
       } else {
         return (executeCommandDetailsOpp(context));
@@ -283,10 +353,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveComponent(ActionContext context) {
     boolean recordInserted = false;
@@ -294,9 +364,13 @@ public final class ExternalContactsOpps extends CFSModule {
     int resultCount = 0;
     Contact thisContact = null;
     String permission = "contacts-external_contacts-opportunities-add";
+    SystemStatus systemStatus = this.getSystemStatus(context);
 
+    OpportunityHeader header = null;
     OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
-    newComponent.setTypeList(context.getRequest().getParameterValues("selectedList"));
+    OpportunityComponent oldComponent = null;
+    newComponent.setTypeList(
+        context.getRequest().getParameterValues("selectedList"));
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
 
@@ -310,20 +384,29 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      header = new OpportunityHeader(db, newComponent.getHeaderId());
+      newComponent.setContactId(header.getContactLink());
+      newComponent.setOrgId(header.getAccountLink());
 
       //check permissions
-      if (!hasPermission(context, permission) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-edit")))) {
+      if (!hasPermission(context, permission) || (thisContact.getOrgId() > 0 && !(hasPermission(
+          context, "accounts-accounts-contacts-opportunities-edit")))) {
         return ("PermissionError");
       }
 
       if (newComponent.getId() > 0) {
         newComponent.setModifiedBy(getUserId(context));
-        if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, newComponent.getOwner()))) {
+        if (!(hasAuthority(db, context, thisContact) || hasAuthority(
+            context, newComponent.getOwner()))) {
           return "PermissionError";
         }
         isValid = this.validateObject(context, db, newComponent);
         if (isValid) {
+          oldComponent = new OpportunityComponent(db, newComponent.getId());
           resultCount = newComponent.update(db, context);
+        }
+        if (resultCount == 1) {
+          this.processUpdateHook(context, oldComponent, newComponent);
         }
       } else {
         if (!hasAuthority(db, context, thisContact)) {
@@ -335,6 +418,7 @@ public final class ExternalContactsOpps extends CFSModule {
         }
       }
       if (recordInserted) {
+        this.processInsertHook(context, newComponent);
         addRecentItem(context, newComponent);
       } else if (resultCount == 1) {
         newComponent.queryRecord(db, newComponent.getId());
@@ -342,12 +426,15 @@ public final class ExternalContactsOpps extends CFSModule {
         //rebuild the form
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
-        context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
+        context.getRequest().setAttribute(
+            "TypeList", newComponent.getTypeList());
         if ("modify".equals(action) && resultCount == -1) {
-          UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+          UserBean thisUser = (UserBean) context.getSession().getAttribute(
+              "User");
           User thisRec = thisUser.getUserRecord();
           UserList shortChildList = thisRec.getShortChildList();
-          UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+          UserList userList = thisRec.getFullChildList(
+              shortChildList, new UserList());
           userList.setMyId(getUserId(context));
           userList.setMyValue(thisUser.getContact().getNameLastFirst());
           userList.setIncludeMe(true);
@@ -356,6 +443,21 @@ public final class ExternalContactsOpps extends CFSModule {
           context.getRequest().setAttribute("UserList", userList);
         }
       }
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
       context.getRequest().setAttribute("ComponentDetails", newComponent);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -389,41 +491,67 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDetailsOpp(ActionContext context) {
     Exception errorMessage = null;
     int headerId = -1;
     addModuleBean(context, "External Contacts", "Opportunities");
     if (context.getRequest().getParameter("headerId") != null) {
-      headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
+      headerId = Integer.parseInt(
+          context.getRequest().getParameter("headerId"));
     } else {
-      headerId = Integer.parseInt((String) context.getRequest().getAttribute("headerId"));
+      headerId = Integer.parseInt(
+          (String) context.getRequest().getAttribute("headerId"));
     }
     String contactId = context.getRequest().getParameter("contactId");
     Connection db = null;
     Contact thisContact = null;
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
 
-    PagedListInfo componentListInfo = this.getPagedListInfo(context, "ComponentListInfo");
-    componentListInfo.setLink("ExternalContactsOpps.do?command=DetailsOpp&headerId=" + headerId + "&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+    PagedListInfo componentListInfo = this.getPagedListInfo(
+        context, "ComponentListInfo");
+    componentListInfo.setLink(
+        "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + headerId + "&contactId=" + contactId + RequestUtils.addLinkParams(
+            context.getRequest(), "popup|popupType|actionId"));
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      if (!thisContact.getEnabled() || thisContact.isTrashed()) {
+        return "ContactDisabledError";
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-view") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-view")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-view") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-view")))) {
         return ("PermissionError");
       }
 
       if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
-      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
 
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
@@ -434,6 +562,9 @@ public final class ExternalContactsOpps extends CFSModule {
       componentList.setPagedListInfo(componentListInfo);
       componentList.setOwnerIdRange(this.getUserRange(context));
       componentList.setHeaderId(thisHeader.getId());
+      if (thisHeader.isTrashed()) {
+        componentList.setIncludeOnlyTrashed(true);
+      }
       componentList.buildList(db);
       context.getRequest().setAttribute("componentList", componentList);
     } catch (Exception e) {
@@ -443,7 +574,8 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+      boolean popup = "true".equals(
+          context.getRequest().getParameter("popup"));
       addRecentItem(context, thisHeader);
       if (popup) {
         return ("DetailsOppPopupOK");
@@ -457,15 +589,16 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyOpp(ActionContext context) {
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Opportunities");
-    int headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
+    int headerId = Integer.parseInt(
+        context.getRequest().getParameter("headerId"));
     String contactId = context.getRequest().getParameter("contactId");
     Connection db = null;
     OpportunityHeader thisHeader = null;
@@ -474,7 +607,9 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-edit")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-edit")))) {
         return ("PermissionError");
       }
 
@@ -491,7 +626,8 @@ public final class ExternalContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+      boolean popup = "true".equals(
+          context.getRequest().getParameter("popup"));
       context.getRequest().setAttribute("opportunityHeader", thisHeader);
       addRecentItem(context, thisHeader);
       if (popup) {
@@ -506,10 +642,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
     OpportunityComponent thisComponent = null;
@@ -524,27 +660,49 @@ public final class ExternalContactsOpps extends CFSModule {
       //Load the contact
       thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-view") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-view")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-view") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-view")))) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
       //Load the component
-      thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
-      if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, thisComponent.getOwner()))) {
+      thisComponent = new OpportunityComponent(
+          db, Integer.parseInt(componentId));
+      if (!(hasAuthority(db, context, thisContact) || hasAuthority(
+          context, thisComponent.getOwner()))) {
         return "PermissionError";
       }
       thisComponent.checkEnabledOwnerAccount(db);
       context.getRequest().setAttribute("oppComponentDetails", thisComponent);
       //Load the opportunity header for display
-      OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
+      OpportunityHeader oppHeader = new OpportunityHeader(
+          db, thisComponent.getHeaderId());
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, thisComponent.getOwner()))) {
+    if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(
+        context, thisComponent.getOwner()))) {
       return "PermissionError";
     }
     boolean popup = "true".equals(context.getRequest().getParameter("popup"));
@@ -557,10 +715,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     HtmlDialog htmlDialog = new HtmlDialog();
@@ -571,7 +729,9 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-delete")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-delete")))) {
         return ("PermissionError");
       }
       if (!hasAuthority(db, context, thisContact)) {
@@ -581,10 +741,14 @@ public final class ExternalContactsOpps extends CFSModule {
       DependencyList dependencies = thisOpp.processDependencies(db);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.addMessage(
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-      htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|sourcePopup") + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId|sourcePopup") + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -597,10 +761,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -614,19 +778,26 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-edit")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-edit")))) {
         return ("PermissionError");
       }
 
       thisComponent = new OpportunityComponent(db, id);
-      if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, thisComponent.getOwner()))) {
+      if (!(hasAuthority(db, context, thisContact) || hasAuthority(
+          context, thisComponent.getOwner()))) {
         return "PermissionError";
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
-      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.contact.opps.delete"));
+      htmlDialog.setTitle(
+          systemStatus.getLabel("confirmdelete.contact.opps.delete"));
       htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|sourcePopup") + "'");
-      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      htmlDialog.setDeleteUrl(
+          "javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId|sourcePopup") + "'");
+      htmlDialog.addButton(
+          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -643,14 +814,14 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDeleteOpp(ActionContext context) {
-    if (!hasPermission(context, "contacts-external_contacts-opportunities-delete")) {
+    if (!hasPermission(
+        context, "contacts-external_contacts-opportunities-delete")) {
       return ("PermissionError");
     }
     String popup = (String) context.getRequest().getParameter("sourcePopup");
@@ -663,15 +834,18 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-delete")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-delete")))) {
         return ("PermissionError");
       }
 
       if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
-      newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
-      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
+      newOpp = new OpportunityHeader(
+          db, context.getRequest().getParameter("id"));
+      recordDeleted = newOpp.delete(db, context, this.getPath(context));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -681,11 +855,13 @@ public final class ExternalContactsOpps extends CFSModule {
       if (recordDeleted) {
         context.getRequest().setAttribute("contactId", contactId);
         deleteRecentItem(context, newOpp);
-        if (popup!= null && "true".equals(popup)) {
-          context.getRequest().setAttribute("id", ""+newOpp.getId());
+        if (popup != null && "true".equals(popup)) {
+          context.getRequest().setAttribute("id", "" + newOpp.getId());
           return "OppDeletePopupOK";
         }
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId|popup"));
+        context.getRequest().setAttribute(
+            "refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + RequestUtils.addLinkParams(
+                context.getRequest(), "popupType|actionId"));
         return "OppDeleteOK";
       } else {
         processErrors(context, newOpp.getErrors());
@@ -699,10 +875,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
     Exception errorMessage = null;
@@ -715,15 +891,19 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-delete")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-delete")))) {
         return ("PermissionError");
       }
 
-      component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
-      if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, component.getOwner()))) {
+      component = new OpportunityComponent(
+          db, context.getRequest().getParameter("id"));
+      if (!(hasAuthority(db, context, thisContact) || hasAuthority(
+          context, component.getOwner()))) {
         return "PermissionError";
       }
-      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
+      recordDeleted = component.delete(db, context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -732,11 +912,13 @@ public final class ExternalContactsOpps extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, component);
-        if (popup!= null && "true".equals(popup)) {
-          context.getRequest().setAttribute("id", ""+component.getHeaderId());
+        if (popup != null && "true".equals(popup)) {
+          context.getRequest().setAttribute("id", "" + component.getHeaderId());
           return "OppDeletePopupOK";
         }
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId|popup"));
+        context.getRequest().setAttribute(
+            "refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + RequestUtils.addLinkParams(
+                context.getRequest(), "popupType|actionId"));
         return ("ComponentDeleteOK");
       } else {
         processErrors(context, component.getErrors());
@@ -750,10 +932,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
     Exception errorMessage = null;
@@ -768,24 +950,46 @@ public final class ExternalContactsOpps extends CFSModule {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
     UserList shortChildList = thisRec.getShortChildList();
-    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    UserList userList = thisRec.getFullChildList(
+        shortChildList, new UserList());
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     userList.setExcludeExpiredIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
+    SystemStatus systemStatus = this.getSystemStatus(context);
 
     try {
       db = this.getConnection(context);
+      LookupList environmentSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_environment");
+      context.getRequest().setAttribute(
+          "environmentSelect", environmentSelect);
+      LookupList competitorsSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_competitors");
+      context.getRequest().setAttribute(
+          "competitorsSelect", competitorsSelect);
+      LookupList compellingEventSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_event_compelling");
+      context.getRequest().setAttribute(
+          "compellingEventSelect", compellingEventSelect);
+      LookupList budgetSelect = systemStatus.getLookupList(
+          db, "lookup_opportunity_budget");
+      context.getRequest().setAttribute("budgetSelect", budgetSelect);
       component = new OpportunityComponent(db, componentId);
+      context.getRequest().setAttribute(
+          "headerId", String.valueOf(component.getHeaderId()));
       thisContact = new Contact(db, contactId);
 
-      if (!hasPermission(context, "contacts-external_contacts-opportunities-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-edit")))) {
+      if (!hasPermission(
+          context, "contacts-external_contacts-opportunities-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(
+              context, "accounts-accounts-contacts-opportunities-edit")))) {
         return ("PermissionError");
       }
 
-      if (!(hasAuthority(db, context, thisContact) || !hasAuthority(context, component.getOwner()))) {
+      if (!(hasAuthority(db, context, thisContact) || !hasAuthority(
+          context, component.getOwner()))) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);

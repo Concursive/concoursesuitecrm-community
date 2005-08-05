@@ -23,37 +23,46 @@
   var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, callId, view) {
+  function displayMenu(loc, id, contactId, callId, view, trashed) {
     thisContactId = contactId;
     thisCallId = callId;
     thisView = view;
-    updateMenu();
+    updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Update menu for this Contact based on permissions
-  function updateMenu(){
-    if(thisView == 'pending'){
-      showSpan('menuComplete');
-      showSpan('menuCancel');
-      showSpan('menuReschedule');
-      hideSpan('menuModify');
-    }else{
+  function updateMenu(trashed){
+    if (trashed == 'true'){
       hideSpan('menuComplete');
       hideSpan('menuCancel');
       hideSpan('menuReschedule');
-      if(thisView != 'cancel'){
-        showSpan('menuModify');
-      }else{
+      hideSpan('menuModify');
+      hideSpan('menuForward');
+    } else {
+      showSpan('menuForward');
+      if(thisView == 'pending'){
+        showSpan('menuComplete');
+        showSpan('menuCancel');
+        showSpan('menuReschedule');
         hideSpan('menuModify');
-       }
+      } else {
+        hideSpan('menuComplete');
+        hideSpan('menuCancel');
+        hideSpan('menuReschedule');
+        if(thisView != 'cancel'){
+          showSpan('menuModify');
+        } else {
+          hideSpan('menuModify');
+        }
       }
     }
-  
+  }
+
   //Menu link functions
   function details() {
     var url = 'ExternalContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';

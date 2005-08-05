@@ -15,19 +15,23 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Object that represents an item in an outline, used for moving items around
- *  and inserting new items.
+ * Object that represents an item in an outline, used for moving items around
+ * and inserting new items.
  *
- *@author     matt rajkowski
- *@created    July 15, 2003
- *@version    $Id: RequirementMapItem.java,v 1.1.2.1 2004/03/19 21:00:50
- *      rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: RequirementMapItem.java,v 1.1.2.1 2004/03/19 21:00:50
+ *          rvasista Exp $
+ * @created July 15, 2003
  */
 public class RequirementMapItem {
 
@@ -53,16 +57,17 @@ public class RequirementMapItem {
 
 
   /**
-   *  Constructor for the RequirementMapItem object
+   * Constructor for the RequirementMapItem object
    */
-  public RequirementMapItem() { }
+  public RequirementMapItem() {
+  }
 
 
   /**
-   *  Constructor for the RequirementMapItem object
+   * Constructor for the RequirementMapItem object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public RequirementMapItem(ResultSet rs) throws SQLException {
     id = rs.getInt("map_id");
@@ -76,9 +81,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the id attribute of the RequirementMapItem object
+   * Sets the id attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -86,9 +91,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the projectId attribute of the RequirementMapItem object
+   * Sets the projectId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -96,9 +101,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the projectId attribute of the RequirementMapItem object
+   * Sets the projectId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -106,9 +111,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the requirementId attribute of the RequirementMapItem object
+   * Sets the requirementId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(int tmp) {
     this.requirementId = tmp;
@@ -116,9 +121,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the requirementId attribute of the RequirementMapItem object
+   * Sets the requirementId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new requirementId value
+   * @param tmp The new requirementId value
    */
   public void setRequirementId(String tmp) {
     this.requirementId = Integer.parseInt(tmp);
@@ -126,9 +131,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the position attribute of the RequirementMapItem object
+   * Sets the position attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new position value
+   * @param tmp The new position value
    */
   public void setPosition(int tmp) {
     this.position = tmp;
@@ -136,9 +141,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the position attribute of the RequirementMapItem object
+   * Sets the position attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new position value
+   * @param tmp The new position value
    */
   public void setPosition(String tmp) {
     this.position = Integer.parseInt(tmp);
@@ -146,9 +151,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the indent attribute of the RequirementMapItem object
+   * Sets the indent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new indent value
+   * @param tmp The new indent value
    */
   public void setIndent(int tmp) {
     this.indent = tmp;
@@ -156,9 +161,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the indent attribute of the RequirementMapItem object
+   * Sets the indent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new indent value
+   * @param tmp The new indent value
    */
   public void setIndent(String tmp) {
     this.indent = Integer.parseInt(tmp);
@@ -166,9 +171,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the folderId attribute of the RequirementMapItem object
+   * Sets the folderId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new folderId value
+   * @param tmp The new folderId value
    */
   public void setFolderId(int tmp) {
     this.folderId = tmp;
@@ -176,9 +181,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the folderId attribute of the RequirementMapItem object
+   * Sets the folderId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new folderId value
+   * @param tmp The new folderId value
    */
   public void setFolderId(String tmp) {
     this.folderId = Integer.parseInt(tmp);
@@ -186,9 +191,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the assignmentId attribute of the RequirementMapItem object
+   * Sets the assignmentId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new assignmentId value
+   * @param tmp The new assignmentId value
    */
   public void setAssignmentId(int tmp) {
     this.assignmentId = tmp;
@@ -196,9 +201,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the assignmentId attribute of the RequirementMapItem object
+   * Sets the assignmentId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new assignmentId value
+   * @param tmp The new assignmentId value
    */
   public void setAssignmentId(String tmp) {
     this.assignmentId = Integer.parseInt(tmp);
@@ -206,9 +211,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the children attribute of the RequirementMapItem object
+   * Sets the children attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new children value
+   * @param tmp The new children value
    */
   public void setChildren(ArrayList tmp) {
     this.children = tmp;
@@ -216,9 +221,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the finalNode attribute of the RequirementMapItem object
+   * Sets the finalNode attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new finalNode value
+   * @param tmp The new finalNode value
    */
   public void setFinalNode(boolean tmp) {
     this.finalNode = tmp;
@@ -226,9 +231,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the finalNode attribute of the RequirementMapItem object
+   * Sets the finalNode attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new finalNode value
+   * @param tmp The new finalNode value
    */
   public void setFinalNode(String tmp) {
     this.finalNode = DatabaseUtils.parseBoolean(tmp);
@@ -236,9 +241,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the parent attribute of the RequirementMapItem object
+   * Sets the parent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new parent value
+   * @param tmp The new parent value
    */
   public void setParent(RequirementMapItem tmp) {
     this.parent = tmp;
@@ -246,9 +251,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the previousSameIndent attribute of the RequirementMapItem object
+   * Sets the previousSameIndent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new previousSameIndent value
+   * @param tmp The new previousSameIndent value
    */
   public void setPreviousSameIndent(RequirementMapItem tmp) {
     this.previousSameIndent = tmp;
@@ -256,9 +261,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the nextSameIndent attribute of the RequirementMapItem object
+   * Sets the nextSameIndent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new nextSameIndent value
+   * @param tmp The new nextSameIndent value
    */
   public void setNextSameIndent(RequirementMapItem tmp) {
     this.nextSameIndent = tmp;
@@ -266,9 +271,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the prevIndent attribute of the RequirementMapItem object
+   * Sets the prevIndent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new prevIndent value
+   * @param tmp The new prevIndent value
    */
   public void setPrevIndent(int tmp) {
     this.prevIndent = tmp;
@@ -276,9 +281,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the prevIndent attribute of the RequirementMapItem object
+   * Sets the prevIndent attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new prevIndent value
+   * @param tmp The new prevIndent value
    */
   public void setPrevIndent(String tmp) {
     this.prevIndent = Integer.parseInt(tmp);
@@ -286,9 +291,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the prevMapId attribute of the RequirementMapItem object
+   * Sets the prevMapId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new prevMapId value
+   * @param tmp The new prevMapId value
    */
   public void setPrevMapId(int tmp) {
     this.prevMapId = tmp;
@@ -296,9 +301,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Sets the prevMapId attribute of the RequirementMapItem object
+   * Sets the prevMapId attribute of the RequirementMapItem object
    *
-   *@param  tmp  The new prevMapId value
+   * @param tmp The new prevMapId value
    */
   public void setPrevMapId(String tmp) {
     this.prevMapId = Integer.parseInt(tmp);
@@ -306,9 +311,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the id attribute of the RequirementMapItem object
+   * Gets the id attribute of the RequirementMapItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -316,9 +321,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the projectId attribute of the RequirementMapItem object
+   * Gets the projectId attribute of the RequirementMapItem object
    *
-   *@return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -326,9 +331,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the requirementId attribute of the RequirementMapItem object
+   * Gets the requirementId attribute of the RequirementMapItem object
    *
-   *@return    The requirementId value
+   * @return The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
@@ -336,9 +341,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the position attribute of the RequirementMapItem object
+   * Gets the position attribute of the RequirementMapItem object
    *
-   *@return    The position value
+   * @return The position value
    */
   public int getPosition() {
     return position;
@@ -346,9 +351,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the indent attribute of the RequirementMapItem object
+   * Gets the indent attribute of the RequirementMapItem object
    *
-   *@return    The indent value
+   * @return The indent value
    */
   public int getIndent() {
     return indent;
@@ -356,9 +361,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the folderId attribute of the RequirementMapItem object
+   * Gets the folderId attribute of the RequirementMapItem object
    *
-   *@return    The folderId value
+   * @return The folderId value
    */
   public int getFolderId() {
     return folderId;
@@ -366,9 +371,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the assignmentId attribute of the RequirementMapItem object
+   * Gets the assignmentId attribute of the RequirementMapItem object
    *
-   *@return    The assignmentId value
+   * @return The assignmentId value
    */
   public int getAssignmentId() {
     return assignmentId;
@@ -376,9 +381,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the children attribute of the RequirementMapItem object
+   * Gets the children attribute of the RequirementMapItem object
    *
-   *@return    The children value
+   * @return The children value
    */
   public ArrayList getChildren() {
     return children;
@@ -386,9 +391,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the finalNode attribute of the RequirementMapItem object
+   * Gets the finalNode attribute of the RequirementMapItem object
    *
-   *@return    The finalNode value
+   * @return The finalNode value
    */
   public boolean getFinalNode() {
     return finalNode;
@@ -396,9 +401,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the parent attribute of the RequirementMapItem object
+   * Gets the parent attribute of the RequirementMapItem object
    *
-   *@return    The parent value
+   * @return The parent value
    */
   public RequirementMapItem getParent() {
     return parent;
@@ -406,9 +411,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the previousSameIndent attribute of the RequirementMapItem object
+   * Gets the previousSameIndent attribute of the RequirementMapItem object
    *
-   *@return    The previousSameIndent value
+   * @return The previousSameIndent value
    */
   public RequirementMapItem getPreviousSameIndent() {
     return previousSameIndent;
@@ -416,9 +421,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the nextSameIndent attribute of the RequirementMapItem object
+   * Gets the nextSameIndent attribute of the RequirementMapItem object
    *
-   *@return    The nextSameIndent value
+   * @return The nextSameIndent value
    */
   public RequirementMapItem getNextSameIndent() {
     return nextSameIndent;
@@ -426,9 +431,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the prevIndent attribute of the RequirementMapItem object
+   * Gets the prevIndent attribute of the RequirementMapItem object
    *
-   *@return    The prevIndent value
+   * @return The prevIndent value
    */
   public int getPrevIndent() {
     return prevIndent;
@@ -436,9 +441,9 @@ public class RequirementMapItem {
 
 
   /**
-   *  Gets the prevMapId attribute of the RequirementMapItem object
+   * Gets the prevMapId attribute of the RequirementMapItem object
    *
-   *@return    The prevMapId value
+   * @return The prevMapId value
    */
   public int getPrevMapId() {
     return prevMapId;
@@ -446,10 +451,10 @@ public class RequirementMapItem {
 
 
   /**
-   *  Appends this item to the bottom of the requirement map list
+   * Appends this item to the bottom of the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public synchronized void append(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -526,11 +531,15 @@ public class RequirementMapItem {
     }
     //Append the item
     ++position;
+    id = DatabaseUtils.getNextSeq(db, "project_requirements_map_map_id_seq");
     pst = db.prepareStatement(
         "INSERT INTO project_requirements_map " +
-        "(project_id, requirement_id, position, indent, folder_id, assignment_id) " +
-        "VALUES (?, ?, ?, ?, ?, ?) ");
+        "(" + (id > -1 ? "map_id, " : "") + "project_id, requirement_id, position, indent, folder_id, assignment_id) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setInt(++i, projectId);
     pst.setInt(++i, requirementId);
     pst.setInt(++i, position);
@@ -539,15 +548,16 @@ public class RequirementMapItem {
     DatabaseUtils.setInt(pst, ++i, assignmentId);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "project_requirements_map_map_id_seq");
+    id = DatabaseUtils.getCurrVal(
+        db, "project_requirements_map_map_id_seq", id);
   }
 
 
   /**
-   *  Removes this item from the requirement map list
+   * Removes this item from the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public synchronized void remove(Connection db) throws SQLException {
     boolean commit = db.getAutoCommit();
@@ -615,10 +625,10 @@ public class RequirementMapItem {
 
 
   /**
-   *  Moves this item right in the requirement map list
+   * Moves this item right in the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void moveRight(Connection db) throws SQLException {
     this.move(db, RequirementMapItem.RIGHT, true, null);
@@ -626,10 +636,10 @@ public class RequirementMapItem {
 
 
   /**
-   *  Moves this item left in the requirement map list
+   * Moves this item left in the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void moveLeft(Connection db) throws SQLException {
     this.move(db, RequirementMapItem.LEFT, true, null);
@@ -637,13 +647,13 @@ public class RequirementMapItem {
 
 
   /**
-   *  Handles the complexity of moving items LEFT and RIGHT
+   * Handles the complexity of moving items LEFT and RIGHT
    *
-   *@param  db                Description of the Parameter
-   *@param  direction         Description of the Parameter
-   *@param  isRoot            Description of the Parameter
-   *@param  mapList           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param direction Description of the Parameter
+   * @param isRoot    Description of the Parameter
+   * @param mapList   Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void move(Connection db, int direction, boolean isRoot, RequirementMapList mapList) throws SQLException {
     if (position == -1) {
@@ -661,7 +671,8 @@ public class RequirementMapItem {
     //Move the item right if NOT 1st in node
     if (direction == RIGHT && thisItem.getPosition() > 1) {
       //Ask parent to make sure this position is not the first child
-      if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(thisItem) > 0) ||
+      if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(
+          thisItem) > 0) ||
           (thisItem.getParent() == null && thisItem.getPosition() > 1) ||
           (!isRoot)) {
         //Good, now move it right and its children
@@ -703,10 +714,10 @@ public class RequirementMapItem {
 
 
   /**
-   *  Moves this item up in the requirement map list
+   * Moves this item up in the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void moveUp(Connection db) throws SQLException {
     if (position == -1) {
@@ -720,7 +731,8 @@ public class RequirementMapItem {
     //Find the next item
     RequirementMapItem thisItem = mapList.getItem(position);
     //Ask parent to make sure this position is not the last child
-    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(thisItem) > 0) ||
+    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(
+        thisItem) > 0) ||
         (thisItem.getParent() == null && thisItem.getPosition() > 1)) {
       thisItem.moveUp(db, true, mapList, new MoveCounter());
     }
@@ -728,19 +740,20 @@ public class RequirementMapItem {
 
 
   /**
-   *  Handles the complexity of moving an item up in the requirement map list
+   * Handles the complexity of moving an item up in the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@param  isRoot            Description of the Parameter
-   *@param  mapList           Description of the Parameter
-   *@param  counter           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param isRoot  Description of the Parameter
+   * @param mapList Description of the Parameter
+   * @param counter Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void moveUp(Connection db, boolean isRoot, RequirementMapList mapList, MoveCounter counter) throws SQLException {
     int moveCount = 0;
     RequirementMapItem thisItem = mapList.getItem(position);
     //Ask parent to make sure this position is not the first child
-    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(thisItem) > 0) ||
+    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(
+        thisItem) > 0) ||
         (thisItem.getParent() == null && thisItem.getPosition() > 1) ||
         (!isRoot)) {
       PreparedStatement pst = db.prepareStatement(
@@ -749,7 +762,8 @@ public class RequirementMapItem {
           "WHERE map_id = ? ");
       int i = 0;
       if (isRoot) {
-        counter.setAmount(thisItem.getPosition() - thisItem.getPreviousSameIndent().getPosition());
+        counter.setAmount(
+            thisItem.getPosition() - thisItem.getPreviousSameIndent().getPosition());
       }
       pst.setInt(++i, thisItem.getPosition() - counter.getAmount());
       pst.setInt(++i, id);
@@ -774,10 +788,10 @@ public class RequirementMapItem {
 
 
   /**
-   *  Moves this item down in the requirement map list
+   * Moves this item down in the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void moveDown(Connection db) throws SQLException {
     if (position == -1) {
@@ -791,28 +805,31 @@ public class RequirementMapItem {
     //Find the next item
     RequirementMapItem thisItem = mapList.getItem(position);
     //Ask parent to make sure this position is not the last child
-    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(thisItem) < thisItem.getParent().getChildren().size() - 1) ||
+    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(
+        thisItem) < thisItem.getParent().getChildren().size() - 1) ||
         (thisItem.getParent() == null && thisItem.getNextSameIndent() != null)) {
-      mapList.getItem(thisItem.getNextSameIndent().getPosition()).moveUp(db, true, mapList, new MoveCounter());
+      mapList.getItem(thisItem.getNextSameIndent().getPosition()).moveUp(
+          db, true, mapList, new MoveCounter());
     }
   }
 
 
   /**
-   *  Handles the complexity of moving an item down in the requirement map list
+   * Handles the complexity of moving an item down in the requirement map list
    *
-   *@param  db                Description of the Parameter
-   *@param  isRoot            Description of the Parameter
-   *@param  mapList           Description of the Parameter
-   *@param  counter           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param isRoot  Description of the Parameter
+   * @param mapList Description of the Parameter
+   * @param counter Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void moveDown(Connection db, boolean isRoot, RequirementMapList mapList, MoveCounter counter) throws SQLException {
     int moveCount = 0;
     //Load the current map once to work on child operations
     RequirementMapItem thisItem = mapList.getItem(position);
     //Ask parent to make sure this position is not the last child
-    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(thisItem) < thisItem.getParent().getChildren().size() - 1) ||
+    if ((thisItem.getParent() != null && thisItem.getParent().getChildren().indexOf(
+        thisItem) < thisItem.getParent().getChildren().size() - 1) ||
         (thisItem.getParent() == null && thisItem.getNextSameIndent() != null) ||
         (!isRoot)) {
       PreparedStatement pst = db.prepareStatement(
@@ -821,7 +838,8 @@ public class RequirementMapItem {
           "WHERE map_id = ? ");
       int i = 0;
       if (isRoot) {
-        counter.setAmount(thisItem.getNextSameIndent().getPosition() - thisItem.getPosition());
+        counter.setAmount(
+            thisItem.getNextSameIndent().getPosition() - thisItem.getPosition());
       }
       pst.setInt(++i, thisItem.getPosition() + counter.getAmount());
       pst.setInt(++i, id);
@@ -846,10 +864,10 @@ public class RequirementMapItem {
 
 
   /**
-   *  Reads in missing requirement map item data
+   * Reads in missing requirement map item data
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -877,7 +895,7 @@ public class RequirementMapItem {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void printObject() {
     System.out.println("=== RequirementMapItem ===");

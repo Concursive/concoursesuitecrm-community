@@ -15,17 +15,21 @@
  */
 package org.aspcfs.modules.help.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *  Represents help for a page
+ * Represents help for a page
  *
- *@author     matt rajkowski
- *@created    January 21, 2002
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 21, 2002
  */
 public class HelpItem extends GenericBean {
 
@@ -61,16 +65,17 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpItem object
+   * Constructor for the HelpItem object
    */
-  public HelpItem() { }
+  public HelpItem() {
+  }
 
 
   /**
-   *  Constructor for the HelpItem object
+   * Constructor for the HelpItem object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -78,14 +83,14 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpItem object
+   * Constructor for the HelpItem object
    *
-   *@param  db                Description of the Parameter
-   *@param  module            Description of the Parameter
-   *@param  section           Description of the Parameter
-   *@param  subsection        Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param module     Description of the Parameter
+   * @param section    Description of the Parameter
+   * @param subsection Description of the Parameter
+   * @param userId     Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpItem(Connection db, String module, String section, String subsection, int userId) throws SQLException {
     if ("null".equals(module)) {
@@ -102,11 +107,11 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Constructor for the HelpItem object
+   * Constructor for the HelpItem object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public HelpItem(Connection db, int id) throws SQLException {
     this.id = id;
@@ -115,10 +120,10 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -148,19 +153,19 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public synchronized void processRecord(Connection db, int userId) throws SQLException {
     boolean newItem = true;
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM help_contents h " +
-        "WHERE module = ? " +
-        (section != null ? "AND section = ? " : "AND section IS NULL ") +
+        "WHERE \"module\" = ? " +
+        (section != null ? "AND \"section\" = ? " : "AND \"section\" IS NULL ") +
         (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL "));
     if (System.getProperty("DEBUG") != null) {
       System.out.println("HelpItem-> Prepared");
@@ -186,7 +191,8 @@ public class HelpItem extends GenericBean {
       this.setModifiedBy(userId);
       this.insert(db);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("HelpItem-> Record not present.. Inserting new record ");
+        System.out.println(
+            "HelpItem-> Record not present.. Inserting new record ");
       }
     } else {
       //build general features
@@ -210,17 +216,17 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void fetchRecord(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM help_contents h " +
-        "WHERE module = ? " +
-        (section != null ? "AND section = ? " : "AND section IS NULL ") +
+        "WHERE \"module\" = ? " +
+        (section != null ? "AND \"section\" = ? " : "AND \"section\" IS NULL ") +
         (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL "));
     int i = 0;
     pst.setString(++i, module);
@@ -240,9 +246,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpItem object
+   * Sets the id attribute of the HelpItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -250,9 +256,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpItem object
+   * Sets the id attribute of the HelpItem object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -260,9 +266,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the HelpItem object
+   * Sets the categoryId attribute of the HelpItem object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -270,9 +276,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the categoryId attribute of the HelpItem object
+   * Sets the categoryId attribute of the HelpItem object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -280,9 +286,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpItem object
+   * Sets the id attribute of the HelpItem object
    *
-   *@param  tmp  The new module id value
+   * @param tmp The new module id value
    */
   public void setModuleId(int tmp) {
     this.moduleId = tmp;
@@ -290,9 +296,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the HelpItem object
+   * Sets the id attribute of the HelpItem object
    *
-   *@param  tmp  The new module id value
+   * @param tmp The new module id value
    */
   public void setModuleId(String tmp) {
     this.moduleId = Integer.parseInt(tmp);
@@ -300,9 +306,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the module attribute of the HelpItem object
+   * Sets the module attribute of the HelpItem object
    *
-   *@param  tmp  The new module value
+   * @param tmp The new module value
    */
   public void setModule(String tmp) {
     this.module = tmp;
@@ -310,9 +316,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the title attribute of the HelpItem object
+   * Sets the title attribute of the HelpItem object
    *
-   *@param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -320,20 +326,19 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the section attribute of the HelpItem object
+   * Sets the section attribute of the HelpItem object
    *
-   *@param  tmp  The new section value
+   * @param tmp The new section value
    */
   public void setSection(String tmp) {
     this.section = tmp;
   }
 
 
-
   /**
-   *  Sets the subsection attribute of the HelpItem object
+   * Sets the subsection attribute of the HelpItem object
    *
-   *@param  tmp  The new subsection value
+   * @param tmp The new subsection value
    */
   public void setSubsection(String tmp) {
     this.subsection = tmp;
@@ -341,9 +346,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the HelpItem object
+   * Sets the description attribute of the HelpItem object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -351,9 +356,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the permission attribute of the HelpItem object
+   * Sets the permission attribute of the HelpItem object
    *
-   *@param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -361,9 +366,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the HelpItem object
+   * Sets the enteredBy attribute of the HelpItem object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -371,9 +376,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the HelpItem object
+   * Sets the entered attribute of the HelpItem object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -381,9 +386,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the HelpItem object
+   * Sets the modifiedBy attribute of the HelpItem object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -391,9 +396,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the HelpItem object
+   * Sets the modified attribute of the HelpItem object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -401,9 +406,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the features attribute of the HelpItem object
+   * Sets the features attribute of the HelpItem object
    *
-   *@param  features  The new features value
+   * @param features The new features value
    */
   public void setFeatures(HelpFeatureList features) {
     this.features = features;
@@ -411,9 +416,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the buildFeatures attribute of the HelpItem object
+   * Sets the buildFeatures attribute of the HelpItem object
    *
-   *@param  buildFeatures  The new buildFeatures value
+   * @param buildFeatures The new buildFeatures value
    */
   public void setBuildFeatures(boolean buildFeatures) {
     this.buildFeatures = buildFeatures;
@@ -421,9 +426,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the businessRules attribute of the HelpItem object
+   * Sets the businessRules attribute of the HelpItem object
    *
-   *@param  businessRules  The new businessRules value
+   * @param businessRules The new businessRules value
    */
   public void setBusinessRules(HelpBusinessRuleList businessRules) {
     this.businessRules = businessRules;
@@ -431,9 +436,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the buildRules attribute of the HelpItem object
+   * Sets the buildRules attribute of the HelpItem object
    *
-   *@param  buildRules  The new buildRules value
+   * @param buildRules The new buildRules value
    */
   public void setBuildRules(boolean buildRules) {
     this.buildRules = buildRules;
@@ -441,9 +446,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the buildNotes attribute of the HelpItem object
+   * Sets the buildNotes attribute of the HelpItem object
    *
-   *@param  buildNotes  The new buildNotes value
+   * @param buildNotes The new buildNotes value
    */
   public void setBuildNotes(boolean buildNotes) {
     this.buildNotes = buildNotes;
@@ -451,9 +456,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the buildTips attribute of the HelpItem object
+   * Sets the buildTips attribute of the HelpItem object
    *
-   *@param  buildTips  The new buildTips value
+   * @param buildTips The new buildTips value
    */
   public void setBuildTips(boolean buildTips) {
     this.buildTips = buildTips;
@@ -461,9 +466,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the HelpItem object
+   * Sets the notes attribute of the HelpItem object
    *
-   *@param  notes  The new notes value
+   * @param notes The new notes value
    */
   public void setNotes(HelpNoteList notes) {
     this.notes = notes;
@@ -471,9 +476,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Sets the tips attribute of the HelpItem object
+   * Sets the tips attribute of the HelpItem object
    *
-   *@param  tips  The new tips value
+   * @param tips The new tips value
    */
   public void setTips(HelpTipList tips) {
     this.tips = tips;
@@ -481,9 +486,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the HelpItem object
+   * Gets the notes attribute of the HelpItem object
    *
-   *@return    The notes value
+   * @return The notes value
    */
   public HelpNoteList getNotes() {
     return notes;
@@ -491,9 +496,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the tips attribute of the HelpItem object
+   * Gets the tips attribute of the HelpItem object
    *
-   *@return    The tips value
+   * @return The tips value
    */
   public HelpTipList getTips() {
     return tips;
@@ -501,9 +506,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the buildRules attribute of the HelpItem object
+   * Gets the buildRules attribute of the HelpItem object
    *
-   *@return    The buildRules value
+   * @return The buildRules value
    */
   public boolean getBuildRules() {
     return buildRules;
@@ -511,9 +516,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the buildNotes attribute of the HelpItem object
+   * Gets the buildNotes attribute of the HelpItem object
    *
-   *@return    The buildNotes value
+   * @return The buildNotes value
    */
   public boolean getBuildNotes() {
     return buildNotes;
@@ -521,9 +526,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the buildTips attribute of the HelpItem object
+   * Gets the buildTips attribute of the HelpItem object
    *
-   *@return    The buildTips value
+   * @return The buildTips value
    */
   public boolean getBuildTips() {
     return buildTips;
@@ -531,9 +536,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the businessRules attribute of the HelpItem object
+   * Gets the businessRules attribute of the HelpItem object
    *
-   *@return    The businessRules value
+   * @return The businessRules value
    */
   public HelpBusinessRuleList getBusinessRules() {
     return businessRules;
@@ -541,9 +546,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the buildFeatures attribute of the HelpItem object
+   * Gets the buildFeatures attribute of the HelpItem object
    *
-   *@return    The buildFeatures value
+   * @return The buildFeatures value
    */
   public boolean getBuildFeatures() {
     return buildFeatures;
@@ -551,9 +556,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the features attribute of the HelpItem object
+   * Gets the features attribute of the HelpItem object
    *
-   *@return    The features value
+   * @return The features value
    */
   public HelpFeatureList getFeatures() {
     return features;
@@ -561,9 +566,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the HelpItem object
+   * Gets the id attribute of the HelpItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -571,9 +576,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the HelpItem object
+   * Gets the categoryId attribute of the HelpItem object
    *
-   *@return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -581,9 +586,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the HelpItem object
+   * Gets the id attribute of the HelpItem object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getModuleId() {
     return moduleId;
@@ -591,9 +596,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the module attribute of the HelpItem object
+   * Gets the module attribute of the HelpItem object
    *
-   *@return    The module value
+   * @return The module value
    */
   public String getModule() {
     return module;
@@ -601,9 +606,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the module attribute of the HelpItem object
+   * Gets the module attribute of the HelpItem object
    *
-   *@return    The page title
+   * @return The page title
    */
   public String getTitle() {
     return title;
@@ -611,9 +616,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the section attribute of the HelpItem object
+   * Gets the section attribute of the HelpItem object
    *
-   *@return    The section value
+   * @return The section value
    */
   public String getSection() {
     return section;
@@ -621,9 +626,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the subsection attribute of the HelpItem object
+   * Gets the subsection attribute of the HelpItem object
    *
-   *@return    The subsection value
+   * @return The subsection value
    */
   public String getSubsection() {
     return subsection;
@@ -631,9 +636,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the HelpItem object
+   * Gets the description attribute of the HelpItem object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -641,9 +646,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the permission attribute of the HelpItem object
+   * Gets the permission attribute of the HelpItem object
    *
-   *@return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -651,9 +656,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the HelpItem object
+   * Gets the enteredBy attribute of the HelpItem object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -661,9 +666,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the HelpItem object
+   * Gets the entered attribute of the HelpItem object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -671,9 +676,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the HelpItem object
+   * Gets the modifiedBy attribute of the HelpItem object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -681,9 +686,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the HelpItem object
+   * Gets the modified attribute of the HelpItem object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -691,10 +696,10 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("help_id");
@@ -716,18 +721,22 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "help_contents_help_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_contents " +
-        "(module, section, subsection, title, description, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+        "(" + (id > -1 ? "help_id, " : "") + "\"module\", \"section\", subsection, title, description, enteredby, modifiedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.setString(++i, module);
     pst.setString(++i, section);
     pst.setString(++i, subsection);
@@ -737,17 +746,17 @@ public class HelpItem extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "help_contents_help_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "help_contents_help_id_seq", id);
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (id == -1) {
@@ -795,10 +804,10 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Builds features of this help item
+   * Builds features of this help item
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildFeatures(Connection db) throws SQLException {
     features.setLinkHelpId(this.getId());
@@ -807,10 +816,10 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Builds Notes for this help item
+   * Builds Notes for this help item
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildNotes(Connection db) throws SQLException {
     notes.setLinkHelpId(this.getId());
@@ -820,10 +829,10 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Builds Tips for this help item
+   * Builds Tips for this help item
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTips(Connection db) throws SQLException {
     tips.setLinkHelpId(this.getId());
@@ -832,10 +841,10 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Builds business rules for this help item
+   * Builds business rules for this help item
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRules(Connection db) throws SQLException {
     businessRules.setLinkHelpId(this.getId());
@@ -844,9 +853,9 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Gets the baseFilename attribute of the HelpItem object
+   * Gets the baseFilename attribute of the HelpItem object
    *
-   *@return    The baseFilename value
+   * @return The baseFilename value
    */
   public String getBaseFilename() {
     StringBuffer filename = new StringBuffer();
@@ -865,14 +874,15 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  path  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param path Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasImageFile(String path) {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("HelpItem-> Looking for the following image: " + path + fs + this.getBaseFilename() + ".png");
+      System.out.println(
+          "HelpItem-> Looking for the following image: " + path + fs + this.getBaseFilename() + ".png");
     }
     File helpImage = new File(path + fs + this.getBaseFilename() + ".png");
     return helpImage.exists();

@@ -15,19 +15,18 @@
  */
 package org.aspcfs.controller;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.servlets.ControllerDestroyHook;
-import com.darkhorseventures.database.*;
 import org.aspcfs.apps.workFlowManager.WorkflowManager;
-import java.sql.*;
+
+import javax.servlet.ServletConfig;
 
 /**
- *  Last chance to do something before the servlet is shut down
+ * Last chance to do something before the servlet is shut down
  *
- *@author     mrajkowski
- *@created    July 30, 2001
- *@version    $Id$
+ * @author mrajkowski
+ * @version $Id$
+ * @created July 30, 2001
  */
 public class DestroyHook implements ControllerDestroyHook {
 
@@ -35,12 +34,12 @@ public class DestroyHook implements ControllerDestroyHook {
 
 
   /**
-   *  When the ServletController is initialized, this code creates a reference
-   *  to the servlet config.
+   * When the ServletController is initialized, this code creates a reference
+   * to the servlet config.
    *
-   *@param  config  The new Config value
-   *@return         Description of the Return Value
-   *@since          1.0
+   * @param config The new Config value
+   * @return Description of the Return Value
+   * @since 1.0
    */
   public String executeControllerDestroyInit(ServletConfig config) {
     this.config = config;
@@ -49,10 +48,10 @@ public class DestroyHook implements ControllerDestroyHook {
 
 
   /**
-   *  Closes and removes the attributes that will need to be reloaded when the
-   *  framework starts back up, working backwards from the InitHook.
+   * Closes and removes the attributes that will need to be reloaded when the
+   * framework starts back up, working backwards from the InitHook.
    *
-   *@return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String executeControllerDestroy() {
     if (config != null) {
@@ -61,7 +60,8 @@ public class DestroyHook implements ControllerDestroyHook {
       }
       //Remove the workflow manager
       WorkflowManager wfManager =
-          (WorkflowManager) config.getServletContext().getAttribute("WorkflowManager");
+          (WorkflowManager) config.getServletContext().getAttribute(
+              "WorkflowManager");
       if (wfManager != null) {
         config.getServletContext().removeAttribute("WorkflowManager");
       }
@@ -73,7 +73,8 @@ public class DestroyHook implements ControllerDestroyHook {
 
       //Shutdown the ConnectionPool
       ConnectionPool cp =
-          (ConnectionPool) config.getServletContext().getAttribute("ConnectionPool");
+          (ConnectionPool) config.getServletContext().getAttribute(
+              "ConnectionPool");
       if (cp != null) {
         cp.closeAllConnections();
         cp.destroy();

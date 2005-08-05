@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     akhi_m
- *@created    October 18, 2002
- *@version    $Id$
+ * @author akhi_m
+ * @version $Id$
+ * @created October 18, 2002
  */
 public class ItemList extends ArrayList {
 
@@ -33,15 +36,16 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Constructor for the ItemList object
+   * Constructor for the ItemList object
    */
-  public ItemList() { }
+  public ItemList() {
+  }
 
 
   /**
-   *  Constructor for the ItemList object
+   * Constructor for the ItemList object
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
   public ItemList(HttpServletRequest request) {
     String items = null;
@@ -51,16 +55,17 @@ public class ItemList extends ArrayList {
         Item thisItem = new Item();
         thisItem.setDescription(itemList.nextToken());
         this.add(thisItem);
-        System.out.println(" ItemList -- > Added Item " + thisItem.getDescription());
+        System.out.println(
+            " ItemList -- > Added Item " + thisItem.getDescription());
       }
     }
   }
 
 
   /**
-   *  Gets the questionId attribute of the ItemList object
+   * Gets the questionId attribute of the ItemList object
    *
-   *@return    The questionId value
+   * @return The questionId value
    */
   public int getQuestionId() {
     return questionId;
@@ -68,11 +73,11 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the ItemList object
+   * Gets the object attribute of the ItemList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public Item getObject(ResultSet rs) throws SQLException {
     Item thisItem = new Item(rs);
@@ -81,9 +86,9 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Sets the questionId attribute of the ItemList object
+   * Sets the questionId attribute of the ItemList object
    *
-   *@param  questionId  The new questionId value
+   * @param questionId The new questionId value
    */
   public void setQuestionId(int questionId) {
     this.questionId = questionId;
@@ -91,9 +96,9 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Sets the questionId attribute of the ItemList object
+   * Sets the questionId attribute of the ItemList object
    *
-   *@param  questionId  The new questionId value
+   * @param questionId The new questionId value
    */
   public void setQuestionId(String questionId) {
     this.questionId = Integer.parseInt(questionId);
@@ -101,12 +106,12 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  questionId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param questionId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean delete(Connection db, int questionId) throws SQLException {
     boolean commit = true;
@@ -139,10 +144,10 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -159,12 +164,12 @@ public class ItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     String sql =

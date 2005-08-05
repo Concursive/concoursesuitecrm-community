@@ -15,14 +15,17 @@
  */
 package org.aspcfs.utils.web;
 
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.Template;
+
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris price
- *@created    July 26, 2002
- *@version    $Id$
+ * @author chris price
+ * @version $Id$
+ * @created July 26, 2002
  */
 public class CustomFormTab extends ArrayList {
 
@@ -38,15 +41,16 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomFormTab object
+   * Constructor for the CustomFormTab object
    */
-  public CustomFormTab() { }
+  public CustomFormTab() {
+  }
 
 
   /**
-   *  Sets the name attribute of the CustomFormTab object
+   * Sets the name attribute of the CustomFormTab object
    *
-   *@param  name  The new name value
+   * @param name The new name value
    */
   public void setName(String name) {
     this.name = name;
@@ -54,9 +58,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the name attribute of the CustomFormTab object
+   * Gets the name attribute of the CustomFormTab object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -64,9 +68,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the next attribute of the CustomFormTab object
+   * Sets the next attribute of the CustomFormTab object
    *
-   *@param  tmp  The new next value
+   * @param tmp The new next value
    */
   public void setNext(String tmp) {
     this.next = tmp;
@@ -74,9 +78,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the prev attribute of the CustomFormTab object
+   * Sets the prev attribute of the CustomFormTab object
    *
-   *@param  tmp  The new prev value
+   * @param tmp The new prev value
    */
   public void setPrev(String tmp) {
     this.prev = tmp;
@@ -84,9 +88,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the buttonString attribute of the CustomFormTab object
+   * Sets the buttonString attribute of the CustomFormTab object
    *
-   *@param  buttonString  The new buttonString value
+   * @param buttonString The new buttonString value
    */
   public void setButtonString(StringBuffer buttonString) {
     this.buttonString = buttonString;
@@ -94,9 +98,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the onLoadEvent attribute of the CustomFormTab object
+   * Sets the onLoadEvent attribute of the CustomFormTab object
    *
-   *@param  onLoadEvent  The new onLoadEvent value
+   * @param onLoadEvent The new onLoadEvent value
    */
   public void setOnLoadEvent(String onLoadEvent) {
     this.onLoadEvent = onLoadEvent;
@@ -104,9 +108,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the returnLinkText attribute of the CustomFormTab object
+   * Sets the returnLinkText attribute of the CustomFormTab object
    *
-   *@param  returnLinkText  The new returnLinkText value
+   * @param returnLinkText The new returnLinkText value
    */
   public void setReturnLinkText(String returnLinkText) {
     this.returnLinkText = returnLinkText;
@@ -114,9 +118,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the returnLinkText attribute of the CustomFormTab object
+   * Gets the returnLinkText attribute of the CustomFormTab object
    *
-   *@return    The returnLinkText value
+   * @return The returnLinkText value
    */
   public String getReturnLinkText() {
     return returnLinkText;
@@ -124,9 +128,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the onLoadEvent attribute of the CustomFormTab object
+   * Gets the onLoadEvent attribute of the CustomFormTab object
    *
-   *@return    The onLoadEvent value
+   * @return The onLoadEvent value
    */
   public String getOnLoadEvent() {
     return onLoadEvent;
@@ -134,9 +138,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the buttonString attribute of the CustomFormTab object
+   * Gets the buttonString attribute of the CustomFormTab object
    *
-   *@return    The buttonString value
+   * @return The buttonString value
    */
   public String getButtonString() {
     return buttonString.toString();
@@ -144,9 +148,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Constructor for the addButton object
+   * Constructor for the addButton object
    *
-   *@param  htmlButton  Description of the Parameter
+   * @param htmlButton Description of the Parameter
    */
   public void addButton(String htmlButton) {
     if (buttonString == null) {
@@ -159,9 +163,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the next attribute of the CustomFormTab object
+   * Gets the next attribute of the CustomFormTab object
    *
-   *@return    The next value
+   * @return The next value
    */
   public String getNext() {
     return next;
@@ -169,9 +173,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the prev attribute of the CustomFormTab object
+   * Gets the prev attribute of the CustomFormTab object
    *
-   *@return    The prev value
+   * @return The prev value
    */
   public String getPrev() {
     return prev;
@@ -179,9 +183,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the CustomFormTab object
+   * Gets the id attribute of the CustomFormTab object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -189,9 +193,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the CustomFormTab object
+   * Sets the id attribute of the CustomFormTab object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(int id) {
     this.id = id;
@@ -199,9 +203,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the CustomFormTab object
+   * Sets the id attribute of the CustomFormTab object
    *
-   *@param  id  The new id value
+   * @param id The new id value
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
@@ -209,9 +213,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Sets the defaultField attribute of the CustomFormTab object
+   * Sets the defaultField attribute of the CustomFormTab object
    *
-   *@param  tmp  The new defaultField value
+   * @param tmp The new defaultField value
    */
   public void setDefaultField(String tmp) {
     this.defaultField = tmp;
@@ -219,9 +223,9 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Gets the defaultField attribute of the CustomFormTab object
+   * Gets the defaultField attribute of the CustomFormTab object
    *
-   *@return    The defaultField value
+   * @return The defaultField value
    */
   public String getDefaultField() {
     return defaultField;
@@ -229,13 +233,31 @@ public class CustomFormTab extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasDefaultField() {
     return (defaultField != null && !"".equals(defaultField));
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   */
+  public void parseTemplateText(SystemStatus thisSystem) {
+    if (returnLinkText != null) {
+      Template template = new Template(returnLinkText);
+      template.populateSystemVariables(thisSystem);
+      returnLinkText = template.getParsedText();
+    }
+
+    if (buttonString != null) {
+      Template template = new Template(buttonString.toString());
+      template.populateSystemVariables(thisSystem);
+      buttonString = new StringBuffer(template.getParsedText());
+    }
+  }
 }
 

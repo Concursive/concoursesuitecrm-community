@@ -1,0 +1,32 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+import java.util.*;
+import org.aspcfs.modules.contacts.base.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.calls.base.*;
+
+print("Updating all Activities with the opportunity id...");
+HashMap callMap = new HashMap();
+CallList calls = new CallList();
+calls.buildList(db);
+Iterator iterator = (Iterator) calls.iterator();
+while (iterator.hasNext()) {
+  Call call = (Call) iterator.next();
+  callMap.put(String.valueOf(call.getId()), call);
+}
+iterator = (Iterator) calls.iterator();
+while (iterator.hasNext()) {
+  Call call = (Call) iterator.next();
+  print("checking for call id =>"+ call.getId()+" its parent id is -->"+ call.getParentId());
+  if (call.getParentId() != -1) {
+    Call parentCall = (Call) callMap.get((String) String.valueOf(call.getParentId()));
+    print("parent opp id is -->"+ parentCall.getOppHeaderId()+" and the call opp id is "+ call.getOppHeaderId());
+    if (parentCall.getOppHeaderId() != -1 && call.getOppHeaderId() == -1) {
+      call.setOppHeaderId(parentCall.getOppHeaderId());
+      call.update(db, (ActionContext) null);
+      print("updated the opp id ->"+ call.getOppHeaderId()+" for the call id ->"+ call.getId());
+    }
+  }
+}

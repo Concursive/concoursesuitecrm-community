@@ -52,7 +52,11 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+  <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>" >
+    <dhv:permission name="accounts-accounts-opportunities-add">
+      <a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
+    </dhv:permission>
+  </dhv:evaluate>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="OpportunityPagedInfo"/></center></dhv:include>
   <table width="100%" border="0">
@@ -81,6 +85,9 @@
         <%= OpportunityPagedInfo.getSortIcon("x.description") %>
       </th>
       <th nowrap>
+        <strong><dhv:label name="account.opportunities.associatedWith">Associated With</dhv:label></strong>
+      </th>
+      <th nowrap>
         <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.BestGuessTotal">Best Guess Total</dhv:label></strong>
       </th>
       <th nowrap>
@@ -103,7 +110,7 @@
       <td width="8" valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-        <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>','<%= oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="center" class="row<%= rowid %>">
         <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
@@ -113,6 +120,16 @@
         <%= thisFile.getImageTag("-23") %>
         </dhv:evaluate>
       </td>
+      <dhv:evaluate if="<%=oppHeader.getAccountLink() != -1 %>">
+        <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+          <%= toHtml(oppHeader.getAccountName()) %>
+        </td>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%=oppHeader.getContactLink() != -1 %>">
+        <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+          <%= toHtml(oppHeader.getContactName()) %>
+        </td>
+      </dhv:evaluate>
       <td valign="center" align="right" class="row<%= rowid %>" nowrap>
         <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>

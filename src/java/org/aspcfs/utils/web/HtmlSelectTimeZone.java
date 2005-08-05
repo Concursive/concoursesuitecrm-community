@@ -15,25 +15,24 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
-import java.sql.*;
+
 
 /**
- *  Generates an HtmlSelect for time zones
+ * Generates an HtmlSelect for time zones
  *
- *@author     matt rajkowski
- *@created    September 3, 2003
- *@version    $Id: HtmlSelectTimeZone.java,v 1.2 2003/09/03 16:59:45 mrajkowski
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: HtmlSelectTimeZone.java,v 1.2 2003/09/03 16:59:45 mrajkowski
+ *          Exp $
+ * @created September 3, 2003
  */
 public class HtmlSelectTimeZone {
 
   /**
-   *  Gets the select attribute of the HtmlSelectTimeZone class
+   * Gets the select attribute of the HtmlSelectTimeZone class
    *
-   *@param  name          Description of the Parameter
-   *@param  defaultValue  Description of the Parameter
-   *@return               The select value
+   * @param name         Description of the Parameter
+   * @param defaultValue Description of the Parameter
+   * @return The select value
    */
   public static HtmlSelect getSelect(String name, String defaultValue) {
     HtmlSelect select = new HtmlSelect();
@@ -45,9 +44,9 @@ public class HtmlSelectTimeZone {
 
 
   /**
-   *  DSome popular time zomes to choose from
+   * DSome popular time zomes to choose from
    *
-   *@param  select  Description of the Parameter
+   * @param select Description of the Parameter
    */
   public static void populateSelect(HtmlSelect select) {
     select.addItem("Pacific/Samoa", "GMT-11 Somoa");

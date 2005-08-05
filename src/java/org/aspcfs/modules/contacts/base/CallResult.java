@@ -15,17 +15,20 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class CallResult extends GenericBean {
 
@@ -40,9 +43,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the CallResult object
+   * Sets the id attribute of the CallResult object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -50,9 +53,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the CallResult object
+   * Sets the id attribute of the CallResult object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -60,9 +63,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the description attribute of the CallResult object
+   * Sets the description attribute of the CallResult object
    *
-   *@param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -70,9 +73,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the CallResult object
+   * Sets the level attribute of the CallResult object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -80,9 +83,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the level attribute of the CallResult object
+   * Sets the level attribute of the CallResult object
    *
-   *@param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -90,9 +93,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the CallResult object
+   * Sets the enabled attribute of the CallResult object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -100,9 +103,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the CallResult object
+   * Sets the enabled attribute of the CallResult object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -110,9 +113,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the nextRequired attribute of the CallResult object
+   * Sets the nextRequired attribute of the CallResult object
    *
-   *@param  tmp  The new nextRequired value
+   * @param tmp The new nextRequired value
    */
   public void setNextRequired(boolean tmp) {
     this.nextRequired = tmp;
@@ -120,9 +123,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the nextRequired attribute of the CallResult object
+   * Sets the nextRequired attribute of the CallResult object
    *
-   *@param  tmp  The new nextRequired value
+   * @param tmp The new nextRequired value
    */
   public void setNextRequired(String tmp) {
     this.nextRequired = DatabaseUtils.parseBoolean(tmp);
@@ -130,9 +133,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the nextDays attribute of the CallResult object
+   * Sets the nextDays attribute of the CallResult object
    *
-   *@param  tmp  The new nextDays value
+   * @param tmp The new nextDays value
    */
   public void setNextDays(int tmp) {
     this.nextDays = tmp;
@@ -140,9 +143,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the nextDays attribute of the CallResult object
+   * Sets the nextDays attribute of the CallResult object
    *
-   *@param  tmp  The new nextDays value
+   * @param tmp The new nextDays value
    */
   public void setNextDays(String tmp) {
     this.nextDays = Integer.parseInt(tmp);
@@ -150,9 +153,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the nextCallTypeId attribute of the CallResult object
+   * Sets the nextCallTypeId attribute of the CallResult object
    *
-   *@param  tmp  The new nextCallTypeId value
+   * @param tmp The new nextCallTypeId value
    */
   public void setNextCallTypeId(int tmp) {
     this.nextCallTypeId = tmp;
@@ -160,9 +163,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the nextCallTypeId attribute of the CallResult object
+   * Sets the nextCallTypeId attribute of the CallResult object
    *
-   *@param  tmp  The new nextCallTypeId value
+   * @param tmp The new nextCallTypeId value
    */
   public void setNextCallTypeId(String tmp) {
     this.nextCallTypeId = Integer.parseInt(tmp);
@@ -170,9 +173,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the canceledType attribute of the CallResult object
+   * Sets the canceledType attribute of the CallResult object
    *
-   *@param  tmp  The new canceledType value
+   * @param tmp The new canceledType value
    */
   public void setCanceledType(boolean tmp) {
     this.canceledType = tmp;
@@ -180,9 +183,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Sets the canceledType attribute of the CallResult object
+   * Sets the canceledType attribute of the CallResult object
    *
-   *@param  tmp  The new canceledType value
+   * @param tmp The new canceledType value
    */
   public void setCanceledType(String tmp) {
     this.canceledType = DatabaseUtils.parseBoolean(tmp);
@@ -190,9 +193,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the CallResult object
+   * Gets the id attribute of the CallResult object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -200,9 +203,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the description attribute of the CallResult object
+   * Gets the description attribute of the CallResult object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -210,9 +213,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the level attribute of the CallResult object
+   * Gets the level attribute of the CallResult object
    *
-   *@return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -220,9 +223,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the CallResult object
+   * Gets the enabled attribute of the CallResult object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -230,9 +233,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the nextRequired attribute of the CallResult object
+   * Gets the nextRequired attribute of the CallResult object
    *
-   *@return    The nextRequired value
+   * @return The nextRequired value
    */
   public boolean getNextRequired() {
     return nextRequired;
@@ -240,9 +243,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the nextDays attribute of the CallResult object
+   * Gets the nextDays attribute of the CallResult object
    *
-   *@return    The nextDays value
+   * @return The nextDays value
    */
   public int getNextDays() {
     return nextDays;
@@ -250,9 +253,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the nextCallTypeId attribute of the CallResult object
+   * Gets the nextCallTypeId attribute of the CallResult object
    *
-   *@return    The nextCallTypeId value
+   * @return The nextCallTypeId value
    */
   public int getNextCallTypeId() {
     return nextCallTypeId;
@@ -260,9 +263,9 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Gets the canceledType attribute of the CallResult object
+   * Gets the canceledType attribute of the CallResult object
    *
-   *@return    The canceledType value
+   * @return The canceledType value
    */
   public boolean getCanceledType() {
     return canceledType;
@@ -270,16 +273,17 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Constructor for the CallResult object
+   * Constructor for the CallResult object
    */
-  public CallResult() { }
+  public CallResult() {
+  }
 
 
   /**
-   *  Constructor for the CallResult object
+   * Constructor for the CallResult object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CallResult(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -287,11 +291,11 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Constructor for the CallResult object
+   * Constructor for the CallResult object
    *
-   *@param  db                Description of the Parameter
-   *@param  resultId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param resultId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public CallResult(Connection db, int resultId) throws SQLException {
     queryRecord(db, resultId);
@@ -299,11 +303,11 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  resultId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param resultId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int resultId) throws SQLException {
     if (resultId == -1) {
@@ -329,10 +333,10 @@ public class CallResult extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //lookup_call_result table

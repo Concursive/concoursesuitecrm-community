@@ -15,17 +15,18 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
 import org.aspcfs.modules.login.beans.UserBean;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     mrajkowski
- *@created    January 15, 2003
- *@version    $Id: BrowserHandler.java,v 1.4 2003/03/10 15:22:05 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: BrowserHandler.java,v 1.4 2003/03/10 15:22:05 mrajkowski Exp
+ *          $
+ * @created January 15, 2003
  */
 public class BrowserHandler extends TagSupport {
   private String browserId = null;
@@ -36,9 +37,9 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Sets the id attribute of the BrowserHandler object
+   * Sets the id attribute of the BrowserHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public final void setId(String tmp) {
     browserId = tmp;
@@ -46,9 +47,9 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Sets the minVersion attribute of the BrowserHandler object
+   * Sets the minVersion attribute of the BrowserHandler object
    *
-   *@param  tmp  The new minVersion value
+   * @param tmp The new minVersion value
    */
   public final void setMinVersion(String tmp) {
     minVersion = Double.parseDouble(tmp);
@@ -56,9 +57,9 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Sets the maxVersion attribute of the BrowserHandler object
+   * Sets the maxVersion attribute of the BrowserHandler object
    *
-   *@param  tmp  The new maxVersion value
+   * @param tmp The new maxVersion value
    */
   public final void setMaxVersion(String tmp) {
     maxVersion = Double.parseDouble(tmp);
@@ -66,9 +67,9 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Sets the os attribute of the BrowserHandler object
+   * Sets the os attribute of the BrowserHandler object
    *
-   *@param  tmp  The new os value
+   * @param tmp The new os value
    */
   public void setOs(String tmp) {
     this.os = tmp;
@@ -76,9 +77,9 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Sets the include attribute of the BrowserHandler object
+   * Sets the include attribute of the BrowserHandler object
    *
-   *@param  tmp  The new include value
+   * @param tmp The new include value
    */
   public final void setInclude(String tmp) {
     include = tmp.equalsIgnoreCase("true");
@@ -86,22 +87,25 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public final int doStartTag() throws JspException {
-    UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+    UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
+        "User");
     if (thisUser.getBrowserId().indexOf(browserId) > -1) {
       if (include) {
-        if (versionPasses(thisUser.getBrowserVersion()) && osPasses(thisUser.getClientType().getOsString())) {
+        if (versionPasses(thisUser.getBrowserVersion()) && osPasses(
+            thisUser.getClientType().getOsString())) {
           return EVAL_BODY_INCLUDE;
         } else {
           return SKIP_BODY;
         }
       } else {
-        if (versionPasses(thisUser.getBrowserVersion()) && osPasses(thisUser.getClientType().getOsString())) {
+        if (versionPasses(thisUser.getBrowserVersion()) && osPasses(
+            thisUser.getClientType().getOsString())) {
           return SKIP_BODY;
         } else {
           return EVAL_BODY_INCLUDE;
@@ -118,10 +122,10 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  userVersion  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param userVersion Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean versionPasses(double userVersion) {
     if ((minVersion == -1 || userVersion >= minVersion) &&
@@ -134,10 +138,10 @@ public class BrowserHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  userOs  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param userOs Description of the Parameter
+   * @return Description of the Return Value
    */
   private boolean osPasses(String userOs) {
     if (os != null) {

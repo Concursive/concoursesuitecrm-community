@@ -98,7 +98,6 @@
 
 
 
-
 /* Main Menu */
 .menuBackground {
   background: #888888;
@@ -345,6 +344,7 @@
 
 .sidetab-left {
   border-right: 1px solid #666;
+  background-color: #fffef3;
   width: 6px;
 }
 .sidetab-mid {
@@ -382,6 +382,7 @@
 
 .sidetab-left-sp {
   border-right: 1px solid #666;
+  background-color: #fffef3;
   height: 3px;
 }
 .sidetab-mid-sp {
@@ -1011,4 +1012,11 @@ a:visited:hover{color:#FF3300;}
 .duplicate {
   background-color: #FF0000;
   color: #FFF;
+}
+
+/* Used for wrapping the div tags */
+.floatWrap div {   
+  float: left;
+  width: 120px;
+  padding-right: 3px;
 }

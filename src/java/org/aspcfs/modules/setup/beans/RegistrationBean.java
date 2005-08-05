@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.setup.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
- *  Bean to encapsulate the Setup HTML form
+ * Bean to encapsulate the Setup HTML form
  *
- *@author     mrajkowski
- *@created    August 13, 2003
- *@version    $Id: RegistrationBean.java,v 1.1.2.1 2003/08/13 15:28:42
- *      mrajkowski Exp $
+ * @author mrajkowski
+ * @version $Id: RegistrationBean.java,v 1.1.2.1 2003/08/13 15:28:42
+ *          mrajkowski Exp $
+ * @created August 13, 2003
  */
 public class RegistrationBean extends GenericBean {
 
@@ -48,9 +50,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the RegistrationBean object
+   * Sets the configured attribute of the RegistrationBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(int tmp) {
     this.configured = tmp;
@@ -58,9 +60,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the configured attribute of the RegistrationBean object
+   * Sets the configured attribute of the RegistrationBean object
    *
-   *@param  tmp  The new configured value
+   * @param tmp The new configured value
    */
   public void setConfigured(String tmp) {
     this.configured = Integer.parseInt(tmp);
@@ -68,9 +70,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the nameFirst attribute of the RegistrationBean object
+   * Sets the nameFirst attribute of the RegistrationBean object
    *
-   *@param  tmp  The new nameFirst value
+   * @param tmp The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -78,9 +80,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the nameLast attribute of the RegistrationBean object
+   * Sets the nameLast attribute of the RegistrationBean object
    *
-   *@param  tmp  The new nameLast value
+   * @param tmp The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -88,9 +90,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the company attribute of the RegistrationBean object
+   * Sets the company attribute of the RegistrationBean object
    *
-   *@param  tmp  The new company value
+   * @param tmp The new company value
    */
   public void setCompany(String tmp) {
     this.company = tmp;
@@ -98,9 +100,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the email attribute of the RegistrationBean object
+   * Sets the email attribute of the RegistrationBean object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -108,9 +110,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the ssl attribute of the RegistrationBean object
+   * Sets the ssl attribute of the RegistrationBean object
    *
-   *@param  tmp  The new ssl value
+   * @param tmp The new ssl value
    */
   public void setSsl(boolean tmp) {
     this.ssl = tmp;
@@ -118,9 +120,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the ssl attribute of the RegistrationBean object
+   * Sets the ssl attribute of the RegistrationBean object
    *
-   *@param  tmp  The new ssl value
+   * @param tmp The new ssl value
    */
   public void setSsl(String tmp) {
     this.ssl = DatabaseUtils.parseBoolean(tmp);
@@ -128,9 +130,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the zlib attribute of the RegistrationBean object
+   * Sets the zlib attribute of the RegistrationBean object
    *
-   *@param  tmp  The new zlib value
+   * @param tmp The new zlib value
    */
   public void setZlib(String tmp) {
     this.zlib = tmp;
@@ -138,9 +140,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the text attribute of the RegistrationBean object
+   * Sets the text attribute of the RegistrationBean object
    *
-   *@param  tmp  The new text value
+   * @param tmp The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -148,9 +150,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the profile attribute of the RegistrationBean object
+   * Sets the profile attribute of the RegistrationBean object
    *
-   *@param  tmp  The new profile value
+   * @param tmp The new profile value
    */
   public void setProfile(String tmp) {
     this.profile = tmp;
@@ -158,9 +160,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the webserver attribute of the RegistrationBean object
+   * Sets the webserver attribute of the RegistrationBean object
    *
-   *@param  tmp  The new webserver value
+   * @param tmp The new webserver value
    */
   public void setWebserver(String tmp) {
     this.webserver = tmp;
@@ -168,9 +170,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the proxy attribute of the RegistrationBean object
+   * Gets the proxy attribute of the RegistrationBean object
    *
-   *@return    The proxy value
+   * @return The proxy value
    */
   public boolean getProxy() {
     return proxy;
@@ -178,9 +180,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the proxy attribute of the RegistrationBean object
+   * Sets the proxy attribute of the RegistrationBean object
    *
-   *@param  tmp  The new proxy value
+   * @param tmp The new proxy value
    */
   public void setProxy(boolean tmp) {
     this.proxy = tmp;
@@ -188,9 +190,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the proxy attribute of the RegistrationBean object
+   * Sets the proxy attribute of the RegistrationBean object
    *
-   *@param  tmp  The new proxy value
+   * @param tmp The new proxy value
    */
   public void setProxy(String tmp) {
     this.proxy = DatabaseUtils.parseBoolean(tmp);
@@ -198,9 +200,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the proxyHost attribute of the RegistrationBean object
+   * Gets the proxyHost attribute of the RegistrationBean object
    *
-   *@return    The proxyHost value
+   * @return The proxyHost value
    */
   public String getProxyHost() {
     return proxyHost;
@@ -208,9 +210,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the proxyHost attribute of the RegistrationBean object
+   * Sets the proxyHost attribute of the RegistrationBean object
    *
-   *@param  tmp  The new proxyHost value
+   * @param tmp The new proxyHost value
    */
   public void setProxyHost(String tmp) {
     this.proxyHost = tmp;
@@ -218,9 +220,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the proxyPort attribute of the RegistrationBean object
+   * Gets the proxyPort attribute of the RegistrationBean object
    *
-   *@return    The proxyPort value
+   * @return The proxyPort value
    */
   public String getProxyPort() {
     return proxyPort;
@@ -228,9 +230,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Sets the proxyPort attribute of the RegistrationBean object
+   * Sets the proxyPort attribute of the RegistrationBean object
    *
-   *@param  tmp  The new proxyPort value
+   * @param tmp The new proxyPort value
    */
   public void setProxyPort(String tmp) {
     this.proxyPort = tmp;
@@ -238,9 +240,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the configured attribute of the RegistrationBean object
+   * Gets the configured attribute of the RegistrationBean object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public int getConfigured() {
     return configured;
@@ -248,9 +250,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the nameFirst attribute of the RegistrationBean object
+   * Gets the nameFirst attribute of the RegistrationBean object
    *
-   *@return    The nameFirst value
+   * @return The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -258,9 +260,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the nameLast attribute of the RegistrationBean object
+   * Gets the nameLast attribute of the RegistrationBean object
    *
-   *@return    The nameLast value
+   * @return The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -268,9 +270,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the company attribute of the RegistrationBean object
+   * Gets the company attribute of the RegistrationBean object
    *
-   *@return    The company value
+   * @return The company value
    */
   public String getCompany() {
     return company;
@@ -278,9 +280,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the email attribute of the RegistrationBean object
+   * Gets the email attribute of the RegistrationBean object
    *
-   *@return    The email value
+   * @return The email value
    */
   public String getEmail() {
     return email;
@@ -288,9 +290,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the ssl attribute of the RegistrationBean object
+   * Gets the ssl attribute of the RegistrationBean object
    *
-   *@return    The ssl value
+   * @return The ssl value
    */
   public boolean getSsl() {
     return ssl;
@@ -298,9 +300,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the profile attribute of the RegistrationBean object
+   * Gets the profile attribute of the RegistrationBean object
    *
-   *@return    The profile value
+   * @return The profile value
    */
   public String getProfile() {
     return profile;
@@ -308,9 +310,9 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the webserver attribute of the RegistrationBean object
+   * Gets the webserver attribute of the RegistrationBean object
    *
-   *@return    The webserver value
+   * @return The webserver value
    */
   public String getWebserver() {
     return webserver;
@@ -318,12 +320,13 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                                                     Description of
-   *      the Return Value
-   *@exception  javax.xml.parsers.ParserConfigurationException  Description of
-   *      the Exception
+   * @return Description of
+   *         the Return Value
+   * @throws javax.xml.parsers.ParserConfigurationException
+   *          Description of
+   *          the Exception
    */
   public String toXmlString() throws javax.xml.parsers.ParserConfigurationException {
     //Build an XML document needed for request
@@ -354,7 +357,8 @@ public class RegistrationBean extends GenericBean {
     profileElement.appendChild(document.createTextNode(profile));
     rootElement.appendChild(profileElement);
     //OS
-    String os = System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version");
+    String os = System.getProperty("os.name") + " " + System.getProperty(
+        "os.arch") + " " + System.getProperty("os.version");
     Element osElement = document.createElement("os");
     osElement.appendChild(document.createTextNode(os));
     rootElement.appendChild(osElement);

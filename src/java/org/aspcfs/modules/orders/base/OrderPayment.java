@@ -15,20 +15,17 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+
+import java.sql.*;
 
 /**
- *  This represents a Payment that is associated with an Order
+ * This represents a Payment that is associated with an Order
  *
- *@author     ananth
- *@created    March 18, 2004
- *@version    $Id$
+ * @author ananth
+ * @version $Id$
+ * @created March 18, 2004
  */
 public class OrderPayment extends GenericBean {
   private int id = -1;
@@ -56,9 +53,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the dateToProcess attribute of the OrderPayment object
+   * Sets the dateToProcess attribute of the OrderPayment object
    *
-   * @param  tmp  The new dateToProcess value
+   * @param tmp The new dateToProcess value
    */
   public void setDateToProcess(Timestamp tmp) {
     this.dateToProcess = tmp;
@@ -66,9 +63,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the dateToProcess attribute of the OrderPayment object
+   * Sets the dateToProcess attribute of the OrderPayment object
    *
-   * @param  tmp  The new dateToProcess value
+   * @param tmp The new dateToProcess value
    */
   public void setDateToProcess(String tmp) {
     this.dateToProcess = DatabaseUtils.parseTimestamp(tmp);
@@ -76,9 +73,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the creditCardId attribute of the OrderPayment object
+   * Sets the creditCardId attribute of the OrderPayment object
    *
-   * @param  tmp  The new creditCardId value
+   * @param tmp The new creditCardId value
    */
   public void setCreditCardId(int tmp) {
     this.creditCardId = tmp;
@@ -86,9 +83,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the creditCardId attribute of the OrderPayment object
+   * Sets the creditCardId attribute of the OrderPayment object
    *
-   * @param  tmp  The new creditCardId value
+   * @param tmp The new creditCardId value
    */
   public void setCreditCardId(String tmp) {
     this.creditCardId = Integer.parseInt(tmp);
@@ -96,9 +93,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the bankId attribute of the OrderPayment object
+   * Sets the bankId attribute of the OrderPayment object
    *
-   * @param  tmp  The new bankId value
+   * @param tmp The new bankId value
    */
   public void setBankId(int tmp) {
     this.bankId = tmp;
@@ -106,9 +103,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the bankId attribute of the OrderPayment object
+   * Sets the bankId attribute of the OrderPayment object
    *
-   * @param  tmp  The new bankId value
+   * @param tmp The new bankId value
    */
   public void setBankId(String tmp) {
     this.bankId = Integer.parseInt(tmp);
@@ -116,9 +113,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the orderItemId attribute of the OrderPayment object
+   * Sets the orderItemId attribute of the OrderPayment object
    *
-   * @param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(int tmp) {
     this.orderItemId = tmp;
@@ -126,9 +123,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the orderItemId attribute of the OrderPayment object
+   * Sets the orderItemId attribute of the OrderPayment object
    *
-   * @param  tmp  The new orderItemId value
+   * @param tmp The new orderItemId value
    */
   public void setOrderItemId(String tmp) {
     this.orderItemId = Integer.parseInt(tmp);
@@ -136,9 +133,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the historyId attribute of the OrderPayment object
+   * Sets the historyId attribute of the OrderPayment object
    *
-   * @param  tmp  The new historyId value
+   * @param tmp The new historyId value
    */
   public void setHistoryId(int tmp) {
     this.historyId = tmp;
@@ -146,9 +143,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the historyId attribute of the OrderPayment object
+   * Sets the historyId attribute of the OrderPayment object
    *
-   * @param  tmp  The new historyId value
+   * @param tmp The new historyId value
    */
   public void setHistoryId(String tmp) {
     this.historyId = Integer.parseInt(tmp);
@@ -156,9 +153,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the OrderPayment object
+   * Sets the statusId attribute of the OrderPayment object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -166,9 +163,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the OrderPayment object
+   * Sets the statusId attribute of the OrderPayment object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -176,9 +173,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the OrderPayment object
+   * Sets the status attribute of the OrderPayment object
    *
-   * @param  tmp  The new status value
+   * @param tmp The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -186,9 +183,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the buildPaymentStatusList attribute of the OrderPayment object
+   * Sets the buildPaymentStatusList attribute of the OrderPayment object
    *
-   * @param  tmp  The new buildPaymentStatusList value
+   * @param tmp The new buildPaymentStatusList value
    */
   public void setBuildOrderPaymentStatusList(boolean tmp) {
     this.buildOrderPaymentStatusList = tmp;
@@ -196,9 +193,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the buildPaymentStatusList attribute of the OrderPayment object
+   * Sets the buildPaymentStatusList attribute of the OrderPayment object
    *
-   * @param  tmp  The new buildPaymentStatusList value
+   * @param tmp The new buildPaymentStatusList value
    */
   public void setBuildOrderPaymentStatusList(String tmp) {
     this.buildOrderPaymentStatusList = DatabaseUtils.parseBoolean(tmp);
@@ -206,9 +203,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the orderPaymentStatusList attribute of the OrderPayment object
+   * Sets the orderPaymentStatusList attribute of the OrderPayment object
    *
-   * @param  tmp  The new orderPaymentStatusList value
+   * @param tmp The new orderPaymentStatusList value
    */
   public void setOrderPaymentStatusList(OrderPaymentStatusList tmp) {
     this.orderPaymentStatusList = tmp;
@@ -216,9 +213,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the buildPaymentStatusList attribute of the OrderPayment object
+   * Gets the buildPaymentStatusList attribute of the OrderPayment object
    *
-   * @return    The buildPaymentStatusList value
+   * @return The buildPaymentStatusList value
    */
   public boolean getBuildOrderPaymentStatusList() {
     return buildOrderPaymentStatusList;
@@ -226,9 +223,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the orderPaymentStatusList attribute of the OrderPayment object
+   * Gets the orderPaymentStatusList attribute of the OrderPayment object
    *
-   * @return    The orderPaymentStatusList value
+   * @return The orderPaymentStatusList value
    */
   public OrderPaymentStatusList getOrderPaymentStatusList() {
     return orderPaymentStatusList;
@@ -236,9 +233,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the status attribute of the OrderPayment object
+   * Gets the status attribute of the OrderPayment object
    *
-   * @return    The status value
+   * @return The status value
    */
   public String getStatus() {
     return status;
@@ -246,9 +243,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the OrderPayment object
+   * Gets the statusId attribute of the OrderPayment object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -256,9 +253,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the orderItemId attribute of the OrderPayment object
+   * Gets the orderItemId attribute of the OrderPayment object
    *
-   * @return    The orderItemId value
+   * @return The orderItemId value
    */
   public int getOrderItemId() {
     return orderItemId;
@@ -266,9 +263,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the historyId attribute of the OrderPayment object
+   * Gets the historyId attribute of the OrderPayment object
    *
-   * @return    The historyId value
+   * @return The historyId value
    */
   public int getHistoryId() {
     return historyId;
@@ -276,9 +273,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the dateToProcess attribute of the OrderPayment object
+   * Gets the dateToProcess attribute of the OrderPayment object
    *
-   * @return    The dateToProcess value
+   * @return The dateToProcess value
    */
   public Timestamp getDateToProcess() {
     return dateToProcess;
@@ -286,9 +283,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the creditCardId attribute of the OrderPayment object
+   * Gets the creditCardId attribute of the OrderPayment object
    *
-   * @return    The creditCardId value
+   * @return The creditCardId value
    */
   public int getCreditCardId() {
     return creditCardId;
@@ -296,9 +293,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the bankId attribute of the OrderPayment object
+   * Gets the bankId attribute of the OrderPayment object
    *
-   * @return    The bankId value
+   * @return The bankId value
    */
   public int getBankId() {
     return bankId;
@@ -306,9 +303,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the OrderPayment object
+   * Sets the id attribute of the OrderPayment object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -316,9 +313,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the OrderPayment object
+   * Sets the id attribute of the OrderPayment object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -326,9 +323,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the orderId attribute of the OrderPayment object
+   * Sets the orderId attribute of the OrderPayment object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -336,9 +333,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the orderId attribute of the OrderPayment object
+   * Sets the orderId attribute of the OrderPayment object
    *
-   *@param  tmp  The new orderId value
+   * @param tmp The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -346,9 +343,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the paymentMethodId attribute of the OrderPayment object
+   * Sets the paymentMethodId attribute of the OrderPayment object
    *
-   *@param  tmp  The new paymentMethodId value
+   * @param tmp The new paymentMethodId value
    */
   public void setPaymentMethodId(int tmp) {
     this.paymentMethodId = tmp;
@@ -356,9 +353,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the paymentMethodId attribute of the OrderPayment object
+   * Sets the paymentMethodId attribute of the OrderPayment object
    *
-   *@param  tmp  The new paymentMethodId value
+   * @param tmp The new paymentMethodId value
    */
   public void setPaymentMethodId(String tmp) {
     this.paymentMethodId = Integer.parseInt(tmp);
@@ -366,9 +363,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the amount attribute of the OrderPayment object
+   * Sets the amount attribute of the OrderPayment object
    *
-   *@param  tmp  The new amount value
+   * @param tmp The new amount value
    */
   public void setAmount(double tmp) {
     this.amount = tmp;
@@ -376,9 +373,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the authorizationRefNumber attribute of the OrderPayment object
+   * Sets the authorizationRefNumber attribute of the OrderPayment object
    *
-   *@param  tmp  The new authorizationRefNumber value
+   * @param tmp The new authorizationRefNumber value
    */
   public void setAuthorizationRefNumber(String tmp) {
     this.authorizationRefNumber = tmp;
@@ -386,9 +383,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the authorizationCode attribute of the OrderPayment object
+   * Sets the authorizationCode attribute of the OrderPayment object
    *
-   *@param  tmp  The new authorizationCode value
+   * @param tmp The new authorizationCode value
    */
   public void setAuthorizationCode(String tmp) {
     this.authorizationCode = tmp;
@@ -396,9 +393,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the authorizationDate attribute of the OrderPayment object
+   * Sets the authorizationDate attribute of the OrderPayment object
    *
-   *@param  tmp  The new authorizationDate value
+   * @param tmp The new authorizationDate value
    */
   public void setAuthorizationDate(Timestamp tmp) {
     this.authorizationDate = tmp;
@@ -406,9 +403,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the authorizationDate attribute of the OrderPayment object
+   * Sets the authorizationDate attribute of the OrderPayment object
    *
-   *@param  tmp  The new authorizationDate value
+   * @param tmp The new authorizationDate value
    */
   public void setAuthorizationDate(String tmp) {
     this.authorizationDate = DatabaseUtils.parseTimestamp(tmp);
@@ -416,9 +413,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the OrderPayment object
+   * Sets the enteredBy attribute of the OrderPayment object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -426,9 +423,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the OrderPayment object
+   * Sets the enteredBy attribute of the OrderPayment object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -436,9 +433,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the OrderPayment object
+   * Sets the entered attribute of the OrderPayment object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -446,9 +443,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the OrderPayment object
+   * Sets the entered attribute of the OrderPayment object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -456,9 +453,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the OrderPayment object
+   * Sets the modifiedBy attribute of the OrderPayment object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -466,9 +463,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the OrderPayment object
+   * Sets the modifiedBy attribute of the OrderPayment object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -476,9 +473,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the OrderPayment object
+   * Sets the modified attribute of the OrderPayment object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -486,9 +483,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the OrderPayment object
+   * Sets the modified attribute of the OrderPayment object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -496,9 +493,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the OrderPayment object
+   * Gets the id attribute of the OrderPayment object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -506,9 +503,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the orderId attribute of the OrderPayment object
+   * Gets the orderId attribute of the OrderPayment object
    *
-   *@return    The orderId value
+   * @return The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -516,9 +513,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the paymentMethodId attribute of the OrderPayment object
+   * Gets the paymentMethodId attribute of the OrderPayment object
    *
-   *@return    The paymentMethodId value
+   * @return The paymentMethodId value
    */
   public int getPaymentMethodId() {
     return paymentMethodId;
@@ -526,9 +523,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the amount attribute of the OrderPayment object
+   * Gets the amount attribute of the OrderPayment object
    *
-   *@return    The amount value
+   * @return The amount value
    */
   public double getAmount() {
     return amount;
@@ -536,9 +533,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the authorizationRefNumber attribute of the OrderPayment object
+   * Gets the authorizationRefNumber attribute of the OrderPayment object
    *
-   *@return    The authorizationRefNumber value
+   * @return The authorizationRefNumber value
    */
   public String getAuthorizationRefNumber() {
     return authorizationRefNumber;
@@ -546,9 +543,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the authorizationCode attribute of the OrderPayment object
+   * Gets the authorizationCode attribute of the OrderPayment object
    *
-   *@return    The authorizationCode value
+   * @return The authorizationCode value
    */
   public String getAuthorizationCode() {
     return authorizationCode;
@@ -556,9 +553,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the authorizationDate attribute of the OrderPayment object
+   * Gets the authorizationDate attribute of the OrderPayment object
    *
-   *@return    The authorizationDate value
+   * @return The authorizationDate value
    */
   public Timestamp getAuthorizationDate() {
     return authorizationDate;
@@ -566,9 +563,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the OrderPayment object
+   * Gets the enteredBy attribute of the OrderPayment object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -576,9 +573,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the OrderPayment object
+   * Gets the entered attribute of the OrderPayment object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -586,9 +583,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the OrderPayment object
+   * Gets the modifiedBy attribute of the OrderPayment object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -596,9 +593,9 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the OrderPayment object
+   * Gets the modified attribute of the OrderPayment object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -606,17 +603,18 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Constructor for the OrderPayment object
+   * Constructor for the OrderPayment object
    */
-  public OrderPayment() { }
+  public OrderPayment() {
+  }
 
 
   /**
-   *  Constructor for the OrderPayment object
+   * Constructor for the OrderPayment object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrderPayment(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -624,10 +622,10 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Constructor for the OrderPayment object
+   * Constructor for the OrderPayment object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OrderPayment(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -635,11 +633,11 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -651,8 +649,7 @@ public class OrderPayment extends GenericBean {
         " FROM order_payment op " +
         " LEFT JOIN lookup_payment_status ps " +
         " ON ( op.status_id = ps.code ) " +
-        " WHERE op.payment_id = ? "
-        );
+        " WHERE op.payment_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -670,10 +667,10 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildStatusList(Connection db) throws SQLException {
     orderPaymentStatusList = new OrderPaymentStatusList();
@@ -683,10 +680,10 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //order_payment table
@@ -714,20 +711,22 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-
+    id = DatabaseUtils.getNextSeq(db, "order_payment_payment_id_seq");
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO order_payment(order_id, order_item_id, history_id, payment_method_id, payment_amount, " +
-        " 	authorization_ref_number, authorization_code, authorization_date, status_id, "
-        );
+        " 	authorization_ref_number, authorization_code, authorization_date, status_id, ");
+    if (id > -1) {
+      sql.append("payment_id, ");
+    }
     if (entered != null) {
       sql.append(" entered, ");
     }
@@ -737,6 +736,9 @@ public class OrderPayment extends GenericBean {
     }
     sql.append(" modifiedby, date_to_process, creditcard_id, bank_id )");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?,");
+    }
     if (entered != null) {
       sql.append("?, ");
     }
@@ -758,6 +760,9 @@ public class OrderPayment extends GenericBean {
     pst.setString(++i, this.getAuthorizationCode());
     pst.setTimestamp(++i, this.getAuthorizationDate());
     DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -771,8 +776,7 @@ public class OrderPayment extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getBankId());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "order_payment_payment_id_seq");
-
+    id = DatabaseUtils.getCurrVal(db, "order_payment_payment_id_seq", id);
     insertPaymentStatus(db);
     result = true;
     return result;
@@ -780,11 +784,11 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -802,8 +806,8 @@ public class OrderPayment extends GenericBean {
       statusList.buildList(db);
       statusList.delete(db);
       statusList = null;
-      
-      PreparedStatement pst = db.prepareStatement("DELETE FROM order_payment WHERE payment_id = ? ");
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM order_payment WHERE payment_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -826,11 +830,11 @@ public class OrderPayment extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -839,7 +843,8 @@ public class OrderPayment extends GenericBean {
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("UPDATE order_payment " +
+    sql.append(
+        "UPDATE order_payment " +
         " SET payment_method_id = ?, " +
         "     order_item_id = ?, " +
         "     history_id = ?, " +
@@ -873,12 +878,12 @@ public class OrderPayment extends GenericBean {
     return resultCount;
   }
 
-  
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertPaymentStatus(Connection db) throws SQLException {
     OrderPaymentStatus thisStatus = new OrderPaymentStatus();

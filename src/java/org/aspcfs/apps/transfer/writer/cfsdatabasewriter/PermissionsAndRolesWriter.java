@@ -17,27 +17,27 @@ package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
+import com.zeroio.webdav.base.WebdavModule;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.modules.admin.base.Permission;
-import org.aspcfs.modules.admin.base.PermissionCategory;
-import org.aspcfs.modules.admin.base.Role;
-import org.aspcfs.modules.admin.base.RolePermission;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.modules.reports.base.Report;
+import org.aspcfs.utils.web.LookupListElement;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- *  Inserts related PermissionCategory data into a database
+ * Inserts related PermissionCategory data into a database
  *
- *@author     matt rajkowski
- *@created    January 23, 2003
- *@version    $Id: PermissionsAndRolesWriter.java,v 1.13 2003/12/02 22:28:24
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: PermissionsAndRolesWriter.java,v 1.13 2003/12/02 22:28:24
+ *          mrajkowski Exp $
+ * @created January 23, 2003
  */
-public class PermissionsAndRolesWriter implements DataWriter {
+public class PermissionsAndRolesWriter
+    implements DataWriter {
   private ConnectionPool sqlDriver = null;
   private Connection db = null;
   private int id = -1;
@@ -47,140 +47,130 @@ public class PermissionsAndRolesWriter implements DataWriter {
   private String user = null;
   private String pass = null;
 
-
   /**
-   *  Sets the driver attribute of the PermissionsAndRolesWriter object
+   * Sets the driver attribute of the PermissionsAndRolesWriter object
    *
-   *@param  tmp  The new driver value
+   * @param tmp The new driver value
    */
   public void setDriver(String tmp) {
     this.driver = tmp;
   }
 
-
   /**
-   *  Sets the url attribute of the PermissionsAndRolesWriter object
+   * Sets the url attribute of the PermissionsAndRolesWriter object
    *
-   *@param  tmp  The new url value
+   * @param tmp The new url value
    */
   public void setUrl(String tmp) {
     this.url = tmp;
   }
 
-
   /**
-   *  Sets the user attribute of the PermissionsAndRolesWriter object
+   * Sets the user attribute of the PermissionsAndRolesWriter object
    *
-   *@param  tmp  The new user value
+   * @param tmp The new user value
    */
   public void setUser(String tmp) {
     this.user = tmp;
   }
 
-
   /**
-   *  Sets the pass attribute of the PermissionsAndRolesWriter object
+   * Sets the pass attribute of the PermissionsAndRolesWriter object
    *
-   *@param  tmp  The new pass value
+   * @param tmp The new pass value
    */
   public void setPass(String tmp) {
     this.pass = tmp;
   }
 
-
   /**
-   *  Sets the autoCommit attribute of the PermissionsAndRolesWriter object
+   * Sets the autoCommit attribute of the PermissionsAndRolesWriter object
    *
-   *@param  flag  The new autoCommit value
+   * @param flag The new autoCommit value
    */
   public void setAutoCommit(boolean flag) {
   }
 
-
   /**
-   *  Gets the driver attribute of the PermissionsAndRolesWriter object
+   * Gets the driver attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The driver value
+   * @return The driver value
    */
   public String getDriver() {
     return driver;
   }
 
-
   /**
-   *  Gets the url attribute of the PermissionsAndRolesWriter object
+   * Gets the url attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
   }
 
-
   /**
-   *  Gets the user attribute of the PermissionsAndRolesWriter object
+   * Gets the user attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The user value
+   * @return The user value
    */
   public String getUser() {
     return user;
   }
 
-
   /**
-   *  Gets the pass attribute of the PermissionsAndRolesWriter object
+   * Gets the pass attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The pass value
+   * @return The pass value
    */
   public String getPass() {
     return pass;
   }
 
-
   /**
-   *  Gets the version attribute of the PermissionsAndRolesWriter object
+   * Gets the version attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The version value
+   * @return The version value
    */
   public double getVersion() {
     return 1.0d;
   }
 
-
   /**
-   *  Gets the name attribute of the PermissionsAndRolesWriter object
+   * Gets the name attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The name value
+   * @return The name value
    */
   public String getName() {
     return "Permissions and Roles Writer";
   }
 
-
   /**
-   *  Gets the description attribute of the PermissionsAndRolesWriter object
+   * Gets the description attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return "Inserts data directly into a Centric CRM database";
   }
 
+  public void setDb(Connection db) {
+    this.db = db;
+  }
 
   /**
-   *  Gets the lastResponse attribute of the PermissionsAndRolesWriter object
+   * Gets the lastResponse attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The lastResponse value
+   * @return The lastResponse value
    */
   public String getLastResponse() {
     return String.valueOf(id);
   }
 
-
   /**
-   *  Gets the configured attribute of the PermissionsAndRolesWriter object
+   * Gets the configured attribute of the PermissionsAndRolesWriter object
    *
-   *@return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     String tmpUrl = System.getProperty("url");
@@ -212,8 +202,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
       sqlDriver = new ConnectionPool();
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(1);
-      ConnectionElement thisElement = new ConnectionElement(
-          url, user, pass);
+      ConnectionElement thisElement = new ConnectionElement(url, user, pass);
       thisElement.setDriver(driver);
       db = sqlDriver.getConnection(thisElement);
     } catch (SQLException e) {
@@ -223,12 +212,11 @@ public class PermissionsAndRolesWriter implements DataWriter {
     return true;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean save(DataRecord record) {
     try {
@@ -236,7 +224,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         PermissionCategory thisCategory = new PermissionCategory();
         thisCategory.setConstant(record.getValue("constant"));
         thisCategory.setCategory(record.getValue("category"));
-        thisCategory.setLevel(record.getValue("level"));
+        thisCategory.setLevel(Integer.parseInt(record.getValue("level")));
         thisCategory.setEnabled(record.getValue("enabled"));
         thisCategory.setActive(record.getValue("active"));
         thisCategory.setFolders(record.getValue("folders"));
@@ -273,89 +261,54 @@ public class PermissionsAndRolesWriter implements DataWriter {
       }
 
       if (record.getName().equals("folder")) {
-        try {
-          PreparedStatement pst = db.prepareStatement(
-              "INSERT INTO module_field_categorylink " +
-              "(module_id, category_id, level, description) " +
-              "VALUES (?, ?, ?, ?) ");
-          pst.setInt(1, record.getIntValue("moduleId"));
-          pst.setInt(2, record.getIntValue("categoryId"));
-          pst.setInt(3, record.getIntValue("level"));
-          pst.setString(4, record.getValue("description"));
-          pst.executeUpdate();
-          pst.close();
-        } catch (SQLException e) {
-          e.printStackTrace(System.out);
-          return false;
-        }
+        ModuleFieldCategoryLink categoryLink = new ModuleFieldCategoryLink();
+        categoryLink.setModuleId(record.getIntValue("moduleId"));
+        categoryLink.setCategoryId(record.getIntValue("categoryId"));
+        categoryLink.setLevel(record.getIntValue("level"));
+        categoryLink.setDescription(record.getValue("description"));
+        categoryLink.insert(db);
         return true;
       }
 
       if (record.getName().equals("lookup")) {
-        try {
-          PreparedStatement pst = db.prepareStatement(
-              "INSERT INTO lookup_lists_lookup " +
-              "(module_id, lookup_id, class_name, table_name, level, description, category_id) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?) ");
-          pst.setInt(1, record.getIntValue("moduleId"));
-          pst.setInt(2, record.getIntValue("lookupId"));
-          pst.setString(3, record.getValue("class"));
-          pst.setString(4, record.getValue("table"));
-          pst.setInt(5, record.getIntValue("level"));
-          pst.setString(6, record.getValue("description"));
-          pst.setInt(7, record.getIntValue("categoryId"));
-          pst.executeUpdate();
-          pst.close();
-        } catch (SQLException e) {
-          e.printStackTrace(System.out);
-          return false;
-        }
+        LookupListElement lookupList = new LookupListElement();
+        lookupList.setModuleId(record.getIntValue("moduleId"));
+        lookupList.setLookupId(record.getIntValue("lookupId"));
+        lookupList.setClassName(record.getValue("class"));
+        lookupList.setTableName(record.getValue("table"));
+        lookupList.setLevel(record.getIntValue("level"));
+        lookupList.setDescription(record.getValue("description"));
+        lookupList.setCategoryId(record.getIntValue("categoryId"));
+        lookupList.insert(db);
+        id = lookupList.getId();
         return true;
       }
 
       if (record.getName().equals("report")) {
-        try {
-          PreparedStatement pst = db.prepareStatement(
-              "INSERT INTO report " +
-              "(category_id, permission_id, filename, type, title, description, " +
-              "enteredby, modifiedby) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
-          pst.setInt(1, record.getIntValue("categoryId"));
-          DatabaseUtils.setInt(pst, 2, record.getIntValue("permissionId"));
-          pst.setString(3, record.getValue("file"));
-          pst.setInt(4, record.getIntValue("type"));
-          pst.setString(5, record.getValue("title"));
-          pst.setString(6, record.getValue("description"));
-          pst.setInt(7, record.getIntValue("enteredBy"));
-          pst.setInt(8, record.getIntValue("modifiedBy"));
-          pst.executeUpdate();
-          pst.close();
-        } catch (SQLException e) {
-          e.printStackTrace(System.out);
-          return false;
-        }
+        Report report = new Report();
+        report.setCategoryId(record.getIntValue("categoryId"));
+        report.setPermissionId(record.getIntValue("permissionId"));
+        report.setFilename(record.getValue("file"));
+        report.setType(record.getIntValue("type"));
+        report.setTitle(record.getValue("title"));
+        report.setDescription(record.getValue("description"));
+        report.setEnteredBy(record.getIntValue("enteredBy"));
+        report.setModifiedBy(record.getIntValue("modifiedBy"));
+        report.insert(db);
+        id = report.getId();
         return true;
       }
 
       if (record.getName().equals("multipleCategory")) {
-        try {
-          PreparedStatement pst = db.prepareStatement(
-              "INSERT INTO category_editor_lookup " +
-              "(module_id, constant_id, table_name, level, description, category_id, max_levels) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?) ");
-          pst.setInt(1, record.getIntValue("moduleId"));
-          pst.setInt(2, record.getIntValue("constantId"));
-          pst.setString(3, record.getValue("table"));
-          pst.setInt(4, record.getIntValue("level"));
-          pst.setString(5, record.getValue("description"));
-          pst.setInt(6, record.getIntValue("categoryId"));
-          pst.setInt(7, record.getIntValue("maxLevels"));
-          pst.executeUpdate();
-          pst.close();
-        } catch (SQLException e) {
-          e.printStackTrace(System.out);
-          return false;
-        }
+        CategoryEditor categoryEditor = new CategoryEditor();
+        categoryEditor.setModuleId(record.getIntValue("moduleId"));
+        categoryEditor.setConstantId(record.getIntValue("constantId"));
+        categoryEditor.setTableName(record.getValue("table"));
+        categoryEditor.setLevel(record.getIntValue("level"));
+        categoryEditor.setDescription(record.getValue("description"));
+        categoryEditor.setCategoryId(record.getIntValue("categoryId"));
+        categoryEditor.setMaxLevels(record.getIntValue("maxLevels"));
+        categoryEditor.insert(db);
         return true;
       }
 
@@ -387,16 +340,13 @@ public class PermissionsAndRolesWriter implements DataWriter {
 
       if (record.getName().equals("webdav")) {
         try {
-          PreparedStatement pst = db.prepareStatement(
-              "INSERT INTO webdav " +
-              "(category_id, class_name, enteredby, modifiedby) " +
-              "VALUES (?, ?, ?, ?) ");
-          pst.setInt(1, record.getIntValue("categoryId"));
-          pst.setString(2, record.getValue("class"));
-          pst.setInt(3, 0);
-          pst.setInt(4, 0);
-          pst.execute();
-          pst.close();
+          WebdavModule webdav = new WebdavModule();
+          webdav.setCategoryId(record.getIntValue("categoryId"));
+          webdav.setClassName(record.getValue("class"));
+          webdav.setEnteredBy(0);
+          webdav.setModifiedBy(0);
+          webdav.insert(db);
+          id = webdav.getId();
         } catch (SQLException e) {
           e.printStackTrace(System.out);
           return false;
@@ -411,42 +361,38 @@ public class PermissionsAndRolesWriter implements DataWriter {
     return true;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean commit() {
     return true;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean rollback() {
     return true;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  record  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param record Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean load(DataRecord record) {
     return false;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean close() {
     if (db != null) {
@@ -458,5 +404,3 @@ public class PermissionsAndRolesWriter implements DataWriter {
     return true;
   }
 }
-
-

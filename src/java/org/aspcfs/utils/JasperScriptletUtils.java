@@ -15,9 +15,9 @@
  */
 package org.aspcfs.utils;
 
-import org.aspcfs.modules.quotes.base.QuoteProduct;
 import net.sf.jasperreports.engine.JRDefaultScriptlet;
 import net.sf.jasperreports.engine.JRScriptletException;
+import org.aspcfs.modules.quotes.base.QuoteProduct;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -30,19 +30,19 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     ananth
- *@created    August 25, 2004
- *@version    $Id: JasperScriptletUtils.java,v 1.4.12.5 2005/01/21 19:33:32
- *      mrajkowski Exp $
+ * @author ananth
+ * @version $Id: JasperScriptletUtils.java,v 1.4.12.5 2005/01/21 19:33:32
+ *          mrajkowski Exp $
+ * @created August 25, 2004
  */
 public class JasperScriptletUtils extends JRDefaultScriptlet {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforeReportInit() throws JRScriptletException {
     //System.out.println("call beforeReportInit");
@@ -50,9 +50,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterReportInit() throws JRScriptletException {
     //System.out.println("call afterReportInit");
@@ -60,9 +60,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforePageInit() throws JRScriptletException {
     //System.out.println("call   beforePageInit : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
@@ -70,9 +70,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterPageInit() throws JRScriptletException {
     //System.out.println("call   afterPageInit  : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
@@ -80,9 +80,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforeColumnInit() throws JRScriptletException {
     //System.out.println("call     beforeColumnInit");
@@ -90,9 +90,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterColumnInit() throws JRScriptletException {
     //System.out.println("call     afterColumnInit");
@@ -100,19 +100,20 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  groupName                 Description of the Parameter
-   *@exception  JRScriptletException  Description of the Exception
+   * @param groupName Description of the Parameter
+   * @throws JRScriptletException Description of the Exception
    */
-  public void beforeGroupInit(String groupName) throws JRScriptletException { }
+  public void beforeGroupInit(String groupName) throws JRScriptletException {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  groupName                 Description of the Parameter
-   *@exception  JRScriptletException  Description of the Exception
+   * @param groupName Description of the Parameter
+   * @throws JRScriptletException Description of the Exception
    */
   public void afterGroupInit(String groupName) throws JRScriptletException {
     /*
@@ -133,9 +134,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public void beforeDetailEval() throws JRScriptletException {
     //System.out.println("        detail");
@@ -143,20 +144,53 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@exception  JRScriptletException  Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
-  public void afterDetailEval() throws JRScriptletException { }
-
+  public void afterDetailEval() throws JRScriptletException {
+  }
 
 
   /**
-   *  Gets the localeFormat attribute of the LocaleDateScriptlet class
+   * Gets the locale attribute of the JasperScriptletUtils object
    *
-   *@param  date                      Description of the Parameter
-   *@return                           The localeFormat value
-   *@exception  JRScriptletException  Description of the Exception
+   * @param language Description of the Parameter
+   * @return The locale value
+   */
+  private Locale getLocale(String language, String country) {
+    Locale locale = Locale.getDefault();
+    if (language != null) {
+      switch (language.length()) {
+        case 2:
+          if (country != null) {
+            locale = new Locale(language.substring(0, 2), country);
+          } else {
+            locale = new Locale(language.substring(0, 2), "");
+          }
+          break;
+        case 5:
+          locale = new Locale(
+              language.substring(0, 2), language.substring(3, 5));
+          break;
+        case 10:
+          // fr_FR_EURO
+          locale = new Locale(
+              language.substring(0, 2), language.substring(3, 5), language.substring(
+                  6));
+          break;
+      }
+    }
+    return locale;
+  }
+
+
+  /**
+   * Gets the localeFormat attribute of the LocaleDateScriptlet class
+   *
+   * @param date Description of the Parameter
+   * @return The localeFormat value
+   * @throws JRScriptletException Description of the Exception
    */
   public String getLocaleFormat(java.util.Date date) throws JRScriptletException {
     if (date == null) {
@@ -167,12 +201,12 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the localeFormat attribute of the JasperScriptletUtils object
+   * Gets the localeFormat attribute of the JasperScriptletUtils object
    *
-   *@param  date                      Description of the Parameter
-   *@param  pattern                   Description of the Parameter
-   *@return                           The localeFormat value
-   *@exception  JRScriptletException  Description of the Exception
+   * @param date    Description of the Parameter
+   * @param pattern Description of the Parameter
+   * @return The localeFormat value
+   * @throws JRScriptletException Description of the Exception
    */
   public String getLocaleFormat(java.util.Date date, String pattern) throws JRScriptletException {
     if (date == null) {
@@ -183,11 +217,11 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  ts                        Description of the Parameter
-   *@return                           Description of the Return Value
-   *@exception  JRScriptletException  Description of the Exception
+   * @param ts Description of the Parameter
+   * @return Description of the Return Value
+   * @throws JRScriptletException Description of the Exception
    */
   public String getLocaleFormat(java.sql.Timestamp ts) throws JRScriptletException {
     if (ts == null) {
@@ -195,22 +229,25 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
     }
     String language = (String) this.getParameterValue("language");
     String country = (String) this.getParameterValue("country");
-    Locale locale = new Locale(language, country);
+
+    Locale locale = getLocale(language, country);
 
     SimpleDateFormat formatter =
-        (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
-    formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
+        (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+            DateFormat.SHORT, locale);
+    formatter.applyPattern(
+        DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
     return (formatter.format(ts));
   }
 
 
   /**
-   *  Gets the localeFormat attribute of the JasperScriptletUtils object
+   * Gets the localeFormat attribute of the JasperScriptletUtils object
    *
-   *@param  ts                        Description of the Parameter
-   *@param  pattern                   Description of the Parameter
-   *@return                           The localeFormat value
-   *@exception  JRScriptletException  Description of the Exception
+   * @param ts      Description of the Parameter
+   * @param pattern Description of the Parameter
+   * @return The localeFormat value
+   * @throws JRScriptletException Description of the Exception
    */
   public String getLocaleFormat(java.sql.Timestamp ts, String pattern) throws JRScriptletException {
     if (ts == null) {
@@ -218,33 +255,35 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
     }
     String language = (String) this.getParameterValue("language");
     String country = (String) this.getParameterValue("country");
-    Locale locale = new Locale(language, country);
+
+    Locale locale = getLocale(language, country);
 
     SimpleDateFormat formatter =
-        (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
+        (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+            DateFormat.SHORT, locale);
     formatter.applyPattern(pattern);
     return (formatter.format(ts));
   }
 
 
-
   /**
-   *  Gets the localeFormat attribute of the LocaleDateScriptlet object
+   * Gets the localeFormat attribute of the LocaleDateScriptlet object
    *
-   *@param  value                     Description of the Parameter
-   *@return                           The localeFormat value
-   *@exception  JRScriptletException  Description of the Exception
+   * @param value Description of the Parameter
+   * @return The localeFormat value
+   * @throws JRScriptletException Description of the Exception
    */
   public String getLocaleFormat(Double value) throws JRScriptletException {
     if (value == null) {
       return "";
     }
-    
+
     String language = (String) this.getParameterValue("language");
     String country = (String) this.getParameterValue("country");
     String code = (String) this.getParameterValue("currency");
 
-    Locale locale = new Locale(language, country);
+    Locale locale = getLocale(language, country);
+
     NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
     if (code != null) {
       Currency currency = Currency.getInstance(code);
@@ -255,13 +294,13 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                        Description of the Parameter
-   *@param  id                        Description of the Parameter
-   *@return                           Description of the Return Value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public static boolean hasQuoteProductOptions(Connection db, int id) throws SQLException, JRScriptletException {
     boolean exists = false;
@@ -283,14 +322,14 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the quoteProductTotalPrice attribute of the JasperScriptletUtils
-   *  class
+   * Gets the quoteProductTotalPrice attribute of the JasperScriptletUtils
+   * class
    *
-   *@param  db                        Description of the Parameter
-   *@param  id                        Description of the Parameter
-   *@return                           The quoteProductTotalPrice value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return The quoteProductTotalPrice value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public String getFormattedQuoteProductTotalPrice(Connection db, int id) throws SQLException, JRScriptletException {
     QuoteProduct thisProduct = new QuoteProduct();
@@ -301,14 +340,14 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the quoteProductTotalPrice attribute of the JasperScriptletUtils
-   *  object
+   * Gets the quoteProductTotalPrice attribute of the JasperScriptletUtils
+   * object
    *
-   *@param  db                        Description of the Parameter
-   *@param  id                        Description of the Parameter
-   *@return                           The quoteProductTotalPrice value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return The quoteProductTotalPrice value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public Double getQuoteProductTotalPrice(Connection db, int id) throws SQLException, JRScriptletException {
     QuoteProduct thisProduct = new QuoteProduct();
@@ -319,10 +358,10 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the paddedTicketId attribute of the JasperScriptletUtils object
+   * Gets the paddedTicketId attribute of the JasperScriptletUtils object
    *
-   *@param  ticketId  Description of the Parameter
-   *@return           The paddedTicketId value
+   * @param ticketId Description of the Parameter
+   * @return The paddedTicketId value
    */
   public String getPaddedTicketId(int ticketId) {
     String paddedId = String.valueOf(ticketId);
@@ -334,11 +373,11 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the paddedQuoteId attribute of the JasperScriptletUtils object
+   * Gets the paddedQuoteId attribute of the JasperScriptletUtils object
    *
-   *@param  groupId  Description of the Parameter
-   *@param  version  Description of the Parameter
-   *@return          The paddedQuoteId value
+   * @param groupId Description of the Parameter
+   * @param version Description of the Parameter
+   * @return The paddedQuoteId value
    */
   public String getPaddedQuoteId(int groupId, String version) {
     String paddedId = String.valueOf(groupId);
@@ -350,14 +389,14 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  This method is used by the ticket_activity_log_subreport.xml which
-   *  displays a subreport by first checking if activity log items exist
+   * This method is used by the ticket_activity_log_subreport.xml which
+   * displays a subreport by first checking if activity log items exist
    *
-   *@param  db                        Description of the Parameter
-   *@param  id                        Description of the Parameter
-   *@return                           Description of the Return Value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public static boolean activityItemsExist(Connection db, int id) throws SQLException, JRScriptletException {
     boolean exists = false;
@@ -365,8 +404,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
         "SELECT count(*) AS recordcount " +
         "FROM ticket_csstm_form tcf, ticket_activity_item tai " +
         "WHERE tcf.form_id = tai.link_form_id " +
-        "AND link_ticket_id = ? "
-        );
+        "AND link_ticket_id = ? ");
 
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -382,14 +420,14 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  This method is used by the ticket_maintenance_log_subreport.xml which
-   *  displays a subreport by first checking if maintenace log items exist
+   * This method is used by the ticket_maintenance_log_subreport.xml which
+   * displays a subreport by first checking if maintenace log items exist
    *
-   *@param  db                        Description of the Parameter
-   *@param  id                        Description of the Parameter
-   *@return                           Description of the Return Value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public static boolean maintenanceItemsExist(Connection db, int id) throws SQLException, JRScriptletException {
     boolean exists = false;
@@ -397,8 +435,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
         "SELECT count(*) AS recordcount " +
         "FROM ticket_sun_form tsf, trouble_asset_replacement tar " +
         "WHERE tar.link_form_id = tsf.form_id " +
-        "AND tsf.link_ticket_id = ? "
-        );
+        "AND tsf.link_ticket_id = ? ");
 
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -414,13 +451,13 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the orgAddress attribute of the JasperScriptletUtils class
+   * Gets the orgAddress attribute of the JasperScriptletUtils class
    *
-   *@param  db                        Description of the Parameter
-   *@param  orgId                     Description of the Parameter
-   *@return                           The orgAddress value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db    Description of the Parameter
+   * @param orgId Description of the Parameter
+   * @return The orgAddress value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public static String getOrgAddress(Connection db, int orgId) throws SQLException, JRScriptletException {
     StringBuffer sb = new StringBuffer();
@@ -481,7 +518,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
     }
 
     pst = db.prepareStatement(
-        "SELECT number as phonenum " +
+        "SELECT \"number\" AS phonenum " +
         "FROM organization_phone " +
         "WHERE org_id = ? AND phone_type = 1 ");
     pst.setInt(1, orgId);
@@ -498,7 +535,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
     }
 
     pst = db.prepareStatement(
-        "SELECT number as faxnum " +
+        "SELECT \"number\" AS faxnum " +
         "FROM organization_phone " +
         "WHERE org_id = ? AND phone_type = 2 ");
     pst.setInt(1, orgId);
@@ -537,13 +574,13 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the orgAddress attribute of the JasperScriptletUtils class
+   * Gets the orgAddress attribute of the JasperScriptletUtils class
    *
-   *@param  db                        Description of the Parameter
-   *@param  quoteId                   Description of the Parameter
-   *@return                           The orgAddress value
-   *@exception  SQLException          Description of the Exception
-   *@exception  JRScriptletException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param quoteId Description of the Parameter
+   * @return The orgAddress value
+   * @throws SQLException         Description of the Exception
+   * @throws JRScriptletException Description of the Exception
    */
   public static String getQuoteContactAddress(Connection db, int quoteId) throws SQLException, JRScriptletException {
     StringBuffer sb = new StringBuffer();
@@ -592,13 +629,13 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
   /**
-   *  Gets the label attribute of the JasperScriptletUtils class
+   * Gets the label attribute of the JasperScriptletUtils class
    *
-   *@param  localizationPrefs         Description of the Parameter
-   *@param  labelName                 Description of the Parameter
-   *@param  defaultLabel              Description of the Parameter
-   *@return                           The label value
-   *@exception  JRScriptletException  Description of the Exception
+   * @param localizationPrefs Description of the Parameter
+   * @param labelName         Description of the Parameter
+   * @param defaultLabel      Description of the Parameter
+   * @return The label value
+   * @throws JRScriptletException Description of the Exception
    */
   public static String getLabel(Map localizationPrefs, String labelName, String defaultLabel) throws JRScriptletException {
     // Only intrested in field labels and value tag
@@ -610,7 +647,8 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
       if (prefGroup != null) {
         Node param = (Node) prefGroup.get(labelName);
         if (param != null) {
-          val = XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) param, tagName));
+          val = XMLUtils.getNodeText(
+              XMLUtils.getFirstChild((Element) param, tagName));
         }
       }
     }

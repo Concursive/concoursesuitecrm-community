@@ -16,21 +16,20 @@
 package org.aspcfs.utils;
 
 
-
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    February 5, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created February 5, 2003
  */
 public class HTMLUtils {
 
   /**
-   *  Strips tags from HTML text and returns a new string
+   * Strips tags from HTML text and returns a new string
    *
-   *@param  html  Description of the Parameter
-   *@return       Description of the Return Value
+   * @param html Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String htmlToText(String html) {
     if (html.length() == 0) {

@@ -16,6 +16,8 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.system.base.ApplicationVersion" %>
 <jsp:useBean id="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
@@ -39,7 +41,6 @@
 <html>
 <head>
 <title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 <link rel="stylesheet" href="css/template-login.css" type="text/css">
 <script language="JavaScript">
@@ -119,7 +120,7 @@
 <dhv:evaluate if="<%= hasText(LoginBean.getMessage()) %>">
               <tr>
                 <td align="center" colspan="2">
-                  <center><font size="2" color='red'><%= LoginBean.getMessage() %></font></center>
+                  <center><font size="2" color='red'><%= toHtml(LoginBean.getMessage()) %></font></center>
                 </td>
               </tr>
 </dhv:evaluate>
@@ -130,7 +131,7 @@
                   <font size="2"><dhv:label name="accounts.Username">Username</dhv:label>:</font>
                 </td>
                 <td>
-                  <font size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;</font>
+                  <font size="2"><input type="text" name="username" value="<%= toHtmlValue(LoginBean.getUsername()) %>" size="20">&nbsp;</font>
                 </td>
               </tr>
               <tr>

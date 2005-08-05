@@ -15,31 +15,39 @@
  */
 package org.aspcfs.modules.documents.actions;
 
-import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.documents.base.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.utils.web.LookupElement;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.RoleList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.documents.base.DocumentStore;
+import org.aspcfs.modules.documents.base.DocumentStoreList;
+import org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
 //import com.zeroio.controller.*;
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     
- *@created    
- *@version    $Id$
+ * @author
+ * @version $Id$
+ * @created
  */
 public final class DocumentStoreManagementTeamList extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDocumentStore(ActionContext context) {
     //Parameters
@@ -63,11 +71,12 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
           documentStoreList.setClosedDocumentStoresOnly(true);
         }
         documentStoreList.buildList(db);
-        context.getRequest().setAttribute("documentStoreList", documentStoreList);
+        context.getRequest().setAttribute(
+            "documentStoreList", documentStoreList);
         return "DocumentStoreListOK";
       } else if ("dept".equals(source) && "all".equals(status)) {
         LookupList departmentList = new LookupList(db, "lookup_department");
-        if (DocumentStoreTeamMemberList.USER.equals(memberType)){
+        if (DocumentStoreTeamMemberList.USER.equals(memberType)) {
           departmentList.addItem(0, "Without a department");
         }
         context.getRequest().setAttribute("departments", departmentList);
@@ -78,8 +87,9 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
         context.getRequest().setAttribute("roles", roleList);
         return "MakeRoleListOK";
       } else if ("acct".equals(source) && "all".equals(status)) {
-        LookupList accountTypeList = new LookupList(db, "lookup_account_types");
-        if (DocumentStoreTeamMemberList.USER.equals(memberType)){
+        LookupList accountTypeList = new LookupList(
+            db, "lookup_account_types");
+        if (DocumentStoreTeamMemberList.USER.equals(memberType)) {
           accountTypeList.addItem(0, "Without a type");
         }
         context.getRequest().setAttribute("accountTypes", accountTypeList);
@@ -95,10 +105,10 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandItems(ActionContext context) {
     //Parameters
@@ -112,14 +122,16 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
       db = getConnection(context);
       if ("my".equals(source) || "all".equals(source)) {
         //Load the document store and check permissions
-        DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(id));
+        DocumentStore thisDocumentStore = new DocumentStore(
+            db, Integer.parseInt(id));
         thisDocumentStore.buildPermissionList(db);
         //Prepare list of team members
         DocumentStoreTeamMemberList team = new DocumentStoreTeamMemberList();
         team.setDocumentStoreId(Integer.parseInt(id));
         team.setMemberType(DocumentStoreTeamMemberList.USER);
         //Check permission first
-        if (hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-team-view")) {
+        if (hasDocumentStoreAccess(
+            context, db, thisDocumentStore, "documentcenter-team-view")) {
           team.buildList(db);
         }
         context.getRequest().setAttribute("team", team);
@@ -143,32 +155,35 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
         allAccountUsers.buildList(db);
         Iterator itr = allAccountUsers.iterator();
         UserList users = new UserList();
-        
-        while (itr.hasNext()){
-          User thisUser = (User)itr.next();
-          Organization organization = new Organization(db,thisUser.getContact().getOrgId());
+
+        while (itr.hasNext()) {
+          User thisUser = (User) itr.next();
+          Organization organization = new Organization(
+              db, thisUser.getContact().getOrgId());
           
           //Append organization name if this user is not a primary contact of this organization
-          if (organization.getPrimaryContact() !=  null){
-            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()){
-              thisUser.getContact().setNameLast(thisUser.getContact().getNameLast() + " (" +organization.getName() + ")");
+          if (organization.getPrimaryContact() != null) {
+            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()) {
+              thisUser.getContact().setNameLast(
+                  thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
             }
-          }else{
-            thisUser.getContact().setNameLast(thisUser.getContact().getNameLast() + " (" +organization.getName() + ")");
+          } else {
+            thisUser.getContact().setNameLast(
+                thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
           }
           
           //Filter the fetched user list based on the account type of the
           //account to which the user belongs to
           Iterator typesIterator = organization.getTypes().iterator();
           if ((organization.getTypes().size() == 0) &&
-            (Integer.parseInt(id) == 0)){
-                //include if the account does not have a type and "without type" is chosen
-                users.add(thisUser);
-          }else{
-            while (typesIterator.hasNext()){
-              LookupElement lookupElement = (LookupElement)typesIterator.next();
+              (Integer.parseInt(id) == 0)) {
+            //include if the account does not have a type and "without type" is chosen
+            users.add(thisUser);
+          } else {
+            while (typesIterator.hasNext()) {
+              LookupElement lookupElement = (LookupElement) typesIterator.next();
               //include if the account type is one of the chosen types
-              if (lookupElement.getCode() == Integer.parseInt(id)){
+              if (lookupElement.getCode() == Integer.parseInt(id)) {
                 users.add(thisUser);
               }
             }

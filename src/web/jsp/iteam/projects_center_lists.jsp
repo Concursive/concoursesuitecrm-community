@@ -51,10 +51,12 @@
   </tr>
 </table>
 <br>
-<zeroio:permission name="project-lists-modify">
-<a href="ProjectManagementLists.do?command=Add&pid=<%= Project.getId() %>&cid=<%= category.getId() %>">Add an Item to this List</a><br>
-<br>
-</zeroio:permission>
+<dhv:evaluate if="<%= !Project.isTrashed() %>" >
+  <zeroio:permission name="project-lists-modify">
+    <a href="ProjectManagementLists.do?command=Add&pid=<%= Project.getId() %>&cid=<%= category.getId() %>">Add an Item to this List</a><br>
+    <br />
+  </zeroio:permission>
+</dhv:evaluate>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="pagedListView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= Project.getId() %>&cid=<%= category.getId() %>">
@@ -99,7 +101,7 @@
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuListItem', <%= thisTask.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuListItem', <%= thisTask.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuListItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
@@ -119,9 +121,11 @@
     <td width="100%" valign="top" align="left"<%= thisTask.getComplete()?" class=\"ghost\"":"" %>>
       <table border="0" cellspacing="0" cellpadding="0" width="100%" class="empty">
         <tr>
-          <td valign="top" nowrap>
-            <zeroio:permission name="project-lists-modify"><a href="javascript:changeImages('task<%= count %>', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=off', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=on')"></zeroio:permission><img name="task<%= count %>" border="0" src="images/box<%= thisTask.getComplete()?"-checked":"" %>.gif" alt="" align="absmiddle" id="<%= thisTask.getComplete()?"1":"0" %>"><zeroio:permission name="project-lists-modify"></a></zeroio:permission>&nbsp;
-          </td>
+          <dhv:evaluate if="<%= !Project.isTrashed() %>" >
+            <td valign="top" nowrap>
+              <zeroio:permission name="project-lists-modify"><a href="javascript:changeImages('task<%= count %>', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=off', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=on')"></zeroio:permission><img name="task<%= count %>" border="0" src="images/box<%= thisTask.getComplete()?"-checked":"" %>.gif" alt="" align="absmiddle" id="<%= thisTask.getComplete()?"1":"0" %>"><zeroio:permission name="project-lists-modify"></a></zeroio:permission>&nbsp;
+            </td>
+          </dhv:evaluate>
           <td valign="top" width="100%">
             <%= toHtml(thisTask.getDescription()) %>
             <dhv:evaluate if="<%= hasText(thisTask.getNotes()) %>">

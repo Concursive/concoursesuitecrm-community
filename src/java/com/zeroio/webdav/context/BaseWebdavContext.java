@@ -15,32 +15,33 @@
  */
 package com.zeroio.webdav.context;
 
+import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.TeamMember;
+import org.apache.naming.resources.Resource;
+import org.apache.naming.resources.ResourceAttributes;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.documents.base.DocumentStore;
+import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
+import org.aspcfs.utils.web.LookupList;
+
+import javax.naming.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.io.FileNotFoundException;
 import java.util.*;
 
-import javax.naming.*;
-
-import org.apache.naming.resources.ResourceAttributes;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.controller.SystemStatus;
-
-import com.zeroio.iteam.base.Project;
-import com.zeroio.iteam.base.TeamMember;
-import org.aspcfs.modules.documents.base.DocumentStore;
-import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.admin.base.User;
-
 /**
- *  All module webdav contexts extend this base class. Provides common methods
- *  which can be used by all its subclasses
+ * All module webdav contexts extend this base class. Provides common methods
+ * which can be used by all its subclasses
  *
- * @author     ananth
- * @created    November 3, 2004
- * @version    $Id$
+ * @author ananth
+ * @version $Id: BaseWebdavContext.java,v 1.2 2005/04/13 20:04:30 mrajkowski
+ *          Exp $
+ * @created November 3, 2004
  */
 public class BaseWebdavContext implements ModuleContext {
 
@@ -50,14 +51,34 @@ public class BaseWebdavContext implements ModuleContext {
   protected Hashtable bindings = new Hashtable();
   // List of attributes for each binding
   protected Hashtable attributes = new Hashtable();
+  protected String contextName = null;
   private String permission = "";
   private int userId = -1;
 
+  /**
+   * Gets the contextName attribute of the BaseWebdavContext object
+   *
+   * @return The contextName value
+   */
+  public String getContextName() {
+    return contextName;
+  }
+
 
   /**
-   *  Sets the userId attribute of the BaseWebdavContext object
+   * Sets the contextName attribute of the BaseWebdavContext object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new contextName value
+   */
+  public void setContextName(String tmp) {
+    this.contextName = tmp;
+  }
+
+
+  /**
+   * Sets the userId attribute of the BaseWebdavContext object
+   *
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -65,9 +86,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Sets the userId attribute of the BaseWebdavContext object
+   * Sets the userId attribute of the BaseWebdavContext object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -75,9 +96,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the userId attribute of the BaseWebdavContext object
+   * Gets the userId attribute of the BaseWebdavContext object
    *
-   * @return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -85,9 +106,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Sets the permission attribute of the BaseWebdavContext object
+   * Sets the permission attribute of the BaseWebdavContext object
    *
-   * @param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -95,9 +116,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the permission attribute of the BaseWebdavContext object
+   * Gets the permission attribute of the BaseWebdavContext object
    *
-   * @return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -105,9 +126,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the BaseWebdavContext object
+   * Sets the fileLibraryPath attribute of the BaseWebdavContext object
    *
-   * @param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -115,9 +136,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Sets the bindings attribute of the BaseWebdavContext object
+   * Sets the bindings attribute of the BaseWebdavContext object
    *
-   * @param  tmp  The new bindings value
+   * @param tmp The new bindings value
    */
   public void setBindings(Hashtable tmp) {
     this.bindings = tmp;
@@ -125,9 +146,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Sets the attributes attribute of the BaseWebdavContext object
+   * Sets the attributes attribute of the BaseWebdavContext object
    *
-   * @param  tmp  The new attributes value
+   * @param tmp The new attributes value
    */
   public void setAttributes(Hashtable tmp) {
     this.attributes = tmp;
@@ -135,9 +156,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the fileLibraryPath attribute of the BaseWebdavContext object
+   * Gets the fileLibraryPath attribute of the BaseWebdavContext object
    *
-   * @return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -145,9 +166,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the bindings attribute of the BaseWebdavContext object
+   * Gets the bindings attribute of the BaseWebdavContext object
    *
-   * @return    The bindings value
+   * @return The bindings value
    */
   public Hashtable getBindings() {
     return bindings;
@@ -155,9 +176,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the attributes attribute of the BaseWebdavContext object
+   * Gets the attributes attribute of the BaseWebdavContext object
    *
-   * @return    The attributes value
+   * @return The attributes value
    */
   public Hashtable getAttributes() {
     return attributes;
@@ -165,16 +186,27 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Constructor for the BaseWebdavContext object
+   * Constructor for the BaseWebdavContext object
    */
-  public BaseWebdavContext() { }
+  public BaseWebdavContext() {
+  }
 
 
   /**
-   *  Constructor for the BaseWebdavContext object
+   * Constructor for the BaseWebdavContext object
    *
-   * @param  fileLibraryPath  Description of the Parameter
-   * @param  userId           Description of the Parameter
+   * @param name Description of the Parameter
+   */
+  public BaseWebdavContext(String name) {
+    this.contextName = name;
+  }
+
+
+  /**
+   * Constructor for the BaseWebdavContext object
+   *
+   * @param fileLibraryPath Description of the Parameter
+   * @param userId          Description of the Parameter
    */
   public BaseWebdavContext(int userId, String fileLibraryPath) {
     this.userId = userId;
@@ -183,52 +215,75 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Method
+   * Gets the cleanName attribute of the BaseWebdavContext object
    *
-   * @param  name                 Description of the Parameter
-   * @return                      Description of the Return Value
-   * @exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return The cleanName value
    */
-  public Object lookup(String name) throws NamingException {
-    if ("".equals(name.trim())) {
+  private String decodePath(String name) {
+    try {
+      return java.net.URLDecoder.decode(name, "UTF-8");
+    } catch (java.io.UnsupportedEncodingException e) {
+      return name;
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param path Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
+   */
+  public Object lookup(String path) throws NamingException {
+    if ("".equals(path.trim())) {
       return this;
     }
-    StringTokenizer st = new StringTokenizer(name, "/");
+    path = decodePath(path);
+    StringTokenizer st = new StringTokenizer(path, "/");
     Object current = this;
+    String token = null;
     while (st.hasMoreTokens()) {
-      String token = st.nextToken();
+      token = st.nextToken();
       if (current instanceof ModuleContext) {
         current = ((ModuleContext) current).getBindings().get(token);
       }
     }
     if (current == null) {
-      throw new NameNotFoundException(name + " NOT FOUND");
+      throw new NameNotFoundException(path + " NOT FOUND");
     }
     return current;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                         Description of the Parameter
-   * @param  name                       Description of the Parameter
-   * @param  thisSystem                 Description of the Parameter
-   * @return                            Description of the Return Value
-   * @exception  NamingException        Description of the Exception
-   * @exception  SQLException           Description of the Exception
-   * @exception  FileNotFoundException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param name       Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException       Description of the Exception
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
    */
   public Object lookup(SystemStatus thisSystem, Connection db, String name) throws NamingException, SQLException, FileNotFoundException {
     if ("".equals(name.trim())) {
       return this;
     }
+    name = decodePath(name);
     StringTokenizer st = new StringTokenizer(name, "/");
     Object current = this;
     while (st.hasMoreTokens()) {
       String token = st.nextToken();
       if (current instanceof ModuleContext) {
         current = ((ModuleContext) current).getBindings().get(token);
+
+        if (current == null) {
+          break;
+        }
+
         if (current instanceof ItemContext) {
           // An ItemContext gets the path from its parent context
           ((ItemContext) current).buildResources(thisSystem, db);
@@ -238,7 +293,8 @@ public class BaseWebdavContext implements ModuleContext {
         } else if (current instanceof ModuleContext) {
           // A BaseWebdavContext or any other Top Level ModuleContext needs the
           // base fileLibrary path from the webdav manager
-          ((ModuleContext) current).buildResources(thisSystem, db, userId, fileLibraryPath);
+          ((ModuleContext) current).buildResources(
+              thisSystem, db, userId, fileLibraryPath);
         }
       }
     }
@@ -250,22 +306,56 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  A ModuleContext has name-object bindings. It also maintains a hashtable of
-   *  attributes for each object available in its bindings.
+   * Gets the attributes attribute of the BaseWebdavContext object
    *
-   *@param  path                       Description of the Parameter
-   *@param  db                         Description of the Parameter
-   *@param  thisSystem                 Description of the Parameter
-   *@return                            The attributes value
-   *@exception  NamingException        Description of the Exception
-   *@exception  SQLException           Description of the Exception
-   *@exception  FileNotFoundException  Description of the Exception
+   * @param path Description of the Parameter
+   * @return The attributes value
+   * @throws NamingException Description of the Exception
    */
-  public ResourceAttributes getAttributes(SystemStatus thisSystem, Connection db, String path)
-       throws NamingException, SQLException, FileNotFoundException {
+  public ResourceAttributes getAttributes(String path) throws NamingException {
     if ("".equals(path.trim())) {
       return null;
     }
+    path = decodePath(path);
+    StringTokenizer st = new StringTokenizer(path, "/");
+    Object current = this;
+    Object parent = null;
+    String token = null;
+    while (st.hasMoreTokens()) {
+      token = st.nextToken();
+      if (current instanceof ModuleContext) {
+        parent = current;
+        current = ((ModuleContext) current).getBindings().get(token);
+      }
+    }
+    if (current == null) {
+      System.out.println(
+          "naming exception while fetching attrs for token: " + token);
+      throw new NameNotFoundException(path + " not found");
+    }
+    return (ResourceAttributes) (((ModuleContext) parent).getAttributes()).get(
+        token);
+  }
+
+
+  /**
+   * A ModuleContext has name-object bindings. It also maintains a hashtable of
+   * attributes for each object available in its bindings.
+   *
+   * @param path       Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @return The attributes value
+   * @throws NamingException       Description of the Exception
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   */
+  public ResourceAttributes getAttributes(SystemStatus thisSystem, Connection db, String path)
+      throws NamingException, SQLException, FileNotFoundException {
+    if ("".equals(path.trim())) {
+      return null;
+    }
+    path = decodePath(path);
     StringTokenizer st = new StringTokenizer(path, "/");
     Object current = this;
     Object parent = null;
@@ -284,26 +374,29 @@ public class BaseWebdavContext implements ModuleContext {
         } else if (current instanceof ModuleContext) {
           // A BaseWebdavContext or any other Top Level ModuleContext needs the
           // base fileLibrary path from the webdav manager
-          ((ModuleContext) current).buildResources(thisSystem, db, userId, fileLibraryPath);
+          ((ModuleContext) current).buildResources(
+              thisSystem, db, userId, fileLibraryPath);
         }
       }
     }
     if (current == null) {
-      System.out.println("naming exception while fetching attrs for token: " + token);
+      System.out.println(
+          "naming exception while fetching attrs for token: " + token);
       throw new NameNotFoundException(path + " not found");
     }
     //System.out.println("parent: " + parent + ", token: " + token);
-    return (ResourceAttributes) (((ModuleContext) parent).getAttributes()).get(token);
+    return (ResourceAttributes) (((ModuleContext) parent).getAttributes()).get(
+        token);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  name      Description of the Parameter
-   * @param  entered   Description of the Parameter
-   * @param  modified  Description of the Parameter
-   * @param  length    Description of the Parameter
+   * @param name     Description of the Parameter
+   * @param entered  Description of the Parameter
+   * @param modified Description of the Parameter
+   * @param length   Description of the Parameter
    */
   public void buildProperties(String name, Timestamp entered, Timestamp modified, Integer length) {
     ResourceAttributes attrs = new ResourceAttributes();
@@ -315,13 +408,13 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  fileLibraryPath   Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @param  thisSystem        Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param fileLibraryPath Description of the Parameter
+   * @param userId          Description of the Parameter
+   * @param thisSystem      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildResources(SystemStatus thisSystem, Connection db, int userId, String fileLibraryPath) throws SQLException {
     this.userId = userId;
@@ -330,11 +423,11 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  name                 Description of the Parameter
-   * @return                      Description of the Return Value
-   * @exception  NamingException  Description of the Exception
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException Description of the Exception
    */
   public NamingEnumeration list(String name) throws NamingException {
     if ("".equals(name.trim())) {
@@ -356,20 +449,293 @@ public class BaseWebdavContext implements ModuleContext {
   /**
    *  Description of the Method
    *
-   * @param  thisSystem        Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @param  linkItemId        Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @param  permission        Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param  db                   Description of the Parameter
+   * @param  path                 Description of the Parameter
+   * @return                      Description of the Return Value
+   * @exception  SQLException     Description of the Exception
+   * @exception  NamingException  Description of the Exception
+   */
+
+  /*
+ public boolean createSubcontext(Connection db, String path) throws SQLException, NamingException {
+   if ("".equals(path.trim())) {
+     //Creating folder at root context not allowed
+     System.out.println("Creating a Folder at root context not permitted");
+     throw new NamingException("Creating a folder at root context not allowed.");
+   }
+   return false;
+ }*/
+
+
+  /**
+   * Description of the Method
+   *
+   * @param path       Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @return Description of the Return Value
+   * @throws NamingException       Description of the Exception
+   * @throws SQLException          Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   */
+  public boolean createSubcontext(SystemStatus thisSystem, Connection db, String path) throws SQLException,
+      FileNotFoundException, NamingException {
+    path = decodePath(path);
+
+    if (path.endsWith("/")) {
+      path = path.substring(0, path.lastIndexOf("/"));
+    }
+
+    int slash = path.lastIndexOf("/");
+    String parentPath = path.substring(0, slash);
+    String contextName = path.substring(slash + 1);
+
+    if ("".equals(parentPath.trim())) {
+      //Creating folder at root context not allowed
+      System.out.println("Creating a Folder at root context not permitted");
+      return false;
+    }
+
+    Object parent = lookup(thisSystem, db, parentPath);
+    if (parent != null) {
+      if (parent instanceof ModuleContext) {
+        return (((ModuleContext) parent).createSubcontext(
+            thisSystem, db, contextName));
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param path   Description of the Parameter
+   * @param object Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+  public Object copyResource(SystemStatus thisSystem, Connection db, String path, Object object) throws SQLException,
+      IOException, NamingException {
+    System.out.println(
+        "BaseWebdavContext-> COPYING RESOURCE AT PATH: " + path);
+    path = decodePath(path);
+
+    if ("".equals(path.trim())) {
+      //binding an object at root context not allowed
+      System.out.println(
+          "binding an object at root context not allowed....returning false");
+      throw new NamingException(
+          "Binding an object at root context not allowed..");
+    }
+
+    //dest contains the name of the file. eg: /Accounts/Dataline/temp.dat
+    int slash = path.lastIndexOf("/");
+    String parentPath = path.substring(0, slash);
+    String resourceName = path.substring(slash + 1);
+
+    if (object instanceof Resource) {
+      Resource resource = (Resource) object;
+      resource.setName(resourceName);
+    }
+
+    Object parent = lookup(parentPath);
+    if (parent != null) {
+      if (parent instanceof ModuleContext) {
+        return (((ModuleContext) parent).copyResource(thisSystem, db, object));
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param object Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+
+  public Object copyResource(SystemStatus thisSystem, Connection db, Object object) throws SQLException,
+      IOException, NamingException {
+    return null;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param object Description of the Parameter
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+  public boolean bind(SystemStatus thisSystem, Connection db, Object object) throws SQLException, NamingException {
+    //binding an object at root context not allowed
+    System.out.println("Binding an object at root context not allowed");
+    return false;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param dest   Description of the Parameter
+   * @param object Description of the Parameter
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+  public boolean bind(SystemStatus thisSystem, Connection db, String dest, Object object) throws SQLException, NamingException {
+    System.out.println(
+        "BaseWebdavContext-> BINDING SUB-CONTEXT AT PATH: " + dest);
+    dest = decodePath(dest);
+
+    if ("".equals(dest.trim())) {
+      //binding an object at root context not allowed
+      System.out.println(
+          "binding an object at root context not allowed....returning false");
+      throw new NamingException(
+          "Binding an object at root context not allowed..");
+    }
+
+    if (object instanceof Resource) {
+      //dest contains the name of the file. eg: /Accounts/Dataline/temp.dat
+      int slash = dest.lastIndexOf("/");
+      dest = dest.substring(0, slash);
+    }
+
+    Object parent = lookup(dest);
+    if (parent != null) {
+      if (parent instanceof ModuleContext) {
+        return (((ModuleContext) parent).bind(thisSystem, db, object));
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param dest       Description of the Parameter
+   * @param object     Description of the Parameter
+   * @throws SQLException          Description of the Exception
+   * @throws NamingException       Description of the Exception
+   * @throws FileNotFoundException Description of the Exception
+   */
+  public boolean move(SystemStatus thisSystem, Connection db, String dest, Object object) throws SQLException,
+      FileNotFoundException, NamingException {
+    dest = decodePath(dest);
+
+    if ("".equals(dest.trim())) {
+      //binding an object at root context not allowed
+      System.out.println("Moving a Folder to the root context not permitted");
+      throw new NamingException(
+          "Binding an object at root context not allowed..");
+    }
+
+    int slash = dest.lastIndexOf("/");
+    String parentPath = dest.substring(0, slash);
+    String contextName = dest.substring(slash + 1);
+
+    if (object instanceof ModuleContext) {
+      ModuleContext context = (ModuleContext) object;
+      context.setContextName(contextName);
+    } else if (object instanceof Resource) {
+      Resource resource = (Resource) object;
+      resource.setSubject(contextName);
+    }
+
+    Object parent = lookup(thisSystem, db, parentPath);
+    if (parent != null) {
+      if (parent instanceof ModuleContext) {
+        return (((ModuleContext) parent).bind(thisSystem, db, object));
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db   Description of the Parameter
+   * @param path Description of the Parameter
+   * @throws SQLException    Description of the Exception
+   * @throws NamingException Description of the Exception
+   */
+  public void unbind(SystemStatus thisSystem, Connection db, String path) throws SQLException, NamingException {
+    System.out.println("BaseWebdavContext-> UN-BINDING...PATH: " + path);
+    path = decodePath(path);
+
+    if (path.endsWith("/")) {
+      path = path.substring(0, path.lastIndexOf("/"));
+    }
+
+    int slash = path.lastIndexOf("/");
+    String parentPath = path.substring(0, slash);
+    String contextName = path.substring(slash + 1);
+
+    if ("".equals(parentPath.trim())) {
+      //unbinding folder at root context not allowed
+      System.out.println(
+          "Unbinding folder at root context not allowed....returning false");
+      throw new NamingException("Unbinding at root context not allowed...");
+    }
+
+    Object parent = lookup(parentPath);
+    if (parent != null) {
+      if (parent instanceof ModuleContext) {
+        ((ModuleContext) parent).unbind(thisSystem, db, contextName);
+      }
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
+
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("Context: " + this.getContextName() + "\n");
+    Iterator i = this.getBindings().keySet().iterator();
+    while (i.hasNext()) {
+      String child = (String) i.next();
+      sb.append("  - " + child + "\n");
+    }
+    return sb.toString();
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param linkItemId Description of the Parameter
+   * @param userId     Description of the Parameter
+   * @param permission Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean hasPermission(SystemStatus thisSystem, Connection db, int linkItemId, int userId, String permission)
-       throws SQLException {
+      throws SQLException {
     if (permission.startsWith("project")) {
       return (hasProjectAccess(thisSystem, db, linkItemId, userId, permission));
-    } else if(permission.startsWith("document")) {
-      return (hasDocumentStoreAccess(thisSystem, db, linkItemId, userId, permission));
+    } else if (permission.startsWith("document")) {
+      return (hasDocumentStoreAccess(
+          thisSystem, db, linkItemId, userId, permission));
     } else {
       return (hasPermission(thisSystem, userId, permission));
     }
@@ -377,12 +743,12 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  thisSystem  Description of the Parameter
-   * @param  userId      Description of the Parameter
-   * @param  permission  Description of the Parameter
-   * @return             Description of the Return Value
+   * @param thisSystem Description of the Parameter
+   * @param userId     Description of the Parameter
+   * @param permission Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasPermission(SystemStatus thisSystem, int userId, String permission) {
     return thisSystem.hasPermission(userId, permission);
@@ -390,13 +756,13 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the userLevel attribute of the BaseWebdavContext object
+   * Gets the userLevel attribute of the BaseWebdavContext object
    *
-   * @param  thisSystem        Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @param  roleLevel         Description of the Parameter
-   * @return                   The userLevel value
-   * @exception  SQLException  Description of the Exception
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param roleLevel  Description of the Parameter
+   * @return The userLevel value
+   * @throws SQLException Description of the Exception
    */
   protected int getUserLevel(SystemStatus thisSystem, Connection db, int roleLevel) throws SQLException {
     LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
@@ -408,13 +774,13 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the roleId attribute of the BaseWebdavContext object
+   * Gets the roleId attribute of the BaseWebdavContext object
    *
-   * @param  thisSystem        Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @param  userlevel         Description of the Parameter
-   * @return                   The roleId value
-   * @exception  SQLException  Description of the Exception
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param userlevel  Description of the Parameter
+   * @return The roleId value
+   * @throws SQLException Description of the Exception
    */
   protected int getRoleId(SystemStatus thisSystem, Connection db, int userlevel) throws SQLException {
     LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
@@ -426,15 +792,15 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  thisSystem        Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  projectId         Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@param  permission        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param projectId  Description of the Parameter
+   * @param userId     Description of the Parameter
+   * @param permission Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected boolean hasProjectAccess(SystemStatus thisSystem, Connection db, int projectId, int userId, String permission) throws SQLException {
     // See if the team member has access to perform a project action
@@ -467,16 +833,17 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the documentStoreRoleId attribute of the BaseWebdavContext object
+   * Gets the documentStoreRoleId attribute of the BaseWebdavContext object
    *
-   *@param  thisSystem        Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  userlevel         Description of the Parameter
-   *@return                   The documentStoreRoleId value
-   *@exception  SQLException  Description of the Exception
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param userlevel  Description of the Parameter
+   * @return The documentStoreRoleId value
+   * @throws SQLException Description of the Exception
    */
   protected int getDocumentStoreRoleId(SystemStatus thisSystem, Connection db, int userlevel) throws SQLException {
-    LookupList roleList = thisSystem.getLookupList(db, "lookup_document_store_role");
+    LookupList roleList = thisSystem.getLookupList(
+        db, "lookup_document_store_role");
     if (roleList != null) {
       return roleList.getLevelFromId(userlevel);
     }
@@ -485,13 +852,13 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Gets the documentStoreUserLevel attribute of the BaseWebdavContext object
+   * Gets the documentStoreUserLevel attribute of the BaseWebdavContext object
    *
-   *@param  thisSystem        Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@param  roleLevel         Description of the Parameter
-   *@return                   The documentStoreUserLevel value
-   *@exception  SQLException  Description of the Exception
+   * @param thisSystem Description of the Parameter
+   * @param db         Description of the Parameter
+   * @param roleLevel  Description of the Parameter
+   * @return The documentStoreUserLevel value
+   * @throws SQLException Description of the Exception
    */
   protected int getDocumentStoreUserLevel(SystemStatus thisSystem, Connection db, int roleLevel) throws SQLException {
     LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
@@ -503,15 +870,15 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  permission        Description of the Parameter
-   *@param  thisSystem        Description of the Parameter
-   *@param  documentStoreId   Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db              Description of the Parameter
+   * @param permission      Description of the Parameter
+   * @param thisSystem      Description of the Parameter
+   * @param documentStoreId Description of the Parameter
+   * @param userId          Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected boolean hasDocumentStoreAccess(SystemStatus thisSystem, Connection db, int documentStoreId, int userId, String permission) throws SQLException {
     // See if the team member has access to perform a document store action
@@ -524,13 +891,16 @@ public class BaseWebdavContext implements ModuleContext {
       Contact tmpContact = new Contact(db, tmpUser.getContactId());
       int tmpDepartmentId = tmpContact.getDepartment();
 
-      thisMember = new DocumentStoreTeamMember(db, thisDocumentStore.getId(), userId, tmpUserRoleId, tmpDepartmentId);
+      thisMember = new DocumentStoreTeamMember(
+          db, thisDocumentStore.getId(), userId, tmpUserRoleId, tmpDepartmentId);
     } catch (Exception notValid) {
       // Create a guest
       // TODO: VERIFY THAT A GUEST CAN HAVE ACCESS!
       thisMember = new DocumentStoreTeamMember();
       thisMember.setDocumentStoreId(thisDocumentStore.getId());
-      thisMember.setUserLevel(getDocumentStoreUserLevel(thisSystem, db, DocumentStoreTeamMember.GUEST));
+      thisMember.setUserLevel(
+          getDocumentStoreUserLevel(
+              thisSystem, db, DocumentStoreTeamMember.GUEST));
       thisMember.setRoleId(DocumentStoreTeamMember.GUEST);
     }
 
@@ -550,20 +920,21 @@ public class BaseWebdavContext implements ModuleContext {
 
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   * @author     ananth
-   * @created    November 5, 2004
-   * @version    $Id$
+   * @author ananth
+   * @version $Id: BaseWebdavContext.java,v 1.2 2005/04/13 20:04:30
+   *          mrajkowski Exp $
+   * @created November 5, 2004
    */
   class ListOfNames implements NamingEnumeration {
     protected Enumeration names;
 
 
     /**
-     *  Constructor for the ListOfNames object
+     * Constructor for the ListOfNames object
      *
-     * @param  names  Description of the Parameter
+     * @param names Description of the Parameter
      */
     ListOfNames(Enumeration names) {
       this.names = names;
@@ -571,9 +942,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public boolean hasMoreElements() {
       try {
@@ -585,10 +956,10 @@ public class BaseWebdavContext implements ModuleContext {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @return                      Description of the Return Value
-     * @exception  NamingException  Description of the Exception
+     * @return Description of the Return Value
+     * @throws NamingException Description of the Exception
      */
     public boolean hasMore() throws NamingException {
       return names.hasMoreElements();
@@ -596,10 +967,10 @@ public class BaseWebdavContext implements ModuleContext {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @return                      Description of the Return Value
-     * @exception  NamingException  Description of the Exception
+     * @return Description of the Return Value
+     * @throws NamingException Description of the Exception
      */
     public Object next() throws NamingException {
       String name = (String) names.nextElement();
@@ -609,9 +980,9 @@ public class BaseWebdavContext implements ModuleContext {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @return    Description of the Return Value
+     * @return Description of the Return Value
      */
     public Object nextElement() {
       try {
@@ -623,7 +994,7 @@ public class BaseWebdavContext implements ModuleContext {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      */
     public void close() {
     }
@@ -633,18 +1004,19 @@ public class BaseWebdavContext implements ModuleContext {
   // Class for enumerating bindings
 
   /**
-   *  Description of the Class
+   * Description of the Class
    *
-   * @author     ananth
-   * @created    November 5, 2004
-   * @version    $Id$
+   * @author ananth
+   * @version $Id: BaseWebdavContext.java,v 1.2 2005/04/13 20:04:30
+   *          mrajkowski Exp $
+   * @created November 5, 2004
    */
   class ListOfBindings extends ListOfNames {
 
     /**
-     *  Constructor for the ListOfBindings object
+     * Constructor for the ListOfBindings object
      *
-     * @param  names  Description of the Parameter
+     * @param names Description of the Parameter
      */
     ListOfBindings(Enumeration names) {
       super(names);
@@ -652,10 +1024,10 @@ public class BaseWebdavContext implements ModuleContext {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     * @return                      Description of the Return Value
-     * @exception  NamingException  Description of the Exception
+     * @return Description of the Return Value
+     * @throws NamingException Description of the Exception
      */
     public Object next() throws NamingException {
       String name = (String) names.nextElement();

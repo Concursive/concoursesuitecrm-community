@@ -13,27 +13,28 @@
  *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
- 
+
 package org.aspcfs.ant.tasks;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import java.security.*;
-import java.io.File;
-import org.aspcfs.utils.*;
-import sun.misc.*;
-import org.aspcfs.modules.setup.beans.RegistrationBean;
-import org.w3c.dom.*;
-import org.aspcfs.modules.service.base.TransactionStatus;
 import org.aspcfs.modules.service.base.Record;
+import org.aspcfs.modules.service.base.TransactionStatus;
+import org.aspcfs.modules.setup.beans.RegistrationBean;
+import org.aspcfs.utils.*;
+import org.w3c.dom.Element;
+import sun.misc.BASE64Encoder;
+
+import java.io.File;
+import java.security.Key;
 
 /**
- *  This Ant Task registers this application with the Centric CRM
- *  registration server.
+ * This Ant Task registers this application with the Centric CRM
+ * registration server.
  *
- *@author     matt rajkowski
- *@created    September 16, 2004
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 16, 2004
  */
 public class RegisterTask extends Task {
 
@@ -47,9 +48,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  Sets the organization attribute of the RegisterTask object
+   * Sets the organization attribute of the RegisterTask object
    *
-   *@param  tmp  The new organization value
+   * @param tmp The new organization value
    */
   public void setOrganization(String tmp) {
     this.organization = tmp;
@@ -57,9 +58,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  Sets the firstName attribute of the RegisterTask object
+   * Sets the firstName attribute of the RegisterTask object
    *
-   *@param  tmp  The new firstName value
+   * @param tmp The new firstName value
    */
   public void setFirstName(String tmp) {
     this.firstName = tmp;
@@ -67,9 +68,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  Sets the lastName attribute of the RegisterTask object
+   * Sets the lastName attribute of the RegisterTask object
    *
-   *@param  tmp  The new lastName value
+   * @param tmp The new lastName value
    */
   public void setLastName(String tmp) {
     this.lastName = tmp;
@@ -77,9 +78,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  Sets the email attribute of the RegisterTask object
+   * Sets the email attribute of the RegisterTask object
    *
-   *@param  tmp  The new email value
+   * @param tmp The new email value
    */
   public void setEmail(String tmp) {
     this.email = tmp;
@@ -87,9 +88,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  Sets the profile attribute of the RegisterTask object
+   * Sets the profile attribute of the RegisterTask object
    *
-   *@param  tmp  The new profile value
+   * @param tmp The new profile value
    */
   public void setProfile(String tmp) {
     this.profile = tmp;
@@ -97,9 +98,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  Sets the webPath attribute of the RegisterTask object
+   * Sets the webPath attribute of the RegisterTask object
    *
-   *@param  tmp  The new webPath value
+   * @param tmp The new webPath value
    */
   public void setWebPath(String tmp) {
     this.webPath = tmp;
@@ -107,9 +108,9 @@ public class RegisterTask extends Task {
 
 
   /**
-   *  This method is called by Ant when the upgradeDatabaseTask is used
+   * This method is called by Ant when the upgradeDatabaseTask is used
    *
-   *@exception  BuildException  Description of the Exception
+   * @throws BuildException Description of the Exception
    */
   public void execute() throws BuildException {
     try {
@@ -131,13 +132,15 @@ public class RegisterTask extends Task {
       //Encode the key
       BASE64Encoder encoder = new BASE64Encoder();
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
-      bean.setText(PrivateString.encrypt(key, "ENTERPRISE-3.0"));
+      bean.setText(PrivateString.encrypt(key, "ENTERPRISE-3.1"));
       //Transmit
       String response = null;
       if (bean.getSsl()) {
-        response = HTTPUtils.sendPacket("https://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
+        response = HTTPUtils.sendPacket(
+            "https://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
       } else {
-        response = HTTPUtils.sendPacket("http://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
+        response = HTTPUtils.sendPacket(
+            "http://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
       }
       XMLUtils responseXML = new XMLUtils(response);
       Element responseNode = responseXML.getFirstChild("response");
@@ -149,10 +152,12 @@ public class RegisterTask extends Task {
         String text = (String) record.get("license");
         if (text != null) {
           StringUtils.saveText(webPath + "input.txt", text);
-          System.out.println("Registration sent.  A license was installed for Centric CRM.");
+          System.out.println(
+              "Registration sent.  A license was installed for Centric CRM.");
         }
       } else {
-        System.out.println("Registration failed... A license was not obtained from Dark Horse Ventures");
+        System.out.println(
+            "Registration failed... A license was not obtained from Dark Horse Ventures");
       }
     } catch (Exception e) {
       e.printStackTrace();

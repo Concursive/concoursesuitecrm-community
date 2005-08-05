@@ -15,24 +15,22 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
- *  A collection of Ticket objects, can also be used for querying and filtering
- *  the tickets that are included in the list.
+ * A collection of Ticket objects, can also be used for querying and filtering
+ * the tickets that are included in the list.
  *
- *@author     chris
- *@created    December 5, 2001
- *@version    $Id: TicketSunMaintenanceList.java,v 1.1.2.2 2004/01/30 23:54:47
- *      kbhoopal Exp $
+ * @author chris
+ * @version $Id: TicketSunMaintenanceList.java,v 1.1.2.2 2004/01/30 23:54:47
+ *          kbhoopal Exp $
+ * @created December 5, 2001
  */
 public class TicketMaintenanceNoteList extends ArrayList {
 
@@ -42,17 +40,16 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Constructor for the TicketList object
-   *
-   *@since
+   * Constructor for the TicketList object
    */
-  public TicketMaintenanceNoteList() { }
+  public TicketMaintenanceNoteList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TicketSunMaintenanceList object
+   * Sets the pagedListInfo attribute of the TicketSunMaintenanceList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -60,9 +57,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketSunMaintenanceList object
+   * Sets the id attribute of the TicketSunMaintenanceList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -70,9 +67,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketSunMaintenanceList object
+   * Sets the id attribute of the TicketSunMaintenanceList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -80,9 +77,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Sets the ticketId attribute of the TicketSunMaintenanceList object
+   * Sets the ticketId attribute of the TicketSunMaintenanceList object
    *
-   *@param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
@@ -90,9 +87,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Sets the ticketId attribute of the TicketSunMaintenanceList object
+   * Sets the ticketId attribute of the TicketSunMaintenanceList object
    *
-   *@param  tmp  The new ticketId value
+   * @param tmp The new ticketId value
    */
   public void setTicketId(String tmp) {
     this.ticketId = Integer.parseInt(tmp);
@@ -100,9 +97,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the TicketSunMaintenanceList object
+   * Gets the pagedListInfo attribute of the TicketSunMaintenanceList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -110,9 +107,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the TicketSunMaintenanceList object
+   * Gets the id attribute of the TicketSunMaintenanceList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -120,9 +117,9 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Gets the ticketId attribute of the TicketSunMaintenanceList object
+   * Gets the ticketId attribute of the TicketSunMaintenanceList object
    *
-   *@return    The ticketId value
+   * @return The ticketId value
    */
   public int getTicketId() {
     return ticketId;
@@ -130,19 +127,15 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
-        break;
-      }
       TicketMaintenanceNote thisMaintenance = this.getObject(rs);
       this.add(thisMaintenance);
     }
@@ -154,12 +147,12 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -209,7 +202,8 @@ public class TicketMaintenanceNoteList extends ArrayList {
         " FROM ticket_sun_form tsf " +
         " WHERE form_id > -1 ");
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
 
@@ -221,12 +215,12 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@param  db         Description of the Parameter
-   *@since             1.2
+   * @param sqlFilter Description of Parameter
+   * @param db        Description of the Parameter
+   * @since 1.2
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     int i = 0;
@@ -240,13 +234,13 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.2
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -262,11 +256,11 @@ public class TicketMaintenanceNoteList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the TicketSunMaintenanceList object
+   * Gets the object attribute of the TicketSunMaintenanceList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public TicketMaintenanceNote getObject(ResultSet rs) throws SQLException {
     TicketMaintenanceNote thisMaintenance = new TicketMaintenanceNote(rs);

@@ -47,6 +47,7 @@
             <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>"/>
           </td>
           <td align="right" nowrap valign="top">
+            <dhv:evaluate if="<%= !Project.isTrashed() %>" >
             <zeroio:permission name="project-news-edit">
               <%-- send email to team members --%>
               <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle">
@@ -60,6 +61,7 @@
               <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle">
               <a href="javascript:confirmDelete('ProjectManagementNews.do?command=Delete&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>');">Delete</a>
             </zeroio:permission>
+            </dhv:evaluate>
             &nbsp;
           </td>
         </tr>

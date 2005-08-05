@@ -31,6 +31,7 @@
 <jsp:useBean id="allOpenLeads" class="java.lang.String" scope="request" />
 <jsp:useBean id="GraphFileName" class="java.lang.String" scope="request" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -79,7 +80,7 @@
   }
 
 </script>
-<form name="searchLeads" action="Sales.do?command=List&contactId=0" method="post" onSubmit="javascript:return checkForm(this);" >
+<form name="searchLeads" action="Sales.do?command=List&contactId=0&from=list" method="post" onSubmit="javascript:return checkForm(this);" >
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>

@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -27,21 +27,26 @@
 <jsp:useBean id="newsArticle" class="com.zeroio.iteam.base.NewsArticle" scope="request"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%
+  if (clientType.getType() == -1) {
+    clientType.setParameters(request);
+  }
+%>
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
-<jsp:include page="../htmlarea_include.jsp" flush="true"/>
-<body onload="initEditor('message');">
+  <jsp:include page="../tinymce_include.jsp" flush="true"/>
+  <script language="javascript" type="text/javascript">
+    initEditor('message');
+  </script>
 </dhv:evaluate>
-<%-- Use applet instead --%>
-<dhv:evaluate if="<%= clientType.showApplet() %>">
-<body onload="document.inputForm.subject.focus();">
-</dhv:evaluate>
+<body onload="document.inputForm.message.focus();">
 <script language="JavaScript">
 <%-- Setup Image Library --%>
     var ilConstant = <%= Constants.NEWSARTICLE_FILES %>;
     var ilId = <%= newsArticle.getId() %>;
 <%-- Validations --%>
   function checkForm(form) {
+    try { tinyMCE.triggerSave(false); } catch(e) { }
     var formTest = true;
     var messageText = "";
 <dhv:evaluate if="<%= clientType.showApplet() %>">
@@ -66,7 +71,7 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
+      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" type="project.news" object="Project"/></a> >
       <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>"><dhv:label name="project.editArticle">Edit Article</dhv:label></a> >
       <dhv:label name="project.addPage">Add Page</dhv:label>
     </td>

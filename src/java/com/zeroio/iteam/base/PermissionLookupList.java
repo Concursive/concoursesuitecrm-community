@@ -15,21 +15,21 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
- *  Represents a list of possible permissions for a permission category
+ * Represents a list of possible permissions for a permission category
  *
- *@author     matt rajkowski
- *@created    August 11, 2003
- *@version    $Id: PermissionLookupList.java,v 1.1.2.2 2004/04/08 14:55:53
- *      rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: PermissionLookupList.java,v 1.1.2.2 2004/04/08 14:55:53
+ *          rvasista Exp $
+ * @created August 11, 2003
  */
 public class PermissionLookupList extends ArrayList {
 
@@ -38,18 +38,19 @@ public class PermissionLookupList extends ArrayList {
 
 
   /**
-   *  Constructor for the PermissionLookupList object
+   * Constructor for the PermissionLookupList object
    */
-  public PermissionLookupList() { }
+  public PermissionLookupList() {
+  }
 
 
   /**
-   *  Constructor for the PermissionLookupList object
+   * Constructor for the PermissionLookupList object
    *
-   *@param  db                Description of the Parameter
-   *@param  categoryId        Description of the Parameter
-   *@param  includeEnabled    Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db             Description of the Parameter
+   * @param categoryId     Description of the Parameter
+   * @param includeEnabled Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public PermissionLookupList(Connection db, int categoryId, int includeEnabled) throws SQLException {
     this.categoryId = categoryId;
@@ -59,9 +60,9 @@ public class PermissionLookupList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the PermissionLookupList object
+   * Sets the categoryId attribute of the PermissionLookupList object
    *
-   *@param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -69,9 +70,9 @@ public class PermissionLookupList extends ArrayList {
 
 
   /**
-   *  Sets the includeEnabled attribute of the PermissionLookupList object
+   * Sets the includeEnabled attribute of the PermissionLookupList object
    *
-   *@param  tmp  The new includeEnabled value
+   * @param tmp The new includeEnabled value
    */
   public void setIncludeEnabled(int tmp) {
     this.includeEnabled = tmp;
@@ -79,10 +80,10 @@ public class PermissionLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -91,7 +92,7 @@ public class PermissionLookupList extends ArrayList {
         "FROM lookup_project_permission " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY category_id, level, description ");
+    sql.append("ORDER BY category_id, \"level\", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
@@ -105,9 +106,9 @@ public class PermissionLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -123,11 +124,11 @@ public class PermissionLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

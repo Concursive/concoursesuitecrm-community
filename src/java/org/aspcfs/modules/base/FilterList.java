@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.base;
 
-import javax.servlet.http.*;
-import java.util.*;
+import org.aspcfs.controller.SystemStatus;
+
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Array;
-import org.aspcfs.modules.base.Constants;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- *  Creates a custom filter list for the Contacts pop up.<br>
- *  Filters should be seperated by a pipe i.e "|" and should be ones already
- *  supported by this list.
+ * Creates a custom filter list for the Contacts pop up.<br>
+ * Filters should be seperated by a pipe i.e "|" and should be ones already
+ * supported by this list.
  *
- *@author     Mathur
- *@created    March 5, 2003
- *@version    $Id: FilterList.java,v 1.2.136.1 2004/06/08 18:34:00 kbhoopal Exp
- *      $
+ * @author Mathur
+ * @version $Id: FilterList.java,v 1.2.136.1 2004/06/08 18:34:00 kbhoopal Exp
+ *          $
+ * @created March 5, 2003
  */
 public class FilterList extends ArrayList {
 
@@ -39,25 +41,26 @@ public class FilterList extends ArrayList {
 
 
   /**
-   *  Constructor for the FilterList object
+   * Constructor for the FilterList object
    */
-  public FilterList() { }
-
-
-  /**
-   *  Constructor for the FilterList object
-   *
-   *@param  request  Description of the Parameter
-   */
-  public FilterList(HttpServletRequest request) {
-    build(request);
+  public FilterList() {
   }
 
 
   /**
-   *  Sets the source attribute of the FilterList object
+   * Constructor for the FilterList object
    *
-   *@param  source  The new source value
+   * @param request Description of the Parameter
+   */
+  public FilterList(SystemStatus thisSystem, HttpServletRequest request) {
+    build(thisSystem, request);
+  }
+
+
+  /**
+   * Sets the source attribute of the FilterList object
+   *
+   * @param source The new source value
    */
   public void setSource(int source) {
     this.source = source;
@@ -65,9 +68,9 @@ public class FilterList extends ArrayList {
 
 
   /**
-   *  Gets the source attribute of the FilterList object
+   * Gets the source attribute of the FilterList object
    *
-   *@return    The source value
+   * @return The source value
    */
   public int getSource() {
     return source;
@@ -75,92 +78,101 @@ public class FilterList extends ArrayList {
 
 
   /**
-   *  Gets the displayName attribute of the FilterList object
+   * Gets the displayName attribute of the FilterList object
    *
-   *@param  name  Description of the Parameter
-   *@return       The displayName value
+   * @param name Description of the Parameter
+   * @return The displayName value
    */
-  public String getDisplayName(String name) {
+  public String getDisplayName(SystemStatus thisSystem, String name) {
     switch (source) {
       case Constants.CONTACTS:
         if (name.equals("all")) {
-          return "All Contacts";
+          return thisSystem.getLabel("actionList.allContacts"); //All Contacts
         } else if (name.equals("employees")) {
-          return "Employees";
+          return thisSystem.getLabel("employees.employees"); //Employees
         } else if (name.equals("mycontacts")) {
-          return "My Contacts";
+          return thisSystem.getLabel("contact.myContacts"); //My Contacts
         } else if (name.equals("accountcontacts")) {
-          return "Account Contacts";
+          return thisSystem.getLabel("documents.team.accountContacts"); //Account Contacts
         } else if (name.equals("myprojects")) {
-          return "My Projects";
+          return thisSystem.getLabel("contacts.myProjects"); //My Projects
         }
       case Constants.ACCOUNTS:
         if (name.equals("all")) {
-          return "All Accounts";
+          return thisSystem.getLabel("accounts.all.accounts"); //All Accounts
         } else if (name.equals("my")) {
-          return "My Accounts";
+          return thisSystem.getLabel("accounts.my.accounts"); //My Accounts
         } else if (name.equals("disabled")) {
-          return "Disabled Accounts";
+          return thisSystem.getLabel("accounts.disabledAccounts"); //Disabled Accounts
         }
       case Constants.ASSETS:
         if (name.equals("allassets")) {
-          return "All Assets";
+          return thisSystem.getLabel("accounts.allAssets"); //All Assets
         } else if (name.equals("undercontract")) {
-          return "Assets under Contract";
+          return thisSystem.getLabel("accounts.assetsUnderContract"); //Assets under Contract
         }
       default:
-        return "-None-";
+        return thisSystem.getLabel("calendar.none.4dashes"); //--None--
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  request  Description of the Parameter
+   * @param request Description of the Parameter
    */
-  public void build(HttpServletRequest request) {
+  public void build(SystemStatus thisSystem, HttpServletRequest request) {
     String filters = (String) request.getParameter("filters");
     if (filters != null && !"".equals(filters)) {
       StringTokenizer st = new StringTokenizer(filters, "|");
       while (st.hasMoreTokens()) {
         String value = st.nextToken();
-        this.add(new Filter(value, getDisplayName(value)));
+        this.add(new Filter(value, getDisplayName(thisSystem, value)));
       }
     } else {
-      buildDefaultFilters();
+      buildDefaultFilters(thisSystem);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
-  public void buildDefaultFilters() {
+  public void buildDefaultFilters(SystemStatus thisSystem) {
     switch (source) {
       case Constants.CONTACTS:
         for (int i = 0; i < Array.getLength(CONTACT_FILTERS); i++) {
-          this.add(new Filter(CONTACT_FILTERS[i], getDisplayName(CONTACT_FILTERS[i])));
+          this.add(
+              new Filter(
+                  CONTACT_FILTERS[i], getDisplayName(
+                      thisSystem, CONTACT_FILTERS[i])));
         }
         break;
       case Constants.ACCOUNTS:
         for (int i = 0; i < Array.getLength(ACCOUNT_FILTERS); i++) {
-          this.add(new Filter(ACCOUNT_FILTERS[i], getDisplayName(ACCOUNT_FILTERS[i])));
+          this.add(
+              new Filter(
+                  ACCOUNT_FILTERS[i], getDisplayName(
+                      thisSystem, ACCOUNT_FILTERS[i])));
         }
         break;
       case Constants.ASSETS:
         for (int i = 0; i < Array.getLength(ASSET_FILTERS); i++) {
-          this.add(new Filter(ASSET_FILTERS[i], getDisplayName(ASSET_FILTERS[i])));
+          this.add(
+              new Filter(
+                  ASSET_FILTERS[i], getDisplayName(
+                      thisSystem, ASSET_FILTERS[i])));
         }
     }
   }
 
 
   /**
-   *  Gets the firstFilter attribute of the FilterList object
+   * Gets the firstFilter attribute of the FilterList object
    *
-   *@param  selectedFilter  Description of the Parameter
-   *@return                 The firstFilter value
+   * @param selectedFilter Description of the Parameter
+   * @return The firstFilter value
    */
   public String getFirstFilter(String selectedFilter) {
     if (selectedFilter == null || selectedFilter.equals("")) {
